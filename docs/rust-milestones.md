@@ -9,6 +9,12 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+Candidate52's fresh 24-phase viewing campaign is in progress after a successful
+100-viewer protocol qualification. The [first campaign's failure](rust-milestone-batch52.md#fresh-viewing-performance-campaign)
+remains recorded separately: eighteen valid phases, an observer failure before
+sampling the first Source100 phase, and five unrun phases. No Candidate52 gains
+or complete milestones are accepted; the fresh campaign reuses no old phases.
+
 [Combined live/VOD settings reference](rust-milestone-batch53.md) qualifies twelve new admin PATCH/account-GET cells: one retained combined save checked offline after controller1, then eleven new cells under controller0 with an exact declared fifteen-table/fifteen-sequence import. Full rows/errors and all sequence effects are retained with only232 login-field redactions. Deferred FK failures consume both live/category sequence values while rolling back business writes. The Rust handler/physical-settlement correction remains private and uncompiled; the accepted image still refuses nonempty live groups. No M5, performance or complete milestone closure follows.
 
 [Positive Comskip reference](../scripts/rust-integration/comskip-positive-source1/README.md)

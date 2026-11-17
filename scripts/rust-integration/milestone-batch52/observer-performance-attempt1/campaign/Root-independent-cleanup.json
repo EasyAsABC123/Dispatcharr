@@ -1,0 +1,1735 @@
+{
+  "passed": true,
+  "exact_CIDs": 66,
+  "projects": [
+    "dispatcharr-shared-ts-b85e581fe183",
+    "dispatcharr-shared-ts-fc8eccaaf4fe",
+    "dispatcharr-shared-ts-629c325f37ea",
+    "dispatcharr-shared-ts-b00adaad6d9d",
+    "dispatcharr-shared-ts-b0d282aa8fcd",
+    "dispatcharr-shared-ts-f4bf83c8d72e",
+    "dispatcharr-shared-ts-b1d5409d207b",
+    "dispatcharr-shared-ts-fbcc11934e50",
+    "dispatcharr-shared-ts-3976dd254b93",
+    "dispatcharr-shared-ts-eaaecc2bf898",
+    "dispatcharr-shared-ts-29e6ad312987",
+    "dispatcharr-shared-ts-c6d67d47f84e",
+    "dispatcharr-shared-ts-1b2e84460ed2",
+    "dispatcharr-shared-ts-f2d3dfedd198",
+    "dispatcharr-shared-ts-601cdd25b3d2",
+    "dispatcharr-shared-ts-88de6fe97adc",
+    "dispatcharr-shared-ts-a6af517b56cf",
+    "dispatcharr-shared-ts-5b06bfdbf8dd",
+    "dispatcharr-shared-ts-811ca9d85610"
+  ],
+  "checks": [
+    {
+      "phase": 1,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b85e581fe183"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 1,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b85e581fe183"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 1,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b85e581fe183"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 1,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=fde9f02b7111678d6f2538f44db79e90f0520d1c39d08d7b2225bb0c2c3aa9f0"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 1,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=836d7c2566515f42f5b9099b70de0efdeef53a04ef1cbe727f4f8c5dfbfea5c1"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 1,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=e75c3501edc80a82d742c357dc573904fdebe0beeec7b9b2e978b40c64d0e602"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 2,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-fc8eccaaf4fe"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 2,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-fc8eccaaf4fe"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 2,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-fc8eccaaf4fe"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 2,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=664c9e52ced2144ca7ffd534adfd7f74b63c22901677724065b115ac4e7aa7a3"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 2,
+      "kind": "candidate-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=708062f3dcbe1153ff3819496b7586492bb5e468a6d056b89619d5d937b6925a"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 2,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=3faa11dae586f68c720e4b3d45f2abaa40fd2a0d906643b7257042eebb2ecc44"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 2,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=6f0de95e3ce109370309fbc430ccaa5966b168867690fa20810755713a21e210"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 3,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-629c325f37ea"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 3,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-629c325f37ea"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 3,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-629c325f37ea"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 3,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=a30b516e98cb6dafc0156616b067ebf7f5b5f8190c788fb23d7941f912dac450"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 3,
+      "kind": "candidate-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=68ed68d14baf4bd7101a87bc0184b39ea9fe7bf9c63b21dc2e14862e5eb1aa7c"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 3,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=1cd9615d835152d0e14ddc1632f94ccd401fa34bb29c1b5a42d3f9c674f16abf"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 3,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=ad4a8b765e9e03b4ceab2e3917f4e0542a8181598dfea06cb0040a45210a45c7"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 4,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b00adaad6d9d"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 4,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b00adaad6d9d"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 4,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b00adaad6d9d"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 4,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=ed9e9d5ab0818c2de6a358f0266a2676b2d4aa02b4e57a56049881251a4c69c5"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 4,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=b7737ef7e35628aecb50ac69117f30bb0f4031ed39d83adcebeb87ea8472db07"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 4,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=2b8b1bae4b209f001ff335b85c3628b20a8f37616b3dbfe2fc8f610023797354"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 5,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b0d282aa8fcd"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 5,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b0d282aa8fcd"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 5,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b0d282aa8fcd"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 5,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=85a803e90103eaa725711839f11af00ed51cd192aa1eb1a809d8ae8d4b0c13cc"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 5,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=5f08ed56e5b5a7f53014de197603fecfed727af001dbd01baaeefa3dce784401"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 5,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=887f0022c78d329053c9a06a85ba5d1179934125dbb1273818ab0ab734195e61"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 6,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-f4bf83c8d72e"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 6,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-f4bf83c8d72e"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 6,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-f4bf83c8d72e"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 6,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=73dac895c29936b046f6fa5b7995eb256e7af7333bbd9eb78132b79103616026"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 6,
+      "kind": "candidate-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=090d6908f05ef93446df807da0331f283df5ad2de44a4137771e62c046cd4c59"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 6,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=e93836ec16a7f24eca76d1fcf506a6213285b908c82b1bdbcb5c4a3f9c2cfde8"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 6,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=ba7086ff37d137f101dbc808965f5555d33019278bd8e0734cd9455895917ceb"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 7,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b1d5409d207b"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 7,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b1d5409d207b"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 7,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-b1d5409d207b"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 7,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=40bc5504aa7db548e836e75d32dc45318e09ec934eda67f4e625b5576d7d8d7a"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 7,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=be89bf1c3486bc7f1a6f0fb5048fe91822152993a0a5949f08ad8c6e68a8a650"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 7,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=e023d45c88d1ae6bb8b69c839240995f4681127f87b5f6494676ac7c80280c85"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 8,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-fbcc11934e50"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 8,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-fbcc11934e50"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 8,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-fbcc11934e50"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 8,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=de5ecdf015ee332e555f23abd3f35f20452789273fccf7aa35bcd28ba67fde2f"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 8,
+      "kind": "candidate-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=b711f18c2ff3dd6a829789a9e17605cebf87726c9a27bcd0dc0fbfc48dc74180"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 8,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=2dc4514ed725fcdf7cd042206272468aaa8ae593c5e411406b1d4d149d581c93"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 8,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=9e5a12f03dbce1d1ecee4b58f0101665a6904db815a76823acec068ed7907e71"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 9,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-3976dd254b93"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 9,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-3976dd254b93"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 9,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-3976dd254b93"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 9,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=6333bf08e46a4e4071faf84021c9693afd59146e824259f8a3aa9df86eb458aa"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 9,
+      "kind": "candidate-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=9be4a491749429a10a1a26f433ef493d93d72366acebcfb54af26242d139f75e"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 9,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=ffa596c92520087949b9702a5f4bad8c7696701279fae4561f96942c479d18f4"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 9,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=f3a707455f10f837f91cff469a1858fb9db5d47386c214105a59cf8595fe7c59"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 10,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-eaaecc2bf898"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 10,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-eaaecc2bf898"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 10,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-eaaecc2bf898"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 10,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=271e35d9d2a8f03af2f462c4ef08d801db3203bce218435332af38baf71320c2"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 10,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=044d09a8bc7dbb385893fa86ceed08191c7911d7545ea38300e8eb6d0d29aa95"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 10,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=b752c71c9b3131e78e56055ae7828fb1a51927cab2e5036255f05ec05fa1b4b5"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 11,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-29e6ad312987"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 11,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-29e6ad312987"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 11,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-29e6ad312987"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 11,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=dc24619356f307a456d0a223ebf8f14e3b8c23a073b7a7b717a00334548ee3cd"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 11,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=cd5f4c6541e60231efbf82bbd67f8c121b1615e00f2ae5a4cdad9d718f43d55c"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 11,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=020851095d2fd26d5249e4b049b58ec369696510da5853957d24ce0c2d239823"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 12,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-c6d67d47f84e"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 12,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-c6d67d47f84e"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 12,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-c6d67d47f84e"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 12,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=79c398d5c69056dc3ea1e662558bba20820bc57a6ce72589c361873b3db8f802"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 12,
+      "kind": "candidate-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=e368f224e8d046d904a47a27f38ef80a0ee102d9f6c9e8d44b0ce34dfd6038a2"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 12,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=51046c56fbfb2fdf84d9ad96a3192ca19a0e6b3e828fd9cf8851dc32376f8b30"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 12,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=6ccb811e9ecb59b0ff2fee643ac569e4509a245e28ebb3533ed1cd2861074221"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 13,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-1b2e84460ed2"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 13,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-1b2e84460ed2"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 13,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-1b2e84460ed2"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 13,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=0f1fe740803763d3d5b6b62d2083d5de605bfed4ad7da7c1529d8e99874a5701"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 13,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=646ac5881ded02627803100203736dbd537b0073effd2cccac623ce906a42d2c"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 13,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=eeef89e1848a6861f7d5eac30082111be250e142f9a6a67bbc5bda59526390c4"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 14,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-f2d3dfedd198"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 14,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-f2d3dfedd198"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 14,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-f2d3dfedd198"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 14,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=6a4949691096cb01b7c84a5899acd395373c99ed97e0be668b240c609396e83b"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 14,
+      "kind": "candidate-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=10a666f12cdcd88e6527c90df5eb165fdd507ab440bbbd77ef1dbc3fd9aa526c"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 14,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=02055e58e7d30dfa76891893085cce66fa9e9046029ecc7cfb66968c2e92bbac"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 14,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=953e51a644bbef9655e10201dce5e3cce18f445201e923bde9783b41f45837c0"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 15,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-601cdd25b3d2"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 15,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-601cdd25b3d2"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 15,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-601cdd25b3d2"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 15,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=bbb7f4c1963a9b852221ab0dd1ad4d7f50bae8d6a4e8a7ce9c50b04c42f6ce1b"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 15,
+      "kind": "candidate-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=0fac55fb694c4be17fd0d27b1151c69cd6b7281c7b6eacb568353733b8618850"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 15,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=97627ab3f9ec5dcf9595ee93c289f4c7f1f540e361a8e4722c193487dd8431c5"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 15,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=258413727dc0f9bdf4034511534c1699463374ce1522d6f20eeb0db2b4aeab19"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 16,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-88de6fe97adc"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 16,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-88de6fe97adc"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 16,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-88de6fe97adc"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 16,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=02ef400c4d32575b872164a720c19def81ebe05eaedffecb87e0b311747c1d95"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 16,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=eb00ef974ce4afb087f8baae407da965df642e6f991050b5d85625d929214ae7"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 16,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=32bdd2d2bee6584fa7d4ecba5350382285578f153bc8bbb3fd7c288e291fed72"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 17,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-a6af517b56cf"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 17,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-a6af517b56cf"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 17,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-a6af517b56cf"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 17,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=97829d85e7b07b6de56d94bbb8b7a19ef0ef09dcebd2ab70807f14f7b1eb3396"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 17,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=88fc77c17d5fd10bc13b568b475ff23d5363a523fa4827a299941640d97b0ee3"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 17,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=bd001c1216347d973a281562680e16647820889903aa6bf4dff5e5ee3b4d7725"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 18,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-5b06bfdbf8dd"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 18,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-5b06bfdbf8dd"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 18,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-5b06bfdbf8dd"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 18,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=858e80868bc054a859afd8e7947d2b6615e6fbc796623a63a0ff53cf400067c9"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 18,
+      "kind": "candidate-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=4113431fa7f6b0361050b02c708d50d9f585b6a39b3ec2ac5a305ae4e20107bd"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 18,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=2657fb1ccc23248bd0031d99a617bdb4647ba2b224ca4121adcc4614bd7043ef"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 18,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=1a085f983a7576ae206168d9bca51f4e76afc7f8c02f26090b6b81617aee97e7"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 19,
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-811ca9d85610"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 19,
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-811ca9d85610"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 19,
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-811ca9d85610"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 19,
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=767a18e4bfd36ea06aecd3a53a82d37224bb0309116cffc8a4bc41c9957031a2"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 19,
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=ab4c0b1a99e348f4583c281cfc23dd3d25811ec7bc9ecf80a70762f2562ecd76"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "phase": 19,
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=4807c130d430dedce3fb27850b20ce40307064e218b3904063892ad927714184"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    }
+  ],
+  "additional_independent_host_generation_claim": false,
+  "actual_phases": 19,
+  "valid_phases": 18,
+  "remaining5_not_run": true,
+  "gain_accepted": false
+}

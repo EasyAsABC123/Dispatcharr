@@ -1,0 +1,194 @@
+{
+  "passed": true,
+  "exact_CIDs": 7,
+  "projects": [
+    "dispatcharr-shared-ts-d59cbf1948d0",
+    "dispatcharr-shared-ts-d7c0fb364403"
+  ],
+  "checks": [
+    {
+      "backend": "baseline",
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-d59cbf1948d0"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "baseline",
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-d59cbf1948d0"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "baseline",
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-d59cbf1948d0"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "baseline",
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=4c3c93e7fb41f4fce00bffbad4e825c112c212a13172cfe423426ec0c8e36cca"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "baseline",
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=7d7c93a6ecdffe79e98088996223597f0f34727b30cde7c8986fc30efbfb8217"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "baseline",
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=05af3a1d33b2b1e2646879d5043d57ffc5b9d99ef96b8e5edff9e8fe06b1b286"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-d7c0fb364403"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-d7c0fb364403"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-shared-ts-d7c0fb364403"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "kind": "baseline-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=4934c9e55827fd295b98598efb7fbf699c1fbd5d0f5ca33532dfd6a2f9c58796"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "kind": "candidate-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=0e5a1e940e1f99dbc744ae611b45893c8138dc1d7ab77c85413360e6e78fa33b"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "kind": "origin-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=dd4015f138396e8f757259d6a3c1ae096be4d0a4c1c301bc8a111e3b5df96bf7"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "backend": "candidate",
+      "kind": "publication-observer-exact-CID",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=ea8796aa10e8d4202498c43f484eb52ecb7f66e858f581387b19ccb62eed6e4c"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    }
+  ],
+  "process_generation_independent_recheck": "not added; phase process-tree evidence retained",
+  "actual_new_phases": 2,
+  "protocol_only": true,
+  "gain_accepted": false
+}

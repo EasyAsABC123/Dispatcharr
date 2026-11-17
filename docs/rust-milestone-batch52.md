@@ -107,3 +107,32 @@ combined save offline plus eleven new continuation cells, with literal controlle
 exits1 and0 and an exact declared fifteen-table/fifteen-sequence import. The Rust
 live-group extension remains private and uncompiled. New
 performance and complete M0–M9 acceptance remain open.
+
+
+## Fresh viewing performance campaign
+
+The [retained protocol pilot and first campaign](../scripts/rust-integration/milestone-batch52/observer-performance-attempt1/index.json)
+keep their literal outcomes. The two-viewer pilot passes; the separate declared
+24-phase campaign exits 1 after eighteen valid phases and an invalid first
+100-viewer Source phase. The remaining five phases never run. Counter sampling
+fails before its first sample; the original exception message was discarded.
+All readers then lack a complete read inside the unstarted measurement window.
+This does not establish Source capacity or a Rust performance gain. Root verifies
+66 exact campaign containers and nineteen projects absent. The retained phase
+process evidence does not imply an additional independent host-generation audit.
+
+The observer's bounded profile capture was too small for an ordinary 100-reader
+shape. A fresh Source/Native 100-viewer qualification subsequently passes all
+61 samples per phase and complete equivalent audio/video validation. Actual
+Source profiles measure 84,757–84,990 bytes, above the old 65,536-byte bound and
+inside the corrected 131,072-byte bound. Framed replies remain bounded at
+262,144 bytes. Failure diagnostics now preserve stage, type and bounded message.
+CPU, memory, media, clock and accounting budgets remain unchanged, and every
+observer cost remains charged. This pilot qualifies the protocol only.
+
+A separate fresh 24-phase campaign is running with the verified configuration:
+three alternating Source/Native pairs at each of 1, 2, 10 and 100 viewers.
+Neither earlier phases nor pilot measurements contribute to its result.
+Candidate52 has no accepted performance gain until that complete campaign and
+its cleanup have been evaluated. Active recording/refresh workloads and all
+formal M0–M9 milestones remain open.

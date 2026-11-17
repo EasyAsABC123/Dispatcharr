@@ -1,0 +1,688 @@
+{
+  "planned_phases": 24,
+  "actual_phases": 19,
+  "valid_phases": 18,
+  "invalid_phases": 1,
+  "remaining_phases_not_run": 5,
+  "all_phases_valid": false,
+  "first_failure": {
+    "phase": 19,
+    "backend": "Original",
+    "viewers": 100,
+    "trial": 1,
+    "actual_exit": 1,
+    "failed_reader_count": 100,
+    "error_counts": {
+      "NoWholeReadInFixedWindow": 100
+    },
+    "source_capacity_or_application_bug_inferred": false,
+    "root_cause": "Earliest recorded failure is ActualCounterSampleIndex: zero counter samples and zero metadata requests; the counter worker exited1 with RuntimeError type only. The exact message was discarded. NoWholeReadInFixedWindow for100 readers follows the measurement abort; this does not establish Source streaming capacity failure.",
+    "counter_worker_raw_cleanup_passed": false,
+    "lost_exception_message_not_recovered": true,
+    "independent_review_sha256": "789022500a7443ac08942e1df85f48d3ebc99e1e23c635adfbc240dc81d2da04"
+  },
+  "phase_summary": [
+    {
+      "phase": 1,
+      "viewers": 1,
+      "trial": 1,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-b85e581fe183",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 158.0339181009913,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "9a9e4ca82f0039ab4556959ab71b58331ba7873f900e76cd0baa5c165175989c",
+        "resource-samples.json": "cf7eefb47fb154e172f7d92754abb3caf844ab575a87abbb7fa5bfc07973868a",
+        "useful-media-complete.json": "f9fd1262eb29c508e0eea5377303dfd121fb02f549cc9f4d320a47d226a62e75"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.580263,
+        "cpu_mean_cores": 0.026336206464311517,
+        "working_set_estimate_median_bytes": 944664576,
+        "charged_memory_median_bytes": 1066037248
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.005355859544541505,
+        "working_set_estimate_median_bytes": 195772416
+      }
+    },
+    {
+      "phase": 2,
+      "viewers": 1,
+      "trial": 1,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-fc8eccaaf4fe",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 145.92309867599397,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "d8daac0326deb6849362ebfb20c02c85f53c9245080ed35c953ac72c5114d7d8",
+        "resource-samples.json": "9b9c0a4ca63e75a372482a81930a725f1f282390cce26a80441acedbb9c78060",
+        "useful-media-complete.json": "b5380b0ed2cdf6a8bde6c000135a3a6d7d4bb5388db6ccd6d97932b5b6c355cf"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.157005,
+        "cpu_mean_cores": 0.019282305973703288,
+        "working_set_estimate_median_bytes": 277196800,
+        "charged_memory_median_bytes": 398544896
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.004803639968997859,
+        "working_set_estimate_median_bytes": 194699264
+      }
+    },
+    {
+      "phase": 3,
+      "viewers": 1,
+      "trial": 2,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-629c325f37ea",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 146.01465517198085,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "ee5309034034b85d904608cfa6524121acd32eebc520810650609736d28314d9",
+        "resource-samples.json": "b5d46980e2db9295e99754fbcff907c892220706b4eb857fb3f8df8df45d97d7",
+        "useful-media-complete.json": "c632d2c5bf162e3a7e2feddc1daedbd0bb94b92f6957b596315cc381bd3ef9ed"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.138514,
+        "cpu_mean_cores": 0.018974118709478016,
+        "working_set_estimate_median_bytes": 276168704,
+        "charged_memory_median_bytes": 397516800
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.0048314161811932885,
+        "working_set_estimate_median_bytes": 197345280
+      }
+    },
+    {
+      "phase": 4,
+      "viewers": 1,
+      "trial": 2,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-b00adaad6d9d",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 157.62163060999592,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "32f9b16874e7a2708a8bf832fa122aeac64a2b647fd56a7a8af7a31f1bf57111",
+        "resource-samples.json": "274dc44a80433bd3f18c172726c7b9ce89f06ee48278cddff8dc864e78c2693a",
+        "useful-media-complete.json": "ddd19e3e5bbe49b835566e9451803f709ff4c9a9d561c27b2e916d2f5e7670fa"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.570901,
+        "cpu_mean_cores": 0.026180271472735207,
+        "working_set_estimate_median_bytes": 946106368,
+        "charged_memory_median_bytes": 1067479040
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.005500036725059104,
+        "working_set_estimate_median_bytes": 199868416
+      }
+    },
+    {
+      "phase": 5,
+      "viewers": 1,
+      "trial": 3,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-b0d282aa8fcd",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 158.36137507599778,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "d4f398772e3043c8c3f4ae4a2d662c72506ad2b388b7ae717d82688ef3b232d7",
+        "resource-samples.json": "f4e4475a41c4f62813c2dc0847cfde2407257e35e4ce76364c9f9936ca04d244",
+        "useful-media-complete.json": "ffb07e867911b2ace004bc91956083e16a8bf642cbb6d977d8f36ce4409ae345"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.591103,
+        "cpu_mean_cores": 0.02651715874442091,
+        "working_set_estimate_median_bytes": 940548096,
+        "charged_memory_median_bytes": 1061920768
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.005431365840759864,
+        "working_set_estimate_median_bytes": 198479872
+      }
+    },
+    {
+      "phase": 6,
+      "viewers": 1,
+      "trial": 3,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-f4bf83c8d72e",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 145.4052045189892,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "5fdd6808e7767dc3965507cb4e1851c6c02c13234371184ec8c3b9f4df9e785e",
+        "resource-samples.json": "81cc11fb070d6d21efab52c54a4cc2e513c912f3be133d50736bc405d81d8695",
+        "useful-media-complete.json": "586f3e8ece4e10a87b14908406f2ee564d3f90f9b3e707cc99933d6f426d5ded"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.150508,
+        "cpu_mean_cores": 0.01917400535471865,
+        "working_set_estimate_median_bytes": 274952192,
+        "charged_memory_median_bytes": 396300288
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.0048302825082307335,
+        "working_set_estimate_median_bytes": 197853184
+      }
+    },
+    {
+      "phase": 7,
+      "viewers": 2,
+      "trial": 1,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-b1d5409d207b",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 159.9011583539832,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "932dcf77cc52b9d5267df8ae275ab80a835d8799020283eece6e8f873cc05fd5",
+        "resource-samples.json": "5c259b50d06c6986b26838d41701812efd85c048c854519c7bb350b88ffd7969",
+        "useful-media-complete.json": "2a680c5b9bbe6c98af9ff994f91b4b9f17cabd4f24a9c5e9e34a46ed1cd47ebe"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.674247,
+        "cpu_mean_cores": 0.027902487412984074,
+        "working_set_estimate_median_bytes": 944369664,
+        "charged_memory_median_bytes": 1065742336
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.006616280335550655,
+        "working_set_estimate_median_bytes": 198082560
+      }
+    },
+    {
+      "phase": 8,
+      "viewers": 2,
+      "trial": 1,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-fbcc11934e50",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 148.52650520400493,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "c1fd4bd14a43487be59701ea8afc1ba4061c25410fc574f1c993b75449f67305",
+        "resource-samples.json": "11597dec95d42871ce6f882ce52c5315f5161694e828e29bf8f6e7ccffe1839a",
+        "useful-media-complete.json": "813ab0b19842fc9e74dae6d0b4ad80799e039ac5e92503d661fdc58c8b1ee508"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.170505,
+        "cpu_mean_cores": 0.01950728877310733,
+        "working_set_estimate_median_bytes": 277061632,
+        "charged_memory_median_bytes": 398409728
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.005371422762591859,
+        "working_set_estimate_median_bytes": 197672960
+      }
+    },
+    {
+      "phase": 9,
+      "viewers": 2,
+      "trial": 2,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-3976dd254b93",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 148.86007022799458,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "075eac93f5dfa4ba4df7afc56690525bf41d3e3b4a5d29d5967302cfa1d0526c",
+        "resource-samples.json": "daeca68a13da3104826731418639722c5eebb47d35f76bc47d839d7543a472cc",
+        "useful-media-complete.json": "cf0d7824499a35d0531f6ad95cb5ab2581abdc835be051c868a3cf05d828d710"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.15852,
+        "cpu_mean_cores": 0.019307646948099062,
+        "working_set_estimate_median_bytes": 276955136,
+        "charged_memory_median_bytes": 398303232
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.005413980731426017,
+        "working_set_estimate_median_bytes": 199573504
+      }
+    },
+    {
+      "phase": 10,
+      "viewers": 2,
+      "trial": 2,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-eaaecc2bf898",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 159.79597934600315,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "eb706ba7eb9c3c6dd46c9ec1927ec7ac75571875f9da043fb7224947b9aeb1c7",
+        "resource-samples.json": "89a07688b8ff2ba9afdd9d85ba65440c8a48b2910ce2d547241a2cbfb49ab125",
+        "useful-media-complete.json": "c0bd3d398da57cf80c439a2c800bfc7c2b7813e5873b8b95a88f18842b16e931"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.667945,
+        "cpu_mean_cores": 0.027798940393035668,
+        "working_set_estimate_median_bytes": 946221056,
+        "charged_memory_median_bytes": 1067593728
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.006465616754229823,
+        "working_set_estimate_median_bytes": 201314304
+      }
+    },
+    {
+      "phase": 11,
+      "viewers": 2,
+      "trial": 3,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-29e6ad312987",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 160.01110850900295,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "903ea8a3fa29aa015aac6380a86fbe64f53741abcb6bed672d6af2f93f98a50e",
+        "resource-samples.json": "a7784a277b1c2253298e1621bebe065d7883bd0059264a0e04564b2c37422d2b",
+        "useful-media-complete.json": "22e04a0ccea401d436c81976fa8c4e636a777ade7801b67a32a8bdc5c5e90609"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.644184,
+        "cpu_mean_cores": 0.027401460341447904,
+        "working_set_estimate_median_bytes": 942796800,
+        "charged_memory_median_bytes": 1064169472
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.006500535593025757,
+        "working_set_estimate_median_bytes": 200409088
+      }
+    },
+    {
+      "phase": 12,
+      "viewers": 2,
+      "trial": 3,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-c6d67d47f84e",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 148.7126729459851,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "0288a557f477646fbf16714718b9f8eeb888eb99f854e680643ec60eca5c6072",
+        "resource-samples.json": "66792ff083ac1652e59f4aeb910e9ef64a4741a98084973c3ce201528d2ed091",
+        "useful-media-complete.json": "443100945f24ed11999f41db373b0d34d3901d99e6a51f176813fa3a7f2cb6f5"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.183242,
+        "cpu_mean_cores": 0.01971956435028865,
+        "working_set_estimate_median_bytes": 277045248,
+        "charged_memory_median_bytes": 398393344
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.005476851254802787,
+        "working_set_estimate_median_bytes": 200286208
+      }
+    },
+    {
+      "phase": 13,
+      "viewers": 10,
+      "trial": 1,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-1b2e84460ed2",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 175.38176828299765,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "b6da4c566e4111aba43b01ca1a898126dee31af1db13bdd41d78e8a888aea236",
+        "resource-samples.json": "bfb99454982feede495e75e64a9ed1c86baf4cd2649371d48374ab1b5faafc68",
+        "useful-media-complete.json": "c563a7895c8977eb64b928671f60fec8e0ca71c31fe7637b6faf1933e6f49039"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 2.295208,
+        "cpu_mean_cores": 0.038251140670899554,
+        "working_set_estimate_median_bytes": 949215232,
+        "charged_memory_median_bytes": 1070587904
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.019064724035424047,
+        "working_set_estimate_median_bytes": 204836864
+      }
+    },
+    {
+      "phase": 14,
+      "viewers": 10,
+      "trial": 1,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-f2d3dfedd198",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 171.93312538199825,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "b54eb85b55ad31515e433e98c3a17d904cec62eab7213bc6be50d6a47466aba7",
+        "resource-samples.json": "d3cdf7925fe948e38e80641d4060b6f0b7e1a18331dff633326da9acf2403bae",
+        "useful-media-complete.json": "1fb4036769e5b77565e3151fcdd7f5783e7f2221ac00fbf7ea453e2fce024870"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.179626,
+        "cpu_mean_cores": 0.019659291351972207,
+        "working_set_estimate_median_bytes": 279601152,
+        "charged_memory_median_bytes": 400949248
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.009866793518118732,
+        "working_set_estimate_median_bytes": 208621568
+      }
+    },
+    {
+      "phase": 15,
+      "viewers": 10,
+      "trial": 2,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-601cdd25b3d2",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 171.72082940198015,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "824422200df81897bedcfda79659db2d15ef96d715d8084000e0459f61286889",
+        "resource-samples.json": "f9d804ab644f8be98328d26fba8b6e42efb490c5cd9d81ec4ea8f40dfcc5b456",
+        "useful-media-complete.json": "88851a3867d363f69c253141687555736fbf79e5b63ee896592ad1bf61eabbc7"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.182183,
+        "cpu_mean_cores": 0.01970261564270622,
+        "working_set_estimate_median_bytes": 277757952,
+        "charged_memory_median_bytes": 399106048
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.010039961995679433,
+        "working_set_estimate_median_bytes": 209027072
+      }
+    },
+    {
+      "phase": 16,
+      "viewers": 10,
+      "trial": 2,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-88de6fe97adc",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 175.93708017497556,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "95d34846062accaf02f466fecfc4369b347dec0625bbbe86fe060beffe719d23",
+        "resource-samples.json": "a024dd990055c82857d426e29f98a128f0b134917d2ddb3e53e9b1b389f1727e",
+        "useful-media-complete.json": "1ed84c69ae8528427d51686bf951148417cdea4fb8ae5587c7d55c2bdd079997"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 2.298212,
+        "cpu_mean_cores": 0.03830143476643439,
+        "working_set_estimate_median_bytes": 947507200,
+        "charged_memory_median_bytes": 1068879872
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.018919613378927714,
+        "working_set_estimate_median_bytes": 205332480
+      }
+    },
+    {
+      "phase": 17,
+      "viewers": 10,
+      "trial": 3,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-a6af517b56cf",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 176.394214518019,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "ae992acd008f13dd3c14b9c9ee5119ac1d45b4d300266bb15d1e66b5c58866ad",
+        "resource-samples.json": "d3d55eb44270598d3858118db358ce7cb8cc2eab4e7d327a12ce0e5a224dde62",
+        "useful-media-complete.json": "7a1f3f2b94c9cba5fdcde52e9a96dccb8b525bb64aebd1376696c6a108cd080c"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 2.329653,
+        "cpu_mean_cores": 0.03882528041904911,
+        "working_set_estimate_median_bytes": 947822592,
+        "charged_memory_median_bytes": 1069195264
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.0180663772403652,
+        "working_set_estimate_median_bytes": 205168640
+      }
+    },
+    {
+      "phase": 18,
+      "viewers": 10,
+      "trial": 3,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "project": "dispatcharr-shared-ts-5b06bfdbf8dd",
+      "controller": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 171.7916365370038,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "0932308efad7abe4d064e9e2a43cd22de83077f617540477e1ab87d1ec4a2fa7",
+        "resource-samples.json": "c2e09f3e7ebdcf65e5982b7c4a0ee4907e94b13fc656b39bf6869610d23230d2",
+        "useful-media-complete.json": "ec1b563c7f0baff607c5e9d9817e40b6d6ff3fc3575be598459c346e91c4f80d"
+      },
+      "useful_media_passed": true,
+      "counter_comparison_accepted": false,
+      "descriptive_primary_all_services_plus_Origin": {
+        "cpu_core_seconds": 1.196988,
+        "cpu_mean_cores": 0.0199494329906142,
+        "working_set_estimate_median_bytes": 276668416,
+        "charged_memory_median_bytes": 398016512
+      },
+      "external_observer_reported_separately": {
+        "cpu_mean_cores": 0.010044498544861235,
+        "working_set_estimate_median_bytes": 208637952
+      }
+    },
+    {
+      "phase": 19,
+      "viewers": 100,
+      "trial": 1,
+      "backend": "baseline",
+      "actual_exit": 1,
+      "valid": false,
+      "project": "dispatcharr-shared-ts-811ca9d85610",
+      "controller": {
+        "actual_exit": 1,
+        "failure": null,
+        "seconds": 110.44876717799343,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group_settled": true
+      },
+      "scoped_cleanup_checks_passed": true,
+      "raw_sha256": {
+        "shared-ts.json": "08d2159b1b74a865dd472fa1b65d63fd264dd766bf0e40c49efca7332b037d25",
+        "resource-samples.json": "4dc9e7e1c3da4d524389806dab243ec1952c1d4b622c69c6d212197cf1b9630a",
+        "useful-media-complete.json": "d1773c230d02b21a8f1f0bb50bfaaaf1bf726ee25075ff26090c8ef7470d3f22"
+      },
+      "useful_media_passed": false,
+      "counter_comparison_accepted": false
+    }
+  ],
+  "changed_inputs": [],
+  "retained_phase_count": 0,
+  "pairs_computed": 0,
+  "selective_retry_or_subset_acceptance": false,
+  "gain_accepted": false,
+  "full24_accepted": false,
+  "raw_result_sha256": "8a4ca214243db43040a91a19d523e16df12931335631bda582ec9a536937063f"
+}

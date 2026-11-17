@@ -1,0 +1,319 @@
+{
+  "status": "ACTUAL_FRESH_TWO_VIEWER_PROTOCOL_QUALIFIED_NOT_GAIN_ACCEPTANCE",
+  "pilot_result_sha256": "e34ef86a542fcdf0b229f3bb65a5e349e28f4bb2111610d9eefe3328dce21a01",
+  "actual_config_review_sha256": "eed001e1bf78332b529099c61478991915cba0d73680f774ea376e776225edd9",
+  "fresh_Source_and_Native_phases": 2,
+  "retained_phases": 0,
+  "cross_phase_useful_duration_equivalence": [
+    true,
+    true
+  ],
+  "phases": [
+    {
+      "backend": "baseline",
+      "resource_capture_sha256": "88bca0ade1e350f244f1b06768dbe060cf1516c1ce47c3155513fc1934202ac3",
+      "viewers": 2,
+      "sample_count": 61,
+      "elapsed_seconds": 60.00352799499524,
+      "fixed_clock_passed": true,
+      "maximum_sample_lag_seconds": 0.0050112970056943595,
+      "maximum_counter_read_skew_seconds": 0.0005072040075901896,
+      "Source_headroom_passed": true,
+      "raw_sampler_useful_work_passed": false,
+      "raw_sampler_useful_flag_reason": "Sampler intentionally leaves false; complete decoded/indexed qualification is performed off-window and retained separately, without rewriting sampler.",
+      "offwindow_complete_media_passed": true,
+      "all_loaded_backend_infrastructure_origin_observer_and_whole_metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.274012,
+          "cpu_mean_cores": 0.02123228487675362,
+          "charged_memory_median_bytes": 842018816,
+          "charged_memory_max_simultaneous_bytes": 847568896,
+          "working_set_estimate_median_bytes": 841601024,
+          "working_set_estimate_max_simultaneous_bytes": 847151104
+        },
+        "origin": {
+          "cpu_core_seconds": 0.392235,
+          "cpu_mean_cores": 0.006536865632846047,
+          "charged_memory_median_bytes": 222363648,
+          "charged_memory_max_simultaneous_bytes": 223383552,
+          "working_set_estimate_median_bytes": 101060608,
+          "working_set_estimate_max_simultaneous_bytes": 102080512
+        },
+        "observer": {
+          "cpu_core_seconds": 0.398138,
+          "cpu_mean_cores": 0.0066352431815877196,
+          "charged_memory_median_bytes": 271179776,
+          "charged_memory_max_simultaneous_bytes": 280444928,
+          "working_set_estimate_median_bytes": 191823872,
+          "working_set_estimate_max_simultaneous_bytes": 195006464
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 2.064385,
+          "cpu_mean_cores": 0.03440439369118739,
+          "charged_memory_median_bytes": 1335508992,
+          "charged_memory_max_simultaneous_bytes": 1349677056,
+          "working_set_estimate_median_bytes": 1134714880,
+          "working_set_estimate_max_simultaneous_bytes": 1141026816
+        },
+        "primary": {
+          "cpu_core_seconds": 1.666247,
+          "cpu_mean_cores": 0.027769150509599667,
+          "charged_memory_median_bytes": 1064513536,
+          "charged_memory_max_simultaneous_bytes": 1070354432,
+          "working_set_estimate_median_bytes": 942792704,
+          "working_set_estimate_max_simultaneous_bytes": 948633600
+        }
+      },
+      "persistent_metadata_helper_and_Redis_server_CPU_charged_in_actual_groups": true,
+      "sampler_same_observer_cgroup": true,
+      "counter_sweep_process_CPU_nanoseconds": 26491175,
+      "counter_sampler_receipt": {
+        "PID": 3234791,
+        "generation": "21726727",
+        "actual_exit": 0,
+        "forced": false,
+        "generation_absent": true,
+        "stdout_EOF": true,
+        "stderr_writer_settled": true,
+        "stderr_bytes": 0,
+        "protocol_errors": [],
+        "worker_final": {
+          "kind": "final",
+          "PID": 3234791,
+          "generation": "21726727",
+          "measurement_completed": true,
+          "failure_type": null,
+          "opened_counter_files": 30,
+          "all_counter_FDs_closed": true,
+          "close_errno": []
+        },
+        "same_accounting_group": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dispatcharr-resource-96357e66e7bf4e8aaab24def4984e721.scope",
+        "cleanup_passed": true
+      },
+      "final_active_metadata": {
+        "owner": "4c3c93e7fb41:327",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 22,
+        "owned_identity_count": 2,
+        "identity_key_count": 2,
+        "all_owned_user_id": true,
+        "input_index": 49,
+        "timestamps": 37,
+        "state": "active"
+      },
+      "media_byte_deltas": [
+        9211248,
+        9211248
+      ],
+      "one_batch_PTS_bound_seconds": 2.005333333332999,
+      "independent_max_PES_media_span_seconds": 0.040000000000020464,
+      "media": [
+        {
+          "reader": "owner",
+          "full_raw_and_certified_decode_passed": true,
+          "streams": {
+            "0": {
+              "complete_units": 1493,
+              "encoded_useful_bytes": 7501991,
+              "useful_duration_seconds": 59.72,
+              "first_pts90k": 1960319,
+              "last_pts90k": 7331519,
+              "independent_expected_encoded_bytes_60s": 7535186,
+              "useful_rate_fraction": 0.9955946674707167
+            },
+            "1": {
+              "complete_units": 2800,
+              "encoded_useful_bytes": 977760,
+              "useful_duration_seconds": 59.733333333333334,
+              "first_pts90k": 1959840,
+              "last_pts90k": 7333920,
+              "independent_expected_encoded_bytes_60s": 981977,
+              "useful_rate_fraction": 0.9957056020660362
+            }
+          }
+        },
+        {
+          "reader": "viewer-001",
+          "full_raw_and_certified_decode_passed": true,
+          "streams": {
+            "0": {
+              "complete_units": 1493,
+              "encoded_useful_bytes": 7501991,
+              "useful_duration_seconds": 59.72,
+              "first_pts90k": 1960319,
+              "last_pts90k": 7331519,
+              "independent_expected_encoded_bytes_60s": 7535186,
+              "useful_rate_fraction": 0.9955946674707167
+            },
+            "1": {
+              "complete_units": 2800,
+              "encoded_useful_bytes": 977760,
+              "useful_duration_seconds": 59.733333333333334,
+              "first_pts90k": 1959840,
+              "last_pts90k": 7333920,
+              "independent_expected_encoded_bytes_60s": 981977,
+              "useful_rate_fraction": 0.9957056020660362
+            }
+          }
+        }
+      ]
+    },
+    {
+      "backend": "candidate",
+      "resource_capture_sha256": "f9511bba7ab47ef85d62182f6b9ea4457a51fbc3176ba6da2cbc0634c43a4347",
+      "viewers": 2,
+      "sample_count": 61,
+      "elapsed_seconds": 60.00352861001738,
+      "fixed_clock_passed": true,
+      "maximum_sample_lag_seconds": 0.005017994000809267,
+      "maximum_counter_read_skew_seconds": 0.0009826479945331812,
+      "Source_headroom_passed": true,
+      "raw_sampler_useful_work_passed": false,
+      "raw_sampler_useful_flag_reason": "Sampler intentionally leaves false; complete decoded/indexed qualification is performed off-window and retained separately, without rewriting sampler.",
+      "offwindow_complete_media_passed": true,
+      "all_loaded_backend_infrastructure_origin_observer_and_whole_metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.826827,
+          "cpu_mean_cores": 0.01377963961709352,
+          "charged_memory_median_bytes": 176197632,
+          "charged_memory_max_simultaneous_bytes": 183783424,
+          "working_set_estimate_median_bytes": 176132096,
+          "working_set_estimate_max_simultaneous_bytes": 183717888
+        },
+        "origin": {
+          "cpu_core_seconds": 0.443731,
+          "cpu_mean_cores": 0.007395081760673665,
+          "charged_memory_median_bytes": 222666752,
+          "charged_memory_max_simultaneous_bytes": 225202176,
+          "working_set_estimate_median_bytes": 101384192,
+          "working_set_estimate_max_simultaneous_bytes": 103919616
+        },
+        "observer": {
+          "cpu_core_seconds": 0.348732,
+          "cpu_mean_cores": 0.005811858203648716,
+          "charged_memory_median_bytes": 269893632,
+          "charged_memory_max_simultaneous_bytes": 280059904,
+          "working_set_estimate_median_bytes": 198324224,
+          "working_set_estimate_max_simultaneous_bytes": 199905280
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.61929,
+          "cpu_mean_cores": 0.0269865795814159,
+          "charged_memory_median_bytes": 668712960,
+          "charged_memory_max_simultaneous_bytes": 683872256,
+          "working_set_estimate_median_bytes": 475881472,
+          "working_set_estimate_max_simultaneous_bytes": 485724160
+        },
+        "primary": {
+          "cpu_core_seconds": 1.270558,
+          "cpu_mean_cores": 0.021174721377767186,
+          "charged_memory_median_bytes": 398696448,
+          "charged_memory_max_simultaneous_bytes": 408985600,
+          "working_set_estimate_median_bytes": 277348352,
+          "working_set_estimate_max_simultaneous_bytes": 287637504
+        }
+      },
+      "persistent_metadata_helper_and_Redis_server_CPU_charged_in_actual_groups": true,
+      "sampler_same_observer_cgroup": true,
+      "counter_sweep_process_CPU_nanoseconds": 31674887,
+      "counter_sampler_receipt": {
+        "PID": 3246154,
+        "generation": "21742017",
+        "actual_exit": 0,
+        "forced": false,
+        "generation_absent": true,
+        "stdout_EOF": true,
+        "stderr_writer_settled": true,
+        "stderr_bytes": 0,
+        "protocol_errors": [],
+        "worker_final": {
+          "kind": "final",
+          "PID": 3246154,
+          "generation": "21742017",
+          "measurement_completed": true,
+          "failure_type": null,
+          "opened_counter_files": 36,
+          "all_counter_FDs_closed": true,
+          "close_errno": []
+        },
+        "same_accounting_group": "/sys/fs/cgroup/user.slice/user-1000.slice/user@1000.service/app.slice/dispatcharr-resource-be264d7f8bfc41149fc3813e06bcb271.scope",
+        "cleanup_passed": true
+      },
+      "final_active_metadata": {
+        "owner": "rust:6dc36dc6-3070-4a40-8c90-eaf2c48739f4",
+        "provider_slots": 1,
+        "clients": 2,
+        "metadata_fields": 19,
+        "owned_identity_count": 2,
+        "identity_key_count": 2,
+        "all_owned_user_id": true,
+        "input_index": 49,
+        "timestamps": 37,
+        "state": "active"
+      },
+      "media_byte_deltas": [
+        9211248,
+        9211248
+      ],
+      "one_batch_PTS_bound_seconds": 2.005333333332999,
+      "independent_max_PES_media_span_seconds": 0.040000000000020464,
+      "media": [
+        {
+          "reader": "owner",
+          "full_raw_and_certified_decode_passed": true,
+          "streams": {
+            "0": {
+              "complete_units": 1482,
+              "encoded_useful_bytes": 7453329,
+              "useful_duration_seconds": 59.28,
+              "first_pts90k": 1999919,
+              "last_pts90k": 7331519,
+              "independent_expected_encoded_bytes_60s": 7534167,
+              "useful_rate_fraction": 0.989270479404027
+            },
+            "1": {
+              "complete_units": 2780,
+              "encoded_useful_bytes": 970806,
+              "useful_duration_seconds": 59.30667777777778,
+              "first_pts90k": 1998239,
+              "last_pts90k": 7333920,
+              "independent_expected_encoded_bytes_60s": 982002,
+              "useful_rate_fraction": 0.9885988012244374
+            }
+          }
+        },
+        {
+          "reader": "viewer-001",
+          "full_raw_and_certified_decode_passed": true,
+          "streams": {
+            "0": {
+              "complete_units": 1489,
+              "encoded_useful_bytes": 7483996,
+              "useful_duration_seconds": 59.56,
+              "first_pts90k": 1974719,
+              "last_pts90k": 7331519,
+              "independent_expected_encoded_bytes_60s": 7534942,
+              "useful_rate_fraction": 0.9932387004438786
+            },
+            "1": {
+              "complete_units": 2792,
+              "encoded_useful_bytes": 975009,
+              "useful_duration_seconds": 59.56267777777778,
+              "first_pts90k": 1975199,
+              "last_pts90k": 7333920,
+              "independent_expected_encoded_bytes_60s": 982004,
+              "useful_rate_fraction": 0.9928768110924192
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "all_helper_CPU_retained": "Application helpers/media children stay in owned backend cgroups; metadata Redis work charged to backend; persistent counter reader and external observer/orchestrator/publication observer costs retained in observer and whole_fixture totals. No helper subtraction. Primary application+infra+Origin is separately explicit.",
+  "pilot_counters_excluded_from_measured_pairs": true,
+  "Source_10_and_100_viewer_support_qualified": false,
+  "full24_not_executed": true,
+  "gain_accepted": false,
+  "full_milestone_accepted": false
+}
