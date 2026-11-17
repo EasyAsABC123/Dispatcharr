@@ -16,6 +16,12 @@ diagnostic then isolates response Allow/Vary and transport-header differences;
 other projected business fields match. Root verifies six exact containers, five
 captured host generations and the project absent. These differences remain
 required fixes; this capture grants no plugin or milestone acceptance.
+Its [original-application reference](../scripts/rust-integration/plugin-repository-transport-source1/index.json)
+passes all twelve HTTPS/DNS metadata cases in 134.623 seconds. Twenty-five SQL
+snapshots retain all seven selected sequences and all business fields; only
+300 account credential values and eleven Authorization fields are redacted.
+Earlier bootstrap failures reached zero metadata cases and remain recorded.
+Plugin installation, actions and signature execution are separate open scopes.
 
 Candidate52's [second fresh 24-phase viewing campaign](../scripts/rust-integration/milestone-batch52/observer-performance-attempt2/index.json)
 exits 1 after 24 attempts and 23 valid phases. The last Native 100-viewer trial 3
