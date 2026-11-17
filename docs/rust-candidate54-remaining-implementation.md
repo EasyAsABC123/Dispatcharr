@@ -12,6 +12,19 @@ The immutable SDK86 source, route composition and selected Source workflows
 were read. This is a confirmed backlog, **not an exhaustive count of all gaps**.
 Source coverage, conditional features and runtime acceptance need separate review.
 
+## Current follow-up
+
+Candidate55 implements the two profile detail methods. Candidate57 implements
+the other nine baseline bindings for the characterized bounded positive domains;
+the unconditional mutation stub is removed. This does not establish general CRUD
+parity: XC/multipart/new-URL account shapes, nested groups and VOD-related account
+deletion, broader EPG credential/source-type changes, linked channel collectors
+and SQL fault behavior remain open. The [Candidate57 acceptance record](rust-milestone-batch57.md)
+retains a real generated-task integration failure after successful account creation.
+The historical table below identifies the original implementation batches, rather
+than eleven currently unconditional refusals. The other implementation domains
+and milestone-wide criteria below remain open.
+
 ## Immediate implementation sequence
 
 | Batch | Confirmed missing implementation at Candidate54 | Milestones |
