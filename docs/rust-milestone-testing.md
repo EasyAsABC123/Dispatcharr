@@ -162,3 +162,20 @@ root-owned helper wrapper or copied support file can be readable while the proxy
 separately mounted original remains0700/0600. Mode-only repairs must preserve
 payload hashes and failed startup receipts; verify the corrected UID before
 another complete run.
+
+Generated API URLs can contain an independently assigned fixture listener. Record
+the actual port receipt, Main bind address and network namespace before comparing
+responses. Validate each complete URL against that run's owned origin and its
+SQL-bound logo ID/provider URL. Map only the declared response field's origin;
+keep path, query/version hash, scheme and credentials/fragment constraints exact.
+Preserve the failed controller result even when an offline comparison proves
+fixture entropy. Then run the complete affected cohort with the corrected
+observer, without rebuilding unchanged application code or replaying known Source
+characterizations.
+
+Typed entropy must also remain stable within a run. Mapping independently
+generated fixture credentials to tokens cannot erase a later credential mutation:
+compare each subsequent raw value with its initial setup value before mapping it.
+Check every reachable launcher path when reusing a runner; updating copied tools
+does not help if the launcher still selects its predecessor directory. Keep
+original process IDs and generations in durable, credential-free cleanup records.
