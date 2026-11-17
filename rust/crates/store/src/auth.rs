@@ -85,6 +85,7 @@ pub struct AuthService {
         Arc<std::sync::OnceLock<std::sync::Weak<dyn crate::recording_http::RecordingJobs>>>,
     pub(crate) notification_cache: Option<crate::NotificationCache>,
     pub(crate) event_sink: Option<Arc<dyn dispatcharr_contracts::UpdateEventSink>>,
+    pub(crate) profile_save_signal: Option<Arc<dyn crate::xc_account_tasks::ProfileSaveSignal>>,
     // Request-local ownership only; global AuthService remains unscoped.
     retained_scope: Option<Arc<dyn Send + Sync>>,
     pub(crate) core_task_broker: Arc<std::sync::OnceLock<Arc<dyn crate::CoreTaskBroker>>>,
@@ -109,6 +110,7 @@ impl AuthService {
             channel_control: None,
             recording_jobs: Arc::new(std::sync::OnceLock::new()),
             notification_cache: None,
+            profile_save_signal: None,
             event_sink: None,
             retained_scope: None,
             core_task_broker: Arc::new(std::sync::OnceLock::new()),
@@ -151,6 +153,14 @@ impl AuthService {
             Some(scope) => cache.with_retained_scope(scope.clone()),
             None => cache,
         });
+        self
+    }
+
+    pub fn with_profile_save_signal(
+        mut self,
+        signal: Arc<dyn crate::xc_account_tasks::ProfileSaveSignal>,
+    ) -> Self {
+        self.profile_save_signal = Some(signal);
         self
     }
 

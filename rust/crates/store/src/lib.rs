@@ -94,6 +94,7 @@ mod password_scrypt;
 mod passwords;
 mod playback;
 mod provider_mutations;
+mod provider_profile_writes;
 mod provider_reads;
 mod stream_files;
 mod stream_validation;

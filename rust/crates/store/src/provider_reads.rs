@@ -84,7 +84,7 @@ fn seconds(value: &Value) -> Value {
         .map(|value| Value::String(value.to_rfc3339_opts(SecondsFormat::Secs, true)))
         .unwrap_or(Value::Null)
 }
-fn profile(raw: &Value, account: &Value) -> Value {
+pub(crate) fn profile(raw: &Value, account: &Value) -> Value {
     let mut value = fields(
         raw,
         &[
@@ -458,8 +458,8 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route(
             "/api/m3u/accounts/{parent}/profiles/{id}/",
             get(profile_detail)
-                .patch(mutation)
-                .put(mutation)
+                .patch(crate::provider_profile_writes::patch)
+                .put(crate::provider_profile_writes::put)
                 .delete(mutation),
         )
         .route(

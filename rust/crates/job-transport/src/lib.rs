@@ -291,6 +291,14 @@ pub mod normal_xc_accounts;
 
 mod xc_profile_notifications;
 
+/// Reuse the original profile post-save effects for management HTTP writes.
+/// Application and signal behavior credit belongs to Dispatcharr's authors.
+pub fn profile_save_signal(
+    sink: std::sync::Arc<dyn dispatcharr_contracts::UpdateEventSink>,
+) -> std::sync::Arc<dyn dispatcharr_store::xc_account_tasks::ProfileSaveSignal> {
+    std::sync::Arc::new(xc_profile_notifications::Callback::new(sink))
+}
+
 mod plugin_eta;
 
 mod normal_xc_live;

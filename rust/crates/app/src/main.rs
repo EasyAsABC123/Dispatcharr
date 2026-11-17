@@ -226,6 +226,9 @@ async fn run() -> Result<(), String> {
     // publish through the same bounded process transport.
     let auth = if let Some(bus) = &realtime_bus {
         auth.with_event_sink(Arc::new(bus.clone()))
+            .with_profile_save_signal(dispatcharr_job_transport::profile_save_signal(Arc::new(
+                bus.clone(),
+            )))
     } else {
         auth
     };
