@@ -145,3 +145,26 @@ and the project absent. The [corrected application evidence](../scripts/rust-int
 keeps the failed first attempt separate and changes no Source oracle. Public
 nine-context reproduction, performance and every complete milestone M0–M9 remain
 open.
+
+
+The optional public nine-context reproduction is now prepared using only the
+published credential-safe Source projection, 36 full SQL endpoints, task
+identities and actual HTTP-origin evidence. It opens no private raw180 Source
+captures and performs no Source business replay. Host checks reproduce all nine
+accepted corrected-image comparisons, reject 17 corruptions, and pass four
+launcher admission controls plus the new workflow composition check. Clean
+public execution remains pending. Older public eight-context/default workflows
+and their helper bodies remain unchanged.
+
+From a clean checkout whose Rust inputs match the corrected Candidate50 build,
+run `python -B scripts/rust-integration/recording-connect-cohort/prepare.py prepare
+--workflow catalogue-nine --repo /absolute/checkout --output /fresh/output
+--build /absolute/package-attempt2/build.json --source-archive /absolute/Original.tar
+--docker /absolute/docker --docker-host unix:///path/to/docker.sock`, then run
+the same launcher with `run --plan /fresh/output/plan.json`. The pinned Original
+archive is separate from the candidate checkout. Preparation starts no
+applications; the explicit run uses the existing bounded Docker cohort. All
+eleven sequences, exact relation PKs, declared reset boundaries, initial owned
+credential stability, independent UUIDs and strictly verified fixture URL origins
+remain contractual. Public9, performance and full milestone acceptance remain
+false until separately demonstrated.

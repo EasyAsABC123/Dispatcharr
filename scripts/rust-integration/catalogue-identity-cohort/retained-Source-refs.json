@@ -1,0 +1,508 @@
+{
+  "Source58": {
+    "contract": {
+      "path": "scripts/rust-integration/vod-ingestion-source58/semantic-contract.json",
+      "sha256": "bf3b58e56d8f36efca8832d081afc1bbb1279d65263eb78936492bbf5434d8bd"
+    },
+    "report": {
+      "path": "scripts/rust-integration/vod-ingestion-source58/cases.json",
+      "sha256": "27e026c741c84dae09eb3f21d5e38d4f42c0fc48e03574162996448e055eb0d0"
+    },
+    "execution": {
+      "path": "scripts/rust-integration/vod-ingestion-source58/execution.json",
+      "sha256": "ad66c7c5a18b4a94657f728136269f06db0f97f04e5679c907067de2316558b5"
+    },
+    "cleanup": {
+      "path": "scripts/rust-integration/vod-ingestion-source58/cleanup.json",
+      "sha256": "6b656d42149f9198d0d4f8756e856476bf024efd758f83db885eb07c255e0e1c"
+    },
+    "qualification": {
+      "path": "scripts/rust-integration/vod-ingestion-source58/qualification.json",
+      "sha256": "9b5da57951b73dbbbee1f1f433d7d248ee4f7088cc354c78cf7e2311841ecc29"
+    },
+    "transport": {
+      "path": "scripts/rust-integration/vod-ingestion-source58/provider-transport.json",
+      "sha256": "292f21bbde113e37f73b3d7a9e1a1b9d9683bcc3b3fabc8203b92c8283071015"
+    }
+  },
+  "VODRepeat": {
+    "projection": {
+      "path": "scripts/rust-integration/vod-repeat-source1/semantic-projection.json",
+      "sha256": "bee54b38bf8efb7151b001567f2479a655f4c7b3c7215332aa649db7dd251798"
+    },
+    "offline_correction": {
+      "path": "scripts/rust-integration/vod-repeat-source1/offline-correction.json",
+      "sha256": "82af69ebaa384cf70aa6ee185ffd97511d366474091288f0ff787da402873ec7"
+    },
+    "report": {
+      "path": "scripts/rust-integration/vod-repeat-source1/report.json",
+      "sha256": "474e4b561ef1d487910784025dba794bb34ecc6169bf30074a4f2cf6a4e57969"
+    },
+    "execution": {
+      "path": "scripts/rust-integration/vod-repeat-source1/execution.json",
+      "sha256": "8e1875a4144685076e0ba4e612f334cc7fcac8d4c46a149d8fe3528b3a016a6d"
+    },
+    "cleanup": {
+      "path": "scripts/rust-integration/vod-repeat-source1/cleanup.json",
+      "sha256": "6e5473ed3b9ffd91cc8b26643b5dfc4dcda14cd7f0c973a2c6cb085a28be2a3d"
+    },
+    "Root_independent_cleanup": {
+      "path": "scripts/rust-integration/vod-repeat-source1/Root-independent-cleanup.json",
+      "sha256": "abf53cbaa827d7fa8161148e8dc8048bf0f3f4bc8576beee89089371adff3faf"
+    }
+  },
+  "Comskip": {
+    "contract": {
+      "path": "scripts/rust-integration/comskip-manual-source1/contract.json",
+      "sha256": "d7065b85de53dfd58d888cbe4d11e3d9788e81f6567e50b766ab9347ac02850e"
+    },
+    "report": {
+      "path": "scripts/rust-integration/comskip-manual-source1/report.json",
+      "sha256": "b8508d4334405f3b054b91442c28c055e649996cac36134a1978a5aff6cec9b2"
+    },
+    "execution": {
+      "path": "scripts/rust-integration/comskip-manual-source1/execution.json",
+      "sha256": "ba0c9425ae84b9b1a6bc2e59969c496d6d2adbf693be42209ba2af4f9b266837"
+    },
+    "cleanup": {
+      "path": "scripts/rust-integration/comskip-manual-source1/cleanup.json",
+      "sha256": "3806ccc774ca3859a7f92a30d978729a2801b23ab6b0d5de4795bcf68d2a37ee"
+    },
+    "input": {
+      "path": "scripts/rust-integration/catalogue-comskip-cohort/testdata/comskip-manual.mkv",
+      "sha256": "ebcc185d00fb24ab467c0605639415061f3001ff09e1381a70420fd1aa72fd3d"
+    },
+    "Root_cleanup": {
+      "path": "scripts/rust-integration/comskip-manual-source1/Root-independent-cleanup.json",
+      "sha256": "03402888160f90d0cc4b8b34cff74f845013f67d65ed9291cbfd42971353d0bb"
+    }
+  },
+  "Series": {
+    "qualification": {
+      "path": "scripts/rust-integration/series-comskip-source1/Series-qualification.json",
+      "sha256": "230aea99110a75e14c9b23772260c8458f44b2a597023f146206f7dfa8d8d060"
+    },
+    "projection": {
+      "path": "scripts/rust-integration/series-comskip-source1/Series-semantic-projection.json",
+      "sha256": "fe116ebbb31d9216d2c622d434617946d408ef1a04691b5f5fe4b07e0934123a"
+    },
+    "report": {
+      "path": "scripts/rust-integration/series-comskip-source1/Series/report.json",
+      "sha256": "370c48f53bbd958789f3e684ede4ac413356e282e123b0928977d6e3abbffd09"
+    },
+    "execution": {
+      "path": "scripts/rust-integration/series-comskip-source1/execution.json",
+      "sha256": "804a80b80b244333be7d2011686f9b1ebae316af28a2ab541e9b2452cd5e88ca"
+    },
+    "cleanup": {
+      "path": "scripts/rust-integration/series-comskip-source1/cleanup.json",
+      "sha256": "a4efdc7347e6170b75af07310f39569468cab6cef0ff9ee0bbf4e4b7a153357d"
+    },
+    "Root_cleanup": {
+      "path": "scripts/rust-integration/series-comskip-source1/Root-independent-cleanup.json",
+      "sha256": "0014a0b2d6ff06c352a32fee889b1552db905a334cd709bcbd5e09507693c89d"
+    }
+  },
+  "ProviderInfo5": {
+    "authority": {
+      "path": "scripts/rust-integration/provider-info-source5/authority.json",
+      "sha256": "a9f8f42c714fda0057caa1e5934c41859a62af659981c8dc2a73f583fc724a0f"
+    },
+    "cases": {
+      "path": "scripts/rust-integration/provider-info-source5/cases.json",
+      "sha256": "4f6ff4bee06391962c855ec3d485ae7b3d0555deafaff7146594f1ebe8600803"
+    }
+  },
+  "Advanced": {
+    "qualification": {
+      "path": "scripts/rust-integration/advanced-series-source1/qualification.json",
+      "sha256": "fdea81648279965f67f65848fa18197205ab11f7242202edecc74b8d2f70f3bf"
+    },
+    "projection": {
+      "path": "scripts/rust-integration/advanced-series-source1/semantic-projection.json",
+      "sha256": "2cc293801019299ec30750b6c8beedb515aeb83e697709688390b81e142ae71f"
+    },
+    "report": {
+      "path": "scripts/rust-integration/advanced-series-source1/report.json",
+      "sha256": "2c3d7b0b98647b3d4a57d1d377da3745518b49481e786e7268b065ddf69e7060"
+    },
+    "execution": {
+      "path": "scripts/rust-integration/advanced-series-source1/execution.json",
+      "sha256": "39ecfbcb8dbda2a74bb4775179ed24915d50fed85888b51db7b1343fddee515e"
+    },
+    "cleanup": {
+      "path": "scripts/rust-integration/advanced-series-source1/cleanup.json",
+      "sha256": "3843f8ed6b05363fed61ee31f8cee30a1610c201e5c06826a20b4fbda2d3d68a"
+    },
+    "Root_cleanup": {
+      "path": "scripts/rust-integration/advanced-series-source1/Root-independent-cleanup.json",
+      "sha256": "a03d62aac0462b012ab82dd3883f0778ee34c2b0b610900ad36e0c755cfec22b"
+    },
+    "identity": {
+      "path": "scripts/rust-integration/advanced-series-source1/identity.json",
+      "sha256": "45196ecbbb3ebde15465b637dbc7f2baa2156a834dc5930a854ffc373c7f9740"
+    }
+  },
+  "DenseList": {
+    "qualification": {
+      "path": "scripts/rust-integration/dense-list-source1/qualification.json",
+      "sha256": "c8c4ed3672416a6f129d4d1713f4cbf8479764d67c321119f163e7b8a645c4c2"
+    },
+    "projection": {
+      "path": "scripts/rust-integration/dense-list-source1/semantic-projection.json",
+      "sha256": "cf030a517a96c6b181c5451c70f0e84c54989f2a4170f3185e11b3cd97c85913"
+    },
+    "report": {
+      "path": "scripts/rust-integration/dense-list-source1/report.json",
+      "sha256": "d975b9051eff03b2a8eba30e0c45470ef67543d31f77268eef6a23821f84a3af"
+    },
+    "execution": {
+      "path": "scripts/rust-integration/dense-list-source1/execution.json",
+      "sha256": "fc6b402c438da54347f2200ab841db84a1617dee4a1a48e4313606dd558b7557"
+    },
+    "cleanup": {
+      "path": "scripts/rust-integration/dense-list-source1/cleanup.json",
+      "sha256": "d1d75a6c2fdd1314a2a3af409863c515e65a9e4c040ed535ba4f2a80a252c415"
+    },
+    "Root_cleanup": {
+      "path": "scripts/rust-integration/dense-list-source1/Root-independent-cleanup.json",
+      "sha256": "e8d7481a5a81ea141827287a70e92b34b302e365761555ef9757de64623f5897"
+    },
+    "identity": {
+      "path": "scripts/rust-integration/dense-list-source1/identity.json",
+      "sha256": "464ae77b2d3032375db8823e2980ab9460c16eae8a41b44ea19c85add6b34e41"
+    }
+  },
+  "DenseListSQL": {
+    "fresh-dense_before": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/fresh-dense-before.json",
+      "sha256": "c335067395d275c8c1b672a83293ca882e2610889800ebb6283dc110b463eacb"
+    },
+    "fresh-dense_after": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/fresh-dense-after.json",
+      "sha256": "4d3a270b3dd4d782500a6d65301b23b6ef70e6366bb0706365a55ec7b477d4b6"
+    },
+    "identical-repeat_before": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/identical-repeat-before.json",
+      "sha256": "9d993b77f3256d51c48e17d438b7d162950511a181832a9fc60cb5e4a219f7ca"
+    },
+    "identical-repeat_after": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/identical-repeat-after.json",
+      "sha256": "498830c2a711bb58fc31f1de8bb53e864de37610e6c20b46ad9881cf5fa25935"
+    },
+    "nonblank-metadata-update_before": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/nonblank-metadata-update-before.json",
+      "sha256": "b9fe67eb9bd6ef8e0e9761642af9f87c582a2e014ff41d8d9f4f4b90cdf1c0b5"
+    },
+    "nonblank-metadata-update_after": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/nonblank-metadata-update-after.json",
+      "sha256": "37614af0a805f910098af70adf97eb4d8a6d848307db1880128061b2fc724121"
+    },
+    "sparse-blank-and-logo-clear_before": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/sparse-blank-and-logo-clear-before.json",
+      "sha256": "71357a6aaa0de97e89467f1265fb3b1341243ec681476904b0b8851dccdf95c0"
+    },
+    "sparse-blank-and-logo-clear_after": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/sparse-blank-and-logo-clear-after.json",
+      "sha256": "1127553fa5368385e3f2a7a6deaffdadc5ad4cba55d011ad87209f181d99e697"
+    },
+    "duplicate-representative-and-reuse_before": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/duplicate-representative-and-reuse-before.json",
+      "sha256": "0a19576c2f2e9d0ce1be99a142751c32b65a08f6bb2a80492785d61736af3604"
+    },
+    "duplicate-representative-and-reuse_after": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/duplicate-representative-and-reuse-after.json",
+      "sha256": "1db01f7c03574755de5e4e09c1d553579bbcfe822e6f10562f45445094d2b27d"
+    },
+    "last-owner-prune_before": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/last-owner-prune-before.json",
+      "sha256": "1e6919ccccf08079837b6d12e94ca32d1006a93e44a9b27205f889904cbdeabe"
+    },
+    "last-owner-prune_after": {
+      "path": "scripts/rust-integration/dense-list-source1/SQL/last-owner-prune-after.json",
+      "sha256": "8099bfab4a86f55bd4c38836e3499335151c36733152fee6f45d9ae5096a970e"
+    }
+  },
+  "DenseListOrigin": {
+    "proof": {
+      "path": "scripts/rust-integration/catalogue-identity-cohort/Source-origin/Source-origin.json",
+      "sha256": "d36efd176899b48bd24731f48c9bc43093458fa77796ed97e35438c35ba462e5"
+    }
+  },
+  "Shared": {
+    "qualification": {
+      "path": "scripts/rust-integration/shared-metadata-source1/qualification.json",
+      "sha256": "bb87bf7a36d011fa5086fd309f62c8f2fa49d801d8af4030fda4ec4aca32f7ea"
+    },
+    "projection": {
+      "path": "scripts/rust-integration/shared-metadata-source1/semantic-projection.json",
+      "sha256": "a583b31589ad990fd567203b3916b4895ba6d551a85133ab42da1d456b27a37c"
+    },
+    "report": {
+      "path": "scripts/rust-integration/shared-metadata-source1/report.json",
+      "sha256": "5a6cd182ef3b10b21913c554ff67681bd52804ddcb1e437d0a50bea7588ac539"
+    },
+    "execution": {
+      "path": "scripts/rust-integration/shared-metadata-source1/execution.json",
+      "sha256": "4ea3e3470a60dbe6abd55b386e1d0cfc0c2174328a79a530e561a7e71d9722db"
+    },
+    "cleanup": {
+      "path": "scripts/rust-integration/shared-metadata-source1/cleanup.json",
+      "sha256": "8c994cc63e7119d83c9732994590d733d1100f4a3f854ada9d74a0c87bdfca92"
+    },
+    "Root_cleanup": {
+      "path": "scripts/rust-integration/shared-metadata-source1/Root-independent-cleanup.json",
+      "sha256": "2483145360321964b7e266ff0d1efd6b77fc943e0bfd478d4f16f753cc0f91e3"
+    },
+    "identity": {
+      "path": "scripts/rust-integration/shared-metadata-source1/identity.json",
+      "sha256": "736de9b53305eae9493e1bcd5a05dfb90aff6aca8e5236b88cbad30adc6c5f25"
+    }
+  },
+  "SharedSQL": {
+    "shared-A-initial_before": {
+      "path": "scripts/rust-integration/shared-metadata-source1/SQL/shared-A-initial-before.json",
+      "sha256": "00f2579088e74f5957bc8a39afa2da62b2630021c7f4a1812b4b212410981a5d"
+    },
+    "shared-A-initial_after": {
+      "path": "scripts/rust-integration/shared-metadata-source1/SQL/shared-A-initial-after.json",
+      "sha256": "c850223b3c970567639d26128032d28cc1b52e6145e86a3c3227231f66a4027f"
+    },
+    "shared-B-update_before": {
+      "path": "scripts/rust-integration/shared-metadata-source1/SQL/shared-B-update-before.json",
+      "sha256": "3c3e4a23e7f5db152913b10caf922b81f98e7de366fd5b90300081bf5f18fdb9"
+    },
+    "shared-B-update_after": {
+      "path": "scripts/rust-integration/shared-metadata-source1/SQL/shared-B-update-after.json",
+      "sha256": "9dc32252a46baea2d66dbd1ddf673ee774c1096ee43c3d63e30908c0b0633637"
+    },
+    "shared-A-prune_before": {
+      "path": "scripts/rust-integration/shared-metadata-source1/SQL/shared-A-prune-before.json",
+      "sha256": "b157ace939f3e0a1ce6ed4ce02779ebbf1430ef146c8207610e53cdee0fabb50"
+    },
+    "shared-A-prune_after": {
+      "path": "scripts/rust-integration/shared-metadata-source1/SQL/shared-A-prune-after.json",
+      "sha256": "9f314bd4e429e8aaaaf741be311a0e83707feeb7058f67bbe42c88e0f32bbb55"
+    },
+    "shared-B-prune_before": {
+      "path": "scripts/rust-integration/shared-metadata-source1/SQL/shared-B-prune-before.json",
+      "sha256": "7c1b8c26cd3df251580f4019bd016e9f41fc5f1f5366b4ffe29b1e9640f58f0d"
+    },
+    "shared-B-prune_after": {
+      "path": "scripts/rust-integration/shared-metadata-source1/SQL/shared-B-prune-after.json",
+      "sha256": "16f1300fe3b4def7c818a2e285f1afecfaf17316662c6c1e40f647c83bc83c97"
+    },
+    "declared-after-A-seed_before": {
+      "path": "scripts/rust-integration/shared-metadata-source1/SQL/declared-after-A-seed-before.json",
+      "sha256": "365d181d48235fa9828988e5353b6ca10f731e2b076ec7e0122b6252f4e3c320"
+    },
+    "declared-after-A-seed_after": {
+      "path": "scripts/rust-integration/shared-metadata-source1/SQL/declared-after-A-seed-after.json",
+      "sha256": "bfbf83828c297a2f984597f94ada5cba3c371bb9027d85173bc886c0030d47c0"
+    }
+  },
+  "SharedOrigin": {
+    "proof": {
+      "path": "scripts/rust-integration/shared-metadata-source1/HTTP-origin-proof.json",
+      "sha256": "472bb8b943854dca14a61f4ca194323a6025a71df97780924dc717bacd02e1cb"
+    },
+    "receipt": {
+      "path": "scripts/rust-integration/shared-metadata-source1/HTTP-port-command.json",
+      "sha256": "dcd5784297d694f227426b1540e86a36b3b3f853ffcccac39336df2f2854e68c"
+    },
+    "stdout": {
+      "path": "scripts/rust-integration/shared-metadata-source1/HTTP-port.stdout",
+      "sha256": "7268f07abd5c71fe7ae10f35cb44c2f33f26b529b6d601c69d21c9abf5bf957c"
+    }
+  },
+  "ExternalIdentity": {
+    "qualification": {
+      "path": "scripts/rust-integration/external-identity-source1/qualification.json",
+      "sha256": "6966ec335fcc4cb99a20430dae81eac8e717d88f11d8773dfa49d80ba9caf75e"
+    },
+    "projection": {
+      "path": "scripts/rust-integration/external-identity-source1/semantic-projection.json",
+      "sha256": "022debac5336b78541ee1b40b4e7868f885ec18f8e24563f3b69dfb89e7ab965"
+    },
+    "report": {
+      "path": "scripts/rust-integration/external-identity-source1/report.json",
+      "sha256": "ec7ce47e35379b295de3d96b0e6808edc922ab3afb7aafeb023d3a0f8278ac97"
+    },
+    "execution": {
+      "path": "scripts/rust-integration/external-identity-source1/execution.json",
+      "sha256": "36eb334495b44e12cb47bde632e93f020449bebc9cacc86c31858f597c9f301d"
+    },
+    "cleanup": {
+      "path": "scripts/rust-integration/external-identity-source1/cleanup.json",
+      "sha256": "e7f6ed94b2048a74d4f353e075432c8a109e43f7cf553a398dc7f34fc4fc9c4d"
+    },
+    "Root_cleanup": {
+      "path": "scripts/rust-integration/external-identity-source1/Root-independent-cleanup.json",
+      "sha256": "bb32837e63528cea727cecd9b2790be6de0fe5b3a734b230dd7ba0b1898570c5"
+    },
+    "identity": {
+      "path": "scripts/rust-integration/external-identity-source1/identity.json",
+      "sha256": "f8f296afa1b327753dc7ce618cb6d7cff14333cfb36d32c1fe6c15852e8f41eb"
+    }
+  },
+  "ExternalIdentitySQL": {
+    "fresh-priority_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/fresh-priority-before.json",
+      "sha256": "f93ec4413c0420e3b5922bae79a061ff6e6ade8b64aa8cd69fe707f7beb8854f"
+    },
+    "fresh-priority_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/fresh-priority-after.json",
+      "sha256": "f04323ccdf7e99511c6af8908ee342ab456756a3aacfb8c2c75959402e03c02f"
+    },
+    "duplicate-ID-occurrences_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/duplicate-ID-occurrences-before.json",
+      "sha256": "cc83c1615769886d0f2f46f7fae2ead9587f0062027e6cc1754d6fbc7f1c19b2"
+    },
+    "duplicate-ID-occurrences_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/duplicate-ID-occurrences-after.json",
+      "sha256": "5c5fbb59eb6458ce49c66085ae286c162d30f3d84aabac026d5387399e755c74"
+    },
+    "same-provider-ID-repeat_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/same-provider-ID-repeat-before.json",
+      "sha256": "69b88f56b0f1de09c91aea2c26601c8384f00556e805a672298878065107dcfe"
+    },
+    "same-provider-ID-repeat_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/same-provider-ID-repeat-after.json",
+      "sha256": "ef24a1c2aa408697bb6086cfb30779bd383e20bd5b7f1ae250f458ffd3ccd85c"
+    },
+    "external-ID-name-year-change_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/external-ID-name-year-change-before.json",
+      "sha256": "411b4796b49d8d8f829930c38fee0994cdc1ea43ef77e08cc32ff5cf7e68627d"
+    },
+    "external-ID-name-year-change_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/external-ID-name-year-change-after.json",
+      "sha256": "5e3ac1e2b4a0febb3f67d4be684b17e282c4d4acea222d0fbe0f6009981db3c3"
+    },
+    "alias-and-zero-precedence_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/alias-and-zero-precedence-before.json",
+      "sha256": "780a8aeca57308b9b456e39212edf138f4b9eb1a16c189163ee1cb6d316867d1"
+    },
+    "alias-and-zero-precedence_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/alias-and-zero-precedence-after.json",
+      "sha256": "706c367d0a63fe4fa4f230b2b091c583e2c8ba6f9ee84b5fbfaf3fc5e965748e"
+    },
+    "changed-primary-existing-target_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/changed-primary-existing-target-before.json",
+      "sha256": "97285d2dc759df05cf2e74c39771b71fa512a04734fa82b4afb6bc5a5b7993ba"
+    },
+    "changed-primary-existing-target_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/changed-primary-existing-target-after.json",
+      "sha256": "ad555390256c7cc06e485fb63edb3e2f580c542ec2a1e67a6c5b39d730cce981"
+    },
+    "sparse-ID-omission_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/sparse-ID-omission-before.json",
+      "sha256": "64d0713fb86236fa9844e4cd041aa43de3ea40b8f352b3c309de90a68cab4c07"
+    },
+    "sparse-ID-omission_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/sparse-ID-omission-after.json",
+      "sha256": "bdd57eaa62d8728ffc00889235f807f1a03e1aad346c74074a3de3e210a425b7"
+    },
+    "secondary-ID-recheck_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/secondary-ID-recheck-before.json",
+      "sha256": "980b9d9d71f6462462db70a737a4708cebdbb7b9de698df625689be4387867e8"
+    },
+    "secondary-ID-recheck_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/secondary-ID-recheck-after.json",
+      "sha256": "6a5b6ce1375ff4d9070c54b487931833b4b0587b9eb33711e460a3901e909165"
+    },
+    "duplicate-secondary-conflict_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/duplicate-secondary-conflict-before.json",
+      "sha256": "c6badb3f3e4727457efbb9a88bd3990c7d76877df505234d0bae0131cbe3a418"
+    },
+    "duplicate-secondary-conflict_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/duplicate-secondary-conflict-after.json",
+      "sha256": "8d39981cf3a94d322986f8f0e9b74dc376bc5e5b8aa20f7174fb758c386cfaf6"
+    },
+    "fresh-priority-setup_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/fresh-priority-setup-before.json",
+      "sha256": "5aba746317c7491e26ece358942d2330d2c0791445a5f538bdd0687fc8de7550"
+    },
+    "fresh-priority-setup_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/fresh-priority-setup-after.json",
+      "sha256": "1bddf14f3819d80fdfd8dce08cec4eb3603c16313e32f6b0c1b8bb4beddd7075"
+    },
+    "duplicate-ID-occurrences-setup_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/duplicate-ID-occurrences-setup-before.json",
+      "sha256": "f00054559d15e265bf341fae5e9cdba5b5f4d0cf5019d38c092fa99def8cf3ab"
+    },
+    "duplicate-ID-occurrences-setup_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/duplicate-ID-occurrences-setup-after.json",
+      "sha256": "5caf94a259379fa044d74c0dd93d9be348e54032eef4e7b29d1b912db1f643bc"
+    },
+    "same-provider-ID-repeat-setup_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/same-provider-ID-repeat-setup-before.json",
+      "sha256": "15c7affdfb45e85080524f5bd60aa141dd2db699d6ab2fc0f923eee40968bbdd"
+    },
+    "same-provider-ID-repeat-setup_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/same-provider-ID-repeat-setup-after.json",
+      "sha256": "d07f8978f39d9d11693b9594c04a84978fb49331b4faa1cc14d24b2cf6086337"
+    },
+    "external-ID-name-year-change-setup_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/external-ID-name-year-change-setup-before.json",
+      "sha256": "69c7fd91ea41c00d7aeb0882273bf096ad5b78e06efa13cf77d60b0dbc9acf7a"
+    },
+    "external-ID-name-year-change-setup_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/external-ID-name-year-change-setup-after.json",
+      "sha256": "a067afbff82da3481c03c49035860470e0e413c8920ebf30b552db912a46bb49"
+    },
+    "alias-and-zero-precedence-setup_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/alias-and-zero-precedence-setup-before.json",
+      "sha256": "55a1e0a0347e0bd98fc7904d78cc1e711429729d36ce0d07c0b9d10540c439e9"
+    },
+    "alias-and-zero-precedence-setup_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/alias-and-zero-precedence-setup-after.json",
+      "sha256": "7b99d296559a1b8af7459881aff2d904b1dc71067f728b3187ac69e9111655a5"
+    },
+    "changed-primary-existing-target-setup_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/changed-primary-existing-target-setup-before.json",
+      "sha256": "8d8c9c305467bcf4b942482200e140f6df82de2b6234f00325848105b8e02143"
+    },
+    "changed-primary-existing-target-setup_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/changed-primary-existing-target-setup-after.json",
+      "sha256": "0ea4f19e5a3b1f85b404e811f799f7709ab6038536a57ad4d929436bf5012c40"
+    },
+    "sparse-ID-omission-setup_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/sparse-ID-omission-setup-before.json",
+      "sha256": "04875ee04447d4db4908eb186495124eb91a282e887c6a52e2413e4d997a9ed4"
+    },
+    "sparse-ID-omission-setup_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/sparse-ID-omission-setup-after.json",
+      "sha256": "d746ba9b3994e7a949ed8d5b345c95de981a8c1eb35fff6b5349cb7184db110c"
+    },
+    "secondary-ID-recheck-setup_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/secondary-ID-recheck-setup-before.json",
+      "sha256": "63ed404dbb3ca47b294daa90ef1bd9f3fd2b358756a2ca05c3c03309edc3590b"
+    },
+    "secondary-ID-recheck-setup_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/secondary-ID-recheck-setup-after.json",
+      "sha256": "8dc190620bfb2461c9e53dc3317aec2664f0f173d4f6580714c7f3563694c133"
+    },
+    "duplicate-secondary-conflict-setup_before": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/duplicate-secondary-conflict-setup-before.json",
+      "sha256": "f8e55c0bb81529df22d5591a28ef35480072e09467c1daacebe768cd731884c8"
+    },
+    "duplicate-secondary-conflict-setup_after": {
+      "path": "scripts/rust-integration/external-identity-source1/SQL/duplicate-secondary-conflict-setup-after.json",
+      "sha256": "4f80c9a1b4b2d546237468bfe36c0f97e22986f3ceddf391172468875b9c0754"
+    }
+  },
+  "ExternalIdentityOrigin": {
+    "proof": {
+      "path": "scripts/rust-integration/external-identity-source1/HTTP-origin-proof.json",
+      "sha256": "e3ea18fc4fc22c453bbd0118bcb11e3e9e3cf7e4743398ed66c4d500dcb237a0"
+    },
+    "receipt": {
+      "path": "scripts/rust-integration/external-identity-source1/HTTP-port-command.json",
+      "sha256": "854e004cbae43a8788696468d041d9d4761f7afc6c08f3e7c5015904ef0a36f8"
+    },
+    "stdout": {
+      "path": "scripts/rust-integration/external-identity-source1/HTTP-port.stdout",
+      "sha256": "444b4b2e53cbeb82c6f5e8df6df848574f10e24acb83b5a7c764d7593c29f2ac"
+    }
+  }
+}
