@@ -1,0 +1,94 @@
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: `sqlx-core` (lib) generated 3 warnings
+warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+   --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+    |
+335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+    |                                                        ^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: variant `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+   |
+68 | pub enum FrontendMessageFormat {
+   |          --------------------- variant in this enum
+...
+76 |     Flush = b'H',
+   |     ^^^^^
+   |
+   = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: struct `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+   |
+11 | pub struct Flush;
+   |            ^^^^^
+
+warning: `sqlx-postgres` (lib) generated 3 warnings
+warning: `sqlx-core` (lib) generated 3 warnings (3 duplicates)
+warning: `sqlx-postgres` (lib) generated 3 warnings (3 duplicates)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/store)
+    Checking dispatcharr-output-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/output-http)
+    Checking dispatcharr-ingest-epg v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/ingest-epg)
+    Checking dispatcharr-xc-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/xc-http)
+    Checking dispatcharr-job-transport v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/job-transport)
+    Checking dispatcharr-xmltv-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/xmltv-http)
+    Checking dispatcharr-realtime v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/realtime)
+    Checking dispatcharr-hdhr-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/hdhr-http)
+    Checking dispatcharr-timeshift-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/timeshift-http)
+    Checking dispatcharr-vod-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/vod-http)
+    Checking dispatcharr-rs v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/app)
+    Finished `dev` profile [unoptimized] target(s) in 22.99s

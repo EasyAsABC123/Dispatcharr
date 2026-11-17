@@ -1,0 +1,71 @@
+{
+  "credit": "Original Dispatcharr, Django, DRF, Celery, redis-py, redis-rs and dependency authors retain all application/model/task/client/protocol/algorithm credit.",
+  "candidate": 60,
+  "SDK": 100,
+  "application_commit": "44c885b9d0445c1a41619c5e5f22f20a27f35225",
+  "tests_passed_failed_ignored": [
+    1216,
+    0,
+    792
+  ],
+  "result_blocks": 180,
+  "inputs": 1462,
+  "delivered_Rust_tree_inputs": 1456,
+  "all_four_actual_exits": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "actual_Root_owner_session": 75513,
+  "all_actual_waits_completed": true,
+  "source_unchanged": true,
+  "changed_Rust_paths_against_SDK97": {
+    "rust/crates/job-transport/src/core_settings_broker_transport.rs": "39220df0399e9903a65059a766f8ac08606dd3271c38e818508ae454f6e59d5b",
+    "rust/crates/job-transport/src/normal_named_recording_transport.rs": "ea4c7a2dc9c16656e01d6ddc1c917be6ac523ba6705444550cedecd12fdd63d6",
+    "rust/crates/job-transport/src/normal_recording_publication_readiness_tests.rs": "5b49a01356ead6024b92f9a2a1ee41d666b1fb8cc9920b562bdef284bfd955b8",
+    "rust/crates/job-transport/src/normal_recording_transport.rs": "7b43962a7e5e171ec0d42c7bd6a6b3328e7562a66240c2fba5ceac8a4ed34403",
+    "rust/crates/output-store/src/result_diagnostics.rs": "710912534c969952d879775e17a1ce77437320eea0b681a6cd8d69b58d1bfb57",
+    "rust/crates/store/src/channel_writes.rs": "8b2b8c2f6ffa6aa607843a14b9de45f2032cd9ae0ba650951dd68691455f92fc",
+    "rust/crates/store/src/core_settings_special_broker.rs": "5ae4717a79d97749b66b2aae736e3edfaae884a33da1e0417dba3e3c74f6ade7"
+  },
+  "history": {
+    "SDK98": {
+      "actual_exit": 1,
+      "gates": [
+        0,
+        0,
+        101,
+        0
+      ],
+      "reason": "Three explicit_auto_deref Clippy diagnostics in channel-guide calls; workspace tests passed."
+    },
+    "SDK99": {
+      "actual_exit": 0,
+      "all_four_gates_passed": true,
+      "scope": "Before final Source25 sequence correction."
+    },
+    "SDK100": {
+      "actual_exit": 0,
+      "all_four_gates_passed": true,
+      "scope": "Final Source25 sequence fix included."
+    }
+  },
+  "new_production_RESP_tests": 2,
+  "physical_result_artwork_Redis9": "Separate actualSDK100 proof under ../physical9",
+  "Docker_build_package_actual": {
+    "build_actual_exit": 0,
+    "proof": "../build/index.json",
+    "package": {
+      "actual_exit": 0,
+      "seconds": 26.663789840007666,
+      "six_families_passed": true,
+      "independent_exact_CIDs_absent": 55,
+      "proof": "../package/inventory.json"
+    },
+    "Native_application_acceptance": false
+  },
+  "Native_application_acceptance": false,
+  "full_milestone_accepted": false,
+  "performance_gain_accepted": false
+}

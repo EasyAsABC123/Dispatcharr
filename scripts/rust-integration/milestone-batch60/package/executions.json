@@ -1,0 +1,91 @@
+{
+  "executions": [
+    {
+      "name": "archive-assets",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch60-build-1/Root-probe.py"
+      ],
+      "PID": 1977996,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 1.692236106027849,
+      "stdout_sha256": "b6b6614256a601b8ec62bd27f541c02dab419ce2787cbf4adf2111661467c36e",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "crypto",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch60-build-1/Root-crypto-probe.py"
+      ],
+      "PID": 1978194,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 0.8583657660055906,
+      "stdout_sha256": "29e4c726de4847e6368aff4f3d960c8e444ed052e68f47d1696b22f5f0658a04",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "postgres",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch60-build-1/Root-postgres-probe.py"
+      ],
+      "PID": 1978473,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 1.9190535510424525,
+      "stdout_sha256": "11792f6d1aca3c07a9563406a65e9119aaa8ab5a32929a9973374d55ffd99835",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "regex",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch60-build-1/Root-regex-probe.py"
+      ],
+      "PID": 1979314,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 3.5198702230118215,
+      "stdout_sha256": "4590f0795bd9e12a5bd9b2423dfd47920014b8b6fc3c60c2404808c59b0c26e3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "python-host",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch60-build-1/Root-python-host-probe-2.py"
+      ],
+      "PID": 1980733,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 7.765755233995151,
+      "stdout_sha256": "57169d48e0b6f5898b3e07e61bfd6073494b42d279e2270db8a87b2c103e6390",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "vlc",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-vlc-packaged-probe-4/probe.py",
+        "--build",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch60-build-1/build.json",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch60-vlc-probe-1"
+      ],
+      "PID": 1981381,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 10.822059427038766,
+      "stdout_sha256": "03918e1bfb267771d8e7def87672255eabbc15d25ea07e1297acadf49eadafa1",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "all_six_actual_exits0": true,
+  "maximum_light_parallel": 1,
+  "VLC_solo_after_all_lights": true,
+  "Main_acceptance": false,
+  "performance_verified": false
+}
