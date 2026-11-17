@@ -22,6 +22,7 @@ catalogue responses are retained.
 | Physical SQL | Original and corrected attempts both pass 45 statements / 24 controls |
 | Candidate50 Docker build/packages | Original and corrected images/package families pass separately |
 | Combined Native nine-context cohort | Attempt1 failed; corrected full rerun passes in 605.043 seconds |
+| Clean public nine-context reproduction | Passes; Native exit 0 in 603.457 seconds |
 | New application performance | Pending |
 
 Movie aliases prefer `tmdb_id` over `tmdb` and `imdb_id` over `imdb`. Series
@@ -79,9 +80,8 @@ Evidence: [Source authority](../scripts/rust-integration/external-identity-sourc
 [physical SQL](../scripts/rust-integration/milestone-batch50/physical/README.md) and
 [historical SDK outcomes](../scripts/rust-integration/milestone-batch50/SDK/diagnostic-history.json).
 Source identity is the pinned Original runtime, not the unused declared
-Candidate49 dependency metadata. Public nine-context reproduction, larger or
-additional identity domains, cross-provider transports, performance and all
-complete migration milestones remain open.
+Candidate49 dependency metadata. Larger or additional identity domains, cross-provider transports, performance
+and all complete migration milestones remain open.
 
 
 Published source `9b1e7988c36eaf21c5017b54476aa6efdd89dfbd` builds in
@@ -142,9 +142,8 @@ explicit reset/seed boundaries and typed causal clocks. The shared-account
 seed, unrelated-owner stability and last-owner cascade also pass. Root verifies
 twelve exact containers including UID, eleven original host process generations
 and the project absent. The [corrected application evidence](../scripts/rust-integration/milestone-batch50/application-attempt2/index.json)
-keeps the failed first attempt separate and changes no Source oracle. Public
-nine-context reproduction, performance and every complete milestone M0–M9 remain
-open.
+keeps the failed first attempt separate and changes no Source oracle. Performance and every complete milestone M0–M9 remain open; the clean public
+reproduction is recorded below.
 
 
 The optional public nine-context reproduction is now prepared using only the
@@ -152,8 +151,7 @@ published credential-safe Source projection, 36 full SQL endpoints, task
 identities and actual HTTP-origin evidence. It opens no private raw180 Source
 captures and performs no Source business replay. Host checks reproduce all nine
 accepted corrected-image comparisons, reject 17 corruptions, and pass four
-launcher admission controls plus the new workflow composition check. Clean
-public execution remains pending. Older public eight-context/default workflows
+launcher admission controls plus the new workflow composition check. Clean public execution now passes separately. Older public eight-context/default workflows
 and their helper bodies remain unchanged.
 
 From a clean checkout whose Rust inputs match the corrected Candidate50 build,
@@ -166,5 +164,21 @@ archive is separate from the candidate checkout. Preparation starts no
 applications; the explicit run uses the existing bounded Docker cohort. All
 eleven sequences, exact relation PKs, declared reset boundaries, initial owned
 credential stability, independent UUIDs and strictly verified fixture URL origins
-remain contractual. Public9, performance and full milestone acceptance remain
-false until separately demonstrated.
+remain contractual. The clean public9 result is recorded below; performance and full milestone
+acceptance remain false.
+
+
+The [clean public nine-context run](../scripts/rust-integration/milestone-batch50/public-application/index.json)
+also passes. Tools commit `b5cb3b79aeb967d455fe4e67468bff28fbebddf4`
+is exported without Git metadata or the developer working tree; all 1,446 Rust
+inputs match corrected image `be231d05`, and all 35 runtime helper bodies remain
+unchanged. UID65532 reads and hashes 42 library files. The outer coordinator
+exits 0 in 604.115 seconds, and the Native coordinator exits 0 in 603.457 seconds,
+both with EOFs and settled groups. All nine contexts pass using only published
+credential-safe Source evidence, including nine strict external-ID comparisons
+with exact relation PKs, all eleven sequences, reset/seed boundaries and typed
+clock/UUID checks. Root verifies twelve exact containers including UID, eleven
+captured original host generations and the project absent; the UID initial
+positive generation remains explicitly uncaptured. Earlier failed application
+and package records remain unchanged. No new performance or complete migration
+milestone acceptance is claimed.

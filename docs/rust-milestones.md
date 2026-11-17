@@ -30,7 +30,9 @@ Source comparisons, exact relation PKs and all eleven sequences. Root verifies
 twelve exact containers, eleven original host generations and the project absent.
 The failed first attempt remains separate; no PK waiver or Source-oracle change
 is used.
-Public reproduction, performance and complete milestones remain open.
+The clean public nine-context reproduction also passes using only published
+credential-safe Source evidence; its Native coordinator exits 0 in 603.457
+seconds, with exact cleanup. New performance and complete milestones remain open.
 
 [Candidate49](rust-milestone-batch49.md) removes the temporary shared-account
 metadata refusal. Source passes its four-root shared update/prune cohort, SDK67
