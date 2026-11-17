@@ -4,7 +4,7 @@ use super::vod_api_projection::truthy;
 use num_bigint::BigInt;
 use serde_json::{Map, Value};
 #[derive(Debug, PartialEq)]
-pub(super) enum Fault {
+pub(crate) enum Fault {
     Type,
     Capacity,
 }
@@ -30,7 +30,7 @@ pub(super) fn text(value: &Value) -> Result<String, Fault> {
         _ => crate::python_action::collection_text(value, 256 * 1024).ok_or(Fault::Capacity),
     }
 }
-pub(super) fn string(value: &Value) -> Result<Option<String>, Fault> {
+pub(crate) fn string(value: &Value) -> Result<Option<String>, Fault> {
     if let Some(value) = value.as_str() {
         return Ok((!trim(value).is_empty()).then(|| trim(value).to_owned()));
     }
@@ -76,7 +76,7 @@ pub(super) fn duration_seconds(value: &Value) -> Option<i64> {
     };
     (seconds > 0 && seconds <= 172_800).then_some(seconds)
 }
-pub(super) fn duration(value: &Value) -> Result<Option<i64>, Fault> {
+pub(crate) fn duration(value: &Value) -> Result<Option<i64>, Fault> {
     let map = value.as_object().ok_or(Fault::Type)?;
     if let Some(value) = map.get("duration_secs") {
         if let Some(seconds) = duration_seconds(value) {
@@ -111,7 +111,7 @@ pub(super) fn duration(value: &Value) -> Result<Option<i64>, Fault> {
         .and_then(|n| n.to_string().parse::<i64>().ok())
         .filter(|n| *n > 0 && *n <= 172_800))
 }
-pub(super) fn rating(value: &Value) -> Result<Option<String>, Fault> {
+pub(crate) fn rating(value: &Value) -> Result<Option<String>, Fault> {
     if !truthy(value) {
         return Ok(None);
     }

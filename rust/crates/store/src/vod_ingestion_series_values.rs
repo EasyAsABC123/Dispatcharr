@@ -13,6 +13,10 @@ pub(super) struct Series {
     pub provider: Option<String>,
     pub properties: Option<Value>,
     pub basic: Value,
+    pub description: String,
+    pub rating: Option<String>,
+    pub genre: String,
+    pub logo: Option<String>,
 }
 fn scalar(value: &Value) -> Result<String, StoreError> {
     let result = match value {
@@ -71,7 +75,7 @@ fn list_year(row: &serde_json::Map<String, Value>) -> Result<Option<i32>, StoreE
 }
 /// Provisional sparse untagged Series list slice. Existing catalogue admission
 /// remains unchanged and rejects advanced stored rows until Source acceptance.
-/// External IDs/language/logo/descriptive provider metadata stay refused.
+/// External IDs/language stay refused; bounded descriptive fields share Source converters.
 pub(super) fn series(
     value: Value,
     is_draining: &dyn Fn() -> bool,
@@ -90,16 +94,7 @@ pub(super) fn series(
             if serde_json::to_vec(value).map_err(|_| unsupported())?.len() > 16384 {
                 return Err(unsupported());
             }
-            // Sparse list shape only: Source can coerce false/zero/list plot
-            // or genre into stored text. Never silently preserve those values.
-            for key in ["plot", "genre"] {
-                if row.get(key).is_some_and(|v| v.as_str() != Some("")) {
-                    return Err(unsupported());
-                }
-            }
             for key in [
-                "rating",
-                "cover",
                 "tmdb",
                 "tmdb_id",
                 "imdb",
@@ -112,11 +107,8 @@ pub(super) fn series(
                 "episode_run_time",
                 "status",
                 "type",
-                "cast",
-                "director",
                 "country",
                 "language",
-                "youtube_trailer",
                 "age",
                 "seasons",
             ] {
@@ -147,27 +139,19 @@ pub(super) fn series(
                 .get("category_id")
                 .filter(|v| crate::xc_live_provider::truthy(v));
             let provider = raw_category.map(scalar).transpose()?;
-            // Unlike Movie, Source list-sync retains category_id in Series CP.
-            let mut properties = serde_json::Map::new();
-            if let Some(value) = raw_category {
-                properties.insert("category_id".into(), value.clone());
-            }
-            // build_series_list_props retains releaseDate but not release_date.
-            if let Some(value) = row
-                .get("releaseDate")
-                .filter(|v| crate::xc_live_provider::truthy(v))
-            {
-                properties.insert("releaseDate".into(), value.clone());
-            }
-            let properties = (!properties.is_empty()).then_some(Value::Object(properties));
+            let props = super::values::list_props::series(row)?;
             let year = list_year(row)?;
             Ok(Series {
                 name,
                 year,
                 external,
                 provider,
-                properties,
+                properties: props.properties,
                 basic: value.clone(),
+                description: props.description,
+                rating: props.rating,
+                genre: props.genre,
+                logo: props.logo,
             })
         })
         .collect()
@@ -233,14 +217,7 @@ mod tests {
     #[test]
     fn sparse_plot_and_genre_refuse_source_coercions_outside_this_domain() {
         for key in ["plot", "genre"] {
-            for value in [
-                Value::Null,
-                json!(false),
-                json!(0),
-                json!([]),
-                json!({}),
-                json!("metadata"),
-            ] {
+            for value in [Value::Null, json!(false), json!(0), json!([]), json!({})] {
                 let mut row = json!({"series_id":1,"name":"Owned"});
                 row[key] = value;
                 assert!(series(json!([row]), &|| false).is_err(), "{key}");
@@ -299,7 +276,7 @@ mod tests {
     fn unqualified_metadata_and_shutdown_do_not_become_sparse_success() {
         let plain = json!([{"series_id":1,"name":"Owned"}]);
         assert!(series(plain.clone(), &|| true).is_err());
-        for key in ["tmdb_id", "cover", "cast"] {
+        for key in ["tmdb_id", "language", "backdrop_path"] {
             let mut row = plain.clone();
             row[0][key] = json!("unqualified");
             assert!(series(row, &|| false).is_err(), "{key}");

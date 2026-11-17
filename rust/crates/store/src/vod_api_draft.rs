@@ -150,7 +150,7 @@ mod vod_api_provider_refresh_series_value;
 #[path = "vod_api_provider_refresh_sql.rs"]
 mod vod_api_provider_refresh_sql;
 #[path = "vod_api_provider_refresh_value.rs"]
-mod vod_api_provider_refresh_value;
+pub(crate) mod vod_api_provider_refresh_value;
 
 #[path = "vod_api_fair_budget.rs"]
 mod vod_api_fair_budget;

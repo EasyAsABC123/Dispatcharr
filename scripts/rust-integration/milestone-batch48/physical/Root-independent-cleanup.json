@@ -1,0 +1,111 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "kind": "exact-CID",
+      "CID": "45cebdf5a5099c251a81acccc4407cb0fb8f25bae0f146ed63e7389cc028b092",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1257661,
+      "original_starttime": "19068081",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1258006,
+      "original_starttime": "19068147",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1258055,
+      "original_starttime": "19068151",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1258056,
+      "original_starttime": "19068151",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1258058,
+      "original_starttime": "19068152",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1258059,
+      "original_starttime": "19068152",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1258060,
+      "original_starttime": "19068152",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1258089,
+      "original_starttime": "19068170",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "containers",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-80a5bd8011"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "kind": "networks",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-80a5bd8011"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "kind": "volumes",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-80a5bd8011"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "passed": true
+    }
+  ],
+  "exact_CIDs": 1,
+  "positive_original_host_generations": 8,
+  "project": "dispatcharr-matching-schema-80a5bd8011",
+  "checked_epoch": 1794877864.14324
+}

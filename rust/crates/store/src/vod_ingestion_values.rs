@@ -3,6 +3,8 @@
 use crate::StoreError;
 use serde_json::{json, Value};
 use std::collections::HashSet;
+#[path = "vod_ingestion_list_props.rs"]
+pub(super) mod list_props;
 fn unsupported() -> StoreError {
     StoreError::Unsupported("VOD initial catalog value domain")
 }
@@ -18,6 +20,12 @@ pub(super) struct Movie {
     pub provider: Option<String>,
     pub extension: String,
     pub basic: Value,
+    pub description: String,
+    pub rating: Option<String>,
+    pub genre: String,
+    pub duration: Option<i64>,
+    pub properties: Option<Value>,
+    pub logo: Option<String>,
 }
 pub(super) fn categories(value: Value) -> Result<Vec<Category>, StoreError> {
     let rows = value
@@ -89,8 +97,8 @@ fn year(row: &serde_json::Map<String, Value>, name: &str) -> Result<Option<i32>,
     }
     Ok(None)
 }
-/// Bounded basic-list slice: no metadata/logo/identity conflict or language split
-/// is silently converted to a sparse row. Those values require later slices.
+/// Bounded Source list fields; external identity/language splits remain refused.
+/// Metadata decoding alone does not widen the separately guarded SQL domain.
 pub(super) fn movies(
     value: Value,
     is_draining: &dyn Fn() -> bool,
@@ -110,23 +118,7 @@ pub(super) fn movies(
                 return Err(unsupported());
             }
             for key in [
-                "description",
-                "plot",
-                "rating",
-                "vote_average",
-                "genre",
-                "category_name",
-                "duration",
-                "duration_secs",
                 "episode_run_time",
-                "trailer",
-                "youtube_trailer",
-                "stream_icon",
-                "director",
-                "actors",
-                "cast",
-                "release_date",
-                "releasedate",
                 "releaseDate",
                 "tmdb_id",
                 "tmdb",
@@ -168,6 +160,7 @@ pub(super) fn movies(
                 _ => return Err(unsupported()),
             };
             let year = year(row, raw_name)?;
+            let props = list_props::movie(row)?;
             Ok(Movie {
                 year,
                 adult: row.get("is_adult").map(|v| adult(Some(v))),
@@ -176,6 +169,12 @@ pub(super) fn movies(
                 provider,
                 extension,
                 basic: value.clone(),
+                description: props.description,
+                rating: props.rating,
+                genre: props.genre,
+                duration: props.duration,
+                properties: props.properties,
+                logo: props.logo,
             })
         })
         .collect()
@@ -218,7 +217,7 @@ mod source_basic_list_controls {
     fn unsupported_metadata_identity_and_shutdown_do_not_become_sparse_imports() {
         let plain = json!([{"stream_id":1,"name":"Owned - 2020","is_adult":true}]);
         assert!(movies(plain.clone(), &|| true).is_err());
-        for field in ["tmdb_id", "stream_icon", "description", "releaseDate"] {
+        for field in ["tmdb_id", "imdb_id", "episode_run_time", "releaseDate"] {
             let mut metadata = plain.clone();
             metadata[0][field] = json!("unsupported");
             assert!(movies(metadata, &|| false).is_err(), "{field}");

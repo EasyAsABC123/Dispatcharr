@@ -1,0 +1,987 @@
+{
+  "scope": "Raw Source captures remain private; only account login strings removed from safe SQL, with full original clocks/IDs/metadata/sequences retained. Public semantic projection applies only declared typed entropy.",
+  "raw_capture_manifest_sha256": "2cbdd5e6bac7a8e6c5fdeaa305528e961b328f815b72a7a0f19245ef15889085",
+  "sixty_raw_capture_hashes": {
+    "fresh-dense/SQL-before.json": "e0a8d61ed9ac5d25a30623f720ea725ac2de950620f76485a57e262bccbcc4ed",
+    "fresh-dense/SQL-after.json": "301f9e69e2a894559adacddf7f380c3f34ccb27d01b8aebca4a904b287234de2",
+    "fresh-dense/HTTP.json": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+    "fresh-dense/frame.json": "7b84263874bc881988a7290d98056c2b37999456e92e4f625e9375d6712dfc34",
+    "fresh-dense/backend.json": "619181a98cee4e0daba82872c135af250292a24d66ce7efc2aef31f8f33645a6",
+    "fresh-dense/Origin.json": "5c7a1d7374575dc869646c4700bf650298afd3c816181bf33adaa1ad055b153a",
+    "fresh-dense/WS.json": "464739229da869ed4d4a4b765cd34f58c0fb9ce65b68090bbbabb92e55a7ee19",
+    "fresh-dense/catalogue.json": "fa803a8c5fb8badd7e12652eb1daf4d6aec467f3ae030d26761e822e11eff93f",
+    "fresh-dense/cache-before.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "fresh-dense/cache-after.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "identical-repeat/SQL-before.json": "c691dd0ffe3e3e5b5e6d3e43722e1ad670aeb44375903fad519aff52cc90253b",
+    "identical-repeat/SQL-after.json": "06b4cfbfb7d5952f4c12454915272dad60e5579671c093f214ccee09a7d3aad0",
+    "identical-repeat/HTTP.json": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+    "identical-repeat/frame.json": "9b3d551f9eef4b9c4e7f30efe002f8d067515a91d47d36026749ed60d6036064",
+    "identical-repeat/backend.json": "0d138036e9ba3c6fa1094ccdecbabfd95b88af8130b08fdf2c3a16d3b7ee8284",
+    "identical-repeat/Origin.json": "35971177096f978ae18b50b75595ef2ff0205fca3830c2c5b150acc50bdf985c",
+    "identical-repeat/WS.json": "a56d4b5ca745db99a40555dbc86e92fd4d7ad789a884f6455cbc0ec874f6f9ed",
+    "identical-repeat/catalogue.json": "fa803a8c5fb8badd7e12652eb1daf4d6aec467f3ae030d26761e822e11eff93f",
+    "identical-repeat/cache-before.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "identical-repeat/cache-after.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "nonblank-metadata-update/SQL-before.json": "d3b43ff1a7581205330666bdc81ad65782a05175074a9e88898e3c605d8c0d9f",
+    "nonblank-metadata-update/SQL-after.json": "a85d7759de7dfcdaf263f3f5142857bc8049d776b0b36e318639a34a27644d56",
+    "nonblank-metadata-update/HTTP.json": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+    "nonblank-metadata-update/frame.json": "5a599eeb0ac84edf230d21f42819275467b9a19f5b0ee2c5d9aa7628328ae4a4",
+    "nonblank-metadata-update/backend.json": "3ec915f2089aae2eb2c889d6f617cf5fc8c8c6f8ba729fa86ef0a323210f1511",
+    "nonblank-metadata-update/Origin.json": "5cd2d5ccae6184a725282c1aead3878aa71d0093834e55bbc8ea160f6a09b0f7",
+    "nonblank-metadata-update/WS.json": "2b26953d7fda3a62d2b042f8f5e37c08cee6d5bd79216a0492bffaa9bccbcb2c",
+    "nonblank-metadata-update/catalogue.json": "1c64315ee77b8804ef886aa040fec4a4ee56edc000bdd07d3ab32abd86835f96",
+    "nonblank-metadata-update/cache-before.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "nonblank-metadata-update/cache-after.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "sparse-blank-and-logo-clear/SQL-before.json": "16e04ec85ccb32a275bdd3e61af5376d4f4064f54a55b15922f790ae1543abea",
+    "sparse-blank-and-logo-clear/SQL-after.json": "8d96c0689f627e194015c2c81bbded6bbc3cfc698253658f8cd0bf8ee1790178",
+    "sparse-blank-and-logo-clear/HTTP.json": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+    "sparse-blank-and-logo-clear/frame.json": "1ccdb257ac8059b8bfa9400f8256050d53a152551e2da38df43e151f3438ce0d",
+    "sparse-blank-and-logo-clear/backend.json": "c1ba24f57ce370da722a247b6faba4455154aee941a28c00df6ed593571d4392",
+    "sparse-blank-and-logo-clear/Origin.json": "0c84d854ba2d3368dc0a3347e942eb6c81c148a273783448facfc1af5f6372c9",
+    "sparse-blank-and-logo-clear/WS.json": "59f97cc07f2faeaf86d59e55607c554f119a425629a1d23326c7320ea0d76b50",
+    "sparse-blank-and-logo-clear/catalogue.json": "6e4dd743255fb9be768ec7b9bf17636a18e2e7127165d71271f01981654d971f",
+    "sparse-blank-and-logo-clear/cache-before.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "sparse-blank-and-logo-clear/cache-after.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "duplicate-representative-and-reuse/SQL-before.json": "e54adc042f0d6c9b1cf26a0f5ca20e544e08ccfdf888c352ae92c1aeb907c4d6",
+    "duplicate-representative-and-reuse/SQL-after.json": "2bb7e9367a405bf5e573042d3fea958d35fce261ce35ef721d27bc554c10ab2c",
+    "duplicate-representative-and-reuse/HTTP.json": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+    "duplicate-representative-and-reuse/frame.json": "c9fff80ccf8fba2a13b2aa8b0800f40dd6ba0daa26eaf6a722e8de6d2114fae5",
+    "duplicate-representative-and-reuse/backend.json": "98817ce30fcf68699481ae690996adf9de5ff438eb444d7ded793361e29b95a7",
+    "duplicate-representative-and-reuse/Origin.json": "bbf9f9f7421c126d989a343c9659a6285e49212cc419d29a905bf23ecf723a46",
+    "duplicate-representative-and-reuse/WS.json": "5301661176e8cccdc695afd374a0c6e1cea360cabb9742d7e7f348ad2178f116",
+    "duplicate-representative-and-reuse/catalogue.json": "482bd1a65040c70832815535f0a09bf7ab13c9109f7645d7487624dbe2759dd5",
+    "duplicate-representative-and-reuse/cache-before.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "duplicate-representative-and-reuse/cache-after.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "last-owner-prune/SQL-before.json": "9ba70263226244b3b8812bd95665cb1b2e2ebed6730d6a2452e579608fe26c9d",
+    "last-owner-prune/SQL-after.json": "b28fb937fdff5302346bc2ef6415513f36c13ed7d7fc8389d895861ba8b4cbcc",
+    "last-owner-prune/HTTP.json": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+    "last-owner-prune/frame.json": "16b31e5e0dfc1aec735628c49daf3a54a2089420d7896c093731c83d34f2ab90",
+    "last-owner-prune/backend.json": "b02aa5448bb8e7b58c453f0e82cf285e33476f0ae7d2894afa457eb4978cd601",
+    "last-owner-prune/Origin.json": "2602dda4f54a6aae79cabf938f598cdccea2132a0587871075e7f98634d46786",
+    "last-owner-prune/WS.json": "812b1ac12950a378e46ea76808be98fae2d5f0e3730f9e5c02df68a6b37e1e42",
+    "last-owner-prune/catalogue.json": "ad1d88733528588890f42274474090047bf19466a9e8e096f4080481a60ed2fb",
+    "last-owner-prune/cache-before.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b",
+    "last-owner-prune/cache-after.json": "75aa4e79d04d5f2caeb9375048998c5de833dc515e28e93b69272988e982b17b"
+  },
+  "projection_module_sha256": "8193720159afae9ceaa5ea8d94d63368ff45431ed81dd76660c9f0a7f0736f58",
+  "published_inputs": [
+    {
+      "published": "projection.py",
+      "private_path": "artifacts/rust/m6-vod-dense-list-native-adapter-draft-1/cohort/vod_dense_list_compare.py",
+      "sha256": "8193720159afae9ceaa5ea8d94d63368ff45431ed81dd76660c9f0a7f0736f58",
+      "mode": "exact"
+    },
+    {
+      "published": "report.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/report.json",
+      "sha256": "d975b9051eff03b2a8eba30e0c45470ef67543d31f77268eef6a23821f84a3af",
+      "mode": "exact"
+    },
+    {
+      "published": "execution.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/dispatch/execution.json",
+      "sha256": "fc6b402c438da54347f2200ab841db84a1617dee4a1a48e4313606dd558b7557",
+      "mode": "exact"
+    },
+    {
+      "published": "cleanup.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/independent-cleanup.json",
+      "sha256": "d1d75a6c2fdd1314a2a3af409863c515e65a9e4c040ed535ba4f2a80a252c415",
+      "mode": "exact"
+    },
+    {
+      "published": "Root-independent-cleanup.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/Root-independent-cleanup.json",
+      "sha256": "e8d7481a5a81ea141827287a70e92b34b302e365761555ef9757de64623f5897",
+      "mode": "exact"
+    },
+    {
+      "published": "UID.json",
+      "private_path": "artifacts/rust/m6-candidate48-dense-list-source-binding-4/actual-UID-2/report.json",
+      "sha256": "1e865c26fc367ad8d0a1968b15c4734563b08c55ce131281695f2a2d5744e830",
+      "mode": "exact"
+    },
+    {
+      "published": "SQL/fresh-dense-before.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/fresh-dense/SQL-before.json",
+      "sha256": "e0a8d61ed9ac5d25a30623f720ea725ac2de950620f76485a57e262bccbcc4ed",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/fresh-dense-after.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/fresh-dense/SQL-after.json",
+      "sha256": "301f9e69e2a894559adacddf7f380c3f34ccb27d01b8aebca4a904b287234de2",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/identical-repeat-before.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/identical-repeat/SQL-before.json",
+      "sha256": "c691dd0ffe3e3e5b5e6d3e43722e1ad670aeb44375903fad519aff52cc90253b",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/identical-repeat-after.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/identical-repeat/SQL-after.json",
+      "sha256": "06b4cfbfb7d5952f4c12454915272dad60e5579671c093f214ccee09a7d3aad0",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/nonblank-metadata-update-before.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/nonblank-metadata-update/SQL-before.json",
+      "sha256": "d3b43ff1a7581205330666bdc81ad65782a05175074a9e88898e3c605d8c0d9f",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/nonblank-metadata-update-after.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/nonblank-metadata-update/SQL-after.json",
+      "sha256": "a85d7759de7dfcdaf263f3f5142857bc8049d776b0b36e318639a34a27644d56",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/sparse-blank-and-logo-clear-before.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/sparse-blank-and-logo-clear/SQL-before.json",
+      "sha256": "16e04ec85ccb32a275bdd3e61af5376d4f4064f54a55b15922f790ae1543abea",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/sparse-blank-and-logo-clear-after.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/sparse-blank-and-logo-clear/SQL-after.json",
+      "sha256": "8d96c0689f627e194015c2c81bbded6bbc3cfc698253658f8cd0bf8ee1790178",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/duplicate-representative-and-reuse-before.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/duplicate-representative-and-reuse/SQL-before.json",
+      "sha256": "e54adc042f0d6c9b1cf26a0f5ca20e544e08ccfdf888c352ae92c1aeb907c4d6",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/duplicate-representative-and-reuse-after.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/duplicate-representative-and-reuse/SQL-after.json",
+      "sha256": "2bb7e9367a405bf5e573042d3fea958d35fce261ce35ef721d27bc554c10ab2c",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/last-owner-prune-before.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/last-owner-prune/SQL-before.json",
+      "sha256": "9ba70263226244b3b8812bd95665cb1b2e2ebed6730d6a2452e579608fe26c9d",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "SQL/last-owner-prune-after.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/vod-dense-list/private/last-owner-prune/SQL-after.json",
+      "sha256": "b28fb937fdff5302346bc2ef6415513f36c13ed7d7fc8389d895861ba8b4cbcc",
+      "mode": "only_nonnull_account_login_values_redacted",
+      "redacted_fields": [
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "username"
+          ],
+          "raw_value_sha256": "de735e4e8eefe4855ffc80298758c0a1e2dd1647ff8f186b6f7e60f93f99e791"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            1,
+            "password"
+          ],
+          "raw_value_sha256": "f50c8bd7391e4c0955786f3070688cdaed9ed5701df5955872d45fde199f8c19"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "username"
+          ],
+          "raw_value_sha256": "067225d89793045efc731cd188c597872438bee79ee72815da7f0d4f7563c9e1"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            3,
+            "password"
+          ],
+          "raw_value_sha256": "8b41a81abdb5af8116bb90fcb74c2c35f9f2ea73fe90260417c7071323987201"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            4,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "username"
+          ],
+          "raw_value_sha256": "49910705e8c71de2c3186dadb3d0a0a6505ee5c920ba098fe09d76fdef5a4033"
+        },
+        {
+          "path": [
+            "m3u_m3uaccount",
+            5,
+            "password"
+          ],
+          "raw_value_sha256": "75356803a457b0082fc5dc4d69cfb47e06280513fb19447ca6f2b6e84632defe"
+        }
+      ]
+    },
+    {
+      "published": "attempt1/execution.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-1/dispatch/execution.json",
+      "sha256": "10a2e56014d3f17764764297fe7016718a74aa069e8c6fbcedc31c1577cfd5c2",
+      "mode": "exact"
+    },
+    {
+      "published": "attempt1/report.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-1/fixtures/Original-afab2fa6/vod-dense-list/report.json",
+      "sha256": "edc46bb85f5f55385ab95c667b6ba105e83fbcade10dc7c10d182149ce3304dc",
+      "mode": "exact"
+    },
+    {
+      "published": "attempt1/Root-independent-cleanup.json",
+      "private_path": "artifacts/rust/normal-graph-vod-dense-list-source-1/Root-independent-cleanup.json",
+      "sha256": "030fdbf9adccce840ff347c1e9ae7a7b07e10e7377ed6fdea177e97290d7725e",
+      "mode": "exact"
+    }
+  ]
+}

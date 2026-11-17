@@ -9,6 +9,13 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+[Candidate48](rust-milestone-batch48.md) implements bounded ordinary Movie/Series
+list metadata and logo lifecycle. Its six-case Source cohort passes, all SDK66
+gates pass with 1,164 tests, and physical checks pass 44 statements and 22
+wrong-bind controls. Candidate48 packaging, combined Native seven-context
+acceptance and new application performance remain pending. All full milestones
+remain open.
+
 [Candidate47](rust-milestone-batch47.md) adds the Source-characterized bounded
 advanced-Series refresh and Requests CA trust for manual provider-info sessions,
 including exact category/relation sequence allocation. SDK65 passes all four

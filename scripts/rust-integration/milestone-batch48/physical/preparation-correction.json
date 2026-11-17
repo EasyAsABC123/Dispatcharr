@@ -1,0 +1,11 @@
+{
+  "status": "OLD_PATH_PREPARATION_ERROR_FOUND_BEFORE_EXECUTION_NOT_AN_ACTUAL_SQL_RUN",
+  "initial_launch_sha256": "0a6ae221b1f2cb5b9acd5821a80c155db4ce22bef51a1adf1f1c880ca2191bac",
+  "initial_prepare_sha256": "4d69b3f7ff1caa143985a53e02610306bf2ea9720153c795d9b181596e918857",
+  "issue": "Copied launch/prepare retained old37/10 folder literal; Root caught before execution",
+  "corrected_launch_sha256": "a267f99284ea8d74de758fc1fa037fb7e2c14284812c19fc7eed5c452172271e",
+  "corrected_prepare_sha256": "622d918831946d7030940122cd0a56ed13e78695ece83265040acca7987bd9c9",
+  "fix": "Both use Path(__file__).resolve().parent; actual full callgraph/input hashes independently reviewed",
+  "old_path_executed": false,
+  "actual_corrected_controller_session": 12876
+}

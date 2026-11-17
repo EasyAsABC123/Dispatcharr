@@ -39,6 +39,19 @@ fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
     // provide PostgreSQL the production Rust wire types, rather than asking it
     // to infer convenient types from otherwise-unbound SQL placeholders.
     match name {
+        "list_logo_insert" | "list_movie_insert" | "list_movie_update" => {
+            vec![<Value as Type<sqlx::Postgres>>::type_info()]
+        }
+        "list_logo_select" => vec![<Vec<String> as Type<sqlx::Postgres>>::type_info()],
+        "list_movie_relation_insert" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <Value as Type<sqlx::Postgres>>::type_info(),
+            <chrono::DateTime<chrono::Utc> as Type<sqlx::Postgres>>::type_info(),
+        ],
+        "list_movie_foreign_account" | "list_series_foreign_account" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <Value as Type<sqlx::Postgres>>::type_info(),
+        ],
         "advanced_category_insert" => vec![
             <Value as Type<sqlx::Postgres>>::type_info(),
             <String as Type<sqlx::Postgres>>::type_info(),
@@ -110,6 +123,10 @@ enum Output {
 fn outputs(name: &str) -> Vec<(&'static str, Output)> {
     use Output::*;
     match name {
+        "list_logo_insert" | "list_movie_update" | "list_movie_relation_insert" => vec![],
+        "list_logo_select" => vec![("id", Int8), ("url", Text)],
+        "list_movie_insert" => vec![("id", Int8), ("name", Text), ("year", Int4)],
+        "list_movie_foreign_account" | "list_series_foreign_account" => vec![("unsupported", Bool)],
         "advanced_category_insert"
         | "advanced_uncategorized_insert"
         | "advanced_uncategorized_relation_insert"
@@ -186,7 +203,7 @@ fn compatible(kind: Output, actual: &PgTypeInfo) -> bool {
 #[test]
 fn compiled_matching_statements_and_bind_ordinals_are_complete() {
     let rows = statements();
-    assert_eq!(rows.len(), 37);
+    assert_eq!(rows.len(), 44);
     let names: BTreeSet<_> = rows.iter().map(|(name, _)| *name).collect();
     assert_eq!(names.len(), rows.len());
     assert_eq!(
@@ -211,6 +228,13 @@ fn compiled_matching_statements_and_bind_ordinals_are_complete() {
             "comskip_update",
             "comskip_settings",
             "comskip_exists",
+            "list_logo_insert",
+            "list_logo_select",
+            "list_movie_insert",
+            "list_movie_update",
+            "list_movie_relation_insert",
+            "list_movie_foreign_account",
+            "list_series_foreign_account",
             "advanced_category_insert",
             "advanced_uncategorized_insert",
             "advanced_uncategorized_relation_insert",
@@ -240,6 +264,8 @@ fn compiled_matching_statements_and_bind_ordinals_are_complete() {
                 || sql.starts_with("UPDATE ")
                 || sql.starts_with("INSERT ")
                 || sql.starts_with("DELETE ")
+                || (matches!(name, "list_movie_update" | "advanced_series_update")
+                    && sql.starts_with("WITH projected AS MATERIALIZED (SELECT "))
         );
         let used: BTreeSet<_> = ordinal
             .captures_iter(&sql)
@@ -331,6 +357,18 @@ async fn actual_compiled_matching_schema_prepare_only() {
         ("advanced_stale_series", 0),
         ("advanced_stale_series", 1),
         ("advanced_orphan_episodes", 0),
+        ("list_logo_insert", 0),
+        ("list_logo_select", 0),
+        ("list_movie_insert", 0),
+        ("list_movie_update", 0),
+        ("list_movie_relation_insert", 0),
+        ("list_movie_relation_insert", 1),
+        ("list_movie_relation_insert", 2),
+        ("advanced_series_update", 0),
+        ("list_movie_foreign_account", 0),
+        ("list_movie_foreign_account", 1),
+        ("list_series_foreign_account", 0),
+        ("list_series_foreign_account", 1),
     ] {
         let sql = statements()
             .into_iter()
@@ -338,7 +376,17 @@ async fn actual_compiled_matching_schema_prepare_only() {
             .unwrap()
             .1;
         let mut types = parameter_types(name);
-        types[index] = if name == "advanced_orphan_episodes" {
+        types[index] = if name == "list_logo_select" {
+            <Vec<bool> as Type<sqlx::Postgres>>::type_info()
+        } else if matches!(
+            name,
+            "list_movie_foreign_account"
+                | "list_series_foreign_account"
+                | "list_movie_relation_insert"
+        ) && index == 0
+        {
+            <bool as Type<sqlx::Postgres>>::type_info()
+        } else if name == "advanced_orphan_episodes" {
             <Vec<bool> as Type<sqlx::Postgres>>::type_info()
         } else if matches!(name, "station_existing" | "comskip_select")
             || (name == "advanced_stale_series" && index == 0)
@@ -352,18 +400,18 @@ async fn actual_compiled_matching_schema_prepare_only() {
     }
     let ready = connection.ping().await;
     let closed = connection.close().await;
-    let passed = rows.len() == 37
+    let passed = rows.len() == 44
         && rows.iter().all(|r| {
             r["prepared"] == true
                 && r["row_decoder_compatible"] == true
                 && r["server_parameter_types_match"] == true
         })
-        && negatives.len() == 10
+        && negatives.len() == 22
         && negatives.iter().all(|r| r["rejected"] == true)
         && ready.is_ok()
         && closed.is_ok();
     let report = json!({"passed":passed,"schema_only":true,"DML_executed":false,"task_or_media_executed":false,
-        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1,"comskip":4,"vod_advanced":18},"statements":rows,"wrong_bind_type_controls":negatives,
+        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1,"comskip":4,"vod_advanced":18,"vod_list_metadata":7},"statements":rows,"wrong_bind_type_controls":negatives,
         "ready":format!("{ready:?}"),"closed":format!("{closed:?}"),"scope":"Compiled production SQL/constants and audited actual Rust bind types; prepares/row shapes only, not DML/data/event/task parity."});
     let bytes = serde_json::to_vec_pretty(&report).expect("report");
     assert!(bytes.len() <= 131072);
