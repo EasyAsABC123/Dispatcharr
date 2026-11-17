@@ -20,8 +20,8 @@ catalogue responses are retained.
 | SDK71 ordering correction | All four gates pass; 1,169 tests pass |
 | Default tests | 1,169 passed, zero failed; 784 fixture-dependent tests ignored |
 | Physical SQL | Original and corrected attempts both pass 45 statements / 24 controls |
-| Candidate50 Docker build/packages | Build and all six package families pass |
-| Combined Native nine-context cohort | Attempt1 failed strict Source comparison; correction pending |
+| Candidate50 Docker build/packages | Original and corrected images/package families pass separately |
+| Combined Native nine-context cohort | Attempt1 failed; corrected full rerun running |
 | New application performance | Pending |
 
 Movie aliases prefer `tmdb_id` over `tmdb` and `imdb_id` over `imdb`. Series
@@ -122,6 +122,20 @@ Ready/Close and unchanged default schema. Root verifies its one exact container,
 eight original host process generations and project absent. See
 [SDK71](../scripts/rust-integration/milestone-batch50/SDK71/summary.json) and
 [physical attempt2](../scripts/rust-integration/milestone-batch50/physical-attempt2/README.md).
-The corrected Docker image, six package families and full Native nine-context
-rerun remain pending. Neither these host checks nor Parse/Describe establish
-that the production relation order is corrected at runtime.
+The corrected Docker image and all six package families now pass separately.
+The entire Native nine-context rerun is running. Neither the host checks nor
+Parse/Describe establish corrected application behavior.
+
+
+Corrected source `7a613ade8b926e99658c45ab071b832525ce5df2` builds separately
+in 303.641 seconds as
+`sha256:be231d05f35bb58a8241789377ee21f7c81ceb7ad2e1a09c47dc0a2355a5218d`.
+Its 1,446 Rust inputs match SDK71. Actual Store/Main recompilation and a Main ELF
+different from the failed image are verified. All six package families pass and
+55 exact package containers are absent; the corrected
+[package-attempt2 proofs](../scripts/rust-integration/milestone-batch50/package-attempt2/inventory.json)
+leave all earlier package records unchanged. Fresh UID177 readability passes.
+The same frozen 177 helper closure and strict Source oracle are used for the
+complete Source0/Native9 rerun. At this update it is RUNNING; no corrected
+application, public reproduction, performance or complete milestone acceptance
+is inferred from successful compilation or packaging.

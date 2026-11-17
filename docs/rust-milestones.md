@@ -17,7 +17,8 @@ TCP-bind failure and SDK69's passing host diagnostics remain preserved. Its Dock
 containers absent. The first full Native nine-context attempt exits 1 after all eight prior
 contexts and nine new local cases pass: strict Source comparison catches real
 relation-PK allocation order drift. The minimal production ordering correction now passes SDK71 and fresh 45/24
-physical checks; a corrected image/package/full-Native run remains pending. No
+physical checks; the corrected image and all six package families now pass. The full affected
+Native nine-context rerun is running; corrected runtime acceptance is pending. No
 PK waiver is used.
 Public reproduction, performance and complete milestones remain open.
 
