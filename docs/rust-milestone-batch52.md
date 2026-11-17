@@ -58,8 +58,18 @@ and Main ELF `bba87a21` differs from accepted Candidate51. All six
 pass in a separately consumed 24.519-second batch, with both EOFs and settled
 group; 55 exact package containers and their scoped inventories are absent.
 React and original contributor credits remain preserved. Fresh UID182
-readability passes. The complete Source0/Native13 application batch is running
-against retained Source observations; no Native13 acceptance is claimed yet. Public
+readability passes. The complete Source0/Native13 application batch exits 1 in 1,003.962 seconds,
+with both EOFs and settled group. The old twelve contexts and all eleven local
+language cases pass, but strict retained-Source comparison fails. The whole
+thirteen-context batch remains unaccepted. Root verifies sixteen exact
+containers, fifteen captured host generations and the project absent; the UID
+initial-generation limitation remains explicit. The [literal failed-run evidence](../scripts/rust-integration/milestone-batch52/application-attempt1/index.json)
+retains the failure. Two independent complete projection diffs find exactly six
+differences: generated receiver IDs in empty tag-API WebSocket wrappers. All
+business rows, primary keys, sequences, metadata, ownership, provider responses,
+roots and event arrays match. This diagnosis does not retroactively qualify the
+run. A narrow typed observer-identity correction and a complete clean public13
+run remain required; the Source oracle is unchanged. Public
 reproduction and equivalent-work performance measurement follow functional
 acceptance. No new performance gain or complete M0–M9 acceptance is claimed.
 

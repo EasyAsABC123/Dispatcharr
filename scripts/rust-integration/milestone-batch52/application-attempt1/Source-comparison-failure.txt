@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-vod-language-native13-driver-1/cohort/vod_category_language_cases.py", line 264, in run
+    compare_retained_Source(f,private);report['Native_qualified']=True
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-vod-language-native13-driver-1/cohort/vod_category_language_compare.py", line 68, in compare_retained_Source
+    native=project(directory,backend_kind='Native');native=json.loads(json.dumps(native,allow_nan=False));exact(oracle['phases'],native['phases'],'Full language11 rows/PKs/all11seq/API/provider/WS/tag/seed comparison')
+                                                                                                          ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-vod-language-native13-driver-1/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-vod-language-native13-driver-1/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-vod-language-native13-driver-1/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  [Previous line repeated 1 more time]
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-vod-language-native13-driver-1/cohort/vod_dense_list_compare.py", line 28, in exact
+    elif left!=right:raise AssertionError(label)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (((('Full language11 rows/PKs/all11seq/API/provider/WS/tag/seed comparison', 'language-A-claim-fr'), 'declared_tag_API'), 'ordered_WS'), 'actual_receiver')
