@@ -1509,10 +1509,25 @@ impl Jobs {
         }
         let lease = self.lease(caller)?;
         let keys = vec![format!("celery-tasks:celery-task-meta-{id}")];
+        // Existing opt-in diagnostics flag; only actual DVR authority writes.
+        // Typed UUID bits are the sole variable identity; no key/error text.
+        let diagnostic = (self.inner.authority == Authority::Dvr
+            && std::env::var("RUST_AUTO_STAGE_DIAGNOSTICS").as_deref() == Ok("1"))
+        .then_some(
+            dispatcharr_output_store::transport::CommandDiagnostic::DvrResult {
+                task: id.as_u128(),
+            },
+        );
         match self
             .inner
             .result
-            .command_classified::<i64, _>(WRITE_SUCCESS, &keys, &[&bytes], lease)
+            .command_classified_with_diagnostic::<i64, _>(
+                WRITE_SUCCESS,
+                &keys,
+                &[&bytes],
+                lease,
+                diagnostic,
+            )
             .await
         {
             Ok((1, _)) => Ok(true),

@@ -5,6 +5,8 @@ mod bounded_subscription;
 #[path = "shared_subscription.rs"]
 mod shared_subscription;
 use crate::Error;
+#[path = "result_diagnostics.rs"]
+mod result_diagnostics;
 pub use bounded_subscription::{
     Error as SubscriptionError, Receipt as SubscriptionReceipt, Subscription as BoundedSubscription,
 };
@@ -12,6 +14,7 @@ use redis::{
     aio::{ConnectionManager, ConnectionManagerConfig},
     Script,
 };
+pub use result_diagnostics::CommandDiagnostic;
 pub use shared_subscription::{
     Confirmation as SubscriptionConfirmation, LogicalSubscription, Message as SubscriptionMessage,
     SharedSubscription,
@@ -170,6 +173,53 @@ impl RedisTransport {
             .await
             .map_err(OperationError::classified)
     }
+    /// Optional fixed-vocabulary diagnostics over the SAME owned command.
+    /// No timeout/retry/admission/result semantics change; raw errors stay private.
+    pub async fn command_classified_with_diagnostic<
+        T: redis::FromRedisValue + Send + 'static,
+        G: Send + 'static,
+    >(
+        &self,
+        source: &str,
+        keys: &[String],
+        args: &[&[u8]],
+        guard: G,
+        diagnostic: Option<CommandDiagnostic>,
+    ) -> Result<(T, G), ClassifiedError> {
+        let trace = diagnostic.map(result_diagnostics::Trace::new);
+        if let Some(t) = &trace {
+            t.emit(
+                result_diagnostics::Stage::Admission,
+                result_diagnostics::Kind::None,
+            );
+        }
+        let operation = match self.acquire_operation().await {
+            Ok(operation) => operation,
+            Err(error) => {
+                if let Some(t) = &trace {
+                    let kind = match &error {
+                        OperationError::Capacity | OperationError::AdmissionTimeout => {
+                            result_diagnostics::Kind::Capacity
+                        }
+                        OperationError::Configuration => result_diagnostics::Kind::Configuration,
+                        _ => result_diagnostics::Kind::Unobserved,
+                    };
+                    t.emit(result_diagnostics::Stage::AdmissionRejected, kind);
+                }
+                return Err(error.classified());
+            }
+        };
+        self.command_admitted_observed(
+            CommandScript::OneOff(Script::new(source)),
+            keys,
+            args,
+            guard,
+            operation,
+            trace,
+        )
+        .await
+        .map_err(OperationError::classified)
+    }
     /// Reuse a caller-owned compiled script without a transport-wide cache.
     /// Admission, physical response ownership and error classification are the
     /// same as command_classified(); Redis still handles NOSCRIPT normally.
@@ -222,10 +272,27 @@ impl RedisTransport {
         guard: G,
         operation: tokio::sync::OwnedSemaphorePermit,
     ) -> Result<(T, G), OperationError> {
+        self.command_admitted_observed(script, keys, args, guard, operation, None)
+            .await
+    }
+    async fn command_admitted_observed<
+        T: redis::FromRedisValue + Send + 'static,
+        G: Send + 'static,
+    >(
+        &self,
+        script: CommandScript,
+        keys: &[String],
+        args: &[&[u8]],
+        guard: G,
+        operation: tokio::sync::OwnedSemaphorePermit,
+        trace: Option<Arc<result_diagnostics::Trace>>,
+    ) -> Result<(T, G), OperationError> {
         let keys = keys.to_vec();
         let args: Vec<Vec<u8>> = args.iter().map(|value| value.to_vec()).collect();
         let mut connection = self.inner.connection.clone();
+        let physical_trace = trace.clone();
         let task = tokio::spawn(async move {
+            let mut observed = result_diagnostics::PhysicalObservation::start(physical_trace);
             let mut invocation = script.script().prepare_invoke();
             for key in keys {
                 invocation.key(key);
@@ -235,16 +302,10 @@ impl RedisTransport {
             }
             let result: Result<T, redis::RedisError> =
                 invocation.invoke_async(&mut connection).await;
+            observed.returned(&result);
             (result, guard, operation)
         });
-        let (result, guard, _operation) =
-            tokio::time::timeout(self.inner.config.command_timeout, task)
-                .await
-                .map_err(|_| OperationError::Backend)?
-                .map_err(|_| OperationError::Server)?;
-        result
-            .map(|value| (value, guard))
-            .map_err(OperationError::redis)
+        await_owned_command(task, self.inner.config.command_timeout, trace).await
     }
     async fn acquire_operation(&self) -> Result<tokio::sync::OwnedSemaphorePermit, OperationError> {
         match self.inner.operations.clone().try_acquire_owned() {
@@ -368,4 +429,40 @@ impl RedisTransport {
         .await
         .map_err(|_| SubscriptionError::Closed)?
     }
+}
+
+// Existing detached command continuation, shared by production and the finite
+// physical-boundary control. Timeout drops only the JoinHandle observer.
+async fn await_owned_command<T: Send + 'static, G: Send + 'static>(
+    task: tokio::task::JoinHandle<(redis::RedisResult<T>, G, tokio::sync::OwnedSemaphorePermit)>,
+    timeout: Duration,
+    trace: Option<Arc<result_diagnostics::Trace>>,
+) -> Result<(T, G), OperationError> {
+    let mut observer = result_diagnostics::LogicalObservation::new(trace.clone());
+    let outcome = tokio::time::timeout(timeout, task).await;
+    observer.finished = true;
+    let (result, guard, _operation) = match outcome {
+        Err(_) => {
+            if let Some(t) = &trace {
+                t.emit(
+                    result_diagnostics::Stage::LogicalDeadline,
+                    result_diagnostics::Kind::LogicalTimeout,
+                );
+            }
+            return Err(OperationError::Backend);
+        }
+        Ok(Err(_)) => {
+            if let Some(t) = &trace {
+                t.emit(
+                    result_diagnostics::Stage::SupervisorFailed,
+                    result_diagnostics::Kind::SupervisorFailure,
+                );
+            }
+            return Err(OperationError::Server);
+        }
+        Ok(Ok(tuple)) => tuple,
+    };
+    result
+        .map(|value| (value, guard))
+        .map_err(OperationError::redis)
 }
