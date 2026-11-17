@@ -95,6 +95,14 @@ The [package proofs](../scripts/rust-integration/milestone-batch48/package/inven
 and [failed application attempt](../scripts/rust-integration/milestone-batch48/application-attempt1/index.json)
 retain their separate scopes and actual exits.
 The [successful seven-context packet](../scripts/rust-integration/milestone-batch48/application/README.md)
-retains the complete affected cohort. The public seven-context reproduction path,
-broader provider domains and new application performance remain separate work.
+retains the complete affected cohort. The clean public seven-context reproduction
+also passes: actual exit 0 in 415.798 seconds on the same image, with no private
+Source captures or Git directory. Its 31 Python payloads, all 1,445 Rust inputs
+and UID65532 readability are verified. Root confirms ten exact CIDs including the
+UID probe, nine captured original host process generations and the project absent;
+the UID probe's initial host PID was not captured and is not inferred. The
+[public execution packet](../scripts/rust-integration/milestone-batch48/public-application/index.json)
+and [runner instructions](../scripts/rust-integration/catalogue-metadata-cohort/README.md)
+make this bounded step reproducible. Broader provider domains and new application
+performance remain separate work.
 All complete M0–M9 milestones remain open.
