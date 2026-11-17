@@ -76,3 +76,46 @@ Public eight-context reproduction, cross-provider transport variations, larger
 catalogues, additional metadata domains, performance and all complete M0–M9
 milestones remain open. Candidate48's public seven-context workflow retains its
 own image and scope.
+
+
+The additive public `catalogue-eight` workflow is now prepared in
+[catalogue-shared-cohort](../scripts/rust-integration/catalogue-shared-cohort/README.md).
+It retains the existing public seven-context and default workflows unchanged.
+Its 33 Python payloads use only published, credential-safe Source projections,
+ten shared SQL snapshots and Source origin evidence; no private raw50 captures
+or fresh known Source business execution are needed. Four owned credentials must
+remain exact initial values before token mapping, while bootstrap credentials
+retain exact published digests. The exact two-row/two-sequence seed and observed
+same-A-account-ID restriction remain explicit. All eleven sequences, causal
+selected-owner clocks, unchanged unrelated-owner rows, independent UUIDs, task,
+provider/HTTP/ordered notifications and strictly origin-bound cache URLs are
+compared.
+
+Host validation on the accepted Candidate49 captures passes all four shared
+phases. Nineteen corruption controls reject credential drift, bootstrap changes,
+seed row/table/sequence/script changes, copied UUIDs, unrelated-owner timestamp
+changes, incorrect last-owner cleanup and altered cache/provider URLs. All four
+existing launcher admission controls pass. The clean public eight-context
+application run is still pending; these host checks do not qualify it.
+
+Use the existing public launcher from a clean committed checkout whose Rust
+inputs match the chosen Candidate49 build record:
+
+```sh
+python3 -B scripts/rust-integration/recording-connect-cohort/prepare.py prepare \
+  --workflow catalogue-eight \
+  --output /tmp/dispatcharr-public-eight \
+  --build scripts/rust-integration/milestone-batch49/package/build.json \
+  --source-archive /path/to/Original.tar
+python3 -B scripts/rust-integration/recording-connect-cohort/prepare.py run \
+  --plan /tmp/dispatcharr-public-eight/plan.json
+```
+
+The pinned Original archive SHA256 is
+`f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff`.
+The candidate image and pinned Source image must be available to the selected
+Docker daemon. Preparation verifies image/source and helper hashes; execution
+performs its actual UID65532 readability probe and owns bounded fixture cleanup.
+The `--source-archive` input is the pinned Original archive, separate from the
+clean candidate checkout; the candidate checkout needs no `.git` directory.
+This workflow accepts no performance or complete migration milestone.
