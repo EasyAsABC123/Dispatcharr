@@ -20,7 +20,7 @@ catalogue responses are retained.
 | Default tests | 1,169 passed, zero failed; 784 fixture-dependent tests ignored |
 | Physical SQL | 45 statements / 24 wrong-bind controls pass |
 | Candidate50 Docker build/packages | Build and all six package families pass |
-| Combined Native nine-context cohort | Running; no acceptance claim yet |
+| Combined Native nine-context cohort | Attempt1 failed strict Source comparison; correction pending |
 | New application performance | Pending |
 
 Movie aliases prefer `tmdb_id` over `tmdb` and `imdb_id` over `imdb`. Series
@@ -70,8 +70,8 @@ controls are prepared for the existing copied-schema executor. The physical read
 both EOFs and settled group. It performs no business DML/tasks/media, uses no
 statement cache, passes Ready/Close and leaves the default 62-table/59-sequence
 schema byte-identical. Root verifies its one exact container, eight original
-host process generations and project absent. All six Docker package families now pass separately. The full affected Native
-nine-context cohort is running; ignored host tests do not satisfy it.
+host process generations and project absent. All six Docker package families now pass separately. The first full affected Native nine-context run fails strict Source comparison;
+ignored host tests do not satisfy that gate.
 
 Evidence: [Source authority](../scripts/rust-integration/external-identity-source1/README.md),
 [SDK70](../scripts/rust-integration/milestone-batch50/SDK/summary.json),
@@ -91,6 +91,22 @@ verified, and the Main ELF differs from Candidate49. Unchanged React assets
 and original credits remain verified. All six existing package families pass;
 all 55 exact package containers and scoped inventories are absent. These are
 [package proofs](../scripts/rust-integration/milestone-batch50/package/inventory.json),
-not application or performance acceptance. The full Source0/Native9 cohort is
-running with the actual image and UID177 helper proof. Its eventual terminal,
-strict Source comparisons and cleanup must be reviewed before acceptance.
+not application or performance acceptance. The full Source0/Native9 attempt exits 1 in 607.581 seconds, with both EOFs and
+settled group. Root verifies twelve exact CIDs including UID, eleven original
+host process generations and the project absent. All eight earlier contexts and
+all nine new local case assertions pass, but the complete strict Source
+comparison fails in the first cell. Later complete comparison phases are not
+reached, so the nine-context cohort is not accepted.
+
+
+The failure is a production relation-allocation bug. In the first cell the global
+Movie IDs and external identities match Source, but relation PK1 points to
+provider stream 9702 instead of Source's 9701. The JSON input order was lost in the
+relation INSERT's filtering plan. Model IDs, relation IDs and ordered Source
+expectations are not normalized away. The [failed attempt](../scripts/rust-integration/milestone-batch50/application-attempt1/index.json)
+retains its literal exit 1, traceback, local/whole-workflow boundary and cleanup.
+The minimal proposed correction adds WITH ORDINALITY and ORDER BY to the Movie
+and Series relation INSERTs. SDK71, fresh physical checks, a new image and the
+entire affected Native nine-context run must pass before this correction is
+accepted. Published SDK70, physical, package and failed application evidence stay
+unchanged. Application performance and complete migration milestones remain open.

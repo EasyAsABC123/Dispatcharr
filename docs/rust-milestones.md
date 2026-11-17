@@ -14,8 +14,11 @@ Movie/Series external-ID identity slice. Source passes nine characterized roots;
 SDK70 passes all four gates with 1,169 tests, and physical checks pass 45
 production statements and 24 wrong-bind controls with cleanup. SDK68's sandbox
 TCP-bind failure and SDK69's passing host diagnostics remain preserved. Its Docker image and all six package families now pass with all 55 package
-containers absent. The full Native nine-context cohort is running; public
-reproduction, new application performance and complete milestones remain open.
+containers absent. The first full Native nine-context attempt exits 1 after all eight prior
+contexts and nine new local cases pass: strict Source comparison catches real
+relation-PK allocation order drift. A minimal production ordering correction
+requires fresh SDK/physical/image/full-Native validation; no PK waiver is used.
+Public reproduction, performance and complete milestones remain open.
 
 [Candidate49](rust-milestone-batch49.md) removes the temporary shared-account
 metadata refusal. Source passes its four-root shared update/prune cohort, SDK67

@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate50-combined-vod-driver-1/cohort/vod_external_identity_cases.py", line 218, in run
+    compare_retained_Source(f,private);report['Native_qualified']=True
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate50-combined-vod-driver-1/cohort/vod_external_identity_cases.py", line 242, in compare_retained_Source
+    actual=compare(root,private,source_origin,native_origin);assert actual['status']=='passed';save(Path(private).parent/'Source-comparison.json',actual)
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate50-combined-vod-driver-1/cohort/vod_external_identity_compare.py", line 96, in compare
+    exact(projected[0],projected[1],(label,'Full external-ID observations and eleven exact sequences'));assert tasks[0]!=tasks[1]
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate50-combined-vod-driver-1/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate50-combined-vod-driver-1/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate50-combined-vod-driver-1/cohort/vod_dense_list_compare.py", line 27, in exact
+    for index,(a,b)in enumerate(zip(left,right)):exact(a,b,(label,index))
+                                                 ~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate50-combined-vod-driver-1/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate50-combined-vod-driver-1/cohort/vod_dense_list_compare.py", line 28, in exact
+    elif left!=right:raise AssertionError(label)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ((((('fresh-priority', 'Full external-ID observations and eleven exact sequences'), 'after'), 'vod_m3umovierelation'), 0), 'movie_id')

@@ -1,0 +1,191 @@
+{
+  "status": "failed",
+  "first_strict_path": "fresh-priority.after.vod_m3umovierelation[0].movie_id",
+  "actual_data": {
+    "Source": {
+      "vod_movie": [
+        {
+          "id": 1,
+          "name": "Movie TMDB",
+          "year": 2010,
+          "tmdb_id": "7101",
+          "imdb_id": "tt7101"
+        },
+        {
+          "id": 2,
+          "name": "Movie IMDB",
+          "year": 2010,
+          "tmdb_id": null,
+          "imdb_id": "tt7102"
+        },
+        {
+          "id": 3,
+          "name": "Movie Plain",
+          "year": 2010,
+          "tmdb_id": null,
+          "imdb_id": null
+        }
+      ],
+      "vod_m3umovierelation": [
+        {
+          "id": 1,
+          "stream_id": "9701",
+          "movie_id": 1,
+          "m3u_account_id": 5
+        },
+        {
+          "id": 2,
+          "stream_id": "9702",
+          "movie_id": 2,
+          "m3u_account_id": 5
+        },
+        {
+          "id": 3,
+          "stream_id": "9703",
+          "movie_id": 3,
+          "m3u_account_id": 5
+        }
+      ],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    "Native": {
+      "vod_movie": [
+        {
+          "id": 1,
+          "name": "Movie TMDB",
+          "year": 2010,
+          "tmdb_id": "7101",
+          "imdb_id": "tt7101"
+        },
+        {
+          "id": 2,
+          "name": "Movie IMDB",
+          "year": 2010,
+          "tmdb_id": null,
+          "imdb_id": "tt7102"
+        },
+        {
+          "id": 3,
+          "name": "Movie Plain",
+          "year": 2010,
+          "tmdb_id": null,
+          "imdb_id": null
+        }
+      ],
+      "vod_m3umovierelation": [
+        {
+          "id": 1,
+          "stream_id": "9702",
+          "movie_id": 2,
+          "m3u_account_id": 5
+        },
+        {
+          "id": 2,
+          "stream_id": "9703",
+          "movie_id": 3,
+          "m3u_account_id": 5
+        },
+        {
+          "id": 3,
+          "stream_id": "9701",
+          "movie_id": 1,
+          "m3u_account_id": 5
+        }
+      ],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    }
+  },
+  "scope": "Model PKs/identity match, but provider-relation PK allocation order differs. No PK normalization or changed expected values are accepted. Later complete Source comparison phases were not reached.",
+  "Source_raw_safe_SQL_sha256": "f04323ccdf7e99511c6af8908ee342ab456756a3aacfb8c2c75959402e03c02f",
+  "Native_raw_SQL_sha256": "002e84b1fe75760b336e0d45df7f5257c58954eafb0d5906a9313377fdc02f0c"
+}
