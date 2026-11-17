@@ -207,3 +207,9 @@ Use explicit seed identifiers without advancing sequences, verify complete rows
 and affected-row counts, roll back, and prove public rows/sequences unchanged.
 Keep these actual DML controls separate from the read-only schema receipt:
 rolled-back DML is still executed DML. Reuse the same owned physical executor.
+
+Runner retargeting and chained correction gates:
+
+- Change count fields explicitly; never replace their digits throughout a file. A `66` to `68` count edit also changed the pinned Source archive digest, so checksum preflight stopped before Docker or applications. Audit opaque hash constants against the qualified parent and pinned proof before launching the copied runner.
+- Keep canonical preimage hashes separate from already compiled SDK hashes. When chaining a correction, verify the canonical preimage before installation and verify the resulting payload against the final successful SDK inputs; a previous SDK payload is not automatically the canonical preimage.
+- Separate preparation and execution stages with fail-fast shell handling (`set -e`) or explicit successful-return checks. A failed preparation assertion must stop the sequence before it can launch an unchanged duplicate SDK attempt. Preserve each actual failed or repeated attempt literally.

@@ -18,9 +18,7 @@ visible; cut, automatic processing and Rust positive acceptance remain pending.
 [Language lifecycle reference](rust-milestone-batch52.md) now passes eleven
 Original refresh roots across two accounts, six category-settings PATCH calls
 and one declared Episode fixture seed. Complete rows and all eleven sequences
-are retained in credential-safe evidence. Rust language matching,
-reconciliation and API integration are in development; no language Native or
-performance acceptance is claimed.
+are retained in credential-safe evidence. The nine-path Rust language/API join passes all four SDK77 gates (1,181 tests), read-only84/68 physical checks and four separate rolled-back UPDATE controls, with exact default/public-state preservation. Source `432df6ac` builds as image `cbd8d1b3`; all six package families pass, with 55 exact package CIDs absent and a new Main ELF. The complete Native13 cohort is running; public reproduction and performance acceptance remain pending. SDK75/76 Clippy failures and the before-Docker archive-checksum preflight failure remain literal.
 
 [Candidate51](rust-milestone-batch51.md) has seventeen Source observations for
 international values, ordered identities and 1,000/2,001-row catalogue lifecycle.

@@ -1,0 +1,278 @@
+{
+  "channels": [
+    "BOOL",
+    "INT8[]"
+  ],
+  "single_exact": [
+    "TEXT"
+  ],
+  "catalog": [
+    "INT8"
+  ],
+  "settings": [],
+  "bulk_candidates": [
+    "JSONB"
+  ],
+  "bulk_update": [
+    "JSONB"
+  ],
+  "child_epgs": [
+    "INT8[]"
+  ],
+  "single_update": [
+    "INT8",
+    "INT8"
+  ],
+  "mark_custom": [
+    "INT8"
+  ],
+  "serialize": [
+    "INT8"
+  ],
+  "plugins": [],
+  "station_existing": [
+    "INT8"
+  ],
+  "station_insert": [
+    "INT8",
+    "JSONB"
+  ],
+  "station_update": [
+    "INT8",
+    "JSONB"
+  ],
+  "aggregate_active": [],
+  "comskip_select": [
+    "INT8"
+  ],
+  "comskip_update": [
+    "INT8",
+    "JSONB"
+  ],
+  "comskip_settings": [],
+  "comskip_exists": [
+    "INT8"
+  ],
+  "advanced_series_existing": [
+    "JSONB"
+  ],
+  "advanced_series_insert": [
+    "JSONB"
+  ],
+  "advanced_series_update": [
+    "JSONB"
+  ],
+  "advanced_guard": [],
+  "advanced_stale_series": [
+    "INT8",
+    "TIMESTAMPTZ"
+  ],
+  "advanced_stale_children": [
+    "INT8[]"
+  ],
+  "advanced_delete_episode_relations": [
+    "INT8[]"
+  ],
+  "advanced_delete_series_relations": [
+    "INT8[]"
+  ],
+  "advanced_orphan_series": [],
+  "advanced_orphan_recheck": [
+    "INT8[]"
+  ],
+  "advanced_orphan_episodes": [
+    "INT8[]"
+  ],
+  "advanced_orphan_children": [
+    "INT8[]"
+  ],
+  "advanced_delete_episodes": [
+    "INT8[]"
+  ],
+  "advanced_delete_series": [
+    "INT8[]"
+  ],
+  "advanced_category_insert": [
+    "JSONB",
+    "TEXT",
+    "TIMESTAMPTZ"
+  ],
+  "advanced_uncategorized_insert": [
+    "TEXT",
+    "TIMESTAMPTZ"
+  ],
+  "advanced_uncategorized_relation_insert": [
+    "INT8",
+    "INT8",
+    "BOOL",
+    "TIMESTAMPTZ"
+  ],
+  "advanced_series_relation_insert": [
+    "INT8",
+    "JSONB",
+    "TIMESTAMPTZ"
+  ],
+  "list_logo_insert": [
+    "JSONB"
+  ],
+  "list_logo_select": [
+    "TEXT[]"
+  ],
+  "list_movie_insert": [
+    "JSONB"
+  ],
+  "list_movie_update": [
+    "JSONB"
+  ],
+  "list_movie_relation_insert": [
+    "INT8",
+    "JSONB",
+    "TIMESTAMPTZ"
+  ],
+  "list_movie_existing": [
+    "JSONB"
+  ],
+  "list_movie_relation_update": [
+    "INT8",
+    "JSONB",
+    "TIMESTAMPTZ"
+  ],
+  "advanced_series_relation_update": [
+    "INT8",
+    "JSONB",
+    "TIMESTAMPTZ"
+  ],
+  "list_movie_relation_existing": [
+    "INT8",
+    "TEXT[]"
+  ],
+  "advanced_series_relation_existing": [
+    "INT8",
+    "TEXT[]"
+  ],
+  "list_category_languages": [
+    "INT8"
+  ],
+  "list_uncategorized_language": [
+    "INT8",
+    "INT8"
+  ],
+  "vod_category_settings_valid": [
+    "INT8[]"
+  ],
+  "vod_category_settings_existing": [
+    "INT8",
+    "INT8[]"
+  ],
+  "vod_category_settings_upsert": [
+    "INT8",
+    "JSONB"
+  ],
+  "language_movie_candidates": [
+    "INT8",
+    "TIMESTAMPTZ"
+  ],
+  "language_movie_min_rows": [
+    "INT8[]"
+  ],
+  "language_movie_row": [
+    "INT8"
+  ],
+  "language_movie_relations": [
+    "INT8[]"
+  ],
+  "language_movie_slot": [
+    "JSONB",
+    "TEXT"
+  ],
+  "language_movie_bulk_language": [
+    "JSONB"
+  ],
+  "language_movie_insert": [
+    "JSONB"
+  ],
+  "language_movie_move": [
+    "INT8[]",
+    "INT8"
+  ],
+  "language_movie_delete": [
+    "INT8"
+  ],
+  "language_movie_metadata": [
+    "JSONB"
+  ],
+  "language_series_candidates": [
+    "INT8",
+    "TIMESTAMPTZ"
+  ],
+  "language_series_min_rows": [
+    "INT8[]"
+  ],
+  "language_series_row": [
+    "INT8"
+  ],
+  "language_series_relations": [
+    "INT8[]"
+  ],
+  "language_series_slot": [
+    "JSONB",
+    "TEXT"
+  ],
+  "language_series_bulk_language": [
+    "JSONB"
+  ],
+  "language_series_insert": [
+    "JSONB"
+  ],
+  "language_series_move": [
+    "INT8[]",
+    "INT8"
+  ],
+  "language_series_delete": [
+    "INT8"
+  ],
+  "language_series_metadata": [
+    "JSONB"
+  ],
+  "language_episode_rows": [
+    "INT8"
+  ],
+  "language_episode_relations": [
+    "INT8"
+  ],
+  "language_episode_collision": [
+    "JSONB",
+    "INT8"
+  ],
+  "language_episode_move": [
+    "INT8",
+    "INT8"
+  ],
+  "language_episode_move_all_relations": [
+    "INT8",
+    "INT8"
+  ],
+  "language_episode_move_relations": [
+    "INT8[]",
+    "INT8"
+  ],
+  "language_episode_insert": [
+    "JSONB"
+  ],
+  "language_episode_delete_relations": [
+    "INT8"
+  ],
+  "language_episode_delete": [
+    "INT8"
+  ],
+  "language_episode_empty": [
+    "INT8[]"
+  ],
+  "language_episode_has_relations": [
+    "INT8"
+  ],
+  "language_category_map": [
+    "INT8[]",
+    "INT8[]"
+  ]
+}

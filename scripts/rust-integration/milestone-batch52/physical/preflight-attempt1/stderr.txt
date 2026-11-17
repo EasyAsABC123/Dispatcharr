@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-vod-language-schema-runner-1/launch.py", line 11, in <module>
+    runpy.run_path(sys.argv[0],run_name='__main__')
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen runpy>", line 294, in run_path
+  File "<frozen runpy>", line 98, in _run_module_code
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-vod-language-schema-runner-1/tools/run_source.py", line 190, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-vod-language-schema-runner-1/tools/run_source.py", line 65, in main
+    require(inputs.get('Original_archive_sha256')==ARCHIVE and re.fullmatch('sha256:[a-f0-9]{64}',inputs.get('Original_image_id','')),'PinnedOriginalIdentity');require(inputs.get('output')==str(out)and not out.exists(),'FixedFreshOutput')
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-vod-language-schema-runner-1/tools/run_source.py", line 15, in require
+    if not ok:raise ValueError(label)
+              ^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: PinnedOriginalIdentity

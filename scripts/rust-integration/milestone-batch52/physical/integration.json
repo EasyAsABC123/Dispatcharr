@@ -1,0 +1,56 @@
+{
+  "passed": true,
+  "Source_verified": false,
+  "Native_verified": false,
+  "performance_verified": false,
+  "project": "dispatcharr-matching-schema-fca22bf077",
+  "database": "rust_probe_backup_jobs_a2d8ab5d57",
+  "scope": "Readonly84/68 Parse/Describe plus separate actual production UPDATE4 on transaction-local shadows, rollback; no tasks/media",
+  "execution_inputs_sha256": "9cbcaa945f3589b25bdef6f2f20e7b5a63b90fc71291eab043ab996f557588d3",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "Original_container": {
+    "id": "9bd7dfddaeb3b3aa8d8c92359e1ea13f6da6f602ce98150b0253ea354bb256d3",
+    "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "image_reference": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+  },
+  "owned_containers": [
+    "9bd7dfddaeb3b3aa8d8c92359e1ea13f6da6f602ce98150b0253ea354bb256d3"
+  ],
+  "web_stop": {
+    "running": false,
+    "pid": 266,
+    "exit_code": 0,
+    "ok": true
+  },
+  "native_ldd": "\tlinux-vdso.so.1 (0x00007f8f9131b000)\n\tlibgcc_s.so.1 => /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f8f912df000)\n\tlibm.so.6 => /usr/lib/x86_64-linux-gnu/libm.so.6 (0x00007f8f8d4da000)\n\tlibc.so.6 => /usr/lib/x86_64-linux-gnu/libc.so.6 (0x00007f8f8d2b9000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f8f9131d000)\n",
+  "actual_controller_exit": 0,
+  "actual_controller_settled": true,
+  "schema_raw_sha256": "74ba104fb511b86d00f6180c87aac7ade83d5323cb1930b3f93207d47ae54ccd",
+  "schema_acceptance": {
+    "schema_verified": true,
+    "prepared_statements": 84,
+    "wrong_bind_controls_rejected": 68,
+    "task_media_or_DML_verified": false
+  },
+  "schema_verified": true,
+  "statements": 84,
+  "default_database_unchanged": true,
+  "default_audit_scope": {
+    "columns": 501,
+    "constraints": 198,
+    "indexes": 255,
+    "sequences": 59,
+    "tables": 62
+  },
+  "cleanup_budget": {
+    "budget_seconds": 90,
+    "elapsed_seconds": 1.3296921770088375,
+    "within_budget": true,
+    "scope": "Acceptance deadline only; physical stop/join may finish later but can never qualify then"
+  },
+  "actual_host_exit": 0,
+  "separate_semantic_DML_executed": true,
+  "separate_semantic_cases": 4,
+  "separate_semantic_rolled_back": true
+}

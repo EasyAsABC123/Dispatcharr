@@ -1,0 +1,51 @@
+{
+  "SDK": 77,
+  "all_four_actual_gates0": true,
+  "Root_session_consumed": 23222,
+  "passed": 1181,
+  "failed": 0,
+  "ignored": 785,
+  "blocks": 180,
+  "inputs": 1455,
+  "Rust_inputs": 1449,
+  "changes_from_SDK74": [
+    "rust/crates/store/src/channel_matching_sql_peer.rs",
+    "rust/crates/store/src/lib.rs",
+    "rust/crates/store/src/provider_reads.rs",
+    "rust/crates/store/src/vod_category_settings.rs",
+    "rust/crates/store/src/vod_ingestion.rs",
+    "rust/crates/store/src/vod_ingestion_language_episodes.rs",
+    "rust/crates/store/src/vod_ingestion_language_sql.rs",
+    "rust/crates/store/src/vod_ingestion_series_sql.rs",
+    "rust/crates/store/src/vod_ingestion_sql.rs"
+  ],
+  "change_scope": "Category group-settings API, cached category-language identity pinning and Source-characterized language/episode reconciliation; readonly84/68 plus separate temporary rollback UPDATE4",
+  "gate_seconds": {
+    "fmt": 3.171689510345459,
+    "check": 19.69166660308838,
+    "strict": 47.78944683074951,
+    "workspace": 128.20853805541992
+  },
+  "workspace_ignored_physical_SQL_and_rollback_DML_not_run_by_SDK": true,
+  "physical_validation": {
+    "state": "ACTUAL_SEPARATE_READONLY_AND_TEMPORARY_DML_GATES_PASSED",
+    "readonly_positive_statements_passed": 84,
+    "readonly_wrong_bind_controls_passed": 68,
+    "readonly_DML_executed": false,
+    "separate_temporary_UPDATE_cases_passed": 4,
+    "separate_DML_executed": true,
+    "separate_DML_rolled_back": true,
+    "public_rows_and_sequence_catalog_exact": true,
+    "Root_independent_cleanup_passed": true,
+    "public_identity": "scripts/rust-integration/milestone-batch52/physical/identity.json"
+  },
+  "Source_authority": {
+    "path": "scripts/rust-integration/category-language-source1/index.json",
+    "sha256": "de03d1a89bad45ee60f2637a62b13e4a6a1d64fcf8bdbd2c3f5898b83e47265c"
+  },
+  "image_packages_Native13_public13_pending": true,
+  "performance_verified": false,
+  "full_milestone_accepted": false,
+  "original_authors_retain_all_credit": true,
+  "historical75_strict_failure_and76_unchanged_duplicate_retained": true
+}
