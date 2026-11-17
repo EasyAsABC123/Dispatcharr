@@ -1,0 +1,1347 @@
+{
+  "passed": true,
+  "DML_executed": true,
+  "schema_only": false,
+  "temporary_typed_tables_and_OWNED_sequences_only": true,
+  "real_deferred_COMMIT_error_cases": 2,
+  "SET_CONSTRAINTS_standin_used": false,
+  "actual_production_parser_transaction_and_GET_serializer": true,
+  "HTTP_auth_tested": false,
+  "public15_tables_and_all_public_sequence_states_exact": true,
+  "temporary_tables_and_sequences_absent": true,
+  "cases": [
+    {
+      "case": "duplicate-live",
+      "passed": true,
+      "request": {
+        "group_settings": [
+          {
+            "channel_group": 1700000021,
+            "enabled": false,
+            "auto_channel_sync": true,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "custom_properties": {
+              "channel_profile_ids": [
+                "1",
+                "bad"
+              ],
+              "sent": true
+            }
+          },
+          {
+            "channel_group": 1700000022,
+            "enabled": false,
+            "auto_channel_sync": true,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "custom_properties": {
+              "channel_profile_ids": [
+                "1",
+                "bad"
+              ],
+              "sent": true
+            }
+          },
+          {
+            "channel_group": 1700000021,
+            "enabled": false,
+            "auto_channel_sync": true,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "custom_properties": {
+              "channel_profile_ids": [
+                "1",
+                "bad"
+              ],
+              "sent": true
+            }
+          }
+        ],
+        "category_settings": [
+          {
+            "id": 1700000031,
+            "enabled": false,
+            "custom_properties": {
+              "quality": "720p"
+            }
+          },
+          {
+            "id": 1700000032,
+            "enabled": false,
+            "custom_properties": {
+              "quality": "720p"
+            }
+          }
+        ]
+      },
+      "status": 400,
+      "response": {
+        "error": "Failed to update group settings: ON CONFLICT DO UPDATE command cannot affect row a second time\nHINT:  Ensure that no rows proposed for insertion within the same command have duplicate constrained values."
+      },
+      "before": {
+        "rows": {
+          "live": [
+            {
+              "id": 41,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000021,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            },
+            {
+              "id": 42,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000022,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            }
+          ],
+          "categories": [
+            {
+              "id": 51,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000031,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            },
+            {
+              "id": 52,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000032,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            }
+          ]
+        },
+        "live_sequence": {
+          "log_cnt": 0,
+          "is_called": true,
+          "last_value": 100
+        },
+        "category_sequence": {
+          "log_cnt": 0,
+          "is_called": true,
+          "last_value": 200
+        }
+      },
+      "after": {
+        "rows": {
+          "live": [
+            {
+              "id": 41,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000021,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            },
+            {
+              "id": 42,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000022,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            }
+          ],
+          "categories": [
+            {
+              "id": 51,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000031,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            },
+            {
+              "id": 52,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000032,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            }
+          ]
+        },
+        "live_sequence": {
+          "log_cnt": 32,
+          "is_called": true,
+          "last_value": 103
+        },
+        "category_sequence": {
+          "log_cnt": 0,
+          "is_called": true,
+          "last_value": 200
+        }
+      },
+      "expected_rows": {
+        "live": [
+          {
+            "id": 41,
+            "enabled": true,
+            "is_stale": false,
+            "last_seen": "2020-01-01T00:00:00+00:00",
+            "m3u_account_id": 1700000011,
+            "channel_group_id": 1700000021,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "auto_sync_channel_end": null,
+            "auto_sync_channel_start": 1
+          },
+          {
+            "id": 42,
+            "enabled": true,
+            "is_stale": false,
+            "last_seen": "2020-01-01T00:00:00+00:00",
+            "m3u_account_id": 1700000011,
+            "channel_group_id": 1700000022,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "auto_sync_channel_end": null,
+            "auto_sync_channel_start": 1
+          }
+        ],
+        "categories": [
+          {
+            "id": 51,
+            "enabled": true,
+            "created_at": "2020-01-01T00:00:00+00:00",
+            "updated_at": "2020-01-02T00:00:00+00:00",
+            "category_id": 1700000031,
+            "m3u_account_id": 1700000011,
+            "custom_properties": {
+              "keep": true,
+              "language": "en"
+            }
+          },
+          {
+            "id": 52,
+            "enabled": true,
+            "created_at": "2020-01-01T00:00:00+00:00",
+            "updated_at": "2020-01-02T00:00:00+00:00",
+            "category_id": 1700000032,
+            "m3u_account_id": 1700000011,
+            "custom_properties": {
+              "keep": true,
+              "language": "en"
+            }
+          }
+        ]
+      },
+      "actual_operation_error_branch_delta": 1,
+      "actual_commit_error_branch_delta": 0,
+      "same_backend_PID": true,
+      "transaction_idle": true,
+      "Ready": "Ok(())",
+      "actual_production_GET_query_and_serializer": {
+        "id": 1700000011,
+        "name": "Owned physical API",
+        "server_url": null,
+        "file_path": null,
+        "max_streams": 0,
+        "is_active": true,
+        "created_at": null,
+        "updated_at": null,
+        "locked": null,
+        "refresh_interval": null,
+        "custom_properties": {},
+        "account_type": "XC",
+        "username": null,
+        "stale_stream_days": null,
+        "priority": null,
+        "status": null,
+        "last_message": null,
+        "server_group": null,
+        "user_agent": null,
+        "password": "",
+        "enable_vod": false,
+        "auto_enable_new_groups_live": true,
+        "auto_enable_new_groups_vod": true,
+        "auto_enable_new_groups_series": true,
+        "hash_key": null,
+        "cron_expression": "",
+        "profiles": [],
+        "exp_date": null,
+        "earliest_expiration": null,
+        "all_expirations": [],
+        "filters": [],
+        "channel_groups": [
+          {
+            "enabled": true,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "is_stale": false,
+            "stream_count": 0,
+            "channel_group": 1700000021,
+            "auto_sync_channel_start": 1.0,
+            "auto_sync_channel_end": null,
+            "last_seen": "2020-01-01T00:00:00Z"
+          },
+          {
+            "enabled": true,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "is_stale": false,
+            "stream_count": 0,
+            "channel_group": 1700000022,
+            "auto_sync_channel_start": 1.0,
+            "auto_sync_channel_end": null,
+            "last_seen": "2020-01-01T00:00:00Z"
+          }
+        ]
+      },
+      "GET_succeeded": true,
+      "live_sequence_delta": 3,
+      "category_sequence_delta": 0
+    },
+    {
+      "case": "missing-live-FK",
+      "passed": true,
+      "request": {
+        "group_settings": [
+          {
+            "channel_group": 1700000021,
+            "enabled": false,
+            "auto_channel_sync": true,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "custom_properties": {
+              "channel_profile_ids": [
+                "1",
+                "bad"
+              ],
+              "sent": true
+            }
+          },
+          {
+            "channel_group": 1700000299,
+            "enabled": false,
+            "auto_channel_sync": true,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "custom_properties": {
+              "channel_profile_ids": [
+                "1",
+                "bad"
+              ],
+              "sent": true
+            }
+          }
+        ],
+        "category_settings": [
+          {
+            "id": 1700000031,
+            "enabled": false,
+            "custom_properties": {
+              "quality": "720p"
+            }
+          },
+          {
+            "id": 1700000032,
+            "enabled": false,
+            "custom_properties": {
+              "quality": "720p"
+            }
+          }
+        ]
+      },
+      "status": 400,
+      "response": {
+        "error": "Failed to update group settings: insert or update on table \"dispatcharr_channels_channelgroupm3uaccount\" violates foreign key constraint \"dispatcharr_channels_channel_group_id_349e35c9_fk_dispatcha\"\nDETAIL:  Key (channel_group_id)=(1700000299) is not present in table \"dispatcharr_channels_channelgroup\"."
+      },
+      "before": {
+        "rows": {
+          "live": [
+            {
+              "id": 41,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000021,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            },
+            {
+              "id": 42,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000022,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            }
+          ],
+          "categories": [
+            {
+              "id": 51,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000031,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            },
+            {
+              "id": 52,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000032,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            }
+          ]
+        },
+        "live_sequence": {
+          "log_cnt": 0,
+          "is_called": true,
+          "last_value": 100
+        },
+        "category_sequence": {
+          "log_cnt": 0,
+          "is_called": true,
+          "last_value": 200
+        }
+      },
+      "after": {
+        "rows": {
+          "live": [
+            {
+              "id": 41,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000021,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            },
+            {
+              "id": 42,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000022,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            }
+          ],
+          "categories": [
+            {
+              "id": 51,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000031,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            },
+            {
+              "id": 52,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000032,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            }
+          ]
+        },
+        "live_sequence": {
+          "log_cnt": 32,
+          "is_called": true,
+          "last_value": 102
+        },
+        "category_sequence": {
+          "log_cnt": 32,
+          "is_called": true,
+          "last_value": 202
+        }
+      },
+      "expected_rows": {
+        "live": [
+          {
+            "id": 41,
+            "enabled": true,
+            "is_stale": false,
+            "last_seen": "2020-01-01T00:00:00+00:00",
+            "m3u_account_id": 1700000011,
+            "channel_group_id": 1700000021,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "auto_sync_channel_end": null,
+            "auto_sync_channel_start": 1
+          },
+          {
+            "id": 42,
+            "enabled": true,
+            "is_stale": false,
+            "last_seen": "2020-01-01T00:00:00+00:00",
+            "m3u_account_id": 1700000011,
+            "channel_group_id": 1700000022,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "auto_sync_channel_end": null,
+            "auto_sync_channel_start": 1
+          }
+        ],
+        "categories": [
+          {
+            "id": 51,
+            "enabled": true,
+            "created_at": "2020-01-01T00:00:00+00:00",
+            "updated_at": "2020-01-02T00:00:00+00:00",
+            "category_id": 1700000031,
+            "m3u_account_id": 1700000011,
+            "custom_properties": {
+              "keep": true,
+              "language": "en"
+            }
+          },
+          {
+            "id": 52,
+            "enabled": true,
+            "created_at": "2020-01-01T00:00:00+00:00",
+            "updated_at": "2020-01-02T00:00:00+00:00",
+            "category_id": 1700000032,
+            "m3u_account_id": 1700000011,
+            "custom_properties": {
+              "keep": true,
+              "language": "en"
+            }
+          }
+        ]
+      },
+      "actual_operation_error_branch_delta": 0,
+      "actual_commit_error_branch_delta": 1,
+      "same_backend_PID": true,
+      "transaction_idle": true,
+      "Ready": "Ok(())",
+      "actual_production_GET_query_and_serializer": {
+        "id": 1700000011,
+        "name": "Owned physical API",
+        "server_url": null,
+        "file_path": null,
+        "max_streams": 0,
+        "is_active": true,
+        "created_at": null,
+        "updated_at": null,
+        "locked": null,
+        "refresh_interval": null,
+        "custom_properties": {},
+        "account_type": "XC",
+        "username": null,
+        "stale_stream_days": null,
+        "priority": null,
+        "status": null,
+        "last_message": null,
+        "server_group": null,
+        "user_agent": null,
+        "password": "",
+        "enable_vod": false,
+        "auto_enable_new_groups_live": true,
+        "auto_enable_new_groups_vod": true,
+        "auto_enable_new_groups_series": true,
+        "hash_key": null,
+        "cron_expression": "",
+        "profiles": [],
+        "exp_date": null,
+        "earliest_expiration": null,
+        "all_expirations": [],
+        "filters": [],
+        "channel_groups": [
+          {
+            "enabled": true,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "is_stale": false,
+            "stream_count": 0,
+            "channel_group": 1700000021,
+            "auto_sync_channel_start": 1.0,
+            "auto_sync_channel_end": null,
+            "last_seen": "2020-01-01T00:00:00Z"
+          },
+          {
+            "enabled": true,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "is_stale": false,
+            "stream_count": 0,
+            "channel_group": 1700000022,
+            "auto_sync_channel_start": 1.0,
+            "auto_sync_channel_end": null,
+            "last_seen": "2020-01-01T00:00:00Z"
+          }
+        ]
+      },
+      "GET_succeeded": true,
+      "live_sequence_delta": 2,
+      "category_sequence_delta": 2
+    },
+    {
+      "case": "missing-category-FK",
+      "passed": true,
+      "request": {
+        "group_settings": [
+          {
+            "channel_group": 1700000021,
+            "enabled": false,
+            "auto_channel_sync": true,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "custom_properties": {
+              "channel_profile_ids": [
+                "1",
+                "bad"
+              ],
+              "sent": true
+            }
+          },
+          {
+            "channel_group": 1700000022,
+            "enabled": false,
+            "auto_channel_sync": true,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "custom_properties": {
+              "channel_profile_ids": [
+                "1",
+                "bad"
+              ],
+              "sent": true
+            }
+          }
+        ],
+        "category_settings": [
+          {
+            "id": 1700000031,
+            "enabled": false,
+            "custom_properties": {
+              "quality": "720p"
+            }
+          },
+          {
+            "id": 1700000399,
+            "enabled": false,
+            "custom_properties": {
+              "quality": "720p"
+            }
+          }
+        ]
+      },
+      "status": 400,
+      "response": {
+        "error": "Failed to update group settings: insert or update on table \"vod_m3uvodcategoryrelation\" violates foreign key constraint \"vod_m3uvodcategoryre_category_id_f3a1c233_fk_vod_vodca\"\nDETAIL:  Key (category_id)=(1700000399) is not present in table \"vod_vodcategory\"."
+      },
+      "before": {
+        "rows": {
+          "live": [
+            {
+              "id": 41,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000021,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            },
+            {
+              "id": 42,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000022,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            }
+          ],
+          "categories": [
+            {
+              "id": 51,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000031,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            },
+            {
+              "id": 52,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000032,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            }
+          ]
+        },
+        "live_sequence": {
+          "log_cnt": 0,
+          "is_called": true,
+          "last_value": 100
+        },
+        "category_sequence": {
+          "log_cnt": 0,
+          "is_called": true,
+          "last_value": 200
+        }
+      },
+      "after": {
+        "rows": {
+          "live": [
+            {
+              "id": 41,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000021,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            },
+            {
+              "id": 42,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000022,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            }
+          ],
+          "categories": [
+            {
+              "id": 51,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000031,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            },
+            {
+              "id": 52,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000032,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            }
+          ]
+        },
+        "live_sequence": {
+          "log_cnt": 32,
+          "is_called": true,
+          "last_value": 102
+        },
+        "category_sequence": {
+          "log_cnt": 32,
+          "is_called": true,
+          "last_value": 202
+        }
+      },
+      "expected_rows": {
+        "live": [
+          {
+            "id": 41,
+            "enabled": true,
+            "is_stale": false,
+            "last_seen": "2020-01-01T00:00:00+00:00",
+            "m3u_account_id": 1700000011,
+            "channel_group_id": 1700000021,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "auto_sync_channel_end": null,
+            "auto_sync_channel_start": 1
+          },
+          {
+            "id": 42,
+            "enabled": true,
+            "is_stale": false,
+            "last_seen": "2020-01-01T00:00:00+00:00",
+            "m3u_account_id": 1700000011,
+            "channel_group_id": 1700000022,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "auto_sync_channel_end": null,
+            "auto_sync_channel_start": 1
+          }
+        ],
+        "categories": [
+          {
+            "id": 51,
+            "enabled": true,
+            "created_at": "2020-01-01T00:00:00+00:00",
+            "updated_at": "2020-01-02T00:00:00+00:00",
+            "category_id": 1700000031,
+            "m3u_account_id": 1700000011,
+            "custom_properties": {
+              "keep": true,
+              "language": "en"
+            }
+          },
+          {
+            "id": 52,
+            "enabled": true,
+            "created_at": "2020-01-01T00:00:00+00:00",
+            "updated_at": "2020-01-02T00:00:00+00:00",
+            "category_id": 1700000032,
+            "m3u_account_id": 1700000011,
+            "custom_properties": {
+              "keep": true,
+              "language": "en"
+            }
+          }
+        ]
+      },
+      "actual_operation_error_branch_delta": 0,
+      "actual_commit_error_branch_delta": 1,
+      "same_backend_PID": true,
+      "transaction_idle": true,
+      "Ready": "Ok(())",
+      "actual_production_GET_query_and_serializer": {
+        "id": 1700000011,
+        "name": "Owned physical API",
+        "server_url": null,
+        "file_path": null,
+        "max_streams": 0,
+        "is_active": true,
+        "created_at": null,
+        "updated_at": null,
+        "locked": null,
+        "refresh_interval": null,
+        "custom_properties": {},
+        "account_type": "XC",
+        "username": null,
+        "stale_stream_days": null,
+        "priority": null,
+        "status": null,
+        "last_message": null,
+        "server_group": null,
+        "user_agent": null,
+        "password": "",
+        "enable_vod": false,
+        "auto_enable_new_groups_live": true,
+        "auto_enable_new_groups_vod": true,
+        "auto_enable_new_groups_series": true,
+        "hash_key": null,
+        "cron_expression": "",
+        "profiles": [],
+        "exp_date": null,
+        "earliest_expiration": null,
+        "all_expirations": [],
+        "filters": [],
+        "channel_groups": [
+          {
+            "enabled": true,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "is_stale": false,
+            "stream_count": 0,
+            "channel_group": 1700000021,
+            "auto_sync_channel_start": 1.0,
+            "auto_sync_channel_end": null,
+            "last_seen": "2020-01-01T00:00:00Z"
+          },
+          {
+            "enabled": true,
+            "auto_channel_sync": false,
+            "custom_properties": {
+              "baseline": true
+            },
+            "is_stale": false,
+            "stream_count": 0,
+            "channel_group": 1700000022,
+            "auto_sync_channel_start": 1.0,
+            "auto_sync_channel_end": null,
+            "last_seen": "2020-01-01T00:00:00Z"
+          }
+        ]
+      },
+      "GET_succeeded": true,
+      "live_sequence_delta": 2,
+      "category_sequence_delta": 2
+    },
+    {
+      "case": "healthy-combined",
+      "passed": true,
+      "request": {
+        "group_settings": [
+          {
+            "channel_group": 1700000021,
+            "enabled": false,
+            "auto_channel_sync": true,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "custom_properties": {
+              "channel_profile_ids": [
+                "1",
+                "bad"
+              ],
+              "sent": true
+            }
+          },
+          {
+            "channel_group": 1700000022,
+            "enabled": false,
+            "auto_channel_sync": true,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "custom_properties": {
+              "channel_profile_ids": [
+                "1",
+                "bad"
+              ],
+              "sent": true
+            }
+          }
+        ],
+        "category_settings": [
+          {
+            "id": 1700000031,
+            "enabled": false,
+            "custom_properties": {
+              "quality": "720p"
+            }
+          },
+          {
+            "id": 1700000032,
+            "enabled": false,
+            "custom_properties": {
+              "quality": "720p"
+            }
+          }
+        ]
+      },
+      "status": 200,
+      "response": {
+        "message": "Group settings updated successfully"
+      },
+      "before": {
+        "rows": {
+          "live": [
+            {
+              "id": 41,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000021,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            },
+            {
+              "id": 42,
+              "enabled": true,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000022,
+              "auto_channel_sync": false,
+              "custom_properties": {
+                "baseline": true
+              },
+              "auto_sync_channel_end": null,
+              "auto_sync_channel_start": 1
+            }
+          ],
+          "categories": [
+            {
+              "id": 51,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000031,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            },
+            {
+              "id": 52,
+              "enabled": true,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000032,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "language": "en"
+              }
+            }
+          ]
+        },
+        "live_sequence": {
+          "log_cnt": 0,
+          "is_called": true,
+          "last_value": 100
+        },
+        "category_sequence": {
+          "log_cnt": 0,
+          "is_called": true,
+          "last_value": 200
+        }
+      },
+      "after": {
+        "rows": {
+          "live": [
+            {
+              "id": 41,
+              "enabled": false,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000021,
+              "auto_channel_sync": true,
+              "custom_properties": {
+                "sent": true,
+                "channel_profile_ids": [
+                  1
+                ]
+              },
+              "auto_sync_channel_end": 9.5,
+              "auto_sync_channel_start": 1.5
+            },
+            {
+              "id": 42,
+              "enabled": false,
+              "is_stale": false,
+              "last_seen": "2020-01-01T00:00:00+00:00",
+              "m3u_account_id": 1700000011,
+              "channel_group_id": 1700000022,
+              "auto_channel_sync": true,
+              "custom_properties": {
+                "sent": true,
+                "channel_profile_ids": [
+                  1
+                ]
+              },
+              "auto_sync_channel_end": 9.5,
+              "auto_sync_channel_start": 1.5
+            }
+          ],
+          "categories": [
+            {
+              "id": 51,
+              "enabled": false,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000031,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "quality": "720p",
+                "language": "en"
+              }
+            },
+            {
+              "id": 52,
+              "enabled": false,
+              "created_at": "2020-01-01T00:00:00+00:00",
+              "updated_at": "2020-01-02T00:00:00+00:00",
+              "category_id": 1700000032,
+              "m3u_account_id": 1700000011,
+              "custom_properties": {
+                "keep": true,
+                "quality": "720p",
+                "language": "en"
+              }
+            }
+          ]
+        },
+        "live_sequence": {
+          "log_cnt": 32,
+          "is_called": true,
+          "last_value": 102
+        },
+        "category_sequence": {
+          "log_cnt": 32,
+          "is_called": true,
+          "last_value": 202
+        }
+      },
+      "expected_rows": {
+        "live": [
+          {
+            "id": 41,
+            "enabled": false,
+            "is_stale": false,
+            "last_seen": "2020-01-01T00:00:00+00:00",
+            "m3u_account_id": 1700000011,
+            "channel_group_id": 1700000021,
+            "auto_channel_sync": true,
+            "custom_properties": {
+              "channel_profile_ids": [
+                1
+              ],
+              "sent": true
+            },
+            "auto_sync_channel_end": 9.5,
+            "auto_sync_channel_start": 1.5
+          },
+          {
+            "id": 42,
+            "enabled": false,
+            "is_stale": false,
+            "last_seen": "2020-01-01T00:00:00+00:00",
+            "m3u_account_id": 1700000011,
+            "channel_group_id": 1700000022,
+            "auto_channel_sync": true,
+            "custom_properties": {
+              "channel_profile_ids": [
+                1
+              ],
+              "sent": true
+            },
+            "auto_sync_channel_end": 9.5,
+            "auto_sync_channel_start": 1.5
+          }
+        ],
+        "categories": [
+          {
+            "id": 51,
+            "enabled": false,
+            "created_at": "2020-01-01T00:00:00+00:00",
+            "updated_at": "2020-01-02T00:00:00+00:00",
+            "category_id": 1700000031,
+            "m3u_account_id": 1700000011,
+            "custom_properties": {
+              "language": "en",
+              "keep": true,
+              "quality": "720p"
+            }
+          },
+          {
+            "id": 52,
+            "enabled": false,
+            "created_at": "2020-01-01T00:00:00+00:00",
+            "updated_at": "2020-01-02T00:00:00+00:00",
+            "category_id": 1700000032,
+            "m3u_account_id": 1700000011,
+            "custom_properties": {
+              "language": "en",
+              "keep": true,
+              "quality": "720p"
+            }
+          }
+        ]
+      },
+      "actual_operation_error_branch_delta": 0,
+      "actual_commit_error_branch_delta": 0,
+      "same_backend_PID": true,
+      "transaction_idle": true,
+      "Ready": "Ok(())",
+      "actual_production_GET_query_and_serializer": {
+        "id": 1700000011,
+        "name": "Owned physical API",
+        "server_url": null,
+        "file_path": null,
+        "max_streams": 0,
+        "is_active": true,
+        "created_at": null,
+        "updated_at": null,
+        "locked": null,
+        "refresh_interval": null,
+        "custom_properties": {},
+        "account_type": "XC",
+        "username": null,
+        "stale_stream_days": null,
+        "priority": null,
+        "status": null,
+        "last_message": null,
+        "server_group": null,
+        "user_agent": null,
+        "password": "",
+        "enable_vod": false,
+        "auto_enable_new_groups_live": true,
+        "auto_enable_new_groups_vod": true,
+        "auto_enable_new_groups_series": true,
+        "hash_key": null,
+        "cron_expression": "",
+        "profiles": [],
+        "exp_date": null,
+        "earliest_expiration": null,
+        "all_expirations": [],
+        "filters": [],
+        "channel_groups": [
+          {
+            "enabled": false,
+            "auto_channel_sync": true,
+            "custom_properties": {
+              "sent": true,
+              "channel_profile_ids": [
+                1
+              ]
+            },
+            "is_stale": false,
+            "stream_count": 0,
+            "channel_group": 1700000021,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "last_seen": "2020-01-01T00:00:00Z"
+          },
+          {
+            "enabled": false,
+            "auto_channel_sync": true,
+            "custom_properties": {
+              "sent": true,
+              "channel_profile_ids": [
+                1
+              ]
+            },
+            "is_stale": false,
+            "stream_count": 0,
+            "channel_group": 1700000022,
+            "auto_sync_channel_start": 1.5,
+            "auto_sync_channel_end": 9.5,
+            "last_seen": "2020-01-01T00:00:00Z"
+          }
+        ]
+      },
+      "GET_succeeded": true,
+      "live_sequence_delta": 2,
+      "category_sequence_delta": 2
+    }
+  ],
+  "final_Ready": "Ok(())",
+  "pool_closed_awaited": true,
+  "task_or_media_executed": false,
+  "performance_verified": false,
+  "full_milestone_accepted": false
+}

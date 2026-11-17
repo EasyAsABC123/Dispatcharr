@@ -1,0 +1,2398 @@
+{
+  "passed": true,
+  "schema_only": true,
+  "DML_executed": false,
+  "task_or_media_executed": false,
+  "actual_readonly": "on",
+  "statement_cache_disabled": true,
+  "components": {
+    "matching": 11,
+    "station": 3,
+    "aggregate": 1,
+    "comskip": 4,
+    "vod_advanced": 20,
+    "vod_list_metadata": 8,
+    "vod_language_pinning": 2,
+    "vod_language_reconcile": 32,
+    "vod_category_settings": 3
+  },
+  "statements": [
+    {
+      "name": "channels",
+      "sql": "SELECT id::bigint,name,tvg_id,tvc_guide_stationid,epg_data_id::bigint,auto_created,channel_group_id::bigint FROM dispatcharr_channels_channel WHERE ($1 AND epg_data_id IS NULL) OR (NOT $1 AND id=ANY($2)) LIMIT 65537",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "BOOL",
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "BOOL",
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tvg_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tvc_guide_stationid",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "epg_data_id",
+          "type": "INT8"
+        },
+        {
+          "name": "auto_created",
+          "type": "BOOL"
+        },
+        {
+          "name": "channel_group_id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "single_exact",
+      "sql": "SELECT e.id::bigint FROM epg_epgdata e JOIN epg_epgsource s ON s.id=e.epg_source_id WHERE s.is_active AND UPPER(e.tvg_id::text)=UPPER($1) ORDER BY e.id ASC LIMIT 1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "TEXT"
+      ],
+      "provided_parameter_types": [
+        "TEXT"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "catalog",
+      "sql": "SELECT e.id::bigint,e.name,e.tvg_id,e.epg_source_id::bigint,s.priority::bigint,s.source_type,EXISTS(SELECT 1 FROM epg_programdata p WHERE p.epg_id=e.id) AS has_programs FROM epg_epgdata e JOIN epg_epgsource s ON s.id=e.epg_source_id WHERE s.is_active AND ($1::bigint IS NULL OR e.id=$1) LIMIT 65537",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tvg_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "epg_source_id",
+          "type": "INT8"
+        },
+        {
+          "name": "priority",
+          "type": "INT8"
+        },
+        {
+          "name": "source_type",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "has_programs",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "settings",
+      "sql": "SELECT key,CASE WHEN octet_length(value::text)<=65536 THEN value ELSE NULL END AS value,COALESCE(octet_length(value::text),0)<=65536 AS supported FROM core_coresettings WHERE key IN ('preferred-region','epg_settings')",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [],
+      "provided_parameter_types": [],
+      "columns": [
+        {
+          "name": "key",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "value",
+          "type": "JSONB"
+        },
+        {
+          "name": "supported",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "bulk_candidates",
+      "sql": "SELECT c.id::bigint,x.epg FROM dispatcharr_channels_channel c JOIN jsonb_to_recordset($1) x(id bigint,epg bigint) ON x.id=c.id JOIN epg_epgdata e ON e.id=x.epg WHERE c.epg_data_id IS DISTINCT FROM x.epg",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "epg",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "bulk_update",
+      "sql": "UPDATE dispatcharr_channels_channel c SET epg_data_id=x.epg_data_id FROM jsonb_to_recordset($1) x(channel_id bigint,epg_data_id bigint) WHERE c.id=x.channel_id",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "child_epgs",
+      "sql": "SELECT e.id::bigint,e.name,e.tvg_id,e.epg_source_id::bigint,s.source_type,EXISTS(SELECT 1 FROM epg_programdata p WHERE p.epg_id=e.id) AS has_programs FROM epg_epgdata e LEFT JOIN epg_epgsource s ON s.id=e.epg_source_id WHERE e.id=ANY($1)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "tvg_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "epg_source_id",
+          "type": "INT8"
+        },
+        {
+          "name": "source_type",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "has_programs",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "single_update",
+      "sql": "UPDATE dispatcharr_channels_channel SET epg_data_id=$2 WHERE id=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "mark_custom",
+      "sql": "INSERT INTO dispatcharr_channels_channelgroupm3uaccount(channel_group_id,m3u_account_id,custom_properties,enabled,auto_channel_sync,auto_sync_channel_start,auto_sync_channel_end,last_seen,is_stale) SELECT $1,id,'{}'::jsonb,true,false,NULL,NULL,now(),false FROM m3u_m3uaccount WHERE name='custom' AND locked ON CONFLICT(channel_group_id,m3u_account_id) DO NOTHING",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "serialize",
+      "sql": "SELECT to_jsonb(c) AS raw,CASE WHEN o.id IS NULL THEN NULL ELSE to_jsonb(o) END AS ov,a.name AS account_name,COALESCE((SELECT jsonb_agg(jsonb_build_object('raw',to_jsonb(s),'account_name',ma.name) ORDER BY cs.\"order\") FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id LEFT JOIN m3u_m3uaccount ma ON ma.id=s.m3u_account_id WHERE cs.channel_id=c.id),'[]'::jsonb) AS streams FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id LEFT JOIN m3u_m3uaccount a ON a.id=c.auto_created_by_id LEFT JOIN dispatcharr_channels_channelgroup g ON g.id=c.channel_group_id LEFT JOIN dispatcharr_channels_channelgroup og ON og.id=o.channel_group_id LEFT JOIN epg_epgdata e ON e.id=c.epg_data_id LEFT JOIN epg_epgdata oe ON oe.id=o.epg_data_id LEFT JOIN epg_epgsource es ON es.id=e.epg_source_id LEFT JOIN epg_epgsource oes ON oes.id=oe.epg_source_id WHERE true AND c.id=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "raw",
+          "type": "JSONB"
+        },
+        {
+          "name": "ov",
+          "type": "JSONB"
+        },
+        {
+          "name": "account_name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "streams",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "plugins",
+      "sql": "SELECT EXISTS(SELECT 1 FROM plugins_pluginconfig)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [],
+      "provided_parameter_types": [],
+      "columns": [
+        {
+          "name": "exists",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "station_existing",
+      "sql": "SELECT tvg_id FROM epg_epgdata WHERE epg_source_id=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "tvg_id",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "station_insert",
+      "sql": "INSERT INTO epg_epgdata(tvg_id,name,icon_url,epg_source_id) SELECT x.sid,x.name,x.logo,$1 FROM jsonb_to_recordset($2) x(sid text,name text,logo text) ON CONFLICT DO NOTHING",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "station_update",
+      "sql": "UPDATE epg_epgdata e SET name=x.name,icon_url=x.logo FROM jsonb_to_recordset($2) x(sid text,name text,logo text) WHERE e.epg_source_id=$1 AND e.tvg_id=x.sid AND (e.name IS DISTINCT FROM x.name OR e.icon_url IS DISTINCT FROM x.logo)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "aggregate_active",
+      "sql": "SELECT id::bigint FROM m3u_m3uaccount WHERE is_active LIMIT 4097",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [],
+      "provided_parameter_types": [],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "comskip_select",
+      "sql": "SELECT CASE WHEN octet_length(custom_properties::text)<=65536 THEN custom_properties ELSE NULL END AS properties,COALESCE(octet_length(custom_properties::text),0)<=65536 AS bounded FROM dispatcharr_channels_recording WHERE id=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "properties",
+          "type": "JSONB"
+        },
+        {
+          "name": "bounded",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "comskip_update",
+      "sql": "UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "comskip_settings",
+      "sql": "SELECT value FROM core_coresettings WHERE key='dvr_settings'",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [],
+      "provided_parameter_types": [],
+      "columns": [
+        {
+          "name": "value",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "comskip_exists",
+      "sql": "SELECT id::bigint FROM dispatcharr_channels_recording WHERE id=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "advanced_series_relation_existing",
+      "sql": "SELECT r.external_series_id AS provider,r.series_id::bigint AS target,m.language FROM vod_m3useriesrelation r JOIN vod_series m ON m.id=r.series_id WHERE r.m3u_account_id::bigint=$1 AND r.external_series_id=ANY($2)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "TEXT[]"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "TEXT[]"
+      ],
+      "columns": [
+        {
+          "name": "provider",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "target",
+          "type": "INT8"
+        },
+        {
+          "name": "language",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "advanced_series_relation_update",
+      "sql": "UPDATE vod_m3useriesrelation r SET series_id=(v->>'series')::bigint,category_id=(v->>'category')::bigint,custom_properties=COALESCE(r.custom_properties,'{}'::jsonb)||jsonb_build_object('basic_data',v->'basic')||CASE WHEN COALESCE((v->>'reset')::boolean,false) OR r.series_id IS DISTINCT FROM (v->>'series')::bigint THEN jsonb_build_object('detailed_fetched',false,'episodes_fetched',false) ELSE '{}'::jsonb END,last_seen=$3 FROM jsonb_array_elements($2) v WHERE r.m3u_account_id=$1 AND r.external_series_id=v->>'external'",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "columns": []
+    },
+    {
+      "name": "advanced_series_relation_insert",
+      "sql": "INSERT INTO vod_m3useriesrelation(m3u_account_id,series_id,category_id,external_series_id,custom_properties,created_at,updated_at,last_episode_refresh,last_seen) SELECT $1::bigint,(v->>'series')::bigint,(v->>'category')::bigint,v->>'external',jsonb_build_object('basic_data',v->'basic','detailed_fetched',false,'episodes_fetched',false),(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz,NULL,$3 FROM jsonb_array_elements($2) WITH ORDINALITY AS input(v,ordinal) WHERE NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.m3u_account_id::bigint=$1 AND r.external_series_id=v->>'external') ORDER BY input.ordinal ON CONFLICT(m3u_account_id,external_series_id) DO NOTHING",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "columns": []
+    },
+    {
+      "name": "advanced_series_existing",
+      "sql": "WITH wanted AS MATERIALIZED (SELECT v FROM jsonb_array_elements($1) v), matches AS (SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id,m.language FROM vod_series m JOIN wanted w ON m.tmdb_id=w.v->>'tmdb_id' WHERE m.language IN(COALESCE(w.v->>'language',''),'') UNION SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id,m.language FROM vod_series m JOIN wanted w ON m.imdb_id=w.v->>'imdb_id' WHERE m.language IN(COALESCE(w.v->>'language',''),'') UNION SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id,m.language FROM vod_series m JOIN wanted w ON m.name=w.v->>'name' AND m.year IS NOT DISTINCT FROM (w.v->>'year')::integer WHERE m.language IN(COALESCE(w.v->>'language',''),'') AND m.tmdb_id IS NULL AND m.imdb_id IS NULL AND w.v->>'tmdb_id' IS NULL AND w.v->>'imdb_id' IS NULL) SELECT id,name,year,tmdb_id,imdb_id,language FROM matches ORDER BY id LIMIT 2001",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "INT4"
+        },
+        {
+          "name": "tmdb_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "imdb_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "language",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "advanced_series_insert",
+      "sql": "INSERT INTO vod_series(uuid,name,description,year,rating,genre,logo_id,tmdb_id,imdb_id,language,custom_properties,created_at,updated_at) SELECT (v->>'uuid')::uuid,v->>'name',v->>'description',(v->>'year')::integer,v->>'rating',v->>'genre',(v->>'logo_id')::bigint,v->>'tmdb_id',v->>'imdb_id',COALESCE(v->>'language',''),NULLIF(v->'properties','null'::jsonb),(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz FROM jsonb_array_elements($1) v RETURNING id::bigint,uuid",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "uuid",
+          "type": "UUID"
+        }
+      ]
+    },
+    {
+      "name": "advanced_series_update",
+      "sql": "WITH projected AS MATERIALIZED (SELECT s.id,input.ordinal,(v->>'name' IS DISTINCT FROM s.name) AS queue_name_change,COALESCE((v->>'year')::integer,s.year) AS year,COALESCE(v->>'tmdb_id',s.tmdb_id) AS tmdb_id,COALESCE(v->>'imdb_id',s.imdb_id) AS imdb_id,CASE WHEN v->>'description'<>'' THEN v->>'description' ELSE s.description END AS description, COALESCE(v->>'rating',s.rating) AS rating, CASE WHEN v->>'genre'<>'' THEN v->>'genre' ELSE s.genre END AS genre, CASE WHEN (COALESCE(s.custom_properties,'{}'::jsonb)||COALESCE((SELECT jsonb_object_agg(p.key,p.value) FROM jsonb_each(COALESCE(NULLIF(v->'properties','null'::jsonb),'{}'::jsonb)) p WHERE NOT (p.value IN ('null'::jsonb,'\"\"'::jsonb,'[]'::jsonb) OR (jsonb_typeof(p.value)='array' AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.value)='array' THEN p.value ELSE '[]'::jsonb END) element WHERE element NOT IN ('null'::jsonb,'\"\"'::jsonb))))),'{}'::jsonb)) IS DISTINCT FROM COALESCE(s.custom_properties,'{}'::jsonb) THEN COALESCE(s.custom_properties,'{}'::jsonb)||COALESCE((SELECT jsonb_object_agg(p.key,p.value) FROM jsonb_each(COALESCE(NULLIF(v->'properties','null'::jsonb),'{}'::jsonb)) p WHERE NOT (p.value IN ('null'::jsonb,'\"\"'::jsonb,'[]'::jsonb) OR (jsonb_typeof(p.value)='array' AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.value)='array' THEN p.value ELSE '[]'::jsonb END) element WHERE element NOT IN ('null'::jsonb,'\"\"'::jsonb))))),'{}'::jsonb) ELSE s.custom_properties END AS custom_properties, (v->>'logo_id')::bigint AS logo_id FROM vod_series s CROSS JOIN jsonb_array_elements($1) WITH ORDINALITY AS input(v,ordinal) WHERE s.id::bigint=(v->>'initial_id')::bigint), changed AS MATERIALIZED (SELECT DISTINCT ON(p.id) p.*,CASE WHEN EXISTS(SELECT 1 FROM projected q WHERE q.id=p.id AND q.logo_id IS DISTINCT FROM s.logo_id) THEN (SELECT q.logo_id FROM projected q WHERE q.id=p.id AND q.logo_id IS DISTINCT FROM s.logo_id ORDER BY q.ordinal DESC LIMIT 1) ELSE s.logo_id END AS final_logo_id FROM projected p JOIN vod_series s ON s.id=p.id WHERE (p.queue_name_change OR ROW(s.year,s.tmdb_id,s.imdb_id,s.description,s.rating,s.genre,s.custom_properties,s.logo_id) IS DISTINCT FROM ROW(p.year,p.tmdb_id,p.imdb_id,p.description,p.rating,p.genre,p.custom_properties,p.logo_id)) ORDER BY p.id,p.ordinal) UPDATE vod_series s SET year=p.year,tmdb_id=p.tmdb_id,imdb_id=p.imdb_id,description=p.description,rating=p.rating,genre=p.genre,custom_properties=p.custom_properties,logo_id=p.final_logo_id FROM changed p WHERE s.id=p.id AND ROW(s.year,s.tmdb_id,s.imdb_id,s.description,s.rating,s.genre,s.custom_properties,s.logo_id) IS DISTINCT FROM ROW(p.year,p.tmdb_id,p.imdb_id,p.description,p.rating,p.genre,p.custom_properties,p.final_logo_id)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "list_movie_relation_existing",
+      "sql": "SELECT r.stream_id AS provider,r.movie_id::bigint AS target,m.language FROM vod_m3umovierelation r JOIN vod_movie m ON m.id=r.movie_id WHERE r.m3u_account_id::bigint=$1 AND r.stream_id=ANY($2)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "TEXT[]"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "TEXT[]"
+      ],
+      "columns": [
+        {
+          "name": "provider",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "target",
+          "type": "INT8"
+        },
+        {
+          "name": "language",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "list_movie_relation_update",
+      "sql": "UPDATE vod_m3umovierelation r SET movie_id=(v->>'movie')::bigint,category_id=(v->>'category')::bigint,container_extension=v->>'extension',custom_properties=COALESCE(r.custom_properties,'{}'::jsonb)||jsonb_build_object('basic_data',v->'basic')||CASE WHEN COALESCE((v->>'reset')::boolean,false) OR r.movie_id IS DISTINCT FROM (v->>'movie')::bigint THEN jsonb_build_object('detailed_fetched',false) ELSE '{}'::jsonb END,last_seen=$3 FROM jsonb_array_elements($2) v WHERE r.m3u_account_id=$1 AND r.stream_id=v->>'stream'",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "columns": []
+    },
+    {
+      "name": "list_movie_existing",
+      "sql": "WITH wanted AS MATERIALIZED (SELECT v FROM jsonb_array_elements($1) v), matches AS (SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id,m.language FROM vod_movie m JOIN wanted w ON m.tmdb_id=w.v->>'tmdb_id' WHERE m.language IN(COALESCE(w.v->>'language',''),'') UNION SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id,m.language FROM vod_movie m JOIN wanted w ON m.imdb_id=w.v->>'imdb_id' WHERE m.language IN(COALESCE(w.v->>'language',''),'') UNION SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id,m.language FROM vod_movie m JOIN wanted w ON m.name=w.v->>'name' AND m.year IS NOT DISTINCT FROM (w.v->>'year')::integer WHERE m.language IN(COALESCE(w.v->>'language',''),'') AND m.tmdb_id IS NULL AND m.imdb_id IS NULL AND w.v->>'tmdb_id' IS NULL AND w.v->>'imdb_id' IS NULL) SELECT id,name,year,tmdb_id,imdb_id,language FROM matches ORDER BY id LIMIT 2001",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "name",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "year",
+          "type": "INT4"
+        },
+        {
+          "name": "tmdb_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "imdb_id",
+          "type": "VARCHAR"
+        },
+        {
+          "name": "language",
+          "type": "VARCHAR"
+        }
+      ]
+    },
+    {
+      "name": "list_category_languages",
+      "sql": "SELECT category_id::bigint AS category,COALESCE(lower(CASE WHEN jsonb_typeof(custom_properties->'language')='string' THEN custom_properties->>'language' ELSE '' END),'') AS language FROM vod_m3uvodcategoryrelation WHERE m3u_account_id::bigint=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "category",
+          "type": "INT8"
+        },
+        {
+          "name": "language",
+          "type": "TEXT"
+        }
+      ]
+    },
+    {
+      "name": "list_uncategorized_language",
+      "sql": "SELECT COALESCE(lower(CASE WHEN jsonb_typeof(custom_properties->'language')='string' THEN custom_properties->>'language' ELSE '' END),'') FROM vod_m3uvodcategoryrelation WHERE m3u_account_id::bigint=$1 AND category_id::bigint=$2",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "coalesce",
+          "type": "TEXT"
+        }
+      ]
+    },
+    {
+      "name": "list_logo_insert",
+      "sql": "INSERT INTO vod_vodlogo(name,url) SELECT v->>'name',v->>'url' FROM jsonb_array_elements($1) v WHERE NOT EXISTS(SELECT 1 FROM vod_vodlogo l WHERE l.url=v->>'url') ON CONFLICT(url) DO NOTHING",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "list_logo_select",
+      "sql": "SELECT id::bigint,url FROM vod_vodlogo WHERE url=ANY($1)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "TEXT[]"
+      ],
+      "provided_parameter_types": [
+        "TEXT[]"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "url",
+          "type": "TEXT"
+        }
+      ]
+    },
+    {
+      "name": "list_movie_insert",
+      "sql": "INSERT INTO vod_movie(uuid,name,description,year,rating,genre,duration_secs,logo_id,tmdb_id,imdb_id,language,is_adult,custom_properties,created_at,updated_at) SELECT (v->>'uuid')::uuid,v->>'name',v->>'description',(v->>'year')::integer,v->>'rating',v->>'genre',(v->>'duration')::bigint,(v->>'logo_id')::bigint,v->>'tmdb_id',v->>'imdb_id',COALESCE(v->>'language',''),COALESCE((v->>'adult')::boolean,false),NULLIF(v->'properties','null'::jsonb),(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz FROM jsonb_array_elements($1) v RETURNING id::bigint,uuid",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        },
+        {
+          "name": "uuid",
+          "type": "UUID"
+        }
+      ]
+    },
+    {
+      "name": "list_movie_update",
+      "sql": "WITH projected AS MATERIALIZED (SELECT m.id,input.ordinal,(v->>'name' IS DISTINCT FROM m.name) AS queue_name_change,COALESCE((v->>'year')::integer,m.year) AS year,COALESCE(v->>'tmdb_id',m.tmdb_id) AS tmdb_id,COALESCE(v->>'imdb_id',m.imdb_id) AS imdb_id,CASE WHEN v->>'description'<>'' THEN v->>'description' ELSE m.description END AS description, COALESCE(v->>'rating',m.rating) AS rating, CASE WHEN v->>'genre'<>'' THEN v->>'genre' ELSE m.genre END AS genre, COALESCE((v->>'duration')::bigint,m.duration_secs) AS duration_secs, COALESCE((v->>'adult')::boolean,m.is_adult) AS is_adult, (v->>'logo_id')::bigint AS logo_id, CASE WHEN (COALESCE(m.custom_properties,'{}'::jsonb)||COALESCE((SELECT jsonb_object_agg(p.key,p.value) FROM jsonb_each(COALESCE(NULLIF(v->'properties','null'::jsonb),'{}'::jsonb)) p WHERE CASE WHEN p.key IN ('director','actors','release_date') THEN m.custom_properties->p.key IS NULL OR m.custom_properties->p.key IN ('null'::jsonb,'false'::jsonb,'0'::jsonb,'\"\"'::jsonb,'[]'::jsonb,'{}'::jsonb) ELSE NOT (p.value IN ('null'::jsonb,'\"\"'::jsonb,'[]'::jsonb) OR (jsonb_typeof(p.value)='array' AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.value)='array' THEN p.value ELSE '[]'::jsonb END) element WHERE element NOT IN ('null'::jsonb,'\"\"'::jsonb)))) END),'{}'::jsonb)) IS DISTINCT FROM COALESCE(m.custom_properties,'{}'::jsonb) THEN COALESCE(m.custom_properties,'{}'::jsonb)||COALESCE((SELECT jsonb_object_agg(p.key,p.value) FROM jsonb_each(COALESCE(NULLIF(v->'properties','null'::jsonb),'{}'::jsonb)) p WHERE CASE WHEN p.key IN ('director','actors','release_date') THEN m.custom_properties->p.key IS NULL OR m.custom_properties->p.key IN ('null'::jsonb,'false'::jsonb,'0'::jsonb,'\"\"'::jsonb,'[]'::jsonb,'{}'::jsonb) ELSE NOT (p.value IN ('null'::jsonb,'\"\"'::jsonb,'[]'::jsonb) OR (jsonb_typeof(p.value)='array' AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.value)='array' THEN p.value ELSE '[]'::jsonb END) element WHERE element NOT IN ('null'::jsonb,'\"\"'::jsonb)))) END),'{}'::jsonb) ELSE m.custom_properties END AS custom_properties FROM vod_movie m CROSS JOIN jsonb_array_elements($1) WITH ORDINALITY AS input(v,ordinal) WHERE m.id::bigint=(v->>'initial_id')::bigint), changed AS MATERIALIZED (SELECT DISTINCT ON(p.id) p.*,CASE WHEN EXISTS(SELECT 1 FROM projected q WHERE q.id=p.id AND q.logo_id IS DISTINCT FROM m.logo_id) THEN (SELECT q.logo_id FROM projected q WHERE q.id=p.id AND q.logo_id IS DISTINCT FROM m.logo_id ORDER BY q.ordinal DESC LIMIT 1) ELSE m.logo_id END AS final_logo_id FROM projected p JOIN vod_movie m ON m.id=p.id WHERE (p.queue_name_change OR ROW(m.year,m.tmdb_id,m.imdb_id,m.description,m.rating,m.genre,m.duration_secs,m.is_adult,m.logo_id,m.custom_properties) IS DISTINCT FROM ROW(p.year,p.tmdb_id,p.imdb_id,p.description,p.rating,p.genre,p.duration_secs,p.is_adult,p.logo_id,p.custom_properties)) ORDER BY p.id,p.ordinal) UPDATE vod_movie m SET year=p.year,tmdb_id=p.tmdb_id,imdb_id=p.imdb_id,description=p.description,rating=p.rating,genre=p.genre,duration_secs=p.duration_secs,is_adult=p.is_adult,logo_id=p.final_logo_id,custom_properties=p.custom_properties FROM changed p WHERE m.id=p.id AND ROW(m.year,m.tmdb_id,m.imdb_id,m.description,m.rating,m.genre,m.duration_secs,m.is_adult,m.logo_id,m.custom_properties) IS DISTINCT FROM ROW(p.year,p.tmdb_id,p.imdb_id,p.description,p.rating,p.genre,p.duration_secs,p.is_adult,p.final_logo_id,p.custom_properties)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "list_movie_relation_insert",
+      "sql": "INSERT INTO vod_m3umovierelation(m3u_account_id,movie_id,category_id,stream_id,container_extension,custom_properties,created_at,updated_at,last_advanced_refresh,last_seen) SELECT $1::bigint,(v->>'movie')::bigint,(v->>'category')::bigint,v->>'stream',v->>'extension',jsonb_build_object('basic_data',v->'basic','detailed_fetched',false),(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz,NULL,$3 FROM jsonb_array_elements($2) WITH ORDINALITY AS input(v,ordinal) WHERE NOT EXISTS(SELECT 1 FROM vod_m3umovierelation r WHERE r.m3u_account_id::bigint=$1 AND r.stream_id=v->>'stream') ORDER BY input.ordinal ON CONFLICT(m3u_account_id,stream_id) DO NOTHING",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "columns": []
+    },
+    {
+      "name": "advanced_uncategorized_relation_insert",
+      "sql": "INSERT INTO vod_m3uvodcategoryrelation(m3u_account_id,category_id,enabled,custom_properties,created_at,updated_at) SELECT $1::bigint,$2::bigint,$3,'{}'::jsonb,$4,$4 WHERE NOT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation r WHERE r.m3u_account_id::bigint=$1 AND r.category_id::bigint=$2) ON CONFLICT(m3u_account_id,category_id) DO NOTHING",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "INT8",
+        "BOOL",
+        "TIMESTAMPTZ"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "INT8",
+        "BOOL",
+        "TIMESTAMPTZ"
+      ],
+      "columns": []
+    },
+    {
+      "name": "advanced_uncategorized_insert",
+      "sql": "INSERT INTO vod_vodcategory(name,category_type,created_at,updated_at) SELECT 'Uncategorized',$1,$2,$2 WHERE NOT EXISTS(SELECT 1 FROM vod_vodcategory c WHERE c.name='Uncategorized' AND c.category_type=$1) ON CONFLICT(name,category_type) DO NOTHING",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "TEXT",
+        "TIMESTAMPTZ"
+      ],
+      "provided_parameter_types": [
+        "TEXT",
+        "TIMESTAMPTZ"
+      ],
+      "columns": []
+    },
+    {
+      "name": "advanced_category_insert",
+      "sql": "INSERT INTO vod_vodcategory(name,category_type,created_at,updated_at) SELECT incoming.value,$2,$3,$3 FROM jsonb_array_elements_text($1) AS incoming(value) WHERE NOT EXISTS(SELECT 1 FROM vod_vodcategory c WHERE c.name=incoming.value AND c.category_type=$2) ON CONFLICT(name,category_type) DO NOTHING",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB",
+        "TEXT",
+        "TIMESTAMPTZ"
+      ],
+      "provided_parameter_types": [
+        "JSONB",
+        "TEXT",
+        "TIMESTAMPTZ"
+      ],
+      "columns": []
+    },
+    {
+      "name": "advanced_guard",
+      "sql": "SELECT NOT EXISTS(SELECT 1 FROM vod_episode WHERE octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation e WHERE e.series_relation_id IS NULL OR NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r JOIN vod_episode p ON p.id=e.episode_id WHERE r.id=e.series_relation_id AND r.series_id=p.series_id AND r.m3u_account_id=e.m3u_account_id)) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_series WHERE COALESCE(char_length(tmdb_id),0)>50 OR COALESCE(octet_length(tmdb_id),0)>200 OR COALESCE(char_length(imdb_id),0)>50 OR COALESCE(octet_length(imdb_id),0)>200 OR COALESCE(tmdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR COALESCE(imdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR language !~ '^([a-z]{2})?$' OR char_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_series WHERE tmdb_id IS NULL AND imdb_id IS NULL GROUP BY name,year,language HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_movie WHERE COALESCE(char_length(tmdb_id),0)>50 OR COALESCE(octet_length(tmdb_id),0)>200 OR COALESCE(char_length(imdb_id),0)>50 OR COALESCE(octet_length(imdb_id),0)>200 OR COALESCE(tmdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR COALESCE(imdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR language !~ '^([a-z]{2})?$' OR char_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_movie WHERE tmdb_id IS NULL AND imdb_id IS NULL GROUP BY name,year,language HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3umovierelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation WHERE NOT enabled OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536 OR custom_properties-'language'<>'{}'::jsonb OR (custom_properties?'language' AND custom_properties->'language'<>'null'::jsonb AND (jsonb_typeof(custom_properties->'language')<>'string' OR custom_properties->>'language'!~'^[A-Za-z]{2}$'))))) AND NOT EXISTS(SELECT 1 FROM vod_vodlogo l WHERE (EXISTS(SELECT 1 FROM vod_movie m WHERE m.logo_id=l.id) OR EXISTS(SELECT 1 FROM vod_series s WHERE s.logo_id=l.id)) AND (char_length(l.url)>500 OR char_length(l.name)>255))",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [],
+      "provided_parameter_types": [],
+      "columns": [
+        {
+          "name": "?column?",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "advanced_stale_series",
+      "sql": "SELECT id::bigint FROM vod_m3useriesrelation WHERE m3u_account_id::bigint=$1 AND last_seen<$2 ORDER BY id FOR UPDATE",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "TIMESTAMPTZ"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "TIMESTAMPTZ"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "advanced_stale_children",
+      "sql": "SELECT id::bigint FROM vod_m3uepisoderelation WHERE series_relation_id::bigint=ANY($1) ORDER BY id LIMIT 4097 FOR UPDATE",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "advanced_delete_episode_relations",
+      "sql": "DELETE FROM vod_m3uepisoderelation WHERE id::bigint=ANY($1)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": []
+    },
+    {
+      "name": "advanced_delete_series_relations",
+      "sql": "DELETE FROM vod_m3useriesrelation WHERE id::bigint=ANY($1)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": []
+    },
+    {
+      "name": "advanced_orphan_series",
+      "sql": "SELECT s.id::bigint FROM vod_series s WHERE NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.series_id=s.id) ORDER BY s.id FOR UPDATE",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [],
+      "provided_parameter_types": [],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "advanced_orphan_recheck",
+      "sql": "SELECT s.id::bigint FROM vod_series s WHERE s.id::bigint=ANY($1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.series_id=s.id) ORDER BY s.id",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "advanced_orphan_episodes",
+      "sql": "SELECT id::bigint FROM vod_episode WHERE series_id::bigint=ANY($1) ORDER BY id LIMIT 1025 FOR UPDATE",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "advanced_orphan_children",
+      "sql": "SELECT id::bigint FROM vod_m3uepisoderelation WHERE episode_id::bigint=ANY($1) ORDER BY id LIMIT 4097 FOR UPDATE",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "advanced_delete_episodes",
+      "sql": "DELETE FROM vod_episode WHERE id::bigint=ANY($1)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": []
+    },
+    {
+      "name": "advanced_delete_series",
+      "sql": "DELETE FROM vod_series s WHERE s.id::bigint=ANY($1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.series_id=s.id)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_movie_candidates",
+      "sql": "SELECT DISTINCT m.id::bigint FROM vod_movie m JOIN vod_m3umovierelation r ON r.movie_id=m.id LEFT JOIN vod_m3uvodcategoryrelation c ON c.m3u_account_id=r.m3u_account_id AND c.category_id=r.category_id WHERE r.m3u_account_id::bigint=$1 AND r.last_seen>=$2 AND COALESCE(lower(c.custom_properties->>'language'),'')<>m.language ORDER BY m.id::bigint",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "TIMESTAMPTZ"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "TIMESTAMPTZ"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "language_movie_min_rows",
+      "sql": "SELECT jsonb_build_object('id',m.id,'name',m.name,'year',m.year,'tmdb_id',m.tmdb_id,'imdb_id',m.imdb_id,'language',m.language) AS item FROM vod_movie m WHERE m.id::bigint=ANY($1) ORDER BY m.id",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_movie_row",
+      "sql": "SELECT to_jsonb(m) AS item FROM vod_movie m WHERE m.id::bigint=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_movie_relations",
+      "sql": "SELECT jsonb_build_object('id',r.id,'parent',r.movie_id,'account',r.m3u_account_id,'category',r.category_id) AS item FROM vod_m3umovierelation r WHERE r.movie_id::bigint=ANY($1) ORDER BY r.id LIMIT CASE WHEN cardinality($1)=1 THEN 2001 ELSE NULL END",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_movie_slot",
+      "sql": "SELECT to_jsonb(m) AS item FROM vod_movie m WHERE m.language=$2 AND ((COALESCE($1->>'tmdb_id','')<>'' AND m.tmdb_id=$1->>'tmdb_id') OR (COALESCE($1->>'imdb_id','')<>'' AND m.imdb_id=$1->>'imdb_id') OR (COALESCE($1->>'tmdb_id','')='' AND COALESCE($1->>'imdb_id','')='' AND m.tmdb_id IS NULL AND m.imdb_id IS NULL AND m.name=$1->>'name' AND m.year IS NOT DISTINCT FROM ($1->>'year')::integer)) ORDER BY CASE WHEN COALESCE($1->>'tmdb_id','')<>'' AND m.tmdb_id=$1->>'tmdb_id' THEN 0 ELSE 1 END,m.id LIMIT 1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB",
+        "TEXT"
+      ],
+      "provided_parameter_types": [
+        "JSONB",
+        "TEXT"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_movie_bulk_language",
+      "sql": "UPDATE vod_movie m SET language=v->>'language' FROM jsonb_array_elements($1) v WHERE m.id::bigint=(v->>'id')::bigint",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_movie_insert",
+      "sql": "INSERT INTO vod_movie(uuid,name,description,year,rating,genre,duration_secs,logo_id,tmdb_id,imdb_id,language,is_adult,custom_properties,created_at,updated_at) SELECT (v->>'uuid')::uuid,v->>'name',NULL,(v->>'year')::integer,NULL,NULL,NULL,NULL,v->>'tmdb_id',v->>'imdb_id',v->>'language',false,NULL,(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz FROM (SELECT $1::jsonb AS v)s RETURNING to_jsonb(vod_movie) AS item",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_movie_move",
+      "sql": "UPDATE vod_m3umovierelation SET movie_id=$2::bigint,custom_properties=COALESCE(custom_properties,'{}'::jsonb)||jsonb_build_object('detailed_fetched',false) WHERE id::bigint=ANY($1)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]",
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8[]",
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_movie_delete",
+      "sql": "DELETE FROM vod_movie WHERE id::bigint=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_movie_metadata",
+      "sql": "UPDATE vod_movie SET description=$1->>'description',rating=$1->>'rating',genre=$1->>'genre',year=($1->>'year')::integer,logo_id=($1->>'logo_id')::bigint,custom_properties=NULLIF($1->'custom_properties','null'::jsonb),duration_secs=($1->>'duration_secs')::bigint WHERE id::bigint=($1->>'id')::bigint",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_series_candidates",
+      "sql": "SELECT DISTINCT m.id::bigint FROM vod_series m JOIN vod_m3useriesrelation r ON r.series_id=m.id LEFT JOIN vod_m3uvodcategoryrelation c ON c.m3u_account_id=r.m3u_account_id AND c.category_id=r.category_id WHERE r.m3u_account_id::bigint=$1 AND r.last_seen>=$2 AND COALESCE(lower(c.custom_properties->>'language'),'')<>m.language ORDER BY m.id::bigint",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "TIMESTAMPTZ"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "TIMESTAMPTZ"
+      ],
+      "columns": [
+        {
+          "name": "id",
+          "type": "INT8"
+        }
+      ]
+    },
+    {
+      "name": "language_series_min_rows",
+      "sql": "SELECT jsonb_build_object('id',m.id,'name',m.name,'year',m.year,'tmdb_id',m.tmdb_id,'imdb_id',m.imdb_id,'language',m.language) AS item FROM vod_series m WHERE m.id::bigint=ANY($1) ORDER BY m.id",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_series_row",
+      "sql": "SELECT to_jsonb(m) AS item FROM vod_series m WHERE m.id::bigint=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_series_relations",
+      "sql": "SELECT jsonb_build_object('id',r.id,'parent',r.series_id,'account',r.m3u_account_id,'category',r.category_id) AS item FROM vod_m3useriesrelation r WHERE r.series_id::bigint=ANY($1) ORDER BY r.id LIMIT CASE WHEN cardinality($1)=1 THEN 2001 ELSE NULL END",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_series_slot",
+      "sql": "SELECT to_jsonb(m) AS item FROM vod_series m WHERE m.language=$2 AND ((COALESCE($1->>'tmdb_id','')<>'' AND m.tmdb_id=$1->>'tmdb_id') OR (COALESCE($1->>'imdb_id','')<>'' AND m.imdb_id=$1->>'imdb_id') OR (COALESCE($1->>'tmdb_id','')='' AND COALESCE($1->>'imdb_id','')='' AND m.tmdb_id IS NULL AND m.imdb_id IS NULL AND m.name=$1->>'name' AND m.year IS NOT DISTINCT FROM ($1->>'year')::integer)) ORDER BY CASE WHEN COALESCE($1->>'tmdb_id','')<>'' AND m.tmdb_id=$1->>'tmdb_id' THEN 0 ELSE 1 END,m.id LIMIT 1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB",
+        "TEXT"
+      ],
+      "provided_parameter_types": [
+        "JSONB",
+        "TEXT"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_series_bulk_language",
+      "sql": "UPDATE vod_series m SET language=v->>'language' FROM jsonb_array_elements($1) v WHERE m.id::bigint=(v->>'id')::bigint",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_series_insert",
+      "sql": "INSERT INTO vod_series(uuid,name,description,year,rating,genre,logo_id,tmdb_id,imdb_id,language,custom_properties,created_at,updated_at) SELECT (v->>'uuid')::uuid,v->>'name',NULL,(v->>'year')::integer,NULL,NULL,NULL,v->>'tmdb_id',v->>'imdb_id',v->>'language',NULL,(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz FROM (SELECT $1::jsonb AS v)s RETURNING to_jsonb(vod_series) AS item",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_series_move",
+      "sql": "UPDATE vod_m3useriesrelation SET series_id=$2::bigint,custom_properties=COALESCE(custom_properties,'{}'::jsonb)||jsonb_build_object('detailed_fetched',false,'episodes_fetched',false) WHERE id::bigint=ANY($1)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]",
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8[]",
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_series_delete",
+      "sql": "DELETE FROM vod_series WHERE id::bigint=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_series_metadata",
+      "sql": "UPDATE vod_series SET description=$1->>'description',rating=$1->>'rating',genre=$1->>'genre',year=($1->>'year')::integer,logo_id=($1->>'logo_id')::bigint,custom_properties=NULLIF($1->'custom_properties','null'::jsonb) WHERE id::bigint=($1->>'id')::bigint",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_category_map",
+      "sql": "SELECT jsonb_build_object('account',c.m3u_account_id,'category',c.category_id,'language',CASE WHEN jsonb_typeof(c.custom_properties->'language')='string' THEN lower(c.custom_properties->>'language') ELSE '' END) AS item FROM vod_m3uvodcategoryrelation c WHERE c.m3u_account_id::bigint=ANY($1) AND c.category_id::bigint=ANY($2) ORDER BY c.id LIMIT 2001",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]",
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]",
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_episode_rows",
+      "sql": "SELECT to_jsonb(e) AS item FROM vod_episode e WHERE e.series_id::bigint=$1 ORDER BY e.season_number,e.episode_number,e.id LIMIT 2001",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_episode_relations",
+      "sql": "SELECT jsonb_build_object('id',r.id,'episode_id',r.episode_id,'destination',COALESCE(s.series_id,e.series_id)) AS item FROM vod_m3uepisoderelation r JOIN vod_episode e ON e.id=r.episode_id LEFT JOIN vod_m3useriesrelation s ON s.id=r.series_relation_id WHERE e.series_id::bigint=$1 ORDER BY r.id LIMIT 2001",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_episode_collision",
+      "sql": "SELECT to_jsonb(e) AS item FROM vod_episode e WHERE e.series_id::bigint=$2 AND e.season_number IS NOT DISTINCT FROM ($1->>'season_number')::integer AND e.episode_number IS NOT DISTINCT FROM ($1->>'episode_number')::integer AND e.id::bigint<>($1->>'id')::bigint ORDER BY e.id LIMIT 1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB",
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "JSONB",
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_episode_move",
+      "sql": "UPDATE vod_episode SET series_id=$2::bigint WHERE id::bigint=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_episode_move_all_relations",
+      "sql": "UPDATE vod_m3uepisoderelation SET episode_id=$2::bigint WHERE episode_id::bigint=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_episode_move_relations",
+      "sql": "UPDATE vod_m3uepisoderelation SET episode_id=$2::bigint WHERE id::bigint=ANY($1)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]",
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8[]",
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_episode_insert",
+      "sql": "INSERT INTO vod_episode(uuid,name,description,air_date,rating,duration_secs,series_id,season_number,episode_number,tmdb_id,imdb_id,custom_properties,created_at,updated_at) SELECT (v->>'new_uuid')::uuid,v->>'name',v->>'description',(v->>'air_date')::date,v->>'rating',(v->>'duration_secs')::integer,(v->>'target_series')::bigint,(v->>'season_number')::integer,(v->>'episode_number')::integer,v->>'tmdb_id',v->>'imdb_id',NULLIF(v->'custom_properties','null'::jsonb),(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz FROM (SELECT $1::jsonb AS v)s RETURNING to_jsonb(vod_episode) AS item",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "JSONB"
+      ],
+      "columns": [
+        {
+          "name": "item",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "language_episode_delete_relations",
+      "sql": "DELETE FROM vod_m3uepisoderelation WHERE episode_id::bigint=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_episode_delete",
+      "sql": "DELETE FROM vod_episode WHERE id::bigint=$1",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_episode_empty",
+      "sql": "DELETE FROM vod_episode e WHERE e.series_id::bigint=ANY($1) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation r WHERE r.episode_id=e.id)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8[]"
+      ],
+      "columns": []
+    },
+    {
+      "name": "language_episode_has_relations",
+      "sql": "SELECT EXISTS(SELECT 1 FROM vod_m3uepisoderelation WHERE episode_id::bigint=$1) AS present",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8"
+      ],
+      "provided_parameter_types": [
+        "INT8"
+      ],
+      "columns": [
+        {
+          "name": "present",
+          "type": "BOOL"
+        }
+      ]
+    },
+    {
+      "name": "vod_live_group_settings_upsert",
+      "sql": "INSERT INTO dispatcharr_channels_channelgroupm3uaccount(channel_group_id,m3u_account_id,enabled,auto_channel_sync,auto_sync_channel_start,auto_sync_channel_end,custom_properties,last_seen,is_stale) SELECT (v->>'group')::bigint,$1::bigint,(v->>'enabled')::boolean,(v->>'auto_sync')::boolean,(v->>'start')::double precision,(v->>'end')::double precision,v->'properties',clock_timestamp(),false FROM jsonb_array_elements($2) WITH ORDINALITY AS input(v,ordinal) ORDER BY input.ordinal ON CONFLICT(channel_group_id,m3u_account_id) DO UPDATE SET enabled=EXCLUDED.enabled,auto_channel_sync=EXCLUDED.auto_channel_sync,auto_sync_channel_start=EXCLUDED.auto_sync_channel_start,auto_sync_channel_end=EXCLUDED.auto_sync_channel_end,custom_properties=EXCLUDED.custom_properties",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "columns": []
+    },
+    {
+      "name": "vod_category_settings_existing",
+      "sql": "SELECT category_id::bigint AS category,custom_properties AS properties FROM vod_m3uvodcategoryrelation WHERE m3u_account_id::bigint=$1 AND category_id::bigint=ANY($2)",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "INT8[]"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "INT8[]"
+      ],
+      "columns": [
+        {
+          "name": "category",
+          "type": "INT8"
+        },
+        {
+          "name": "properties",
+          "type": "JSONB"
+        }
+      ]
+    },
+    {
+      "name": "vod_category_settings_upsert",
+      "sql": "INSERT INTO vod_m3uvodcategoryrelation(m3u_account_id,category_id,enabled,custom_properties,created_at,updated_at) SELECT $1::bigint,(v->>'category')::bigint,(v->>'enabled')::boolean,v->'properties',clock_timestamp(),clock_timestamp() FROM jsonb_array_elements($2) WITH ORDINALITY AS input(v,ordinal) ORDER BY input.ordinal ON CONFLICT(m3u_account_id,category_id) DO UPDATE SET enabled=EXCLUDED.enabled,custom_properties=EXCLUDED.custom_properties",
+      "prepared": true,
+      "row_decoder_compatible": true,
+      "server_parameter_types_match": true,
+      "server_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "provided_parameter_types": [
+        "INT8",
+        "JSONB"
+      ],
+      "columns": []
+    }
+  ],
+  "wrong_bind_type_controls": [
+    {
+      "name": "channels",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42804\", message: \"argument of AND must be type boolean, not type bigint\", detail: None, hint: None, position: Some(Original(150)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_coerce.c\"), line: Some(1180), routine: Some(\"coerce_to_boolean\") })"
+    },
+    {
+      "name": "bulk_candidates",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_to_recordset(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(68)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "station_insert",
+      "wrong_parameter_index": 1,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_to_recordset(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(96)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "station_existing",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(51)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "comskip_select",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(226)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "comskip_update",
+      "wrong_parameter_index": 1,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42804\", message: \"column \\\"custom_properties\\\" is of type jsonb but expression is of type bigint\", detail: None, hint: Some(\"You will need to rewrite or cast the expression.\"), position: Some(Original(61)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_target.c\"), line: Some(585), routine: Some(\"transformAssignedExpr\") })"
+    },
+    {
+      "name": "advanced_series_insert",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(417)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "advanced_stale_series",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "TIMESTAMPTZ"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(74)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "advanced_stale_series",
+      "wrong_parameter_index": 1,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: timestamp with time zone < bigint\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(91)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "advanced_orphan_episodes",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(59)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "list_logo_insert",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(68)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "list_logo_select",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: text = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(49)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "list_movie_insert",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(503)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "list_movie_update",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(2141)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "list_movie_relation_insert",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42846\", message: \"cannot cast type boolean to bigint\", detail: None, hint: None, position: Some(Original(182)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_expr.c\"), line: Some(2761), routine: Some(\"transformTypeCast\") })"
+    },
+    {
+      "name": "list_movie_relation_insert",
+      "wrong_parameter_index": 1,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8",
+        "TIMESTAMPTZ"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(403)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "list_movie_relation_insert",
+      "wrong_parameter_index": 2,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "JSONB",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42804\", message: \"column \\\"last_seen\\\" is of type timestamp with time zone but expression is of type bigint\", detail: None, hint: Some(\"You will need to rewrite or cast the expression.\"), position: Some(Original(395)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_target.c\"), line: Some(585), routine: Some(\"transformAssignedExpr\") })"
+    },
+    {
+      "name": "advanced_series_update",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(1584)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "list_movie_relation_update",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(485)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "list_movie_relation_update",
+      "wrong_parameter_index": 1,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8",
+        "TIMESTAMPTZ"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(436)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "list_movie_relation_update",
+      "wrong_parameter_index": 2,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "JSONB",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42804\", message: \"column \\\"last_seen\\\" is of type timestamp with time zone but expression is of type bigint\", detail: None, hint: Some(\"You will need to rewrite or cast the expression.\"), position: Some(Original(428)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_target.c\"), line: Some(585), routine: Some(\"transformAssignedExpr\") })"
+    },
+    {
+      "name": "advanced_series_relation_update",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "JSONB",
+        "TIMESTAMPTZ"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(479)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "advanced_series_relation_update",
+      "wrong_parameter_index": 1,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8",
+        "TIMESTAMPTZ"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(430)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "advanced_series_relation_update",
+      "wrong_parameter_index": 2,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "JSONB",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42804\", message: \"column \\\"last_seen\\\" is of type timestamp with time zone but expression is of type bigint\", detail: None, hint: Some(\"You will need to rewrite or cast the expression.\"), position: Some(Original(422)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_target.c\"), line: Some(585), routine: Some(\"transformAssignedExpr\") })"
+    },
+    {
+      "name": "list_movie_existing",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(44)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "advanced_series_existing",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(44)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "list_movie_relation_existing",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "TEXT[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(166)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "list_movie_relation_existing",
+      "wrong_parameter_index": 1,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "BOOL[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: character varying = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(185)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "advanced_series_relation_existing",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "TEXT[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(179)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "advanced_series_relation_existing",
+      "wrong_parameter_index": 1,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "BOOL[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: character varying = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(207)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_movie_candidates",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "TIMESTAMPTZ"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(232)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_movie_min_rows",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(171)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_movie_row",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(63)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_movie_relations",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(170)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_movie_slot",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "TEXT"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint ->> unknown\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(82)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_movie_bulk_language",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(53)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "language_movie_insert",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42846\", message: \"cannot cast type bigint to jsonb\", detail: None, hint: None, position: Some(Original(367)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_expr.c\"), line: Some(2761), routine: Some(\"transformTypeCast\") })"
+    },
+    {
+      "name": "language_movie_move",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(173)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_movie_delete",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(39)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_movie_metadata",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint ->> unknown\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(283)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_series_candidates",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "TIMESTAMPTZ"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(235)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_series_min_rows",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(172)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_series_row",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(64)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_series_relations",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(173)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_series_slot",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "TEXT"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint ->> unknown\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(83)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_series_bulk_language",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(54)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "language_series_insert",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42846\", message: \"cannot cast type bigint to jsonb\", detail: None, hint: None, position: Some(Original(334)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_expr.c\"), line: Some(2761), routine: Some(\"transformTypeCast\") })"
+    },
+    {
+      "name": "language_series_move",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(200)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_series_delete",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(40)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_series_metadata",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint ->> unknown\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(239)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_episode_rows",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(72)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_episode_relations",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(278)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_episode_collision",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint ->> unknown\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(120)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_episode_move",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(61)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_episode_move_all_relations",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(81)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_episode_move_relations",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(73)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_episode_insert",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42846\", message: \"cannot cast type bigint to jsonb\", detail: None, hint: None, position: Some(Original(534)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_expr.c\"), line: Some(2761), routine: Some(\"transformTypeCast\") })"
+    },
+    {
+      "name": "language_episode_delete_relations",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(60)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_episode_delete",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(41)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_episode_empty",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(52)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_episode_has_relations",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(76)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_category_map",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL[]",
+        "INT8[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(285)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "language_category_map",
+      "wrong_parameter_index": 1,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8[]",
+        "BOOL[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(319)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "list_category_languages",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(243)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "list_uncategorized_language",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(199)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "vod_live_group_settings_upsert",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "JSONB"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42846\", message: \"cannot cast type boolean to bigint\", detail: None, hint: None, position: Some(Original(230)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_expr.c\"), line: Some(2761), routine: Some(\"transformTypeCast\") })"
+    },
+    {
+      "name": "vod_live_group_settings_upsert",
+      "wrong_parameter_index": 1,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "INT8",
+        "INT8"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"function jsonb_array_elements(bigint) does not exist\", detail: None, hint: Some(\"No function matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(398)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_func.c\"), line: Some(629), routine: Some(\"ParseFuncOrColumn\") })"
+    },
+    {
+      "name": "vod_category_settings_existing",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "INT8[]"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42883\", message: \"operator does not exist: bigint = boolean\", detail: None, hint: Some(\"No operator matches the given name and argument types. You might need to add explicit type casts.\"), position: Some(Original(132)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_oper.c\"), line: Some(635), routine: Some(\"op_error\") })"
+    },
+    {
+      "name": "vod_category_settings_upsert",
+      "wrong_parameter_index": 0,
+      "same_production_SQL": true,
+      "deliberately_wrong_types": [
+        "BOOL",
+        "JSONB"
+      ],
+      "rejected": true,
+      "error": "Database(PgDatabaseError { severity: Error, code: \"42846\", message: \"cannot cast type boolean to bigint\", detail: None, hint: None, position: Some(Original(125)), where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some(\"parse_expr.c\"), line: Some(2761), routine: Some(\"transformTypeCast\") })"
+    }
+  ],
+  "ready": "Ok(())",
+  "closed": "Ok(())",
+  "scope": "Compiled production SQL/constants and audited actual Rust bind types; prepares/row shapes only, not DML/data/event/task parity."
+}

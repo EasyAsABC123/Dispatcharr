@@ -1,0 +1,4 @@
+
+thread 'channel_matching_sql_peer::actual_live_group_settings_transactions' panicked at crates/store/src/channel_matching_sql_peer.rs:1086:18:
+literal public sequence state; never nextval: Database(PgDatabaseError { severity: Error, code: "42809", message: "relation \"accounts_user_channel_profiles_id_seq\" does not have a composite type", detail: None, hint: None, position: None, where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some("makefuncs.c"), line: Some(150), routine: Some("makeWholeRowVar") })
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

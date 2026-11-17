@@ -1,0 +1,103 @@
+{
+  "passed": true,
+  "exact_CIDs": 1,
+  "unique_captured_host_generations": 8,
+  "project": "dispatcharr-matching-schema-06749829a6",
+  "checks": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=b788e1e588d654972ba2cc4cf36d250ebcfa8757e6c94cf3b9f4d1c55d1a5e07"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-06749829a6"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-06749829a6"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-matching-schema-06749829a6"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "pid": 72281,
+      "original_starttime": "23169095",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "pid": 72673,
+      "original_starttime": "23169166",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "pid": 72674,
+      "original_starttime": "23169171",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "pid": 72675,
+      "original_starttime": "23169171",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "pid": 72677,
+      "original_starttime": "23169172",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "pid": 72678,
+      "original_starttime": "23169172",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "pid": 72679,
+      "original_starttime": "23169172",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "pid": 72740,
+      "original_starttime": "23169188",
+      "current_starttime": null,
+      "passed": true
+    }
+  ]
+}

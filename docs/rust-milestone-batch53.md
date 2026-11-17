@@ -44,12 +44,42 @@ are consumed while every business write rolls back. PostgreSQL message/DETAIL/
 HINT text is preserved, including newline labels and two spaces after the colon.
 No fixture constraint name or invalid ID is hardcoded into the formatter.
 
-The private combined handler retains its pool connection beyond the transaction
+The combined handler retains its pool connection beyond the transaction
 wrapper. A commit error must await same-connection rollback/Ready before returning
 its mapped400 response or reusing the connection; failed rollback retires the
-connection. This code has only been parsed. Compilation, physical rollback and
-immediate-GET controls, a new image and the complete affected Native workflow
-remain pending. This is Source reference qualification, not Rust/M5 closure,
+connection. The combined fifteen-path Live/Comskip batch now passes
+[SDK81](../scripts/rust-integration/milestone-batch53/SDK/index.json): all four
+gates,1,188 tests passed/0 failed/786 ignored across180 result blocks. SDK78's
+compiler failure, SDK79's strict-only failure and SDK80's all-four pass remain
+separate hash-bound history. The fifteen canonical paths are committed as
+`132d69d2a1c6b4c0e8bb941d21266ecbfc03e00a`. Its actual Docker build passes in
+310.069 seconds as image `77557a195ef315310ae36dfb3d6d979ec38710f246a4d66a2d62f834cb89a39d`.
+The [six package checks](../scripts/rust-integration/milestone-batch53/package/index.json)
+pass in27.284 seconds: archive/assets, cryptography, PostgreSQL, regular
+expressions, Python host and VLC. Store and Main recompile, all1,449 Rust inputs
+match SDK81, and Main differs from Candidate52. All55 scoped package containers
+are independently absent after cleanup. These package facts establish availability,
+not the new full application workflow.
+
+The [full physical rerun](../scripts/rust-integration/milestone-batch53/physical/index.json)
+passes in15.211 seconds. It keeps84 read-only statements/69 wrong-bind controls
+separate from four temporary model UPDATE rollback controls and four TEMP live
+transaction controls. Two real deferred-FK COMMIT failures await rollback/Ready
+and immediate production GET serialization on the same connection. HTTP auth is
+not exercised by this physical gate. All fifteen public model tables and all
+public sequence states remain exact; the default schema remains62 tables/59
+sequences. Root independently verifies one exact container, eight captured
+original host generations and the project absent.
+
+The [first physical attempt](../scripts/rust-integration/milestone-batch53/physical-attempt1/index.json)
+remains exit1: read-only84/69 and the earlier UPDATE4 pass, then the new observer
+requests an unsupported sequence composite type before any live case. SDK81
+changes only that test observer to read explicit last_value/log_cnt/is_called
+fields, preserving all59 public sequence states and both temporary sequences
+without nextval. It does not weaken the default audit or change production SQL.
+
+Complete Source automatic-processing qualification and the new full Native/public
+workflow remain pending. These facts do not close Rust/M5,
 performance acceptance or complete M0–M9 migration acceptance. Broader input and
 role domains, profile execution, the preceding playlist update and following
 playlist refresh remain separate scopes.

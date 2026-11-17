@@ -1,0 +1,17 @@
+{
+  "whole_actual_exit": 1,
+  "seconds": 14.852965597994626,
+  "readonly84_69_passed": true,
+  "temporary_UPDATE4_passed": true,
+  "live_cases_reached": 0,
+  "error_code": "42809",
+  "cause": "Observer SELECT to_jsonb(sequenceAlias) requests unsupported sequence composite type before live cases",
+  "correction": "SDK81 explicit last_value/log_cnt/is_called in all three sequence JSON expressions",
+  "no_nextval_or_production_SQL_changed": true,
+  "prior_attempt_not_accepted": true,
+  "raw_failure_log": {
+    "path": "artifacts/rust/m6-live-vod-settings-schema-runner-1/actual-1/worker-native-live-settings-stderr.log",
+    "sha256": "7e99090d157a5fd86021ca52f340e1f8d671c57e17699406976dc30f8d0ec37c",
+    "bytes": 632
+  }
+}
