@@ -1,0 +1,53 @@
+{
+  "attempts": [
+    {
+      "attempt": 1,
+      "actual_exit": 1,
+      "seconds": 75.15086260600947,
+      "bound_inputs": 568,
+      "input_drift": 0,
+      "provider_refresh_roots_completed": 0,
+      "cleanup_CIDs": 3,
+      "cleanup_host_generations": 2,
+      "actual_terminal_consumed": true
+    },
+    {
+      "attempt": 2,
+      "actual_exit": 1,
+      "seconds": 87.29241247699247,
+      "bound_inputs": 571,
+      "input_drift": 0,
+      "provider_refresh_roots_completed": 0,
+      "cleanup_CIDs": 3,
+      "cleanup_host_generations": 2,
+      "actual_terminal_consumed": true
+    },
+    {
+      "attempt": 3,
+      "actual_exit": 0,
+      "seconds": 230.30558186600683,
+      "bound_inputs": 590,
+      "input_drift": 0,
+      "provider_refresh_roots_completed": 10,
+      "cleanup_CIDs": 3,
+      "cleanup_host_generations": 2,
+      "actual_terminal_consumed": true
+    }
+  ],
+  "failures": [
+    {
+      "attempt": 1,
+      "scope": "Observer ZoneInfo encoding failed before a provider refresh root; no Source application behavior change."
+    },
+    {
+      "attempt": 2,
+      "scope": "A defaults PATCH returned200; its invalid group-settings GET readback returned405 before any provider refresh root."
+    }
+  ],
+  "successor": {
+    "attempt": 3,
+    "scope": "Valid account-detail GET; A defaults separately declared normal-model setup from captured CP values, completed PATCH not replayed; six remaining administrative PATCHes and ten refresh roots observed."
+  },
+  "cleanup": "All three literal attempts retain independently verified exact3CID/2process-generation absence.",
+  "performance_comparison_of_durations_valid": false
+}
