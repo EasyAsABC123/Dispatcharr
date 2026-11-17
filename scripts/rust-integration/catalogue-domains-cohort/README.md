@@ -1,0 +1,7 @@
+# Portable twelve-context cohort
+
+Original Dispatcharr and dependency authors retain all application credit. This additive library preserves the qualified public nine contexts and adds international catalogue5, ordered identity7 and catalogue-scale5.
+
+Use the existing recording-connect-cohort/prepare.py with --workflow catalogue-twelve. Source17 authority is the published gzip projections/SQL and all95 hash-bound files. Literal Source controller1 after12 completed roots and separate scale controller0/five roots remain distinct. No private405 Source capture reads or known Source business replay occur. Existing account IDs, exact all11sequences/PKs, full business/support rows, initial raw-stable owned credentials, typed causal clocks/independent UUIDs, exact setup/tag-free phase chains, actual provider bytes, complete pagination and own staged-file custody remain contractual. Only actual verified API origins change; path/query bytes remain exact. The observed same fixture-account namespace is explicitly required.
+
+Private Candidate51 Native12 execution passed. Public12 clean execution is pending; new performance and every complete migration milestone remain open. Prior public9/default workflows and Source authority stay unchanged.

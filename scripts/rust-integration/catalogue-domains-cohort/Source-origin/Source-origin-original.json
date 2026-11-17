@@ -1,0 +1,37 @@
+{
+  "scope": "Qualified Original Source HTTP request origin",
+  "actual_origin": "http://127.0.0.1:61610",
+  "declared_context": "vod-dense-list",
+  "actual_compose_port": 5656,
+  "argv": [
+    "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+    "compose",
+    "-p",
+    "dispatcharr-normal-dvr-cff098a17f",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/candidate47-public-clean-1/repo/docker/compose.rust-playback.yml",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/ports.json",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/compose.json",
+    "port",
+    "baseline",
+    "5656"
+  ],
+  "argv_sha256": "9d01f9ae4e343e7830f64a5c183a459f91682455f78891d130ce0cd3bdd113f3",
+  "receipt": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/command-0003.json",
+    "sha256": "188484b5d397a65fb2674e68383d3606a2139002194aae576c693a5164c8fdab"
+  },
+  "stdout": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-vod-dense-list-source-2/fixtures/Original-d69d93e7/command-0003.stdout",
+    "sha256": "b6cc04e8453168fb7a9e25aac01380f1893f64fd960d6f874e8d58876db7e433"
+  },
+  "actual_exit": 0,
+  "EOF_and_group_settled": true,
+  "fixture_API_client_no_Host_or_forwarded_header_overrides": true,
+  "actual_Source_binding": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-vod-dense-list-source-2/binding.json",
+    "sha256": "bac721d0e3f28637701aef46204f4b97ba3009b50c25c5a038cf0ddb14f878d1"
+  }
+}
