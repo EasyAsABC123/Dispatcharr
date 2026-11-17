@@ -1,0 +1,51 @@
+{
+  "passed": true,
+  "image_id": "sha256:1c8bbbab484eaf32e64261fdd139584cd97a044e92565ea9c476de0e654cde43",
+  "git_revision": "7148f05a68f73345de5103249695bf12382600e8",
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "actual_UID": 65532,
+  "manifest_ELF_records": 51,
+  "prefix_files": 626,
+  "all_exact_files_and_notices": 648,
+  "actual_isolated_cli": {
+    "python": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+    "regex": "2026.9.29",
+    "prefix": "/opt/dispatcharr-python",
+    "Django_dependency_available": true,
+    "Source_application_on_generic_sys_path": false
+  },
+  "actual_framed_dependency_roundtrip": [
+    {
+      "kind": "ready",
+      "actual_pid": 1,
+      "version": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+      "regex_version": "2026.9.29",
+      "application_server_started": false,
+      "dependency_only": true
+    },
+    {
+      "kind": "result",
+      "id": 1,
+      "result": {
+        "active": true,
+        "matches": [
+          true,
+          false
+        ],
+        "caught": null
+      },
+      "error": null
+    },
+    {
+      "kind": "result",
+      "id": 2,
+      "result": null,
+      "error": null
+    }
+  ],
+  "exact_bridge_bytes_match_Git": true,
+  "failure": null,
+  "exact_cleanup": true,
+  "commands": "commands.json"
+}
