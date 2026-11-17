@@ -122,7 +122,7 @@ This does not establish Source capacity or a Rust performance gain. Root verifie
 process evidence does not imply an additional independent host-generation audit.
 
 The observer's bounded profile capture was too small for an ordinary 100-reader
-shape. A fresh Source/Native 100-viewer qualification subsequently passes all
+shape. A [fresh Source/Native 100-viewer qualification](../scripts/rust-integration/milestone-batch52/observer-pilot100/index.json) subsequently passes all
 61 samples per phase and complete equivalent audio/video validation. Actual
 Source profiles measure 84,757–84,990 bytes, above the old 65,536-byte bound and
 inside the corrected 131,072-byte bound. Framed replies remain bounded at

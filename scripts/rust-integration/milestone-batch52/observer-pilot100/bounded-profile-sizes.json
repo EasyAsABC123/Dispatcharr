@@ -1,0 +1,143 @@
+{
+  "scope": "Exact first/final actual profile lengths from the capture-only reviewed pilot, not a reconstruction of the old lost exception",
+  "previous_profile_limit_bytes": 65536,
+  "profiles": [
+    {
+      "backend": "baseline",
+      "profiles": [
+        {
+          "tick": 0,
+          "actual_retained_profile_bytes": 84757,
+          "actual_reconstructed_reply_bytes": 92197,
+          "would_exceed_previous_profile65536": true,
+          "groups": {
+            "observer": {
+              "processes": 4,
+              "tasks": 135
+            },
+            "orchestrator": {
+              "processes": 1,
+              "tasks": 1
+            },
+            "baseline": {
+              "processes": 58,
+              "tasks": 173
+            },
+            "origin": {
+              "processes": 2,
+              "tasks": 4
+            },
+            "publication-observer": {
+              "processes": 1,
+              "tasks": 1
+            }
+          }
+        },
+        {
+          "tick": 60,
+          "actual_retained_profile_bytes": 84990,
+          "actual_reconstructed_reply_bytes": 92436,
+          "would_exceed_previous_profile65536": true,
+          "groups": {
+            "observer": {
+              "processes": 4,
+              "tasks": 135
+            },
+            "orchestrator": {
+              "processes": 1,
+              "tasks": 1
+            },
+            "baseline": {
+              "processes": 57,
+              "tasks": 174
+            },
+            "origin": {
+              "processes": 2,
+              "tasks": 4
+            },
+            "publication-observer": {
+              "processes": 1,
+              "tasks": 1
+            }
+          }
+        }
+      ],
+      "sample_count": 61,
+      "metadata_completed_requests": 62
+    },
+    {
+      "backend": "candidate",
+      "profiles": [
+        {
+          "tick": 0,
+          "actual_retained_profile_bytes": 47260,
+          "actual_reconstructed_reply_bytes": 56130,
+          "would_exceed_previous_profile65536": false,
+          "groups": {
+            "observer": {
+              "processes": 4,
+              "tasks": 138
+            },
+            "orchestrator": {
+              "processes": 1,
+              "tasks": 1
+            },
+            "baseline": {
+              "processes": 13,
+              "tasks": 30
+            },
+            "candidate": {
+              "processes": 2,
+              "tasks": 9
+            },
+            "origin": {
+              "processes": 2,
+              "tasks": 4
+            },
+            "publication-observer": {
+              "processes": 1,
+              "tasks": 1
+            }
+          }
+        },
+        {
+          "tick": 60,
+          "actual_retained_profile_bytes": 45775,
+          "actual_reconstructed_reply_bytes": 54646,
+          "would_exceed_previous_profile65536": false,
+          "groups": {
+            "observer": {
+              "processes": 4,
+              "tasks": 138
+            },
+            "orchestrator": {
+              "processes": 1,
+              "tasks": 1
+            },
+            "baseline": {
+              "processes": 9,
+              "tasks": 26
+            },
+            "candidate": {
+              "processes": 2,
+              "tasks": 10
+            },
+            "origin": {
+              "processes": 2,
+              "tasks": 4
+            },
+            "publication-observer": {
+              "processes": 1,
+              "tasks": 1
+            }
+          }
+        }
+      ],
+      "sample_count": 61,
+      "metadata_completed_requests": 62
+    }
+  ],
+  "actual_summary_sha256": "aed3bcd8876e608f8dfb34850ea33908788a0139412b44c631e8c8beb81f6cf5",
+  "old_failed_phase_exception_recovered": false,
+  "gain_accepted": false
+}
