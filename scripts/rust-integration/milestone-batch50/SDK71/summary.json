@@ -1,0 +1,44 @@
+{
+  "SDK": 71,
+  "all_four_actual_gates0": true,
+  "Root_session_consumed": 44156,
+  "passed": 1169,
+  "failed": 0,
+  "ignored": 784,
+  "blocks": 180,
+  "inputs": 1452,
+  "Rust_inputs": 1446,
+  "changes_from_SDK70": [
+    "rust/crates/store/src/vod_ingestion_series_sql.rs",
+    "rust/crates/store/src/vod_ingestion_sql.rs"
+  ],
+  "change_scope": "Movie and Series relation INSERTs use WITH ORDINALITY and ORDER BY to preserve Source provider allocation order; no expected PK normalization",
+  "gate_seconds": {
+    "fmt": 3.2213847637176514,
+    "check": 19.5276517868042,
+    "strict": 47.80868744850159,
+    "workspace": 128.04778218269348
+  },
+  "workspace_ignored_physical_SQL_not_run_by_SDK": true,
+  "physical_SQL": {
+    "state": "ACTUAL_ATTEMPT2_PASSED",
+    "positive_statements_passed": 45,
+    "wrong_bind_controls_passed": 24,
+    "actual_guest_exit": 0,
+    "DML_executed": false,
+    "Root_independent_cleanup_passed": true,
+    "public_identity": "scripts/rust-integration/milestone-batch50/physical-attempt2/identity.json"
+  },
+  "historical_failed_Native_attempt1": {
+    "path": "scripts/rust-integration/milestone-batch50/application-attempt1/index.json",
+    "sha256": "2f52769fe775be8f756a956627f9ecf4f561b7aca78c3a90d13b992bc0993064"
+  },
+  "historical_SDK70_unchanged": {
+    "path": "scripts/rust-integration/milestone-batch50/SDK/index.json",
+    "sha256": "9cce28df8ea0e3f8155bff22884057a4ebc651d664cc16fcdc7e668fdb56705f"
+  },
+  "fresh_physical_image_packages_full_Native9_pending": true,
+  "performance_verified": false,
+  "full_milestone_accepted": false,
+  "original_authors_retain_all_credit": true
+}

@@ -16,9 +16,10 @@ catalogue responses are retained.
 | Validation | Current result |
 | --- | --- |
 | Source external-ID cohort | Nine cases pass; actual exit 0 in 186.533 seconds |
-| SDK70 | Formatting, workspace check, strict Clippy and workspace tests pass |
+| SDK70 | Original attempt all four gates pass; retained |
+| SDK71 ordering correction | All four gates pass; 1,169 tests pass |
 | Default tests | 1,169 passed, zero failed; 784 fixture-dependent tests ignored |
-| Physical SQL | 45 statements / 24 wrong-bind controls pass |
+| Physical SQL | Original and corrected attempts both pass 45 statements / 24 controls |
 | Candidate50 Docker build/packages | Build and all six package families pass |
 | Combined Native nine-context cohort | Attempt1 failed strict Source comparison; correction pending |
 | New application performance | Pending |
@@ -110,3 +111,17 @@ and Series relation INSERTs. SDK71, fresh physical checks, a new image and the
 entire affected Native nine-context run must pass before this correction is
 accepted. Published SDK70, physical, package and failed application evidence stay
 unchanged. Application performance and complete migration milestones remain open.
+
+
+The correction now passes all four SDK71 gates with 1,169 tests, zero failures
+and 784 ignored tests. Only the two relation INSERT SQL constants differ from
+SDK70; values, typed controls, bounds and Source authority remain unchanged.
+The separate corrected physical attempt passes all 45 statements/24 wrong-bind
+controls in 14.107 seconds, with both EOFs and settled group, read-only/no-cache
+Ready/Close and unchanged default schema. Root verifies its one exact container,
+eight original host process generations and project absent. See
+[SDK71](../scripts/rust-integration/milestone-batch50/SDK71/summary.json) and
+[physical attempt2](../scripts/rust-integration/milestone-batch50/physical-attempt2/README.md).
+The corrected Docker image, six package families and full Native nine-context
+rerun remain pending. Neither these host checks nor Parse/Describe establish
+that the production relation order is corrected at runtime.
