@@ -1,0 +1,31 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate48-combined-vod-driver-2/cohort/vod_dense_list_cases.py", line 182, in run
+    compare_retained_Source(f,private);report['Native_qualified']=True
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate48-combined-vod-driver-2/cohort/vod_dense_list_cases.py", line 209, in compare_retained_Source
+    actual=compare(root,private);assert actual['status']=='passed'
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate48-combined-vod-driver-2/cohort/vod_dense_list_compare.py", line 227, in compare
+    exact(ws[0],ws[1],(label,'Ordered parsed WS events'));exact(catalogues[0],catalogues[1],(label,'Catalogue responses'))
+                                                          ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate48-combined-vod-driver-2/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate48-combined-vod-driver-2/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate48-combined-vod-driver-2/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate48-combined-vod-driver-2/cohort/vod_dense_list_compare.py", line 27, in exact
+    for index,(a,b)in enumerate(zip(left,right)):exact(a,b,(label,index))
+                                                 ~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate48-combined-vod-driver-2/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate48-combined-vod-driver-2/cohort/vod_dense_list_compare.py", line 24, in exact
+    for key in left:exact(left[key],right[key],(label,key))
+                    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-candidate48-combined-vod-driver-2/cohort/vod_dense_list_compare.py", line 28, in exact
+    elif left!=right:raise AssertionError(label)
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ((((((('fresh-dense', 'Catalogue responses'), 'movies'), 'body'), 'results'), 0), 'logo'), 'cache_url')

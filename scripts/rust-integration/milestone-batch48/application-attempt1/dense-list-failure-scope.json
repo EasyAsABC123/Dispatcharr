@@ -1,0 +1,673 @@
+{
+  "overall_status": "failed",
+  "metadata_local_cases_passed": 6,
+  "actual_provider_HTTP_requests": 30,
+  "all_six_context_observations_complete": true,
+  "literal_Source_comparison_failure": "AssertionError at fresh-dense catalogue movies.results[0].logo.cache_url",
+  "cross_backend_remaining_phases": "not reached by the failed comparator",
+  "phases": [
+    {
+      "name": "fresh-dense",
+      "local_status": "passed",
+      "actual_provider_requests": 5,
+      "all11_sequence_before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "all11_sequence_after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "raw_SQL_and_wire_capture_hashes": {
+        "SQL-before": "a7d08b190a82e4555b8caeb6f0f4cee0c2baa89688350c1b138c01460f049e16",
+        "SQL-after": "c1353b2b5582d4941eada9736a1f8e367e60140478a574a8c229d9224a444609",
+        "HTTP": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+        "frame": "fc75e4774c890c7b52a2c5ba9fd239d63429539038db7302f2d773660c6006c6",
+        "backend": "f063d08b565fb8ae297e91711657ef6a50658c2f98197cf2ed87ddda0bc70bec",
+        "Origin": "a24417d9cc52da45261c7cd7507a3d6b7329097b304e4b46e5ea7bff0e9575cf",
+        "WS": "045ebfa89216c1dd3db0f5bae1c1e30ac8845824e58894520a9648dee6cf88bb",
+        "catalogue": "69b54b31d746c1c55f50c4c7c6a7f1217f7cfd65ddecaf51f62e1dd3a5195ef7",
+        "cache-before": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a",
+        "cache-after": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a"
+      },
+      "full_Source_comparator_status": "failed at catalogue"
+    },
+    {
+      "name": "identical-repeat",
+      "local_status": "passed",
+      "actual_provider_requests": 5,
+      "all11_sequence_before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "all11_sequence_after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 6,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "raw_SQL_and_wire_capture_hashes": {
+        "SQL-before": "04191af16ed2ee9fd5fc26550dfdc3deafe5e49491207438249af22c494bf866",
+        "SQL-after": "75885f54b23c95e7b6b57b366e0ce07dfc50077026acf05093b6cd9a5b16d6a0",
+        "HTTP": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+        "frame": "f924b33987dd8143dcd43bd3f1ce672f340dfe1c444268d94927217f4f684142",
+        "backend": "642fba7c7598079e30e50dd2ff7ecb2042907c4228490c01e6782828a9cd072e",
+        "Origin": "c9e46debf83a78a937085e734a2232e8278c220db1a4652c8350793b21aab0aa",
+        "WS": "aba375f7a1f3853dfb5d76ef59b5abd38f7766c7be9a792573221f33c1fd9792",
+        "catalogue": "69b54b31d746c1c55f50c4c7c6a7f1217f7cfd65ddecaf51f62e1dd3a5195ef7",
+        "cache-before": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a",
+        "cache-after": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a"
+      },
+      "full_Source_comparator_status": "not_reached_after_first_phase_catalogue_failure"
+    },
+    {
+      "name": "nonblank-metadata-update",
+      "local_status": "passed",
+      "actual_provider_requests": 5,
+      "all11_sequence_before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 6,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "all11_sequence_after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "raw_SQL_and_wire_capture_hashes": {
+        "SQL-before": "452068d85f4c6c7388d771cf520bcffc59bbf80e857407e2a5a07b45969d2033",
+        "SQL-after": "b2cc0d11f55b77faaa59d4f2c5bd9d69cefa68e7deda82ebb62254a00f27783b",
+        "HTTP": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+        "frame": "a55537e66da0b08e3c323286f6eccf98e4770fd7aeb98514f6ec4a636e74bf2e",
+        "backend": "505b8ad381082617a91baf250ca023f42eb290cb223c30eedd21051b3ad03bed",
+        "Origin": "3e02e44b60795d14d0a82276be16e4ace26291e923c6130ae2b93741ce7f26e2",
+        "WS": "80d9a9d0c7bb2336949584cbe8385fb0cd324e3b9e140f575a37c83ff752d468",
+        "catalogue": "4fa99eb75db939af50703d83148f10e637df5ba849fc93673f77b80a4435d9e2",
+        "cache-before": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a",
+        "cache-after": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a"
+      },
+      "full_Source_comparator_status": "not_reached_after_first_phase_catalogue_failure"
+    },
+    {
+      "name": "sparse-blank-and-logo-clear",
+      "local_status": "passed",
+      "actual_provider_requests": 5,
+      "all11_sequence_before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "all11_sequence_after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 10,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "raw_SQL_and_wire_capture_hashes": {
+        "SQL-before": "22a9270f237788cb82a02b68c6e6b0f4438a930198e7f2445c16df58cc5b2392",
+        "SQL-after": "806808836c42ad14f74700709f30abc0b6a29df17b87ae7b4e94eeda0e309998",
+        "HTTP": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+        "frame": "a62bda0410d18f0616b04b33a5b6ec01bf47c810c0a5d8842d0edd5ad7704915",
+        "backend": "86be16a008fdd8d68204868f7006a78742b005790aa1f16eb9737615a50d19bd",
+        "Origin": "bca966aecda393b5ee8aa84fbdf6c05b35f9171c7f2cb530cb0be8cffabbb501",
+        "WS": "4ccbe35fe9f5bd50cd8cd061f6245029639883135ee4d6da292859b430591416",
+        "catalogue": "40d51ee3896833e8172efaf9ec8213b7c8d8b246f1d271e40c9dbe82f97541fb",
+        "cache-before": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a",
+        "cache-after": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a"
+      },
+      "full_Source_comparator_status": "not_reached_after_first_phase_catalogue_failure"
+    },
+    {
+      "name": "duplicate-representative-and-reuse",
+      "local_status": "passed",
+      "actual_provider_requests": 5,
+      "all11_sequence_before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 10,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "all11_sequence_after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "raw_SQL_and_wire_capture_hashes": {
+        "SQL-before": "dfaa3d0e9dc3d9e9aa083f023f93360f031291434bb7254da1f57fcd4beea954",
+        "SQL-after": "e66acf4e7dec9993be49889160747dfe798fc8fbb3effe0860de8d8bad56f131",
+        "HTTP": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+        "frame": "c295a964164da7079175d65a83b584e504e8f9b1b61d5e1fc8f5eaff5121d326",
+        "backend": "96c627285a49f821190d106f20fa082d9e235f78e3d03f1b9cb0e9dec0b7cffc",
+        "Origin": "0bfa130e9754c06c1464df8e92075e0fd475ace19f8c3341206174f40cfa459e",
+        "WS": "f7ccb88dda4b5ac64daeb55d9b0938ed97ceaeeede841f4dd3921eb4780f5321",
+        "catalogue": "a7300db99ba5a5ad1acfb272a0c876276df844c3b9034f5b2990b53c78dbef9f",
+        "cache-before": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a",
+        "cache-after": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a"
+      },
+      "full_Source_comparator_status": "not_reached_after_first_phase_catalogue_failure"
+    },
+    {
+      "name": "last-owner-prune",
+      "local_status": "passed",
+      "actual_provider_requests": 5,
+      "all11_sequence_before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "all11_sequence_after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 14,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      },
+      "raw_SQL_and_wire_capture_hashes": {
+        "SQL-before": "1aee27d25062aaa25b2aec0d10141411b0d182539542d337e0867872b8a1e762",
+        "SQL-after": "e46025d5e6891e8e717455946a6ba863ee25e972a4b69b42b3511803ec96d235",
+        "HTTP": "7f498043637285b589fb9da5b4c09a2a540b60c8df4a953010e9aee8e4b982b5",
+        "frame": "25e60a85dbb70c0c411f684ca5cdaae7c3097b8d24408fbc638329cd329c2a0d",
+        "backend": "a4346eda3018602ffbef7b0c4eb800952ca872845380a8e6f9b517b3a1b80bbb",
+        "Origin": "7c5427f6e68bf58e5b34ccbc2d47f2afe6b9b6af8315a1f84f84987c1758c210",
+        "WS": "d1f3ceff44cc9652da56c33cc34b1dbaea2cdb33a4b54ea63091c57a42963577",
+        "catalogue": "ad1d88733528588890f42274474090047bf19466a9e8e096f4080481a60ed2fb",
+        "cache-before": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a",
+        "cache-after": "e22f455a5b239cfaccc998f78f745e4147b436baddcec320630a81e71162cb9a"
+      },
+      "full_Source_comparator_status": "not_reached_after_first_phase_catalogue_failure"
+    }
+  ],
+  "full7_qualified": false,
+  "performance_verified": false,
+  "new_acceptance_claim": false
+}

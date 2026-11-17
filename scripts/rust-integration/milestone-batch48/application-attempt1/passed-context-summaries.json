@@ -1,0 +1,153 @@
+[
+  {
+    "context": "vod-repeat",
+    "status": "passed",
+    "raw_report_sha256": "c1d558ccbf459c9c34261945e7c0de94e36e7b4ce12873c37fc7168d9e300fa8",
+    "cases": [
+      {
+        "name": "unchanged",
+        "status": "passed"
+      },
+      {
+        "name": "update-reassign-deduplicate-category-replace",
+        "status": "passed"
+      },
+      {
+        "name": "prune-stale-preserve-other-account",
+        "status": "passed"
+      },
+      {
+        "name": "empty-categories-preserve-selected-catalogue",
+        "status": "passed"
+      },
+      {
+        "name": "empty-Movies-clean-only-owned-stale-orphans",
+        "status": "passed"
+      }
+    ]
+  },
+  {
+    "context": "vod-series",
+    "status": "passed",
+    "raw_report_sha256": "70997ef2d99862a6fb7327c3929cf89ca919b036fcd4a47ea30fb37a910f00a7",
+    "cases": [
+      {
+        "name": "fresh-nonempty-Series-no-Movies",
+        "status": "passed"
+      },
+      {
+        "name": "unchanged-Series-repeat",
+        "status": "passed"
+      },
+      {
+        "name": "Series-reassign-globaldedup-category-replace",
+        "status": "passed"
+      },
+      {
+        "name": "empty-Series-prunes-only-stale-Series",
+        "status": "passed"
+      }
+    ]
+  },
+  {
+    "context": "comskip-manual",
+    "status": "passed",
+    "raw_report_sha256": "8ff21343f6b8d334981049f6f9305236912841acaf7adacbd36db5a687c22740",
+    "cases": [
+      {
+        "name": "no-file",
+        "status": "passed"
+      },
+      {
+        "name": "real-manual-mark",
+        "status": "passed"
+      },
+      {
+        "name": "actual-repeat-already-processed",
+        "status": "passed"
+      }
+    ]
+  },
+  {
+    "context": "vlc-live",
+    "status": "passed",
+    "raw_report_sha256": "6a42e3b6f6f736cb2b15befaa5ccc6c41a35841f026762199623000680815029",
+    "cases": [],
+    "actual_viewers": 2,
+    "actual_inputs": 1,
+    "actual_upstreams": 1,
+    "actual_provider_slots": 1,
+    "actual_Main_loaded_graph_health": {
+      "status": "ready",
+      "backend": "rust",
+      "parity_complete": false,
+      "selected_workers": {
+        "scope": "experimental selected normal families plus startup recovery; not Source47 parity",
+        "ready": true,
+        "startup": "Started",
+        "startup_error": null,
+        "control": "Subscribed",
+        "celery": "Observed(Empty)",
+        "dvr": "Observed(Empty)",
+        "clocked_scheduler": "Observed(Tick { reloaded: false, published: None, publication_error: None, disabled: 0, synchronized: 0, missing: 0, invalid_rows: 0, delay_seconds: 5.0 })",
+        "clocked_scheduler_enabled": true,
+        "dvr_plugin_domain": "empty_directory_rechecked_before_recording_effects",
+        "startup_recovery_deferred_unsupported_domain": false,
+        "parity_complete": false
+      }
+    },
+    "actual_Main_readiness_status": 200,
+    "actual_idle_input_retired": true,
+    "actual_Main_exit": 0
+  },
+  {
+    "context": "vod-series-info",
+    "status": "passed",
+    "raw_report_sha256": "ddd518ed97d9c62f409a0948d25f17dd5caf53d4d2f7a4b51d3b4a9b3481cc81",
+    "cases": [
+      {
+        "name": "series_missing_flags",
+        "status": "passed"
+      },
+      {
+        "name": "series_fresh",
+        "status": "passed"
+      },
+      {
+        "name": "series_force",
+        "status": "passed"
+      },
+      {
+        "name": "series_empty_episodes",
+        "status": "passed"
+      },
+      {
+        "name": "series_no_stored_empty",
+        "status": "passed"
+      }
+    ]
+  },
+  {
+    "context": "vod-series-advanced",
+    "status": "passed",
+    "raw_report_sha256": "6838de8df32db8c7ed6a79225a2f479c3e14e452441338de7f61f45d5ca0e8f7",
+    "cases": [
+      {
+        "name": "sparse-list-preserves-detail-and-Episodes",
+        "status": "passed"
+      },
+      {
+        "name": "advanced-catalogue-repeat",
+        "status": "passed"
+      },
+      {
+        "name": "prune-cascades-detail-Episodes-and-streams",
+        "status": "passed"
+      },
+      {
+        "name": "yearless-list-reassigns-and-cascades-old-details",
+        "status": "passed"
+      }
+    ]
+  }
+]

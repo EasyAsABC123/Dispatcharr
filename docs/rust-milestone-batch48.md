@@ -32,8 +32,8 @@ external-ID identity and shared-account metadata remain open.
 | SDK66 | Formatting, workspace check, strict Clippy and workspace tests pass |
 | Default tests | 1,164 passed, zero failed; 784 fixture-dependent tests ignored |
 | Physical SQL | 44 statements and 22 wrong-bind controls pass; no business DML |
-| Candidate48 image and package families | Pending |
-| Combined Native seven-context cohort | Pending |
+| Candidate48 image and package families | Build and all six package families pass |
+| Combined Native seven-context cohort | First attempt fails the cross-backend cache URL comparison; rerun pending |
 | New application performance | Pending; earlier image results retain their own scope |
 
 The Source cases cover fresh import, identical repeat, nonblank update, sparse
@@ -55,8 +55,31 @@ its exact container, eight captured host process generations and project absent.
 These checks establish SQL compatibility; they do not establish application row
 effects. The packaged application cohort remains required.
 
+The committed source `2d25d5d77e2cb22980f1b677b33a155cd307673d` builds in
+301.212 seconds as image
+`sha256:a623d5ad9bb588e8cbb1cc0ff0ed5eac5bc87561788c51fb4545f6287da28cc4`.
+All six package families pass. The production Main ELF changes from Candidate47;
+all 1,445 archived Rust inputs match SDK66, and the React assets and original
+credits remain unchanged. All 55 exact package-test containers are absent.
+
+The first seven-context run exits 1 in 417.234 seconds. Its six prior contexts
+pass, and all six new metadata phases pass their local assertions, including
+30 real provider requests. The final cross-backend comparison fails on nested
+logo `cache_url`: Source and Native use independently assigned localhost ports
+61610 and 64347. Scheme, host, path, query, logo ID and version hash match.
+Recorded port receipts and Main binding establish the differing fixture origins.
+A narrow offline comparison validates both origins before mapping only this
+Native response field to the Source origin; all six captures then match, with
+seven deliberate URI corruption controls rejected. This diagnostic does not
+change the failed runtime result. A fresh full seven-context run remains required.
+Root verifies its nine exact containers, nine captured host process generations
+and project absent.
+
 Evidence: [Source cohort](../scripts/rust-integration/dense-list-source1/README.md),
 [SDK66](../scripts/rust-integration/milestone-batch48/SDK/summary.json), and
 [physical SQL](../scripts/rust-integration/milestone-batch48/physical/README.md).
+The [package proofs](../scripts/rust-integration/milestone-batch48/package/inventory.json)
+and [failed application attempt](../scripts/rust-integration/milestone-batch48/application-attempt1/index.json)
+retain their separate scopes and actual exits.
 The existing six application contexts must run alongside this new seventh
 context after packaging. All complete M0–M9 milestones remain open.
