@@ -13,7 +13,7 @@ catalogues spanning Source's 1,000-row transaction boundary.
 | SDK74 | All four gates pass; 1,174 tests pass, 785 ignored |
 | Physical SQL / UPDATE semantics | Readonly47/30 and separate temporary rollback4 pass |
 | Docker / packages | Image passes; all six package families pass with 55 CIDs absent |
-| Full Native12 | Running; no result accepted yet |
+| Full Native12 | Passes; actual exit 0 in 842.643 seconds |
 | New paired performance | Not run |
 
 The first grouped controller exits 1 in 232.145 seconds after completing the
@@ -56,8 +56,7 @@ or deduplication, processes and settles each raw 1,000-row chunk, and performs
 reconciliation and cleanup once. Scoped identity lookups replace whole-catalogue
 snapshots. SQL must preserve Source's ordered conflict handling and first queued
 metadata update while keeping stored-name behavior. SDK74, the separate physical checks and all six Docker package families now pass.
-The complete affected application cohort remains running before accepting Main
-behavior.
+The complete affected Native12 cohort now passes separately.
 
 Language reconciliation, wider logo domains, categories beyond the captured
 admission, other provider value/fault domains, public reproduction, performance
@@ -88,8 +87,8 @@ captured original host generations and the project absent.
 
 Eight canonical Rust paths are published as
 `63e6672525d6fa58d8faeb424ea14051b56552f1`, byte-identical to SDK74. The Candidate51 image and all six package families now pass separately;
-Native12 remains running, and public12, performance and full milestone acceptance
-remain pending. Original Dispatcharr and dependency authors retain all credit.
+Native12 also passes; public12, performance and full milestone acceptance remain
+pending. Original Dispatcharr and dependency authors retain all credit.
 
 
 The published source builds in 302.212 seconds as
@@ -101,8 +100,25 @@ pass in a separately consumed 24.562-second batch, with both EOFs and settled
 group; 55 exact package containers and their scoped inventories are absent.
 The unchanged React assets, original contributor credit and runtime dependency
 closures remain verified. Fresh UID180 readability passes. The complete
-Source0/Native12 cohort is now RUNNING on this image, adding the seventeen
+Source0/Native12 cohort now passes on this image, adding the seventeen
 Source-characterized roots to the unchanged old nine contexts. No Source
-business root is replayed. An eventual application result must be recorded
-separately; package success alone establishes no new Main, public12, performance
-or full milestone acceptance.
+business root is replayed. The application result is recorded separately below;
+package success alone establishes no public12, performance or full milestone
+acceptance.
+
+
+The [complete Native12 application run](../scripts/rust-integration/milestone-batch51/application/index.json)
+exits 0 in 842.643 seconds, with both EOFs and settled group. All twelve contexts
+pass. All five international, seven ordered-identity and five scale roots pass
+strict comparison against retained Source observations, including complete
+model/support rows, exact primary keys and all eleven sequences, causal/stable
+clocks, independent UUIDs, provider bytes, ordered events, full pagination and
+large-snapshot file custody. Pagination origins map only between verified actual
+fixture endpoints; path/query bytes remain exact. No PK masks or Source-oracle
+changes are used. Source's original controller exit 1 and separate scale exit 0
+remain preserved. The older nine contexts also pass, including two viewers
+sharing one upstream. Root verifies fifteen exact containers including UID,
+fourteen captured original host generations and the project absent; UID's
+uncaptured initial positive generation remains explicit. Clean public12
+reproduction, new paired performance and every complete migration milestone
+remain open.

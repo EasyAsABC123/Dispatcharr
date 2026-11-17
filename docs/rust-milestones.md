@@ -16,8 +16,11 @@ remain explicit; twelve completed roots were reused without replay. Its eight Ru
 physical checks pass readonly47/30 and four actual temporary-table UPDATE
 controls, rolled back with exact public rows/sequences and cleanup. Source
 `63e66725` builds as image `f7484742`; all six package families pass with 55 exact
-containers absent. The complete Native12 cohort is running. Its outcome,
-public12, new performance and complete milestone acceptance remain pending.
+containers absent. The complete Native12 cohort passes in 842.643 seconds, including strict
+full-row/all-eleven-sequence comparisons for all seventeen new Source roots,
+pagination and snapshot custody. Root verifies fifteen exact containers,
+fourteen captured original host generations and the project absent. Public12,
+new performance and complete milestone acceptance remain pending.
 
 [Candidate50](rust-milestone-batch50.md) adds the bounded, empty-language
 Movie/Series external-ID identity slice. Source passes nine characterized roots;

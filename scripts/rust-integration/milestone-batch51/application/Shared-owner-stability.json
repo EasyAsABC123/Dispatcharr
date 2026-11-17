@@ -1,0 +1,790 @@
+{
+  "scope": "Actual Native51 selected/unrelated owner evidence, derived from exact strict-Source-compared snapshots; no plaintext credentials",
+  "owned_account_ids": {
+    "A": 5,
+    "B": 8
+  },
+  "phases": {
+    "shared-A-initial": {
+      "selected_owner": "A",
+      "selected_account_id": 5,
+      "observed_at_before": "2026-11-17T05:50:33.674167+00:00",
+      "observed_at_after": "2026-11-17T05:50:38.538408+00:00",
+      "selected_surviving_relation_last_seen_causal": true,
+      "all_unrelated_relation_rows_stable": [],
+      "relations": {
+        "vod_m3umovierelation": {
+          "before": [],
+          "after": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "movie_id": 1,
+              "category_id": 1,
+              "stream_id": "9401",
+              "created_at": "2026-11-17T05:50:35.525699+00:00",
+              "updated_at": "2026-11-17T05:50:35.525699+00:00",
+              "last_seen": "2026-11-17T05:50:35.482203+00:00",
+              "last_advanced_refresh": null
+            }
+          ]
+        },
+        "vod_m3useriesrelation": {
+          "before": [],
+          "after": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "series_id": 1,
+              "category_id": 2,
+              "external_series_id": "9501",
+              "created_at": "2026-11-17T05:50:35.540498+00:00",
+              "updated_at": "2026-11-17T05:50:35.540498+00:00",
+              "last_seen": "2026-11-17T05:50:35.482203+00:00",
+              "last_episode_refresh": null
+            }
+          ]
+        }
+      },
+      "global_row_counts": {
+        "vod_movie": {
+          "before": 0,
+          "after": 1
+        },
+        "vod_series": {
+          "before": 0,
+          "after": 1
+        },
+        "vod_episode": {
+          "before": 0,
+          "after": 0
+        },
+        "vod_m3uepisoderelation": {
+          "before": 0,
+          "after": 0
+        }
+      },
+      "all11sequences": {
+        "before": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        },
+        "after": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 1,
+            "is_called": false
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "raw_SQL_before_sha256": "e084d801e6e7f6e317d7c76544c3839a7d513e479d333a3b6c9939b451627866",
+      "raw_SQL_after_sha256": "0e093dab294fc4bde2db208a7c39d375cd04ed917a331d6f8151ba3583469c6c"
+    },
+    "shared-B-update": {
+      "selected_owner": "B",
+      "selected_account_id": 8,
+      "observed_at_before": "2026-11-17T05:50:46.463418+00:00",
+      "observed_at_after": "2026-11-17T05:50:51.275493+00:00",
+      "selected_surviving_relation_last_seen_causal": true,
+      "all_unrelated_relation_rows_stable": [
+        {
+          "table": "vod_m3umovierelation",
+          "id": 1,
+          "all_raw_fields_unchanged": true
+        },
+        {
+          "table": "vod_m3useriesrelation",
+          "id": 1,
+          "all_raw_fields_unchanged": true
+        }
+      ],
+      "relations": {
+        "vod_m3umovierelation": {
+          "before": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "movie_id": 1,
+              "category_id": 1,
+              "stream_id": "9401",
+              "created_at": "2026-11-17T05:50:35.525699+00:00",
+              "updated_at": "2026-11-17T05:50:35.525699+00:00",
+              "last_seen": "2026-11-17T05:50:35.482203+00:00",
+              "last_advanced_refresh": null
+            }
+          ],
+          "after": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "movie_id": 1,
+              "category_id": 1,
+              "stream_id": "9401",
+              "created_at": "2026-11-17T05:50:35.525699+00:00",
+              "updated_at": "2026-11-17T05:50:35.525699+00:00",
+              "last_seen": "2026-11-17T05:50:35.482203+00:00",
+              "last_advanced_refresh": null
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 8,
+              "movie_id": 1,
+              "category_id": 1,
+              "stream_id": "9401",
+              "created_at": "2026-11-17T05:50:48.270014+00:00",
+              "updated_at": "2026-11-17T05:50:48.270014+00:00",
+              "last_seen": "2026-11-17T05:50:48.226259+00:00",
+              "last_advanced_refresh": null
+            }
+          ]
+        },
+        "vod_m3useriesrelation": {
+          "before": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "series_id": 1,
+              "category_id": 2,
+              "external_series_id": "9501",
+              "created_at": "2026-11-17T05:50:35.540498+00:00",
+              "updated_at": "2026-11-17T05:50:35.540498+00:00",
+              "last_seen": "2026-11-17T05:50:35.482203+00:00",
+              "last_episode_refresh": null
+            }
+          ],
+          "after": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "series_id": 1,
+              "category_id": 2,
+              "external_series_id": "9501",
+              "created_at": "2026-11-17T05:50:35.540498+00:00",
+              "updated_at": "2026-11-17T05:50:35.540498+00:00",
+              "last_seen": "2026-11-17T05:50:35.482203+00:00",
+              "last_episode_refresh": null
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 8,
+              "series_id": 1,
+              "category_id": 2,
+              "external_series_id": "9501",
+              "created_at": "2026-11-17T05:50:48.285563+00:00",
+              "updated_at": "2026-11-17T05:50:48.285563+00:00",
+              "last_seen": "2026-11-17T05:50:48.226259+00:00",
+              "last_episode_refresh": null
+            }
+          ]
+        }
+      },
+      "global_row_counts": {
+        "vod_movie": {
+          "before": 1,
+          "after": 1
+        },
+        "vod_series": {
+          "before": 1,
+          "after": 1
+        },
+        "vod_episode": {
+          "before": 1,
+          "after": 1
+        },
+        "vod_m3uepisoderelation": {
+          "before": 1,
+          "after": 1
+        }
+      },
+      "all11sequences": {
+        "before": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        },
+        "after": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "raw_SQL_before_sha256": "1ba9d54c494d9cd5e27e17b844f8d0976f71f112aa3a2ccfd244b7522d025392",
+      "raw_SQL_after_sha256": "2cf935c0071a35a3ce64671f51068c19985c25d3f43e01da52f4a8ef1d749f08"
+    },
+    "shared-A-prune": {
+      "selected_owner": "A",
+      "selected_account_id": 5,
+      "observed_at_before": "2026-11-17T05:50:54.011656+00:00",
+      "observed_at_after": "2026-11-17T05:50:58.829837+00:00",
+      "selected_surviving_relation_last_seen_causal": true,
+      "all_unrelated_relation_rows_stable": [
+        {
+          "table": "vod_m3umovierelation",
+          "id": 2,
+          "all_raw_fields_unchanged": true
+        },
+        {
+          "table": "vod_m3useriesrelation",
+          "id": 2,
+          "all_raw_fields_unchanged": true
+        }
+      ],
+      "relations": {
+        "vod_m3umovierelation": {
+          "before": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "movie_id": 1,
+              "category_id": 1,
+              "stream_id": "9401",
+              "created_at": "2026-11-17T05:50:35.525699+00:00",
+              "updated_at": "2026-11-17T05:50:35.525699+00:00",
+              "last_seen": "2026-11-17T05:50:35.482203+00:00",
+              "last_advanced_refresh": null
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 8,
+              "movie_id": 1,
+              "category_id": 1,
+              "stream_id": "9401",
+              "created_at": "2026-11-17T05:50:48.270014+00:00",
+              "updated_at": "2026-11-17T05:50:48.270014+00:00",
+              "last_seen": "2026-11-17T05:50:48.226259+00:00",
+              "last_advanced_refresh": null
+            }
+          ],
+          "after": [
+            {
+              "id": 2,
+              "m3u_account_id": 8,
+              "movie_id": 1,
+              "category_id": 1,
+              "stream_id": "9401",
+              "created_at": "2026-11-17T05:50:48.270014+00:00",
+              "updated_at": "2026-11-17T05:50:48.270014+00:00",
+              "last_seen": "2026-11-17T05:50:48.226259+00:00",
+              "last_advanced_refresh": null
+            }
+          ]
+        },
+        "vod_m3useriesrelation": {
+          "before": [
+            {
+              "id": 1,
+              "m3u_account_id": 5,
+              "series_id": 1,
+              "category_id": 2,
+              "external_series_id": "9501",
+              "created_at": "2026-11-17T05:50:35.540498+00:00",
+              "updated_at": "2026-11-17T05:50:35.540498+00:00",
+              "last_seen": "2026-11-17T05:50:35.482203+00:00",
+              "last_episode_refresh": null
+            },
+            {
+              "id": 2,
+              "m3u_account_id": 8,
+              "series_id": 1,
+              "category_id": 2,
+              "external_series_id": "9501",
+              "created_at": "2026-11-17T05:50:48.285563+00:00",
+              "updated_at": "2026-11-17T05:50:48.285563+00:00",
+              "last_seen": "2026-11-17T05:50:48.226259+00:00",
+              "last_episode_refresh": null
+            }
+          ],
+          "after": [
+            {
+              "id": 2,
+              "m3u_account_id": 8,
+              "series_id": 1,
+              "category_id": 2,
+              "external_series_id": "9501",
+              "created_at": "2026-11-17T05:50:48.285563+00:00",
+              "updated_at": "2026-11-17T05:50:48.285563+00:00",
+              "last_seen": "2026-11-17T05:50:48.226259+00:00",
+              "last_episode_refresh": null
+            }
+          ]
+        }
+      },
+      "global_row_counts": {
+        "vod_movie": {
+          "before": 1,
+          "after": 1
+        },
+        "vod_series": {
+          "before": 1,
+          "after": 1
+        },
+        "vod_episode": {
+          "before": 1,
+          "after": 1
+        },
+        "vod_m3uepisoderelation": {
+          "before": 1,
+          "after": 0
+        }
+      },
+      "all11sequences": {
+        "before": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        },
+        "after": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 10,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "raw_SQL_before_sha256": "fb8e11cd49323a35925a5683ec5afe8d5704666819f334d352fe6d18230011b9",
+      "raw_SQL_after_sha256": "27c3e3cdfc71585b37fd547b617fd38cf5f043d552f8de1c01175afb8be7819a"
+    },
+    "shared-B-prune": {
+      "selected_owner": "B",
+      "selected_account_id": 8,
+      "observed_at_before": "2026-11-17T05:51:01.516636+00:00",
+      "observed_at_after": "2026-11-17T05:51:06.251839+00:00",
+      "selected_surviving_relation_last_seen_causal": true,
+      "all_unrelated_relation_rows_stable": [],
+      "relations": {
+        "vod_m3umovierelation": {
+          "before": [
+            {
+              "id": 2,
+              "m3u_account_id": 8,
+              "movie_id": 1,
+              "category_id": 1,
+              "stream_id": "9401",
+              "created_at": "2026-11-17T05:50:48.270014+00:00",
+              "updated_at": "2026-11-17T05:50:48.270014+00:00",
+              "last_seen": "2026-11-17T05:50:48.226259+00:00",
+              "last_advanced_refresh": null
+            }
+          ],
+          "after": []
+        },
+        "vod_m3useriesrelation": {
+          "before": [
+            {
+              "id": 2,
+              "m3u_account_id": 8,
+              "series_id": 1,
+              "category_id": 2,
+              "external_series_id": "9501",
+              "created_at": "2026-11-17T05:50:48.285563+00:00",
+              "updated_at": "2026-11-17T05:50:48.285563+00:00",
+              "last_seen": "2026-11-17T05:50:48.226259+00:00",
+              "last_episode_refresh": null
+            }
+          ],
+          "after": []
+        }
+      },
+      "global_row_counts": {
+        "vod_movie": {
+          "before": 1,
+          "after": 0
+        },
+        "vod_series": {
+          "before": 1,
+          "after": 0
+        },
+        "vod_episode": {
+          "before": 1,
+          "after": 0
+        },
+        "vod_m3uepisoderelation": {
+          "before": 0,
+          "after": 0
+        }
+      },
+      "all11sequences": {
+        "before": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 10,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        },
+        "after": {
+          "public.m3u_m3uaccount_id_seq": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "public.vod_movie_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_series_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_episode_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_m3umovierelation_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_m3useriesrelation_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_m3uepisoderelation_id_seq": {
+            "last_value": 1,
+            "is_called": true
+          },
+          "public.vod_vodlogo_id_seq": {
+            "last_value": 2,
+            "is_called": true
+          },
+          "public.vod_vodcategory_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          },
+          "public.vod_m3uvodcategoryrelation_id_seq": {
+            "last_value": 12,
+            "is_called": true
+          },
+          "public.core_systemevent_id_seq": {
+            "last_value": 4,
+            "is_called": true
+          }
+        }
+      },
+      "raw_SQL_before_sha256": "d3ff1ab969233186f35f9840c82f1f78e5262f3bcc4360f336429a039140e15c",
+      "raw_SQL_after_sha256": "38c3bf5efc888921e65ba6ac22ed69ede7d62c0e93b6165d5a83376e12fea7e7"
+    }
+  },
+  "declared_seed_Episode": [
+    {
+      "id": 1,
+      "uuid": "d9bfa251-f868-4d40-b664-b649bf86913c",
+      "name": "Owned Shared Episode A",
+      "description": "Explicit shared-owner fixture descendant",
+      "air_date": null,
+      "rating": "7.0",
+      "duration_secs": 60,
+      "series_id": 1,
+      "season_number": 1,
+      "episode_number": 1,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "custom_properties": {
+        "fixture": "shared-owner-A"
+      },
+      "created_at": "2026-11-17T05:50:42.234413+00:00",
+      "updated_at": "2026-11-17T05:50:42.234423+00:00"
+    }
+  ],
+  "declared_seed_EpisodeRelationA": [
+    {
+      "id": 1,
+      "m3u_account_id": 5,
+      "episode_id": 1,
+      "series_relation_id": 1,
+      "stream_id": "owned-shared-episode-A",
+      "container_extension": "mkv",
+      "custom_properties": {
+        "fixture": "shared-owner-A"
+      },
+      "created_at": "2026-11-17T05:50:42.235169+00:00",
+      "updated_at": "2026-11-17T05:50:42.235175+00:00",
+      "last_seen": "2026-11-17T05:50:42.234962+00:00"
+    }
+  ],
+  "B_update_and_A_prune_keep_complete_Episode_row_exact": true,
+  "A_prune_cascades_only_A_EpisodeRelation": true,
+  "last_B_prune_removes_globals_and_Episode": true,
+  "all11seq_exact_Source_comparison": "Shared-metadata-Source-comparison.json",
+  "performance_verified": false,
+  "full_milestone_accepted": false
+}
