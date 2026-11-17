@@ -4,6 +4,7 @@ use super::{unsupported, values, Account, Owner};
 use crate::{AuthService, StoreError};
 use chrono::{DateTime, Utc};
 use dispatcharr_contracts::BoxFuture;
+use futures_util::TryStreamExt;
 use serde_json::{json, Value};
 use sqlx::{Connection, PgConnection, Row};
 use std::collections::HashMap;
@@ -37,7 +38,7 @@ pub(super) async fn account(
         let movie_enabled=flag("auto_enable_new_groups_vod")?;let series_enabled=flag("auto_enable_new_groups_series")?;
         let text=|key:&str|->Result<String,StoreError>{let value=row.try_get::<Option<String>,_>(key)?.unwrap_or_default();if value.len()>65536{return Err(unsupported());}Ok(value)};
         let account=Account{id,name:row.try_get("name")?,base:text("server_url")?,username:text("username")?,password:text("password")?,agent:row.try_get("user_agent")?,message:row.try_get("last_message")?,movie_enabled,series_enabled};
-        if account.base.is_empty()||account.username.is_empty()||account.password.is_empty()||!account.movie_enabled||!account.series_enabled{return Ok(None);}
+        if account.base.is_empty()||account.username.is_empty()||account.password.is_empty(){return Ok(None);}
         Ok(Some(account))
     })).await
 }
@@ -64,9 +65,16 @@ async fn supported_sparse_advanced_catalog(
 ) -> Result<bool, StoreError> {
     scope(auth, owner, |c| {
         Box::pin(async move {
-            Ok(sqlx::query_scalar::<_, bool>(ADVANCED_GUARD)
-                .fetch_one(c)
-                .await?)
+            if !sqlx::query_scalar::<_,bool>(ADVANCED_GUARD).fetch_one(&mut *c).await? {
+                return Ok(false);
+            }
+            // Admission bounds all subsequent category maps, including rows
+            // returned by stale-relation collection, before any provider effect.
+            // SQL aggregates scan without fetching unbounded rows into Rust.
+            let(category_bytes,relation_bytes):(i64,i64)=sqlx::query_as(
+                "SELECT COALESCE((SELECT sum(256::bigint+8::bigint*octet_length(name)) FROM vod_vodcategory),0)::bigint,COALESCE((SELECT sum(256::bigint+4::bigint*COALESCE(octet_length(custom_properties->>'language'),0)) FROM vod_m3uvodcategoryrelation),0)::bigint"
+            ).fetch_one(c).await?;
+            Ok((0..=values::CATEGORY_WORK_BYTES as i64).contains(&category_bytes)&&(0..=values::CATEGORY_WORK_BYTES as i64).contains(&relation_bytes))
         })
     })
     .await
@@ -82,6 +90,19 @@ pub(super) async fn categories(
 ) -> Result<HashMap<String, i64>, StoreError> {
     let names: Vec<String> = rows.iter().map(|row| row.name.clone()).collect();
     let wanted = names.clone();
+    // Source distinguishes already-global categories from newly bulk-created
+    // categories. Existing relation inputs retain provider order; new inputs
+    // follow the Meta.ordering=name refetch, preserving serial allocation.
+    let prior = wanted.clone();
+    let existing_names=scope(auth,owner.clone(),move|c|Box::pin(async move{
+        let mut stream=sqlx::query("SELECT name FROM vod_vodcategory WHERE category_type=$2 AND name=ANY($1) ORDER BY name").bind(&prior).bind(kind).fetch(c);
+        let mut names=std::collections::HashSet::new();let mut work=0usize;
+        while let Some(row)=stream.try_next().await?{
+            let name:String=row.try_get("name")?;values::category_charge(&mut work,name.len())?;names.insert(name);
+        }
+        Ok(names)
+    })).await?;
+    let previously_present = existing_names.clone();
     let stamp = Utc::now();
     scope(auth, owner.clone(), move |c| {
         Box::pin(async move {
@@ -95,11 +116,24 @@ pub(super) async fn categories(
         })
     })
     .await?;
-    let mapping=scope(auth,owner.clone(),move|c|Box::pin(async move{
-        let rows=sqlx::query("SELECT id::bigint,name FROM vod_vodcategory WHERE category_type=$2 AND name=ANY($1) ORDER BY name").bind(&wanted).bind(kind).fetch_all(c).await?;
-        rows.into_iter().map(|row|Ok((row.try_get::<String,_>("name")?,row.try_get::<i64,_>("id")?))).collect::<Result<HashMap<_,_>,StoreError>>()
+    let (mapping,new_ids)=scope(auth,owner.clone(),move|c|Box::pin(async move{
+        let mut stream=sqlx::query("SELECT id::bigint,name FROM vod_vodcategory WHERE category_type=$2 AND name=ANY($1) ORDER BY name").bind(&wanted).bind(kind).fetch(c);
+        let mut result=HashMap::new();let mut new_ids=Vec::new();let mut work=0usize;
+        while let Some(row)=stream.try_next().await?{
+            let name:String=row.try_get("name")?;
+            values::category_charge(&mut work,name.len())?;
+            let id:i64=row.try_get("id")?;
+            if !previously_present.contains(&name){new_ids.push(id);}
+            result.insert(name,id);
+        }
+        Ok((result,new_ids))
     })).await?;
-    let ids: Vec<i64> = rows.iter().map(|row| mapping[&row.name]).collect();
+    let mut ids: Vec<i64> = rows
+        .iter()
+        .filter(|row| existing_names.contains(&row.name))
+        .map(|row| mapping[&row.name])
+        .collect();
+    ids.extend(new_ids);
     scope(auth,owner,move|c|Box::pin(async move{
         sqlx::query("INSERT INTO vod_m3uvodcategoryrelation(m3u_account_id,category_id,enabled,custom_properties,created_at,updated_at) SELECT $1::bigint,c.id,$3,'{}'::jsonb,$4,$4 FROM vod_vodcategory c WHERE c.id::bigint=ANY($2) ORDER BY array_position($2,c.id::bigint) ON CONFLICT(m3u_account_id,category_id) DO NOTHING").bind(account).bind(&ids).bind(enabled).bind(stamp).execute(&mut*c).await?;
         let removed:Vec<i64>=sqlx::query_scalar("DELETE FROM vod_m3uvodcategoryrelation r USING vod_vodcategory c WHERE r.category_id=c.id AND r.m3u_account_id::bigint=$1 AND c.category_type=$2 AND c.name<>'Uncategorized' AND NOT(c.id::bigint=ANY($3)) RETURNING r.category_id::bigint").bind(account).bind(kind).bind(&ids).fetch_all(&mut*c).await?;
@@ -125,12 +159,12 @@ pub(super) async fn uncategorized(
     account: i64,
     kind: &'static str,
     enabled: bool,
-) -> Result<(i64, String), StoreError> {
+) -> Result<(i64, String, bool), StoreError> {
     scope(auth,owner,move|c|Box::pin(async move{
         let stamp=Utc::now();
         sqlx::query(ADVANCED_UNCATEGORIZED_INSERT).bind(kind).bind(stamp).execute(&mut*c).await?;
         let id:i64=sqlx::query_scalar("SELECT id::bigint FROM vod_vodcategory WHERE name='Uncategorized' AND category_type=$1").bind(kind).fetch_one(&mut*c).await?;
-        sqlx::query(ADVANCED_UNCATEGORIZED_RELATION_INSERT).bind(account).bind(id).bind(enabled).bind(stamp).execute(&mut*c).await?;let language:String=sqlx::query_scalar(LIST_UNCATEGORIZED_LANGUAGE).bind(account).bind(id).fetch_one(c).await?;Ok((id,language))
+        sqlx::query(ADVANCED_UNCATEGORIZED_RELATION_INSERT).bind(account).bind(id).bind(enabled).bind(stamp).execute(&mut*c).await?;let(language,actual_enabled):(String,bool)=sqlx::query_as(LIST_UNCATEGORIZED_LANGUAGE).bind(account).bind(id).fetch_one(c).await?;Ok((id,language,actual_enabled))
     })).await
 }
 pub(super) async fn enabled(
@@ -138,7 +172,15 @@ pub(super) async fn enabled(
     owner: Owner,
     account: i64,
 ) -> Result<HashMap<i64, bool>, StoreError> {
-    scope(auth,owner,move|c|Box::pin(async move{let rows=sqlx::query("SELECT category_id::bigint,enabled FROM vod_m3uvodcategoryrelation WHERE m3u_account_id::bigint=$1").bind(account).fetch_all(c).await?;rows.into_iter().map(|row|Ok((row.try_get("category_id")?,row.try_get("enabled")?))).collect()})).await
+    scope(auth,owner,move|c|Box::pin(async move{
+        let mut stream=sqlx::query("SELECT category_id::bigint,enabled FROM vod_m3uvodcategoryrelation WHERE m3u_account_id::bigint=$1").bind(account).fetch(c);
+        let mut result=HashMap::new();let mut work=0usize;
+        while let Some(row)=stream.try_next().await?{
+            values::category_charge(&mut work,16)?;
+            result.insert(row.try_get::<i64,_>("category_id")?,row.try_get::<bool,_>("enabled")?);
+        }
+        Ok(result)
+    })).await
 }
 /// One Source category-relation snapshot after both category refreshes.
 /// The caller then replaces only each get/create Uncategorized entry.
@@ -149,13 +191,15 @@ pub(super) async fn category_languages(
 ) -> Result<HashMap<i64, String>, StoreError> {
     scope(auth, owner, move |c| {
         Box::pin(async move {
-            let rows = sqlx::query(LIST_CATEGORY_LANGUAGES)
-                .bind(account)
-                .fetch_all(c)
-                .await?;
-            rows.into_iter()
-                .map(|row| Ok((row.try_get("category")?, row.try_get("language")?)))
-                .collect()
+            let mut stream = sqlx::query(LIST_CATEGORY_LANGUAGES).bind(account).fetch(c);
+            let mut result = HashMap::new();
+            let mut work = 0usize;
+            while let Some(row) = stream.try_next().await? {
+                let language: String = row.try_get("language")?;
+                values::category_charge(&mut work, language.len())?;
+                result.insert(row.try_get::<i64, _>("category")?, language);
+            }
+            Ok(result)
         })
     })
     .await
@@ -406,7 +450,7 @@ pub(super) async fn has_selected_categories(
     scope(auth,owner,move|c|Box::pin(async move{Ok(sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation r JOIN vod_vodcategory c ON c.id=r.category_id WHERE r.m3u_account_id=$1 AND c.category_type=$2 AND c.name<>'Uncategorized')").bind(account).bind(kind).fetch_one(c).await?)})).await
 }
 
-const ADVANCED_GUARD: &str = "SELECT NOT EXISTS(SELECT 1 FROM vod_episode WHERE octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation e WHERE e.series_relation_id IS NULL OR NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r JOIN vod_episode p ON p.id=e.episode_id WHERE r.id=e.series_relation_id AND r.series_id=p.series_id AND r.m3u_account_id=e.m3u_account_id)) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_series WHERE COALESCE(char_length(tmdb_id),0)>50 OR COALESCE(octet_length(tmdb_id),0)>200 OR COALESCE(char_length(imdb_id),0)>50 OR COALESCE(octet_length(imdb_id),0)>200 OR COALESCE(tmdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR COALESCE(imdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR language !~ '^([a-z]{2})?$' OR char_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_series WHERE tmdb_id IS NULL AND imdb_id IS NULL GROUP BY name,year,language HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_movie WHERE COALESCE(char_length(tmdb_id),0)>50 OR COALESCE(octet_length(tmdb_id),0)>200 OR COALESCE(char_length(imdb_id),0)>50 OR COALESCE(octet_length(imdb_id),0)>200 OR COALESCE(tmdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR COALESCE(imdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR language !~ '^([a-z]{2})?$' OR char_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_movie WHERE tmdb_id IS NULL AND imdb_id IS NULL GROUP BY name,year,language HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3umovierelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation WHERE NOT enabled OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536 OR custom_properties-'language'<>'{}'::jsonb OR (custom_properties?'language' AND custom_properties->'language'<>'null'::jsonb AND (jsonb_typeof(custom_properties->'language')<>'string' OR custom_properties->>'language'!~'^[A-Za-z]{2}$'))))) AND NOT EXISTS(SELECT 1 FROM vod_vodlogo l WHERE (EXISTS(SELECT 1 FROM vod_movie m WHERE m.logo_id=l.id) OR EXISTS(SELECT 1 FROM vod_series s WHERE s.logo_id=l.id)) AND (char_length(l.url)>500 OR char_length(l.name)>255))";
+const ADVANCED_GUARD: &str = "SELECT NOT EXISTS(SELECT 1 FROM vod_episode WHERE octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation e WHERE e.series_relation_id IS NULL OR NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r JOIN vod_episode p ON p.id=e.episode_id WHERE r.id=e.series_relation_id AND r.series_id=p.series_id AND r.m3u_account_id=e.m3u_account_id)) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_series WHERE COALESCE(char_length(tmdb_id),0)>50 OR COALESCE(octet_length(tmdb_id),0)>200 OR COALESCE(char_length(imdb_id),0)>50 OR COALESCE(octet_length(imdb_id),0)>200 OR COALESCE(tmdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR COALESCE(imdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR language !~ '^([a-z]{2})?$' OR char_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_series WHERE tmdb_id IS NULL AND imdb_id IS NULL GROUP BY name,year,language HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_movie WHERE COALESCE(char_length(tmdb_id),0)>50 OR COALESCE(octet_length(tmdb_id),0)>200 OR COALESCE(char_length(imdb_id),0)>50 OR COALESCE(octet_length(imdb_id),0)>200 OR COALESCE(tmdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR COALESCE(imdb_id,'') ~ U&'[\\0001-\\001F\\007F-\\009F]' OR language !~ '^([a-z]{2})?$' OR char_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_movie WHERE tmdb_id IS NULL AND imdb_id IS NULL GROUP BY name,year,language HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3umovierelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation WHERE (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536 OR (custom_properties?'language' AND custom_properties->'language'<>'null'::jsonb AND (jsonb_typeof(custom_properties->'language')<>'string' OR custom_properties->>'language'!~'^[A-Za-z]{2}$'))))) AND NOT EXISTS(SELECT 1 FROM vod_vodlogo l WHERE (EXISTS(SELECT 1 FROM vod_movie m WHERE m.logo_id=l.id) OR EXISTS(SELECT 1 FROM vod_series s WHERE s.logo_id=l.id)) AND (char_length(l.url)>500 OR char_length(l.name)>255))";
 const ADVANCED_STALE_SERIES: &str = "SELECT id::bigint FROM vod_m3useriesrelation WHERE m3u_account_id::bigint=$1 AND last_seen<$2 ORDER BY id FOR UPDATE";
 const ADVANCED_STALE_CHILDREN: &str = "SELECT id::bigint FROM vod_m3uepisoderelation WHERE series_relation_id::bigint=ANY($1) ORDER BY id LIMIT 4097 FOR UPDATE";
 const ADVANCED_DELETE_EPISODE_RELATIONS: &str =
@@ -760,7 +804,7 @@ pub(super) fn list_snapshot(rows: Vec<sqlx::postgres::PgRow>) -> Result<Vec<Valu
     rows.into_iter().map(|row| Ok(json!({"id":row.try_get::<i64,_>("id")?,"name":row.try_get::<String,_>("name")?,"year":row.try_get::<Option<i32>,_>("year")?,"tmdb_id":row.try_get::<Option<String>,_>("tmdb_id")?,"imdb_id":row.try_get::<Option<String>,_>("imdb_id")?,"language":row.try_get::<String,_>("language")?}))).collect()
 }
 
-const LIST_UNCATEGORIZED_LANGUAGE: &str = "SELECT COALESCE(lower(CASE WHEN jsonb_typeof(custom_properties->'language')='string' THEN custom_properties->>'language' ELSE '' END),'') FROM vod_m3uvodcategoryrelation WHERE m3u_account_id::bigint=$1 AND category_id::bigint=$2";
+const LIST_UNCATEGORIZED_LANGUAGE: &str = "SELECT COALESCE(lower(CASE WHEN jsonb_typeof(custom_properties->'language')='string' THEN custom_properties->>'language' ELSE '' END),''),enabled FROM vod_m3uvodcategoryrelation WHERE m3u_account_id::bigint=$1 AND category_id::bigint=$2";
 
 const LIST_CATEGORY_LANGUAGES: &str = "SELECT category_id::bigint AS category,COALESCE(lower(CASE WHEN jsonb_typeof(custom_properties->'language')='string' THEN custom_properties->>'language' ELSE '' END),'') AS language FROM vod_m3uvodcategoryrelation WHERE m3u_account_id::bigint=$1";
 

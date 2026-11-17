@@ -312,6 +312,43 @@ impl Worker {
                     }
                     return Ok(Some(D::Revoked(message.id)));
                 }
+                // HTTP account creation publishes a real unparented Groups
+                // root. Its inactive STD branch needs neither the parent-only
+                // scanner protocol nor the active uploaded/remote input domain.
+                // All parented work and active rows keep their existing path.
+                if direct_std_groups(&candidate.message) {
+                    let session = match inactive_std_session(
+                        &inner.auth,
+                        candidate.message.account,
+                        owner.clone(),
+                    )
+                    .await
+                    {
+                        Ok(value) => value,
+                        Err(D::Capacity) => return Ok(Some(D::Capacity)),
+                        Err(error) => return Err(error),
+                    };
+                    if let Some(session) = session {
+                        let message = match inner.jobs.claim_xc_live(candidate, owner.clone()).await
+                        {
+                            Ok(message) => message,
+                            Err(crate::transport::Error::ClaimRace) => {
+                                session
+                                    .close()
+                                    .await
+                                    .map_err(|_| D::Operational("STD root SQL close".into()))?;
+                                return Ok(Some(D::HeadChanged));
+                            }
+                            Err(_) => {
+                                let _ = session.close().await;
+                                return Err(D::Operational("STD root claim unsettled".into()));
+                            }
+                        };
+                        return finish_inactive_std_groups(&inner, session, message, owner.clone())
+                            .await
+                            .map(Some);
+                    }
+                }
                 let prepared = if inner.auto_jobs.is_some() {
                     dispatcharr_store::xc_live_tasks::prepare_with_auto(
                         inner.store.clone(),
@@ -630,6 +667,133 @@ async fn publish_profile(
     })
 }
 
+/// Admission is deliberately limited to the actual create producer's default
+/// Groups root. Surviving parented scanner children remain byte-for-byte on the
+/// original route and do not acquire an invented parent/root receipt here.
+fn direct_std_groups(message: &Message) -> bool {
+    message.kind == Kind::Groups && message.parent.is_none() && !message.full && !message.use_cache
+}
+fn std_groups_early_result(account: i64, already_running: bool) -> Value {
+    json!([
+        if already_running {
+            format!("Task already running for account_id={account}.")
+        } else {
+            format!("M3UAccount with ID={account} not found or inactive.")
+        },
+        null
+    ])
+}
+/// Read-only admission owns the original Store four-writer budget and closes
+/// the SAME physical session for every decline/error. No cache/settings/UA,
+/// provider, parser, file or account-save operation runs on the inactive path.
+async fn inactive_std_session(
+    auth: &AuthService,
+    account: i64,
+    owner: Owner,
+) -> Result<Option<dispatcharr_store::TaskSqlSession>, D> {
+    let session = auth
+        .borrow_task_sql_session(owner)
+        .await
+        .map_err(|error| match error {
+            StoreError::StatusBody(503, _) => D::Capacity,
+            _ => D::Operational("STD root SQL admission".into()),
+        })?;
+    let observed = session
+        .run(move |c| {
+            Box::pin(async move {
+                sqlx::query_scalar::<_, bool>(
+                    "SELECT account_type='STD' AND NOT is_active FROM m3u_m3uaccount WHERE id=$1",
+                )
+                .bind(account)
+                .fetch_optional(c)
+                .await
+            })
+        })
+        .await;
+    if matches!(observed, Ok(Ok(Some(true)))) {
+        return Ok(Some(session));
+    }
+    let closed = session.close().await;
+    match observed {
+        Ok(Ok(_)) => {
+            closed.map_err(|_| D::Operational("STD root declined SQL close".into()))?;
+            Ok(None)
+        }
+        _ => Err(D::Operational(
+            "STD root account observation unsettled".into(),
+        )),
+    }
+}
+async fn finish_inactive_std_groups(
+    inner: &Arc<Inner>,
+    session: dispatcharr_store::TaskSqlSession,
+    message: Message,
+    owner: Owner,
+) -> Result<D, D> {
+    // Source acquires this actual lock before its account lookup, and releases
+    // it before Celery records SUCCESS. Keep real contention/token ownership.
+    let lock = match inner
+        .locks
+        .acquire_retained_detailed("refresh_m3u_account_groups", message.account, owner.clone())
+        .await
+    {
+        Ok(value) => Some(value),
+        Err(TaskLockDetailedError::Operational(TaskLockError::Held)) => None,
+        Err(_) => {
+            let _ = session.close().await;
+            return Err(D::Operational("STD root lock unsettled".into()));
+        }
+    };
+    let outcome = if lock.is_none() {
+        Ok(std_groups_early_result(message.account, true))
+    } else {
+        let account = message.account;
+        // Re-observe at Source's actual lookup boundary after lock acquisition.
+        // A concurrently reactivated account is not falsely declared inactive;
+        // that wider race domain remains an actual fault requiring qualification.
+        match session
+            .run(move |c| {
+                Box::pin(async move {
+                    sqlx::query_scalar::<_, bool>(
+                        "SELECT EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE id=$1 AND is_active)",
+                    )
+                    .bind(account)
+                    .fetch_one(c)
+                    .await
+                })
+            })
+            .await
+        {
+            Ok(Ok(false)) => Ok(std_groups_early_result(account, false)),
+            Ok(Ok(true)) => Err(D::UnsupportedDomain),
+            _ => Err(D::Operational(
+                "STD root locked account lookup unsettled".into(),
+            )),
+        }
+    };
+    let unlocked = if let Some(lock) = lock {
+        lock.release_owned_detailed().await.is_ok_and(|v| v)
+    } else {
+        true
+    };
+    let closed = session.close().await;
+    if !unlocked || closed.is_err() {
+        return Err(D::Operational(
+            "STD root lock release or physical SQL close".into(),
+        ));
+    }
+    let result = outcome?;
+    let acknowledged = inner
+        .jobs
+        .write_xc_live(&message, result, Vec::new(), owner)
+        .await
+        .map_err(|_| D::Operational("STD root terminal metadata unsettled".into()))?;
+    if !acknowledged {
+        return Err(D::Operational("STD root terminal metadata rejected".into()));
+    }
+    Ok(D::Completed(message.id))
+}
+
 fn domain(error: StoreError) -> D {
     match error {
         StoreError::Unsupported(_) => D::UnsupportedDomain,
@@ -670,6 +834,38 @@ mod source_controls {
             .unwrap()
         ));
         serde_json::to_vec(&value).unwrap()
+    }
+    #[test]
+    fn direct_inactive_std_admission_preserves_parented_scanner_and_single_domains() {
+        let root = Uuid::new_v4();
+        let parent = Uuid::new_v4();
+        let mut direct = parse(&frame(Kind::Groups, None, root)).unwrap();
+        assert!(direct_std_groups(&direct));
+        assert_eq!(direct.parent, None);
+        let child = parse(&frame(Kind::Groups, Some(parent), root)).unwrap();
+        assert!(!direct_std_groups(&child));
+        assert_eq!(child.parent, Some(parent));
+        assert!(!direct_std_groups(
+            &parse(&frame(Kind::Single, None, root)).unwrap()
+        ));
+        direct.full = true;
+        assert!(!direct_std_groups(&direct));
+        direct.full = false;
+        direct.use_cache = true;
+        assert!(!direct_std_groups(&direct));
+    }
+    #[test]
+    fn direct_inactive_std_results_match_source_missing_inactive_and_lock_contention_tuples() {
+        // Retained Source1 account-create terminal returned this exact tuple.
+        assert_eq!(
+            std_groups_early_result(5, false),
+            json!(["M3UAccount with ID=5 not found or inactive.", null])
+        );
+        // Original apps.m3u.tasks.refresh_m3u_groups early lock branch.
+        assert_eq!(
+            std_groups_early_result(5, true),
+            json!(["Task already running for account_id=5.", null])
+        );
     }
     #[test]
     fn xc_live_root_and_surviving_parented_frames_keep_real_lineage() {

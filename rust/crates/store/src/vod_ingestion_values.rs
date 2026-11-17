@@ -31,11 +31,20 @@ pub(super) struct Movie {
     pub properties: Option<Value>,
     pub logo: Option<String>,
 }
-pub(super) fn categories(value: Value) -> Result<Vec<Category>, StoreError> {
-    let rows = value
-        .as_array()
-        .filter(|rows| rows.len() <= 64)
+// Charge all retained vectors/maps/strings rather than impose a64-row ceiling.
+// The provider document retains its existing16MiB HTTP/32MiB parser bounds.
+// Category work is an additional256KiB owned domain, independent of row count.
+pub(super) const CATEGORY_WORK_BYTES: usize = 256 * 1024;
+pub(super) fn category_charge(work: &mut usize, bytes: usize) -> Result<(), StoreError> {
+    *work = work
+        .checked_add(bytes.checked_add(128).ok_or_else(unsupported)?)
+        .filter(|value| *value <= CATEGORY_WORK_BYTES)
         .ok_or_else(unsupported)?;
+    Ok(())
+}
+pub(super) fn categories(value: Value) -> Result<Vec<Category>, StoreError> {
+    let rows = value.as_array().ok_or_else(unsupported)?;
+    let mut work = 0usize;
     let (mut ids, mut names) = (HashSet::new(), HashSet::new());
     rows.iter()
         .map(|row| {
@@ -45,10 +54,23 @@ pub(super) fn categories(value: Value) -> Result<Vec<Category>, StoreError> {
                 Some(Value::String(name)) => name,
                 _ => return Err(unsupported()),
             };
-            if name.chars().count() > 255 || !names.insert(name.to_owned()) {
+            if name.chars().count() > 255 {
+                return Err(unsupported());
+            }
+            // Eight copies cover validation sets, returned rows and SQL mapping
+            // arguments; reject before allocating those extra retained names.
+            category_charge(
+                &mut work,
+                name.len().checked_mul(8).ok_or_else(unsupported)?,
+            )?;
+            if !names.insert(name.to_owned()) {
                 return Err(unsupported());
             }
             let provider = scalar(row.get("category_id").ok_or_else(unsupported)?)?;
+            category_charge(
+                &mut work,
+                provider.len().checked_mul(4).ok_or_else(unsupported)?,
+            )?;
             if provider.is_empty() || provider == "0" || !ids.insert(provider.clone()) {
                 return Err(unsupported());
             }
@@ -303,5 +325,27 @@ mod source_basic_list_controls {
             .unwrap(),
             Some(2012)
         );
+    }
+}
+
+#[cfg(test)]
+mod provider_category_work_controls {
+    use super::*;
+    #[test]
+    fn sixty_five_provider_categories_are_retained_without_a_count_ceiling() {
+        let raw=Value::Array((1..=65).map(|id|json!({"category_id":id.to_string(),"category_name":format!("Owned Lifecycle Movie {id}")})).collect());
+        let rows = categories(raw).unwrap();
+        assert_eq!(rows.len(), 65);
+        assert_eq!(rows[0].provider, "1");
+        assert_eq!(rows[64].provider, "65");
+    }
+    #[test]
+    fn category_retention_budget_and_duplicate_identity_remain_fail_closed() {
+        let raw=Value::Array((1..=1000).map(|id|json!({"category_id":id.to_string(),"category_name":format!("{}-{id}","x".repeat(200))})).collect());
+        assert!(categories(raw).is_err());
+        assert!(categories(
+            json!([{"category_id":"1","category_name":"A"},{"category_id":"2","category_name":"A"}])
+        )
+        .is_err());
     }
 }

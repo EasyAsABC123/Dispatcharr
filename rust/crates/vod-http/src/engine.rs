@@ -230,11 +230,7 @@ impl VodEngine {
             // Source Redirect checks capacity without probing or reserving.
             // Existing remote idle-session adoption remains an explicit gate.
             let location = self.inner.sessions.redirect_candidate(&source).await?;
-            return Ok(Response::builder()
-                .status(302)
-                .header("location", iri_location(&location))
-                .body(Body::empty())
-                .unwrap());
+            return Ok(provider_redirect(&location));
         }
         let id = request.session_id.as_deref().ok_or(StoreError::NotFound)?;
         let ticket = self.inner.sessions.enter(id, source, request).await?;
@@ -731,6 +727,18 @@ fn iri_location(value: &str) -> String {
     }
     encoded
 }
+// Source stream_vod returns Django HttpResponseRedirect here. Its empty
+// HTML response and GET-view Allow metadata are observable even though the
+// client follows Location. Keep streamed/XC-shared response headers separate.
+fn provider_redirect(location: &str) -> Response {
+    Response::builder()
+        .status(302)
+        .header("location", iri_location(location))
+        .header("content-type", "text/html; charset=utf-8")
+        .header("allow", "OPTIONS, GET")
+        .body(Body::empty())
+        .unwrap()
+}
 fn session_redirect(request: &VodRequest, session: &str) -> Response {
     // Preserve the source helper's literal path append, including its bare
     // profile duplication. Such redirects fall through the app React route;
@@ -1215,5 +1223,29 @@ mod header_tests {
             iri_location("/proxy/vod/é/uuid?value=%20\r\n\t"),
             "/proxy/vod/%C3%A9/uuid?value=%20%0D%0A%09"
         );
+    }
+}
+
+#[cfg(test)]
+mod provider_redirect_header_tests {
+    use super::*;
+    #[tokio::test]
+    async fn transformed_provider_redirect_retains_django_html_get_metadata() {
+        let response = provider_redirect("https://owned.invalid/media");
+        assert_eq!(response.status(), StatusCode::FOUND);
+        assert_eq!(
+            response.headers()["location"],
+            "https://owned.invalid/media"
+        );
+        assert_eq!(
+            response.headers()["content-type"],
+            "text/html; charset=utf-8"
+        );
+        assert_eq!(response.headers()["allow"], "OPTIONS, GET");
+        assert!(!response.headers().contains_key("cache-control"));
+        assert!(axum::body::to_bytes(response.into_body(), 1)
+            .await
+            .unwrap()
+            .is_empty());
     }
 }

@@ -303,7 +303,22 @@ fn validate(
     if !errors.is_empty() {
         return Err(StoreError::InvalidInput(Value::Object(errors)));
     }
-    if saved["account_type"] != "STD" || (!create && old["account_type"] != "STD") {
+    // Source3 qualified an ordinary PATCH of these two preferences on an
+    // existing activeXC account. Do not admit XC create/credentials/activation,
+    // enable_vod transitions or a general unqualified XC full serializer.
+    let xc_preferences = !create
+        && partial
+        && old["account_type"] == "XC"
+        && saved["account_type"] == "XC"
+        && old["is_active"] == true
+        && old["custom_properties"].is_object()
+        && old["custom_properties"]["enable_vod"] == true
+        && input.len() == 2
+        && input.get("auto_enable_new_groups_vod") == Some(&Value::Bool(false))
+        && input.get("auto_enable_new_groups_series") == Some(&Value::Bool(false));
+    if !xc_preferences
+        && (saved["account_type"] != "STD" || (!create && old["account_type"] != "STD"))
+    {
         return Err(unsupported());
     }
     if input
@@ -827,5 +842,28 @@ mod tests {
             v.saved["custom_properties"]["auto_enable_new_groups_vod"],
             true
         );
+    }
+    #[test]
+    fn captured_existing_xc_preferences_do_not_admit_general_xc_mutations() {
+        let mut old = defaults();
+        old["name"] = json!("Owned XC");
+        old["account_type"] = json!("XC");
+        old["is_active"] = json!(true);
+        old["custom_properties"] = json!({"enable_vod":true,"inert":"preserved"});
+        let request =
+            json!({"auto_enable_new_groups_vod":false,"auto_enable_new_groups_series":false});
+        let actual = validate(request.as_object().unwrap().clone(), &old, "", true, false).unwrap();
+        assert_eq!(
+            actual.saved["custom_properties"],
+            json!({"enable_vod":true,"inert":"preserved","auto_enable_new_groups_vod":false,"auto_enable_new_groups_series":false})
+        );
+        assert!(!actual.hash_changed);
+        assert_eq!(actual.expiration, None);
+        let mut wider = request.clone();
+        wider["enable_vod"] = json!(false);
+        assert!(validate(wider.as_object().unwrap().clone(), &old, "", true, false).is_err());
+        assert!(validate(request.as_object().unwrap().clone(), &old, "", false, false).is_err());
+        old["is_active"] = json!(false);
+        assert!(validate(request.as_object().unwrap().clone(), &old, "", true, false).is_err());
     }
 }

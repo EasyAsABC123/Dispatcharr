@@ -206,7 +206,7 @@ pub async fn execute(
         // Source retains one relation-property snapshot across both list kinds,
         // updating only each freshly fetched Uncategorized relation.
         let mut languages = sql::category_languages(&auth, owner.clone(), account.id).await?;
-        let (uncategorized, language) = sql::uncategorized(
+        let (uncategorized, language, uncategorized_enabled) = sql::uncategorized(
             &auth,
             owner.clone(),
             account.id,
@@ -216,7 +216,8 @@ pub async fn execute(
         .await?;
         languages.insert(uncategorized, language);
         movie_map.insert("__uncategorized__".into(), uncategorized);
-        let enabled = sql::enabled(&auth, owner.clone(), account.id).await?;
+        let mut enabled = sql::enabled(&auth, owner.clone(), account.id).await?;
+        enabled.insert(uncategorized,uncategorized_enabled);
         draining(cancellation.as_ref())?;
         let document = action(&mut client, "get_vod_streams").await?;
         for document in source_batches(document)? {
@@ -243,7 +244,7 @@ pub async fn execute(
             }
             sql::movies(&auth, owner.clone(), account.id, imported, scan, &languages).await?;
         }
-        let (uncategorized_series, language) = sql::uncategorized(
+        let (uncategorized_series, language, uncategorized_series_enabled) = sql::uncategorized(
             &auth,
             owner.clone(),
             account.id,
@@ -253,6 +254,9 @@ pub async fn execute(
         .await?;
         draining(cancellation.as_ref())?;
         languages.insert(uncategorized_series, language);
+        // Source overwrites the shared relation snapshot with actual get/create
+        // Uncategorized state for this kind; defaultfalse is not missing=>true.
+        enabled.insert(uncategorized_series,uncategorized_series_enabled);
         series_map.insert("__uncategorized__".into(), uncategorized_series);
         // Source refresh_series calls the decorated batch helper inline. It
         // creates no Celery child and does not fetch episodes/details here.
