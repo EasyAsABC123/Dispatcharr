@@ -13,7 +13,7 @@ use axum::{
 };
 use chrono::{SecondsFormat, Utc};
 use serde_json::{json, Map, Value};
-use sqlx::{Postgres, QueryBuilder, Row, Transaction};
+use sqlx::{PgConnection, Postgres, QueryBuilder, Row, Transaction};
 use std::{collections::HashMap, net::SocketAddr};
 use uuid::Uuid;
 type Body = Result<Json<Value>, JsonRejection>;
@@ -308,7 +308,7 @@ pub(crate) async fn mark_group(
     group: &Value,
 ) -> Result<(), StoreError> {
     if let Some(group) = group.as_i64() {
-        sqlx::query("INSERT INTO dispatcharr_channels_channelgroupm3uaccount(channel_group_id,m3u_account_id,custom_properties,enabled,auto_channel_sync,auto_sync_channel_start,auto_sync_channel_end,last_seen,is_stale) SELECT $1,id,'{}'::jsonb,true,false,NULL,NULL,now(),false FROM m3u_m3uaccount WHERE name='custom' AND locked ON CONFLICT(channel_group_id,m3u_account_id) DO NOTHING").bind(group).execute(&mut **tx).await?;
+        sqlx::query("INSERT INTO dispatcharr_channels_channelgroupm3uaccount(channel_group_id,m3u_account_id,custom_properties,enabled,auto_channel_sync,auto_sync_channel_start,auto_sync_channel_end,last_seen,is_stale) SELECT $1,id,'{}'::jsonb,true,false,NULL,NULL,now(),false FROM m3u_m3uaccount a WHERE name='custom' AND locked AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r WHERE r.channel_group_id=$1 AND r.m3u_account_id=a.id) ON CONFLICT(channel_group_id,m3u_account_id) DO NOTHING").bind(group).execute(&mut **tx).await?;
     }
     Ok(())
 }
@@ -337,7 +337,85 @@ fn manual_override_error() -> StoreError {
         json!({"override":"Cannot set override on a manual channel; overrides only apply to auto-created channels."}),
     )
 }
+/// Source25 positive channel/guide signal scope. Main's existing four-writer
+/// permit and shared cache/broker owners cover every physical side effect.
+#[derive(Clone, Copy)]
+enum GuideTarget {
+    CacheOnly,
+    Programme(i64),
+}
+fn guide_unsupported() -> StoreError {
+    StoreError::Unsupported("Channel guide coupling outside Source25 positive domain")
+}
+async fn guide_target(
+    auth: &AuthService,
+    c: &mut PgConnection,
+    epg: Option<i64>,
+) -> Result<GuideTarget, StoreError> {
+    if auth.notification_cache.is_none() {
+        return Err(guide_unsupported());
+    }
+    // The captured channel-profile table was empty; do not silently admit a
+    // different precommit membership/signal ordering in this first port.
+    let profiles: bool =
+        sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelprofile)")
+            .fetch_one(&mut *c)
+            .await?;
+    if profiles {
+        return Err(guide_unsupported());
+    }
+    let triggers: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled <> 'D' AND tgrelid IN ('dispatcharr_channels_channel'::regclass,'dispatcharr_channels_channeloverride'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass))")
+        .fetch_one(&mut *c).await?;
+    if triggers {
+        return Err(guide_unsupported());
+    }
+    let Some(epg) = epg else {
+        return Ok(GuideTarget::CacheOnly);
+    };
+    let kind: Option<(Option<String>,)> = sqlx::query_as("SELECT s.source_type FROM epg_epgdata e LEFT JOIN epg_epgsource s ON s.id=e.epg_source_id WHERE e.id=$1").bind(epg).fetch_optional(c).await?;
+    match kind {
+        Some((Some(kind),)) if kind == "dummy" => Ok(GuideTarget::CacheOnly),
+        Some((kind,)) if kind.as_deref().is_none_or(|v| v == "xmltv") => {
+            if !auth.normal_core_task_broker || auth.core_task_broker.get().is_none() {
+                return Err(guide_unsupported());
+            }
+            Ok(GuideTarget::Programme(epg))
+        }
+        _ => Err(guide_unsupported()),
+    }
+}
+async fn guide_after_save(
+    auth: &AuthService,
+    target: GuideTarget,
+    owner: crate::compact_numbering::Owner,
+) -> Result<(), StoreError> {
+    let cache = auth
+        .notification_cache
+        .as_ref()
+        .ok_or_else(guide_unsupported)?
+        .clone()
+        .with_retained_scope(owner);
+    let mut command = redis::cmd("INCR");
+    command.arg("epg_content_generation");
+    // Source catches cache invalidation errors, then still attempts publication.
+    // Physical command ownership remains retained even after a logical error.
+    let _ = cache.command::<i64>(command).await;
+    if let GuideTarget::Programme(epg) = target {
+        crate::core_settings_special_broker::publish(
+            auth,
+            &crate::core_settings_special_budget::Scratch::new(),
+            "apps.epg.tasks.parse_programs_for_tvg_id",
+            json!([epg]),
+            json!({}),
+        )
+        .await?;
+    }
+    Ok(())
+}
+
 async fn overrides(
+    auth: &AuthService,
+    owner: crate::compact_numbering::Owner,
     tx: &mut Transaction<'_, Postgres>,
     id: i64,
     value: &Value,
@@ -359,6 +437,7 @@ async fn overrides(
     .bind(id)
     .fetch_optional(&mut **tx)
     .await?;
+    let existed = old.is_some();
     let mut merged = old
         .and_then(|value| value.as_object().cloned())
         .unwrap_or_default();
@@ -367,11 +446,16 @@ async fn overrides(
         merged.entry(field.to_string()).or_insert(Value::Null);
     }
     merged.extend(changes.clone());
-    if merged.get("epg_data_id") != Some(&previous) {
-        return Err(StoreError::Unsupported(
-            "EPG override cache invalidation and programme import jobs are not migrated",
-        ));
-    }
+    let guide = if merged.get("epg_data_id") != Some(&previous) {
+        if OVERRIDABLE.iter().all(|field| merged[*field].is_null()) {
+            // Source25 cleared an EPG while retaining a name; the all-null
+            // save-then-delete variant needs its own causal observation.
+            return Err(guide_unsupported());
+        }
+        Some(guide_target(auth, tx, merged["epg_data_id"].as_i64()).await?)
+    } else {
+        None
+    };
     if OVERRIDABLE.iter().all(|field| merged[*field].is_null()) {
         sqlx::query("DELETE FROM dispatcharr_channels_channeloverride WHERE channel_id=$1")
             .bind(id)
@@ -397,7 +481,28 @@ async fn overrides(
         .map(|col| format!("{col}=EXCLUDED.{col}"))
         .collect::<Vec<_>>()
         .join(",");
-    sqlx::query(&format!("INSERT INTO dispatcharr_channels_channeloverride({cols}) SELECT {selected} FROM jsonb_populate_record(NULL::dispatcharr_channels_channeloverride,$1) x ON CONFLICT(channel_id) DO UPDATE SET {assignments}")).bind(Value::Object(merged)).execute(&mut **tx).await?;
+    if existed {
+        let fields = cols
+            .split(',')
+            .filter(|col| *col != "channel_id" && *col != "created_at")
+            .collect::<Vec<_>>()
+            .join(",");
+        let values = fields
+            .split(',')
+            .map(|col| format!("x.{col}"))
+            .collect::<Vec<_>>()
+            .join(",");
+        sqlx::query(&format!("UPDATE dispatcharr_channels_channeloverride SET ({fields})=(SELECT {values} FROM jsonb_populate_record(NULL::dispatcharr_channels_channeloverride,$1) x) WHERE channel_id=$2"))
+            .bind(Value::Object(merged)).bind(id).execute(&mut **tx).await?;
+    } else {
+        // Source update_or_create reads first: an ordinary existing-row save
+        // must not consume a new PostgreSQL identity on conflict.
+        sqlx::query(&format!("INSERT INTO dispatcharr_channels_channeloverride({cols}) SELECT {selected} FROM jsonb_populate_record(NULL::dispatcharr_channels_channeloverride,$1) x ON CONFLICT(channel_id) DO UPDATE SET {assignments}")).bind(Value::Object(merged)).execute(&mut **tx).await?;
+    }
+    // Actual model post_save occurs inside the surrounding serializer atomic.
+    if let Some(target) = guide {
+        guide_after_save(auth, target, owner).await?;
+    }
     Ok(())
 }
 pub(crate) async fn rollup_ids(
@@ -564,16 +669,40 @@ pub(crate) async fn create(
     Query(params): Query<HashMap<String, String>>,
     body: Body,
 ) -> Result<Response, StoreError> {
+    let writer = auth.task_sql_writer()?;
+    let auth = auth.with_request_writer_permit(writer.clone())?;
+    let owner = auth.core_publication_owner(writer);
+    tokio::spawn(async move { create_owned(auth, peer, headers, uri, params, body, owner).await })
+        .await
+        .map_err(|_| StoreError::UnhandledRestFault)?
+}
+async fn create_owned(
+    auth: AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    uri: Uri,
+    params: HashMap<String, String>,
+    body: Body,
+    owner: crate::compact_numbering::Owner,
+) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers.clone(), true).await?;
     let base = channels::base_url(&headers, &uri)?;
     let body = body_object(body)?;
     let validated = validation(&auth, &body, false).await?;
     let mut data=json!({"name":"","logo_id":null,"channel_group_id":null,"tvg_id":null,"tvc_guide_stationid":null,"epg_data_id":null,"stream_profile_id":null,"uuid":Uuid::new_v4().to_string(),"user_level":0,"is_adult":false,"auto_created":false,"auto_created_by_id":null,"is_catchup":false,"catchup_days":0,"is_radio":false,"hidden_from_output":false,"created_at":now(),"updated_at":now()}).as_object().expect("object").clone();
     data.extend(validated.scalars);
-    if !data["epg_data_id"].is_null() {
-        return Err(StoreError::Unsupported(
-            "EPG channel creation cache invalidation and programme import jobs are not migrated",
-        ));
+    let guide_coupled = !data["epg_data_id"].is_null()
+        || validated
+            .overrides
+            .as_ref()
+            .is_some_and(|v| v.get("epg_data_id").is_some_and(|v| !v.is_null()));
+    if guide_coupled
+        && (body.contains_key("streams")
+            || body.contains_key("channel_profile_ids")
+            || body.contains_key("channel_group_id")
+            || !data["auto_created_by_id"].is_null())
+    {
+        return Err(guide_unsupported());
     }
     let has_override = validated
         .overrides
@@ -583,14 +712,19 @@ pub(crate) async fn create(
         return Err(manual_override_error());
     }
     let default_number = !data.contains_key("channel_number");
-    let mut tx = auth.store.pool().begin().await?;
+    let mut connection = auth.store.pool().acquire().await?;
+    let work=async {
+    use sqlx::Connection;
+    let mut tx = connection.begin().await?;
+    let created_guide=if let Some(epg)=data["epg_data_id"].as_i64(){Some(guide_target(&auth,&mut tx,Some(epg)).await?)}else{None};
+    if let Some(epg)=validated.overrides.as_ref().and_then(|v|v.get("epg_data_id")).and_then(Value::as_i64){guide_target(&auth,&mut tx,Some(epg)).await?;}
     if !data.contains_key("channel_number") {
         data.insert("channel_number".into(), next_number(&mut tx).await?);
     }
     if data["channel_group_id"].is_null() {
         data.insert("channel_group_id".into(), default_group(&mut tx).await?);
     }
-    if data["auto_created"] != true {
+    if data["auto_created"] != true && created_guide.is_none() {
         mark_group(&mut tx, &data["channel_group_id"]).await?;
     }
     let selected = COLUMNS
@@ -599,14 +733,26 @@ pub(crate) async fn create(
         .collect::<Vec<_>>()
         .join(",");
     let id:i64=sqlx::query_scalar(&format!("INSERT INTO dispatcharr_channels_channel({COLUMNS}) SELECT {selected} FROM jsonb_populate_record(NULL::dispatcharr_channels_channel,$1) x RETURNING id")).bind(Value::Object(data.clone())).fetch_one(&mut *tx).await?;
+    if let Some(target)=created_guide {
+        guide_after_save(&auth,target,owner.clone()).await?;
+        if data["auto_created"] != true { mark_group(&mut tx,&data["channel_group_id"]).await?; }
+    }
     if let Some(stream_ids) = validated.streams {
         streams(&mut tx, id, stream_ids).await?;
     }
     if let Some(value) = validated.overrides {
-        overrides(&mut tx, id, &value).await?;
+        overrides(&auth, owner.clone(), &mut tx, id, &value).await?;
     }
     let profile_error = profile_memberships(&mut tx, id, body.get("channel_profile_ids")).await?;
     tx.commit().await?;
+    Ok::<_,StoreError>((id,profile_error))
+    }.await;
+    use sqlx::Connection;
+    let ready = connection.ping().await;
+    let closed = connection.close().await;
+    let (id, profile_error) = work?;
+    ready?;
+    closed?;
     if let Some(error) = profile_error {
         return Ok((StatusCode::BAD_REQUEST, Json(error)).into_response());
     }
@@ -685,6 +831,13 @@ async fn update_owned(
     let old = object(&auth, &user, id, &params, &mut tx).await?;
     let body = body_object(body)?;
     let validated = validation(&auth, &body, partial).await?;
+    // Source25 measured override-only changes. A combined parent update can
+    // introduce additional signal ordering, so retain that explicit boundary.
+    if validated.overrides.as_ref().and_then(Value::as_object)
+        .is_some_and(|v| v.contains_key("epg_data_id"))
+        && (!validated.scalars.is_empty() || validated.streams.is_some()) {
+        return Err(guide_unsupported());
+    }
     if validated
         .overrides
         .as_ref()
@@ -716,7 +869,7 @@ async fn update_owned(
         }
     }
     if let Some(value) = validated.overrides {
-        overrides(&mut tx, id, &value).await?;
+        overrides(&auth, owner.clone(), &mut tx, id, &value).await?;
     }
     if let Some(value) = validated.streams {
         streams(&mut tx, id, value).await?;

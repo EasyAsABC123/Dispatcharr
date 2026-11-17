@@ -16,14 +16,21 @@ impl Jobs {
             return Err(Error::Protocol);
         }
         let limit = self.inner.config.max_queued_jobs.to_string();
+        let diagnostic = (std::env::var("RUST_AUTO_STAGE_DIAGNOSTICS").as_deref() == Ok("1"))
+            .then_some(
+                dispatcharr_output_store::transport::CommandDiagnostic::RecordingPublication {
+                    task: message.task_id().as_u128(),
+                },
+            );
         let (reply, _held) = self
             .inner
             .broker
-            .command_classified::<i64, _>(
+            .command_publication_classified_with_diagnostic::<i64, _>(
                 PUBLISH,
                 &["dvr".into(), "_kombu.binding.dvr".into()],
                 &[message.raw_frame(), limit.as_bytes()],
                 self.lease(owner)?,
+                diagnostic,
             )
             .await
             .map_err(|error| match error {
@@ -119,3 +126,7 @@ impl Jobs {
         .await
     }
 }
+
+#[cfg(test)]
+#[path = "normal_recording_publication_readiness_tests.rs"]
+mod publication_readiness_tests;

@@ -31,11 +31,14 @@ impl Jobs {
         let (reply, _held) = self
             .inner
             .broker
-            .command_classified::<i64, _>(
+            .command_publication_classified_with_diagnostic::<i64, _>(
                 PUBLISH,
                 &["dvr".into(), "_kombu.binding.dvr".into()],
                 &[message.raw_frame(), limit.as_bytes()],
                 self.lease(owner)?,
+                // Preserve original named task keys; do not log a raw key or
+                // project it into a fabricated UUID for diagnostics.
+                None,
             )
             .await
             .map_err(|error| match error {

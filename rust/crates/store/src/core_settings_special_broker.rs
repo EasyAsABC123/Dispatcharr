@@ -108,7 +108,7 @@ struct Headers<'a> {
     group: Option<()>,
     group_index: Option<()>,
     retries: u8,
-    timelimit: [Option<u8>; 2],
+    timelimit: [Option<u64>; 2],
     root_id: &'a str,
     parent_id: Option<()>,
     argsrepr: String,
@@ -145,6 +145,7 @@ pub(crate) async fn publish(
     use base64::Engine;
     if ![
         "core.tasks.rehash_streams",
+        "apps.epg.tasks.parse_programs_for_tvg_id",
         "apps.m3u.tasks.refresh_m3u_groups",
         "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
     ]
@@ -192,7 +193,11 @@ pub(crate) async fn publish(
             group: None,
             group_index: None,
             retries: 0,
-            timelimit: [None, None],
+            timelimit: if task == "apps.epg.tasks.parse_programs_for_tvg_id" {
+                [Some(3600), Some(3500)]
+            } else {
+                [None, None]
+            },
             root_id: &id,
             parent_id: None,
             argsrepr,

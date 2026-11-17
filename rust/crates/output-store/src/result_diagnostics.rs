@@ -11,6 +11,7 @@ use std::{
 pub enum CommandDiagnostic {
     DvrResult { task: u128 },
     ArtworkPublication { task: u128 },
+    RecordingPublication { task: u128 },
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
@@ -131,6 +132,7 @@ impl Trace {
         let (scope, task) = match self.scope {
             CommandDiagnostic::DvrResult { task } => ("dvr_result", task),
             CommandDiagnostic::ArtworkPublication { task } => ("artwork_publication", task),
+            CommandDiagnostic::RecordingPublication { task } => ("recording_publication", task),
         };
         eprintln!("{scope} task_hex={task:032x} stage={} kind={} elapsed_ms={} physical={physical} physical_pending={pending}",stage.name(),kind.name(),self.start.elapsed().as_millis());
     }
