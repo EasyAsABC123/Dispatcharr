@@ -12,9 +12,11 @@ alone does not establish application parity or an application performance gain.
 [Candidate51](rust-milestone-batch51.md) has seventeen Source observations for
 international values, ordered identities and 1,000/2,001-row catalogue lifecycle.
 The original controller's scale-fixture failure and the separate scale-only pass
-remain explicit; twelve completed roots were reused without replay. Its Rust
-implementation is prepared privately; combined compiler, SQL, Docker, application
-and performance acceptance remain pending.
+remain explicit; twelve completed roots were reused without replay. Its eight Rust paths now pass all four SDK74 gates with 1,174 tests. Separate
+physical checks pass readonly47/30 and four actual temporary-table UPDATE
+controls, rolled back with exact public rows/sequences and cleanup. Source
+`63e66725` is published and its image is building. Docker packages, full Native12,
+public12, new performance and complete milestone acceptance remain pending.
 
 [Candidate50](rust-milestone-batch50.md) adds the bounded, empty-language
 Movie/Series external-ID identity slice. Source passes nine characterized roots;

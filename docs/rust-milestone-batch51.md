@@ -10,7 +10,9 @@ catalogues spanning Source's 1,000-row transaction boundary.
 | International Source lifecycle | Five refresh roots pass |
 | Ordered-identity Source lifecycle | Seven refresh roots pass |
 | Catalogue-scale Source lifecycle | Five refresh roots pass |
-| Rust port | Prepared privately; combined compiler and runtime gates pending |
+| SDK74 | All four gates pass; 1,174 tests pass, 785 ignored |
+| Physical SQL / UPDATE semantics | Readonly47/30 and separate temporary rollback4 pass |
+| Docker / full Native12 | New image and full affected cohort pending |
 | New paired performance | Not run |
 
 The first grouped controller exits 1 in 232.145 seconds after completing the
@@ -48,15 +50,42 @@ keeps both actual exits and the original harness failure. Compressed evidence
 avoids duplicating tens of megabytes of repeated JSON while retaining canonical
 uncompressed hashes and all 405 raw capture references.
 
-The proposed Rust join slices the owned provider array before category filtering
+The Rust join slices the owned provider array before category filtering
 or deduplication, processes and settles each raw 1,000-row chunk, and performs
 reconciliation and cleanup once. Scoped identity lookups replace whole-catalogue
 snapshots. SQL must preserve Source's ordered conflict handling and first queued
-metadata update while keeping stored-name behavior. The combined SDK, physical
-SQL, actual UPDATE semantics, Docker packages and complete affected application
-cohort must pass before accepting that implementation.
+metadata update while keeping stored-name behavior. SDK74 and the separate physical checks now pass. Docker packages and the complete
+affected application cohort remain pending before accepting Main behavior.
 
 Language reconciliation, wider logo domains, categories beyond the captured
 admission, other provider value/fault domains, public reproduction, performance
 and every complete M0–M9 milestone remain open. Candidate50's accepted image and
 public nine-context workflow retain their separate scope.
+
+
+[SDK74](../scripts/rust-integration/milestone-batch51/SDK/summary.json) passes
+formatting, check, strict Clippy and workspace tests: 1,174 passed, zero failed,
+785 ignored, across 180 result blocks. All 1,452 inputs, including 1,446 Rust
+inputs, remain unchanged during those gates. SDK72's internal visibility
+compiler failure and SDK73's strict-only lint failures remain recorded; SDK73's
+passing workspace result does not promote its failed four-gate batch.
+
+The [physical batch](../scripts/rust-integration/milestone-batch51/physical/README.md)
+exits 0 in 14.054 seconds, with both EOFs and settled group. Its read-only
+connection prepares 47 exact production statements and rejects 30 meaningful
+wrong-bind controls with caching disabled and Ready/Close success. That gate
+executes no DML. A separate compiled test executes four production Movie/Series
+UPDATE controls on transaction-local shadow tables, truthfully recording DML.
+The first name-only queue preserves the full stored row despite a later metadata
+change; reversed order changes only description. Rows affected are respectively
+zero and one for each kind. Explicit IDs and UUIDs avoid sequence allocation.
+The transaction rolls back, temporary tables disappear, and public model rows
+and sequence catalog remain exact. The default 62-table/59-sequence schema is
+byte-identical across both invocations. Root verifies one exact container, eight
+captured original host generations and the project absent.
+
+Eight canonical Rust paths are published as
+`63e6672525d6fa58d8faeb424ea14051b56552f1`, byte-identical to SDK74. The
+Candidate51 Docker build is running; no new image, package, Native12, public12,
+performance or full milestone acceptance is inferred from compiler and SQL
+validation. Original Dispatcharr and dependency authors retain all credit.

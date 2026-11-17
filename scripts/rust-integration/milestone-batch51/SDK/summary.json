@@ -1,0 +1,50 @@
+{
+  "SDK": 74,
+  "all_four_actual_gates0": true,
+  "Root_session_consumed": 11633,
+  "passed": 1174,
+  "failed": 0,
+  "ignored": 785,
+  "blocks": 180,
+  "inputs": 1452,
+  "Rust_inputs": 1446,
+  "changes_from_SDK71": [
+    "rust/crates/store/src/channel_matching_sql_peer.rs",
+    "rust/crates/store/src/vod_ingestion.rs",
+    "rust/crates/store/src/vod_ingestion_external_identity.rs",
+    "rust/crates/store/src/vod_ingestion_list_props.rs",
+    "rust/crates/store/src/vod_ingestion_series_sql.rs",
+    "rust/crates/store/src/vod_ingestion_series_values.rs",
+    "rust/crates/store/src/vod_ingestion_sql.rs",
+    "rust/crates/store/src/vod_ingestion_values.rs"
+  ],
+  "change_scope": "Bounded ordinary Unicode catalogue values and Source1000-row chunks, scoped identity/provider lookups and duplicate/overlap ordering; exactreadOnly47/30 plus separatelyignoredtemporaryDML4 test",
+  "gate_seconds": {
+    "fmt": 3.1863203048706055,
+    "check": 19.56108331680298,
+    "strict": 48.25276231765747,
+    "workspace": 128.305428981781
+  },
+  "workspace_ignored_physical_SQL_and_rollback_DML_not_run_by_SDK": true,
+  "physical_validation": {
+    "state": "ACTUAL_SEPARATE_READONLY_AND_TEMPORARY_DML_GATES_PASSED",
+    "readonly_positive_statements_passed": 47,
+    "readonly_wrong_bind_controls_passed": 30,
+    "readonly_DML_executed": false,
+    "separate_temporary_UPDATE_cases_passed": 4,
+    "separate_DML_executed": true,
+    "separate_DML_rolled_back": true,
+    "public_rows_and_sequence_catalog_exact": true,
+    "Root_independent_cleanup_passed": true,
+    "public_identity": "scripts/rust-integration/milestone-batch51/physical/identity.json"
+  },
+  "historical72_compile_and73_strict_failures_retained": true,
+  "Source_authority": {
+    "path": "scripts/rust-integration/catalogue-domains-source1/index.json",
+    "sha256": "27e484a66fe6f7522682a96ebe51e1f852689a14faa3836ad765d396cdef4ef7"
+  },
+  "image_packages_full_Native12_public12_pending": true,
+  "performance_verified": false,
+  "full_milestone_accepted": false,
+  "original_authors_retain_all_credit": true
+}
