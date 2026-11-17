@@ -62,6 +62,11 @@ async fn start_peer(mode: u8) -> (Jobs, Arc<State>, tokio::task::JoinHandle<()>)
                         write.write_all(b"+OK\r\n").await.unwrap();
                         continue;
                     }
+                    if name == "PING" {
+                        assert_eq!(args.len(), 1);
+                        write.write_all(b"+PONG\r\n").await.unwrap();
+                        continue;
+                    }
                     if name == "SCRIPT" {
                         assert_eq!(args.len(), 3);
                         assert_eq!(args[1], b"LOAD");

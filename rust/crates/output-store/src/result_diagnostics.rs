@@ -1,4 +1,4 @@
-//! Fixed-vocabulary DVR result diagnostics, never request/Redis error text.
+//! Fixed-vocabulary result/artwork diagnostics, never request/Redis error text.
 //! Original Dispatcharr/dependency authors retain application/protocol credit.
 use std::{
     sync::{
@@ -10,6 +10,7 @@ use std::{
 #[derive(Clone, Copy)]
 pub enum CommandDiagnostic {
     DvrResult { task: u128 },
+    ArtworkPublication { task: u128 },
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(u8)]
@@ -127,8 +128,11 @@ impl Trace {
             _ => "unobserved_drop",
         };
         let pending = matches!(phase, 0 | 1);
-        let CommandDiagnostic::DvrResult { task } = self.scope;
-        eprintln!("dvr_result task_hex={task:032x} stage={} kind={} elapsed_ms={} physical={physical} physical_pending={pending}",stage.name(),kind.name(),self.start.elapsed().as_millis());
+        let (scope, task) = match self.scope {
+            CommandDiagnostic::DvrResult { task } => ("dvr_result", task),
+            CommandDiagnostic::ArtworkPublication { task } => ("artwork_publication", task),
+        };
+        eprintln!("{scope} task_hex={task:032x} stage={} kind={} elapsed_ms={} physical={physical} physical_pending={pending}",stage.name(),kind.name(),self.start.elapsed().as_millis());
     }
 }
 pub(super) struct PhysicalObservation {

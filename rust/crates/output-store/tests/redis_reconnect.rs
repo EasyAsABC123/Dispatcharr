@@ -509,6 +509,206 @@ async fn pending_result_preflight_retains_owner_and_admission_without_mutating()
     assert_eq!(proxy.accepted.load(Ordering::SeqCst), 1);
     let _: () = redis.del(key).await.unwrap();
 }
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires actual owned Redis and exact client idle-close equivalent"]
+async fn artwork_preflight_recovers_closed_socket_before_one_publication() {
+    let mut redis = raw().await;
+    let script = "return redis.call('LPUSH',KEYS[1],'owned-artwork-frame')";
+    let _: String = redis::cmd("SCRIPT")
+        .arg("LOAD")
+        .arg(script)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    // Published Docker ports can translate the upstream peer address. Use
+    // exact server IDs, not a guessed hostIP:port, and fail closed if anything
+    // besides our one newly connected/marked client appeared in this fixture.
+    async fn client_rows(
+        redis: &mut redis::aio::MultiplexedConnection,
+    ) -> std::collections::BTreeMap<u64, String> {
+        let raw: String = redis::cmd("CLIENT")
+            .arg("LIST")
+            .query_async(redis)
+            .await
+            .unwrap();
+        assert!(raw.len() <= 262144);
+        let mut rows = std::collections::BTreeMap::new();
+        for row in raw.lines() {
+            assert!(rows.len() < 128);
+            let id = row
+                .split_whitespace()
+                .find_map(|v| v.strip_prefix("id="))
+                .unwrap()
+                .parse::<u64>()
+                .unwrap();
+            let command = row
+                .split_whitespace()
+                .find_map(|v| v.strip_prefix("cmd="))
+                .unwrap()
+                .to_owned();
+            assert!(rows.insert(id, command).is_none());
+        }
+        rows
+    }
+    let before = client_rows(&mut redis).await;
+    let proxy = proxy().await;
+    let transport =
+        RedisTransport::connect_classified(&proxy.url, config(1, Duration::from_secs(2)))
+            .await
+            .unwrap();
+    let (marker, _) = transport
+        .command_classified::<i64, _>("return 7", &[], &[], ())
+        .await
+        .unwrap();
+    assert_eq!(marker, 7);
+    assert_eq!(proxy.accepted.load(Ordering::SeqCst), 1);
+    let after = client_rows(&mut redis).await;
+    let fresh: Vec<_> = after
+        .iter()
+        .filter(|(id, _)| !before.contains_key(*id))
+        .collect();
+    assert_eq!(
+        fresh.len(),
+        1,
+        "ambiguous client identity must never choose a victim"
+    );
+    let (id, command) = fresh[0];
+    assert_eq!(
+        command, "evalsha",
+        "exact new client must carry our transport marker"
+    );
+    let killed: i64 = redis::cmd("CLIENT")
+        .arg("KILL")
+        .arg("ID")
+        .arg(id)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert_eq!(
+        killed, 1,
+        "close only the exact transport socket, as idle expiry does"
+    );
+    let key = format!("owned:artwork-preflight:closed:{}", uuid_suffix());
+    let (value, _) = transport
+        .command_publication_classified_with_diagnostic::<i64, _>(
+            script,
+            std::slice::from_ref(&key),
+            &[],
+            (),
+            None,
+        )
+        .await
+        .unwrap();
+    assert_eq!(value, 1);
+    assert_eq!(redis.llen::<_, i64>(&key).await.unwrap(), 1);
+    assert_eq!(
+        proxy.accepted.load(Ordering::SeqCst),
+        2,
+        "one shared reconnect"
+    );
+    assert_eq!(
+        redis.lrange::<_, Vec<String>>(&key, 0, -1).await.unwrap(),
+        vec!["owned-artwork-frame".to_owned()],
+        "exact single retained publication payload"
+    );
+    let _: () = redis.del(key).await.unwrap();
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires actual owned Redis and dropped artwork publication reply"]
+async fn artwork_preflight_does_not_replay_an_uncertain_publication() {
+    let mut redis = raw().await;
+    let script = "return redis.call('LPUSH',KEYS[1],'owned-artwork-frame')";
+    let _: String = redis::cmd("SCRIPT")
+        .arg("LOAD")
+        .arg(script)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    let proxy = proxy().await;
+    let transport =
+        RedisTransport::connect_classified(&proxy.url, config(1, Duration::from_secs(2)))
+            .await
+            .unwrap();
+    let key = format!("owned:artwork-preflight:uncertain:{}", uuid_suffix());
+    // First reply is PONG; drop the second actual EVALSHA reply after LPUSH.
+    proxy.drop_after.store(2, Ordering::SeqCst);
+    let result = transport
+        .command_publication_classified_with_diagnostic::<i64, _>(
+            script,
+            std::slice::from_ref(&key),
+            &[],
+            (),
+            None,
+        )
+        .await;
+    assert!(matches!(result, Err(ClassifiedError::Backend)));
+    assert_eq!(
+        redis.llen::<_, i64>(&key).await.unwrap(),
+        1,
+        "publication is never replayed"
+    );
+    assert_eq!(
+        redis.lrange::<_, Vec<String>>(&key, 0, -1).await.unwrap(),
+        vec!["owned-artwork-frame".to_owned()],
+        "exact single retained publication payload"
+    );
+    let _: () = redis.del(key).await.unwrap();
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires actual owned Redis and held health reply"]
+async fn pending_artwork_preflight_retains_owner_and_admission_without_publishing() {
+    let mut redis = raw().await;
+    let script = "return redis.call('LPUSH',KEYS[1],'owned-artwork-frame')";
+    let _: String = redis::cmd("SCRIPT")
+        .arg("LOAD")
+        .arg(script)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    let proxy = proxy().await;
+    let transport =
+        RedisTransport::connect_classified(&proxy.url, config(1, Duration::from_millis(75)))
+            .await
+            .unwrap();
+    let key = format!("owned:artwork-preflight:held:{}", uuid_suffix());
+    let dropped = Arc::new(AtomicUsize::new(0));
+    proxy.hold.send_replace(true);
+    let result = transport
+        .command_publication_classified_with_diagnostic::<i64, _>(
+            script,
+            std::slice::from_ref(&key),
+            &[],
+            Arc::new(Owner(dropped.clone())),
+            None,
+        )
+        .await;
+    assert!(matches!(result, Err(ClassifiedError::Backend)));
+    assert_eq!(dropped.load(Ordering::SeqCst), 0);
+    assert!(
+        !redis.exists::<_, bool>(&key).await.unwrap(),
+        "no mutation before PONG"
+    );
+    assert!(matches!(
+        transport
+            .command_classified::<i64, _>("return 0", &[], &[], ())
+            .await,
+        Err(ClassifiedError::Capacity)
+    ));
+    proxy.hold.send_replace(false);
+    wait(async || dropped.load(Ordering::SeqCst) == 1).await;
+    assert_eq!(
+        redis.llen::<_, i64>(&key).await.unwrap(),
+        1,
+        "one detached physical completion"
+    );
+    assert_eq!(proxy.accepted.load(Ordering::SeqCst), 1);
+    assert_eq!(
+        redis.lrange::<_, Vec<String>>(&key, 0, -1).await.unwrap(),
+        vec!["owned-artwork-frame".to_owned()],
+        "exact single retained publication payload"
+    );
+    let _: () = redis.del(key).await.unwrap();
+}
 fn uuid_suffix() -> String {
     format!(
         "{}",

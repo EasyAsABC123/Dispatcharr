@@ -75,12 +75,15 @@ impl OperationError {
 enum CommandScript {
     OneOff(Script),
     ResultWithPreflight(Script),
+    PublicationWithPreflight(Script),
     Prepared(Arc<Script>),
 }
 impl CommandScript {
     fn script(&self) -> &Script {
         match self {
-            Self::OneOff(script) | Self::ResultWithPreflight(script) => script,
+            Self::OneOff(script)
+            | Self::ResultWithPreflight(script)
+            | Self::PublicationWithPreflight(script) => script,
             Self::Prepared(script) => script,
         }
     }
@@ -219,6 +222,29 @@ impl RedisTransport {
         )
         .await
     }
+    /// Root-artwork publication socket readiness before its unchanged single
+    /// mutation. Only the read-only PING may repeat after a settled disconnect;
+    /// admission, owner, timeout and physical completion match result preflight.
+    pub async fn command_publication_classified_with_diagnostic<
+        T: redis::FromRedisValue + Send + 'static,
+        G: Send + 'static,
+    >(
+        &self,
+        source: &str,
+        keys: &[String],
+        args: &[&[u8]],
+        guard: G,
+        diagnostic: Option<CommandDiagnostic>,
+    ) -> Result<(T, G), ClassifiedError> {
+        self.command_diagnostic_inner(
+            CommandScript::PublicationWithPreflight(Script::new(source)),
+            keys,
+            args,
+            guard,
+            diagnostic,
+        )
+        .await
+    }
     async fn command_diagnostic_inner<
         T: redis::FromRedisValue + Send + 'static,
         G: Send + 'static,
@@ -338,7 +364,11 @@ impl RedisTransport {
                 invocation.arg(arg);
             }
             let result: Result<T, redis::RedisError> = async {
-                if matches!(&script, CommandScript::ResultWithPreflight(_)) {
+                if matches!(
+                    &script,
+                    CommandScript::ResultWithPreflight(_)
+                        | CommandScript::PublicationWithPreflight(_)
+                ) {
                     result_preflight(&mut connection).await?;
                 }
                 // Do not retry a script after any error: its mutation/reply may

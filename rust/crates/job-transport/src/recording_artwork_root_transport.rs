@@ -41,15 +41,24 @@ impl ArtworkRootPublisher {
     ) -> Result<Published, Error> {
         let message = recording_artwork_root::parse_signal(raw).ok_or(Error::Protocol)?;
         let maximum = self.jobs.inner.config.max_queued_jobs.to_string();
+        // Fixed vocabulary and typed identity only; no frame, Redis key or error
+        // text. Same existing opt-in and global record bound as DVR diagnostics.
+        let diagnostic = (std::env::var("RUST_AUTO_STAGE_DIAGNOSTICS").as_deref() == Ok("1"))
+            .then_some(
+                dispatcharr_output_store::transport::CommandDiagnostic::ArtworkPublication {
+                    task: message.task_id.as_u128(),
+                },
+            );
         match self
             .jobs
             .inner
             .broker
-            .command_classified::<i64, _>(
+            .command_publication_classified_with_diagnostic::<i64, _>(
                 PUBLISH,
                 &["celery".into(), "_kombu.binding.celery".into()],
                 &[raw, maximum.as_bytes()],
                 self.jobs.lease(owner)?,
+                diagnostic,
             )
             .await
         {
