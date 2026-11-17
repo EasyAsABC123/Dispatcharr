@@ -1,0 +1,8 @@
+   Compiling dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/attempt94/source/rust/crates/output-store)
+    Finished `test` profile [unoptimized] target(s) in 1.36s
+     Running tests/redis_reconnect.rs (artifacts/rust/m7-xc-vod-info-physical-compile-29/target/debug/deps/redis_reconnect-cbae6657f9ea7d25)
+
+thread 'result_preflight_recovers_closed_socket_before_one_mutation' panicked at crates/output-store/tests/redis_reconnect.rs:360:10:
+called `Option::unwrap()` on a `None` value
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+error: test failed, to rerun pass `-p dispatcharr-output-store --test redis_reconnect`

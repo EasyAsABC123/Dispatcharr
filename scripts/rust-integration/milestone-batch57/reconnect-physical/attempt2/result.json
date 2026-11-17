@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "failure": null,
+  "cleanup": {
+    "passed": true,
+    "absence": {
+      "container": true,
+      "network": true,
+      "volume": true,
+      "exact_CID": true,
+      "original_process_generation": true
+    },
+    "errors": []
+  },
+  "test_actual_exit": 0,
+  "all_six_expected_tests": [
+    "lost_publication_reply_is_not_replayed_and_future_commands_reconnect",
+    "concurrent_future_operations_share_one_bounded_reconnect_attempt",
+    "logical_timeout_does_not_reconnect_or_free_a_still_pending_physical_reply",
+    "result_preflight_recovers_closed_socket_before_one_mutation",
+    "result_preflight_does_not_replay_an_uncertain_mutation",
+    "pending_result_preflight_retains_owner_and_admission_without_mutating"
+  ],
+  "seconds": 17.434799741982715,
+  "identity": {
+    "project": "dispatcharr-result-reconnect-30da38e811f0",
+    "CID": "9b56b6a80ed056672cefba518a878e0fd0aaeb93cb5b4187814fc65ffbd6f39a",
+    "hostPID": 1396536,
+    "starttime": "25687740",
+    "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+  },
+  "input_drift": [],
+  "SDK_source_drift": [],
+  "integrity_error": null,
+  "Source_business_replayed": false,
+  "full_milestone_passed": false,
+  "performance_verified": false
+}

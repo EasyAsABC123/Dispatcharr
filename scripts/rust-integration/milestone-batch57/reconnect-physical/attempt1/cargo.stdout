@@ -1,0 +1,16 @@
+
+running 6 tests
+test concurrent_future_operations_share_one_bounded_reconnect_attempt ... ok
+test logical_timeout_does_not_reconnect_or_free_a_still_pending_physical_reply ... ok
+test lost_publication_reply_is_not_replayed_and_future_commands_reconnect ... ok
+test pending_result_preflight_retains_owner_and_admission_without_mutating ... ok
+test result_preflight_does_not_replay_an_uncertain_mutation ... ok
+test result_preflight_recovers_closed_socket_before_one_mutation ... FAILED
+
+failures:
+
+failures:
+    result_preflight_recovers_closed_socket_before_one_mutation
+
+test result: FAILED. 5 passed; 1 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.42s
+

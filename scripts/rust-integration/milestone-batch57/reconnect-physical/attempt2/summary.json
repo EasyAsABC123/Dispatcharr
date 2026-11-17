@@ -1,0 +1,30 @@
+{
+  "attempt": 2,
+  "SDK": 95,
+  "Root_actual_exit": 0,
+  "Cargo_actual_exit": 0,
+  "Root_seconds": 17.694659241999034,
+  "all_cli_receipts_physically_settled": true,
+  "cli_receipts": 27,
+  "raw_commands_sha256": "62308483bf3742485e0e1a109439e900c5f399c75c50c47499ce573aec47f620",
+  "all_expected_tests": 6,
+  "tests_passed": 6,
+  "tests_failed": 0,
+  "exact_CID_absent": true,
+  "original_host_generation_absent": true,
+  "project_container_network_volume_absent": true,
+  "independent_cleanup_sha256": "91b85797fdc9d3e4fc78a4511d76e95f99678cf161205f6a44bb2a16d53d4ce9",
+  "Source_business_replayed": false,
+  "passed": true,
+  "input_integrity_passed": true,
+  "SDK_source_integrity_passed": true,
+  "test_names": [
+    "lost_publication_reply_is_not_replayed_and_future_commands_reconnect",
+    "concurrent_future_operations_share_one_bounded_reconnect_attempt",
+    "logical_timeout_does_not_reconnect_or_free_a_still_pending_physical_reply",
+    "result_preflight_recovers_closed_socket_before_one_mutation",
+    "result_preflight_does_not_replay_an_uncertain_mutation",
+    "pending_result_preflight_retains_owner_and_admission_without_mutating"
+  ],
+  "repair_scope": "Exact server client ID established using before/after CLIENT LIST plus owned read-only EVALSHA marker; refuse ambiguous new IDs before exact CLIENT KILL. Primary failure is saved before cleanup; hash inputs normalize Path."
+}

@@ -1,0 +1,86 @@
+{
+  "credit": "Original Dispatcharr and dependency authors retain all application, protocol and algorithm/code credit.",
+  "candidate56_observations": {
+    "read_only_CONFIG_GET_timeout_seconds": 300,
+    "fixed_vocabulary_lines": [
+      "dvr_result task_hex=698d8ede8c134ad2bc2c94f67d28f77d stage=admission kind=none elapsed_ms=0 physical=queued physical_pending=true",
+      "dvr_result task_hex=698d8ede8c134ad2bc2c94f67d28f77d stage=command_started kind=none elapsed_ms=0 physical=running physical_pending=true",
+      "dvr_result task_hex=698d8ede8c134ad2bc2c94f67d28f77d stage=physical_returned kind=success elapsed_ms=0 physical=returned physical_pending=false",
+      "dvr_result task_hex=2b129e4d1e2b4aa68f86966afd2290a1 stage=admission kind=none elapsed_ms=0 physical=queued physical_pending=true",
+      "dvr_result task_hex=2b129e4d1e2b4aa68f86966afd2290a1 stage=command_started kind=none elapsed_ms=0 physical=running physical_pending=true",
+      "dvr_result task_hex=2b129e4d1e2b4aa68f86966afd2290a1 stage=physical_returned kind=redis_disconnect elapsed_ms=0 physical=returned physical_pending=false"
+    ],
+    "transport_record_sha256": "f4d18a88a03067b4f0e32de8d6d5b3034d7c0feb0d37411e2bb01bf3d9ddfb0e",
+    "Redis_read_only_record_sha256": "861aed80140dba4b3f6e1d5bf5934d1e0ca98f0143d1c77d9d24bef352290796",
+    "scope": "Actual immediate physical disconnect, not logical deadline. CONFIG timeout observation plus pinned Source config explains idle-close domain; no Redis configuration was changed."
+  },
+  "pinned_installed_Source_libraries": {
+    "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "versions": {
+      "celery": "5.6.3",
+      "redis": "6.4.0"
+    },
+    "actual_extract_exit": 0,
+    "exact_extract_CID_absent": true,
+    "network": "none",
+    "read_only": true,
+    "files": {
+      "celery-backends-base.py": {
+        "installed_path": "/dispatcharrpy/lib/python3.13/site-packages/celery/backends/base.py",
+        "sha256": "27aebd98b65fdc8debba695bdc39d1eec11322d5a2669eb62ecb8428da09e847"
+      },
+      "celery-backends-redis.py": {
+        "installed_path": "/dispatcharrpy/lib/python3.13/site-packages/celery/backends/redis.py",
+        "sha256": "8641f5aa898814a4b03e273f5c6f7bde96c006b8eca1444ae7338767e053f266"
+      },
+      "redis-connection.py": {
+        "installed_path": "/dispatcharrpy/lib/python3.13/site-packages/redis/connection.py",
+        "sha256": "793e0c6e3e698c19bf47949242bac39258c9faa0b19ec8154410e56f0ac60ec5"
+      },
+      "redis-retry.py": {
+        "installed_path": "/dispatcharrpy/lib/python3.13/site-packages/redis/retry.py",
+        "sha256": "a12d277349d8c4441a0f8b7de4712bd4686f8693a69d328c9cdb479fc16acf1a"
+      },
+      "redis-client.py": {
+        "installed_path": "/dispatcharrpy/lib/python3.13/site-packages/redis/client.py",
+        "sha256": "5e6a3abdaf282a0ee4b03f2dbf9f8412b085ab73a1a5f7884ae47e9d60484520"
+      }
+    },
+    "receipt_sha256": "b4f320f160af0b4f5912c1157c48130267ba60eece8ffdc66d5cad51c447ae78"
+  },
+  "Source_code_authority": [
+    {
+      "file": "celery-backends-base.py",
+      "lines": "1078\u20131115",
+      "behavior": "Reads current metadata before persistence; completed SUCCESS is preserved."
+    },
+    {
+      "file": "celery-backends-redis.py",
+      "lines": "404\u2013405",
+      "behavior": "Metadata GET delegates to redis-py."
+    },
+    {
+      "file": "redis-connection.py",
+      "lines": "1520\u20131550",
+      "behavior": "Pool checks readiness and reconnects a closed socket before sending the next command."
+    },
+    {
+      "file": "redis-connection.py",
+      "lines": "566\u2013579",
+      "behavior": "Library has fixed PING/PONG health checks; nonzero configured backend interval is not asserted."
+    }
+  ],
+  "implementation": {
+    "result_only_read_only_PING_preflight": true,
+    "maximum_read_only_retries_after_settled_disconnect": 1,
+    "mutation_retries": 0,
+    "original_WRITE_SUCCESS_Lua_unchanged": true,
+    "same_owned_task_guard_admission_and_logical_deadline": true,
+    "timeout_increased": false,
+    "background_keepalive_added": false,
+    "generic_commands_changed": false
+  },
+  "privacy": "No raw Redis client inventory, URLs, credentials, payloads, exception text or private Source HTTP/SQL/WS captures published here. Installed source code retained privately; published provenance is hashes and behavior descriptions.",
+  "full_application_acceptance": false,
+  "performance_gain_accepted": false
+}

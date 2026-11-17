@@ -1,0 +1,162 @@
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+    |
+501 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+    |            -- the same lifetime is named here  -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: consistently use `'q`
+    |
+502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+    |
+388 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |              -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: eliding a lifetime that's named elsewhere is confusing
+   --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+    |
+367 |     statement: &'q DB::Statement<'q>,
+    |                 ^^               ^^ the lifetime is named here
+    |                 |
+    |                 the lifetime is named here
+368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+    |                  -- the same lifetime is named here     -- the same lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: consistently use `'q`
+    |
+368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+    |
+
+warning: `sqlx-core` (lib) generated 3 warnings
+warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+   --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+    |
+335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+    |                                                        ^^^^^^^^
+    |
+    = note: `#[warn(deprecated)]` on by default
+
+warning: variant `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+   |
+68 | pub enum FrontendMessageFormat {
+   |          --------------------- variant in this enum
+...
+76 |     Flush = b'H',
+   |     ^^^^^
+   |
+   = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+   = note: `#[warn(dead_code)]` on by default
+
+warning: struct `Flush` is never constructed
+  --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+   |
+11 | pub struct Flush;
+   |            ^^^^^
+
+warning: `sqlx-postgres` (lib) generated 3 warnings
+warning: `sqlx-core` (lib) generated 3 warnings (3 duplicates)
+    Checking dispatcharr-output-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/output-store)
+warning: `sqlx-postgres` (lib) generated 3 warnings (3 duplicates)
+    Checking dispatcharr-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/store)
+    Checking dispatcharr-input-store v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/input-store)
+    Checking dispatcharr-stream-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/stream-http)
+    Checking dispatcharr-fmp4-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/fmp4-http)
+    Checking dispatcharr-hls-http v0.1.0 (/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-batch17-sdk-1/source/rust/crates/hls-http)
+error[E0277]: `?` couldn't convert the error: `StoreError: DatabaseError` is not satisfied
+   --> crates/store/src/epg_source_writes.rs:307:230
+    |
+307 | ...d(id).bind(i32::try_from(periodic).map_err(|_|unsupported())?).execute(c).await.map(|_|())})).await??;
+    |               ----------------------- -------------------------^ the trait `DatabaseError` is not implemented for `StoreError`
+    |               |                       |
+    |               |                       this has type `Result<_, StoreError>`
+    |               this can't be annotated with `?` because it has type `Result<_, TryFromIntError>`
+    |
+note: `StoreError` needs to implement `DatabaseError`
+   --> crates/store/src/lib.rs:125:1
+    |
+125 | pub enum StoreError {
+    | ^^^^^^^^^^^^^^^^^^^
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: the trait `DatabaseError` is implemented for `PgDatabaseError`
+    = note: required for `sqlx::Error` to implement `From<StoreError>`
+
+error[E0277]: `?` couldn't convert the error: `StoreError: DatabaseError` is not satisfied
+   --> crates/store/src/provider_account_writes.rs:580:232
+    |
+580 | ...ount).bind(i32::try_from(periodic).map_err(|_|unsupported())?).execute(c).await.map(|_|())})).await??;
+    |               ----------------------- -------------------------^ the trait `DatabaseError` is not implemented for `StoreError`
+    |               |                       |
+    |               |                       this has type `Result<_, StoreError>`
+    |               this can't be annotated with `?` because it has type `Result<_, TryFromIntError>`
+    |
+note: `StoreError` needs to implement `DatabaseError`
+   --> crates/store/src/lib.rs:125:1
+    |
+125 | pub enum StoreError {
+    | ^^^^^^^^^^^^^^^^^^^
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: the trait `DatabaseError` is implemented for `PgDatabaseError`
+    = note: required for `sqlx::Error` to implement `From<StoreError>`
+
+error[E0282]: type annotations needed for `Result<(reqwest::StatusCode, axum::Json<JsonValue>), _>`
+   --> crates/store/src/provider_profile_writes.rs:282:13
+    |
+282 |           let outcome = async {
+    |               ^^^^^^^
+...
+314 | /             Ok((axum::http::StatusCode::CREATED,
+315 | |                 Json(crate::provider_reads::profile(&after,&account))))
+    | |_______________________________________________________________________- type must be known at this point
+    |
+help: consider giving `outcome` an explicit type, where the type for type parameter `E` is specified
+    |
+282 |         let outcome: Result<_, E> = async {
+    |                    ++++++++++++++
+
+error[E0283]: type annotations needed for `Result<(reqwest::StatusCode, axum::Json<JsonValue>), _>`
+   --> crates/store/src/provider_profile_writes.rs:282:13
+    |
+282 |         let outcome = async {
+    |             ^^^^^^^
+...
+318 |         let value = outcome?;
+    |                            - type must be known at this point
+    |
+note: multiple `impl`s satisfying `StoreError: From<_>` found
+   --> crates/store/src/lib.rs:151:1
+    |
+151 | impl From<sqlx::Error> for StoreError {
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    = note: and another `impl` found in the `core` crate: `impl<T> From<T> for T;`
+help: consider giving `outcome` an explicit type, where the placeholders `_` are specified
+    |
+282 |         let outcome: Result<_, E> = async {
+    |                    ++++++++++++++
+
+Some errors have detailed explanations: E0277, E0282, E0283.
+For more information about an error, try `rustc --explain E0277`.
+error: could not compile `dispatcharr-store` (lib) due to 4 previous errors
