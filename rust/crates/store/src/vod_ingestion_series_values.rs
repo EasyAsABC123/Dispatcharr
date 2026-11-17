@@ -2,13 +2,14 @@
 //! Original Dispatcharr authors retain all application and algorithm credit.
 use crate::StoreError;
 use serde_json::{json, Value};
-use std::collections::HashSet;
 fn unsupported() -> StoreError {
     StoreError::Unsupported("VOD basic Series list value domain unavailable")
 }
 pub(super) struct Series {
     pub name: String,
     pub year: Option<i32>,
+    pub tmdb_id: Option<String>,
+    pub imdb_id: Option<String>,
     pub external: String,
     pub provider: Option<String>,
     pub properties: Option<Value>,
@@ -75,7 +76,7 @@ fn list_year(row: &serde_json::Map<String, Value>) -> Result<Option<i32>, StoreE
 }
 /// Provisional sparse untagged Series list slice. Existing catalogue admission
 /// remains unchanged and rejects advanced stored rows until Source acceptance.
-/// External IDs/language stay refused; bounded descriptive fields share Source converters.
+/// Qualified external IDs and bounded descriptive fields share Source converters; language stays empty.
 pub(super) fn series(
     value: Value,
     is_draining: &dyn Fn() -> bool,
@@ -84,7 +85,7 @@ pub(super) fn series(
         .as_array()
         .filter(|rows| rows.len() <= 64)
         .ok_or_else(unsupported)?;
-    let mut ids = HashSet::new();
+    let mut provider_ids = std::collections::HashMap::new();
     rows.iter()
         .map(|value| {
             if is_draining() {
@@ -95,10 +96,6 @@ pub(super) fn series(
                 return Err(unsupported());
             }
             for key in [
-                "tmdb",
-                "tmdb_id",
-                "imdb",
-                "imdb_id",
                 "backdrop_path",
                 "poster_path",
                 "original_name",
@@ -132,18 +129,25 @@ pub(super) fn series(
                 return Err(unsupported());
             }
             let external = scalar(row.get("series_id").ok_or_else(unsupported)?)?;
-            if !ids.insert(external.clone()) {
-                return Err(unsupported());
-            }
             let raw_category = row
                 .get("category_id")
                 .filter(|v| crate::xc_live_provider::truthy(v));
             let provider = raw_category.map(scalar).transpose()?;
             let props = super::values::list_props::series(row)?;
             let year = list_year(row)?;
+            let ids = super::values::external_identity::series(row)?;
+            let identity = super::values::external_identity::key(&ids, &name, year);
+            if provider_ids
+                .insert(external.clone(), identity.clone())
+                .is_some_and(|previous| previous != identity)
+            {
+                return Err(unsupported());
+            }
             Ok(Series {
                 name,
                 year,
+                tmdb_id: ids.tmdb_id,
+                imdb_id: ids.imdb_id,
                 external,
                 provider,
                 properties: props.properties,
@@ -276,7 +280,7 @@ mod tests {
     fn unqualified_metadata_and_shutdown_do_not_become_sparse_success() {
         let plain = json!([{"series_id":1,"name":"Owned"}]);
         assert!(series(plain.clone(), &|| true).is_err());
-        for key in ["tmdb_id", "language", "backdrop_path"] {
+        for key in ["language", "backdrop_path"] {
             let mut row = plain.clone();
             row[0][key] = json!("unqualified");
             assert!(series(row, &|| false).is_err(), "{key}");
@@ -286,5 +290,20 @@ mod tests {
             &|| false
         )
         .is_err());
+    }
+    #[test]
+    fn source_same_identity_series_provider_repeats_keep_order_and_short_alias_priority() {
+        let input = json!([
+            {"series_id":1,"name":"First","tmdb":101,"tmdb_id":202},
+            {"series_id":1,"name":"Second","tmdb":101,"tmdb_id":303}
+        ]);
+        let rows = series(input.clone(), &|| false).unwrap();
+        assert_eq!(rows.len(), 2);
+        assert_eq!(rows[0].name, "First");
+        assert_eq!(rows[1].name, "Second");
+        assert_eq!(rows[0].basic, input[0]);
+        assert_eq!(rows[1].basic, input[1]);
+        assert_eq!(rows[0].tmdb_id.as_deref(), Some("101"));
+        assert_eq!(rows[1].tmdb_id.as_deref(), Some("101"));
     }
 }

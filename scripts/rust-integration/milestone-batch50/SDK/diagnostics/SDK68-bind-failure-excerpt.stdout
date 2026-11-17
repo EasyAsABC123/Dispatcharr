@@ -1,0 +1,30 @@
+---- unknown_staging_owner_fails_promptly_even_with_stalled_body stdout ----
+
+thread 'unknown_staging_owner_fails_promptly_even_with_stalled_body' panicked at crates/ingest-http/tests/http.rs:96:69:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- abort_and_shutdown_hold_admission_until_actual_worker_cleanup stdout ----
+
+thread 'abort_and_shutdown_hold_admission_until_actual_worker_cleanup' panicked at crates/ingest-http/tests/http.rs:96:69:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+
+---- invalid_empty_oversize_and_http_error_keep_prior_cache_and_clean_staging stdout ----
+
+thread 'invalid_empty_oversize_and_http_error_keep_prior_cache_and_clean_staging' panicked at crates/ingest-http/tests/http.rs:96:69:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+---- accepts_all_source_success_statuses_and_reuses_no_cookie_between_downloads stdout ----
+
+thread 'accepts_all_source_success_statuses_and_reuses_no_cookie_between_downloads' panicked at crates/ingest-http/tests/http.rs:96:69:
+called `Result::unwrap()` on an `Err` value: Os { code: 1, kind: PermissionDenied, message: "Operation not permitted" }
+
+
+failures:
+    abort_and_shutdown_hold_admission_until_actual_worker_cleanup
+    accepts_all_source_success_statuses_and_reuses_no_cookie_between_downloads
+    invalid_empty_oversize_and_http_error_keep_prior_cache_and_clean_staging
+    unknown_staging_owner_fails_promptly_even_with_stalled_body
+
+test result: FAILED. 0 passed; 4 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

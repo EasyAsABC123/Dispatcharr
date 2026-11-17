@@ -1,0 +1,34 @@
+{
+  "actual_origin": "http://127.0.0.1:63309",
+  "actual_Source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "actual_binding_sha256": "a709600d00a51881acf9f4cb834aa6bc30d3711bac2d3fd88c6930d30dbd0f3f",
+  "actual_project": "dispatcharr-normal-dvr-97d8ae48ad",
+  "actual_port_query_argv": [
+    "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+    "compose",
+    "-p",
+    "dispatcharr-normal-dvr-97d8ae48ad",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/candidate47-public-clean-1/repo/docker/compose.rust-playback.yml",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-vod-external-identity-source-1/fixtures/Original-57c72f3b/ports.json",
+    "-f",
+    "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-vod-external-identity-source-1/fixtures/Original-57c72f3b/compose.json",
+    "port",
+    "baseline",
+    "5656"
+  ],
+  "actual_port_query_receipt": {
+    "path": "HTTP-port-command.json",
+    "sha256": "854e004cbae43a8788696468d041d9d4761f7afc6c08f3e7c5015904ef0a36f8"
+  },
+  "actual_port_query_stdout": {
+    "path": "HTTP-port.stdout",
+    "sha256": "444b4b2e53cbeb82c6f5e8df6df848574f10e24acb83b5a7c764d7593c29f2ac"
+  },
+  "baseline_service": "baseline",
+  "container_port": 5656,
+  "Source_contexts": 1,
+  "Native_contexts": 0,
+  "private_binding_or_environment_published": false
+}

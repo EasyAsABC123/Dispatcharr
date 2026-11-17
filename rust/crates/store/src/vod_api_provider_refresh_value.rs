@@ -11,7 +11,7 @@ pub(crate) enum Fault {
 fn trim(value: &str) -> &str {
     value.trim_matches(|c: char| c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}'))
 }
-pub(super) fn text(value: &Value) -> Result<String, Fault> {
+pub(crate) fn text(value: &Value) -> Result<String, Fault> {
     match value {
         Value::String(text) => Ok(text.clone()),
         Value::Number(number)

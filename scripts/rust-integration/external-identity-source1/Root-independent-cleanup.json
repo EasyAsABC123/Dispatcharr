@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "checks": [
+    {
+      "kind": "exact-CID",
+      "CID": "5accb86b0612437729e57f3e7c495f965284ce8105c8a81f0214f4d67f76a8d1",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1706093,
+      "original_starttime": "19846856",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "exact-CID",
+      "CID": "bd341321d2e4ad57207acc70a3865df758b3b8d2ab9b6af0e8ec123093ca856b",
+      "passed": true
+    },
+    {
+      "kind": "exact-host-generation",
+      "pid": 1706016,
+      "original_starttime": "19846843",
+      "current_starttime": null,
+      "passed": true
+    },
+    {
+      "kind": "containers",
+      "project": "dispatcharr-normal-dvr-97d8ae48ad",
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-97d8ae48ad"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "kind": "networks",
+      "project": "dispatcharr-normal-dvr-97d8ae48ad",
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-97d8ae48ad"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "passed": true
+    },
+    {
+      "kind": "volumes",
+      "project": "dispatcharr-normal-dvr-97d8ae48ad",
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-97d8ae48ad"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "passed": true
+    }
+  ],
+  "exact_CIDs": 2,
+  "positive_original_host_generations": 2,
+  "projects": [
+    "dispatcharr-normal-dvr-97d8ae48ad"
+  ],
+  "checked_epoch": 1794885728.7442882,
+  "actual_controller_exit": 0,
+  "all_nine_Source_cases_passed": true
+}

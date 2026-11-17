@@ -1,0 +1,52 @@
+{
+  "scope": "Literal historical outcomes, never replaced by SDK70. SDK68 failed TCP bind under sandbox before Store tests; no physical attempt. SDK69 all4 passed but prepared physical negativeaccount0 was sameINT8; staticpeer corrected toBOOL before any PG execution. SDK70 changes only peer control plumbing vs69, production6files exact. Allphysical/build/package/Native9/performance acceptance separate.",
+  "attempts": [
+    {
+      "SDK": 68,
+      "all_actual_exit_codes": {
+        "fmt": 0,
+        "check": 0,
+        "strict": 0,
+        "workspace": 101
+      },
+      "checks_sha256": "961bcf306221a92ce8f47cffde5df98de2787f7331e622d8878de4694436d7d4",
+      "private_lossless_log_refs": {
+        "workspace.stdout": {
+          "path": "artifacts/rust/normal-graph-batch17-sdk-1/attempt68/workspace.stdout",
+          "sha256": "107f61e5d0dab31edda36b8799ab8282033292238dbddb03eab28ce4ba3fba48",
+          "bytes": 37691
+        },
+        "workspace.stderr": {
+          "path": "artifacts/rust/normal-graph-batch17-sdk-1/attempt68/workspace.stderr",
+          "sha256": "8d80a86dc3178ee1620a425b24372b40b3d0a35cf3ef9344f467c89cdd0754d9",
+          "bytes": 18603
+        }
+      }
+    },
+    {
+      "SDK": 69,
+      "all_actual_exit_codes": {
+        "fmt": 0,
+        "check": 0,
+        "strict": 0,
+        "workspace": 0
+      },
+      "checks_sha256": "5c01ddb16034531ad0a43fe9b5ac27808f76796934826e80bd8a05bd9a578167",
+      "private_lossless_log_refs": {
+        "workspace.stdout": {
+          "path": "artifacts/rust/normal-graph-batch17-sdk-1/attempt69/workspace.stdout",
+          "sha256": "18717deb069cfe75ac37b97c18a8982051a0618b864aa641bab3f1f9c5997157",
+          "bytes": 255431
+        },
+        "workspace.stderr": {
+          "path": "artifacts/rust/normal-graph-batch17-sdk-1/attempt69/workspace.stderr",
+          "sha256": "12d7e1319030b327d2f6160597909a3111eacc9bb844d3af90ed490c876be0c1",
+          "bytes": 35113
+        }
+      }
+    }
+  ],
+  "SDK70_final_all4_passed": true,
+  "new_physical_controls": "45positive/24wrongbind actualpassed, read-only/noDML; each mutatedwiretype asserted distinct before Parse/Describe; see sibling physical/identity.json",
+  "historical_logs_duplicate_omitted_only_with_lossless_SHA256_refs": true
+}

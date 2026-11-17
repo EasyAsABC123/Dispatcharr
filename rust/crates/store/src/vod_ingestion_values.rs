@@ -3,6 +3,8 @@
 use crate::StoreError;
 use serde_json::{json, Value};
 use std::collections::HashSet;
+#[path = "vod_ingestion_external_identity.rs"]
+pub(super) mod external_identity;
 #[path = "vod_ingestion_list_props.rs"]
 pub(super) mod list_props;
 fn unsupported() -> StoreError {
@@ -15,6 +17,8 @@ pub(super) struct Category {
 pub(super) struct Movie {
     pub name: String,
     pub year: Option<i32>,
+    pub tmdb_id: Option<String>,
+    pub imdb_id: Option<String>,
     pub adult: Option<bool>,
     pub stream: String,
     pub provider: Option<String>,
@@ -97,7 +101,7 @@ fn year(row: &serde_json::Map<String, Value>, name: &str) -> Result<Option<i32>,
     }
     Ok(None)
 }
-/// Bounded Source list fields; external identity/language splits remain refused.
+/// Bounded Source list fields, including qualified external identities; language stays empty.
 /// Metadata decoding alone does not widen the separately guarded SQL domain.
 pub(super) fn movies(
     value: Value,
@@ -107,7 +111,7 @@ pub(super) fn movies(
         .as_array()
         .filter(|rows| rows.len() <= 64)
         .ok_or_else(unsupported)?;
-    let mut streams = HashSet::new();
+    let mut streams = std::collections::HashMap::new();
     rows.iter()
         .map(|value| {
             if is_draining() {
@@ -117,14 +121,7 @@ pub(super) fn movies(
             if serde_json::to_vec(value).map_err(|_| unsupported())?.len() > 16384 {
                 return Err(unsupported());
             }
-            for key in [
-                "episode_run_time",
-                "releaseDate",
-                "tmdb_id",
-                "tmdb",
-                "imdb_id",
-                "imdb",
-            ] {
+            for key in ["episode_run_time", "releaseDate"] {
                 if row.get(key).is_some_and(crate::xc_live_provider::truthy) {
                     return Err(unsupported());
                 }
@@ -144,9 +141,6 @@ pub(super) fn movies(
                 return Err(unsupported());
             }
             let stream = scalar(row.get("stream_id").ok_or_else(unsupported)?)?;
-            if !streams.insert(stream.clone()) {
-                return Err(unsupported());
-            }
             let provider = match row
                 .get("category_id")
                 .filter(|v| crate::xc_live_provider::truthy(v))
@@ -160,9 +154,19 @@ pub(super) fn movies(
                 _ => return Err(unsupported()),
             };
             let year = year(row, raw_name)?;
+            let ids = external_identity::movie(row)?;
+            let identity = external_identity::key(&ids, &name, year);
+            if streams
+                .insert(stream.clone(), identity.clone())
+                .is_some_and(|previous| previous != identity)
+            {
+                return Err(unsupported());
+            }
             let props = list_props::movie(row)?;
             Ok(Movie {
                 year,
+                tmdb_id: ids.tmdb_id,
+                imdb_id: ids.imdb_id,
                 adult: row.get("is_adult").map(|v| adult(Some(v))),
                 name,
                 stream,
@@ -217,7 +221,7 @@ mod source_basic_list_controls {
     fn unsupported_metadata_identity_and_shutdown_do_not_become_sparse_imports() {
         let plain = json!([{"stream_id":1,"name":"Owned - 2020","is_adult":true}]);
         assert!(movies(plain.clone(), &|| true).is_err());
-        for field in ["tmdb_id", "imdb_id", "episode_run_time", "releaseDate"] {
+        for field in ["episode_run_time", "releaseDate"] {
             let mut metadata = plain.clone();
             metadata[0][field] = json!("unsupported");
             assert!(movies(metadata, &|| false).is_err(), "{field}");
@@ -242,5 +246,20 @@ mod source_basic_list_controls {
         assert_eq!(rows[1].adult, Some(true));
         assert_ne!(rows[0].stream, rows[1].stream);
         assert!(movies(json!([]), &|| false).unwrap().is_empty());
+    }
+    #[test]
+    fn source_same_identity_provider_repeats_remain_ordered_with_exact_basic_payloads() {
+        let input = json!([
+            {"stream_id":1,"name":"First","tmdb_id":101,"imdb_id":"tt-first"},
+            {"stream_id":1,"name":"Second","tmdb_id":101,"imdb_id":"tt-second"}
+        ]);
+        let rows = movies(input.clone(), &|| false).unwrap();
+        assert_eq!(rows.len(), 2);
+        assert_eq!(rows[0].name, "First");
+        assert_eq!(rows[1].name, "Second");
+        assert_eq!(rows[0].basic, input[0]);
+        assert_eq!(rows[1].basic, input[1]);
+        assert_eq!(rows[0].tmdb_id.as_deref(), Some("101"));
+        assert_eq!(rows[1].imdb_id.as_deref(), Some("tt-second"));
     }
 }
