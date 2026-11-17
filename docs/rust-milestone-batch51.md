@@ -14,6 +14,7 @@ catalogues spanning Source's 1,000-row transaction boundary.
 | Physical SQL / UPDATE semantics | Readonly47/30 and separate temporary rollback4 pass |
 | Docker / packages | Image passes; all six package families pass with 55 CIDs absent |
 | Full Native12 | Passes; actual exit 0 in 842.643 seconds |
+| Clean public12 | Passes; actual outer exit 0 in 847.196 seconds |
 | New paired performance | Not run |
 
 The first grouped controller exits 1 in 232.145 seconds after completing the
@@ -59,7 +60,7 @@ metadata update while keeping stored-name behavior. SDK74, the separate physical
 The complete affected Native12 cohort now passes separately.
 
 Language reconciliation, wider logo domains, categories beyond the captured
-admission, other provider value/fault domains, public reproduction, performance
+admission, other provider value/fault domains, performance
 and every complete M0–M9 milestone remain open. Candidate50's accepted image and
 public nine-context workflow retain their separate scope.
 
@@ -87,7 +88,7 @@ captured original host generations and the project absent.
 
 Eight canonical Rust paths are published as
 `63e6672525d6fa58d8faeb424ea14051b56552f1`, byte-identical to SDK74. The Candidate51 image and all six package families now pass separately;
-Native12 also passes; public12, performance and full milestone acceptance remain
+Native12 and clean public12 also pass; performance and full milestone acceptance remain
 pending. Original Dispatcharr and dependency authors retain all credit.
 
 
@@ -119,6 +120,17 @@ changes are used. Source's original controller exit 1 and separate scale exit 0
 remain preserved. The older nine contexts also pass, including two viewers
 sharing one upstream. Root verifies fifteen exact containers including UID,
 fourteen captured original host generations and the project absent; UID's
-uncaptured initial positive generation remains explicit. Clean public12
-reproduction, new paired performance and every complete migration milestone
-remain open.
+uncaptured initial positive generation remains explicit. Clean public12 reproduction is separately recorded below; new paired performance and every complete migration milestone remain open.
+
+
+The [clean public12 run](../scripts/rust-integration/milestone-batch51/public-application/index.json)
+exits 0 in 847.196 seconds, with both EOFs and settled group. All twelve contexts
+pass from Git archive `149ae28588656536b1dde79792449008e42e8037`, using 38 public
+Python payloads and the same 1,446 Rust inputs as SDK74. The three added contexts
+compare all seventeen roots against published credential-safe Source projections,
+including full rows, exact primary keys/all eleven sequences, provider responses,
+pagination and staged-file custody. No private405 Source capture files are opened
+and no Source business root is replayed. Root verifies fifteen exact containers,
+fourteen captured original host generations and the project absent; the UID
+initial-generation limitation remains explicit. This qualifies public reproduction
+of the selected twelve contexts; performance and complete M0–M9 acceptance remain open.

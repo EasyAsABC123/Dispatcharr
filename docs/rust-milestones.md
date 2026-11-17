@@ -32,8 +32,7 @@ controls, rolled back with exact public rows/sequences and cleanup. Source
 containers absent. The complete Native12 cohort passes in 842.643 seconds, including strict
 full-row/all-eleven-sequence comparisons for all seventeen new Source roots,
 pagination and snapshot custody. Root verifies fifteen exact containers,
-fourteen captured original host generations and the project absent. Public12,
-new performance and complete milestone acceptance remain pending.
+fourteen captured original host generations and the project absent. Clean public12 also passes all twelve contexts in 847.196 seconds from archive `149ae285`, using 38 public helpers and published safe Source authority only, with the same fifteen-CID/fourteen-generation cleanup scope. No known Source business root is replayed; new performance and complete milestone acceptance remain pending.
 
 [Candidate50](rust-milestone-batch50.md) adds the bounded, empty-language
 Movie/Series external-ID identity slice. Source passes nine characterized roots;
