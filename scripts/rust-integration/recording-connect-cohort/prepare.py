@@ -29,9 +29,9 @@ def support_inputs(repo):
  return files
 
 def prepare_catalogue(args,repo,out,build,archive,source):
- six=args.workflow=='catalogue-six'
- tools=repo/('scripts/rust-integration/catalogue-extended-cohort'if six else'scripts/rust-integration/catalogue-comskip-cohort')
- manifest=load(tools/'payloads.json');assert manifest['selected_runtime_payloads']==(29 if six else 26)and manifest['frozen_driver_total_payloads']==(171 if six else 168)
+ seven=args.workflow=='catalogue-seven';six=args.workflow in('catalogue-six','catalogue-seven')
+ tools=repo/('scripts/rust-integration/catalogue-metadata-cohort'if seven else'scripts/rust-integration/catalogue-extended-cohort'if six else'scripts/rust-integration/catalogue-comskip-cohort')
+ manifest=load(tools/'payloads.json');assert manifest['selected_runtime_payloads']==(31 if seven else 29 if six else 26)and manifest['frozen_driver_total_payloads']==(173 if seven else 171 if six else 168)
  for row in manifest['files']:assert sha(tools/row['path'])==row['sha256'],('FrozenPublicHelperChanged',row['path'])
  retained=load(tools/'retained-Source-refs.json');bound={};authority=[]
  for group,rows in retained.items():
@@ -63,7 +63,16 @@ def prepare_catalogue(args,repo,out,build,archive,source):
   binding['retained_source_provider_info']=bound['ProviderInfo5']
   binding['retained_source_vod_series_advanced']=bound['Advanced']
   binding['functional_budget_scope']='Functional six-context cohort only; no performance-equivalence claim'
- plan={'state':'UNQUALIFIED_PUBLIC_EXPORT_PREPARED','workflow':args.workflow,'repo':str(repo),'cohort_root':str(tools),'output':str(out),'base_binding':binding,'source_contexts':[],'native_contexts':['vod-repeat','vod-series','comskip-manual','vlc-live']+(['vod-series-info','vod-series-advanced']if six else[]),'Docker_host':args.docker_host,'source_seconds':1200,'native_seconds':1800 if six else 1200,'cleanup_seconds':90,'qualification':('Exact29 frozen payload subset; correctedprivate6 +cleanpublic6 required. 'if six else'Exact26 frozen payload subset; ')+'public closure still requires actual clean-checkout validation. Retained Source captures are reused, including literal failed VOD controller/offline correction.','credit':'Original Dispatcharr and dependencies retain all application/model/task/protocol/algorithm credit.'}
+ if seven:
+  q=load(bound['DenseList']['qualification']['path']);assert q['Source_dense_list_context_capture_qualified']and q['actual_Source_cases_passed']==6 and q['actual_controller_exit']==0
+  e=load(bound['DenseList']['execution']['path']);assert e['actual_exit']==0 and e['stdout_EOF']and e['stderr_EOF']and e['process_group_settled']
+  assert load(bound['DenseList']['cleanup']['path'])['exact_owned_absence']and load(bound['DenseList']['Root_cleanup']['path'])['passed']
+  binding['retained_source_vod_dense_list']=bound['DenseList']
+  labels=('fresh-dense','identical-repeat','nonblank-metadata-update','sparse-blank-and-logo-clear','duplicate-representative-and-reuse','last-owner-prune')
+  binding['retained_source_vod_dense_list_SQL']={label:{end:bound['DenseListSQL'][label+'_'+end]for end in('before','after')}for label in labels}
+  binding['retained_source_vod_dense_list_http_origin']=bound['DenseListOrigin']['proof']
+  binding['functional_budget_scope']='Functional seven-context cohort only; no performance-equivalence claim'
+ plan={'state':'UNQUALIFIED_PUBLIC_EXPORT_PREPARED','workflow':args.workflow,'repo':str(repo),'cohort_root':str(tools),'output':str(out),'base_binding':binding,'source_contexts':[],'native_contexts':['vod-repeat','vod-series','comskip-manual','vlc-live']+(['vod-series-info','vod-series-advanced']if six else[])+(['vod-dense-list']if seven else[]),'Docker_host':args.docker_host,'source_seconds':1200,'native_seconds':1800 if six else 1200,'cleanup_seconds':90,'qualification':('31 portable payloads; strict safe public Source projection; clean public7 execution required. 'if seven else'Exact29 frozen payload subset; correctedprivate6 +cleanpublic6 required. 'if six else'Exact26 frozen payload subset; ')+'public closure still requires actual clean-checkout validation. Retained Source captures are reused, including literal failed VOD controller/offline correction.','credit':'Original Dispatcharr and dependencies retain all application/model/task/protocol/algorithm credit.'}
  save(out/'plan.json',plan);print(json.dumps({'plan':str(out/'plan.json'),'state':plan['state'],'applications_started':0,'native_contexts':plan['native_contexts']}))
 
 def prepare(args):
@@ -84,7 +93,7 @@ def prepare(args):
   for item in reader:
    if item.isfile():
     path=Path(item.name);assert not path.is_absolute()and'..'not in path.parts;source[item.name]=hashlib.sha256(reader.extractfile(item).read()).hexdigest()
- if args.workflow in('catalogue-series-comskip-vlc','catalogue-six'):
+ if args.workflow in('catalogue-series-comskip-vlc','catalogue-six','catalogue-seven'):
   assert not args.all_native,'all-native applies only to the recording Connect workflow'
   prepare_catalogue(args,repo,out,build,archive,source);return
  public=[p for p in HERE.rglob('*')if p.is_file()and'__pycache__'not in p.parts]
@@ -181,7 +190,7 @@ def run(args):
 
 def main():
  parser=argparse.ArgumentParser(description=__doc__);sub=parser.add_subparsers(dest='command',required=True)
- p=sub.add_parser('prepare');p.add_argument('--repo',type=Path,default=HERE.parents[2]);p.add_argument('--output',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--source-archive',type=Path);p.add_argument('--docker',default='docker');p.add_argument('--docker-host');p.add_argument('--all-native',action='store_true',help='Run all seven affected Native contexts; strict restart remains a known open failure.');p.add_argument('--workflow',choices=['recording-connect','catalogue-series-comskip-vlc','catalogue-six'],default='recording-connect',help='Select the existing public Connect pair or retained-Source Native catalogue/comskip/VLC cohort.')
+ p=sub.add_parser('prepare');p.add_argument('--repo',type=Path,default=HERE.parents[2]);p.add_argument('--output',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--source-archive',type=Path);p.add_argument('--docker',default='docker');p.add_argument('--docker-host');p.add_argument('--all-native',action='store_true',help='Run all seven affected Native contexts; strict restart remains a known open failure.');p.add_argument('--workflow',choices=['recording-connect','catalogue-series-comskip-vlc','catalogue-six','catalogue-seven'],default='recording-connect',help='Select the existing public Connect pair or retained-Source Native catalogue/comskip/VLC cohort.')
  p=sub.add_parser('run');p.add_argument('--plan',type=Path,required=True)
  args=parser.parse_args()
  if args.command=='prepare':prepare(args);return 0
