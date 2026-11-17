@@ -1,0 +1,92 @@
+{
+  "actual_tool": {
+    "ELF": {
+      "path": "/usr/local/bin/ffmpeg",
+      "sha256": "5831afcbcb9dc46107b633dc09f276794dc094b70aacfda6096eeceb83f013f0"
+    },
+    "version": "ffmpeg version 9.0.2-Dispatcharr Copyright (c) 2000-2026 the FFmpeg developers"
+  },
+  "one_master_regeneration": {
+    "actual": {
+      "sha256": "196448f34e418dd1a5cc9179817c8ab329c90cd48e85aad071fc788fa85691c0",
+      "bytes": 39148255
+    },
+    "exact_Source_SHA_match": false,
+    "argv": [
+      "ffmpeg",
+      "-hide_banner",
+      "-loglevel",
+      "error",
+      "-f",
+      "lavfi",
+      "-i",
+      "testsrc2=size=320x180:rate=25",
+      "-f",
+      "lavfi",
+      "-i",
+      "testsrc=size=320x180:rate=25",
+      "-f",
+      "lavfi",
+      "-i",
+      "sine=frequency=440:sample_rate=48000",
+      "-filter_complex_threads",
+      "1",
+      "-filter_complex",
+      "[0:v]drawbox=x=260:y=12:w=40:h=18:color=white:t=fill[show];[1:v]hue=h=90:s=1.5[spot];[show][spot]overlay=shortest=1:enable='between(t,151,181)+between(t,333,363)',drawbox=x=0:y=0:w=iw:h=ih:color=black:t=fill:enable='between(t,150,151)+between(t,181,182)+between(t,332,333)+between(t,363,364)'[video];[2:a]volume=0:enable='between(t,150,151)+between(t,181,182)+between(t,332,333)+between(t,363,364)'[audio]",
+      "-map",
+      "[video]",
+      "-map",
+      "[audio]",
+      "-t",
+      "544",
+      "-c:v",
+      "libx264",
+      "-preset",
+      "ultrafast",
+      "-crf",
+      "28",
+      "-pix_fmt",
+      "yuv420p",
+      "-threads:v",
+      "1",
+      "-threads:a",
+      "1",
+      "-g",
+      "25",
+      "-keyint_min",
+      "25",
+      "-sc_threshold",
+      "0",
+      "-c:a",
+      "aac",
+      "-b:a",
+      "128k",
+      "-y",
+      "/shared/comskip-positive-media/master.mkv"
+    ],
+    "attempts": 1,
+    "tuning_performed": false
+  },
+  "master_custody": "exact retained Source master copied; no input normalization",
+  "feed": {
+    "sha256": "133e0c68dcaae0c7d6de306983eccc2e621cda665f711915197e5fcbf334f804",
+    "bytes": 135999764
+  },
+  "retained_Source_input_unchanged": true,
+  "passed": true,
+  "failure": null,
+  "seconds": 7.089020351006184,
+  "owned_cleanup": {
+    "project": "dispatcharr-comskip-assets-49bf0c7fb6f1",
+    "CID": "910d419aac0214572a695c58e6bd4567a739e3dd60b0337ef8d9d3ac12ced2a3",
+    "hostPID": 104566,
+    "starttime": "23238412",
+    "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "project_absent": true,
+    "original_generation_absent": true,
+    "CID_absent": true
+  },
+  "new_Source_business_tasks": 0,
+  "new_applications": 0,
+  "performance_claim": false
+}

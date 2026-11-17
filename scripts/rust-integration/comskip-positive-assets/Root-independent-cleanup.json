@@ -1,0 +1,61 @@
+{
+  "passed": true,
+  "exact_CIDs": 1,
+  "captured_host_generations": 1,
+  "projects": 1,
+  "checks": [
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--no-trunc",
+        "--filter",
+        "id=910d419aac0214572a695c58e6bd4567a739e3dd60b0337ef8d9d3ac12ced2a3"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "ps",
+        "-aq",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-comskip-assets-49bf0c7fb6f1"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "network",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-comskip-assets-49bf0c7fb6f1"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "argv": [
+        "docker",
+        "volume",
+        "ls",
+        "-q",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-comskip-assets-49bf0c7fb6f1"
+      ],
+      "actual_exit": 0,
+      "passed": true
+    },
+    {
+      "hostPID": 104566,
+      "original_starttime": "23238412",
+      "current_starttime": null,
+      "passed": true
+    }
+  ]
+}
