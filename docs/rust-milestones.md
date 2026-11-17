@@ -9,6 +9,12 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+[Positive Comskip reference](../scripts/rust-integration/comskip-positive-source1/README.md)
+now includes a real two-range commercial detection and an unchanged target
+repeat. The whole controller exits 1 because an unrelated periodic scan and
+its EPG child enter the repeat's producer journal. Those publications remain
+visible; cut, automatic processing and Rust positive acceptance remain pending.
+
 [Language lifecycle reference](rust-milestone-batch52.md) now passes eleven
 Original refresh roots across two accounts, six category-settings PATCH calls
 and one declared Episode fixture seed. Complete rows and all eleven sequences

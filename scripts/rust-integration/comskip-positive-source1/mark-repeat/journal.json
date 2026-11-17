@@ -1,0 +1,386 @@
+{
+  "actual_journal_rows": 60,
+  "DVR_claim_or_ACK_commands": [
+    {
+      "time": 1794895817.108726,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "ZREM unacked_index 9ba7a140-e198-4c2e-9e96-8e060a734658"
+    },
+    {
+      "time": 1794895817.108732,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "HDEL unacked 9ba7a140-e198-4c2e-9e96-8e060a734658"
+    },
+    {
+      "time": 1794895817.683848,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "44126",
+      "client_type": "tcp",
+      "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+    },
+    {
+      "time": 1794895818.59044,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "ZREM unacked_index a524d1ec-2e2b-4bbd-b817-ad62bedf96a8"
+    },
+    {
+      "time": 1794895818.590443,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "HDEL unacked a524d1ec-2e2b-4bbd-b817-ad62bedf96a8"
+    },
+    {
+      "time": 1794895818.598961,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "ZREM unacked_index 5ed9b651-fcfb-4f65-a5ac-a9217451bf32"
+    },
+    {
+      "time": 1794895818.598964,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "HDEL unacked 5ed9b651-fcfb-4f65-a5ac-a9217451bf32"
+    },
+    {
+      "time": 1794895818.687497,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "44126",
+      "client_type": "tcp",
+      "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+    }
+  ],
+  "publications": [
+    {
+      "actual_redis_time": 1794895817.107719,
+      "queue": "celery",
+      "id": "0a3a1a55-593c-4494-8b52-2be2ac904743",
+      "task": "apps.channels.tasks.comskip_process_recording",
+      "raw_frame": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.comskip_process_recording",
+          "id": "0a3a1a55-593c-4494-8b52-2be2ac904743",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "0a3a1a55-593c-4494-8b52-2be2ac904743",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen534@17fea59f6111",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "0a3a1a55-593c-4494-8b52-2be2ac904743",
+          "reply_to": "947dbea4-7ac4-323b-8179-1fe4e9c853cc",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "9ba7a140-e198-4c2e-9e96-8e060a734658"
+        }
+      }
+    },
+    {
+      "actual_redis_time": 1794895818.58924,
+      "queue": "celery",
+      "id": "5a874df1-60f8-4a70-b059-5113bae9e7c0",
+      "task": "core.tasks.scan_and_process_files",
+      "raw_frame": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "core.tasks.scan_and_process_files",
+          "id": "5a874df1-60f8-4a70-b059-5113bae9e7c0",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "5a874df1-60f8-4a70-b059-5113bae9e7c0",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen713@17fea59f6111",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {},
+          "periodic_task_name": "scan-files"
+        },
+        "properties": {
+          "correlation_id": "5a874df1-60f8-4a70-b059-5113bae9e7c0",
+          "reply_to": "e4b0d335-fa34-361d-ba47-72601843d859",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "a524d1ec-2e2b-4bbd-b817-ad62bedf96a8"
+        }
+      }
+    },
+    {
+      "actual_redis_time": 1794895818.597998,
+      "queue": "celery",
+      "id": "b1edc1ea-e3be-4049-9b4e-891ed4520a46",
+      "task": "apps.epg.tasks.build_programme_index_task",
+      "raw_frame": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "b1edc1ea-e3be-4049-9b4e-891ed4520a46",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "5a874df1-60f8-4a70-b059-5113bae9e7c0",
+          "parent_id": "5a874df1-60f8-4a70-b059-5113bae9e7c0",
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen623@17fea59f6111",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "b1edc1ea-e3be-4049-9b4e-891ed4520a46",
+          "reply_to": "b5e30b9e-2b12-306a-9645-ef38cbeb93d8",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "5ed9b651-fcfb-4f65-a5ac-a9217451bf32"
+        }
+      }
+    }
+  ],
+  "recording_recovery_offset_publications": [],
+  "queue_operations": [
+    {
+      "time": 1794895817.108429,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60780",
+      "client_type": "tcp",
+      "command": "BRPOP celery celery\\x06\\x163 celery\\x06\\x166 celery\\x06\\x169 1"
+    },
+    {
+      "time": 1794895817.108726,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "ZREM unacked_index 9ba7a140-e198-4c2e-9e96-8e060a734658"
+    },
+    {
+      "time": 1794895817.108732,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "HDEL unacked 9ba7a140-e198-4c2e-9e96-8e060a734658"
+    },
+    {
+      "time": 1794895817.683848,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "44126",
+      "client_type": "tcp",
+      "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+    },
+    {
+      "time": 1794895818.185122,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60780",
+      "client_type": "tcp",
+      "command": "BRPOP celery celery\\x06\\x163 celery\\x06\\x166 celery\\x06\\x169 1"
+    },
+    {
+      "time": 1794895818.590063,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60780",
+      "client_type": "tcp",
+      "command": "BRPOP celery celery\\x06\\x163 celery\\x06\\x166 celery\\x06\\x169 1"
+    },
+    {
+      "time": 1794895818.59044,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "ZREM unacked_index a524d1ec-2e2b-4bbd-b817-ad62bedf96a8"
+    },
+    {
+      "time": 1794895818.590443,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "HDEL unacked a524d1ec-2e2b-4bbd-b817-ad62bedf96a8"
+    },
+    {
+      "time": 1794895818.598463,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60780",
+      "client_type": "tcp",
+      "command": "BRPOP celery celery\\x06\\x163 celery\\x06\\x166 celery\\x06\\x169 1"
+    },
+    {
+      "time": 1794895818.598961,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "ZREM unacked_index 5ed9b651-fcfb-4f65-a5ac-a9217451bf32"
+    },
+    {
+      "time": 1794895818.598964,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "HDEL unacked 5ed9b651-fcfb-4f65-a5ac-a9217451bf32"
+    },
+    {
+      "time": 1794895818.687497,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "44126",
+      "client_type": "tcp",
+      "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+    }
+  ],
+  "raw_journal_path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-comskip-positive-source-1/fixtures/Original-5f9f779d/data/comskip-positive-manual/dvr-domain-observer-76b8bf8a/private-startup-monitor.jsonl",
+  "raw_journal_sha256": "eaf13ab062298447bbdff8887fd3a9da90f6bcbc2d8bd40f6507cb8c3b845dbb",
+  "terminal": {
+    "thread_settled": true,
+    "actual_rows": 60,
+    "written_rows": 60,
+    "persisted_rows": 60,
+    "captured_bytes": 15944,
+    "row_limit": 20000,
+    "byte_limit": 16777216,
+    "terminal_reader_error": null,
+    "close_after_cases": true,
+    "terminal_marker": "plugin-startup-terminal-615957d47a7d4b0aa2d07bc76628299a",
+    "terminal_marker_read": true,
+    "terminal_barrier_observed": true,
+    "terminal_barrier_fsynced": true,
+    "writer_closed": true,
+    "flush_calls": 2,
+    "fsync_calls": 1,
+    "database_filter": 1,
+    "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+    "raw_rows_received": 124,
+    "raw_bytes_received": 28093,
+    "excluded_rows_by_database": {
+      "0": 43,
+      "2": 21
+    },
+    "excluded_bytes_by_database": {
+      "0": 7102,
+      "2": 5047
+    },
+    "complete_all_database_journal": false,
+    "scope": "Only actual database1 commands through the actual database1 terminal ECHO are retained; other databases counted but excluded before retained byte/row budgets. Flush/fsync barrier is unchanged; no all-database coverage claimed.",
+    "observer_error": null
+  },
+  "observer_stop": {
+    "role": "dvr-domain-observer-76b8bf8a",
+    "socket": "/tmp/normal-dvr-roles/146289fdc8174132b55d74b9ad33fb3d.sock",
+    "owner_pid": 1111,
+    "owner_starttime": "20878503",
+    "pid": 1112,
+    "starttime": "20878506",
+    "actual_pgid": 1112,
+    "process_group_authority": "successful Popen(start_new_session=True)",
+    "actual_argv": [
+      "/dispatcharrpy/bin/python",
+      "/normal-dvr-tools/startup_observer.py"
+    ],
+    "log_paths": {
+      "stdout": "/tmp/normal-dvr-roles/146289fdc8174132b55d74b9ad33fb3d/stdout.log",
+      "stderr": "/tmp/normal-dvr-roles/146289fdc8174132b55d74b9ad33fb3d/stderr.log"
+    },
+    "shutdown_started": true,
+    "signal_settled": true,
+    "actual_master_SIGTERM_sent": true,
+    "shutdown_settled": true,
+    "running": false,
+    "actual_exit": 0,
+    "actual_wait_completed": true,
+    "forced": false,
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "failures": [],
+    "actual_reaped_adopted_children": [],
+    "owned_generations": [
+      {
+        "pid": 1112,
+        "starttime": "20878506",
+        "absent": true
+      }
+    ],
+    "all_original_process_generations_absent": true
+  },
+  "strict_Beat_equality_relaxed": false
+}

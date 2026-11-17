@@ -1,0 +1,66 @@
+{
+  "scope": "Two bounded targeted business leaves observed before the literal whole-controller failure; global repeat producer cardinality and later domains remain unqualified",
+  "leaves": {
+    "positive-mark": {
+      "business_leaf_qualified": true,
+      "result": "ok",
+      "duration_seconds": 544.021,
+      "input_bytes": 39148255,
+      "input_SHA256": "be04f525c8783b7077b99130d5e26cc5941ce8e21eb887682248e2d5d2c4c29b",
+      "actual_EDL": {
+        "sha256": "984238c523502b3c23dc3e07e9fcdaf3bead2446328e74315bec4671af4dfbbc",
+        "text": "150.52\t181.48\t3\n332.52\t363.48\t3\n",
+        "observed_epoch": 1794895811.3620481
+      },
+      "intervals": [
+        [
+          150.52,
+          181.48
+        ],
+        [
+          332.52,
+          363.48
+        ]
+      ],
+      "media_unchanged": true,
+      "actual_AV_decode_exit": 0,
+      "exact_recording_CP_and_status_events": true,
+      "whole_producer_one_target_root": true,
+      "direct_OS_detector_exit_receipt_claimed": false,
+      "Source_code_success_branch_observed": true
+    },
+    "mark-repeat": {
+      "target_business_leaf_qualified_offline": true,
+      "actual_result": "already_processed",
+      "full_recording_row_unchanged": true,
+      "media_SHA_unchanged": true,
+      "EDL_exact": true,
+      "target_status_events": [],
+      "target_publication_exact_one": true,
+      "global_producer_journal_qualified": false,
+      "foreign_publications_retained": [
+        {
+          "task": "core.tasks.scan_and_process_files",
+          "id": "5a874df1-60f8-4a70-b059-5113bae9e7c0",
+          "root_id": "5a874df1-60f8-4a70-b059-5113bae9e7c0",
+          "parent_id": null,
+          "periodic_task_name": "scan-files"
+        },
+        {
+          "task": "apps.epg.tasks.build_programme_index_task",
+          "id": "b1edc1ea-e3be-4049-9b4e-891ed4520a46",
+          "root_id": "5a874df1-60f8-4a70-b059-5113bae9e7c0",
+          "parent_id": "5a874df1-60f8-4a70-b059-5113bae9e7c0",
+          "periodic_task_name": null
+        }
+      ],
+      "broader_background_effect_equivalence_qualified": false
+    }
+  },
+  "whole_manual_four_qualified": false,
+  "positive_cut_or_cut_repeat_reached": false,
+  "natural_automatic_reached": false,
+  "Native_positive_qualified": false,
+  "performance_verified": false,
+  "full_milestone_accepted": false
+}

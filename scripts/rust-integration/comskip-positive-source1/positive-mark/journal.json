@@ -1,0 +1,243 @@
+{
+  "actual_journal_rows": 23,
+  "DVR_claim_or_ACK_commands": [
+    {
+      "time": 1794895808.159769,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "ZREM unacked_index 6cd1c029-4b1a-4c58-83ae-e2d6ea279e8c"
+    },
+    {
+      "time": 1794895808.159772,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "HDEL unacked 6cd1c029-4b1a-4c58-83ae-e2d6ea279e8c"
+    },
+    {
+      "time": 1794895808.65269,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "44126",
+      "client_type": "tcp",
+      "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+    },
+    {
+      "time": 1794895809.656725,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "44126",
+      "client_type": "tcp",
+      "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+    },
+    {
+      "time": 1794895810.660887,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "44126",
+      "client_type": "tcp",
+      "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+    }
+  ],
+  "publications": [
+    {
+      "actual_redis_time": 1794895808.158734,
+      "queue": "celery",
+      "id": "ca5e5ac6-ed0b-467c-894d-7e1d439e3db7",
+      "task": "apps.channels.tasks.comskip_process_recording",
+      "raw_frame": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.comskip_process_recording",
+          "id": "ca5e5ac6-ed0b-467c-894d-7e1d439e3db7",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "ca5e5ac6-ed0b-467c-894d-7e1d439e3db7",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen534@17fea59f6111",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "ca5e5ac6-ed0b-467c-894d-7e1d439e3db7",
+          "reply_to": "947dbea4-7ac4-323b-8179-1fe4e9c853cc",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "6cd1c029-4b1a-4c58-83ae-e2d6ea279e8c"
+        }
+      }
+    }
+  ],
+  "recording_recovery_offset_publications": [],
+  "queue_operations": [
+    {
+      "time": 1794895808.159446,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60780",
+      "client_type": "tcp",
+      "command": "BRPOP celery celery\\x06\\x163 celery\\x06\\x166 celery\\x06\\x169 1"
+    },
+    {
+      "time": 1794895808.159769,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "ZREM unacked_index 6cd1c029-4b1a-4c58-83ae-e2d6ea279e8c"
+    },
+    {
+      "time": 1794895808.159772,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60792",
+      "client_type": "tcp",
+      "command": "HDEL unacked 6cd1c029-4b1a-4c58-83ae-e2d6ea279e8c"
+    },
+    {
+      "time": 1794895808.65269,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "44126",
+      "client_type": "tcp",
+      "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+    },
+    {
+      "time": 1794895809.254938,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60780",
+      "client_type": "tcp",
+      "command": "BRPOP celery celery\\x06\\x163 celery\\x06\\x166 celery\\x06\\x169 1"
+    },
+    {
+      "time": 1794895809.656725,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "44126",
+      "client_type": "tcp",
+      "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+    },
+    {
+      "time": 1794895810.25882,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60780",
+      "client_type": "tcp",
+      "command": "BRPOP celery celery\\x06\\x163 celery\\x06\\x166 celery\\x06\\x169 1"
+    },
+    {
+      "time": 1794895810.660887,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "44126",
+      "client_type": "tcp",
+      "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+    },
+    {
+      "time": 1794895811.262916,
+      "db": 1,
+      "client_address": "127.0.0.1",
+      "client_port": "60780",
+      "client_type": "tcp",
+      "command": "BRPOP celery celery\\x06\\x163 celery\\x06\\x166 celery\\x06\\x169 1"
+    }
+  ],
+  "raw_journal_path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-comskip-positive-source-1/fixtures/Original-5f9f779d/data/comskip-positive-manual/dvr-domain-observer-ea2eb130/private-startup-monitor.jsonl",
+  "raw_journal_sha256": "6f23a9c4dfac3c3c994e51b7ab42fbccf8e660e66f174da01047371deefccac9",
+  "terminal": {
+    "thread_settled": true,
+    "actual_rows": 23,
+    "written_rows": 23,
+    "persisted_rows": 23,
+    "captured_bytes": 5950,
+    "row_limit": 20000,
+    "byte_limit": 16777216,
+    "terminal_reader_error": null,
+    "close_after_cases": true,
+    "terminal_marker": "plugin-startup-terminal-118b36c0cd2141129e076b5f8435b5a3",
+    "terminal_marker_read": true,
+    "terminal_barrier_observed": true,
+    "terminal_barrier_fsynced": true,
+    "writer_closed": true,
+    "flush_calls": 2,
+    "fsync_calls": 1,
+    "database_filter": 1,
+    "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+    "raw_rows_received": 98,
+    "raw_bytes_received": 22110,
+    "excluded_rows_by_database": {
+      "0": 64,
+      "2": 11
+    },
+    "excluded_bytes_by_database": {
+      "0": 13886,
+      "2": 2274
+    },
+    "complete_all_database_journal": false,
+    "scope": "Only actual database1 commands through the actual database1 terminal ECHO are retained; other databases counted but excluded before retained byte/row budgets. Flush/fsync barrier is unchanged; no all-database coverage claimed.",
+    "observer_error": null
+  },
+  "observer_stop": {
+    "role": "dvr-domain-observer-ea2eb130",
+    "socket": "/tmp/normal-dvr-roles/f01d72354fd943d9a1bf9c67ec7e05dd.sock",
+    "owner_pid": 925,
+    "owner_starttime": "20877608",
+    "pid": 926,
+    "starttime": "20877610",
+    "actual_pgid": 926,
+    "process_group_authority": "successful Popen(start_new_session=True)",
+    "actual_argv": [
+      "/dispatcharrpy/bin/python",
+      "/normal-dvr-tools/startup_observer.py"
+    ],
+    "log_paths": {
+      "stdout": "/tmp/normal-dvr-roles/f01d72354fd943d9a1bf9c67ec7e05dd/stdout.log",
+      "stderr": "/tmp/normal-dvr-roles/f01d72354fd943d9a1bf9c67ec7e05dd/stderr.log"
+    },
+    "shutdown_started": true,
+    "signal_settled": true,
+    "actual_master_SIGTERM_sent": true,
+    "shutdown_settled": true,
+    "running": false,
+    "actual_exit": 0,
+    "actual_wait_completed": true,
+    "forced": false,
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "failures": [],
+    "actual_reaped_adopted_children": [],
+    "owned_generations": [
+      {
+        "pid": 926,
+        "starttime": "20877610",
+        "absent": true
+      }
+    ],
+    "all_original_process_generations_absent": true
+  },
+  "strict_Beat_equality_relaxed": false
+}
