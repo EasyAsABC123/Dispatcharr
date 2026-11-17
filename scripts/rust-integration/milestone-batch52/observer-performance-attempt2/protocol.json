@@ -1,0 +1,253 @@
+{
+  "status": "executable_overlay_prepared_NOT_RUN",
+  "credit": "Original Dispatcharr authors retain all application and algorithm credit; FFmpeg authors retain codec/tool credit.",
+  "scope": "Full normal graph loaded; steady VLC-input live MPEGTS only; idle consumers. No active-recording/recovery/full migration acceptance.",
+  "levels": [
+    {
+      "viewers": 1,
+      "continuous_requests_per_viewer": 1,
+      "same_channel": true,
+      "upstream_connections": 1,
+      "provider_slots": 1,
+      "cell": "plan-live-1"
+    },
+    {
+      "viewers": 2,
+      "continuous_requests_per_viewer": 1,
+      "same_channel": true,
+      "upstream_connections": 1,
+      "provider_slots": 1,
+      "cell": "representative-fullgraph-two-viewer"
+    },
+    {
+      "viewers": 10,
+      "continuous_requests_per_viewer": 1,
+      "same_channel": true,
+      "upstream_connections": 1,
+      "provider_slots": 1,
+      "cell": "plan-live-10"
+    },
+    {
+      "viewers": 100,
+      "continuous_requests_per_viewer": 1,
+      "same_channel": true,
+      "upstream_connections": 1,
+      "provider_slots": 1,
+      "cell": "plan-live-100"
+    }
+  ],
+  "phase_order_per_level": [
+    "Original",
+    "Native",
+    "Native",
+    "Original",
+    "Original",
+    "Native"
+  ],
+  "paired_trials": 3,
+  "warmup_seconds": 15,
+  "measurement_seconds": 60,
+  "samples": 61,
+  "sample_interval_seconds": 1,
+  "readiness_before_warmup": [
+    "Main HTTP serving",
+    "all selected workers/Beat ready",
+    "startup recovery settled",
+    "all expected CG/PID generations inventoried",
+    "independent reference+output-rate authority complete"
+  ],
+  "fixed_profile": {
+    "input_fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+    "seconds": 300,
+    "video": "H264 AnnexB/AUD 320x180 25fps; one AU per PES",
+    "audio": "AAC ADTS mono48kHz1024 samples/frame",
+    "transform": "actual configured Original0027 VLC copy/remux input template; identical unmodified parameters; exact argv hash frozen before execution",
+    "input_mux_rate_not_output_rate": true,
+    "output_rate_authority": "independent exact fixed-profile remux index before viewers, never candidate-fitted"
+  },
+  "media_window": {
+    "clock": "shared monotonic",
+    "read_ledger_chunk_cap_bytes": 65536,
+    "unit_index": "complete_units.py, original TS byte order",
+    "selection": "whole reads inside T0/T1; whole PES+closure proof inside selected bytes",
+    "PTS_sorting": false,
+    "post_window_drain_seconds": 5,
+    "post_window_work_counted": false,
+    "drain_derivation": "ceil(2*2.048+max independently indexed PES span)<=5; larger bound blocks binding",
+    "all_units_touching_window_require_closure_by_drain": true,
+    "batch_bytes": 255868,
+    "single_conservative_encoded_batch_seconds": 2.0480000000000587,
+    "additional_boundary_allowance_seconds": 0,
+    "full_raw_decode_always": true,
+    "outer_cut_exception": "requires exact per-PID outside-window certificate and clean separately hashed derivative decode; raw status retained",
+    "internal_damage_allowed": false,
+    "content": "all selected+context units match unique contiguous independent A/V content; exact durations/hash/size; no fitted timestamps"
+  },
+  "budgets_unchanged_from_plan": {
+    "max_CPU_ratio": 0.9,
+    "max_memory_ratio": 0.95,
+    "max_first_byte_ratio": 1.1,
+    "first_byte_floor_ms": 50,
+    "minimum_throughput_ratio": 0.95,
+    "minimum_viewer_rate_fraction": 0.9,
+    "maximum_viewer_rate_fraction": 1.1,
+    "minimum_samples": 50,
+    "maximum_errors": 0,
+    "maximum_OOM_events": 0,
+    "cleanup_seconds": 60
+  },
+  "existing_decoder_gate_preserved": {
+    "decoder_prefix_bytes_per_viewer": 2097152,
+    "decoder_min_video_frames": 25,
+    "decoder_output_seconds": 5,
+    "decoder_scope": "Source-derived bounded playback recovery: two-second GOP, allow up to two seconds of startup resynchronization, then decode within five-second output cap on an eight-second2MiB capture. Raw-prefix probe warnings and arbitrary tail remain separate; no every-byte decoder claim. Selected before any Native playback results/resource metrics."
+  },
+  "resource_limits": {
+    "Source_backend_plus_infrastructure": {
+      "nano_cpus": 3000000000,
+      "memory_bytes": 3221225472,
+      "pids": 1024,
+      "swap": 0
+    },
+    "Native_backend": {
+      "nano_cpus": 2000000000,
+      "memory_bytes": 2147483648,
+      "pids": 512,
+      "swap": 0
+    },
+    "Native_shared_infrastructure": {
+      "nano_cpus": 1000000000,
+      "memory_bytes": 1073741824,
+      "pids": 512,
+      "swap": 0
+    },
+    "Origin": {
+      "nano_cpus": 2000000000,
+      "memory_bytes": 536870912,
+      "pids": 128,
+      "swap": 0
+    },
+    "publication_observer": {
+      "nano_cpus": 500000000,
+      "memory_bytes": 100663296,
+      "pids": 32
+    },
+    "Source_headroom": "<=85% effective3CPU, <=90%chargedlimit, <=5%throttledperiods",
+    "scope": "explicit equal aggregate fullgraph budget; not image57 inherited; no adaptive inflation"
+  },
+  "resource_boundary": {
+    "services": "Main + every normal worker/Beat/recovery + all media children + PG/Redis + compatibility subprocesses + deterministic Origin",
+    "observers": "dedicated owned orchestrator and sampler systemd scopes",
+    "ratios_primary": "sum backend+infrastructure+Origin",
+    "reported_totals": [
+      "backend+infrastructure",
+      "Origin",
+      "observers+orchestrator",
+      "whole_fixture"
+    ],
+    "cpu": "raw cpu.stat usage_usec delta / actual monotonic elapsed",
+    "charged_memory": "memory.current",
+    "working_memory": "max(0,memory.current-inactive_file); working-set estimate, not RSS",
+    "peak": "max same-tick aggregate, not sum individual peaks",
+    "memory_peak": "lifetime context only",
+    "overlapping_cgroups": "reject",
+    "accounting_skew": "retain per-tick begin/end timestamps"
+  },
+  "equivalence": {
+    "errors": 0,
+    "OOM": 0,
+    "all_viewers_and_streams_required": true,
+    "first_byte": "p95 actual response latency; 50ms comparison floor",
+    "throughput": "actual whole-window TS bytes/sec AND independently indexed encoded useful A/V bytes/sec; both candidate/source>=0.95",
+    "per_viewer_rate": "0.90..1.10 of independently known fixed-profile useful output rate; input CBR padding not authority",
+    "useful_span": "each stream within one single batch bound of 60s; max-min spans across all viewers/phases <= same single bound",
+    "schedule": "freeze actual equal schedule rows and task completion ledger; extra/missing periodic work invalidates phase",
+    "cache": "verified symmetric reset/restart between all phases; bootstrap reusable, backend warm cache not one-sided"
+  },
+  "cleanup_seconds": 60,
+  "retry_or_fallback": false,
+  "failed_pairs_discardable": false,
+  "blocks_before_execution": [
+    "whole affected functional recording/Core acceptance",
+    "Root image/protocol/budget review",
+    "Root exclusive quiet lease"
+  ],
+  "previous_results": "Old preflight/v2 remain failed. Offline diagnostics cannot accept old phases. Image57 ratios never transfer.",
+  "implementation": {
+    "ledger": "bounded64KiB actual read begin/end/offset/hash",
+    "drain": "fixed5s fromT1; never success-driven",
+    "certificate": "perPID outside-window preIDR/prefix/unclosedtail only; exact removedranges/derivativehash; rawunchanged",
+    "content": "selected raw+clean derivative AV units independently matched; all complete internal context matched; first AAC-LC1024sample priming unit strictly beforeW0 may differ inPCMhash only",
+    "no_old_acceptance_transfer": true
+  },
+  "source_compatibility": {
+    "nginx_template": {
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "path": "docker/nginx.conf",
+      "sha256": "c96911de9034e9ea7988e98e5afeec91b756094c34e75a9d58482a8d4846bfd3",
+      "fixture_transformations": [
+        "port8081",
+        "ownedUnixsocket/tmp",
+        "absoluteuwsgiinclude",
+        "stderrkeyword",
+        "fixedIPv4listener"
+      ]
+    },
+    "workers": [
+      "uWSGI1/gevent400",
+      "Daphne",
+      "nginx auto",
+      "Celery prefork1 normalcontrol/gossip/heartbeat",
+      "DVR threads20",
+      "Beat DatabaseScheduler defaultinterval",
+      "FFmpeg1",
+      "PG17",
+      "Redis"
+    ],
+    "Native": "production Main selectedjobs+Beat, /data only"
+  },
+  "idle_business_work": {
+    "settings": "actual Beatrowsdisabled beforestartup; verify poststartup+postwindow; reinstallationinvalidates",
+    "publications": "separate capped Redis keyspaceobserver actualbroker1 celery/dvr pushes; any withinfixedwindow invalidates",
+    "housekeeping": "actual sourcecontrol/gossip/heartbeat enabled+counted"
+  },
+  "clock_limits": {
+    "maximum_sample_lag_seconds": 0.05,
+    "maximum_counter_read_skew_seconds": 0.05,
+    "maximum_60s_endpoint_drift_seconds": 0.05
+  },
+  "gain_qualification": "all24 phases and every12 pair must pass; report allratios/ranges, no failedpair/reader exclusion; fullmigration/activeDVR claimsalwaysfalse",
+  "owned_media_proxy": {
+    "shared_service": "origin",
+    "same_both_graphs": true,
+    "counts_in": "origin and whole-fixture and primary",
+    "fixed_target": "127.0.0.1:8080 inside actual deterministic Origin",
+    "HTTP_authority": "origin:8080",
+    "allowed_paths": "/live/[0-9]{1,20}.ts",
+    "allowed_methods": [
+      "GET",
+      "HEAD"
+    ],
+    "CONNECT": false,
+    "handler_cap": 4,
+    "per_request_bytes": 134217728,
+    "per_request_seconds": 180,
+    "read_bytes": 65536,
+    "I/O_timeout_seconds": 3,
+    "no_new_cgroup_budget": true,
+    "common_app_controller_unchanged": "six slots/twelve workers on both graphs"
+  },
+  "measurement_protocol_revision": "persistent-infrastructure-observer-2-bounded100profile",
+  "prior_protocol_preserved": "Candidate52 original19attempt/18valid/fiveunrun and prior fresh2pilot remain immutable; no pooling",
+  "redis_observation": "Two unchanged synchronous EVALs per snapshot through one persistent baseline-cgroup helper; helper costs charged, no subtraction",
+  "counter_metadata_capture": {
+    "passive_profile_bytes_max": 131072,
+    "counter_message_bytes_max": 262144,
+    "declared_viewers_max": 100,
+    "actual10_profile_bytes": 63526,
+    "retained_shape_plus90_reader_threads_control_bytes": 84406,
+    "failure_diagnostics": "exact stage/type/message bounded512characters; actual original RuntimeError message not recovered",
+    "budgets_and_accounting_unchanged": true,
+    "requires_fresh_Source_Native100viewer_protocol_qualification": true
+  }
+}

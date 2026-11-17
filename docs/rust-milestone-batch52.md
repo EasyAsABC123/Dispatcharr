@@ -130,9 +130,19 @@ inside the corrected 131,072-byte bound. Framed replies remain bounded at
 CPU, memory, media, clock and accounting budgets remain unchanged, and every
 observer cost remains charged. This pilot qualifies the protocol only.
 
-A separate fresh 24-phase campaign is running with the verified configuration:
-three alternating Source/Native pairs at each of 1, 2, 10 and 100 viewers.
-Neither earlier phases nor pilot measurements contribute to its result.
-Candidate52 has no accepted performance gain until that complete campaign and
-its cleanup have been evaluated. Active recording/refresh workloads and all
-formal M0–M9 milestones remain open.
+The [second fresh 24-phase campaign](../scripts/rust-integration/milestone-batch52/observer-performance-attempt2/index.json)
+exits 1 after all 24 phases execute: 23 validate, while the last Native 100-viewer
+trial 3 phase violates the unchanged zero-swap gate. At tick 52 the external
+orchestrator records 442,368 swap bytes; later swap also affects the external
+observer. All four service groups retain zero swap and zero OOM deltas. The
+phase still captures 61 counter ticks, 62 clean metadata requests and 100
+individually qualified readers/200 successful physical decodes. Its final media
+gate stays false because valid resource state is mandatory. The underlying
+kernel/global reclaim trigger is not established.
+
+Root consumes exit 1 in 5,377.679883 seconds with EOF/group settlement and verifies
+84 exact containers and 24 projects absent, without adding an independent
+aggregate host-generation claim. No earlier phase/pilot is pooled, no valid
+subset or pair is accepted, and no rerun, exclusion, subtraction or threshold
+change is used. Candidate52 has no accepted performance gain. Active
+recording/refresh workloads and every formal M0–M9 milestone remain open.

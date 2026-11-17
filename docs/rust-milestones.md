@@ -9,11 +9,14 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-Candidate52's fresh 24-phase viewing campaign is in progress after a successful
-100-viewer protocol qualification. The [first campaign's failure](rust-milestone-batch52.md#fresh-viewing-performance-campaign)
-remains recorded separately: eighteen valid phases, an observer failure before
-sampling the first Source100 phase, and five unrun phases. No Candidate52 gains
-or complete milestones are accepted; the fresh campaign reuses no old phases.
+Candidate52's [second fresh 24-phase viewing campaign](../scripts/rust-integration/milestone-batch52/observer-performance-attempt2/index.json)
+exits 1 after 24 attempts and 23 valid phases. The last Native 100-viewer trial 3
+fails the unchanged zero-swap rule in external orchestrator/observer scopes;
+all service groups have zero swap/OOM and all 100 individual readers pass.
+Root verifies 84 exact containers and 24 projects absent. No valid subset,
+pair or gain is accepted. The [first campaign](rust-milestone-batch52.md#fresh-viewing-performance-campaign)
+and successful 100-viewer protocol pilot remain separate; no old phase is pooled.
+All complete milestones and active-work performance acceptance remain open.
 
 [Combined live/VOD settings reference](rust-milestone-batch53.md) qualifies twelve new admin PATCH/account-GET cells: one retained combined save checked offline after controller1, then eleven new cells under controller0 with an exact declared fifteen-table/fifteen-sequence import. Full rows/errors and all sequence effects are retained with only232 login-field redactions. Deferred FK failures consume both live/category sequence values while rolling back business writes. The Rust handler/physical-settlement correction remains private and uncompiled; the accepted image still refuses nonempty live groups. No M5, performance or complete milestone closure follows.
 

@@ -1,0 +1,154 @@
+{
+  "status": "ACTUAL_PHASE24_INVALID_ZERO_SWAP_BUDGET_NO_RERUN_OR_WAIVER",
+  "first_failed_budget": {
+    "tick": 52,
+    "monotonic": 228669.808032295,
+    "seconds_after_window_start": 52.004487992991926,
+    "swap_bytes": {
+      "orchestrator": 442368
+    }
+  },
+  "all_bad_ticks": [
+    {
+      "tick": 52,
+      "monotonic": 228669.808032295,
+      "seconds_after_window_start": 52.004487992991926,
+      "swap_bytes": {
+        "orchestrator": 442368
+      }
+    },
+    {
+      "tick": 53,
+      "monotonic": 228670.808543973,
+      "seconds_after_window_start": 53.00499967098585,
+      "swap_bytes": {
+        "orchestrator": 3989504
+      }
+    },
+    {
+      "tick": 54,
+      "monotonic": 228671.808542695,
+      "seconds_after_window_start": 54.004998393007554,
+      "swap_bytes": {
+        "orchestrator": 3989504
+      }
+    },
+    {
+      "tick": 55,
+      "monotonic": 228672.808026003,
+      "seconds_after_window_start": 55.004481701005716,
+      "swap_bytes": {
+        "observer": 413696,
+        "orchestrator": 3989504
+      }
+    },
+    {
+      "tick": 56,
+      "monotonic": 228673.804767713,
+      "seconds_after_window_start": 56.00122341100359,
+      "swap_bytes": {
+        "observer": 8249344,
+        "orchestrator": 3989504
+      }
+    },
+    {
+      "tick": 57,
+      "monotonic": 228674.806042412,
+      "seconds_after_window_start": 57.00249810999958,
+      "swap_bytes": {
+        "observer": 8540160,
+        "orchestrator": 3989504
+      }
+    },
+    {
+      "tick": 58,
+      "monotonic": 228675.806051604,
+      "seconds_after_window_start": 58.00250730200787,
+      "swap_bytes": {
+        "observer": 11649024,
+        "orchestrator": 3989504
+      }
+    },
+    {
+      "tick": 59,
+      "monotonic": 228676.808570367,
+      "seconds_after_window_start": 59.00502606498776,
+      "swap_bytes": {
+        "observer": 11649024,
+        "orchestrator": 3989504
+      }
+    },
+    {
+      "tick": 60,
+      "monotonic": 228677.808555799,
+      "seconds_after_window_start": 60.00501149700722,
+      "swap_bytes": {
+        "observer": 11649024,
+        "orchestrator": 3989504
+      }
+    }
+  ],
+  "classification": "Charged observer/orchestrator resource-budget violation; no observed sampler/metadata failure or application/media failure. Kernel/global reclaim trigger is not established by retained phase JSON.",
+  "service_swap_bytes_all_ticks": {
+    "baseline": 0,
+    "candidate": 0,
+    "origin": 0,
+    "publication-observer": 0
+  },
+  "resource_samples": 61,
+  "non_swap_live_state_bad_ticks": [],
+  "clock_passed": true,
+  "maximum_sample_lag_seconds": 0.005026064987760037,
+  "maximum_counter_read_skew_seconds": 0.0009037860145326704,
+  "all_service_OOM_deltas_zero": true,
+  "actual_VLC_generation_stable": true,
+  "metadata_helper": {
+    "actual_exit": 0,
+    "completed_requests": 62,
+    "normal_STOP": true,
+    "EOF": {
+      "stdout": true,
+      "stderr": true
+    }
+  },
+  "counter_sampler": {
+    "actual_exit": 0,
+    "measurement_completed": true,
+    "all_counter_FDs_closed": true,
+    "protocol_errors": []
+  },
+  "application": {
+    "ordinary_checks": 11,
+    "failed_check_names": [],
+    "candidate_functional_and_recovery_passed": true,
+    "Main_shutdown_exit": 0
+  },
+  "media": {
+    "reader_count": 100,
+    "individually_passed": 100,
+    "physical_decodes_exit0": 200,
+    "all_decode_failure_fields_None": true,
+    "overall_media_passed": false,
+    "reason": "Frozen complete_media final gate also requires resource sample live_state_passed=True; individual media passes cannot waive swap."
+  },
+  "failure_chain": [
+    "sampler.py290 all-group swap_current_bytes==0 fails tick52",
+    "resource.live_state_passed=False",
+    "complete_media.qualify overall passed=False despite100individual reader passes",
+    "phase.py612 report.passed=False",
+    "phase controller exit1",
+    "full24 v2 all_phases_valid=False/gain flags false;23 earlier valid phases remain unaccepted as a whole campaign"
+  ],
+  "retained_proofs": [
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate52-performance-prep-2/measured-full24-1/24-100-3-candidate/resource-samples.json",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate52-performance-prep-2/measured-full24-1/24-100-3-candidate/counter-sampler-settlement.json",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate52-performance-prep-2/measured-full24-1/24-100-3-candidate/metadata-observer-receipt.json",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m3-candidate52-performance-prep-2/measured-full24-1/24-100-3-candidate/shared-ts.json"
+  ],
+  "Root_cleanup": "Parent owns independent exact cleanup; no new cleanup/PID claims in this offline review",
+  "no_media_opened_hashed_decoded": true,
+  "new_runtime": false,
+  "threshold_changed": false,
+  "subset_retry_or_pooling": false,
+  "gain_accepted": false
+}
