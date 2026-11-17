@@ -28,6 +28,7 @@ relations and timestamps remain unchanged throughout each selected-account root.
 | Physical SQL | 42 statements and 18 wrong-bind controls pass |
 | Candidate49 packaged build and runtime | Build and all six package families pass |
 | Combined Native eight-context cohort | All eight pass; actual exit 0 in 468.441 seconds |
+| Clean public eight-context cohort | All eight pass; Native coordinator exit 0 in 474.460 seconds |
 | New application performance | Pending |
 
 The three-file Rust change removes two obsolete capability-refusal queries and
@@ -72,9 +73,8 @@ Evidence: [Source authority](../scripts/rust-integration/shared-metadata-source1
 [physical SQL](../scripts/rust-integration/milestone-batch49/physical/README.md),
 [package proofs](../scripts/rust-integration/milestone-batch49/package/inventory.json),
 and [eight-context acceptance](../scripts/rust-integration/milestone-batch49/application/index.json).
-Public eight-context reproduction, cross-provider transport variations, larger
-catalogues, additional metadata domains, performance and all complete M0–M9
-milestones remain open. Candidate48's public seven-context workflow retains its
+Cross-provider transport variations, larger catalogues, additional metadata
+domains, performance and all complete M0–M9 milestones remain open. Candidate48's public seven-context workflow retains its
 own image and scope.
 
 
@@ -95,8 +95,19 @@ Host validation on the accepted Candidate49 captures passes all four shared
 phases. Nineteen corruption controls reject credential drift, bootstrap changes,
 seed row/table/sequence/script changes, copied UUIDs, unrelated-owner timestamp
 changes, incorrect last-owner cleanup and altered cache/provider URLs. All four
-existing launcher admission controls pass. The clean public eight-context
-application run is still pending; these host checks do not qualify it.
+existing launcher admission controls pass. The subsequent clean public eight-context application run passes independently;
+its actual Native coordinator exit is 0 in 474.460 seconds, with both EOFs and
+settled group. It uses tools commit `c229773a709f5cb5b1109eb61196689eade8d4e8`,
+33 runtime Python helpers and the same Candidate49 image/1,445 Rust inputs.
+Only published safe Source evidence is read. All eight contexts pass, including
+strict shared four-root/eleven-sequence/seed/owner-cascade and dense six-root
+comparison. Root ran the launcher directly, so no whole-launcher elapsed time
+or outer coordinator EOF/group settlement is claimed. Native and UID coordinator
+receipts are retained separately. Root verifies eleven exact CIDs including UID,
+ten captured original host generations and the project absent; the initial UID
+host generation was not independently captured. The earlier relative-Docker-path
+pre-Popen failure and owned-marker resolution remain literal, separate evidence.
+See the [public packet](../scripts/rust-integration/milestone-batch49/public-application/index.json).
 
 Use the existing public launcher from a clean committed checkout whose Rust
 inputs match the chosen Candidate49 build record:

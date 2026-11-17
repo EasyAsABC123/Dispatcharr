@@ -22,8 +22,10 @@ metadata refusal. Source passes its four-root shared update/prune cohort, SDK67
 passes with 1,163 tests, and physical checks pass 42 statements and 18 wrong-bind
 controls. Its image, six package families and complete Native eight-context
 cohort now pass, including strict shared-account Source comparison and cleanup.
-Public eight-context reproduction, new performance and full milestones remain
-open.
+The clean public eight-context reproduction also passes using published safe
+Source evidence without private captures. Its Native coordinator exits 0 in
+474.460 seconds; the direct launcher has no separate whole-launcher timing or
+outer EOF/group instrumentation. New performance and full milestones remain open.
 
 [Candidate48](rust-milestone-batch48.md) implements bounded ordinary Movie/Series
 list metadata and logo lifecycle. Its six-case Source cohort passes, all SDK66
