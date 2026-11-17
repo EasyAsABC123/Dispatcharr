@@ -1,0 +1,50 @@
+{
+  "script": {
+    "sha256": "6795b4bc4a5e35a3dec11949cb7c27f47e3c9eb41c2f73ed1747c034f8d1f15f",
+    "seed_spec": {
+      "movie": [
+        {
+          "name": "Movie Persisted Target",
+          "year": 2010,
+          "tmdb_id": "7101",
+          "imdb_id": "tt7101",
+          "stream": "9701"
+        }
+      ],
+      "series": [
+        {
+          "name": "Series Persisted Target",
+          "year": 2010,
+          "tmdb_id": "8101",
+          "imdb_id": "tt8101",
+          "stream": "9801"
+        }
+      ]
+    },
+    "scope": "Only six VOD entity/relation tables and their automatic sequences; accounts/support tables untouched"
+  },
+  "setup-result": {
+    "declared_fixture_only": true,
+    "created": {
+      "movie": [
+        {
+          "id": 6,
+          "name": "Movie Persisted Target",
+          "tmdb_id": "7101",
+          "imdb_id": "tt7101",
+          "relation_id": 7
+        }
+      ],
+      "series": [
+        {
+          "id": 6,
+          "name": "Series Persisted Target",
+          "tmdb_id": "8101",
+          "imdb_id": "tt8101",
+          "relation_id": 7
+        }
+      ]
+    },
+    "no_manual_sequence_reset": true
+  }
+}

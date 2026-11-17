@@ -9,6 +9,13 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+[Candidate51](rust-milestone-batch51.md) has seventeen Source observations for
+international values, ordered identities and 1,000/2,001-row catalogue lifecycle.
+The original controller's scale-fixture failure and the separate scale-only pass
+remain explicit; twelve completed roots were reused without replay. Its Rust
+implementation is prepared privately; combined compiler, SQL, Docker, application
+and performance acceptance remain pending.
+
 [Candidate50](rust-milestone-batch50.md) adds the bounded, empty-language
 Movie/Series external-ID identity slice. Source passes nine characterized roots;
 SDK70 passes all four gates with 1,169 tests, and physical checks pass 45

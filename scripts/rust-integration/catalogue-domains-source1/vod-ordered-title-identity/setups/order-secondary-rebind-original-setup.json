@@ -1,0 +1,50 @@
+{
+  "script": {
+    "sha256": "874acf015944b1eb7296fb45c3a96af4608ddbb7fb4ff952cee9fc517cf25468",
+    "seed_spec": {
+      "movie": [
+        {
+          "name": "Movie IMDb Recheck Target",
+          "year": 2009,
+          "tmdb_id": null,
+          "imdb_id": "tt7101",
+          "stream": "9701"
+        }
+      ],
+      "series": [
+        {
+          "name": "Series IMDb Recheck Target",
+          "year": 2009,
+          "tmdb_id": null,
+          "imdb_id": "tt8101",
+          "stream": "9801"
+        }
+      ]
+    },
+    "scope": "Only six VOD entity/relation tables and their automatic sequences; accounts/support tables untouched"
+  },
+  "setup-result": {
+    "declared_fixture_only": true,
+    "created": {
+      "movie": [
+        {
+          "id": 7,
+          "name": "Movie IMDb Recheck Target",
+          "tmdb_id": null,
+          "imdb_id": "tt7101",
+          "relation_id": 9
+        }
+      ],
+      "series": [
+        {
+          "id": 7,
+          "name": "Series IMDb Recheck Target",
+          "tmdb_id": null,
+          "imdb_id": "tt8101",
+          "relation_id": 9
+        }
+      ]
+    },
+    "no_manual_sequence_reset": true
+  }
+}
