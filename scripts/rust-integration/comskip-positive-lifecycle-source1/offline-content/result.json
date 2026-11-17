@@ -1,0 +1,101 @@
+{
+  "input": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/data/comskip-positive-manual/cut/recording.mkv",
+    "bytes": 37212976,
+    "sha256": "5f99c17c67d3b29da75b86e694ea13c0137c2675b5d3ae405c110364d74b1787",
+    "generation": [
+      37,
+      34500698,
+      37212976,
+      1794909234749248947,
+      1794909234768249370
+    ]
+  },
+  "tool": {
+    "path": "/usr/local/bin/ffmpeg",
+    "sha256": "5831afcbcb9dc46107b633dc09f276794dc094b70aacfda6096eeceb83f013f0"
+  },
+  "actual_decoder_argv": [
+    "ffmpeg",
+    "-nostdin",
+    "-hide_banner",
+    "-loglevel",
+    "error",
+    "-threads",
+    "1",
+    "-copyts",
+    "-i",
+    "/evidence/recording.mkv",
+    "-map",
+    "0",
+    "-c:v",
+    "rawvideo",
+    "-c:a",
+    "pcm_f32le",
+    "-threads:v",
+    "1",
+    "-threads:a",
+    "1",
+    "-fps_mode",
+    "passthrough",
+    "-enc_time_base:v",
+    "demux",
+    "-enc_time_base:a",
+    "1:48000",
+    "-avoid_negative_ts",
+    "disabled",
+    "-f",
+    "framehash",
+    "-hash",
+    "sha256",
+    "-"
+  ],
+  "framehash": {
+    "path": "/home/justin/github/Dispatcharr/artifacts/rust/m6-comskip-lifecycle-source-public-curation-1/manual-cut-content-actual-2/command-0006.stdout",
+    "bytes": 3888633,
+    "sha256": "500d1a5d5a76bcf2034a1e9e9ac59dd02c9e3e7196daa01da66fd173e6315a89",
+    "frame_counts": {
+      "0": 12076,
+      "1": 22641
+    },
+    "complete_all_streams": true,
+    "video_time_base": "1/1000",
+    "audio_time_base": "1/48000",
+    "audio_sample_storage": "float32 little-endian; no integer quantization",
+    "no_frame_rate_or_audio_rate_channel_transform": true
+  },
+  "decode_receipt": {
+    "actual_exit": 0,
+    "failure": null,
+    "seconds": 3.149623553996207,
+    "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m6-comskip-lifecycle-source-public-curation-1/manual-cut-content-actual-2/command-0006.stdout",
+    "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m6-comskip-lifecycle-source-public-curation-1/manual-cut-content-actual-2/command-0006.stderr",
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "process_group": 199471,
+    "process_group_settled": true,
+    "remaining_group_members": [],
+    "reaped_descendants": [],
+    "output_bytes_written": 3888633,
+    "output_bytes_discarded": 0
+  },
+  "passed": true,
+  "failure": null,
+  "seconds": 4.439621108002029,
+  "owned_cleanup": {
+    "project": "dispatcharr-comskip-content-4fbc72afc019",
+    "CID": "3a906b9942b8fdc975432fae907ab724aeee59c4f631c66c6d5eff3cdc5f80d4",
+    "hostPID": 199261,
+    "starttime": "23541266",
+    "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "containers_absent": true,
+    "networks_absent": true,
+    "volumes_absent": true,
+    "CID_absent": true,
+    "original_generation_absent": true
+  },
+  "Source_business_replayed": false,
+  "new_applications": 0,
+  "performance_or_Native_acceptance": false,
+  "all_commands_EOF_group_settled": true
+}

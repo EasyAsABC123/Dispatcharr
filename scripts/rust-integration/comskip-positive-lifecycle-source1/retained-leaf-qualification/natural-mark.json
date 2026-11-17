@@ -1,0 +1,153 @@
+{
+  "status": "ACTUAL_NATURAL_MARK_BUSINESS_AND_EXACT_THREE_PUBLICATION_GRAPH_QUALIFIED_OFFLINE_WHOLE_CONTROLLER_STILL1",
+  "whole_controller_exit": 1,
+  "new_Source_task_calls": 0,
+  "all_captured_post_journal_assertions_replayed_exactly": true,
+  "post_journal_assertion_count": 22,
+  "full_actual_journal_retained": true,
+  "actual_publication_graph": [
+    {
+      "task": "apps.channels.tasks.prefetch_recording_artwork",
+      "id": "3628d4d6-0d4d-42de-9f28-2c6611f506a5",
+      "queue": "celery",
+      "parent_id": null,
+      "root_id": "3628d4d6-0d4d-42de-9f28-2c6611f506a5"
+    },
+    {
+      "task": "apps.channels.tasks.run_recording",
+      "id": "1e738fc8-d49f-4fdf-9379-f45ffbb52e48",
+      "queue": "dvr",
+      "parent_id": null,
+      "root_id": "1e738fc8-d49f-4fdf-9379-f45ffbb52e48"
+    },
+    {
+      "task": "apps.channels.tasks.comskip_process_recording",
+      "id": "d6740fcb-ce91-4d75-a108-5db32a611c5c",
+      "queue": "celery",
+      "parent_id": "1e738fc8-d49f-4fdf-9379-f45ffbb52e48",
+      "root_id": "1e738fc8-d49f-4fdf-9379-f45ffbb52e48"
+    }
+  ],
+  "booking_artwork_eta_minus_actual_publication_seconds": 0.9918889999389648,
+  "artwork_backend_not_captured": true,
+  "artwork_backend_qualification": false,
+  "strict_recording_Comskip_backends_and_children_passed": true,
+  "actual_input_duration_seconds": 519.861,
+  "actual_media_sha256": "8e430d488e5d472328dd12ccb206b6d2e76bb24d09edf2fff90e3c2fee541fd0",
+  "actual_media_bytes": 37370261,
+  "actual_Comskip_custom_INI_argv_observed": true,
+  "cut_not_run": true,
+  "remaining_Source_business_roots": [
+    "natural-automatic-cut"
+  ],
+  "no_known_mark_or_manual_replay_required": true,
+  "global_two_publication_expectation_failed_and_preserved": true,
+  "raw_refs": [
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/EDL-watch-errors.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/HTTP.json",
+      "sha256": "aeb43b22d3f6c5ce54dd6c1dd0b8e3b068206763c899573d04085f4d690a4d97",
+      "bytes": 491
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/SQL-after.json",
+      "sha256": "99c34fd216d1bc10e9bf2e9de4cdcd24c0f9f2eea7df49af62af9306f4f4af18",
+      "bytes": 4888
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/SQL-before.json",
+      "sha256": "710cedbaa4f46b0b788f1c1d062ebcbf5b8d7f2212522c3f343d7a3b6035f3fb",
+      "bytes": 1445
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/WS.json",
+      "sha256": "f352632e9fc1c34bddc25056a6fb20b455c4181924c2d37e70d65eaf02ebb68a",
+      "bytes": 14827
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/actual-Comskip-child-argv.json",
+      "sha256": "69392f1262c8a531d3b7933a9ab884de4b4e09e260f748cdbb092725fefbdef1",
+      "bytes": 2157
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/actual-UID65532-settings-paths.json",
+      "sha256": "7df5e125dff905e1d6687ccdcd15f2de345583ee164e085ccc462c0031abc525",
+      "bytes": 1035
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/actual-detector-input-media.json",
+      "sha256": "b3c7d5158dcc2957749b760fc56b5081955e6fe3f30f4b5d2be007ace757a886",
+      "bytes": 1351
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/actual-detector-inputs.json",
+      "sha256": "2e9d4c2bedc6e860e7c3133143c66d926a27439e4294a0fa547f755a5064e91e",
+      "bytes": 649
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/actual-generated-EDL.json",
+      "sha256": "78e1202ada4e3601e512681ca91d95788c72a9711db607557c1f8334172d9a81",
+      "bytes": 403
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/comskip-backend.json",
+      "sha256": "afca7715be48a4818cc79c8ebc4e37088ee5026a33371a853c4ce1d1fab2838f",
+      "bytes": 242
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/comskip-frame.json",
+      "sha256": "064ab2d15de0a97030d37f0ad57105338e6fbc8f9d440035deff7ffa7c2495c7",
+      "bytes": 1167
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/journal.json",
+      "sha256": "8eb698cb581602b33ea1eb3df6618e8bf3013610a110d41c69a18eebe30da5d6",
+      "bytes": 388205
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/media-after.json",
+      "sha256": "d77c852b203fd4b6fd6d4be78e8431512b3218f0f9381e591d3eebb591e8d2c1",
+      "bytes": 70363
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/observer-capture-directory-ownership.json",
+      "sha256": "ab89706de3f305697f3dd8be5a37780f7093f837801504c96ca9d4dc6f1a152c",
+      "bytes": 593
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/recording-backend.json",
+      "sha256": "3d0177f7bf8feb33baef03779332350c7942307ce0dc76ab646a46b195c10381",
+      "bytes": 291
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/recording-frame.json",
+      "sha256": "700baab9f59d9b17fd5299f788756f35573e12e736a57fa86387969f4a0ecbb4",
+      "bytes": 1337
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-5/fixtures/Original-d7eed996/comskip-positive-automatic/private/natural-automatic-mark/settings-delta.json",
+      "sha256": "b70163f5635858a1d177fd4f9ff6cfa70880a732dd3b624bb66b45bd48ffb10b",
+      "bytes": 557
+    }
+  ],
+  "credit": "Original Dispatcharr/Comskip/FFmpeg/Celery authors retain their work credit",
+  "gain_accepted": false,
+  "full_milestone_accepted": false,
+  "actual_Root_proofs": {
+    "Root-terminal.json": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-comskip-positive-source-5/Root-terminal.json",
+      "sha256": "53365bebf27f5059f7813955feda56a9d83a80d57c600b70b7e6d76533940e5f"
+    },
+    "Root-independent-cleanup.json": {
+      "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-comskip-positive-source-5/Root-independent-cleanup.json",
+      "sha256": "46351ea2a5b322349840aaafe2ccf59028b8ebac4ee1f579e74642d504bfeeea"
+    }
+  },
+  "source_booking_authority": "Original-source/apps/channels/signals.py post_save prefetch_recording_artwork.apply_async(args=[id],countdown=1)",
+  "Native_booking_prefetch_already_implemented": "normal_booking_publication.rs schedule_booking_context artwork path; selected_jobs composes existing ArtworkRootPublisher",
+  "new_production_publication_patch_needed_for_this_extra_root": false
+}

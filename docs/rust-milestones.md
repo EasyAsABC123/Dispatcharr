@@ -9,6 +9,14 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+Candidate53's [Native plugin metadata transport batch](../scripts/rust-integration/plugin-repository-transport-native1/index.json)
+captures all twelve requests but exits 1 in 130.630 seconds. Strict comparison
+finds a startup notification timestamp that fails to advance. An offline
+diagnostic then isolates response Allow/Vary and transport-header differences;
+other projected business fields match. Root verifies six exact containers, five
+captured host generations and the project absent. These differences remain
+required fixes; this capture grants no plugin or milestone acceptance.
+
 Candidate52's [second fresh 24-phase viewing campaign](../scripts/rust-integration/milestone-batch52/observer-performance-attempt2/index.json)
 exits 1 after 24 attempts and 23 valid phases. The last Native 100-viewer trial 3
 fails the unchanged zero-swap rule in external orchestrator/observer scopes;
@@ -30,8 +38,14 @@ now qualifies offline: two commercial ranges and three kept segments reduce
 controller also exits 1: the helper expected a custom INI path while Source
 reports its default path. That mismatch stays literal; the captured directory
 permissions support an explanation, but actual worker argv/getter evidence was
-not captured. Sequence equivalence is unobserved. Cut-repeat, natural automatic
-processing and Rust positive acceptance remain pending.
+not captured. Sequence equivalence is unobserved for that manual cut capture.
+A later cut-repeat is qualified, followed by natural 520-second automatic MARK
+and CUT captures. MARK's business assertions qualify offline while its
+controller's two-task expectation rejects the real causal artwork publication;
+its artwork backend remains unobserved. The following CUT controller exits 0
+with all three causal publications and backends. The manual CUT decoded-content
+authority covers 12,076 video frames and 22,641 audio frames. Full Native positive
+acceptance remains pending.
 
 [Language lifecycle reference](rust-milestone-batch52.md) now passes eleven
 Original refresh roots across two accounts, six category-settings PATCH calls

@@ -1,0 +1,163 @@
+{
+  "recordings": [
+    {
+      "id": 1,
+      "channel_id": 1,
+      "start_time": "2026-11-17 13:04:15.700428+00:00",
+      "end_time": "2026-11-17 13:12:55.700428+00:00",
+      "task_id": "dvr-recording-1",
+      "custom_properties": {
+        "status": "completed",
+        "comskip": {
+          "edl": "20261117_130415.edl",
+          "status": "completed",
+          "ini_path": "/shared/comskip-positive-media/positive.ini",
+          "commercials": 2,
+          "segments_kept": 3
+        },
+        "program": {
+          "title": "Offline benchmark channel 0"
+        },
+        "ended_at": "2026-11-17 13:12:57.616318",
+        "file_url": "/api/channels/recordings/1/file/",
+        "file_name": "20261117_130415.mkv",
+        "file_path": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261117_130415.mkv",
+        "started_at": "2026-11-17 13:04:15.734616",
+        "bytes_written": 40247604,
+        "remux_success": true,
+        "output_file_url": "/api/channels/recordings/1/file/",
+        "fixture_case_label": "natural-automatic-cut"
+      }
+    }
+  ],
+  "DVR": {
+    "comskip_mode": "cut",
+    "comskip_enabled": true,
+    "comskip_hw_accel": "none",
+    "pre_offset_minutes": 0,
+    "comskip_custom_path": "/shared/comskip-positive-media/positive.ini",
+    "post_offset_minutes": 0
+  },
+  "dvr_clocked": [],
+  "clocked": [],
+  "events": [
+    {
+      "id": 1,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-01 03:04:05+00:00",
+      "channel_id": null,
+      "channel_name": null,
+      "details": {
+        "ordinal": 1,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 2,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-02 03:04:05.123456+00:00",
+      "channel_id": null,
+      "channel_name": "rust-probe-event",
+      "details": {
+        "ordinal": 2,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 3,
+      "event_type": "rust-probe-event-kind",
+      "timestamp": "2020-01-03 03:04:05+00:00",
+      "channel_id": "00000000-0000-0000-0000-000000000000",
+      "channel_name": "rust-probe-event",
+      "details": {
+        "ordinal": 3,
+        "fraction": 1.5,
+        "integral": 2.0
+      }
+    },
+    {
+      "id": 4,
+      "event_type": "vod_stop",
+      "timestamp": "2020-01-04 03:04:05+00:00",
+      "channel_id": null,
+      "channel_name": "rust-probe-display-event",
+      "details": {
+        "owned_fixture": true
+      }
+    },
+    {
+      "id": 5,
+      "event_type": "recording_start",
+      "timestamp": "2026-11-17 13:04:15.730593+00:00",
+      "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "channel_name": "Offline benchmark channel 0",
+      "details": {
+        "recording_id": 1
+      }
+    },
+    {
+      "id": 6,
+      "event_type": "channel_start",
+      "timestamp": "2026-11-17 13:04:15.768582+00:00",
+      "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "channel_name": "Offline benchmark channel 0",
+      "details": {
+        "stream_id": 1,
+        "stream_name": "Offline benchmark stream 0"
+      }
+    },
+    {
+      "id": 7,
+      "event_type": "client_connect",
+      "timestamp": "2026-11-17 13:04:20.331863+00:00",
+      "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "channel_name": "Offline benchmark channel 0",
+      "details": {
+        "username": null,
+        "client_id": "client_1794920655751_4809",
+        "client_ip": "127.0.0.1",
+        "user_agent": "Dispatcharr-DVR/recording-1"
+      }
+    },
+    {
+      "id": 8,
+      "event_type": "recording_end",
+      "timestamp": "2026-11-17 13:12:57.620018+00:00",
+      "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "channel_name": "Offline benchmark channel 0",
+      "details": {
+        "status": "completed",
+        "outcome": "success",
+        "end_time": "2026-11-17T13:12:55.700428+00:00",
+        "file_url": "/api/channels/recordings/1/file/",
+        "has_file": true,
+        "file_name": "20261117_130415.mkv",
+        "file_path": "/data/recordings/TV_Shows/Offline benchmark channel 0/20261117_130415.mkv",
+        "file_size": 37370261,
+        "start_time": "2026-11-17T13:04:15.700428+00:00",
+        "recording_id": 1,
+        "bytes_written": 40247604,
+        "remux_success": true,
+        "failure_reason": null,
+        "interrupted_reason": null
+      }
+    },
+    {
+      "id": 9,
+      "event_type": "client_disconnect",
+      "timestamp": "2026-11-17 13:12:58.893255+00:00",
+      "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "channel_name": "Offline benchmark channel 0",
+      "details": {
+        "duration": 518.54,
+        "username": null,
+        "client_id": "client_1794920655751_4809",
+        "client_ip": "127.0.0.1",
+        "bytes_sent": 130492680,
+        "user_agent": "Dispatcharr-DVR/recording-1"
+      }
+    }
+  ]
+}

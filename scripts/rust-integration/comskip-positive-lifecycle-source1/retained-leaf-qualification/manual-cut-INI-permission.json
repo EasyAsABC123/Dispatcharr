@@ -1,0 +1,55 @@
+{
+  "state": "RETAINED_FILESYSTEM_AND_SOURCE_CODE_AUTHORITY_NO_LIVE_PROBE",
+  "stat_rows": [
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/data/comskip-positive-media",
+      "retained_postrun_stat": true,
+      "mode": "0o700",
+      "host_uid": 1000,
+      "host_gid": 1000,
+      "inode": 34499668
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-2/fixtures/Original-c878eb5c/data/comskip-positive-media/positive.ini",
+      "retained_postrun_stat": true,
+      "mode": "0o644",
+      "host_uid": 65534,
+      "host_gid": 65534,
+      "inode": 34499671,
+      "sha256": "6ec0b7fa8ed1c16a10e7cf665ae7174b6a1ca6d78f7da7ead6a7a01fdc1c61f7"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-1/fixtures/Original-5f9f779d/data/comskip-positive-media",
+      "retained_postrun_stat": true,
+      "mode": "0o755",
+      "host_uid": 1000,
+      "host_gid": 1000,
+      "inode": 34164730
+    },
+    {
+      "path": "artifacts/rust/normal-graph-comskip-positive-source-1/fixtures/Original-5f9f779d/data/comskip-positive-media/positive.ini",
+      "retained_postrun_stat": true,
+      "mode": "0o644",
+      "host_uid": 65534,
+      "host_gid": 65534,
+      "inode": 34164732,
+      "sha256": "6ec0b7fa8ed1c16a10e7cf665ae7174b6a1ca6d78f7da7ead6a7a01fdc1c61f7"
+    }
+  ],
+  "frozen_role_owner": {
+    "path": "artifacts/rust/m6-comskip-positive-source-driver-3/cohort/role_owner.py",
+    "sha256": "d421f381df6f2e1ed6e69d97498bcd0563a3dc43d1c9c0cb7d0e0b61a30327f3",
+    "preexec_user": "os.setgid(65532);os.setuid(65532)",
+    "actual_role_uid_from_separate_process_status_captured": false
+  },
+  "fixture_source": {
+    "path": "artifacts/rust/m6-comskip-positive-source-driver-3/cohort/comskip_positive_cases.py",
+    "sha256": "02a0338c4a16d360afbe7500148581ac4ab7063b630522934d8fb752e12f8f2b",
+    "directory_creation": "target.mkdir(mode=0o755,exist_ok=False) subject to umask; no directorychmod follows",
+    "file_changes": "files chowned65532/chmod0644, directory unchanged"
+  },
+  "Source_selection": "custom getter errors are caught; candidate accepted only if os.path.exists(path); first existing /etc/comskip/comskip.ini then /app/docker/comskip.ini fallback. Same selected_ini is appended to command and persisted in CP by code.",
+  "observed_effect": "CP reports /app/docker/comskip.ini; custom path setting/host file retained. Source2 parent0700 prevents a plainUID65532 role traversing it, whereas Source1 parent0755 permits traversal.",
+  "limit": "Actual worker getter return/exception, os.path.exists result and Comskip argv were not captured; do not assert these as observed receipts or a Redis cache failure.",
+  "future_scope": "Correct only owned fixture directorymode explicitly then capture actual getter/path/readability before missing cutrepeat/automatic cases; do not rerun known cut simply to green."
+}

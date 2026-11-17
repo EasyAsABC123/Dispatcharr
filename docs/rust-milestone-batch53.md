@@ -78,8 +78,22 @@ changes only that test observer to read explicit last_value/log_cnt/is_called
 fields, preserving all59 public sequence states and both temporary sequences
 without nextval. It does not weaken the default audit or change production SQL.
 
-Complete Source automatic-processing qualification and the new full Native/public
-workflow remain pending. These facts do not close Rust/M5,
+The [six-leaf Source packet](../scripts/rust-integration/comskip-positive-lifecycle-source1/index.json)
+now also has a qualified cut-repeat and two natural 520-second recordings
+that trigger automatic commercial processing. The automatic MARK capture passes
+its remaining business assertions offline after its controller rejects the real
+third publication: booking artwork, recording root and commercial-processing
+child are all causal. Its artwork backend was not captured. The subsequent CUT
+controller exits 0 with that complete three-task graph, artwork backend, actual
+detector arguments, retained original input and complete audio/video decode.
+These are distinct retained observations, not a single passing six-cell run.
+The manual CUT reference additionally retains hashes for all 12,076 decoded video
+frames and 22,641 decoded audio frames for exact Native content comparison.
+The public verifier reproduces all six business projections and rejects six
+corruptions without starting an application or decoder. Full SQL/lifecycle
+projection and natural CUT whole-content equivalence remain unqualified.
+
+The new full Native/public workflow remains pending. These facts do not close Rust/M5,
 performance acceptance or complete M0–M9 migration acceptance. Broader input and
 role domains, profile execution, the preceding playlist update and following
 playlist refresh remain separate scopes.

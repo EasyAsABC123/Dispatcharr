@@ -1,0 +1,811 @@
+{
+  "scope": "SIX_PER_RECORD_COMSKIP_BUSINESS_CONTRACTS_NOT_WHOLE_SQL_OR_NATURAL_MEDIA_EQUALITY",
+  "cells": {
+    "positive-mark": {
+      "label": "positive-mark",
+      "HTTP": {
+        "method": "POST",
+        "path": "/api/channels/recordings/1/comskip/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "success": true,
+          "queued": true
+        }
+      },
+      "SQL_before": {
+        "id": 1,
+        "channel_id": 1,
+        "start_time": "2026-11-17 06:00:30.247778+00:00",
+        "end_time": "2026-11-17 06:09:40.247778+00:00",
+        "task_id": null,
+        "custom_properties": {
+          "status": "completed",
+          "program": {
+            "title": "Owned positive mark"
+          },
+          "file_path": "/shared/comskip-positive-manual/mark/recording.mkv",
+          "remux_success": true
+        }
+      },
+      "SQL_after": {
+        "id": 1,
+        "channel_id": 1,
+        "start_time": "2026-11-17 06:00:30.247778+00:00",
+        "end_time": "2026-11-17 06:09:40.247778+00:00",
+        "task_id": null,
+        "custom_properties": {
+          "status": "completed",
+          "comskip": {
+            "edl": "recording.edl",
+            "mode": "mark",
+            "status": "completed",
+            "ini_path": "/shared/comskip-positive-media/positive.ini",
+            "commercials": 2
+          },
+          "program": {
+            "title": "Owned positive mark"
+          },
+          "file_path": "/shared/comskip-positive-manual/mark/recording.mkv",
+          "remux_success": true
+        }
+      },
+      "task_graph": [
+        {
+          "task": "apps.channels.tasks.comskip_process_recording",
+          "queue": "celery",
+          "args": [
+            1
+          ],
+          "kwargs": {},
+          "callbacks": {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          },
+          "parent": null,
+          "root": "comskip",
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "ignore_result": false
+        }
+      ],
+      "backend": {
+        "status": "SUCCESS",
+        "result": "ok",
+        "traceback": null,
+        "children": [],
+        "date_done": "@actual-backend-completion",
+        "task_id": "@task.comskip"
+      },
+      "Comskip_WS": [
+        {
+          "success": true,
+          "type": "comskip_status",
+          "status": "started",
+          "recording_id": 1,
+          "title": "Owned positive mark"
+        },
+        {
+          "success": true,
+          "type": "comskip_status",
+          "status": "completed",
+          "recording_id": 1,
+          "commercials": 2,
+          "mode": "mark"
+        }
+      ],
+      "media_streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ],
+      "EDL_after_exists": true,
+      "EDL_text": "150.52\t181.48\t3\n332.52\t363.48\t3\n"
+    },
+    "mark-repeat": {
+      "label": "mark-repeat",
+      "HTTP": {
+        "method": "POST",
+        "path": "/api/channels/recordings/1/comskip/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "success": true,
+          "queued": true
+        }
+      },
+      "SQL_before": {
+        "id": 1,
+        "channel_id": 1,
+        "start_time": "2026-11-17 06:00:30.247778+00:00",
+        "end_time": "2026-11-17 06:09:40.247778+00:00",
+        "task_id": null,
+        "custom_properties": {
+          "status": "completed",
+          "comskip": {
+            "edl": "recording.edl",
+            "mode": "mark",
+            "status": "completed",
+            "ini_path": "/shared/comskip-positive-media/positive.ini",
+            "commercials": 2
+          },
+          "program": {
+            "title": "Owned positive mark"
+          },
+          "file_path": "/shared/comskip-positive-manual/mark/recording.mkv",
+          "remux_success": true
+        }
+      },
+      "SQL_after": {
+        "id": 1,
+        "channel_id": 1,
+        "start_time": "2026-11-17 06:00:30.247778+00:00",
+        "end_time": "2026-11-17 06:09:40.247778+00:00",
+        "task_id": null,
+        "custom_properties": {
+          "status": "completed",
+          "comskip": {
+            "edl": "recording.edl",
+            "mode": "mark",
+            "status": "completed",
+            "ini_path": "/shared/comskip-positive-media/positive.ini",
+            "commercials": 2
+          },
+          "program": {
+            "title": "Owned positive mark"
+          },
+          "file_path": "/shared/comskip-positive-manual/mark/recording.mkv",
+          "remux_success": true
+        }
+      },
+      "task_graph": [
+        {
+          "task": "apps.channels.tasks.comskip_process_recording",
+          "queue": "celery",
+          "args": [
+            1
+          ],
+          "kwargs": {},
+          "callbacks": {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          },
+          "parent": null,
+          "root": "comskip",
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "ignore_result": false
+        }
+      ],
+      "backend": {
+        "status": "SUCCESS",
+        "result": "already_processed",
+        "traceback": null,
+        "children": [],
+        "date_done": "@actual-backend-completion",
+        "task_id": "@task.comskip"
+      },
+      "Comskip_WS": [],
+      "media_streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ],
+      "EDL_after_exists": true,
+      "EDL_text": null
+    },
+    "positive-cut": {
+      "label": "positive-cut",
+      "HTTP": {
+        "method": "POST",
+        "path": "/api/channels/recordings/2/comskip/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "success": true,
+          "queued": true
+        }
+      },
+      "SQL_before": {
+        "id": 2,
+        "channel_id": 1,
+        "start_time": "2026-11-17 09:44:12.052563+00:00",
+        "end_time": "2026-11-17 09:53:22.052563+00:00",
+        "task_id": null,
+        "custom_properties": {
+          "status": "completed",
+          "program": {
+            "title": "Owned positive cut"
+          },
+          "file_path": "/shared/comskip-positive-manual/cut/recording.mkv",
+          "remux_success": true
+        }
+      },
+      "SQL_after": {
+        "id": 2,
+        "channel_id": 1,
+        "start_time": "2026-11-17 09:44:12.052563+00:00",
+        "end_time": "2026-11-17 09:53:22.052563+00:00",
+        "task_id": null,
+        "custom_properties": {
+          "status": "completed",
+          "comskip": {
+            "edl": "recording.edl",
+            "status": "completed",
+            "ini_path": "/app/docker/comskip.ini",
+            "commercials": 2,
+            "segments_kept": 3
+          },
+          "program": {
+            "title": "Owned positive cut"
+          },
+          "file_path": "/shared/comskip-positive-manual/cut/recording.mkv",
+          "remux_success": true
+        }
+      },
+      "task_graph": [
+        {
+          "task": "apps.channels.tasks.comskip_process_recording",
+          "queue": "celery",
+          "args": [
+            2
+          ],
+          "kwargs": {},
+          "callbacks": {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          },
+          "parent": null,
+          "root": "comskip",
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "ignore_result": false
+        }
+      ],
+      "backend": {
+        "status": "SUCCESS",
+        "result": "ok",
+        "traceback": null,
+        "children": [],
+        "date_done": "@actual-backend-completion",
+        "task_id": "@task.comskip"
+      },
+      "Comskip_WS": [
+        {
+          "success": true,
+          "type": "comskip_status",
+          "status": "started",
+          "recording_id": 2,
+          "title": "Owned positive cut"
+        },
+        {
+          "success": true,
+          "type": "comskip_status",
+          "status": "completed",
+          "recording_id": 2,
+          "commercials": 2,
+          "segments_kept": 3
+        }
+      ],
+      "media_streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ],
+      "EDL_after_exists": false,
+      "EDL_text": "150.52\t181.48\t3\n332.52\t363.48\t3\n"
+    },
+    "cut-repeat": {
+      "label": "cut-repeat",
+      "HTTP": {
+        "method": "POST",
+        "path": "/api/channels/recordings/2/comskip/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "success": true,
+          "queued": true
+        }
+      },
+      "SQL_before": {
+        "id": 2,
+        "channel_id": 1,
+        "start_time": "2026-11-17 09:44:12.052563+00:00",
+        "end_time": "2026-11-17 09:53:22.052563+00:00",
+        "task_id": null,
+        "custom_properties": {
+          "status": "completed",
+          "comskip": {
+            "edl": "recording.edl",
+            "status": "completed",
+            "ini_path": "/app/docker/comskip.ini",
+            "commercials": 2,
+            "segments_kept": 3
+          },
+          "program": {
+            "title": "Owned positive cut"
+          },
+          "file_path": "/shared/comskip-positive-manual/cut/recording.mkv",
+          "remux_success": true
+        }
+      },
+      "SQL_after": {
+        "id": 2,
+        "channel_id": 1,
+        "start_time": "2026-11-17 09:44:12.052563+00:00",
+        "end_time": "2026-11-17 09:53:22.052563+00:00",
+        "task_id": null,
+        "custom_properties": {
+          "status": "completed",
+          "comskip": {
+            "edl": "recording.edl",
+            "status": "completed",
+            "ini_path": "/app/docker/comskip.ini",
+            "commercials": 2,
+            "segments_kept": 3
+          },
+          "program": {
+            "title": "Owned positive cut"
+          },
+          "file_path": "/shared/comskip-positive-manual/cut/recording.mkv",
+          "remux_success": true
+        }
+      },
+      "task_graph": [
+        {
+          "task": "apps.channels.tasks.comskip_process_recording",
+          "queue": "celery",
+          "args": [
+            2
+          ],
+          "kwargs": {},
+          "callbacks": {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          },
+          "parent": null,
+          "root": "comskip",
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "ignore_result": false
+        }
+      ],
+      "backend": {
+        "status": "SUCCESS",
+        "result": "already_processed",
+        "traceback": null,
+        "children": [],
+        "date_done": "@actual-backend-completion",
+        "task_id": "@task.comskip"
+      },
+      "Comskip_WS": [],
+      "media_streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ],
+      "EDL_after_exists": false,
+      "EDL_text": null
+    },
+    "natural-automatic-mark": {
+      "label": "natural-automatic-mark",
+      "HTTP": {
+        "method": "POST",
+        "path": "/api/channels/recordings/",
+        "credential_role": "admin",
+        "status": 201,
+        "body": {
+          "id": 1,
+          "start_time": "@actual-booking.start",
+          "end_time": "@actual-booking.end",
+          "task_id": "dvr-recording-1",
+          "custom_properties": {
+            "program": {
+              "title": "Offline benchmark channel 0"
+            },
+            "fixture_case_label": "natural-automatic-mark"
+          },
+          "channel": 1
+        }
+      },
+      "recording": {
+        "id": 1,
+        "channel_id": 1,
+        "duration_seconds": 520,
+        "task_id": "dvr-recording-1",
+        "custom_properties": {
+          "status": "completed",
+          "comskip": {
+            "edl": "@owned-recording.edl",
+            "mode": "mark",
+            "status": "completed",
+            "ini_path": "@custom-positive-ini",
+            "commercials": 2
+          },
+          "program": {
+            "title": "Offline benchmark channel 0"
+          },
+          "ended_at": "@actual-recording.ended",
+          "file_url": "/api/channels/recordings/1/file/",
+          "file_name": "@owned-recording.basename",
+          "file_path": "@owned-recording.file",
+          "started_at": "@actual-recording.started",
+          "bytes_written": "@actual-recording.bytes",
+          "remux_success": true,
+          "output_file_url": "/api/channels/recordings/1/file/",
+          "fixture_case_label": "natural-automatic-mark"
+        }
+      },
+      "DVR": {
+        "comskip_mode": "mark",
+        "comskip_enabled": true,
+        "comskip_hw_accel": "none",
+        "pre_offset_minutes": 0,
+        "comskip_custom_path": "@custom-positive-ini",
+        "post_offset_minutes": 0
+      },
+      "task_graph": [
+        {
+          "task": "apps.channels.tasks.prefetch_recording_artwork",
+          "queue": "celery",
+          "args": [
+            1
+          ],
+          "kwargs": {},
+          "callbacks": {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          },
+          "parent": null,
+          "root": "artwork",
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "ignore_result": false
+        },
+        {
+          "task": "apps.channels.tasks.run_recording",
+          "queue": "dvr",
+          "args": [
+            1,
+            1,
+            "@actual-booking.start",
+            "@actual-booking.end"
+          ],
+          "kwargs": {},
+          "callbacks": {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          },
+          "parent": null,
+          "root": "recording",
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "ignore_result": false
+        },
+        {
+          "task": "apps.channels.tasks.comskip_process_recording",
+          "queue": "celery",
+          "args": [
+            1
+          ],
+          "kwargs": {},
+          "callbacks": {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          },
+          "parent": "recording",
+          "root": "recording",
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "ignore_result": false
+        }
+      ],
+      "backends": {
+        "recording": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [
+            [
+              [
+                "@task.comskip",
+                null
+              ],
+              null
+            ]
+          ],
+          "date_done": "@actual-backend-completion",
+          "task_id": "@task.recording"
+        },
+        "comskip": {
+          "status": "SUCCESS",
+          "result": "ok",
+          "traceback": null,
+          "children": [],
+          "date_done": "@actual-backend-completion",
+          "parent_id": "@task.recording",
+          "task_id": "@task.comskip"
+        }
+      },
+      "Comskip_WS": [
+        {
+          "success": true,
+          "type": "comskip_status",
+          "status": "started",
+          "recording_id": 1,
+          "title": "Offline benchmark channel 0"
+        },
+        {
+          "success": true,
+          "type": "comskip_status",
+          "status": "completed",
+          "recording_id": 1,
+          "commercials": 2,
+          "mode": "mark"
+        }
+      ],
+      "media_streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ],
+      "EDL_after_exists": true,
+      "EDL_text": "150.52\t181.48\t3\n332.52\t363.48\t3\n",
+      "Source_MARK_artwork_backend_unobserved": true
+    },
+    "natural-automatic-cut": {
+      "label": "natural-automatic-cut",
+      "HTTP": {
+        "method": "POST",
+        "path": "/api/channels/recordings/",
+        "credential_role": "admin",
+        "status": 201,
+        "body": {
+          "id": 1,
+          "start_time": "@actual-booking.start",
+          "end_time": "@actual-booking.end",
+          "task_id": "dvr-recording-1",
+          "custom_properties": {
+            "program": {
+              "title": "Offline benchmark channel 0"
+            },
+            "fixture_case_label": "natural-automatic-cut"
+          },
+          "channel": 1
+        }
+      },
+      "recording": {
+        "id": 1,
+        "channel_id": 1,
+        "duration_seconds": 520,
+        "task_id": "dvr-recording-1",
+        "custom_properties": {
+          "status": "completed",
+          "comskip": {
+            "edl": "@owned-recording.edl",
+            "status": "completed",
+            "ini_path": "@custom-positive-ini",
+            "commercials": 2,
+            "segments_kept": 3
+          },
+          "program": {
+            "title": "Offline benchmark channel 0"
+          },
+          "ended_at": "@actual-recording.ended",
+          "file_url": "/api/channels/recordings/1/file/",
+          "file_name": "@owned-recording.basename",
+          "file_path": "@owned-recording.file",
+          "started_at": "@actual-recording.started",
+          "bytes_written": "@actual-recording.bytes",
+          "remux_success": true,
+          "output_file_url": "/api/channels/recordings/1/file/",
+          "fixture_case_label": "natural-automatic-cut"
+        }
+      },
+      "DVR": {
+        "comskip_mode": "cut",
+        "comskip_enabled": true,
+        "comskip_hw_accel": "none",
+        "pre_offset_minutes": 0,
+        "comskip_custom_path": "@custom-positive-ini",
+        "post_offset_minutes": 0
+      },
+      "task_graph": [
+        {
+          "task": "apps.channels.tasks.prefetch_recording_artwork",
+          "queue": "celery",
+          "args": [
+            1
+          ],
+          "kwargs": {},
+          "callbacks": {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          },
+          "parent": null,
+          "root": "artwork",
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "ignore_result": false
+        },
+        {
+          "task": "apps.channels.tasks.run_recording",
+          "queue": "dvr",
+          "args": [
+            1,
+            1,
+            "@actual-booking.start",
+            "@actual-booking.end"
+          ],
+          "kwargs": {},
+          "callbacks": {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          },
+          "parent": null,
+          "root": "recording",
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "ignore_result": false
+        },
+        {
+          "task": "apps.channels.tasks.comskip_process_recording",
+          "queue": "celery",
+          "args": [
+            1
+          ],
+          "kwargs": {},
+          "callbacks": {
+            "callbacks": null,
+            "errbacks": null,
+            "chain": null,
+            "chord": null
+          },
+          "parent": "recording",
+          "root": "recording",
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "ignore_result": false
+        }
+      ],
+      "backends": {
+        "recording": {
+          "status": "SUCCESS",
+          "result": null,
+          "traceback": null,
+          "children": [
+            [
+              [
+                "@task.comskip",
+                null
+              ],
+              null
+            ]
+          ],
+          "date_done": "@actual-backend-completion",
+          "task_id": "@task.recording"
+        },
+        "comskip": {
+          "status": "SUCCESS",
+          "result": "ok",
+          "traceback": null,
+          "children": [],
+          "date_done": "@actual-backend-completion",
+          "parent_id": "@task.recording",
+          "task_id": "@task.comskip"
+        },
+        "artwork": {
+          "status": "SUCCESS",
+          "result": "ok",
+          "traceback": null,
+          "children": [],
+          "date_done": "@actual-backend-completion",
+          "task_id": "@task.artwork"
+        }
+      },
+      "Comskip_WS": [
+        {
+          "success": true,
+          "type": "comskip_status",
+          "status": "started",
+          "recording_id": 1,
+          "title": "Offline benchmark channel 0"
+        },
+        {
+          "success": true,
+          "type": "comskip_status",
+          "status": "completed",
+          "recording_id": 1,
+          "commercials": 2,
+          "segments_kept": 3
+        }
+      ],
+      "media_streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ],
+      "EDL_after_exists": false,
+      "EDL_text": "150.52\t181.48\t3\n332.52\t363.48\t3\n",
+      "Source_MARK_artwork_backend_unobserved": false
+    }
+  }
+}

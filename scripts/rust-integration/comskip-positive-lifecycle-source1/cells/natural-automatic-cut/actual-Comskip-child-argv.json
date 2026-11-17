@@ -1,0 +1,69 @@
+{
+  "actual_observer_stop": {
+    "role": "comskip-argv-10082aee",
+    "socket": "/tmp/normal-dvr-roles/43010d0d1b714074b4916c154575a78d.sock",
+    "owner_pid": 913,
+    "owner_starttime": "23361764",
+    "pid": 914,
+    "starttime": "23361767",
+    "actual_pgid": 914,
+    "process_group_authority": "successful Popen(start_new_session=True)",
+    "actual_argv": [
+      "/dispatcharrpy/bin/python",
+      "-c",
+      "import sys;sys.path.insert(0,'/normal-dvr-tools');from comskip_positive_cases import guest_comskip_argv_observer;guest_comskip_argv_observer('/shared/comskip-positive-automatic/comskip-argv-10082aee')"
+    ],
+    "log_paths": {
+      "stdout": "/tmp/normal-dvr-roles/43010d0d1b714074b4916c154575a78d/stdout.log",
+      "stderr": "/tmp/normal-dvr-roles/43010d0d1b714074b4916c154575a78d/stderr.log"
+    },
+    "shutdown_started": true,
+    "signal_settled": true,
+    "actual_master_SIGTERM_sent": true,
+    "shutdown_settled": true,
+    "running": false,
+    "actual_exit": 0,
+    "actual_wait_completed": true,
+    "forced": false,
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "failures": [],
+    "actual_reaped_adopted_children": [],
+    "owned_generations": [
+      {
+        "pid": 914,
+        "starttime": "23361767",
+        "absent": true
+      }
+    ],
+    "all_original_process_generations_absent": true
+  },
+  "actual_observation": {
+    "actual_UID": 65532,
+    "observed": {
+      "1521:23414580": {
+        "stable_generation": true,
+        "PID": 1521,
+        "starttime": "23414580",
+        "argv": [
+          "/usr/local/bin/comskip",
+          "--threads=1",
+          "--output",
+          "/data/recordings/TV_Shows/Offline benchmark channel 0",
+          "--ini=/shared/comskip-positive-media/positive.ini",
+          "/data/recordings/TV_Shows/Offline benchmark channel 0/20261117_130415.mkv"
+        ],
+        "UIDs": [
+          "65532",
+          "65532",
+          "65532",
+          "65532"
+        ],
+        "observed_epoch": 1794921177.7588553,
+        "kind": "actual /proc cmdline; not inferred from CP"
+      }
+    },
+    "normal_signal_stop": true
+  },
+  "actual_child_argv_captured": true
+}

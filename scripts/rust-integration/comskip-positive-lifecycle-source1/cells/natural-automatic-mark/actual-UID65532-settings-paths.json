@@ -1,0 +1,39 @@
+{
+  "observation_actor": "independent Django observer with same Source role UID; not captured in-worker getter invocation",
+  "actual_UID": 65532,
+  "actual_GID": 65532,
+  "mode": "mark",
+  "enabled": true,
+  "custom_path": "/shared/comskip-positive-media/positive.ini",
+  "custom_path_getter_error": null,
+  "paths": [
+    {
+      "path": "/shared/comskip-positive-media/positive.ini",
+      "exists": true,
+      "readable": true,
+      "parent": {
+        "mode": "0o755",
+        "UID": 0,
+        "GID": 0
+      },
+      "sha256": "6ec0b7fa8ed1c16a10e7cf665ae7174b6a1ca6d78f7da7ead6a7a01fdc1c61f7"
+    },
+    {
+      "path": "/etc/comskip/comskip.ini",
+      "exists": false,
+      "readable": false,
+      "observation_error": "FileNotFoundError"
+    },
+    {
+      "path": "/app/docker/comskip.ini",
+      "exists": true,
+      "readable": true,
+      "parent": {
+        "mode": "0o755",
+        "UID": 0,
+        "GID": 0
+      },
+      "sha256": "7614488f8addcd44850f524f5a7d104527aa6d80c25dbdf8d60219d4e658b896"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "file_path": "/shared/comskip-positive-input-observations/natural-automatic-cut/0.mkv",
+  "exists": true,
+  "observer_only": true,
+  "bytes": 37370261,
+  "sha256": "7009b4d103b81687ae310cc45ec988f8f92f2df2b8d45730c7c808ea06a6e3c5",
+  "EDL": {
+    "exists": false
+  },
+  "probe": {
+    "argv": [
+      "ffprobe",
+      "-v",
+      "error",
+      "-show_entries",
+      "format=duration:stream=codec_type,codec_name",
+      "-of",
+      "json",
+      "/shared/comskip-positive-input-observations/natural-automatic-cut/0.mkv"
+    ],
+    "actual_exit": 0,
+    "stdout": "{\n    \"programs\": [\n\n    ],\n    \"stream_groups\": [\n\n    ],\n    \"streams\": [\n        {\n            \"codec_name\": \"h264\",\n            \"codec_type\": \"video\"\n        },\n        {\n            \"codec_name\": \"aac\",\n            \"codec_type\": \"audio\"\n        }\n    ],\n    \"format\": {\n        \"duration\": \"519.861000\"\n    }\n}\n",
+    "stderr": "",
+    "actual": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio"
+        }
+      ],
+      "format": {
+        "duration": "519.861000"
+      }
+    }
+  },
+  "actual_sidecars": [],
+  "fixed_cut_paths_remaining": []
+}

@@ -1,0 +1,269 @@
+{
+  "status": "FAILED_STRICT_PARITY",
+  "actual_controller_exit": 1,
+  "actual_requests": 12,
+  "first_failure": {
+    "path": "startup.core_systemnotification[0].updated_at",
+    "Source_requirement": "strictly advances between setup and first HTTP",
+    "Native_setup": "2026-11-17T13:52:40.764770+00:00",
+    "Native_first_HTTP": "2026-11-17T13:52:40.764770+00:00"
+  },
+  "offline_diagnostic_only": {
+    "exact_in_memory_change": {
+      "from": "timestamp(prepared['tables']['core_systemnotification'][0]['updated_at'])<timestamp(notice_time)",
+      "to": "timestamp(prepared['tables']['core_systemnotification'][0]['updated_at'])<=timestamp(notice_time)"
+    },
+    "production_or_authority_bytes_changed": false,
+    "acceptance_claimed": false,
+    "remaining_differences": [
+      {
+        "path": "$.phases[0].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[0].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[1].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[1].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[2].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[2].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[3].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[3].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[4].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[4].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[5].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[5].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[6].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[6].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[7].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[7].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[8].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[8].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[9].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[9].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[10].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[10].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.phases[11].headers",
+        "kind": "keys",
+        "Native_only": [
+          "connection",
+          "date"
+        ],
+        "Source_only": [
+          "allow"
+        ]
+      },
+      {
+        "path": "$.phases[11].headers.vary",
+        "kind": "value",
+        "Native": "origin",
+        "Source": "Accept, origin"
+      },
+      {
+        "path": "$.transport.successful_requests[0].headers",
+        "kind": "keys",
+        "Native_only": [],
+        "Source_only": [
+          "connection"
+        ]
+      },
+      {
+        "path": "$.transport.successful_requests[1].headers",
+        "kind": "keys",
+        "Native_only": [],
+        "Source_only": [
+          "connection"
+        ]
+      },
+      {
+        "path": "$.transport.successful_requests[2].headers",
+        "kind": "keys",
+        "Native_only": [],
+        "Source_only": [
+          "connection"
+        ]
+      },
+      {
+        "path": "$.transport.successful_requests[3].headers",
+        "kind": "keys",
+        "Native_only": [],
+        "Source_only": [
+          "connection"
+        ]
+      },
+      {
+        "path": "$.transport.successful_requests[4].headers",
+        "kind": "keys",
+        "Native_only": [],
+        "Source_only": [
+          "connection"
+        ]
+      }
+    ],
+    "all_other_projected_fields_exact": true
+  },
+  "original_projection_sha256": "bed30e6ac38a5394ee2d4428529d383344082ca03c300d7044749b0740da7cdf",
+  "full_milestone_passed": false,
+  "performance_verified": false
+}

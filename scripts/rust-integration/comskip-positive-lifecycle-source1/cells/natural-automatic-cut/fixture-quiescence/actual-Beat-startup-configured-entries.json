@@ -1,0 +1,38 @@
+{
+  "configured_tasks": {
+    "fetch-channel-statuses": "apps.proxy.tasks.fetch_channel_stats",
+    "scan-files": "core.tasks.scan_and_process_files",
+    "maintain-recurring-recordings": "apps.channels.tasks.maintain_recurring_recordings",
+    "check-version-updates": "core.tasks.check_for_version_update",
+    "check-account-expirations": "apps.m3u.tasks.check_account_expirations"
+  },
+  "actual": {
+    "fetch-channel-statuses": {
+      "task": "apps.proxy.tasks.fetch_channel_stats",
+      "enabled": false,
+      "date_changed": "2026-11-17T13:03:28.616886+00:00"
+    },
+    "scan-files": {
+      "task": "core.tasks.scan_and_process_files",
+      "enabled": true,
+      "date_changed": "2026-11-17T13:03:28.620726+00:00"
+    },
+    "maintain-recurring-recordings": {
+      "task": "apps.channels.tasks.maintain_recurring_recordings",
+      "enabled": true,
+      "date_changed": "2026-11-17T13:03:28.624155+00:00"
+    },
+    "check-version-updates": {
+      "task": "core.tasks.check_for_version_update",
+      "enabled": true,
+      "date_changed": "2026-11-17T13:03:28.627306+00:00"
+    },
+    "check-account-expirations": {
+      "task": "apps.m3u.tasks.check_account_expirations",
+      "enabled": true,
+      "date_changed": "2026-11-17T13:03:28.630486+00:00"
+    }
+  },
+  "prepared_before_business_roles": "2026-11-17T13:03:20.185544+00:00",
+  "all_configured_startup_entries_observed": true
+}

@@ -1,0 +1,83 @@
+{
+  "scope": "TWO pinned Original Source-only contexts sharing one generated real A/V master: retained mark/repeat/cut business leaves + ONLY missing cut-repeat then dependent natural automatic2. Actual Source image34f/pinned1241; Candidate50 metadata is unused Native dependency metadata. No old Source replay, artificial EDL, direct task-body calls or Native acceptance.",
+  "historical_native20_contexts": {},
+  "backends": [
+    {
+      "status": "failed",
+      "cases": [
+        {
+          "case": "comskip-positive-manual",
+          "status": "passed"
+        },
+        {
+          "case": "comskip-positive-automatic",
+          "status": "failed",
+          "reason": "RuntimeError:('ActualCommand', 1, None, 'command-0108')"
+        }
+      ],
+      "full_milestone_passed": false,
+      "performance_verified": false,
+      "no_Source_model18_replay": true,
+      "executed_slice_passed": false
+    }
+  ],
+  "expected_backend_order": [
+    "Original"
+  ],
+  "expected_cleanup_count": 1,
+  "cleanup": [
+    {
+      "project": "dispatcharr-normal-dvr-c9285f5fe4",
+      "captured_original_process_generations": [
+        {
+          "Id": "ec16c98872fbf3e5d480f369d54e4177ac045d2d26ae423291f9f90ba45beaac",
+          "pid": 10445,
+          "starttime": "22963919",
+          "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+        },
+        {
+          "Id": "1d6fb0a20b7654390470b020f69fa3e3e1229d5cd11fa7a23f30bbc08f650cc5",
+          "pid": 10300,
+          "starttime": "22963904",
+          "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+        }
+      ],
+      "inventories": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "exact_CID_absence": [
+        {
+          "Id": "ec16c98872fbf3e5d480f369d54e4177ac045d2d26ae423291f9f90ba45beaac",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        },
+        {
+          "Id": "1d6fb0a20b7654390470b020f69fa3e3e1229d5cd11fa7a23f30bbc08f650cc5",
+          "actual_missing_object": true,
+          "original_host_generation_absent": true
+        }
+      ],
+      "errors": [],
+      "exact_owned_absence": true,
+      "all_original_process_generations_absent": true,
+      "host_CLI_groups_settled": true
+    }
+  ],
+  "selected_application_cells_passed": false,
+  "exact_cleanup_passed": true,
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "paired_exceptional_ranges": {
+    "status": "blocked",
+    "reason": "both actual completed playback captures required"
+  },
+  "retained_known_required_gaps": [
+    "Source exceptional-range transport",
+    "Source historical warm/crash periodic previousrow/delete/orphan transition",
+    "unqualified enabled-plugin/eager edges, custom guides and held-search Main cancellation",
+    "remote-owner wider profile/fault domains"
+  ],
+  "combined_selected_workflow_passed": false
+}
