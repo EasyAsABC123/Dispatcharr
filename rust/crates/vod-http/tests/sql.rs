@@ -103,15 +103,54 @@ async fn actual_django_movie_episode_series_xc_profiles_flags_and_caps() {
         resolver.resolve(&offset, None).await,
         Err(StoreError::Unsupported(_))
     ));
-    // An unknown transform must not silently substitute another identity
-    // profile. This fixture is disposable; restore its exact default after.
+    // Source1 observed /live/user/pass/ -> /live/alias-user/alias-pass/.
+    // Resolve both kinds through the real ORM joins and share the transformed
+    // credential pool, rather than hashing the base account credentials.
     let profile = source.candidates[0].profile_id;
-    let backup:i64=sqlx::query_scalar("INSERT INTO m3u_m3uaccountprofile(m3u_account_id,name,is_default,max_streams,is_active,search_pattern,replace_pattern,current_viewers,custom_properties) VALUES($1,'Unsupported-transform fallback probe',false,2,true,'^(.*)$','$1',0,'{}'::jsonb) RETURNING id::bigint").bind(source.candidates[0].account_id).fetch_one(store.pool()).await.unwrap();
-    sqlx::query("UPDATE m3u_m3uaccountprofile SET search_pattern='fixture',replace_pattern='other-credentials' WHERE id=$1").bind(profile).execute(store.pool()).await.unwrap();
-    assert!(matches!(
-        resolver.resolve(&movie, None).await,
-        Err(StoreError::Unsupported(_))
-    ));
+    let account = source.candidates[0].account_id;
+    let prior_group: Option<i64> =
+        sqlx::query_scalar("SELECT server_group_id::bigint FROM m3u_m3uaccount WHERE id=$1")
+            .bind(account)
+            .fetch_one(store.pool())
+            .await
+            .unwrap();
+    let group: i64 = sqlx::query_scalar(
+        "INSERT INTO m3u_servergroup(name) VALUES('Disposable VOD transformed pool probe') RETURNING id::bigint",
+    )
+    .fetch_one(store.pool())
+    .await
+    .unwrap();
+    sqlx::query("UPDATE m3u_m3uaccount SET server_group_id=$1 WHERE id=$2")
+        .bind(group)
+        .bind(account)
+        .execute(store.pool())
+        .await
+        .unwrap();
+    sqlx::query(
+        "UPDATE m3u_m3uaccountprofile SET search_pattern=$1,replace_pattern=$2 WHERE id=$3",
+    )
+    .bind(r"/live/([^/]+)/([^/]+)/")
+    .bind("/live/alias-$1/alias-$2/")
+    .bind(profile)
+    .execute(store.pool())
+    .await
+    .unwrap();
+    let transformed_movie = resolver.resolve(&movie, None).await;
+    let transformed_episode = resolver
+        .resolve(
+            &request("episode", "3c884edf-a48f-4e91-adf3-f876c8094814"),
+            None,
+        )
+        .await;
+
+    // A genuinely unsupported lookahead must not silently substitute a later
+    // identity profile. The normal Source alias transform above is supported.
+    let backup:i64=sqlx::query_scalar("INSERT INTO m3u_m3uaccountprofile(m3u_account_id,name,is_default,max_streams,is_active,search_pattern,replace_pattern,current_viewers,custom_properties) VALUES($1,'Unsupported-transform fallback probe',false,2,true,'^(.*)$','$1',0,'{}'::jsonb) RETURNING id::bigint").bind(account).fetch_one(store.pool()).await.unwrap();
+    sqlx::query("UPDATE m3u_m3uaccountprofile SET search_pattern='(?=fixture)',replace_pattern='other-credentials' WHERE id=$1").bind(profile).execute(store.pool()).await.unwrap();
+    let unsupported = resolver.resolve(&movie, None).await;
+
+    // Restore fixture business values before checking the captured results.
+    // Inserts consume sequence values in this explicitly disposable fixture.
     sqlx::query(
         "UPDATE m3u_m3uaccountprofile SET search_pattern='^(.*)$',replace_pattern='$1' WHERE id=$1",
     )
@@ -124,4 +163,39 @@ async fn actual_django_movie_episode_series_xc_profiles_flags_and_caps() {
         .execute(store.pool())
         .await
         .unwrap();
+    sqlx::query("UPDATE m3u_m3uaccount SET server_group_id=$1 WHERE id=$2")
+        .bind(prior_group)
+        .bind(account)
+        .execute(store.pool())
+        .await
+        .unwrap();
+    sqlx::query("DELETE FROM m3u_servergroup WHERE id=$1")
+        .bind(group)
+        .execute(store.pool())
+        .await
+        .unwrap();
+
+    let transformed_movie = transformed_movie.unwrap();
+    let transformed_episode = transformed_episode.unwrap();
+    assert_eq!(transformed_movie.candidates.len(), 1);
+    assert_eq!(transformed_episode.candidates.len(), 1);
+    assert_eq!(
+        transformed_movie.candidates[0].url,
+        "http://origin:8080/movie/alias-fixture/alias-fixture/fixture.mp4"
+    );
+    assert_eq!(
+        transformed_episode.candidates[0].url,
+        "http://origin:8080/series/alias-fixture/alias-fixture/fixture.mp4"
+    );
+    let expected_key = format!("server_group_connections:{group}:289aa54bb9083f97");
+    for candidate in [
+        &transformed_movie.candidates[0],
+        &transformed_episode.candidates[0],
+    ] {
+        assert_eq!(candidate.profile_id, profile);
+        let pool = candidate.credential_pool.as_ref().unwrap();
+        assert_eq!(pool.counter_key, expected_key);
+        assert_eq!(pool.max_streams, 2);
+    }
+    assert!(matches!(unsupported, Err(StoreError::Unsupported(_))));
 }

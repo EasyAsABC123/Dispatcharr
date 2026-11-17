@@ -130,6 +130,7 @@ async fn physical_fixture(
             account_id: 1,
             profile_id: 777,
             max_streams: 1,
+            credential_pool: None,
             url: "http://fixture.invalid/no-network".into(),
             user_agent: "owned-restart".into(),
         }],

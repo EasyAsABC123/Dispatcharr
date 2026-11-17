@@ -137,3 +137,36 @@ pub(crate) async fn save(
         tracing::warn!(%error,"Network developer notification synchronization failed");
     }
 }
+
+impl AuthService {
+    /// Source CoreConfig.ready developer sync for the retained notification
+    /// fixture. Reuse the already ported network-signal SQL, including the
+    /// existing-row updated_at write and absence of an INSERT sequence burn.
+    /// Startup does not run the network-setting condition-cache invalidation.
+    pub async fn startup_developer_notifications(&self) -> Result<(), StoreError> {
+        let writer = self.task_sql_writer()?;
+        let auth = self.clone().with_request_writer_permit(writer.clone())?;
+        // Detach cancellation ownership from the awaiting Main future. The
+        // actual same writer remains owned through SQL Ready/pool return and
+        // the existing Channels transport's retained completion.
+        tokio::spawn(async move {
+            transaction(&auth, false).await?;
+            transaction(&auth, true).await?;
+            let events = auth.event_sink.as_ref().ok_or(StoreError::Unsupported(
+                "Actual Channels publisher required",
+            ))?;
+            let owner: Arc<dyn Send + Sync> = writer;
+            events
+                .send_retained(
+                    "updates",
+                    json!({"type":"update","data":{"type":"notifications_cleared"}}),
+                    owner,
+                )
+                .await
+                .map_err(|_| StoreError::Unsupported("Notification publication failed"))?;
+            Ok::<(), StoreError>(())
+        })
+        .await
+        .map_err(|_| StoreError::Unsupported("Developer notification startup actor failed"))?
+    }
+}

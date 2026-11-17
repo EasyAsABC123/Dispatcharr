@@ -136,6 +136,7 @@ pub(super) async fn one_get(
         .get(url.clone())
         .header(header::ACCEPT, "*/*")
         .header(header::ACCEPT_ENCODING, "gzip, deflate")
+        .header(header::CONNECTION, "keep-alive")
         .send();
     let response = request.await.map_err(|e| {
         if e.is_timeout() {
@@ -223,6 +224,7 @@ pub(super) async fn download_one(
         .get(url.clone())
         .header(header::ACCEPT, "*/*")
         .header(header::ACCEPT_ENCODING, "gzip, deflate")
+        .header(header::CONNECTION, "keep-alive")
         .send()
         .await
         .map_err(|e| {

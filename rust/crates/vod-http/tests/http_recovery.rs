@@ -291,6 +291,7 @@ async fn run_case(
             account_id: 1,
             profile_id: profile,
             max_streams: if idle_busy { 2 } else { 1 },
+            credential_pool: None,
             url: format!("{origin}/fixture.mp4"),
             user_agent: "owned-recovery".into(),
         }],

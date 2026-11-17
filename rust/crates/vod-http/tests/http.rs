@@ -228,6 +228,7 @@ async fn fixture_with_user(
         } else {
             1
         },
+        credential_pool: None,
         url: format!("{base}/{selected_path}"),
         user_agent: "VOD-contract-test".into(),
     }];
@@ -237,6 +238,7 @@ async fn fixture_with_user(
             account_id: 2,
             profile_id: id + 1,
             max_streams: 1,
+            credential_pool: None,
             url: format!("{base}/paced"),
             user_agent: "VOD-contract-test".into(),
         });

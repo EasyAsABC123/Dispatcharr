@@ -101,6 +101,7 @@ pub(crate) async fn initial_from_fixture_with_body_limit(
             lease: f.old.clone(),
             metadata_token: f.token.clone(),
             profile_id: f.profile,
+            credential_pool: None,
             identity: Identity {
                 user_id: "prototype-user".into(),
                 content_uuid: f.id.clone(),

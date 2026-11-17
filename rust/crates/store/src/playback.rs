@@ -94,7 +94,7 @@ impl ProviderUrl<'_> {
 /// Source connection_pool.compute_credential_fingerprint and truncated legacy key.
 /// Python Unicode case conversion can differ from Rust's; that unqualified
 /// username domain remains explicit rather than splitting one real login pool.
-fn xc_credential_pool(
+pub(crate) fn xc_credential_pool(
     group: i64,
     maximum: u32,
     username: &str,

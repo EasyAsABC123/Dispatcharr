@@ -62,6 +62,7 @@ pub struct VodCandidate {
     pub account_id: i64,
     pub profile_id: i64,
     pub max_streams: u32,
+    pub credential_pool: Option<dispatcharr_coordination::CredentialPool>,
     pub url: String,
     pub user_agent: String,
 }
@@ -346,51 +347,42 @@ impl VodResolver for SqlVodResolver {
                 }
                 let search: String = row.try_get("search_pattern")?;
                 let replacement: String = row.try_get("replace_pattern")?;
-                if !((search.is_empty() || replacement.is_empty())
-                    || (search == "^(.*)$" && replacement == "$1"))
-                {
-                    return Err(StoreError::Unsupported(
-                        "VOD credential transforms are not implemented",
-                    ));
-                }
-                if row.try_get::<Option<i64>, _>("server_group_id")?.is_some() {
-                    return Err(StoreError::Unsupported(
-                        "VOD server-group credential pools are not implemented",
-                    ));
-                }
                 let server: Option<String> = row.try_get("server_url")?;
                 let username: Option<String> = row.try_get("username")?;
                 let password: Option<String> = row.try_get("password")?;
                 let Some((server, username, password)) = server
                     .zip(username)
                     .zip(password)
-                    .map(|((s, u), p)| (s, u, p))
+                    .map(|((server, username), password)| (server, username, password))
                 else {
                     continue;
                 };
+                // Preserve accepted fallback behavior for missing/malformed base
+                // credentials; the shared transform adds no new fallback policy.
                 if username.is_empty() || password.is_empty() {
                     continue;
                 }
-                let Ok(mut parsed) = Url::parse(server.trim()) else {
+                let Ok(parsed) = Url::parse(server.trim()) else {
                     continue;
                 };
-                let path = parsed.path().trim_end_matches('/');
-                let last = path.rsplit('/').next().unwrap_or("");
-                let normalized_path = if last.ends_with(".php") {
-                    path.strip_suffix(last)
-                        .unwrap_or(path)
-                        .trim_end_matches('/')
-                } else {
-                    path
-                }
-                .to_owned();
-                parsed.set_path(&normalized_path);
-                parsed.set_query(None);
-                parsed.set_fragment(None);
                 if !matches!(parsed.scheme(), "http" | "https") || parsed.host_str().is_none() {
                     unsupported = true;
                     continue;
                 }
+                let maximum = row.try_get::<i32, _>("max_streams")?.max(0) as u32;
+                let Some((base, username, password, credential_pool)) =
+                    AuthService::resolve_vod_profile_credentials(
+                        &server,
+                        &username,
+                        &password,
+                        &search,
+                        &replacement,
+                        row.try_get("server_group_id")?,
+                        maximum,
+                    )?
+                else {
+                    continue;
+                };
                 let path = if kind == ContentKind::Movie {
                     "movie"
                 } else {
@@ -403,7 +395,7 @@ impl VodResolver for SqlVodResolver {
                     .unwrap_or_else(|| "mp4".into());
                 let url = format!(
                     "{}/{path}/{username}/{password}/{stream_id}.{extension}",
-                    parsed.as_str().trim_end_matches('/')
+                    base.trim_end_matches('/')
                 );
                 if Url::parse(&url).is_err() {
                     continue;
@@ -412,16 +404,20 @@ impl VodResolver for SqlVodResolver {
                     relation_id: row.try_get("relation_id")?,
                     account_id: row.try_get("account_id")?,
                     profile_id,
-                    max_streams: row.try_get::<i32, _>("max_streams")?.max(0) as u32,
+                    max_streams: maximum,
+                    credential_pool: credential_pool.map(|pool| {
+                        dispatcharr_coordination::CredentialPool {
+                            counter_key: pool.counter_key,
+                            max_streams: pool.max_streams,
+                        }
+                    }),
                     url,
                     user_agent: row.try_get("user_agent")?,
                 });
             }
             if candidates.is_empty() {
                 return Err(if unsupported {
-                    StoreError::Unsupported(
-                        "VOD credential transforms/server groups are not implemented",
-                    )
+                    StoreError::Unsupported("VOD provider URL scheme is not implemented")
                 } else {
                     StoreError::StatusBody(503, Value::String("No available stream".into()))
                 });

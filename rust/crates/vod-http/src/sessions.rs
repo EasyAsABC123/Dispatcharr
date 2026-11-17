@@ -293,6 +293,7 @@ impl SessionPool {
                     lease: session.lease.clone(),
                     metadata_token: session.metadata_token.clone(),
                     profile_id: session.candidate.profile_id,
+                    credential_pool: session.candidate.credential_pool.clone(),
                     identity: ScopeIdentity {
                         user_id: session
                             .source
@@ -422,9 +423,23 @@ impl SessionPool {
             if count < 0 {
                 return Err(redis_error());
             }
-            if count < (candidate.max_streams as i64) {
-                return Ok(candidate.url.clone());
+            if count >= (candidate.max_streams as i64) {
+                continue;
             }
+            if let Some(pool) = &candidate.credential_pool {
+                let used: Option<i64> = connection
+                    .get(&pool.counter_key)
+                    .await
+                    .map_err(|_| redis_error())?;
+                let used = used.unwrap_or(0);
+                if used < 0 {
+                    return Err(redis_error());
+                }
+                if used >= i64::from(pool.max_streams) {
+                    continue;
+                }
+            }
+            return Ok(candidate.url.clone());
         }
         Err(unavailable())
     }
@@ -556,7 +571,7 @@ impl SessionPool {
                     channel_id: id.into(),
                     provider_profile_id: Some(candidate.profile_id),
                     provider_max_streams: candidate.max_streams,
-                    credential_pool: None,
+                    credential_pool: candidate.credential_pool.clone(),
                 },
                 recovery::NewAdmission {
                     fields,
@@ -757,7 +772,7 @@ impl SessionPool {
                     .reserve_provider(ProviderReservation {
                         profile_id: Some(session.candidate.profile_id),
                         max_streams: session.candidate.max_streams,
-                        credential_pool: None,
+                        credential_pool: session.candidate.credential_pool.clone(),
                     })
                     .await
                     .map_err(|_| unavailable())?;
@@ -897,7 +912,7 @@ impl SessionPool {
                     channel_id: id.into(),
                     provider_profile_id: Some(candidate.profile_id),
                     provider_max_streams: candidate.max_streams,
-                    credential_pool: None,
+                    credential_pool: candidate.credential_pool.clone(),
                 })
                 .await
             {

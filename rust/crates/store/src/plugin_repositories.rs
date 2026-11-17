@@ -500,20 +500,69 @@ impl PluginRepositories {
         Ok(Json(serialized(&payload(row)?)?).into_response())
     }
 }
+// DRF APIView finalizes these headers for success and error responses alike.
+// Keep the retained body/permit owner intact; transport framing belongs to Main.
+fn source_response(result: Result<Response, StoreError>, allow: &'static str) -> Response {
+    use axum::http::{header, HeaderValue};
+    let mut response = match result {
+        Ok(response) => response,
+        Err(error) => error.into_response(),
+    };
+    response
+        .headers_mut()
+        .insert(header::ALLOW, HeaderValue::from_static(allow));
+    // Main's CorsMiddleware-compatible finalizer adds origin only when absent.
+    // Supply one merged field here so it does not create a second Vary line.
+    // Preserve other existing variation tokens, including opaque header bytes;
+    // wildcard dominates as in Django patch_vary_headers.
+    let mut tokens: Vec<Vec<u8>> = vec![b"Accept".to_vec()];
+    let mut wildcard = false;
+    for value in response.headers().get_all(header::VARY) {
+        for token in value.as_bytes().split(|byte| *byte == b',') {
+            let token = token.trim_ascii();
+            if token == b"*" {
+                wildcard = true;
+            } else if !token.is_empty()
+                && !token.eq_ignore_ascii_case(b"origin")
+                && !tokens.iter().any(|old| old.eq_ignore_ascii_case(token))
+            {
+                tokens.push(token.to_vec());
+            }
+        }
+    }
+    tokens.push(b"origin".to_vec());
+    let merged = if wildcard {
+        b"*".to_vec()
+    } else {
+        tokens.join(b", ".as_slice())
+    };
+    response.headers_mut().insert(
+        header::VARY,
+        HeaderValue::from_bytes(&merged).expect("joined valid Vary field values"),
+    );
+    response
+}
+
 async fn collection(
     State(service): State<PluginRepositories>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
-) -> Result<Response, StoreError> {
-    service.operation(peer, request, None).await
+) -> Response {
+    source_response(
+        service.operation(peer, request, None).await,
+        "GET, POST, HEAD, OPTIONS",
+    )
 }
 async fn detail(
     State(service): State<PluginRepositories>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     axum::extract::Path(id): axum::extract::Path<String>,
     request: Request,
-) -> Result<Response, StoreError> {
-    service.operation(peer, request, Some(id)).await
+) -> Response {
+    source_response(
+        service.operation(peer, request, Some(id)).await,
+        "PUT, DELETE, OPTIONS",
+    )
 }
 #[cfg(test)]
 #[path = "plugin_repositories_tests.rs"]
@@ -527,25 +576,31 @@ async fn manifest_preview(
     State(service): State<PluginRepositories>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
-) -> Result<Response, StoreError> {
-    service
-        .operation_route(peer, request, None, Some(manifest_fetch::Action::Preview))
-        .await
+) -> Response {
+    source_response(
+        service
+            .operation_route(peer, request, None, Some(manifest_fetch::Action::Preview))
+            .await,
+        "POST, OPTIONS",
+    )
 }
 async fn manifest_refresh(
     State(service): State<PluginRepositories>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     axum::extract::Path(id): axum::extract::Path<String>,
     request: Request,
-) -> Result<Response, StoreError> {
-    service
-        .operation_route(
-            peer,
-            request,
-            None,
-            Some(manifest_fetch::Action::Refresh(id)),
-        )
-        .await
+) -> Response {
+    source_response(
+        service
+            .operation_route(
+                peer,
+                request,
+                None,
+                Some(manifest_fetch::Action::Refresh(id)),
+            )
+            .await,
+        "POST, OPTIONS",
+    )
 }
 
 /// Plain shared-family plugin refresh uses the SAME Main auth admission/pool.
@@ -730,4 +785,72 @@ pub(crate) async fn fetch_plugin_detail(
     key: Option<&str>,
 ) -> Result<(Value, Option<bool>), StoreError> {
     manifest_fetch::fetch_detail(raw, key).await
+}
+
+#[cfg(test)]
+mod source_response_headers_tests {
+    use super::*;
+    #[test]
+    fn finalization_preserves_error_status_and_coalesces_vary() {
+        let mut response = StatusCode::METHOD_NOT_ALLOWED.into_response();
+        response.headers_mut().insert(
+            axum::http::header::VARY,
+            axum::http::HeaderValue::from_static("origin"),
+        );
+        let response = source_response(Ok(response), "PUT, DELETE, OPTIONS");
+        assert_eq!(response.status(), StatusCode::METHOD_NOT_ALLOWED);
+        assert_eq!(
+            response.headers()[axum::http::header::ALLOW],
+            "PUT, DELETE, OPTIONS"
+        );
+        let vary = response
+            .headers()
+            .get_all(axum::http::header::VARY)
+            .iter()
+            .map(|v| v.to_str().unwrap())
+            .collect::<Vec<_>>();
+        assert_eq!(vary, vec!["Accept, origin"]);
+        let response = source_response(
+            Err(StoreError::StatusBody(
+                401,
+                json!({"detail":"authentication required"}),
+            )),
+            "POST, OPTIONS",
+        );
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+        assert_eq!(
+            response.headers()[axum::http::header::ALLOW],
+            "POST, OPTIONS"
+        );
+        assert_eq!(
+            response.headers()[axum::http::header::VARY],
+            "Accept, origin"
+        );
+    }
+    #[test]
+    fn varying_encodings_and_wildcard_are_preserved_without_duplicate_fields() {
+        use axum::http::{header, HeaderValue};
+        let mut response = StatusCode::OK.into_response();
+        response.headers_mut().append(
+            header::VARY,
+            HeaderValue::from_static("Accept-Encoding, ACCEPT"),
+        );
+        response.headers_mut().append(
+            header::VARY,
+            HeaderValue::from_static("Origin, Accept-Language"),
+        );
+        let response = source_response(Ok(response), "POST, OPTIONS");
+        assert_eq!(response.headers().get_all(header::VARY).iter().count(), 1);
+        assert_eq!(
+            response.headers()[header::VARY],
+            "Accept, Accept-Encoding, Accept-Language, origin"
+        );
+        let mut response = response;
+        response
+            .headers_mut()
+            .append(header::VARY, HeaderValue::from_static("*"));
+        let response = source_response(Ok(response), "POST, OPTIONS");
+        assert_eq!(response.headers().get_all(header::VARY).iter().count(), 1);
+        assert_eq!(response.headers()[header::VARY], "*");
+    }
 }

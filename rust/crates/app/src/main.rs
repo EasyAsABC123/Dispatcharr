@@ -229,6 +229,11 @@ async fn run() -> Result<(), String> {
     } else {
         auth
     };
+    // Source CoreConfig.ready synchronizes developer notices before serving.
+    // A failed sync is logged, as in Source; it does not prevent app startup.
+    if let Err(error) = auth.startup_developer_notifications().await {
+        tracing::warn!(%error, "Developer notification startup synchronization failed");
+    }
     // Temporary migration capability while exceptional settings shapes and
     // live Main transitions remain outside the measured numeric Source cohort.
     let dynamic_health = match env::var("RUST_DYNAMIC_PROXY_HEALTH_ENABLED").as_deref() {

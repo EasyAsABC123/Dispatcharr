@@ -259,7 +259,7 @@ impl LocalScope {
                 .reserve_provider_retained_result(ProviderReservation {
                     profile_id: Some(inner.profile),
                     max_streams: profile_max,
-                    credential_pool: None,
+                    credential_pool: inner.credential_pool.clone(),
                 })
                 .await;
             gen.lease.settlement().wait().await;

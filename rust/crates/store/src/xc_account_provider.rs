@@ -387,9 +387,114 @@ pub(crate) fn expiration(value: &Value) -> Option<DateTime<Utc>> {
         .filter(|v| (1..=9999).contains(&v.year()))
 }
 
+/// Resolve VOD profiles through the SAME bounded Source credential transform
+/// and shared live/VOD credential fingerprint. Returned strings are secret-bearing
+/// and must not be included in logs, public evidence or Debug diagnostics.
+impl crate::AuthService {
+    #[allow(clippy::type_complexity)]
+    pub fn resolve_vod_profile_credentials(
+        base: &str,
+        username: &str,
+        password: &str,
+        search: &str,
+        replacement: &str,
+        group: Option<i64>,
+        maximum: u32,
+    ) -> Result<
+        Option<(
+            String,
+            String,
+            String,
+            Option<dispatcharr_contracts::PlaybackCredentialPool>,
+        )>,
+        StoreError,
+    > {
+        let Some(current) = credentials(base, username, password, search, replacement)? else {
+            return Ok(None);
+        };
+        let pool = match group {
+            Some(group) if maximum > 0 => Some(crate::playback::xc_credential_pool(
+                group,
+                maximum,
+                &current.username,
+                &current.password,
+            )?),
+            _ => None,
+        };
+        Ok(Some((
+            current.url,
+            current.username,
+            current.password,
+            pool,
+        )))
+    }
+}
+
 #[cfg(test)]
 mod source_controls {
     use super::*;
+    #[test]
+    fn vod_profile_transform_and_pool_use_the_same_changed_credentials() {
+        let (base, user, password, pool) = crate::AuthService::resolve_vod_profile_credentials(
+            "http://provider.invalid/base/player_api.php?discard=1",
+            "user",
+            "pass",
+            r"/live/([^/]+)/([^/]+)/",
+            "/live/new-$1/new-$2/",
+            Some(7),
+            2,
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(base, "http://provider.invalid/base");
+        assert_eq!(user, "new-user");
+        assert_eq!(password, "new-pass");
+        let pool = pool.unwrap();
+        assert_eq!(
+            pool.counter_key,
+            "server_group_connections:7:e2f437f8e5327e15"
+        );
+        assert_eq!(pool.max_streams, 2);
+    }
+    #[test]
+    fn vod_nonmatching_profile_is_not_a_base_credential_fallback() {
+        assert!(crate::AuthService::resolve_vod_profile_credentials(
+            "http://provider.invalid",
+            "user",
+            "pass",
+            "never-matches",
+            "replacement",
+            Some(7),
+            2,
+        )
+        .unwrap()
+        .is_none());
+    }
+    #[test]
+    fn vod_unlimited_profile_skips_group_fingerprinting_like_source() {
+        let (_, _, _, pool) = crate::AuthService::resolve_vod_profile_credentials(
+            "http://provider.invalid",
+            "unicode-é",
+            "pass",
+            "^(.*)$",
+            "$1",
+            Some(7),
+            0,
+        )
+        .unwrap()
+        .unwrap();
+        assert!(pool.is_none());
+        assert!(crate::AuthService::resolve_vod_profile_credentials(
+            "http://provider.invalid",
+            "unicode-é",
+            "pass",
+            "^(.*)$",
+            "$1",
+            Some(7),
+            1,
+        )
+        .is_err());
+    }
     #[test]
     fn provider_auth_zero_expired_is_still_source_success_when_user_info_is_truthy() {
         let v=normalize(json!({"user_info":{"auth":0,"status":"Expired","exp_date":"0","unexpected":"discarded"},"server_info":{"timezone":"UTC"}}),DateTime::from_timestamp(1,0).unwrap()).unwrap();

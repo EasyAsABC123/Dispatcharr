@@ -1,9 +1,11 @@
+#[path = "auth_route_compat.rs"]
+mod route_compat;
 use crate::{cidrs_allow, Store, StoreError, User};
 use axum::{
     extract::{ConnectInfo, State},
     http::{HeaderMap, StatusCode},
     response::{IntoResponse, Response},
-    routing::post,
+    routing::{any, post},
     Json, Router,
 };
 use dispatcharr_contracts::{ChannelControl, PlaybackRequest};
@@ -231,9 +233,9 @@ impl AuthService {
         let providers = crate::provider_reads::router(self.clone());
         Router::new()
             .route("/api/accounts/token/", post(login))
-            .route("/api/accounts/auth/login/", post(login_alias))
-            .route("/api/accounts/token/refresh/", post(refresh))
-            .route("/api/accounts/auth/logout/", post(logout))
+            .route("/api/accounts/auth/login/", any(route_compat::login))
+            .route("/api/accounts/token/refresh/", any(route_compat::refresh))
+            .route("/api/accounts/auth/logout/", any(route_compat::logout))
             .with_state(self)
             .merge(accounts)
             .merge(core)

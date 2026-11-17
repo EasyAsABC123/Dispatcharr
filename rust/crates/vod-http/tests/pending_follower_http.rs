@@ -314,6 +314,7 @@ async fn actual_pending_timed(busy: bool, cancel: bool, command_seconds: u64, ho
             account_id: 1,
             profile_id: profile,
             max_streams: 1,
+            credential_pool: None,
             url: format!("{origin}/fixture.mp4"),
             user_agent: "owned-pending-http".into(),
         }],
