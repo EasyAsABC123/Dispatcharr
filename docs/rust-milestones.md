@@ -9,6 +9,13 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+[Language lifecycle reference](rust-milestone-batch52.md) now passes eleven
+Original refresh roots across two accounts, six category-settings PATCH calls
+and one declared Episode fixture seed. Complete rows and all eleven sequences
+are retained in credential-safe evidence. Rust language matching,
+reconciliation and API integration are in development; no language Native or
+performance acceptance is claimed.
+
 [Candidate51](rust-milestone-batch51.md) has seventeen Source observations for
 international values, ordered identities and 1,000/2,001-row catalogue lifecycle.
 The original controller's scale-fixture failure and the separate scale-only pass

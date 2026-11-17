@@ -1,0 +1,1878 @@
+{
+  "status": "ACTUAL_SOURCE11_OBSERVED",
+  "actual_exit": 0,
+  "whole_seconds": 200.4612854430161,
+  "actual_Source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "provisional_Rust_interface": [
+    "reconcile once perkind afterwhole1000chunks, beforeorphancleanup",
+    "select touchedaccount relations bylast_seen>=scanstart, loadallaccountrelations ofcandidate titles",
+    "pin existingprovider streams duringlistbatches; languagechanges onlyreconcile stage",
+    "newlanguage rows minimalidentity; metadata donor fillsblank survivor only",
+    "Seriesmove resetsdetailed/episodesflags, stable refresh stamps; Episode followsseries_relation; majority/tiehigherSeriesID retains originalEpisodeUUID/ID",
+    "clean donor absorbed preservingselectedsourceglobalPK; collisionERels moveontosurvivorEpisode; no-streamEpisodes deleted",
+    "per-title atomic exceptions caughtandcounted, unrelatedtitles continue (codeauthority only faultsnotcaptured)"
+  ],
+  "normal_admin_API": "sixPATCHcalls each2categoryitems:EN\u2192en normalization/nullclear,CPmerge,categoryrelationsequence burns2/PKandtimestampsunchanged",
+  "sole_seed": "AfterBshared2Episodes(oneempty),2EpisodeRelations linkedA/BSeriesRelations;4existingrelfetchedflagsTrue; nootherrows/clock/seqdelta",
+  "phases": [
+    {
+      "phase": "language-A-initial",
+      "selected_owner": "A",
+      "Movie": [
+        {
+          "id": 1,
+          "name": "Owned Language Movie",
+          "description": "Owned movie baseline",
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "",
+          "custom_properties": null
+        }
+      ],
+      "Series": [
+        {
+          "id": 1,
+          "name": "Owned Language Series",
+          "description": "Owned series baseline",
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        }
+      ],
+      "MovieRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "movie_id": 1,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        }
+      ],
+      "SeriesRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "series_id": 1,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        }
+      ],
+      "Episodes": [],
+      "EpisodeRelations": [],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    {
+      "phase": "language-B-shared",
+      "selected_owner": "B",
+      "Movie": [
+        {
+          "id": 1,
+          "name": "Owned Language Movie",
+          "description": "Owned movie baseline",
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "",
+          "custom_properties": null
+        }
+      ],
+      "Series": [
+        {
+          "id": 1,
+          "name": "Owned Language Series",
+          "description": "Owned series baseline",
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        }
+      ],
+      "MovieRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "movie_id": 1,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "movie_id": 1,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        }
+      ],
+      "SeriesRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "series_id": 1,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "series_id": 1,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        }
+      ],
+      "Episodes": [],
+      "EpisodeRelations": [],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    {
+      "phase": "language-A-en",
+      "selected_owner": "A",
+      "Movie": [
+        {
+          "id": 1,
+          "name": "Owned Language Movie",
+          "description": "Owned movie baseline",
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "",
+          "custom_properties": null
+        },
+        {
+          "id": 2,
+          "name": "Owned Language Movie",
+          "description": null,
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "en",
+          "custom_properties": null
+        }
+      ],
+      "Series": [
+        {
+          "id": 1,
+          "name": "Owned Language Series",
+          "description": "Owned series baseline",
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        },
+        {
+          "id": 2,
+          "name": "Owned Language Series",
+          "description": null,
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "en",
+          "custom_properties": null
+        }
+      ],
+      "MovieRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "movie_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "movie_id": 1,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": true
+          }
+        }
+      ],
+      "SeriesRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "series_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "series_id": 1,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": true,
+            "episodes_fetched": true
+          }
+        }
+      ],
+      "Episodes": [
+        {
+          "id": 1,
+          "series_id": 2,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        },
+        {
+          "id": 3,
+          "series_id": 1,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        }
+      ],
+      "EpisodeRelations": [
+        {
+          "id": 1,
+          "episode_id": 1,
+          "series_relation_id": 1,
+          "m3u_account_id": 5,
+          "stream_id": "owned-language-episode-5"
+        },
+        {
+          "id": 2,
+          "episode_id": 3,
+          "series_relation_id": 2,
+          "m3u_account_id": 8,
+          "stream_id": "owned-language-episode-8"
+        }
+      ],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    {
+      "phase": "language-A-fr",
+      "selected_owner": "A",
+      "Movie": [
+        {
+          "id": 1,
+          "name": "Owned Language Movie",
+          "description": "Owned movie baseline",
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "",
+          "custom_properties": null
+        },
+        {
+          "id": 2,
+          "name": "Owned Language Movie",
+          "description": null,
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "fr",
+          "custom_properties": null
+        }
+      ],
+      "Series": [
+        {
+          "id": 1,
+          "name": "Owned Language Series",
+          "description": "Owned series baseline",
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        },
+        {
+          "id": 2,
+          "name": "Owned Language Series",
+          "description": null,
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "fr",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        }
+      ],
+      "MovieRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "movie_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "movie_id": 1,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": true
+          }
+        }
+      ],
+      "SeriesRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "series_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "series_id": 1,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": true,
+            "episodes_fetched": true
+          }
+        }
+      ],
+      "Episodes": [
+        {
+          "id": 1,
+          "series_id": 2,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        },
+        {
+          "id": 3,
+          "series_id": 1,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        }
+      ],
+      "EpisodeRelations": [
+        {
+          "id": 1,
+          "episode_id": 1,
+          "series_relation_id": 1,
+          "m3u_account_id": 5,
+          "stream_id": "owned-language-episode-5"
+        },
+        {
+          "id": 2,
+          "episode_id": 3,
+          "series_relation_id": 2,
+          "m3u_account_id": 8,
+          "stream_id": "owned-language-episode-8"
+        }
+      ],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 16,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    {
+      "phase": "language-A-clear",
+      "selected_owner": "A",
+      "Movie": [
+        {
+          "id": 2,
+          "name": "Owned Language Movie",
+          "description": "Owned movie baseline",
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "",
+          "custom_properties": null
+        }
+      ],
+      "Series": [
+        {
+          "id": 2,
+          "name": "Owned Language Series",
+          "description": "Owned series baseline",
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        }
+      ],
+      "MovieRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "movie_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "movie_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        }
+      ],
+      "SeriesRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "series_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "series_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        }
+      ],
+      "Episodes": [
+        {
+          "id": 1,
+          "series_id": 2,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        }
+      ],
+      "EpisodeRelations": [
+        {
+          "id": 1,
+          "episode_id": 1,
+          "series_relation_id": 1,
+          "m3u_account_id": 5,
+          "stream_id": "owned-language-episode-5"
+        },
+        {
+          "id": 2,
+          "episode_id": 1,
+          "series_relation_id": 2,
+          "m3u_account_id": 8,
+          "stream_id": "owned-language-episode-8"
+        }
+      ],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 20,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    {
+      "phase": "language-A-en-again",
+      "selected_owner": "A",
+      "Movie": [
+        {
+          "id": 2,
+          "name": "Owned Language Movie",
+          "description": "Owned movie baseline",
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "",
+          "custom_properties": null
+        },
+        {
+          "id": 3,
+          "name": "Owned Language Movie",
+          "description": null,
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "en",
+          "custom_properties": null
+        }
+      ],
+      "Series": [
+        {
+          "id": 2,
+          "name": "Owned Language Series",
+          "description": "Owned series baseline",
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        },
+        {
+          "id": 3,
+          "name": "Owned Language Series",
+          "description": null,
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "en",
+          "custom_properties": null
+        }
+      ],
+      "MovieRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "movie_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "movie_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        }
+      ],
+      "SeriesRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "series_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "series_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        }
+      ],
+      "Episodes": [
+        {
+          "id": 1,
+          "series_id": 3,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        },
+        {
+          "id": 4,
+          "series_id": 2,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        }
+      ],
+      "EpisodeRelations": [
+        {
+          "id": 1,
+          "episode_id": 1,
+          "series_relation_id": 1,
+          "m3u_account_id": 5,
+          "stream_id": "owned-language-episode-5"
+        },
+        {
+          "id": 2,
+          "episode_id": 4,
+          "series_relation_id": 2,
+          "m3u_account_id": 8,
+          "stream_id": "owned-language-episode-8"
+        }
+      ],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 24,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    {
+      "phase": "language-B-fr",
+      "selected_owner": "B",
+      "Movie": [
+        {
+          "id": 2,
+          "name": "Owned Language Movie",
+          "description": "Owned movie baseline",
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "fr",
+          "custom_properties": null
+        },
+        {
+          "id": 3,
+          "name": "Owned Language Movie",
+          "description": null,
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "en",
+          "custom_properties": null
+        }
+      ],
+      "Series": [
+        {
+          "id": 2,
+          "name": "Owned Language Series",
+          "description": "Owned series baseline",
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "fr",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        },
+        {
+          "id": 3,
+          "name": "Owned Language Series",
+          "description": null,
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "en",
+          "custom_properties": null
+        }
+      ],
+      "MovieRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "movie_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "movie_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        }
+      ],
+      "SeriesRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "series_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "series_id": 2,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        }
+      ],
+      "Episodes": [
+        {
+          "id": 1,
+          "series_id": 3,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        },
+        {
+          "id": 4,
+          "series_id": 2,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        }
+      ],
+      "EpisodeRelations": [
+        {
+          "id": 1,
+          "episode_id": 1,
+          "series_relation_id": 1,
+          "m3u_account_id": 5,
+          "stream_id": "owned-language-episode-5"
+        },
+        {
+          "id": 2,
+          "episode_id": 4,
+          "series_relation_id": 2,
+          "m3u_account_id": 8,
+          "stream_id": "owned-language-episode-8"
+        }
+      ],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 28,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    {
+      "phase": "language-A-claim-fr",
+      "selected_owner": "A",
+      "Movie": [
+        {
+          "id": 3,
+          "name": "Owned Language Movie",
+          "description": "Owned movie baseline",
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "fr",
+          "custom_properties": null
+        }
+      ],
+      "Series": [
+        {
+          "id": 3,
+          "name": "Owned Language Series",
+          "description": "Owned series baseline",
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "fr",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        }
+      ],
+      "MovieRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "movie_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "movie_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        }
+      ],
+      "SeriesRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "series_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "series_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        }
+      ],
+      "Episodes": [
+        {
+          "id": 1,
+          "series_id": 3,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        }
+      ],
+      "EpisodeRelations": [
+        {
+          "id": 1,
+          "episode_id": 1,
+          "series_relation_id": 1,
+          "m3u_account_id": 5,
+          "stream_id": "owned-language-episode-5"
+        },
+        {
+          "id": 2,
+          "episode_id": 1,
+          "series_relation_id": 2,
+          "m3u_account_id": 8,
+          "stream_id": "owned-language-episode-8"
+        }
+      ],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 32,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    {
+      "phase": "language-repeat",
+      "selected_owner": "A",
+      "Movie": [
+        {
+          "id": 3,
+          "name": "Owned Language Movie",
+          "description": "Owned movie baseline",
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "fr",
+          "custom_properties": null
+        }
+      ],
+      "Series": [
+        {
+          "id": 3,
+          "name": "Owned Language Series",
+          "description": "Owned series baseline",
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "fr",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        }
+      ],
+      "MovieRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "movie_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "movie_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        }
+      ],
+      "SeriesRelations": [
+        {
+          "id": 1,
+          "m3u_account_id": 5,
+          "series_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        },
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "series_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        }
+      ],
+      "Episodes": [
+        {
+          "id": 1,
+          "series_id": 3,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        }
+      ],
+      "EpisodeRelations": [
+        {
+          "id": 1,
+          "episode_id": 1,
+          "series_relation_id": 1,
+          "m3u_account_id": 5,
+          "stream_id": "owned-language-episode-5"
+        },
+        {
+          "id": 2,
+          "episode_id": 1,
+          "series_relation_id": 2,
+          "m3u_account_id": 8,
+          "stream_id": "owned-language-episode-8"
+        }
+      ],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 34,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    {
+      "phase": "language-A-prune",
+      "selected_owner": "A",
+      "Movie": [
+        {
+          "id": 3,
+          "name": "Owned Language Movie",
+          "description": "Owned movie baseline",
+          "year": 2010,
+          "tmdb_id": "96001",
+          "language": "fr",
+          "custom_properties": null
+        }
+      ],
+      "Series": [
+        {
+          "id": 3,
+          "name": "Owned Language Series",
+          "description": "Owned series baseline",
+          "year": 2010,
+          "tmdb_id": "97001",
+          "language": "fr",
+          "custom_properties": {
+            "category_id": "21",
+            "releaseDate": "2010-01-02"
+          }
+        }
+      ],
+      "MovieRelations": [
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "movie_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Movie",
+              "year": 2010,
+              "tmdb_id": "96001",
+              "stream_id": 9401,
+              "category_id": "11",
+              "description": "Owned movie baseline",
+              "_category_id": 1,
+              "container_extension": "mp4",
+              "_provider_category_id": "11"
+            },
+            "detailed_fetched": false
+          }
+        }
+      ],
+      "SeriesRelations": [
+        {
+          "id": 2,
+          "m3u_account_id": 8,
+          "series_id": 3,
+          "custom_properties": {
+            "basic_data": {
+              "name": "Owned Language Series",
+              "plot": "Owned series baseline",
+              "tmdb": "97001",
+              "series_id": 9501,
+              "category_id": "21",
+              "releaseDate": "2010-01-02",
+              "_category_id": 2,
+              "_provider_category_id": "21"
+            },
+            "detailed_fetched": false,
+            "episodes_fetched": false
+          }
+        }
+      ],
+      "Episodes": [
+        {
+          "id": 1,
+          "series_id": 3,
+          "name": "Owned Language Episode",
+          "season_number": 1,
+          "episode_number": 1,
+          "custom_properties": {
+            "fixture": "language-owned"
+          }
+        }
+      ],
+      "EpisodeRelations": [
+        {
+          "id": 2,
+          "episode_id": 1,
+          "series_relation_id": 2,
+          "m3u_account_id": 8,
+          "stream_id": "owned-language-episode-8"
+        }
+      ],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 36,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    },
+    {
+      "phase": "language-B-prune",
+      "selected_owner": "B",
+      "Movie": [],
+      "Series": [],
+      "MovieRelations": [],
+      "SeriesRelations": [],
+      "Episodes": [],
+      "EpisodeRelations": [],
+      "all11sequences": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 8,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 3,
+          "is_called": true
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 38,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        }
+      }
+    }
+  ],
+  "not_captured": [
+    "arbitrarylanguagecycles/parking",
+    "nullseries_relation descendants",
+    "three-waymajority/ties",
+    "metadata-keyconflict beyondblankdescription",
+    "transactionfault/concurrentinsertion"
+  ]
+}
