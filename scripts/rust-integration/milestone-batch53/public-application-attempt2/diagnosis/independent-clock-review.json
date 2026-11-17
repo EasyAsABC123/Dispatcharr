@@ -1,0 +1,70 @@
+{
+  "status": "INDEPENDENT_READ_ONLY_CLOCK_BOUND_DIAGNOSIS",
+  "runtime_or_replay": false,
+  "clock_slack_added": false,
+  "running_export_modified": false,
+  "cases": {
+    "Native": {
+      "inputs": {
+        "artifacts/rust/normal-graph-candidate53-public-fourteen-2/fixtures/Native-85a3c7dd/comskip-positive-epochs/private/mark-repeat/journal.json": "8a47b1f886a3f5c3491b9b246a713197d2a6f6b49f93647b482cbd45d250b148",
+        "artifacts/rust/normal-graph-candidate53-public-fourteen-2/fixtures/Native-85a3c7dd/comskip-positive-epochs/private/mark-repeat/backend.json": "ab383cfb2601152586a945c34af698789d2ee75b3c6f953431b8351ed7cad0ba",
+        "artifacts/rust/normal-graph-candidate53-public-fourteen-2/fixtures/Native-85a3c7dd/comskip-positive-epochs/private/mark-repeat/frame.json": "441dcdff91309b75d0f1311a86a5622f60ec50c71fb478c0c9061906ab3933f1"
+      },
+      "raw_journal": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-candidate53-public-fourteen-2/fixtures/Native-85a3c7dd/data/comskip-manual/dvr-domain-observer-de99bc65/private-startup-monitor.jsonl",
+        "sha256": "84fabb4254139e9115b26a064d52b0455827dc727e660e0d546d744a8475d38c",
+        "rows": 125
+      },
+      "task_id": "a19e4c23-ff58-4400-9fac-5d9f48ecbb75",
+      "backend_date_done": "2026-11-17T14:24:11.493555+00:00",
+      "backend_epoch": "1794925451.493555",
+      "actual_publication_lower": "1794925451.399734",
+      "current_queue_upper": "1794925451.490614",
+      "terminal_marker": "plugin-startup-terminal-b42f29f624554c0c91d329b7c5dabcf4",
+      "actual_terminal_ECHO": "1794925453.484399",
+      "completion_after_current_queue_upper_microseconds": "2941.000000",
+      "completion_before_terminal_microseconds": "1990844.000000",
+      "matching_delivery_tag_ACKs": [],
+      "queue_operation_count": 1,
+      "within_actual_publication_terminal_window": true,
+      "passes_current_queue_upper_bound": false,
+      "ACK_scope": "No actual matching ACK retained. Native selected queue path uses destructive RPOP; do not invent an ACK or claim cross-DB completion-write MONITOR evidence."
+    },
+    "Source": {
+      "inputs": {
+        "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/mark-repeat/journal.json": "b5b6e4337b7798baded978f4081a29c173b93bf25a2fb3b7468f8d1e32f9beb1",
+        "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/mark-repeat/backend.json": "1cf8aa3681ee2a1691401ea1c960bb010a385837bac6e0631b6ca7dceec73251",
+        "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/mark-repeat/frame.json": "32320b748aadb7eeb9e7451b0687232fcfff488cf3d4e00939950cfb69fea7f4"
+      },
+      "raw_journal": {
+        "path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-comskip-positive-source-1/fixtures/Original-5f9f779d/data/comskip-positive-manual/dvr-domain-observer-76b8bf8a/private-startup-monitor.jsonl",
+        "sha256": "eaf13ab062298447bbdff8887fd3a9da90f6bcbc2d8bd40f6507cb8c3b845dbb",
+        "rows": 60
+      },
+      "task_id": "0a3a1a55-593c-4494-8b52-2be2ac904743",
+      "backend_date_done": "2026-11-17T06:10:17.111833+00:00",
+      "backend_epoch": "1794895817.111833",
+      "actual_publication_lower": "1794895817.107719",
+      "current_queue_upper": "1794895818.687497",
+      "terminal_marker": "plugin-startup-terminal-615957d47a7d4b0aa2d07bc76628299a",
+      "actual_terminal_ECHO": "1794895819.189468",
+      "completion_after_current_queue_upper_microseconds": "-1575664.000000",
+      "completion_before_terminal_microseconds": "2077635.000000",
+      "matching_delivery_tag_ACKs": [
+        {
+          "command": "ZREM unacked_index 9ba7a140-e198-4c2e-9e96-8e060a734658",
+          "time": "1794895817.108726"
+        },
+        {
+          "command": "HDEL unacked 9ba7a140-e198-4c2e-9e96-8e060a734658",
+          "time": "1794895817.108732"
+        }
+      ],
+      "queue_operation_count": 12,
+      "within_actual_publication_terminal_window": true,
+      "passes_current_queue_upper_bound": true,
+      "completion_after_matching_ACK_microseconds": "3101.000000"
+    }
+  },
+  "conclusion": "Current queue upper is dequeue/ACK or later polling activity, not terminal completion barrier. Native completion legitimately follows destructive RPOP by2941us and precedes exact terminal ECHO by1990844us. Source completion follows its matching early ACK by3101us; unrelated later polls/publications happen to make old upper succeed. Validate exact terminal ECHO against hash-bound raw journal rather than adding clock slack."
+}

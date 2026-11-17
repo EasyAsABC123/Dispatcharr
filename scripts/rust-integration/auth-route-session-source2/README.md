@@ -1,0 +1,9 @@
+Source auth missing-streamer companion
+
+Original Dispatcharr, Django, DRF and SimpleJWT authors retain all credit.
+
+Root63254 consumed exit0 in81.620722447s, with EOF/group settled. Exactly six NEW calls in one fresh isolated Source fixture/cache completed200: role0 streamer login, own identity, refresh, refreshed-token identity, logout, and original-JWT identity after logout. The last protected response still reports the same actual role0 user. No45 known admin/standard/method/error calls were replayed. Source1 remains immutable, including its streamer429 and blocked dependents. These are51 observations across TWO distinct Source contexts, not a single51-call green controller.
+
+Read-only throttle snapshots directly observe the login scope3/minute: zero histories before the chain and one matching11.254.251.1 history entry afterward, TTL50s. The timestamp precedes the real login_success event. Neither observer mutates the budget; no bucket deletion/reset, forwarded-IP spoofing or arbitrary sleep occurred. The three fixture actors were recreated in the fresh namespace; their seeded state is not a replay of their prior HTTP operations.
+
+All six wire/request/SQLbefore/SQLafter observations and both throttle snapshots are SHA/length bound. The raw selected SQL chain is exact, credentials/user fields remain stable except real last_login, only expected login/logout events are appended, both selected sequences are preserved/advance exactly, and no session is created by the JWT-only streamer chain. Public evidence has no usable passwords/JWTs/cookies. Raw private token-bearing payloads remain private. JWT actor/type/lifetime and real protected use are checked; offline signature verification is not claimed. Notification inbox, general admin models/forms, Native parity and fullM0/fullmilestone acceptance remain unqualified. Root cleanup proves three exact CIDs, two captured original host generations and the project absent.

@@ -1,0 +1,9 @@
+# Candidate53 public14 attempt2: failed
+
+The clean exported cohort exits **1 in1214.148802 seconds** after all fourteen contexts run. Thirteen pass, including the combined live/VOD settings path. The Comskip context preserves the old three negative leaves and passes positive MARK, then its original mark-repeat checker rejects a backend completion clock outside a filtered queue-command interval. The repeated operation was fully captured. The four subsequent positive CUT/repeat/natural cells are **not run**.
+
+Independent offline diagnosis binds the actual completed terminal DB1 ECHO as the upper observation fence; captured MARK and repeat business observations then match the unchanged Source oracle with zero clock slack. This does not change the original failed controller, qualify the positive six-cell workflow or accept public14. The corrected fence and Source6-calibrated own-input CUT tool are prepared successors only.
+
+The earlier attempt1 exits1 in0.709 seconds during UID readability, before any application starts. Its owned archive extraction directories inherited0700; the repair changes only those directories to0755 and preserves file bytes. One exact UID CID is independently absent; its initial host generation was not captured. The full attempt2 has actual EOF/group settlement and independent absence of eighteen exact CIDs, seventeen captured original host generations and the project. Its UID initial host-generation gap remains explicit.
+
+Receipts, safe status reports and the literal failure traceback are copied exactly. Large Source projections, SQL, media, credentials and framehash transcripts are not duplicated. Passed-context reports remain hash-bound. No performance gain or complete M0–M9 milestone acceptance is claimed. Original Dispatcharr and dependency authors retain all application and algorithm credit.

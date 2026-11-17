@@ -120,6 +120,29 @@ when every file checksum and mode is correct. Normalize only owned export helper
 directories to0755, verify unchanged file bytes, and use a fresh prepared attempt.
 Do not relax the production UID, capabilities or source-file integrity checks.
 
+Positive Comskip characterization also exposed two compound-workflow traps.
+Natural booking publishes artwork before the recording root and its Comskip
+child; retain that complete three-task graph instead of assuming two tasks.
+When MARK and CUT share a fixture, snapshot the existing MARK EDL paths and
+hashes before CUT, exclude only those pre-existing files from the new-output
+watcher, and verify their bytes remain unchanged afterward. Otherwise an
+observer can reject a successful second operation after a 520-second recording.
+
+The manual CUT content reference contains a 3.9 MiB framehash transcript, larger
+than the fixture's 1 MiB command-output cap. Keep that cap: write the complete
+decoder output to an owned file under an explicit 8 MiB child file-size limit,
+wait for the actual decoder, return a compact receipt, and compare the full
+file. Syntax and synthetic delegation controls precede the real cohort; they
+do not establish media equivalence or application performance. Natural timed
+captures with successful A/V decode still need their own content proof.
+
+Use the completed journal's actual terminal barrier to bound backend completion,
+not the last selected queue command. A fast Comskip repeat completes after
+Native dequeue and Source early acknowledgement; later unrelated Source polling
+had accidentally made the old upper bound pass. Validate the complete journal
+hash, unique final ECHO, persisted row count and closed/fsynced observer before
+using that timestamp. Preserve the failed controller and add no clock tolerance.
+
 When reducing a frozen helper closure, inspect imports inside generated guest
 Python strings as well as ordinary host imports. Catalogue receiver setup uses
 `matching_guest` through `fixture.sql`; that dependency is invisible to a host-only

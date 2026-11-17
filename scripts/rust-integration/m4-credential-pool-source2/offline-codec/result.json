@@ -1,0 +1,181 @@
+{
+  "cp_tmpfs_reproduction": {
+    "visibility": {
+      "path": "/tmp/source2-owned-vod-prefix.ts",
+      "exists_in_exec_mount": false
+    },
+    "argv": [
+      "ffmpeg",
+      "-nostdin",
+      "-hide_banner",
+      "-v",
+      "error",
+      "-i",
+      "/tmp/source2-owned-vod-prefix.ts",
+      "-map",
+      "0:v:0",
+      "-map",
+      "0:a:0",
+      "-f",
+      "framehash",
+      "-"
+    ],
+    "receipt": {
+      "actual_exit": 254,
+      "failure": null,
+      "seconds": 0.18893471802584827,
+      "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-source2-prefix-offline-1/actual-1/command-0007.stdout",
+      "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-source2-prefix-offline-1/actual-1/command-0007.stderr",
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group": 567567,
+      "process_group_settled": true,
+      "remaining_group_members": [],
+      "reaped_descendants": [],
+      "output_bytes_written": 183,
+      "output_bytes_discarded": 0
+    },
+    "original_Source2_stderr_unretained": true
+  },
+  "three_prefixes": [
+    {
+      "name": "proxy-Movie-shared-login",
+      "argv": [
+        "ffmpeg",
+        "-nostdin",
+        "-hide_banner",
+        "-v",
+        "error",
+        "-i",
+        "/retained/proxy-Movie-shared-login-prefix.ts",
+        "-map",
+        "0:v:0",
+        "-map",
+        "0:a:0",
+        "-f",
+        "framehash",
+        "-"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.1690066070004832,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-source2-prefix-offline-1/actual-1/command-0008.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-source2-prefix-offline-1/actual-1/command-0008.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 567637,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 33913,
+        "output_bytes_discarded": 0
+      },
+      "stream_frame_counts": {
+        "0": 105,
+        "1": 194
+      },
+      "passed": true,
+      "purpose": "original retained-prefix video/audio decode-existence criterion; not full-stream/content equality"
+    },
+    {
+      "name": "proxy-Episode-other-login",
+      "argv": [
+        "ffmpeg",
+        "-nostdin",
+        "-hide_banner",
+        "-v",
+        "error",
+        "-i",
+        "/retained/proxy-Episode-other-login-prefix.ts",
+        "-map",
+        "0:v:0",
+        "-map",
+        "0:a:0",
+        "-f",
+        "framehash",
+        "-"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.17157638998469338,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-source2-prefix-offline-1/actual-1/command-0009.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-source2-prefix-offline-1/actual-1/command-0009.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 567795,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 20263,
+        "output_bytes_discarded": 0
+      },
+      "stream_frame_counts": {
+        "0": 64,
+        "1": 114
+      },
+      "passed": true,
+      "purpose": "original retained-prefix video/audio decode-existence criterion; not full-stream/content equality"
+    },
+    {
+      "name": "proxy-Episode-unlimited",
+      "argv": [
+        "ffmpeg",
+        "-nostdin",
+        "-hide_banner",
+        "-v",
+        "error",
+        "-i",
+        "/retained/proxy-Episode-unlimited-prefix.ts",
+        "-map",
+        "0:v:0",
+        "-map",
+        "0:a:0",
+        "-f",
+        "framehash",
+        "-"
+      ],
+      "receipt": {
+        "actual_exit": 0,
+        "failure": null,
+        "seconds": 0.14091910599381663,
+        "stdout": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-source2-prefix-offline-1/actual-1/command-0010.stdout",
+        "stderr": "/home/justin/github/Dispatcharr/artifacts/rust/m4-vod-source2-prefix-offline-1/actual-1/command-0010.stderr",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "process_group": 567948,
+        "process_group_settled": true,
+        "remaining_group_members": [],
+        "reaped_descendants": [],
+        "output_bytes_written": 4919,
+        "output_bytes_discarded": 0
+      },
+      "stream_frame_counts": {
+        "0": 17,
+        "1": 24
+      },
+      "passed": true,
+      "purpose": "original retained-prefix video/audio decode-existence criterion; not full-stream/content equality"
+    }
+  ],
+  "passed": true,
+  "failure": null,
+  "seconds": 2.8073020949959755,
+  "owned_cleanup": {
+    "project": "dispatcharr-m4-prefix-codec-cbd60143cf5c",
+    "CID": "959ce8a44fd6cc319cebb5ec827b082011bfc5da565cc2a90a8ce15781db9d95",
+    "hostPID": 567297,
+    "starttime": "24278471",
+    "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "containers_absent": true,
+    "networks_absent": true,
+    "volumes_absent": true,
+    "CID_absent": true,
+    "original_generation_absent": true
+  },
+  "Source_business_replayed": false,
+  "new_applications": 0,
+  "performance_or_Native_acceptance": false,
+  "all_commands_EOF_group_settled": true
+}

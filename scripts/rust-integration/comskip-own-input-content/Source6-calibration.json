@@ -1,0 +1,289 @@
+{
+  "Source6_metadata_inputs": {
+    "/home/justin/github/Dispatcharr/scripts/rust-integration/comskip-positive-lifecycle-source1/cells/natural-automatic-cut/actual-detector-inputs.json": {
+      "sha256": "07d570d8df53c8ff48e21f1eaa6d5dc4b94c0c86edc7c8cf877002921b6294be",
+      "bytes": 648
+    },
+    "/home/justin/github/Dispatcharr/scripts/rust-integration/comskip-positive-lifecycle-source1/cells/natural-automatic-cut/media-after.json": {
+      "sha256": "7d43a9fe67bd6fdaa30ad5b15077ce384b134c22774efa55a875d48d4993e4c0",
+      "bytes": 69985
+    },
+    "/home/justin/github/Dispatcharr/scripts/rust-integration/comskip-positive-lifecycle-source1/cells/natural-automatic-cut/actual-generated-EDL.json": {
+      "sha256": "b06350467f86a71a1abe7fc9e69741c763ce63d937d53eb55122c14cf41202a1",
+      "bytes": 404
+    },
+    "/home/justin/github/Dispatcharr/scripts/rust-integration/comskip-positive-lifecycle-source1/qualification.json": {
+      "sha256": "e3443e1ec433c319b51f2942cd5cc069813b19450bb842c9621a48ba4b9c079e",
+      "bytes": 1300
+    }
+  },
+  "tool_inputs": {
+    "guest": {
+      "sha256": "a170efefca76c47812a7085c33115d41b691c14aa479dcb53e7af0d2937fb4f0",
+      "bytes": 12326
+    },
+    "host": {
+      "sha256": "6c327d386879aea9de9ed2656f5a082943eeb244d231532a68ffeef25cc19d43",
+      "bytes": 11239
+    },
+    "decoder_authority": {
+      "sha256": "4aab16c41a6ac6912a36ebab43d0f301cad8297a6aa5169fccb513e336d00116",
+      "bytes": 2318
+    },
+    "coordinator": {
+      "sha256": "e3626511a8a1f607b911e465208c1bea9de65df044d4f1dca36701d65f4f68bc",
+      "bytes": 34775
+    },
+    "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+  },
+  "codec_result": {
+    "passed": true,
+    "PID_namespace": "pid:[4026533417]",
+    "Source_apps_jobs_bookings_or_Comskip_detector_started": false,
+    "performance_claim": false,
+    "container_byte_equivalence_claimed": false,
+    "tool": {
+      "ffmpeg_path": "/usr/local/bin/ffmpeg",
+      "sha256": "5831afcbcb9dc46107b633dc09f276794dc094b70aacfda6096eeceb83f013f0",
+      "bytes": 47576280,
+      "ffprobe_path": "/usr/local/bin/ffprobe",
+      "version": "ffmpeg version 9.0.2-Dispatcharr Copyright (c) 2000-2026 the FFmpeg developers"
+    },
+    "input_probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 320,
+          "height": 180
+        },
+        {
+          "index": 1,
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 1
+        }
+      ],
+      "format": {
+        "duration": "519.861000"
+      }
+    },
+    "reference_probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 320,
+          "height": 180
+        },
+        {
+          "index": 1,
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 1
+        }
+      ],
+      "format": {
+        "duration": "458.901000"
+      }
+    },
+    "actual_probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "index": 0,
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 320,
+          "height": 180
+        },
+        {
+          "index": 1,
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "48000",
+          "channels": 1
+        }
+      ],
+      "format": {
+        "duration": "458.901000"
+      }
+    },
+    "reference_raw": {
+      "sha256": "e40bd27648fdd1c58893f8d6e30fb943d94dae8866646170fd708eaceeaa49b0",
+      "bytes": 35406443
+    },
+    "actual_raw": {
+      "sha256": "209e34cc009b6218af1140280fd338dde04be4ebee72f282920108c50aa81b7c",
+      "bytes": 35406443
+    },
+    "keep_intervals": [
+      {
+        "start": 0.0,
+        "end": 150.52,
+        "argv_start": "0.000",
+        "argv_duration": "150.520"
+      },
+      {
+        "start": 181.48,
+        "end": 332.52,
+        "argv_start": "181.480",
+        "argv_duration": "151.040"
+      },
+      {
+        "start": 363.48,
+        "end": 519.861,
+        "argv_start": "363.480",
+        "argv_duration": "156.381"
+      }
+    ],
+    "commercials": [
+      [
+        150.52,
+        181.48
+      ],
+      [
+        332.52,
+        363.48
+      ]
+    ],
+    "input_custody": {
+      "/inputs/original.mkv": {
+        "stat": [
+          37,
+          34735945,
+          37370261,
+          1794921180101520411,
+          1794921180101520411
+        ],
+        "sha256": "7009b4d103b81687ae310cc45ec988f8f92f2df2b8d45730c7c808ea06a6e3c5",
+        "bytes": 37370261
+      },
+      "/inputs/actual.mkv": {
+        "stat": [
+          37,
+          34735966,
+          35406443,
+          1794921180500529057,
+          1794921180509529252
+        ],
+        "sha256": "209e34cc009b6218af1140280fd338dde04be4ebee72f282920108c50aa81b7c",
+        "bytes": 35406443
+      },
+      "/inputs/generated.edl": {
+        "stat": [
+          37,
+          34841039,
+          32,
+          1794927220684197813,
+          1794927220684197813
+        ],
+        "sha256": "984238c523502b3c23dc3e07e9fcdaf3bead2446328e74315bec4671af4dfbbc",
+        "bytes": 32
+      }
+    },
+    "reference_framehash": {
+      "file": {
+        "sha256": "c78d0de7596099642dd6fc958294e8b88c9f03b713e54f3cff366797f3a8313c",
+        "bytes": 3693977
+      },
+      "headers": [
+        "#format: frame checksums",
+        "#version: 2",
+        "#hash: SHA256",
+        "#software: Lavf63.1.102",
+        "#tb 0: 1/1000",
+        "#media_type 0: video",
+        "#codec_id 0: rawvideo",
+        "#dimensions 0: 320x180",
+        "#sar 0: 1/1",
+        "#tb 1: 1/48000",
+        "#media_type 1: audio",
+        "#codec_id 1: pcm_f32le",
+        "#sample_rate 1: 48000",
+        "#channel_layout_name 1: mono",
+        "#stream#, dts,        pts, duration,     size, hash"
+      ],
+      "record_counts": {
+        "0": 11472,
+        "1": 21507
+      }
+    },
+    "actual_framehash": {
+      "file": {
+        "sha256": "c78d0de7596099642dd6fc958294e8b88c9f03b713e54f3cff366797f3a8313c",
+        "bytes": 3693977
+      },
+      "headers": [
+        "#format: frame checksums",
+        "#version: 2",
+        "#hash: SHA256",
+        "#software: Lavf63.1.102",
+        "#tb 0: 1/1000",
+        "#media_type 0: video",
+        "#codec_id 0: rawvideo",
+        "#dimensions 0: 320x180",
+        "#sar 0: 1/1",
+        "#tb 1: 1/48000",
+        "#media_type 1: audio",
+        "#codec_id 1: pcm_f32le",
+        "#sample_rate 1: 48000",
+        "#channel_layout_name 1: mono",
+        "#stream#, dts,        pts, duration,     size, hash"
+      ],
+      "record_counts": {
+        "0": 11472,
+        "1": 21507
+      }
+    },
+    "all_streams_and_full_timing_exact": true,
+    "all_source_files_unchanged": true,
+    "scratch_only_transform": true,
+    "failure": null,
+    "commands": 10,
+    "scratch_files": [
+      "reference.cut.mkv",
+      "concat_list.txt",
+      "segment_002.mkv",
+      "segment_001.mkv",
+      "segment_000.mkv"
+    ]
+  },
+  "passed": true,
+  "mode": "qualify-source6",
+  "failure": null,
+  "seconds": 7.551345774001675,
+  "owned_cleanup": {
+    "passed": true,
+    "identity": {
+      "project": "dispatcharr-cut-content-8f74d74a2e79",
+      "CID": "5731cbd6ae6dc6fdc5c30d92dc2ee16b07403fe57e3e00ffc500316b929d3675",
+      "hostPID": 500895,
+      "starttime": "24018896",
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "PID_namespace": "pid:[4026533417]",
+      "CID_absent": true,
+      "original_host_generation_absent": true,
+      "project_inventories_empty": {
+        "containers": true,
+        "networks": true,
+        "volumes": true
+      },
+      "project_absent": true
+    },
+    "errors": []
+  },
+  "application_or_Comskip_detector_or_booking_calls": 0,
+  "source_application_business_replay": false,
+  "performance_claim": false,
+  "full_milestone_claim": false
+}

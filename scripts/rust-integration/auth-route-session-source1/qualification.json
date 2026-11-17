@@ -1,0 +1,1460 @@
+{
+  "status": "FORTY_FIVE_ACTUAL_HTTP_OBSERVATIONS_OFFLINE_QUALIFIED_SELECTED_SQL_ONLY",
+  "actual_controller_exit": 0,
+  "Source_observations_qualified": 45,
+  "missing_streamer_dependent_chain_qualified": false,
+  "dependent_NOT_RUN": [
+    {
+      "role": "streamer",
+      "blocked": "Login route did not issue a usable pair; dependent chain NOT_RUN"
+    }
+  ],
+  "known_requests_replayed": false,
+  "Native_acceptance": false,
+  "full_milestone_accepted": false,
+  "scope_limits": [
+    "Only owned users/all sessions/all SystemEvents and their2selectedsequences captured; notification inbox/cache throttle history NOT directly captured.",
+    "JWTs parsed for actor/type/lifetime; actual protected ownGET proves issuedaccess usable. No offline signature-verification claim.",
+    "Admin real CSRF/session chain observed; no general admin forms/model callbacks qualified."
+  ],
+  "observations": [
+    {
+      "role": "admin",
+      "method": "POST",
+      "path": "/api/accounts/auth/login/",
+      "status": 200,
+      "private_wire_sha256": "a4bf94b1cb9fd3ed38d71ceb97851a2c49fccc790090b9956a02bdcc07e208c2",
+      "body_sha256": "9f2cccf1a141a62642449132126861173c784cfa348060d8fd4e706d129bdaed",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [
+        {
+          "id": 5,
+          "event_type": "login_success",
+          "timestamp": "2026-11-17T15:00:07.096047+00:00",
+          "details": {
+            "client_ip": "11.254.251.1",
+            "user": "OwnedM0RouteAdmin",
+            "user_agent": "Dispatcharr-owned-M0-actual-route-probe"
+          }
+        }
+      ],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": [
+        5
+      ],
+      "issued_pair_for_actual_actor": 5
+    },
+    {
+      "role": "admin",
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_wire_sha256": "f5e128b9fe697448ea33b1834ac293a55f54ad769c2630bdd885513aa22d584a",
+      "body_sha256": "01a35ad27eaf9eb2f5ddca37a9df3da492f42c8357dc8695e4a38ada52eb7140",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": [],
+      "protected_actual_own_identity": 5
+    },
+    {
+      "role": "admin",
+      "method": "POST",
+      "path": "/api/accounts/token/refresh/",
+      "status": 200,
+      "private_wire_sha256": "7b3653db8bac8526ce04caaedee21e26ceedafdd3ef2c9565e1da8d1b08be5f1",
+      "body_sha256": "5a3494f657b02b0cd4cf2debf2a7cdf1e2c92cec9786d8214c46b767122ce6a5",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": [],
+      "refresh_rotated_refresh_token": false
+    },
+    {
+      "role": "admin",
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_wire_sha256": "361bb38ec027acb76f3053053ccf4ff5f5e1dc179364743076a8f86f2f538c46",
+      "body_sha256": "01a35ad27eaf9eb2f5ddca37a9df3da492f42c8357dc8695e4a38ada52eb7140",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": [],
+      "protected_actual_own_identity": 5
+    },
+    {
+      "role": "admin",
+      "method": "GET",
+      "path": "/admin/login/?next=/admin/",
+      "status": 200,
+      "private_wire_sha256": "2cdb000454b0f7b319b3809c73dba5dc8d024306cbd54fb46f787df00f13c0f2",
+      "body_sha256": "56cb31a22c4ceb262db7ff03abe10c2712c2a0c4ff01ca2aad7b220bc97a162a",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": []
+    },
+    {
+      "role": "admin",
+      "method": "POST",
+      "path": "/admin/login/?next=/admin/",
+      "status": 302,
+      "private_wire_sha256": "1ce122be887a90f7c1eb2365ff7526eae2c350bfb182e0291517f3e3ce9fb8f0",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 1,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": [
+        5
+      ]
+    },
+    {
+      "role": "admin",
+      "method": "GET",
+      "path": "/admin/",
+      "status": 200,
+      "private_wire_sha256": "f24012d94f1f1e2ba8e4ef250729ac5dff2b93c02afba741408c390c8793266c",
+      "body_sha256": "b77cf84b8cb985b5b40ca18047f69596aa5564d0d481ed57cde26f8d9be547be",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 1,
+      "session_count_after": 1,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": []
+    },
+    {
+      "role": "admin",
+      "method": "POST",
+      "path": "/api/accounts/auth/logout/",
+      "status": 200,
+      "private_wire_sha256": "023f2b54533c31f36e1e6a49709426e0e81bb140ef730eb60155708bbabb5a6a",
+      "body_sha256": "f940be21d8958e26ed7c035f400aa3b63af7fb20c7276cc1b0eaf11234cdb68d",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 1,
+      "session_count_after": 0,
+      "new_events": [
+        {
+          "id": 6,
+          "event_type": "logout",
+          "timestamp": "2026-11-17T15:00:17.734255+00:00",
+          "details": {
+            "client_ip": "11.254.251.1",
+            "user": "OwnedM0RouteAdmin",
+            "user_agent": "Dispatcharr-owned-M0-actual-route-probe"
+          }
+        }
+      ],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 6
+        }
+      },
+      "user_last_login_changed": [],
+      "actual_Django_session_deleted_and_cookie_expired": true
+    },
+    {
+      "role": "admin",
+      "method": "GET",
+      "path": "/admin/",
+      "status": 302,
+      "private_wire_sha256": "a2a06a4ef1cbe13a211007b84f4110c334143e5c059b77f236be32a17aa3d7b6",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 6
+        }
+      },
+      "user_last_login_changed": []
+    },
+    {
+      "role": "admin",
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_wire_sha256": "87d819d5fd3b8e19f4c43f62b163f7278f433f9bb43cfd4e208ec4d485cc0f07",
+      "body_sha256": "606f2cfe7f57e3a0b2d4a1779ad7a5dffba3fba03adb4941072bce461104fdc9",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 6
+        }
+      },
+      "user_last_login_changed": [],
+      "protected_actual_own_identity": 5
+    },
+    {
+      "role": "standard",
+      "method": "POST",
+      "path": "/api/accounts/auth/login/",
+      "status": 200,
+      "private_wire_sha256": "2d92ed01889e4f5f69f473e846977f3768344d26d113d3c2e9dd2ed09c863486",
+      "body_sha256": "306b9debc361f3f5d55cf022a35cefc5bc0a5e8a77a3dfb7bdc9995d8382ea32",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [
+        {
+          "id": 7,
+          "event_type": "login_success",
+          "timestamp": "2026-11-17T15:00:23.911335+00:00",
+          "details": {
+            "client_ip": "11.254.251.1",
+            "user": "OwnedM0RouteStandard",
+            "user_agent": "Dispatcharr-owned-M0-actual-route-probe"
+          }
+        }
+      ],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        }
+      },
+      "user_last_login_changed": [
+        6
+      ],
+      "issued_pair_for_actual_actor": 6
+    },
+    {
+      "role": "standard",
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_wire_sha256": "fbcdbee1309960e0fe9b119e6be5ec6e295087e5c0d15a3f98171078ecead219",
+      "body_sha256": "dddd2474bb9fee1ed344305b55963d6f76a90a3d151b8f614d7b611646ee1f9a",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        }
+      },
+      "user_last_login_changed": [],
+      "protected_actual_own_identity": 6
+    },
+    {
+      "role": "standard",
+      "method": "POST",
+      "path": "/api/accounts/token/refresh/",
+      "status": 200,
+      "private_wire_sha256": "318341e66557028bb2af49df45d4e4a8dfc8a3c44be55e3b39a59a3824cc1508",
+      "body_sha256": "f1e916efa23da04a0768e0713f4950ffab813dcc8f9aed17b47015283820969b",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        }
+      },
+      "user_last_login_changed": [],
+      "refresh_rotated_refresh_token": false
+    },
+    {
+      "role": "standard",
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_wire_sha256": "83e8dbc47b3326f0d871a661c741a5f801bf0daeb6d1291f56faec26c60bf25d",
+      "body_sha256": "dddd2474bb9fee1ed344305b55963d6f76a90a3d151b8f614d7b611646ee1f9a",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        }
+      },
+      "user_last_login_changed": [],
+      "protected_actual_own_identity": 6
+    },
+    {
+      "role": "standard",
+      "method": "POST",
+      "path": "/api/accounts/auth/logout/",
+      "status": 200,
+      "private_wire_sha256": "b186d066bc313a83771f01e2e1e774fed5215d034a457cb346804ac5f9230db8",
+      "body_sha256": "f940be21d8958e26ed7c035f400aa3b63af7fb20c7276cc1b0eaf11234cdb68d",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [
+        {
+          "id": 8,
+          "event_type": "logout",
+          "timestamp": "2026-11-17T15:00:29.982942+00:00",
+          "details": {
+            "client_ip": "11.254.251.1",
+            "user": "OwnedM0RouteStandard",
+            "user_agent": "Dispatcharr-owned-M0-actual-route-probe"
+          }
+        }
+      ],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 8
+        }
+      },
+      "user_last_login_changed": []
+    },
+    {
+      "role": "standard",
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_wire_sha256": "ffae8087a608ff793b63fda2332a348c7967c23710bcc1bd0f152536884dddb0",
+      "body_sha256": "dddd2474bb9fee1ed344305b55963d6f76a90a3d151b8f614d7b611646ee1f9a",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 8
+        }
+      },
+      "user_last_login_changed": [],
+      "protected_actual_own_identity": 6
+    },
+    {
+      "role": "streamer",
+      "method": "POST",
+      "path": "/api/accounts/auth/login/",
+      "status": 429,
+      "private_wire_sha256": "f1384804a4dc88a7d28644de9415c7e1e50b2c056ae28d0c07430169217d72f8",
+      "body_sha256": "8c588179f09584e5f0a92836643b2e63fa9687e22e67a1257d592010f3faca79",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [
+        {
+          "id": 9,
+          "event_type": "login_failed",
+          "timestamp": "2026-11-17T15:00:34.466417+00:00",
+          "details": {
+            "client_ip": "11.254.251.1",
+            "reason": "Login rate limited",
+            "user": "OwnedM0RouteStreamer",
+            "user_agent": "Dispatcharr-owned-M0-actual-route-probe"
+          }
+        }
+      ],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Request was throttled. Expected available in 33 seconds."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "retry-after": "33",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "69"
+      },
+      "actual_throttle_not_wrong_password_401": true
+    },
+    {
+      "role": "owned_admin_wrong_password",
+      "method": "POST",
+      "path": "/api/accounts/auth/login/",
+      "status": 429,
+      "private_wire_sha256": "1bf7048ef6e1a62b22f27a423a8fd0e5a723a3ebbf6d36640633907783936779",
+      "body_sha256": "b2bd39d9d31d9b5858d204b25cd68d74506b9037ae0f0c73d7c264e8468af279",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Request was throttled. Expected available in 31 seconds."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "retry-after": "31",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "69"
+      },
+      "actual_throttle_not_wrong_password_401": true
+    },
+    {
+      "role": "anonymous",
+      "method": "POST",
+      "path": "/api/accounts/auth/login/",
+      "status": 429,
+      "private_wire_sha256": "490cfe01775c19457d972e77f2c4d7759dfc1b020515362ad36351bfb6d9144a",
+      "body_sha256": "30b1aae3bc24b3c4b3ab310d6b10751cb3dc331f633f38c66a62ca12626d9e51",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Request was throttled. Expected available in 29 seconds."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "retry-after": "29",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "69"
+      },
+      "actual_throttle_not_wrong_password_401": true
+    },
+    {
+      "role": "anonymous",
+      "method": "GET",
+      "path": "/api/accounts/auth/login/",
+      "status": 405,
+      "private_wire_sha256": "e1bc5aaba32d590d6e19f21f699b7b4add123e0ae145e017aa4db12f007a2f39",
+      "body_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"GET\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "40"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "HEAD",
+      "path": "/api/accounts/auth/login/",
+      "status": 405,
+      "private_wire_sha256": "5e3cca6c99afa166a2d05c5a190172dbc1d4e9ba4e06ad91a28b53401d9bd1ad",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": null,
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "41"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "OPTIONS",
+      "path": "/api/accounts/auth/login/",
+      "status": 200,
+      "private_wire_sha256": "d7cd8253447573c45858e21d22dac35a64ad4ed11c06db2ef48685975c6226cf",
+      "body_sha256": "068428af3a394a0fe7118cc960d80c0516dcb6f458675880f8053d0a4593af85",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "name": "Auth",
+        "description": "Handles user login and logout",
+        "renders": [
+          "application/json",
+          "text/html"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "192"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "PUT",
+      "path": "/api/accounts/auth/login/",
+      "status": 405,
+      "private_wire_sha256": "b75337d6f414e0fb49c3889de82a29f5f92df421886be57ffc5c92cf9c84dedd",
+      "body_sha256": "a817fdc1bd7d8752c161e454c16ef0e7670cc29193d55f88ec5c80bb58bc7bd8",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"PUT\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "40"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "PATCH",
+      "path": "/api/accounts/auth/login/",
+      "status": 405,
+      "private_wire_sha256": "56ec64fa5f0ebe1233ce214f5f872abbda7956a53cab42b664123d1dde7851ce",
+      "body_sha256": "3e91ddbaf795bc0c4cb6c99bb1c72d70181345f64bb214ecb667076ea95a19ad",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"PATCH\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "42"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "DELETE",
+      "path": "/api/accounts/auth/login/",
+      "status": 405,
+      "private_wire_sha256": "c12cadc1448bd1a75eb162e663ea4e3864bd62bfbd00646090408fd9db6d89ca",
+      "body_sha256": "e93f84a99b10c0f2863ac4a267ca519e5a57c85a9fe0b573c3e84688eb249e0b",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"DELETE\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "43"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "TRACE",
+      "path": "/api/accounts/auth/login/",
+      "status": 405,
+      "private_wire_sha256": "a822dabf7588512c22810b5aac92e9698f482b56a04524bbc948cff3bb1f0e27",
+      "body_sha256": "23e449c46b1d50f4a11bf07d2c5dd73fe20696758521a280a86e6f23c315140f",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"TRACE\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "42"
+      }
+    },
+    {
+      "role": "invalid_JWT",
+      "method": "POST",
+      "path": "/api/accounts/auth/login/",
+      "status": 401,
+      "private_wire_sha256": "21749a18aeaa94965ff1b925eb3cb0230d6c0f8a7c3587cb5024cf26868c3bee",
+      "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Given token not valid for any token type",
+        "code": "token_not_valid",
+        "messages": [
+          {
+            "token_class": "AccessToken",
+            "token_type": "access",
+            "message": "Token is invalid"
+          }
+        ]
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "www-authenticate": "Bearer realm=\"api\"",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "172"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "POST",
+      "path": "/api/accounts/auth/logout/",
+      "status": 401,
+      "private_wire_sha256": "f01f6b7397fce9fa19fb2d8806ac346c89e5ad103bbacd2fd0b7318e5c52ecc4",
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "www-authenticate": "Bearer realm=\"api\"",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "58"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "GET",
+      "path": "/api/accounts/auth/logout/",
+      "status": 405,
+      "private_wire_sha256": "9fa023eeb2f71d383ce01b316ca17d8262374c178c71d5f95c20c9c4d6c123bd",
+      "body_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"GET\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "40"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "HEAD",
+      "path": "/api/accounts/auth/logout/",
+      "status": 405,
+      "private_wire_sha256": "22ada5c7eda89f53e33330c4b0688ad5841ee630a5799cc15fdb767930615c47",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": null,
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "41"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "OPTIONS",
+      "path": "/api/accounts/auth/logout/",
+      "status": 200,
+      "private_wire_sha256": "1e9be9591104b5edee10efa875f282c56c39157e5871c4aa549c3ef53af30828",
+      "body_sha256": "068428af3a394a0fe7118cc960d80c0516dcb6f458675880f8053d0a4593af85",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "name": "Auth",
+        "description": "Handles user login and logout",
+        "renders": [
+          "application/json",
+          "text/html"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ]
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "192"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "PUT",
+      "path": "/api/accounts/auth/logout/",
+      "status": 405,
+      "private_wire_sha256": "c15354d0a4377820683f8f309fb7abe167a0bce851c6504a22741d914dbff609",
+      "body_sha256": "a817fdc1bd7d8752c161e454c16ef0e7670cc29193d55f88ec5c80bb58bc7bd8",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"PUT\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "40"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "PATCH",
+      "path": "/api/accounts/auth/logout/",
+      "status": 405,
+      "private_wire_sha256": "a86d11de7d23803221e5731ae748a6769b7c50303d00637f7cc556fe768fbea5",
+      "body_sha256": "3e91ddbaf795bc0c4cb6c99bb1c72d70181345f64bb214ecb667076ea95a19ad",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"PATCH\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "42"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "DELETE",
+      "path": "/api/accounts/auth/logout/",
+      "status": 405,
+      "private_wire_sha256": "f6b1b12fa781ccd62ff22851fe40096fe0b9556cd65ed84937db3dd5fbdd8c63",
+      "body_sha256": "e93f84a99b10c0f2863ac4a267ca519e5a57c85a9fe0b573c3e84688eb249e0b",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"DELETE\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "43"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "TRACE",
+      "path": "/api/accounts/auth/logout/",
+      "status": 405,
+      "private_wire_sha256": "c7f20227aabb6173ac26d54f66eb7814593098a8aad18f81d1be4d22c0238693",
+      "body_sha256": "23e449c46b1d50f4a11bf07d2c5dd73fe20696758521a280a86e6f23c315140f",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"TRACE\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "42"
+      }
+    },
+    {
+      "role": "invalid_JWT",
+      "method": "POST",
+      "path": "/api/accounts/auth/logout/",
+      "status": 401,
+      "private_wire_sha256": "9eb685345b598002febdb44aab9a7dd9e49cbd41925962d41055dda50d114693",
+      "body_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Given token not valid for any token type",
+        "code": "token_not_valid",
+        "messages": [
+          {
+            "token_class": "AccessToken",
+            "token_type": "access",
+            "message": "Token is invalid"
+          }
+        ]
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "www-authenticate": "Bearer realm=\"api\"",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "172"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "POST",
+      "path": "/api/accounts/token/refresh/",
+      "status": 400,
+      "private_wire_sha256": "040c1a51676b65666d485d827ed09d281347450dc008a92e050feda9937381d2",
+      "body_sha256": "26530a9ad46f36357c9fbb97a319ea1b8d7369de61a76c6064f1d13200dc67d9",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "refresh": [
+          "This field is required."
+        ]
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "39"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "GET",
+      "path": "/api/accounts/token/refresh/",
+      "status": 405,
+      "private_wire_sha256": "aec11986b64b9303bb58029909a1f3d2f6e655a0cfb1bb2b0a80cfdf60e11567",
+      "body_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"GET\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "40"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "HEAD",
+      "path": "/api/accounts/token/refresh/",
+      "status": 405,
+      "private_wire_sha256": "43c89a6c7ec04a2f2498369657b03e000151d3ea89d459bed59ec183d158de02",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": null,
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "41"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "OPTIONS",
+      "path": "/api/accounts/token/refresh/",
+      "status": 200,
+      "private_wire_sha256": "5a6e7fc5813a15198f56653962031b5da957f9be3f396e1beff3cbd723ddf723",
+      "body_sha256": "648da7b5965ffabe55f16c491a58a9219a0e99440c9785ac25d2f437d9028864",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "name": "Token Refresh",
+        "description": "",
+        "renders": [
+          "application/json",
+          "text/html"
+        ],
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "actions": {
+          "POST": {
+            "refresh": {
+              "type": "string",
+              "required": true,
+              "read_only": false,
+              "label": "Refresh"
+            },
+            "access": {
+              "type": "string",
+              "required": false,
+              "read_only": true,
+              "label": "Access"
+            }
+          }
+        }
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "351"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "PUT",
+      "path": "/api/accounts/token/refresh/",
+      "status": 405,
+      "private_wire_sha256": "ba6d43785d8d5f73a13f86067dfd387b4a965593e30d7072ca300d18079e9c8e",
+      "body_sha256": "a817fdc1bd7d8752c161e454c16ef0e7670cc29193d55f88ec5c80bb58bc7bd8",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"PUT\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "40"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "PATCH",
+      "path": "/api/accounts/token/refresh/",
+      "status": 405,
+      "private_wire_sha256": "4da6a07faf1a75b7b6746d8f6d76bb7a443c70898a2cb45d9946095439d8d85f",
+      "body_sha256": "3e91ddbaf795bc0c4cb6c99bb1c72d70181345f64bb214ecb667076ea95a19ad",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"PATCH\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "42"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "DELETE",
+      "path": "/api/accounts/token/refresh/",
+      "status": 405,
+      "private_wire_sha256": "b7b38c5fede42d23017a21b43893d21a0e0d764702c2716312d89579f4fb3564",
+      "body_sha256": "e93f84a99b10c0f2863ac4a267ca519e5a57c85a9fe0b573c3e84688eb249e0b",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"DELETE\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "43"
+      }
+    },
+    {
+      "role": "anonymous",
+      "method": "TRACE",
+      "path": "/api/accounts/token/refresh/",
+      "status": 405,
+      "private_wire_sha256": "0ca654a26254f0a86d73bb6322bb88ae51836336588f3325d9ffad81d9ac019f",
+      "body_sha256": "23e449c46b1d50f4a11bf07d2c5dd73fe20696758521a280a86e6f23c315140f",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "detail": "Method \"TRACE\" not allowed."
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "42"
+      }
+    },
+    {
+      "role": "invalid_JWT",
+      "method": "POST",
+      "path": "/api/accounts/token/refresh/",
+      "status": 400,
+      "private_wire_sha256": "bd0d2e491103b45b4b3d3fcfea7bb6c5262bb6975f380856debad1df86120d5e",
+      "body_sha256": "26530a9ad46f36357c9fbb97a319ea1b8d7369de61a76c6064f1d13200dc67d9",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 9
+        }
+      },
+      "user_last_login_changed": [],
+      "literal_JSON_body": {
+        "refresh": [
+          "This field is required."
+        ]
+      },
+      "application_headers": {
+        "content-type": "application/json",
+        "vary": "Accept, origin",
+        "allow": "POST, OPTIONS",
+        "content-length": "39"
+      }
+    }
+  ]
+}

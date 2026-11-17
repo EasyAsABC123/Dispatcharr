@@ -93,7 +93,32 @@ The public verifier reproduces all six business projections and rejects six
 corruptions without starting an application or decoder. Full SQL/lifecycle
 projection and natural CUT whole-content equivalence remain unqualified.
 
-The new full Native/public workflow remains pending. These facts do not close Rust/M5,
-performance acceptance or complete M0–M9 migration acceptance. Broader input and
-role domains, profile execution, the preceding playlist update and following
-playlist refresh remain separate scopes.
+The [clean public14 attempt](../scripts/rust-integration/milestone-batch53/public-application-attempt2/index.json)
+exits 1 in1,214.148802 seconds after all fourteen contexts run. Thirteen pass,
+including the twelve contiguous live/VOD settings calls and strict retained
+Source comparison. The old three Comskip negative leaves and positive MARK
+pass. Mark-repeat observations are complete, but the original checker rejects
+its backend completion clock against the last filtered queue-command time.
+The subsequent positive CUT/repeat and both natural cells are not run.
+
+Independent diagnosis shows Native completion2,941 microseconds after its
+RPOP and before the actual completed terminal DB1 ECHO. Source completion also
+follows its early ACK; later queue activity happens to make the old Source
+bound succeed. The prepared exact terminal-fence correction reproduces both
+captured MARK/repeat business projections with zero clock slack and unchanged
+Source oracles. It does not retroactively pass the original controller.
+The separately calibrated own-input natural-CUT tool and successor integration
+remain prepared, with no new Native CUT acceptance.
+
+An earlier UID-only attempt exits 1 in0.709 seconds before applications start:
+owned clean-export directories inherited0700. Only their modes change to0755;
+file bytes remain exact. Its one UID CID is independently absent, with initial
+host generation uncaptured. The application attempt has actual EOF/group
+settlement and independent absence of eighteen exact CIDs, seventeen captured
+original host generations and the project; its UID generation gap remains
+explicit. Both literal failures remain in the packet.
+
+The complete public14 workflow remains unaccepted. These facts do not close
+Rust/M5, performance acceptance or complete M0–M9 migration acceptance. Broader
+input and role domains, profile execution, the preceding playlist update and
+following playlist refresh remain separate scopes.

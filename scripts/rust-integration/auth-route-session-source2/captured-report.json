@@ -1,0 +1,78 @@
+{
+  "status": "OBSERVATIONS_CAPTURED_NOT_YET_QUALIFIED",
+  "actual_Source": true,
+  "actual_Native": false,
+  "observations": [
+    {
+      "method": "POST",
+      "path": "/api/accounts/auth/login/",
+      "status": 200,
+      "private_raw": {
+        "sha256": "f44705ebaa3860c8e6ab3112fb086033db68f6eb09b59169b42b0ecc9809d85a",
+        "bytes": 1429
+      },
+      "role": "streamer",
+      "actor_id": 7
+    },
+    {
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_raw": {
+        "sha256": "7d63c1124d9ae26b62d49fa0fb842498818bb7747a393e6b8b15a914d343102c",
+        "bytes": 1326
+      },
+      "role": "streamer",
+      "own_identity_matches": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/accounts/token/refresh/",
+      "status": 200,
+      "private_raw": {
+        "sha256": "6422ebb558c1353025f328212f4201f0039ab07af90f62ffd7cdf5af3eb7bba8",
+        "bytes": 1329
+      },
+      "role": "streamer",
+      "issued_access": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_raw": {
+        "sha256": "a8405889940af74de74fb880a10378d44cf951666dbc2641344ca6d03cdbbfba",
+        "bytes": 1326
+      },
+      "role": "streamer",
+      "refreshed_token_own_identity_matches": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/accounts/auth/logout/",
+      "status": 200,
+      "private_raw": {
+        "sha256": "82851e6484ebd002b88f889345c240c73d6e54fa914688baea9d0336a6b1862a",
+        "bytes": 981
+      },
+      "role": "streamer",
+      "session_chain_exercised": false,
+      "session_cookie_present": false
+    },
+    {
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_raw": {
+        "sha256": "58758d910aa35099d0925e25eb363c7b2911205e7f54b9c4afc1820122cd3f44",
+        "bytes": 1326
+      },
+      "role": "streamer",
+      "own_identity_matches": true
+    }
+  ],
+  "dependent_NOT_RUN": [],
+  "raw_credentials_cookies_CSRF_JWT": "Private0600 only; public per-response SHA and selected typed facts",
+  "method_definition_binding": "ONLY missingstreamer6; previous45 actualobservations including429 preserved; fresh ownedcache, no bucketreset/header spoofing",
+  "known45_replayed": false
+}

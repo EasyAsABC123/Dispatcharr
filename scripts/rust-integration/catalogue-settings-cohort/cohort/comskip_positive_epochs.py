@@ -230,7 +230,7 @@ def _origin(f,out):
  save(out/'declared-primary-URL-delta.json',value);save(out/'actual-pinned-feed-ready.json',receipt)
  return value
 
-def _auto_cell(f,mode,out,root,business):
+def _auto_cell(f,mode,out,root,business,own_input):
  label='natural-automatic-'+mode;p=out/'private'/label;p.mkdir();save(p/'settings-delta.json',_setting(f,mode,True,'/data/comskip-positive-media/positive.ini'));_drain(f,label+'-before')
  before=_snapshot(f);receiver=_receiver_begin(f,label);observer=journal.observer_start(f,label,database=1)
  captures=f.data/'comskip-positive-native-input-observations';captures.mkdir(mode=0o755,exist_ok=True);captures.chmod(0o755)
@@ -274,6 +274,11 @@ def _auto_cell(f,mode,out,root,business):
  if mode=='mark':assert media['sha256']==input_media['sha256']and media['EDL']['exists']and cp['mode']=='mark'
  else:assert media['sha256']!=input_media['sha256']and not media['EDL']['exists']and not media['fixed_cut_paths_remaining']and cp['segments_kept']>0
  proof=business.compare_business_cell(root,label,p,recording_file=row['custom_properties']['file_path'],effective_ini='/data/comskip-positive-media/positive.ini',ini_role='custom-positive-ini',recording_id_map={1:ident});save(p/'Source-comparison.json',proof)
+ if mode=='cut':
+  retained_input=Path(next(iter(watch.inputs.values()))['path']);actual_guest=_guest(f,row['custom_properties']['file_path']);actual_host=f.data/Path(actual_guest).relative_to('/shared')
+  generated=next(iter(watch.observed.values()))
+  own_content=own_input.compare_in_existing_role(lambda argv,timeout:f.command(argv,seconds=timeout,secret=True),f.compose,f.data,original_input=retained_input,actual_output=actual_host,edl_text=generated['text'],edl_sha256=generated['sha256'])
+  save(p/'own-input-content-proof.json',own_content)
  save(p/'natural-media-protocol-proof.json',{'passed':True,'planned_capture_seconds':520,'actual_original_input_seconds':duration,'explicit_endpoint_bound_seconds':bound,'bound_terms':{'one_GOP':1,'one_AAC_block':1024/48000,'one_origin_packet':1316/250000,'scheduler_stop_poll':1},'input_retained_before_replace':True,'input_full_AV_decode':True,'output_full_AV_decode':True,'actual_EDL_ranges':ranges,'Source_vs_Native_whole_natural_content_equality_claimed':False,'exact_feed_SHA':'133e0c68dcaae0c7d6de306983eccc2e621cda665f711915197e5fcbf334f804'})
  return {'name':label,'status':'passed','raw_directory':str(p),'recording_id':ident,'actual_parent':parent['headers']['id'],'actual_child':child['headers']['id'],'Source_comparison':proof}
 
@@ -283,6 +288,7 @@ def run(f):
  for name,ref in refs.items():
   if isinstance(ref,dict)and 'path'in ref:assert hashlib.sha256(Path(ref['path']).read_bytes()).hexdigest()==ref['sha256'],name
  q=json.loads((root/'qualification.json').read_text());assert q['actual_Source_business_leaves']==6 and q['manual_mark_repeat_cut_repeat_qualified']and q['natural_CUT_actual_controller_exit']==0 and not q['whole_six_cell_controller_pass_exists']
+ own_input=_load(f.binding['retained_source_comskip_own_input'],'qualified_own_input_content')
  business=_load(refs['business'],'positive_Source_business');content=_load(refs['content'],'positive_Source_content');asset_module=_load(refs['assets'],'positive_exact_assets')
  out=f.output/'comskip-positive-epochs';out.mkdir();(out/'private').mkdir(mode=0o700);report={'status':'running','cases':[],'Source_business_replayed':False,'old_manual3_preserved':True,'full_milestone_passed':False,'performance_verified':False};save(out/'report.json',report)
  try:
@@ -297,7 +303,7 @@ def run(f):
    report['cases'].append(_manual_cell(f,label,ident,'/data/positive-manual/'+mode+'/recording.mkv',mode,repeat,out,root,business,content,assets));save(out/'report.json',report)
   identity=_auto_start(f,out);_origin(f,out)
   for mode in ['mark','cut']:
-   assert f.native==identity;report['cases'].append(_auto_cell(f,mode,out,root,business));save(out/'report.json',report)
+   assert f.native==identity;report['cases'].append(_auto_cell(f,mode,out,root,business,own_input));save(out/'report.json',report)
   save(out/'positive-origin-stop.json',f.role('positive-media-origin',[],stop=True));save(out/'positive-origin-final.json',json.loads((f.case_data/'positive-origin-final.json').read_text()));report['status']='passed'
  except BaseException as error:
   save(out/'private/failure.json',{'type':type(error).__name__,'message':str(error)[:2048],'traceback':traceback.format_exc()[-16384:]});report.update(status='failed',failure_type=type(error).__name__)

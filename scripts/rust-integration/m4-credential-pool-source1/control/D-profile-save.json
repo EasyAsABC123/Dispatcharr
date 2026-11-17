@@ -1,0 +1,27 @@
+{
+  "context": "vod-credential-profiles",
+  "method": "PUT",
+  "path": "/api/m3u/accounts/10/profiles/9/",
+  "credential_role": "admin",
+  "status": 200,
+  "body": {
+    "id": 9,
+    "name": "Owned profile D",
+    "max_streams": 0,
+    "is_active": true,
+    "is_default": true,
+    "current_viewers": 0,
+    "search_pattern": "/live/([^/]+)/([^/]+)/",
+    "replace_pattern": "/live/alias-$1/alias-$2/",
+    "custom_properties": {
+      "notes": "Owned credential lifecycle"
+    },
+    "exp_date": null,
+    "account": {
+      "id": 10,
+      "name": "Owned VOD profile D",
+      "account_type": "XC",
+      "is_xtream_codes": true
+    }
+  }
+}

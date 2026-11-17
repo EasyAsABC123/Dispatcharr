@@ -1,0 +1,60 @@
+{
+  "status": "FIVE_CAPTURED_REDIRECT_BUSINESS_CELLS_QUALIFIED_OFFLINE_WHOLE_SOURCE_CONTROLLER_STILL1",
+  "actual_controller_exit": 1,
+  "actual_seconds": 94.30492941598641,
+  "five_observed_cells": [
+    {
+      "label": "transformed-Movie",
+      "status": 302,
+      "actual_role": "A",
+      "SQL_all_business_rows_and11_sequences_unchanged": true,
+      "snapshot_clock_causal": true,
+      "six_owned_counters_read_only_after_exact_one_decode": true,
+      "Location_credentials_derived_from_actual_owned_profile_where_redirect": true
+    },
+    {
+      "label": "transformed-Episode",
+      "status": 302,
+      "actual_role": "B",
+      "SQL_all_business_rows_and11_sequences_unchanged": true,
+      "snapshot_clock_causal": true,
+      "six_owned_counters_read_only_after_exact_one_decode": true,
+      "Location_credentials_derived_from_actual_owned_profile_where_redirect": true
+    },
+    {
+      "label": "same-credential-group-full",
+      "status": 503,
+      "actual_role": "B",
+      "SQL_all_business_rows_and11_sequences_unchanged": true,
+      "snapshot_clock_causal": true,
+      "six_owned_counters_read_only_after_exact_one_decode": true,
+      "Location_credentials_derived_from_actual_owned_profile_where_redirect": false
+    },
+    {
+      "label": "different-credential-group-available",
+      "status": 302,
+      "actual_role": "C",
+      "SQL_all_business_rows_and11_sequences_unchanged": true,
+      "snapshot_clock_causal": true,
+      "six_owned_counters_read_only_after_exact_one_decode": true,
+      "Location_credentials_derived_from_actual_owned_profile_where_redirect": true
+    },
+    {
+      "label": "unlimited-profile-skips-group",
+      "status": 302,
+      "actual_role": "D",
+      "SQL_all_business_rows_and11_sequences_unchanged": true,
+      "snapshot_clock_causal": true,
+      "six_owned_counters_read_only_after_exact_one_decode": true,
+      "Location_credentials_derived_from_actual_owned_profile_where_redirect": true
+    }
+  ],
+  "sixth_cell_completed": false,
+  "sixth_partial_reader_HTTP": 200,
+  "sixth_partial_reader_bytes": 45056,
+  "all_three_real_readers_or_release_or_AV_decode_qualified": false,
+  "observer_failure": "Fixture.redis leaves Lua cjson.encode result asJSONstring; positive() assumedmapping",
+  "counter_fix_required": "Exactlyone bounded json.loads onstring, require expected6keys/null-or-decimal-string values; retain rawreturn+CLIreceipt",
+  "new_Source_requests_or_media_reads": 0,
+  "Native_or_performance_or_full_milestone_accepted": false
+}

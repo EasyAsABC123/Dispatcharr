@@ -1,0 +1,38 @@
+{
+  "scope": "SOURCE_CODE_AND_ACTUAL_EARLY_ACK_EVENTS_NOT_RECOVERED_REDIS_BUCKET_DUMP",
+  "owner": "Actual trusted get_client_ip peer11.254.251.1 shared across all actors; separate CookieJars/accounts do not change key",
+  "Source_scope": "login",
+  "rate": "3/minute",
+  "window_seconds": 60,
+  "logical_cache_key": "throttle_login_11.254.251.1",
+  "physical_default_Django_key": ":1:throttle_login_11.254.251.1",
+  "cache_key_directly_captured": false,
+  "consuming_successes": [
+    "admin JWT login200",
+    "admin real Django admin POSTlogin302",
+    "standard JWT login200"
+  ],
+  "fourth_attempt": {
+    "actor": "OwnedM0RouteStreamer",
+    "status": 429,
+    "retry_after_seconds": 33,
+    "actual_event_id": 9,
+    "actual_event_timestamp": "2026-11-17T15:00:34.466417+00:00",
+    "actual_client_ip": "11.254.251.1",
+    "reason": "Login rate limited"
+  },
+  "following_wrong_password_alias": {
+    "status": 429,
+    "retry_after_seconds": 31,
+    "credential_verdict_401_observed": false
+  },
+  "known_tests": "apps/accounts/tests/test_admin_login_throttle.py::test_admin_and_jwt_login_share_throttle_bucket",
+  "retained_actual_source_code": {
+    "apps/accounts/throttling.py": "819d682914cdf4ae2c3f8260d50a23ea4217bbb7881fd483920972b0407f2ed0",
+    "apps/accounts/admin.py": "0edef627a546fcbb53522c51ee3c09cfe35d924786fe007bced01f430bd99d84",
+    "apps/accounts/api_views.py": "96feed79eeb22dd2c1a44cf74967cb39498cc52846473fa21032057e0d7dcf6c",
+    "dispatcharr/settings.py": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+    "dispatcharr/utils.py": "740da794553c7c059bff3a2d64a14d0a2448ea8d867e7331568e3cd9d4eecdf6"
+  },
+  "continuation": "Only six missing streamer requests in a fresh isolated Source fixture/cache; record read-only initialempty andafteronebudgethistory/TTL. Do notdeleteexistingbucket,spoofXFF,replay45calls or relabel429."
+}

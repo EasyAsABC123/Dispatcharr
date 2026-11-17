@@ -1,0 +1,212 @@
+{
+  "status": "SIX_MISSING_STREAMER_CELLS_ACTUALLY_QUALIFIED_SEPARATE_FRESH_NAMESPACE",
+  "actual_controller_exit": 0,
+  "Source_observations_qualified": 6,
+  "streamer_dependent_chain_qualified": true,
+  "known45_replayed": false,
+  "fresh_namespace_throttle_observed_initially_empty": true,
+  "one_real_login_history_entry_after_six_calls": true,
+  "throttle_before": {
+    "buckets": [],
+    "mutations": 0,
+    "observer_only": true,
+    "rate": "3/minute",
+    "scope": "login"
+  },
+  "throttle_after": {
+    "buckets": [
+      {
+        "history": [
+          1794929541.5208318
+        ],
+        "key": "throttle_login_11.254.251.1",
+        "ttl": 50
+      }
+    ],
+    "mutations": 0,
+    "observer_only": true,
+    "rate": "3/minute",
+    "scope": "login"
+  },
+  "dependent_NOT_RUN": [],
+  "known_requests_replayed": false,
+  "Native_acceptance": false,
+  "full_milestone_accepted": false,
+  "scope_limits": [
+    "Only owned users/all sessions/all SystemEvents/their2sequences and read-onlyloginbudget history captured; notification inbox NOT directly captured.",
+    "JWTs parsed for actor/type/lifetime; actual protected ownGET proves issuedaccess usable. No offline signature-verification claim.",
+    "Only missing streamer6 in a fresh fixture/cache; no admin/standard/dispatch45 replay. Previous Source1 remains separate immutable authority."
+  ],
+  "observations": [
+    {
+      "role": "streamer",
+      "method": "POST",
+      "path": "/api/accounts/auth/login/",
+      "status": 200,
+      "private_wire_sha256": "f44705ebaa3860c8e6ab3112fb086033db68f6eb09b59169b42b0ecc9809d85a",
+      "body_sha256": "c283015fa55d2e610babdba7a0700261f4531007310ef92210a6451e50cf3bed",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [
+        {
+          "id": 5,
+          "event_type": "login_success",
+          "timestamp": "2026-11-17T15:32:21.713249+00:00",
+          "details": {
+            "client_ip": "11.254.251.1",
+            "user": "OwnedM0RouteStreamer",
+            "user_agent": "Dispatcharr-owned-M0-actual-route-probe"
+          }
+        }
+      ],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": [
+        7
+      ],
+      "issued_pair_for_actual_actor": 7
+    },
+    {
+      "role": "streamer",
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_wire_sha256": "7d63c1124d9ae26b62d49fa0fb842498818bb7747a393e6b8b15a914d343102c",
+      "body_sha256": "8fb82571c247ff116a2164158f8fa6cedf375b21cf2f2009a83db850bc72bf42",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": [],
+      "protected_actual_own_identity": 7,
+      "actual_response_user_level": 0
+    },
+    {
+      "role": "streamer",
+      "method": "POST",
+      "path": "/api/accounts/token/refresh/",
+      "status": 200,
+      "private_wire_sha256": "6422ebb558c1353025f328212f4201f0039ab07af90f62ffd7cdf5af3eb7bba8",
+      "body_sha256": "01d92aeaf1eedf547924fba7f8888ff5966966cfe7d478ff827d5256b43666a1",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": [],
+      "refresh_rotated_refresh_token": false
+    },
+    {
+      "role": "streamer",
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_wire_sha256": "a8405889940af74de74fb880a10378d44cf951666dbc2641344ca6d03cdbbfba",
+      "body_sha256": "8fb82571c247ff116a2164158f8fa6cedf375b21cf2f2009a83db850bc72bf42",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 5
+        }
+      },
+      "user_last_login_changed": [],
+      "protected_actual_own_identity": 7,
+      "actual_response_user_level": 0
+    },
+    {
+      "role": "streamer",
+      "method": "POST",
+      "path": "/api/accounts/auth/logout/",
+      "status": 200,
+      "private_wire_sha256": "82851e6484ebd002b88f889345c240c73d6e54fa914688baea9d0336a6b1862a",
+      "body_sha256": "f940be21d8958e26ed7c035f400aa3b63af7fb20c7276cc1b0eaf11234cdb68d",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [
+        {
+          "id": 6,
+          "event_type": "logout",
+          "timestamp": "2026-11-17T15:32:27.651954+00:00",
+          "details": {
+            "client_ip": "11.254.251.1",
+            "user": "OwnedM0RouteStreamer",
+            "user_agent": "Dispatcharr-owned-M0-actual-route-probe"
+          }
+        }
+      ],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 6
+        }
+      },
+      "user_last_login_changed": []
+    },
+    {
+      "role": "streamer",
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "status": 200,
+      "private_wire_sha256": "58758d910aa35099d0925e25eb363c7b2911205e7f54b9c4afc1820122cd3f44",
+      "body_sha256": "8fb82571c247ff116a2164158f8fa6cedf375b21cf2f2009a83db850bc72bf42",
+      "selected_SQL_raw_chain_exact": true,
+      "session_count_before": 0,
+      "session_count_after": 0,
+      "new_events": [],
+      "selected_sequences_after": {
+        "public.accounts_user_id_seq": {
+          "is_called": true,
+          "last_value": 7
+        },
+        "public.core_systemevent_id_seq": {
+          "is_called": true,
+          "last_value": 6
+        }
+      },
+      "user_last_login_changed": [],
+      "protected_actual_own_identity": 7,
+      "actual_response_user_level": 0
+    }
+  ]
+}
