@@ -21,7 +21,7 @@ catalogue responses are retained.
 | Default tests | 1,169 passed, zero failed; 784 fixture-dependent tests ignored |
 | Physical SQL | Original and corrected attempts both pass 45 statements / 24 controls |
 | Candidate50 Docker build/packages | Original and corrected images/package families pass separately |
-| Combined Native nine-context cohort | Attempt1 failed; corrected full rerun running |
+| Combined Native nine-context cohort | Attempt1 failed; corrected full rerun passes in 605.043 seconds |
 | New application performance | Pending |
 
 Movie aliases prefer `tmdb_id` over `tmdb` and `imdb_id` over `imdb`. Series
@@ -97,7 +97,7 @@ settled group. Root verifies twelve exact CIDs including UID, eleven original
 host process generations and the project absent. All eight earlier contexts and
 all nine new local case assertions pass, but the complete strict Source
 comparison fails in the first cell. Later complete comparison phases are not
-reached, so the nine-context cohort is not accepted.
+reached, so that original nine-context attempt is not accepted.
 
 
 The failure is a production relation-allocation bug. In the first cell the global
@@ -106,10 +106,9 @@ provider stream 9702 instead of Source's 9701. The JSON input order was lost in 
 relation INSERT's filtering plan. Model IDs, relation IDs and ordered Source
 expectations are not normalized away. The [failed attempt](../scripts/rust-integration/milestone-batch50/application-attempt1/index.json)
 retains its literal exit 1, traceback, local/whole-workflow boundary and cleanup.
-The minimal proposed correction adds WITH ORDINALITY and ORDER BY to the Movie
+The correction adds WITH ORDINALITY and ORDER BY to the Movie
 and Series relation INSERTs. SDK71, fresh physical checks, a new image and the
-entire affected Native nine-context run must pass before this correction is
-accepted. Published SDK70, physical, package and failed application evidence stay
+entire affected Native nine-context rerun now pass independently. Published SDK70, physical, package and failed application evidence stay
 unchanged. Application performance and complete migration milestones remain open.
 
 
@@ -123,8 +122,8 @@ eight original host process generations and project absent. See
 [SDK71](../scripts/rust-integration/milestone-batch50/SDK71/summary.json) and
 [physical attempt2](../scripts/rust-integration/milestone-batch50/physical-attempt2/README.md).
 The corrected Docker image and all six package families now pass separately.
-The entire Native nine-context rerun is running. Neither the host checks nor
-Parse/Describe establish corrected application behavior.
+The entire corrected Native nine-context rerun also passes independently;
+its application result is recorded below.
 
 
 Corrected source `7a613ade8b926e99658c45ab071b832525ce5df2` builds separately
@@ -136,6 +135,13 @@ different from the failed image are verified. All six package families pass and
 [package-attempt2 proofs](../scripts/rust-integration/milestone-batch50/package-attempt2/inventory.json)
 leave all earlier package records unchanged. Fresh UID177 readability passes.
 The same frozen 177 helper closure and strict Source oracle are used for the
-complete Source0/Native9 rerun. At this update it is RUNNING; no corrected
-application, public reproduction, performance or complete milestone acceptance
-is inferred from successful compilation or packaging.
+complete Source0/Native9 rerun. It exits 0 in 605.043 seconds, with both EOFs
+and settled group. All nine contexts pass, including all nine complete strict
+external-ID Source comparisons with exact relation PKs, all eleven sequences,
+explicit reset/seed boundaries and typed causal clocks. The shared-account
+seed, unrelated-owner stability and last-owner cascade also pass. Root verifies
+twelve exact containers including UID, eleven original host process generations
+and the project absent. The [corrected application evidence](../scripts/rust-integration/milestone-batch50/application-attempt2/index.json)
+keeps the failed first attempt separate and changes no Source oracle. Public
+nine-context reproduction, performance and every complete milestone M0–M9 remain
+open.

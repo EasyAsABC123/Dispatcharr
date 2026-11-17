@@ -18,8 +18,11 @@ containers absent. The first full Native nine-context attempt exits 1 after all 
 contexts and nine new local cases pass: strict Source comparison catches real
 relation-PK allocation order drift. The minimal production ordering correction now passes SDK71 and fresh 45/24
 physical checks; the corrected image and all six package families now pass. The full affected
-Native nine-context rerun is running; corrected runtime acceptance is pending. No
-PK waiver is used.
+Native nine-context rerun passes in 605.043 seconds, including all nine strict
+Source comparisons, exact relation PKs and all eleven sequences. Root verifies
+twelve exact containers, eleven original host generations and the project absent.
+The failed first attempt remains separate; no PK waiver or Source-oracle change
+is used.
 Public reproduction, performance and complete milestones remain open.
 
 [Candidate49](rust-milestone-batch49.md) removes the temporary shared-account

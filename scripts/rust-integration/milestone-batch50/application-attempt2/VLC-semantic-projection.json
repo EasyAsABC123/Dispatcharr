@@ -1,0 +1,111 @@
+{
+  "status": "passed",
+  "scope": "two authenticated idle live viewers, actual Source0027 locked-template VLC input; no active Recording rows or performance measurement",
+  "profile_template": "actual locked VLC template, exact0027 parameters; no model methods replaced",
+  "readers": [
+    {
+      "bytes": 1279340,
+      "media_bytes": 1279340,
+      "packets": 6805,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t",
+      "first_byte_seconds": 6.761931888002437
+    },
+    {
+      "bytes": 1279340,
+      "media_bytes": 1279340,
+      "packets": 6805,
+      "sync_errors": 0,
+      "partial_bytes": 0,
+      "ended": true,
+      "errors": [],
+      "http_status": 200,
+      "content_type": "video/mp2t",
+      "first_byte_seconds": 0.010630042001139373
+    }
+  ],
+  "decoders": [
+    {
+      "viewer": "owner",
+      "actual_exit": 0,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "video_frames": 74,
+      "video_and_audio": true,
+      "file_bytes": 1279340,
+      "file_sha256": "5165f36163873cd03adce1a7504c4697b24e47e092ce99f6a49456f76f737ed1",
+      "scope": "existing qualified3s positive A/V prefix decoder with threads1; packaged fixed-core certificate separately required; no full-file/resource acceptance"
+    },
+    {
+      "viewer": "follower",
+      "actual_exit": 0,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "process_group_settled": true,
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "video_frames": 74,
+      "video_and_audio": true,
+      "file_bytes": 1279340,
+      "file_sha256": "5165f36163873cd03adce1a7504c4697b24e47e092ce99f6a49456f76f737ed1",
+      "scope": "existing qualified3s positive A/V prefix decoder with threads1; packaged fixed-core certificate separately required; no full-file/resource acceptance"
+    }
+  ],
+  "performance_verified": false,
+  "full_M3_passed": false,
+  "actual_Main_readiness_status": 200,
+  "actual_Main_loaded_graph_health": {
+    "status": "ready",
+    "backend": "rust",
+    "parity_complete": false,
+    "selected_workers": {
+      "scope": "experimental selected normal families plus startup recovery; not Source47 parity",
+      "ready": true,
+      "startup": "Started",
+      "startup_error": null,
+      "control": "Subscribed",
+      "celery": "Observed(Empty)",
+      "dvr": "Observed(Empty)",
+      "clocked_scheduler": "Observed(Tick { reloaded: false, published: None, publication_error: None, disabled: 0, synchronized: 0, missing: 0, invalid_rows: 0, delay_seconds: 5.0 })",
+      "clocked_scheduler_enabled": true,
+      "dvr_plugin_domain": "empty_directory_rechecked_before_recording_effects",
+      "startup_recovery_deferred_unsupported_domain": false,
+      "parity_complete": false
+    }
+  },
+  "active": {
+    "actual_upstream_connections": 1,
+    "actual_provider_slots": 1,
+    "actual_recording_ffmpeg_count": 0
+  },
+  "actual_input_process_count": 1,
+  "actual_origin_connection_delta": 1,
+  "actual_client_count": 2,
+  "actual_idle_upstream_and_process_retired": true,
+  "actual_Main_normal_stop": {
+    "actual_exit": 0,
+    "oom_killed": false,
+    "expected_exit": 0
+  },
+  "startup_roots": {
+    "passed": true,
+    "root_ids": [
+      "2930f7d1-9f20-4212-b86a-abe30c05c089",
+      "96d9026c-e117-4f60-92a9-6346e081c036",
+      "d89b8e57-b1d7-4ffa-9254-c2607a4cbbf2"
+    ],
+    "statuses": {
+      "2930f7d1-9f20-4212-b86a-abe30c05c089": "SUCCESS",
+      "96d9026c-e117-4f60-92a9-6346e081c036": "SUCCESS",
+      "d89b8e57-b1d7-4ffa-9254-c2607a4cbbf2": "SUCCESS"
+    },
+    "actual_startup_root_count": 3
+  }
+}
