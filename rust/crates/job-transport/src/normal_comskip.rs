@@ -23,6 +23,7 @@ pub const TASK: &str = "apps.channels.tasks.comskip_process_recording";
 pub(crate) struct Message {
     pub id: Uuid,
     pub recording: i64,
+    pub parent: Option<String>,
 }
 pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     if raw.is_empty() || raw.len() > crate::protocol::MAX_ENVELOPE {
@@ -53,6 +54,27 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     if frame["headers"]["argsrepr"] != format!("({recording},)") {
         return Err(());
     }
+    let id = frame["headers"]["id"].as_str().ok_or(())?.to_owned();
+    let root = frame["headers"]["root_id"].as_str().ok_or(())?.to_owned();
+    let parent = match &frame["headers"]["parent_id"] {
+        Value::Null => {
+            if root != id {
+                return Err(());
+            }
+            None
+        }
+        Value::String(parent) => {
+            if root == id || parent == &id || !lineage_key(parent) || !lineage_key(&root) {
+                return Err(());
+            }
+            Some(parent.clone())
+        }
+        _ => return Err(()),
+    };
+    // The shared no-argument validator checks the normalized common framing;
+    // actual nested lineage above remains in the original CAS bytes and result.
+    frame["headers"]["root_id"] = json!(id);
+    frame["headers"]["parent_id"] = Value::Null;
     frame["headers"]["task"] = json!("apps.proxy.tasks.fetch_channel_stats");
     frame["headers"]["argsrepr"] = json!("()");
     frame["headers"]["kwargsrepr"] = json!("{}");
@@ -67,7 +89,33 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     Ok(Message {
         id: common.task_id,
         recording,
+        parent,
     })
+}
+fn lineage_key(key: &str) -> bool {
+    if let Ok(id) = Uuid::parse_str(key) {
+        return id.to_string() == key
+            && id.get_version_num() == 4
+            && id.get_variant() == uuid::Variant::RFC4122;
+    }
+    if let Some(recording) = key.strip_prefix("dvr-recover-") {
+        return recording
+            .parse::<i32>()
+            .is_ok_and(|id| id > 0 && id.to_string() == recording);
+    }
+    if let Some(value) = key.strip_prefix("dvr-now-") {
+        if let Some((recording, nonce)) = value.split_once('-') {
+            return recording
+                .parse::<i32>()
+                .is_ok_and(|id| id > 0 && id.to_string() == recording)
+                && Uuid::parse_str(nonce).is_ok_and(|id| {
+                    id.simple().to_string() == nonce
+                        && id.get_version_num() == 4
+                        && id.get_variant() == uuid::Variant::RFC4122
+                });
+        }
+    }
+    false
 }
 struct Inner {
     jobs: Jobs,
@@ -113,6 +161,32 @@ impl Prepared {
         Arc::new(Worker(self.inner.clone()))
     }
     pub async fn publish(&self, recording: i64, owner: Scope) -> Result<Uuid, StoreError> {
+        self.publish_context(recording, None, owner).await
+    }
+    pub(crate) fn uses_store(&self, store: &dispatcharr_store::Store) -> bool {
+        self.inner.auth.uses_store_pool(store)
+    }
+    pub(crate) async fn publish_after_recording(
+        &self,
+        recording: i64,
+        parent: String,
+        root: String,
+        owner: Scope,
+    ) -> Result<Uuid, StoreError> {
+        if !lineage_key(&parent) || !lineage_key(&root) {
+            return Err(StoreError::Unsupported(
+                "Comskip recording lineage unavailable",
+            ));
+        }
+        self.publish_context(recording, Some((parent, root)), owner)
+            .await
+    }
+    async fn publish_context(
+        &self,
+        recording: i64,
+        lineage: Option<(String, String)>,
+        owner: Scope,
+    ) -> Result<Uuid, StoreError> {
         if self.inner.closed.load(Ordering::Acquire)
             || recording <= 0
             || recording > i64::from(i32::MAX)
@@ -134,6 +208,10 @@ impl Prepared {
         frame["headers"]["task"] = json!(TASK);
         frame["headers"]["argsrepr"] = json!(format!("({recording},)"));
         frame["headers"]["timelimit"] = json!([null, null]);
+        if let Some((parent, root)) = lineage {
+            frame["headers"]["parent_id"] = json!(parent);
+            frame["headers"]["root_id"] = json!(root);
+        }
         frame["body"]=json!(STANDARD.encode(serde_json::to_vec(&json!([[recording],{},{"callbacks":null,"errbacks":null,"chain":null,"chord":null}])).map_err(|_|StoreError::UnhandledRestFault)?));
         let raw = serde_json::to_vec(&frame).map_err(|_| StoreError::UnhandledRestFault)?;
         self.inner
@@ -371,5 +449,19 @@ mod tests {
             bad["body"] = json!(STANDARD.encode(serde_json::to_vec(&body).unwrap()));
             assert!(parse(&serde_json::to_vec(&bad).unwrap()).is_err());
         }
+    }
+    #[test]
+    fn nested_recording_comskip_keeps_original_parent_without_relaxing_common_frame() {
+        let mut value = frame();
+        let parent = Uuid::new_v4().to_string();
+        value["headers"]["parent_id"] = json!(parent);
+        value["headers"]["root_id"] = json!(parent);
+        let message = parse(&serde_json::to_vec(&value).unwrap()).unwrap();
+        assert_eq!(message.parent.as_deref(), Some(parent.as_str()));
+        value["headers"]["parent_id"] = value["headers"]["id"].clone();
+        assert!(parse(&serde_json::to_vec(&value).unwrap()).is_err());
+        value["headers"]["parent_id"] = json!(parent);
+        value["headers"]["root_id"] = json!("foreign");
+        assert!(parse(&serde_json::to_vec(&value).unwrap()).is_err());
     }
 }

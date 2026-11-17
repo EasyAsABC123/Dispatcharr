@@ -119,7 +119,23 @@ impl Jobs {
         if !self.allows_recording_dvr() {
             return Err(Error::UnsupportedTask);
         }
-        let mut value = serde_json::json!({"status":"SUCCESS","result":null,"traceback":null,"children":[],"date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string(),"task_id":message.task_key()});
+        self.write_named_recording_dvr_with_children(message, vec![], owner)
+            .await
+    }
+    pub(crate) async fn write_named_recording_dvr_with_children(
+        &self,
+        message: &Message,
+        children: Vec<uuid::Uuid>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if !self.allows_recording_dvr() {
+            return Err(Error::UnsupportedTask);
+        }
+        let children: Vec<_> = children
+            .into_iter()
+            .map(|child| serde_json::json!([[child.to_string(), null], null]))
+            .collect();
+        let mut value = serde_json::json!({"status":"SUCCESS","result":null,"traceback":null,"children":children,"date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string(),"task_id":message.task_key()});
         if let Some(parent) = message.parent() {
             value["parent_id"] = serde_json::json!(parent);
         }

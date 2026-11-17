@@ -153,6 +153,21 @@ impl SelectedJobs {
                     .map_err(|_| "Selected root artwork publisher unavailable")?,
             )
             .map_err(|_| "Selected root artwork publisher composition failed")?;
+        let shared_jobs = jobs::transport::Jobs::connect_defaults(
+            &broker,
+            &backend,
+            jobs::transport::Config::default(),
+        )
+        .await
+        .map_err(|_| "Selected scanner transport initialization failed")?;
+        let comskip = jobs::normal_comskip::Prepared::new(
+            shared_jobs.clone(),
+            auth.clone(),
+            events.clone(),
+            auth.producer_identity_source(),
+            revoked.clone(),
+        )
+        .map_err(|_| "Selected manual Comskip authority unavailable")?;
         let dvr = Arc::new(
             jobs::recording_dvr_normal::NormalDvr::connect(
                 jobs::recording_dvr_normal::Assembly {
@@ -165,6 +180,7 @@ impl SelectedJobs {
                     configured_plugin_directory: plugin_directory,
                     media_uid,
                     publisher: publisher.clone(),
+                    comskip: comskip.clone(),
                     revoked: revoked.clone(),
                     control: control.clone(),
                     publications,
@@ -190,13 +206,6 @@ impl SelectedJobs {
         .map_err(|_| "Selected recovery initialization failed")?;
         let recovery =
             jobs::normal_recording_recovery::Worker::prepare(recovery_jobs, recovery_service);
-        let shared_jobs = jobs::transport::Jobs::connect_defaults(
-            &broker,
-            &backend,
-            jobs::transport::Config::default(),
-        )
-        .await
-        .map_err(|_| "Selected scanner transport initialization failed")?;
         let plugin_jobs =
             crate::plugin_jobs_bridge::PluginJobsBridge::prepare(shared_jobs.clone(), Arc::new(()))
                 .map_err(|_| "Plugin shared Jobs bridge preparation failed")?;
@@ -339,14 +348,6 @@ impl SelectedJobs {
                 auth.producer_identity_source(),
             )),
         );
-        let comskip = jobs::normal_comskip::Prepared::new(
-            shared_jobs.clone(),
-            auth.clone(),
-            events.clone(),
-            auth.producer_identity_source(),
-            revoked.clone(),
-        )
-        .map_err(|_| "Selected manual Comskip authority unavailable")?;
         let comskip_http =
             dispatcharr_store::comskip_http::ComskipHttp::prepare(Arc::new(comskip.clone()));
         let recording_http = dispatcharr_store::recording_http::RecordingHttp::prepare(

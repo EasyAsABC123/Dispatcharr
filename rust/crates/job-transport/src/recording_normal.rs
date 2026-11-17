@@ -36,6 +36,23 @@ pub(crate) struct NormalPaths {
     pub segments: PathBuf,
 }
 
+/// Enabled postprocessing is restricted to the two explicit software modes;
+/// other effective DVR/output/profile constraints remain independently checked.
+pub(crate) fn supported_comskip_settings(settings: &Value) -> bool {
+    match settings.get("comskip_enabled") {
+        None | Some(Value::Bool(false)) => true,
+        Some(Value::Bool(true)) => {
+            matches!(
+                settings.get("comskip_mode").and_then(Value::as_str),
+                Some("mark" | "cut")
+            ) && matches!(
+                settings.get("comskip_hw_accel").and_then(Value::as_str),
+                None | Some("" | "none")
+            )
+        }
+        _ => false,
+    }
+}
 pub(crate) fn paths(
     recording: i64,
     properties: &Value,
@@ -53,9 +70,7 @@ pub(crate) fn paths(
     if settings
         .get("tv_template")
         .is_some_and(|value| value.as_str() != Some(TV_TEMPLATE))
-        || settings
-            .get("comskip_enabled")
-            .is_some_and(|v| v != &json!(false))
+        || !supported_comskip_settings(&groups.dvr)
         || settings
             .get("output_profile_id")
             .is_some_and(|v| !v.is_null())
@@ -357,5 +372,24 @@ mod tests {
         )
         .is_err());
         assert_eq!(fresh, before);
+    }
+    #[test]
+    fn automatic_software_modes_do_not_admit_unknown_modes_or_hardware() {
+        for mode in ["mark", "cut"] {
+            assert!(supported_comskip_settings(
+                &json!({"comskip_enabled":true,"comskip_mode":mode,"comskip_hw_accel":"none"})
+            ));
+        }
+        for value in [
+            json!({"comskip_enabled":true}),
+            json!({"comskip_enabled":true,"comskip_mode":"other"}),
+            json!({"comskip_enabled":true,"comskip_mode":"cut","comskip_hw_accel":"cuvid"}),
+            json!({"comskip_enabled":"yes","comskip_mode":"mark"}),
+        ] {
+            assert!(!supported_comskip_settings(&value));
+        }
+        assert!(supported_comskip_settings(
+            &json!({"comskip_enabled":false,"comskip_mode":"legacy-ignored"})
+        ));
     }
 }

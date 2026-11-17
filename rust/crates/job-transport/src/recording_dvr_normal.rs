@@ -1,6 +1,6 @@
 //! Additive normal DVR handler; captured constructors remain unchanged.
 //! Original Dispatcharr authors retain algorithm/application credit.
-//! Private overlay: not compiled, not default-registered, no runtime acceptance.
+//! Automatic postprocessing extension remains private pending Source characterization.
 pub use crate::recording_normal_task::TaskKey;
 use crate::{
     normal_named_recording::NormalNamedRecordingPublications,
@@ -53,6 +53,7 @@ pub struct Assembly {
     pub configured_plugin_directory: String,
     pub media_uid: u32,
     pub publisher: NormalRecordingPublisher,
+    pub comskip: crate::normal_comskip::Prepared,
     pub revoked: Revoked,
     pub control: Arc<crate::normal_control::Control>,
     pub publications: NormalRecordingPublications,
@@ -107,6 +108,7 @@ struct Inner {
     plugin_domain: Arc<plugin_domain::PluginDomain>,
     media_uid: u32,
     publisher: NormalRecordingPublisher,
+    comskip: crate::normal_comskip::Prepared,
     revoked: Revoked,
     control: Arc<crate::normal_control::Control>,
     publications: NormalRecordingPublications,
@@ -172,6 +174,11 @@ impl NormalDvr {
                     .map_err(Error::Active)?;
             let store = Arc::new(CaptureStore::normal(assembly.store.pool().clone()));
             let cleanup = recording_cleanup::Component::normal(assembly.store.pool().clone());
+            if !assembly.comskip.uses_store(&assembly.store) {
+                return Err(Error::Unsupported(
+                    "Comskip and normal DVR must share Store",
+                ));
+            }
             let settings = recording_settings::Settings::new(assembly.store, assembly.cache);
             Ok(Self {
                 inner: Arc::new(Inner {
@@ -185,6 +192,7 @@ impl NormalDvr {
                     plugin_domain,
                     media_uid: assembly.media_uid,
                     publisher: assembly.publisher,
+                    comskip: assembly.comskip,
                     revoked: assembly.revoked,
                     control: assembly.control,
                     publications: assembly.publications,
@@ -371,6 +379,42 @@ async fn emit_recording_event(
             .map_err(Error::Store)?;
     }
     Ok(())
+}
+/// Source finalization exceptions continue to automatic postprocessing. The
+/// later explicit deleted-row exists() return still suppresses publication.
+async fn automatic_comskip_children(
+    inner: &Arc<Inner>,
+    message: &recording_normal_task::Message,
+    owner: Arc<Owner>,
+) -> Result<Vec<uuid::Uuid>, Error> {
+    let recording = message.recording_id();
+    let mut children = Vec::new();
+    match inner.settings.normal_effect(false, owner.clone()).await {
+        Ok(settings) => {
+            if settings.get("comskip_enabled") == Some(&Value::Bool(true)) {
+                match inner
+                    .comskip
+                    .publish_after_recording(
+                        recording,
+                        message.raw_key(),
+                        message.root_key(),
+                        owner.clone(),
+                    )
+                    .await
+                {
+                    Ok(child) => children.push(child),
+                    Err(_) => trace(
+                        &owner,
+                        "caught-comskip-publication",
+                        json!({"published_reply_observed":false,"retried":false}),
+                    )?,
+                }
+            }
+        }
+        Err(recording_settings::Error::Unsettled) => return Err(Error::Unsettled),
+        Err(_) => trace(&owner, "caught-comskip-settings", json!({"retried":false}))?,
+    }
+    Ok(children)
 }
 async fn execute(
     inner: Arc<Inner>,
@@ -893,7 +937,21 @@ async fn execute(
             intended
         }
         dispatcharr_store::recording_capture::RuntimeFinalizeOutcome::Missing => {
-            let metadata_written = message.clone().write(inner.jobs.clone(), owner).await?;
+            // This SELECT-none corresponds to Source refresh_from_db failing
+            // before its later exists() guards; the caught exception still
+            // reaches automatic dispatch and active-lock release.
+            let children = automatic_comskip_children(&inner, &message, owner.clone()).await?;
+            let removed = inner
+                .active
+                .remove_normal_retired(recording, owner.clone())
+                .await
+                .map_err(Error::Active)?;
+            trace(&owner, "removed", removed.receipt(json!(removed.value)))?;
+            drop(files);
+            let metadata_written = message
+                .clone()
+                .write_with_children(inner.jobs.clone(), children, owner)
+                .await?;
             task.complete(&inner.publications, &inner.named_publications)?;
             return Ok(Run::CompletedNoop {
                 task: message.key(),
@@ -974,6 +1032,7 @@ async fn execute(
             metadata_written,
         });
     }
+    let postprocess_children = automatic_comskip_children(&inner, &message, owner.clone()).await?;
     let removed = inner
         .active
         .remove_normal_retired(recording, owner.clone())
@@ -996,7 +1055,10 @@ async fn execute(
     // Known spawn failure and nonzero process exits are retained diagnostics,
     // not fabricated ownership loss. All actual children/stderr are settled.
     drop(files);
-    let metadata_written = message.clone().write(inner.jobs.clone(), owner).await?;
+    let metadata_written = message
+        .clone()
+        .write_with_children(inner.jobs.clone(), postprocess_children, owner)
+        .await?;
     task.complete(&inner.publications, &inner.named_publications)?;
     let active_observations = per_trace.lock().map_err(|_| Error::Unsettled)?.clone();
     Ok(Run::Completed {

@@ -90,7 +90,11 @@ impl Jobs {
         } else {
             ("SUCCESS", result, serde_json::Value::Null)
         };
-        let bytes=serde_json::to_vec(&serde_json::json!({"status":status,"result":result,"traceback":traceback,"children":[],"date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string(),"task_id":message.id.to_string()})).map_err(|_|Error::Protocol)?;
+        let mut metadata = serde_json::json!({"status":status,"result":result,"traceback":traceback,"children":[],"date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string(),"task_id":message.id.to_string()});
+        if let Some(parent) = &message.parent {
+            metadata["parent_id"] = serde_json::json!(parent);
+        }
+        let bytes = serde_json::to_vec(&metadata).map_err(|_| Error::Protocol)?;
         crate::decode::decode(&bytes, message.id).map_err(|_| Error::Protocol)?;
         self.write_metadata(message.id, bytes, owner).await
     }

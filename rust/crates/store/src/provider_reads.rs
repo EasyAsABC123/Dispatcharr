@@ -514,6 +514,19 @@ async fn mutation(
     ))
 }
 #[cfg(test)]
+pub(crate) async fn physical_account_detail(
+    connection: &mut sqlx::PgConnection,
+    id: i64,
+) -> Result<Value, StoreError> {
+    let row = sqlx::query(ACCOUNT_QUERY)
+        .bind(Some(id))
+        .bind(None::<i64>)
+        .fetch_one(connection)
+        .await?;
+    account(&row, true)
+}
+
+#[cfg(test)]
 mod tests {
     use super::*;
     #[tokio::test]

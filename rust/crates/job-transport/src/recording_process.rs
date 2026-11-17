@@ -1,4 +1,4 @@
-//! PRIVATE UNCOMPILED inert owned-FFmpeg draft. No worker/ACK attachment.
+//! Owned DVR and commercial-processing child lifecycle and physical settlement.
 //! Source algorithm/arguments credit: Original Dispatcharr channels/tasks.py.
 //! Direct pinned libc dependency provides the confined owned-child SIGINT boundary.
 use super::recording_normal::NormalPaths;
@@ -186,6 +186,7 @@ pub enum Error {
     ReaderPanic,
     ReaderMissing,
     CallerShutdown(Box<ProcessReceipt>),
+    ExplicitOperationDeadline(Box<ProcessReceipt>),
     EarlyExit(Box<ProcessReceipt>),
     UnexpectedExit(Box<ProcessReceipt>),
 }
@@ -1166,7 +1167,7 @@ mod dvr_output_profile_url {
     }
 }
 
-/// Real comskip/ffprobe invocation through the existing DVR child transcript,
+/// Real comskip/ffprobe/bounded-cut FFmpeg invocation through the existing DVR child transcript,
 /// identity, stderr reader, wait and emergency owner retention. No shell.
 pub(crate) fn comskip_program(
     program: &str,
@@ -1175,22 +1176,75 @@ pub(crate) fn comskip_program(
     shutdown: Arc<AtomicBool>,
     owner: Arc<dyn Send + Sync>,
     transcript: Arc<Transcript>,
-    seconds: u64,
+    explicit_operation_budget: Option<Duration>,
 ) -> Result<ProcessReceipt, Error> {
-    if !(1..=300).contains(&seconds)
-        || !matches!(program, "/usr/local/bin/comskip" | "/usr/local/bin/ffprobe")
-    {
+    if !matches!(program, "/usr/local/bin/comskip" | "/usr/local/bin/ffprobe") {
         return Err(Error::Unsupported);
     }
+    postprocess_program(
+        program,
+        args,
+        stdout,
+        shutdown,
+        owner,
+        transcript,
+        explicit_operation_budget,
+    )
+}
+/// The cut adapter chooses the packaged FFmpeg; callers cannot substitute a program.
+pub(crate) fn comskip_cut_program(
+    args: &[String],
+    shutdown: Arc<AtomicBool>,
+    owner: Arc<dyn Send + Sync>,
+    transcript: Arc<Transcript>,
+) -> Result<ProcessReceipt, Error> {
+    postprocess_program(
+        "/usr/local/bin/ffmpeg",
+        args,
+        None,
+        shutdown,
+        owner,
+        transcript,
+        None,
+    )
+}
+fn postprocess_program(
+    program: &str,
+    args: &[String],
+    stdout: Option<fs::File>,
+    shutdown: Arc<AtomicBool>,
+    owner: Arc<dyn Send + Sync>,
+    transcript: Arc<Transcript>,
+    explicit_operation_budget: Option<Duration>,
+) -> Result<ProcessReceipt, Error> {
+    if !matches!(
+        program,
+        "/usr/local/bin/comskip" | "/usr/local/bin/ffprobe" | "/usr/local/bin/ffmpeg"
+    ) {
+        return Err(Error::Unsupported);
+    }
+    // Pinned Source subprocess.run specifies no operation timeout. None is its
+    // default; Some is reserved for an explicitly supplied task/frame policy,
+    // never inferred from media length, settings defaults or observer budgets.
+    // Check overflow and a nonsensical zero before starting a physical child.
+    let deadline = match explicit_operation_budget {
+        None => None,
+        Some(budget) if !budget.is_zero() => Some(
+            Instant::now()
+                .checked_add(budget)
+                .ok_or(Error::Unsupported)?,
+        ),
+        Some(_) => return Err(Error::Unsupported),
+    };
     let (mut owned, started, argv) =
         OwnedChild::spawn_program(program, args, transcript, owner, stdout)?;
     let identity = owned.identity()?;
-    let deadline = Instant::now() + Duration::from_secs(seconds);
     loop {
         if let Some(status) = owned.try_wait()? {
             return owned.receipt(status, identity, argv, started, false, false);
         }
-        if shutdown.load(Ordering::Acquire) || Instant::now() >= deadline {
+        let caller_shutdown = shutdown.load(Ordering::Acquire);
+        if caller_shutdown || deadline.is_some_and(|value| Instant::now() >= value) {
             signal_int(&mut owned.child, &identity)?;
             let grace = Instant::now() + Duration::from_secs(10);
             let (status, forced) = loop {
@@ -1204,7 +1258,11 @@ pub(crate) fn comskip_program(
                 thread::sleep(Duration::from_millis(25));
             };
             let receipt = owned.receipt(status, identity, argv, started, true, forced)?;
-            return Err(Error::CallerShutdown(Box::new(receipt)));
+            return Err(if caller_shutdown {
+                Error::CallerShutdown(Box::new(receipt))
+            } else {
+                Error::ExplicitOperationDeadline(Box::new(receipt))
+            });
         }
         thread::sleep(Duration::from_millis(25));
     }

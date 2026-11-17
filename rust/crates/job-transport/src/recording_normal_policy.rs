@@ -339,11 +339,7 @@ pub(crate) fn paths_for_execution(
     // nonfinite/unsupported numeric domains remain explicit.
     crate::recording_output_profile::capture_id(groups.dvr.get("output_profile_id"))
         .map_err(Error::Unsupported)?;
-    if groups
-        .dvr
-        .get("comskip_enabled")
-        .is_some_and(|v| v != &Value::Bool(false))
-    {
+    if !super::recording_normal::supported_comskip_settings(&groups.dvr) {
         return Err(Error::Unsupported("normal comskip adapter required"));
     }
     if snapshot.channel_epg_data_id.is_some()

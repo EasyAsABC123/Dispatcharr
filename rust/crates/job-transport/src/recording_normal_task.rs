@@ -73,6 +73,12 @@ impl Message {
             Self::Named(m) => m.argument_end(),
         }
     }
+    pub(crate) fn root_key(&self) -> String {
+        match self {
+            Self::Clocked(message) => message.task_id().to_string(),
+            Self::Named(message) => message.root().to_owned(),
+        }
+    }
     pub(crate) async fn write(
         self,
         jobs: Jobs,
@@ -82,6 +88,26 @@ impl Message {
             match self {
                 Self::Clocked(m) => jobs.write_recording_dvr(&m, guard).await,
                 Self::Named(m) => jobs.write_named_recording_dvr(&m, guard).await,
+            }
+        })
+        .await
+    }
+    pub(crate) async fn write_with_children(
+        self,
+        jobs: Jobs,
+        children: Vec<uuid::Uuid>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        retained_transport(owner, move |guard| async move {
+            match self {
+                Self::Clocked(m) => {
+                    jobs.write_recording_dvr_with_children(&m, children, guard)
+                        .await
+                }
+                Self::Named(m) => {
+                    jobs.write_named_recording_dvr_with_children(&m, children, guard)
+                        .await
+                }
             }
         })
         .await

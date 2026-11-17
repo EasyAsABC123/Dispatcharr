@@ -115,6 +115,15 @@ impl Jobs {
         message: &ObservedProducerEnvelope,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
+        self.write_recording_dvr_with_children(message, vec![], owner)
+            .await
+    }
+    pub(crate) async fn write_recording_dvr_with_children(
+        &self,
+        message: &ObservedProducerEnvelope,
+        children: Vec<uuid::Uuid>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
         if !self.allows_recording_dvr() {
             return Err(Error::UnsupportedTask);
         }
@@ -124,7 +133,7 @@ impl Jobs {
             message.task_id(),
             serde_json::Value::Null,
             None,
-            vec![],
+            children,
             owner,
         )
         .await

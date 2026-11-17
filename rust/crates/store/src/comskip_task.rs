@@ -9,7 +9,13 @@ pub const SETTINGS: &str = "SELECT value FROM core_coresettings WHERE key='dvr_s
 pub const SELECT:&str="SELECT CASE WHEN octet_length(custom_properties::text)<=65536 THEN custom_properties ELSE NULL END AS properties,COALESCE(octet_length(custom_properties::text),0)<=65536 AS bounded FROM dispatcharr_channels_recording WHERE id=$1";
 pub const UPDATE: &str =
     "UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1";
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Mode {
+    Mark,
+    Cut,
+}
 pub struct Work {
+    pub mode: Mode,
     pub recording: i64,
     pub file: PathBuf,
     pub custom_ini: Option<PathBuf>,
@@ -22,7 +28,7 @@ pub enum Plan {
     Work(Work),
 }
 pub struct Outcome {
-    pub result: &'static str,
+    pub result: String,
     pub properties: Value,
     pub status: &'static str,
     pub extra: Value,
@@ -32,7 +38,34 @@ pub trait Media: Send + Sync {
     fn process(&self, work: Work, owner: Owner) -> BoxFuture<'_, Result<Outcome, StoreError>>;
 }
 fn unsupported() -> StoreError {
-    StoreError::Unsupported("Manual comskip supports bounded completed-file mark mode only")
+    StoreError::Unsupported("Comskip supports bounded completed-file mark/cut modes only")
+}
+fn bounded_file(properties: &Value) -> Result<Option<&str>, StoreError> {
+    let value = &properties["file_path"];
+    if !crate::xc_live_provider::truthy(value) {
+        return Ok(None);
+    }
+    value.as_str().map(Some).ok_or_else(unsupported)
+}
+fn bounded_title(properties: &Value, file: &std::path::Path) -> Result<String, StoreError> {
+    let fallback = || {
+        file.file_name()
+            .and_then(|v| v.to_str())
+            .map(str::to_owned)
+            .ok_or_else(unsupported)
+    };
+    let program = &properties["program"];
+    if !crate::xc_live_provider::truthy(program) {
+        return fallback();
+    }
+    let program = program.as_object().ok_or_else(unsupported)?;
+    match program
+        .get("title")
+        .filter(|v| crate::xc_live_provider::truthy(v))
+    {
+        None => fallback(),
+        Some(value) => value.as_str().map(str::to_owned).ok_or_else(unsupported),
+    }
 }
 pub async fn preflight(
     auth: &AuthService,
@@ -58,11 +91,7 @@ pub async fn preflight(
                 }
                 let raw: Option<Value> = row.try_get("properties")?;
                 let properties = raw.filter(Value::is_object).unwrap_or_else(|| json!({}));
-                let Some(file) = properties
-                    .get("file_path")
-                    .and_then(Value::as_str)
-                    .filter(|v| !v.is_empty())
-                else {
+                let Some(file) = bounded_file(&properties)? else {
                     return Ok(Plan::Terminal("no_file"));
                 };
                 if file.len() > 4096 {
@@ -88,9 +117,11 @@ pub async fn preflight(
                 let settings: Option<Value> =
                     sqlx::query_scalar(SETTINGS).fetch_optional(&mut *c).await?;
                 let settings = settings.unwrap_or_else(|| json!({}));
-                if settings.get("comskip_mode").and_then(Value::as_str) != Some("mark") {
-                    return Err(unsupported());
-                }
+                let mode = match settings.get("comskip_mode").and_then(Value::as_str) {
+                    Some("mark") => Mode::Mark,
+                    Some("cut") => Mode::Cut,
+                    _ => return Err(unsupported()),
+                };
                 if !matches!(
                     properties.get("status").and_then(Value::as_str),
                     Some("completed" | "stopped")
@@ -113,15 +144,9 @@ pub async fn preflight(
                     Some(Value::String(s)) if s.len() <= 4096 => Some(PathBuf::from(s)),
                     _ => return Err(unsupported()),
                 };
-                let title = properties
-                    .get("program")
-                    .and_then(|v| v.get("title"))
-                    .and_then(Value::as_str)
-                    .filter(|v| !v.is_empty())
-                    .map(str::to_owned)
-                    .or_else(|| file.file_name().and_then(|v| v.to_str()).map(str::to_owned))
-                    .ok_or_else(unsupported)?;
+                let title = bounded_title(&properties, &file)?;
                 Ok(Plan::Work(Work {
+                    mode,
                     recording,
                     file,
                     custom_ini,
@@ -219,6 +244,22 @@ pub fn intervals(edl: &str, duration: f64) -> Vec<(f64, f64)> {
     ranges.sort_by(|a, b| a.0.total_cmp(&b.0).then(a.1.total_cmp(&b.1)));
     ranges
 }
+/// Source advances the cursor with max(cur,end), retaining every commercial
+/// for its separate count/sum. Only actual segment execution omits <=0.01s.
+pub fn keep_intervals(commercials: &[(f64, f64)], duration: f64) -> Vec<(f64, f64)> {
+    let mut keep = Vec::new();
+    let mut cursor = 0.0_f64;
+    for &(start, end) in commercials {
+        if start > cursor {
+            keep.push((cursor, cursor.max(start)));
+        }
+        cursor = cursor.max(end);
+    }
+    if cursor < duration {
+        keep.push((cursor, duration));
+    }
+    keep
+}
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -233,5 +274,71 @@ mod tests {
     fn source_half_second_threshold_is_strict() {
         let v = intervals("1 1.5", 3.0);
         assert_eq!(v.iter().map(|(a, b)| b - a).sum::<f64>(), 0.5);
+    }
+    #[test]
+    fn source_cut_keeps_around_overlaps_and_does_not_discard_negative_commercials() {
+        let ranges = intervals("1 3\n2 5\n8 4", 10.0);
+        assert_eq!(ranges.len(), 3);
+        assert_eq!(
+            keep_intervals(&ranges, 10.0),
+            vec![(0.0, 1.0), (5.0, 8.0), (5.0, 10.0)]
+        );
+    }
+    #[test]
+    fn source_falsy_program_title_falls_back_but_truthy_nontext_is_refused() {
+        let file = std::path::Path::new("/data/owned.mkv");
+        for value in [
+            json!(null),
+            json!(false),
+            json!(0),
+            json!(""),
+            json!([]),
+            json!({}),
+        ] {
+            assert_eq!(
+                bounded_title(&json!({"program":value}), file).unwrap(),
+                "owned.mkv"
+            );
+            assert_eq!(
+                bounded_title(&json!({"program":{"title":value}}), file).unwrap(),
+                "owned.mkv"
+            );
+        }
+        assert_eq!(
+            bounded_title(&json!({"program":{"title":"0"}}), file).unwrap(),
+            "0"
+        );
+        for value in [
+            json!({"program":"bad"}),
+            json!({"program":{"title":7}}),
+            json!({"program":{"title":["bad"]}}),
+        ] {
+            assert!(bounded_title(&value, file).is_err());
+        }
+    }
+    #[test]
+    fn truthy_nontext_file_paths_never_become_false_no_file_results() {
+        for value in [
+            json!(null),
+            json!(false),
+            json!(0),
+            json!(""),
+            json!([]),
+            json!({}),
+        ] {
+            assert_eq!(bounded_file(&json!({"file_path":value})).unwrap(), None);
+        }
+        for value in [
+            json!(true),
+            json!(7),
+            json!(["/data/input.mkv"]),
+            json!({"path":"/data/input.mkv"}),
+        ] {
+            assert!(bounded_file(&json!({"file_path":value})).is_err());
+        }
+        assert_eq!(
+            bounded_file(&json!({"file_path":"/data/input.mkv"})).unwrap(),
+            Some("/data/input.mkv")
+        );
     }
 }
