@@ -1,0 +1,525 @@
+{
+  "passed": true,
+  "image_id": "sha256:2272e72ddbde19a59d93c05eeedbcf0ea64eb236d24b0eba7ce804d68de6d050",
+  "git_revision": "0e52e4f0e406374243fad144c8055c83a4467595",
+  "build_sha256": "671dfacedfb67cea1ee32beab51e5cd4451bd3f830fafc0b6c7e9daa5e5492ab",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "apps_DB_network_calls": 0,
+  "performance_claims": false,
+  "VLC_failover_or_upstream_workflow_acceptance": false,
+  "full_finite_file_acceptance": false,
+  "Source_profile0027_sha256": "3d0d5ce6013560cde40eddf27330ad4133e29060a3619bbaa795a9a390f7fc74",
+  "required_useful_core": {
+    "video_frames": 75,
+    "AAC_frames": 142,
+    "audio_samples": 145408
+  },
+  "cells": [
+    {
+      "name": "source-default-wrapper-remux-decode",
+      "required": true,
+      "passed": true,
+      "observation": {
+        "stdout_TS_sha256": "4c9a7beb26a6afbb2c51fe26312efe95b06ac31f0d3a475dca6da9a8950fdb6b",
+        "stdout_TS_bytes": 334264,
+        "raw_media": {
+          "programs": [
+            {
+              "streams": [
+                {
+                  "codec_name": "h264",
+                  "codec_type": "video",
+                  "nb_read_frames": "145"
+                },
+                {
+                  "codec_name": "aac",
+                  "codec_type": "audio",
+                  "nb_read_frames": "272"
+                }
+              ]
+            }
+          ],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "nb_read_frames": "145"
+            },
+            {
+              "codec_name": "aac",
+              "codec_type": "audio",
+              "nb_read_frames": "272"
+            }
+          ],
+          "decode_receipt": {
+            "actual_exit": 0,
+            "stderr_bytes": 207,
+            "stderr_sha256": "8fae3af2d08f2e204c5ccc68d94821f11cf12d77d0227a1e19b0009e78484802",
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "CLI_generation_absent": true
+          }
+        },
+        "raw_decode_clean": false,
+        "certified_media": {
+          "programs": [
+            {
+              "streams": [
+                {
+                  "codec_name": "h264",
+                  "codec_type": "video",
+                  "nb_read_frames": "145"
+                },
+                {
+                  "codec_name": "aac",
+                  "codec_type": "audio",
+                  "nb_read_frames": "272"
+                }
+              ]
+            }
+          ],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "nb_read_frames": "145"
+            },
+            {
+              "codec_name": "aac",
+              "codec_type": "audio",
+              "nb_read_frames": "272"
+            }
+          ],
+          "decode_receipt": {
+            "actual_exit": 0,
+            "stderr_bytes": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "CLI_generation_absent": true
+          }
+        },
+        "certificate": {
+          "scope": "NEW fixed usefulcore; not full finite-file or prior-protocol pass",
+          "raw_sha256": "4c9a7beb26a6afbb2c51fe26312efe95b06ac31f0d3a475dca6da9a8950fdb6b",
+          "raw_bytes": 334264,
+          "certificate_sha256": "fd9fdb69c07bea944defce05d2ae3bef29f045e042466e45a2974563e7b1b57a",
+          "certificate_bytes": 334076,
+          "core_video_indices": [
+            25,
+            100
+          ],
+          "core_audio_indices": [
+            47,
+            189
+          ],
+          "required_video_frames": 75,
+          "required_audio_frames": 142,
+          "required_audio_samples": 145408,
+          "core_end_transport_offset": 228984,
+          "outer_tail_removed": [
+            {
+              "offset": 333136,
+              "pid": 200,
+              "bytes": 188
+            }
+          ],
+          "exact_reference_prefix": {
+            "video_exact_reference_prefix": true,
+            "audio_exact_reference_prefix": true
+          },
+          "retained_initial_duplicate_header_offsets": [
+            940
+          ],
+          "raw_complete_video_frames": 145,
+          "raw_complete_audio_frames": 272,
+          "whole_fixture_acceptance": false
+        },
+        "full_finite_file_acceptance": false,
+        "default_production_wrapper_environment": true,
+        "explicit_probe_only_environment": {},
+        "VLC_PLUGIN_PATH_or_codec_override_supplied": false
+      }
+    },
+    {
+      "name": "candidate-default-wrapper-remux-decode",
+      "required": true,
+      "passed": true,
+      "observation": {
+        "stdout_TS_sha256": "9da4a87087ace3948634c7ebf5d2cad7690e89a3c2748442b97a638a9c337dc5",
+        "stdout_TS_bytes": 334264,
+        "raw_media": {
+          "programs": [
+            {
+              "streams": [
+                {
+                  "codec_name": "h264",
+                  "codec_type": "video",
+                  "nb_read_frames": "145"
+                },
+                {
+                  "codec_name": "aac",
+                  "codec_type": "audio",
+                  "nb_read_frames": "272"
+                }
+              ]
+            }
+          ],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "nb_read_frames": "145"
+            },
+            {
+              "codec_name": "aac",
+              "codec_type": "audio",
+              "nb_read_frames": "272"
+            }
+          ],
+          "decode_receipt": {
+            "actual_exit": 0,
+            "stderr_bytes": 207,
+            "stderr_sha256": "26741f71e68ccea20996d59696d49899f00e7f806ea15097b873a0b3e20b8db4",
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "CLI_generation_absent": true
+          }
+        },
+        "raw_decode_clean": false,
+        "certified_media": {
+          "programs": [
+            {
+              "streams": [
+                {
+                  "codec_name": "h264",
+                  "codec_type": "video",
+                  "nb_read_frames": "145"
+                },
+                {
+                  "codec_name": "aac",
+                  "codec_type": "audio",
+                  "nb_read_frames": "272"
+                }
+              ]
+            }
+          ],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "nb_read_frames": "145"
+            },
+            {
+              "codec_name": "aac",
+              "codec_type": "audio",
+              "nb_read_frames": "272"
+            }
+          ],
+          "decode_receipt": {
+            "actual_exit": 0,
+            "stderr_bytes": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "CLI_generation_absent": true
+          }
+        },
+        "certificate": {
+          "scope": "NEW fixed usefulcore; not full finite-file or prior-protocol pass",
+          "raw_sha256": "9da4a87087ace3948634c7ebf5d2cad7690e89a3c2748442b97a638a9c337dc5",
+          "raw_bytes": 334264,
+          "certificate_sha256": "fe929b0bbfbbfc03a1f163a9a580a50f2879c5e9d886ced7cd3b95754d4b6f4b",
+          "certificate_bytes": 334076,
+          "core_video_indices": [
+            25,
+            100
+          ],
+          "core_audio_indices": [
+            47,
+            189
+          ],
+          "required_video_frames": 75,
+          "required_audio_frames": 142,
+          "required_audio_samples": 145408,
+          "core_end_transport_offset": 228984,
+          "outer_tail_removed": [
+            {
+              "offset": 333136,
+              "pid": 200,
+              "bytes": 188
+            }
+          ],
+          "exact_reference_prefix": {
+            "video_exact_reference_prefix": true,
+            "audio_exact_reference_prefix": true
+          },
+          "retained_initial_duplicate_header_offsets": [
+            940
+          ],
+          "raw_complete_video_frames": 145,
+          "raw_complete_audio_frames": 272,
+          "whole_fixture_acceptance": false
+        },
+        "full_finite_file_acceptance": false,
+        "default_production_wrapper_environment": true,
+        "explicit_probe_only_environment": {},
+        "VLC_PLUGIN_PATH_or_codec_override_supplied": false
+      }
+    },
+    {
+      "name": "candidate-explicit-home-diagnostic",
+      "required": false,
+      "passed": true,
+      "observation": {
+        "stdout_TS_sha256": "8cb8558cf1e1c25278f8051ead8a922c3ac771d6489fe6d45d0182e6897c7c50",
+        "stdout_TS_bytes": 334264,
+        "raw_media": {
+          "programs": [
+            {
+              "streams": [
+                {
+                  "codec_name": "h264",
+                  "codec_type": "video",
+                  "nb_read_frames": "145"
+                },
+                {
+                  "codec_name": "aac",
+                  "codec_type": "audio",
+                  "nb_read_frames": "272"
+                }
+              ]
+            }
+          ],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "nb_read_frames": "145"
+            },
+            {
+              "codec_name": "aac",
+              "codec_type": "audio",
+              "nb_read_frames": "272"
+            }
+          ],
+          "decode_receipt": {
+            "actual_exit": 0,
+            "stderr_bytes": 207,
+            "stderr_sha256": "9d87acbd453d259dc1ceade8d7b1ce392f7ee823e42acc57b2c554332d0451f6",
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "CLI_generation_absent": true
+          }
+        },
+        "raw_decode_clean": false,
+        "certified_media": {
+          "programs": [
+            {
+              "streams": [
+                {
+                  "codec_name": "h264",
+                  "codec_type": "video",
+                  "nb_read_frames": "145"
+                },
+                {
+                  "codec_name": "aac",
+                  "codec_type": "audio",
+                  "nb_read_frames": "272"
+                }
+              ]
+            }
+          ],
+          "stream_groups": [],
+          "streams": [
+            {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "nb_read_frames": "145"
+            },
+            {
+              "codec_name": "aac",
+              "codec_type": "audio",
+              "nb_read_frames": "272"
+            }
+          ],
+          "decode_receipt": {
+            "actual_exit": 0,
+            "stderr_bytes": 0,
+            "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "CLI_generation_absent": true
+          }
+        },
+        "certificate": {
+          "scope": "NEW fixed usefulcore; not full finite-file or prior-protocol pass",
+          "raw_sha256": "8cb8558cf1e1c25278f8051ead8a922c3ac771d6489fe6d45d0182e6897c7c50",
+          "raw_bytes": 334264,
+          "certificate_sha256": "a386567340577c8985164b143cdf27ccdbf8f1383e5b0568b29a6d6eb39da6d1",
+          "certificate_bytes": 334076,
+          "core_video_indices": [
+            25,
+            100
+          ],
+          "core_audio_indices": [
+            47,
+            189
+          ],
+          "required_video_frames": 75,
+          "required_audio_frames": 142,
+          "required_audio_samples": 145408,
+          "core_end_transport_offset": 228984,
+          "outer_tail_removed": [
+            {
+              "offset": 333136,
+              "pid": 200,
+              "bytes": 188
+            }
+          ],
+          "exact_reference_prefix": {
+            "video_exact_reference_prefix": true,
+            "audio_exact_reference_prefix": true
+          },
+          "retained_initial_duplicate_header_offsets": [
+            940
+          ],
+          "raw_complete_video_frames": 145,
+          "raw_complete_audio_frames": 272,
+          "whole_fixture_acceptance": false
+        },
+        "full_finite_file_acceptance": false,
+        "default_production_wrapper_environment": false,
+        "explicit_probe_only_environment": {
+          "HOME": "/tmp",
+          "XDG_CONFIG_HOME": "/tmp/vlc-config",
+          "XDG_CACHE_HOME": "/tmp/vlc-cache"
+        },
+        "VLC_PLUGIN_PATH_or_codec_override_supplied": false
+      }
+    },
+    {
+      "name": "paired-remux-useful-AV",
+      "required": true,
+      "passed": true,
+      "observation": {
+        "paired_exact_fixture_core_video_frames": 75,
+        "paired_exact_fixture_core_AAC_frames": 142,
+        "paired_exact_fixture_core_audio_samples": 145408,
+        "full_finite_file_acceptance": false,
+        "scope": "Source0027 profile, SAME fixed useful core plus outer context; not fullfile/failover/session/performance parity"
+      }
+    }
+  ],
+  "manifest": {
+    "sha256": "9d1fcf95c2a8f987d3ebbebe26e319eb2d364fb69b8885bf410e3ed61dc50ccc",
+    "exact_hashed_files": 798,
+    "category_counts": {
+      "binaries": 2,
+      "libraries": 202,
+      "plugins": 345,
+      "data": 63,
+      "wrappers": 2
+    },
+    "actual_three_custom_ELF_notice_links": [
+      {
+        "installed": "/opt/dispatcharr-vlc/lib/libva-drm.so.2",
+        "ELF_sha256": "804f3166ed4039a9cb241dd1c5a6822abb3c538975479ce1c9a4a0b7e77ab83d",
+        "notice": {
+          "actual_ELF_sha256": "804f3166ed4039a9cb241dd1c5a6822abb3c538975479ce1c9a4a0b7e77ab83d",
+          "actual_resolved_ELF": "/usr/local/lib/x86_64-linux-gnu/libva-drm.so.2.2400.0",
+          "component": "libva",
+          "origin": "pinned-Original-custom-build",
+          "retained_path": "/usr/share/doc/dispatcharr/vlc-copyright/Original-custom-libva/COPYING",
+          "sha256": "c86a782ee845b52472dae9b9d79fb915d333628ac0efe49cdce63644814931de",
+          "source": "/usr/local/share/doc/dispatcharr-ffmpeg/intel-media-licenses/libva/COPYING"
+        }
+      },
+      {
+        "installed": "/opt/dispatcharr-vlc/lib/libva.so.2",
+        "ELF_sha256": "bdd61c4f35cc33ae3ce26e42e980424ccbf412c787d1b3bb92b5a3397984bf0c",
+        "notice": {
+          "actual_ELF_sha256": "bdd61c4f35cc33ae3ce26e42e980424ccbf412c787d1b3bb92b5a3397984bf0c",
+          "actual_resolved_ELF": "/usr/local/lib/x86_64-linux-gnu/libva.so.2.2400.0",
+          "component": "libva",
+          "origin": "pinned-Original-custom-build",
+          "retained_path": "/usr/share/doc/dispatcharr/vlc-copyright/Original-custom-libva/COPYING",
+          "sha256": "c86a782ee845b52472dae9b9d79fb915d333628ac0efe49cdce63644814931de",
+          "source": "/usr/local/share/doc/dispatcharr-ffmpeg/intel-media-licenses/libva/COPYING"
+        }
+      },
+      {
+        "installed": "/opt/dispatcharr-vlc/lib/libvpl.so.2",
+        "ELF_sha256": "3cd00a3cab96737296106e801610a4b62f26993cc5c60e34d770a8b7a2d03fbe",
+        "notice": {
+          "actual_ELF_sha256": "3cd00a3cab96737296106e801610a4b62f26993cc5c60e34d770a8b7a2d03fbe",
+          "actual_resolved_ELF": "/usr/local/lib/x86_64-linux-gnu/libvpl.so.2.17",
+          "component": "libvpl",
+          "origin": "pinned-Original-custom-build",
+          "retained_path": "/usr/share/doc/dispatcharr/vlc-copyright/Original-custom-libvpl/LICENSE",
+          "sha256": "bf1cfac2e2792b6e1e995ce103d70796aecaf2ec7e4c5fe5474f7acec7b4a677",
+          "source": "/usr/local/share/doc/dispatcharr-ffmpeg/intel-media-licenses/libvpl/LICENSE"
+        }
+      }
+    ]
+  },
+  "actual_final_uid": 65532,
+  "source_environment": "HOME=/\nXDG_CONFIG_HOME=\nXDG_CACHE_HOME=\nVLC_PLUGIN_PATH=\nLD_LIBRARY_PATH=\n",
+  "source_actual_version": "VLC version 3.0.23 Vetinari (3.0.23-2-0-g79128878dd)\nCompiled by Ubuntu buildd for unstable on Ubuntu amd64 buildd (Jan  2 2026 11:14:02)\nCompiler: gcc version 15.2.0 (Ubuntu 15.2.0-11ubuntu1)\nThis program comes with NO WARRANTY, to the extent permitted by law.\nYou may redistribute it under the terms of the GNU General Public License;\nsee the file named COPYING for details.\nWritten by the VideoLAN team; see the AUTHORS file.\n",
+  "candidate_environment": "HOME=/\nXDG_CONFIG_HOME=\nXDG_CACHE_HOME=\nVLC_PLUGIN_PATH=\nLD_LIBRARY_PATH=\n",
+  "candidate_actual_version": "VLC version 3.0.23 Vetinari (3.0.23-2-0-g79128878dd)\nCompiled by Ubuntu buildd for unstable on Ubuntu amd64 buildd (Jan  2 2026 11:14:02)\nCompiler: gcc version 15.2.0 (Ubuntu 15.2.0-11ubuntu1)\nThis program comes with NO WARRANTY, to the extent permitted by law.\nYou may redistribute it under the terms of the GNU General Public License;\nsee the file named COPYING for details.\nWritten by the VideoLAN team; see the AUTHORS file.\n",
+  "pinned_source_tool_identity": "source-tool-identity.stdout",
+  "fixture": {
+    "sha256": "a8c6540e7e6dd05a1407c43025b7154e85531ca0db98496446bde6f24062c576",
+    "bytes": 309636,
+    "media": {
+      "programs": [
+        {
+          "streams": [
+            {
+              "codec_name": "h264",
+              "codec_type": "video",
+              "nb_read_frames": "150"
+            },
+            {
+              "codec_name": "aac",
+              "codec_type": "audio",
+              "nb_read_frames": "283"
+            }
+          ]
+        }
+      ],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "nb_read_frames": "150"
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "nb_read_frames": "283"
+        }
+      ],
+      "decode_receipt": {
+        "actual_exit": 0,
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "CLI_generation_absent": true
+      }
+    },
+    "explicit_codec_threads": 1
+  },
+  "physical_cleanup_passed": true,
+  "failure": null,
+  "all_tool_process_and_pipe_receipts": "commands.json",
+  "cleanup_receipts": "cleanup.json"
+}

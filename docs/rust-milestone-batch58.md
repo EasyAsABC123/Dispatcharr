@@ -63,8 +63,13 @@ passes: **341.834 seconds for Docker**, **342.384 seconds for the complete owned
 wrapper**, with both output pipes and the wrapper process group settled. It
 produces image `sha256:2272e72ddbde19a59d93c05eeedbcf0ea64eb236d24b0eba7ce804d68de6d050`
 and source-tree SHA256 `49f371a7ccdecd143ad29f3642d170f8ffc5203b61fba510959c624699a3c7ce`.
-All 1,455 Rust build inputs match tested SDK96. Package checks, Native
-management/provider workflows and the affected regression cohort still require
-actual evidence for this rebuilt image. M0–M9 remain open.
+All 1,455 Rust build inputs match tested SDK96. Its
+[six package families](../scripts/rust-integration/milestone-batch58/package/inventory.json)
+pass with actual exit 0 in 26.044 seconds; independent verification finds all 55
+exact containers absent. The matched Native12 management workflow is running
+after correcting pre-application helper modes and stale entry metadata. The
+prepared whole16 batch remains held for the automatic CUT booking HTTP503 found
+on Candidate57; a repaired successor will run the combined affected batch.
+M0–M9 remain open.
 Compilation and test duration do not establish application CPU or memory gains;
 no new performance gain or full backend parity is accepted here.

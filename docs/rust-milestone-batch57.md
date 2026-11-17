@@ -75,8 +75,27 @@ All 2,079 bound inputs remained unchanged. The actual exit 1 was consumed;
 four exact containers and three original host process generations were independently
 absent. Successful cleanup does not turn this failed workflow into acceptance.
 
-The independent 15-context application regression is running against this image.
-Its result and the management repair remain pending. Caught SQL faults,
+The [completed 15-context regression](../scripts/rust-integration/milestone-batch57/application-attempt1/summary.json)
+exits 1 in **1,925.791 seconds**: thirteen contexts pass and two fail. All six
+credential business cells complete, but strict response-header comparison fails.
+Candidate58 adds the missing provider redirect metadata; a separate successor
+comparison retains raw headers and distinguishes HTTP field semantics from
+literal transport identity.
+
+The four positive manual Comskip cases pass, followed by **natural automatic
+MARK**, including its parent and child terminal results. This qualifies the
+observed repaired result path; whole natural media equivalence is not claimed.
+The next automatic CUT booking returns HTTP503, `Recording operation physically
+unsettled`, before its expected201. Recording/schedule SQL has committed and no
+artwork publication is observed. The producer was idle at least 540.654 seconds
+against Source's configured 300-second idle timeout, but the physical error kind remains
+unobserved. The next repair/control must preserve that attribution limit and
+never replay an uncertain publication.
+
+All 2,292 bound inputs remain unchanged. Root consumed the real exit and both
+EOFs; twenty exact containers, nineteen original process generations and all
+owned Compose resources were independently absent. The management repair and
+expanded application acceptance remain pending. Caught SQL faults,
 unsupported input domains and concurrency limits remain explicit in the bounded
 write ports. M0–M9 remain open. Build/test duration is not application CPU or
 memory evidence; no new performance gain is accepted here.
