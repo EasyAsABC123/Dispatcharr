@@ -49,7 +49,7 @@ pub(super) async fn apply(
             representatives.push(incoming);
         }
     }
-    super::sql::prepare_logos(auth, owner.clone(), account, "series", &mut representatives).await?;
+    super::sql::prepare_logos(auth, owner.clone(), &mut representatives).await?;
     let session = auth.borrow_task_sql_session(owner).await?;
     let observed = session.run(move |c| Box::pin(async move {
         sqlx::query("BEGIN").execute(&mut *c).await?;

@@ -9,6 +9,12 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+[Candidate49](rust-milestone-batch49.md) removes the temporary shared-account
+metadata refusal. Source passes its four-root shared update/prune cohort, SDK67
+passes with 1,163 tests, and physical checks pass 42 statements and 18 wrong-bind
+controls. Candidate49 packaging, combined Native eight-context execution and new
+performance remain pending. Full milestones remain open.
+
 [Candidate48](rust-milestone-batch48.md) implements bounded ordinary Movie/Series
 list metadata and logo lifecycle. Its six-case Source cohort passes, all SDK66
 gates pass with 1,164 tests, and physical checks pass 44 statements and 22

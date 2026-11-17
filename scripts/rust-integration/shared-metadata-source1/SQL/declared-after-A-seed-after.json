@@ -1,0 +1,559 @@
+{
+  "m3u_m3uaccount": [
+    {
+      "id": 1,
+      "name": "custom",
+      "server_url": null,
+      "file_path": null,
+      "server_group_id": null,
+      "max_streams": 0,
+      "is_active": true,
+      "created_at": "2026-11-17T02:19:01.706703+00:00",
+      "updated_at": "2026-11-17T02:19:01.706708+00:00",
+      "status": "idle",
+      "last_message": null,
+      "user_agent_id": null,
+      "locked": true,
+      "stream_profile_id": null,
+      "account_type": "STD",
+      "username": null,
+      "password": null,
+      "custom_properties": null,
+      "refresh_interval": 24,
+      "refresh_task_id": 1,
+      "stale_stream_days": 7,
+      "priority": 0
+    },
+    {
+      "id": 2,
+      "name": "rust-probe-group-provider",
+      "server_url": null,
+      "file_path": null,
+      "server_group_id": 1,
+      "max_streams": 0,
+      "is_active": true,
+      "created_at": "2026-11-17T02:19:30.021395+00:00",
+      "updated_at": null,
+      "status": "idle",
+      "last_message": null,
+      "user_agent_id": null,
+      "locked": false,
+      "stream_profile_id": null,
+      "account_type": "STD",
+      "username": "<fixture-credential>",
+      "password": "<fixture-credential>",
+      "custom_properties": {
+        "hash_key": "name,url",
+        "enable_vod": true,
+        "probe_numbers": {
+          "large": 100000000000000000000000,
+          "integer": 1,
+          "fraction": 1.5,
+          "integral_float": 2.0
+        },
+        "auto_enable_new_groups_live": false
+      },
+      "refresh_interval": 0,
+      "refresh_task_id": 4,
+      "stale_stream_days": 7,
+      "priority": 0
+    },
+    {
+      "id": 3,
+      "name": "rust-probe-inactive-provider",
+      "server_url": null,
+      "file_path": null,
+      "server_group_id": null,
+      "max_streams": 0,
+      "is_active": false,
+      "created_at": "2026-11-17T02:19:30.027381+00:00",
+      "updated_at": null,
+      "status": "idle",
+      "last_message": null,
+      "user_agent_id": null,
+      "locked": false,
+      "stream_profile_id": null,
+      "account_type": "STD",
+      "username": null,
+      "password": null,
+      "custom_properties": {},
+      "refresh_interval": 0,
+      "refresh_task_id": null,
+      "stale_stream_days": 7,
+      "priority": 0
+    },
+    {
+      "id": 4,
+      "name": "rust-probe-read-xc",
+      "server_url": "http://example.invalid",
+      "file_path": null,
+      "server_group_id": null,
+      "max_streams": 0,
+      "is_active": false,
+      "created_at": "2026-11-17T02:19:30.042565+00:00",
+      "updated_at": null,
+      "status": "idle",
+      "last_message": null,
+      "user_agent_id": null,
+      "locked": false,
+      "stream_profile_id": null,
+      "account_type": "XC",
+      "username": "<fixture-credential>",
+      "password": "<fixture-credential>",
+      "custom_properties": {},
+      "refresh_interval": 0,
+      "refresh_task_id": null,
+      "stale_stream_days": 7,
+      "priority": 0
+    },
+    {
+      "id": 5,
+      "name": "Owned VOD ingest",
+      "server_url": "https://xc-vod-owned.invalid/xc/player_api.php?discard=1#fragment",
+      "file_path": null,
+      "server_group_id": null,
+      "max_streams": 0,
+      "is_active": true,
+      "created_at": "2026-11-17T02:19:34.867705+00:00",
+      "updated_at": null,
+      "status": "success",
+      "last_message": "Owned VOD account baseline",
+      "user_agent_id": 4,
+      "locked": false,
+      "stream_profile_id": null,
+      "account_type": "XC",
+      "username": "<fixture-credential>",
+      "password": "<fixture-credential>",
+      "custom_properties": {
+        "enable_vod": true
+      },
+      "refresh_interval": 0,
+      "refresh_task_id": null,
+      "stale_stream_days": 7,
+      "priority": 0
+    },
+    {
+      "id": 6,
+      "name": "Owned VOD disabled",
+      "server_url": "https://xc-vod-owned.invalid/xc",
+      "file_path": null,
+      "server_group_id": null,
+      "max_streams": 0,
+      "is_active": true,
+      "created_at": "2026-11-17T02:19:34.867710+00:00",
+      "updated_at": null,
+      "status": "idle",
+      "last_message": null,
+      "user_agent_id": 4,
+      "locked": false,
+      "stream_profile_id": null,
+      "account_type": "XC",
+      "username": "<fixture-credential>",
+      "password": "<fixture-credential>",
+      "custom_properties": {
+        "enable_vod": false
+      },
+      "refresh_interval": 0,
+      "refresh_task_id": null,
+      "stale_stream_days": 7,
+      "priority": 0
+    },
+    {
+      "id": 7,
+      "name": "Owned VOD non-XC",
+      "server_url": null,
+      "file_path": null,
+      "server_group_id": null,
+      "max_streams": 0,
+      "is_active": true,
+      "created_at": "2026-11-17T02:19:34.867712+00:00",
+      "updated_at": null,
+      "status": "idle",
+      "last_message": null,
+      "user_agent_id": null,
+      "locked": false,
+      "stream_profile_id": null,
+      "account_type": "STD",
+      "username": null,
+      "password": null,
+      "custom_properties": {
+        "enable_vod": true
+      },
+      "refresh_interval": 0,
+      "refresh_task_id": null,
+      "stale_stream_days": 7,
+      "priority": 0
+    },
+    {
+      "id": 8,
+      "name": "Owned VOD shared B",
+      "server_url": "https://xc-vod-owned.invalid/xc/player_api.php?discard=1#fragment",
+      "file_path": null,
+      "server_group_id": null,
+      "max_streams": 0,
+      "is_active": true,
+      "created_at": "2026-11-17T02:19:35.589725+00:00",
+      "updated_at": null,
+      "status": "success",
+      "last_message": "Owned VOD account baseline",
+      "user_agent_id": 4,
+      "locked": false,
+      "stream_profile_id": null,
+      "account_type": "XC",
+      "username": "<fixture-credential>",
+      "password": "<fixture-credential>",
+      "custom_properties": {
+        "enable_vod": true
+      },
+      "refresh_interval": 0,
+      "refresh_task_id": null,
+      "stale_stream_days": 7,
+      "priority": 0
+    }
+  ],
+  "vod_movie": [
+    {
+      "id": 1,
+      "uuid": "6df3bb6d-a602-4f4d-a61b-14105c098332",
+      "name": "Owned Dense Movie (2010)",
+      "description": "Movie description one",
+      "year": 2010,
+      "rating": "8.5",
+      "genre": "Adventure",
+      "duration_secs": 5400,
+      "logo_id": 1,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "language": "",
+      "is_adult": true,
+      "custom_properties": {
+        "actors": "Actor One, Actor Two",
+        "director": "Director One",
+        "release_date": "2010-01-02",
+        "youtube_trailer": "trailer-one"
+      },
+      "created_at": "2026-11-17T02:19:53.073250+00:00",
+      "updated_at": "2026-11-17T02:19:53.073256+00:00"
+    }
+  ],
+  "vod_series": [
+    {
+      "id": 1,
+      "uuid": "91ba68f9-265d-46ba-afbb-345256904727",
+      "name": "Owned Dense Series",
+      "description": "Series description one",
+      "year": 2010,
+      "rating": "7.5",
+      "genre": "Drama",
+      "logo_id": 1,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "language": "",
+      "custom_properties": {
+        "cast": "Series Actor One, Series Actor Two",
+        "director": "Series Director",
+        "category_id": "21",
+        "releaseDate": "2010-01-02",
+        "youtube_trailer": "series-trailer-one"
+      },
+      "created_at": "2026-11-17T02:19:53.081124+00:00",
+      "updated_at": "2026-11-17T02:19:53.081131+00:00"
+    }
+  ],
+  "vod_episode": [
+    {
+      "id": 1,
+      "uuid": "3934179e-66f5-41e9-a186-56413ef7f1c2",
+      "name": "Owned Shared Episode A",
+      "description": "Explicit shared-owner fixture descendant",
+      "air_date": null,
+      "rating": "7.0",
+      "duration_secs": 60,
+      "series_id": 1,
+      "season_number": 1,
+      "episode_number": 1,
+      "tmdb_id": null,
+      "imdb_id": null,
+      "custom_properties": {
+        "fixture": "shared-owner-A"
+      },
+      "created_at": "2026-11-17T02:19:59.949622+00:00",
+      "updated_at": "2026-11-17T02:19:59.949630+00:00"
+    }
+  ],
+  "vod_m3umovierelation": [
+    {
+      "id": 1,
+      "m3u_account_id": 5,
+      "movie_id": 1,
+      "category_id": 1,
+      "stream_id": "9401",
+      "container_extension": "mp4",
+      "custom_properties": {
+        "basic_data": {
+          "name": "Owned Dense Movie (2010)",
+          "plot": "fallback plot unused",
+          "year": 2010,
+          "genre": "Adventure",
+          "actors": [
+            " Actor One ",
+            " Actor Two "
+          ],
+          "rating": "8,5",
+          "trailer": [
+            "",
+            " trailer-one "
+          ],
+          "director": [
+            " Director One ",
+            "Director Two"
+          ],
+          "duration": "95",
+          "is_adult": true,
+          "stream_id": 9401,
+          "category_id": "11",
+          "description": "Movie description one",
+          "stream_icon": "https://owned.invalid/dense-logo-A.png",
+          "_category_id": 1,
+          "release_date": "2010-01-02",
+          "vote_average": "7.0",
+          "category_name": "fallback category unused",
+          "duration_secs": 5400,
+          "container_extension": "mp4",
+          "_provider_category_id": "11"
+        },
+        "detailed_fetched": false
+      },
+      "created_at": "2026-11-17T02:19:53.073731+00:00",
+      "updated_at": "2026-11-17T02:19:53.073737+00:00",
+      "last_advanced_refresh": null,
+      "last_seen": "2026-11-17T02:19:53.037767+00:00"
+    }
+  ],
+  "vod_m3useriesrelation": [
+    {
+      "id": 1,
+      "m3u_account_id": 5,
+      "series_id": 1,
+      "category_id": 2,
+      "external_series_id": "9501",
+      "custom_properties": {
+        "basic_data": {
+          "cast": [
+            " Series Actor One ",
+            " Series Actor Two "
+          ],
+          "name": "Owned Dense Series",
+          "plot": "Series description one",
+          "cover": "https://owned.invalid/dense-logo-A.png",
+          "genre": "Drama",
+          "rating": "7.5",
+          "director": [
+            " Series Director ",
+            "Ignored Director"
+          ],
+          "series_id": 9501,
+          "category_id": "21",
+          "releaseDate": "2010-01-02",
+          "_category_id": 2,
+          "youtube_trailer": " series-trailer-one ",
+          "_provider_category_id": "21"
+        },
+        "detailed_fetched": false,
+        "episodes_fetched": false
+      },
+      "created_at": "2026-11-17T02:19:53.081566+00:00",
+      "updated_at": "2026-11-17T02:19:53.081571+00:00",
+      "last_episode_refresh": null,
+      "last_seen": "2026-11-17T02:19:53.037767+00:00"
+    }
+  ],
+  "vod_m3uepisoderelation": [
+    {
+      "id": 1,
+      "m3u_account_id": 5,
+      "episode_id": 1,
+      "series_relation_id": 1,
+      "stream_id": "owned-shared-episode-A",
+      "container_extension": "mkv",
+      "custom_properties": {
+        "fixture": "shared-owner-A"
+      },
+      "created_at": "2026-11-17T02:19:59.950322+00:00",
+      "updated_at": "2026-11-17T02:19:59.950326+00:00",
+      "last_seen": "2026-11-17T02:19:59.950167+00:00"
+    }
+  ],
+  "support": {
+    "vod_vodlogo": [
+      {
+        "id": 1,
+        "name": "Owned Dense Movie (2010)",
+        "url": "https://owned.invalid/dense-logo-A.png"
+      }
+    ],
+    "vod_vodcategory": [
+      {
+        "id": 1,
+        "name": "Owned Movies",
+        "category_type": "movie",
+        "created_at": "2026-11-17T02:19:53.056248+00:00",
+        "updated_at": "2026-11-17T02:19:53.056257+00:00"
+      },
+      {
+        "id": 2,
+        "name": "Owned Series",
+        "category_type": "series",
+        "created_at": "2026-11-17T02:19:53.062018+00:00",
+        "updated_at": "2026-11-17T02:19:53.062026+00:00"
+      },
+      {
+        "id": 3,
+        "name": "Uncategorized",
+        "category_type": "movie",
+        "created_at": "2026-11-17T02:19:53.065060+00:00",
+        "updated_at": "2026-11-17T02:19:53.065067+00:00"
+      },
+      {
+        "id": 4,
+        "name": "Uncategorized",
+        "category_type": "series",
+        "created_at": "2026-11-17T02:19:53.074718+00:00",
+        "updated_at": "2026-11-17T02:19:53.074724+00:00"
+      }
+    ],
+    "vod_m3uvodcategoryrelation": [
+      {
+        "id": 1,
+        "m3u_account_id": 5,
+        "category_id": 1,
+        "enabled": true,
+        "custom_properties": {},
+        "created_at": "2026-11-17T02:19:53.057264+00:00",
+        "updated_at": "2026-11-17T02:19:53.057272+00:00"
+      },
+      {
+        "id": 2,
+        "m3u_account_id": 5,
+        "category_id": 2,
+        "enabled": true,
+        "custom_properties": {},
+        "created_at": "2026-11-17T02:19:53.062661+00:00",
+        "updated_at": "2026-11-17T02:19:53.062667+00:00"
+      },
+      {
+        "id": 3,
+        "m3u_account_id": 5,
+        "category_id": 3,
+        "enabled": true,
+        "custom_properties": {},
+        "created_at": "2026-11-17T02:19:53.065967+00:00",
+        "updated_at": "2026-11-17T02:19:53.065973+00:00"
+      },
+      {
+        "id": 4,
+        "m3u_account_id": 5,
+        "category_id": 4,
+        "enabled": true,
+        "custom_properties": {},
+        "created_at": "2026-11-17T02:19:53.075436+00:00",
+        "updated_at": "2026-11-17T02:19:53.075441+00:00"
+      }
+    ],
+    "core_systemevent": [
+      {
+        "id": 1,
+        "event_type": "rust-probe-event-kind",
+        "timestamp": "2020-01-01T03:04:05+00:00",
+        "channel_id": null,
+        "channel_name": null,
+        "details": {
+          "ordinal": 1,
+          "fraction": 1.5,
+          "integral": 2.0
+        }
+      },
+      {
+        "id": 2,
+        "event_type": "rust-probe-event-kind",
+        "timestamp": "2020-01-02T03:04:05.123456+00:00",
+        "channel_id": null,
+        "channel_name": "rust-probe-event",
+        "details": {
+          "ordinal": 2,
+          "fraction": 1.5,
+          "integral": 2.0
+        }
+      },
+      {
+        "id": 3,
+        "event_type": "rust-probe-event-kind",
+        "timestamp": "2020-01-03T03:04:05+00:00",
+        "channel_id": "00000000-0000-0000-0000-000000000000",
+        "channel_name": "rust-probe-event",
+        "details": {
+          "ordinal": 3,
+          "fraction": 1.5,
+          "integral": 2.0
+        }
+      },
+      {
+        "id": 4,
+        "event_type": "vod_stop",
+        "timestamp": "2020-01-04T03:04:05+00:00",
+        "channel_id": null,
+        "channel_name": "rust-probe-display-event",
+        "details": {
+          "owned_fixture": true
+        }
+      }
+    ]
+  },
+  "observed_at": "2026-11-17T02:20:00.684418+00:00",
+  "sequences": {
+    "public.m3u_m3uaccount_id_seq": {
+      "last_value": 8,
+      "is_called": true
+    },
+    "public.vod_movie_id_seq": {
+      "last_value": 1,
+      "is_called": true
+    },
+    "public.vod_series_id_seq": {
+      "last_value": 1,
+      "is_called": true
+    },
+    "public.vod_episode_id_seq": {
+      "last_value": 1,
+      "is_called": true
+    },
+    "public.vod_m3umovierelation_id_seq": {
+      "last_value": 1,
+      "is_called": true
+    },
+    "public.vod_m3useriesrelation_id_seq": {
+      "last_value": 1,
+      "is_called": true
+    },
+    "public.vod_m3uepisoderelation_id_seq": {
+      "last_value": 1,
+      "is_called": true
+    },
+    "public.vod_vodlogo_id_seq": {
+      "last_value": 1,
+      "is_called": true
+    },
+    "public.vod_vodcategory_id_seq": {
+      "last_value": 4,
+      "is_called": true
+    },
+    "public.vod_m3uvodcategoryrelation_id_seq": {
+      "last_value": 4,
+      "is_called": true
+    },
+    "public.core_systemevent_id_seq": {
+      "last_value": 4,
+      "is_called": true
+    }
+  }
+}

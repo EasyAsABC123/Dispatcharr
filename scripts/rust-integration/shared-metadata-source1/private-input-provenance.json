@@ -1,0 +1,874 @@
+{
+  "scope": "Complete raw50 captures remain immutable/private; ten SQL snapshots redact ONLY nonnull account username/password. All other fields/PKs/clocks/eleven sequence states unchanged. Projection preserves explicit typed entropy and hashes/slots fixture logins.",
+  "raw_capture_manifest": {
+    "path": "artifacts/rust/m6-vod-shared-source-public-curation-1/raw-capture-manifest.json",
+    "sha256": "15cc6d61b98a8bd95a92909360ed051fcb6416a7c685a8d54be20ef0403de464"
+  },
+  "raw_file_sha256": {
+    "shared-A-initial/SQL-before.json": "1870efb73b15af9111363f4d73769de8b17676c1d07729839004900093270e82",
+    "shared-A-initial/SQL-after.json": "d743587777c9d75a314e1fc78740c7ce4e0e1fa193abf5db35514f895e6847f4",
+    "shared-A-initial/HTTP.json": "1c804a1c1d530f5a3bb2fbb876912ca5edc5239134d603593eabb048a4b7c9bf",
+    "shared-A-initial/frame.json": "81fc4ac14cc14a4e25236101d4ba3f197aeb88c2855043ac557665dd118d6d1d",
+    "shared-A-initial/backend.json": "6cb89236419f5393e223ee911cac4cdd1f66d709593038911f2cf933a6dad666",
+    "shared-A-initial/Origin.json": "c0ab3fcfd41489cc44f44e0c46a549857eb18ebd612264296ac84d23e3083cfe",
+    "shared-A-initial/WS.json": "076ce5134939934e9e5ce3ecc3f17d53ebd0dc7feeeac001869c95780124b52d",
+    "shared-A-initial/catalogue.json": "7bd49e337233a9803afcbad1d57b587c2553ff89da424e434d9ba130cd201f37",
+    "shared-A-initial/cache-before.json": "0471c3f2d8288e38707b26997332fde23a23f548a9a53d26d21fb9c43ec3e31f",
+    "shared-A-initial/cache-after.json": "0471c3f2d8288e38707b26997332fde23a23f548a9a53d26d21fb9c43ec3e31f",
+    "shared-B-update/SQL-before.json": "7437c2db5e3d7aced45bee1e7acbe84606094d1c0bc7b3438a18e149e13bd52c",
+    "shared-B-update/SQL-after.json": "19aa62caa41f04de82442e1933c1207200017ea6bed31d95fce9b993ff09686b",
+    "shared-B-update/HTTP.json": "378ddab2bb09643e89cbcde7e34590d743ef6bae054baab47a7ef5afef50f283",
+    "shared-B-update/frame.json": "e713eb992952302e1aed8dc59262609a07a3e4847f110e905de9acce4a5eefda",
+    "shared-B-update/backend.json": "7b0849a86760bee441e864e3e248970dc6d01a37887c4f786b5dd448b868915c",
+    "shared-B-update/Origin.json": "81534224298f82db1dc2e6efcd9f106f14f975f0cea3e998a12d5136857c09b0",
+    "shared-B-update/WS.json": "fc12b9929c7e13eb9cc265a95f64d469333e03a44ee64fca05499956f27176f7",
+    "shared-B-update/catalogue.json": "99f9307c250fb175c90ee897d93ac75b195af6adf07acacb31df806ff145e8f9",
+    "shared-B-update/cache-before.json": "0471c3f2d8288e38707b26997332fde23a23f548a9a53d26d21fb9c43ec3e31f",
+    "shared-B-update/cache-after.json": "0471c3f2d8288e38707b26997332fde23a23f548a9a53d26d21fb9c43ec3e31f",
+    "shared-A-prune/SQL-before.json": "8e1b3c756c418a5b92d201d09890e923d8ddb044da514e66461af30722c464b7",
+    "shared-A-prune/SQL-after.json": "83c374531b561e2eed2abca6970237e578dd64d93993fb1ab659a3f65e61a83b",
+    "shared-A-prune/HTTP.json": "1c804a1c1d530f5a3bb2fbb876912ca5edc5239134d603593eabb048a4b7c9bf",
+    "shared-A-prune/frame.json": "51c62cce6850062eb75b2b92b4e1c8e42e1402149f7bc53ef1f4c8ea343997d3",
+    "shared-A-prune/backend.json": "89d84f6f8ceda995345c00bc8b385dd80960f8d71693896f11909907c78a62ee",
+    "shared-A-prune/Origin.json": "25a1c7a5f71014db031e3766da7e20320afd4a45c5fab06552f596c825674465",
+    "shared-A-prune/WS.json": "9e88ae0292ebdfd24605c9056f3541e1651748201bd53c58b85f938fce5a99eb",
+    "shared-A-prune/catalogue.json": "99f9307c250fb175c90ee897d93ac75b195af6adf07acacb31df806ff145e8f9",
+    "shared-A-prune/cache-before.json": "0471c3f2d8288e38707b26997332fde23a23f548a9a53d26d21fb9c43ec3e31f",
+    "shared-A-prune/cache-after.json": "0471c3f2d8288e38707b26997332fde23a23f548a9a53d26d21fb9c43ec3e31f",
+    "shared-B-prune/SQL-before.json": "0e44e142e3391e0e0af536da165ef7b984509d49eb2215bef6b67d9b1ee36bb0",
+    "shared-B-prune/SQL-after.json": "b0e0f95375b3bc620cd49b8375f58499c490f6efa1cdb2f1a1fba106c050b7a4",
+    "shared-B-prune/HTTP.json": "378ddab2bb09643e89cbcde7e34590d743ef6bae054baab47a7ef5afef50f283",
+    "shared-B-prune/frame.json": "8a0dde342fb506687d1c7344992010783e9bee1ee094b2474661a42af9b18139",
+    "shared-B-prune/backend.json": "024255c3c99160c5a35cb9001d97de13755d0a989e0cc56a006b28bfe696bb12",
+    "shared-B-prune/Origin.json": "846d5426f55af80f802fb29b92bf251f4396bf47740076100352e42a86f66b03",
+    "shared-B-prune/WS.json": "5dc1f2cffd64daecc792b2fd3700db63cffe1d185f64c6a8e4e10f4894f7506f",
+    "shared-B-prune/catalogue.json": "1b3e88b79d74784a7f7c1689a24d226a48485b6f005a214ffe0351c3ebe74983",
+    "shared-B-prune/cache-before.json": "0471c3f2d8288e38707b26997332fde23a23f548a9a53d26d21fb9c43ec3e31f",
+    "shared-B-prune/cache-after.json": "0471c3f2d8288e38707b26997332fde23a23f548a9a53d26d21fb9c43ec3e31f",
+    "declared-after-A-seed/SQL-before.json": "5b78b7acf2f027e5a6aa5c21b93320eeb3a25fc66431a6b59a136f4a167a1e7b",
+    "declared-after-A-seed/SQL-after.json": "97d821a00341b069122ea7d39b0bce9df2a04f4fec79d5eded97ad61668b997e",
+    "declared-after-A-seed/setup-result.json": "c73e7ac54d4a45391b74db81b6b7b9e58616ed12dbb90d51aea9e1c8a045071d",
+    "declared-after-A-seed/seed-script.json": "977a2d54e28c8b5215d6521fd8e59898e4ac58f11874c56773eceb96b102c15c",
+    "declared-after-A-seed/cache-before.json": "0471c3f2d8288e38707b26997332fde23a23f548a9a53d26d21fb9c43ec3e31f",
+    "declared-after-A-seed/cache-after.json": "0471c3f2d8288e38707b26997332fde23a23f548a9a53d26d21fb9c43ec3e31f",
+    "declared-after-A-seed/provider-before.json": "6b0fe80a9b36d097a6efc2e3fa99dac96f51b0c7172cca58a942de78f37af938",
+    "declared-after-A-seed/provider-after.json": "6b0fe80a9b36d097a6efc2e3fa99dac96f51b0c7172cca58a942de78f37af938",
+    "declared-after-A-seed/broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+    "declared-after-A-seed/broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885"
+  },
+  "redacted_account_fields": [
+    {
+      "capture": "shared-A-initial/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-initial/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-update/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-A-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "password"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "username"
+      ]
+    },
+    {
+      "capture": "shared-B-prune/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "password"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "username"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "password"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "username"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "password"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "username"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "password"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "username"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "password"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "username"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-before.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "password"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "username"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        1,
+        "password"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "username"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        3,
+        "password"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "username"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        4,
+        "password"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "username"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        5,
+        "password"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "username"
+      ]
+    },
+    {
+      "capture": "declared-after-A-seed/SQL-after.json",
+      "path": [
+        "m3u_m3uaccount",
+        7,
+        "password"
+      ]
+    }
+  ],
+  "projection_module": {
+    "path": "artifacts/rust/m6-vod-shared-metadata-native-adapter-1/cohort/vod_shared_metadata_compare.py",
+    "sha256": "73d8e046166396b0fca678a684d0fff699793395eb3c1b2c62cbe56ed20d8175"
+  },
+  "dense_projection_dependency": {
+    "path": "artifacts/rust/m6-candidate48-combined-vod-driver-3/cohort/vod_dense_list_compare.py",
+    "sha256": "c6121f2c5033eccd2d3c249e40ac8e06d587aca0efd9f7823377683a2589400c"
+  },
+  "safe_projection_frozen_raw_sha256": "a583b31589ad990fd567203b3916b4895ba6d551a85133ab42da1d456b27a37c",
+  "actual_Source_independent_review": {
+    "path": "artifacts/rust/m6-vod-shared-source-actual-peer-1/review.json",
+    "sha256": "99ca7d7218d23ed1935d2cdfc591271c53e4b9db954ef44fa37054382dca72f2"
+  }
+}

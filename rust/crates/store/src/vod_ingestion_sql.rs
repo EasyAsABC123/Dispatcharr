@@ -55,8 +55,9 @@ pub(super) async fn supported_catalog(
 }
 /// Bounded metadata list domain; reconcile the next extension against Source
 /// list-metadata captures before installation. Plain admission stays unchanged.
-/// Each Series belongs to exactly one provider account, so crossaccount descendant ownership
-/// stays refused. Metadata is opaque, bounded, and preserved by sparse updates.
+/// Source globals can be shared by multiple provider accounts. Each Episode relation
+/// must still bind its actual provider Series relation and the same global Series.
+/// The shared-account extension remains provisional until actual Source4 acceptance.
 async fn supported_sparse_advanced_catalog(
     auth: &AuthService,
     owner: Owner,
@@ -158,7 +159,7 @@ pub(super) async fn movies(
             representatives.push(incoming);
         }
     }
-    prepare_logos(auth, owner.clone(), account, "movie", &mut representatives).await?;
+    prepare_logos(auth, owner.clone(), &mut representatives).await?;
     scope(auth,owner,move|c|Box::pin(async move{
         sqlx::query("BEGIN").execute(&mut*c).await?;
         let result=async{
@@ -335,7 +336,7 @@ pub(super) async fn has_selected_categories(
     scope(auth,owner,move|c|Box::pin(async move{Ok(sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation r JOIN vod_vodcategory c ON c.id=r.category_id WHERE r.m3u_account_id=$1 AND c.category_type=$2 AND c.name<>'Uncategorized')").bind(account).bind(kind).fetch_one(c).await?)})).await
 }
 
-const ADVANCED_GUARD: &str = "SELECT (SELECT count(*) FROM (SELECT 1 FROM vod_episode LIMIT 1025)s)<=1024 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3uepisoderelation LIMIT 4097)s)<=4096 AND NOT EXISTS(SELECT 1 FROM vod_episode WHERE octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_series s WHERE (NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.series_id=s.id) OR (SELECT count(DISTINCT r.m3u_account_id) FROM vod_m3useriesrelation r WHERE r.series_id=s.id)<>1)) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation e WHERE e.series_relation_id IS NULL OR NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r JOIN vod_episode p ON p.id=e.episode_id WHERE r.id=e.series_relation_id AND r.series_id=p.series_id AND r.m3u_account_id=e.m3u_account_id)) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND (SELECT count(*) FROM (SELECT 1 FROM vod_series LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3useriesrelation LIMIT 257)s)<=256 AND NOT EXISTS(SELECT 1 FROM vod_series WHERE tmdb_id IS NOT NULL OR imdb_id IS NOT NULL OR language<>'' OR name ~ '[^ -~]' OR octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_series GROUP BY name,year HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND (SELECT count(*) FROM (SELECT 1 FROM vod_movie LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3umovierelation LIMIT 257)s)<=256 AND (SELECT count(*) FROM (SELECT 1 FROM vod_vodcategory LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3uvodcategoryrelation LIMIT 257)s)<=256 AND NOT EXISTS(SELECT 1 FROM vod_movie WHERE tmdb_id IS NOT NULL OR imdb_id IS NOT NULL OR language<>'' OR name ~ '[^ -~]' OR octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_movie GROUP BY name,year HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3umovierelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation WHERE NOT enabled OR (custom_properties IS NOT NULL AND custom_properties<>'{}'::jsonb)) AND NOT EXISTS(SELECT 1 FROM vod_vodlogo l WHERE (EXISTS(SELECT 1 FROM vod_movie m WHERE m.logo_id=l.id) OR EXISTS(SELECT 1 FROM vod_series s WHERE s.logo_id=l.id)) AND (char_length(l.url)>500 OR char_length(l.name)>255)) AND NOT EXISTS(SELECT 1 FROM vod_movie m WHERE (SELECT count(DISTINCT r.m3u_account_id) FROM vod_m3umovierelation r WHERE r.movie_id=m.id)>1)";
+const ADVANCED_GUARD: &str = "SELECT (SELECT count(*) FROM (SELECT 1 FROM vod_episode LIMIT 1025)s)<=1024 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3uepisoderelation LIMIT 4097)s)<=4096 AND NOT EXISTS(SELECT 1 FROM vod_episode WHERE octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_series s WHERE NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.series_id=s.id)) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation e WHERE e.series_relation_id IS NULL OR NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r JOIN vod_episode p ON p.id=e.episode_id WHERE r.id=e.series_relation_id AND r.series_id=p.series_id AND r.m3u_account_id=e.m3u_account_id)) AND NOT EXISTS(SELECT 1 FROM vod_m3uepisoderelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND (SELECT count(*) FROM (SELECT 1 FROM vod_series LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3useriesrelation LIMIT 257)s)<=256 AND NOT EXISTS(SELECT 1 FROM vod_series WHERE tmdb_id IS NOT NULL OR imdb_id IS NOT NULL OR language<>'' OR name ~ '[^ -~]' OR octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_series GROUP BY name,year HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND (SELECT count(*) FROM (SELECT 1 FROM vod_movie LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3umovierelation LIMIT 257)s)<=256 AND (SELECT count(*) FROM (SELECT 1 FROM vod_vodcategory LIMIT 129)s)<=128 AND (SELECT count(*) FROM (SELECT 1 FROM vod_m3uvodcategoryrelation LIMIT 257)s)<=256 AND NOT EXISTS(SELECT 1 FROM vod_movie WHERE tmdb_id IS NOT NULL OR imdb_id IS NOT NULL OR language<>'' OR name ~ '[^ -~]' OR octet_length(name)>255 OR COALESCE(octet_length(description),0)>65536 OR COALESCE(octet_length(genre),0)>255 OR COALESCE(octet_length(rating),0)>10 OR (custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536))) AND NOT EXISTS(SELECT 1 FROM vod_movie GROUP BY name,year HAVING count(*)>1) AND NOT EXISTS(SELECT 1 FROM vod_m3umovierelation WHERE custom_properties IS NOT NULL AND (jsonb_typeof(custom_properties)<>'object' OR octet_length(custom_properties::text)>65536)) AND NOT EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation WHERE NOT enabled OR (custom_properties IS NOT NULL AND custom_properties<>'{}'::jsonb)) AND NOT EXISTS(SELECT 1 FROM vod_vodlogo l WHERE (EXISTS(SELECT 1 FROM vod_movie m WHERE m.logo_id=l.id) OR EXISTS(SELECT 1 FROM vod_series s WHERE s.logo_id=l.id)) AND (char_length(l.url)>500 OR char_length(l.name)>255))";
 const ADVANCED_STALE_SERIES: &str = "SELECT id::bigint FROM vod_m3useriesrelation WHERE m3u_account_id::bigint=$1 AND last_seen<$2 ORDER BY id LIMIT 257 FOR UPDATE";
 const ADVANCED_STALE_CHILDREN: &str = "SELECT id::bigint FROM vod_m3uepisoderelation WHERE series_relation_id::bigint=ANY($1) ORDER BY id LIMIT 4097 FOR UPDATE";
 const ADVANCED_DELETE_EPISODE_RELATIONS: &str =
@@ -352,14 +353,6 @@ const ADVANCED_DELETE_SERIES: &str = "DELETE FROM vod_series s WHERE s.id::bigin
 #[cfg(test)]
 pub(super) fn schema_statements() -> Vec<(&'static str, String)> {
     vec![
-        (
-            "list_movie_foreign_account",
-            LIST_MOVIE_FOREIGN_ACCOUNT.to_owned(),
-        ),
-        (
-            "list_series_foreign_account",
-            LIST_SERIES_FOREIGN_ACCOUNT.to_owned(),
-        ),
         ("list_logo_insert", LIST_LOGO_INSERT.to_owned()),
         ("list_logo_select", LIST_LOGO_SELECT.to_owned()),
         ("list_movie_insert", LIST_MOVIE_INSERT.to_owned()),
@@ -465,8 +458,6 @@ pub(super) fn merge_representative(existing: &mut Value, incoming: &Value) {
 pub(super) async fn prepare_logos(
     auth: &AuthService,
     owner: Owner,
-    account: i64,
-    kind: &'static str,
     rows: &mut [Value],
 ) -> Result<(), StoreError> {
     let mut seen = std::collections::HashSet::new();
@@ -481,30 +472,8 @@ pub(super) async fn prepare_logos(
             }
         }
     }
-    let extended: Vec<Value> = rows
-        .iter()
-        .filter(|row| metadata_is_extended(row, kind))
-        .cloned()
-        .collect();
     let ids = scope(auth, owner, move |c| {
         Box::pin(async move {
-            // Preserve previously admitted sparse shared-global behavior. Only
-            // newly supported metadata requires this selected-account fence.
-            if !extended.is_empty() {
-                let sql = match kind {
-                    "movie" => LIST_MOVIE_FOREIGN_ACCOUNT,
-                    "series" => LIST_SERIES_FOREIGN_ACCOUNT,
-                    _ => return Err(unsupported()),
-                };
-                let foreign: bool = sqlx::query_scalar(sql)
-                    .bind(account)
-                    .bind(json!(extended))
-                    .fetch_one(&mut *c)
-                    .await?;
-                if foreign {
-                    return Err(unsupported());
-                }
-            }
             let urls: Vec<String> = logos
                 .iter()
                 .filter_map(|v| v["url"].as_str().map(str::to_owned))
@@ -568,30 +537,6 @@ pub(super) async fn prepare_logos(
     Ok(())
 }
 
-/// Distinguish this new capability from already supported sparse/year/adult
-/// fields. Never use Python truthiness here: textual whitespace is metadata.
-fn metadata_is_extended(row: &Value, kind: &str) -> bool {
-    let scalar = ["description", "genre"]
-        .into_iter()
-        .any(|key| row[key].as_str().is_some_and(|v| !v.is_empty()))
-        || !row["rating"].is_null()
-        || row["logo"].is_string();
-    scalar
-        || match kind {
-            "movie" => {
-                !row["duration"].is_null()
-                    || row["properties"].as_object().is_some_and(|v| !v.is_empty())
-            }
-            "series" => row["properties"].as_object().is_some_and(|v| {
-                v.keys()
-                    .any(|key| !matches!(key.as_str(), "category_id" | "releaseDate"))
-            }),
-            _ => true,
-        }
-}
-const LIST_MOVIE_FOREIGN_ACCOUNT:&str="SELECT EXISTS(SELECT 1 FROM vod_movie m JOIN jsonb_array_elements($2) v ON m.name=v->>'name' AND m.year IS NOT DISTINCT FROM (v->>'year')::integer JOIN vod_m3umovierelation r ON r.movie_id=m.id WHERE r.m3u_account_id::bigint<>$1) AS unsupported";
-const LIST_SERIES_FOREIGN_ACCOUNT:&str="SELECT EXISTS(SELECT 1 FROM vod_series s JOIN jsonb_array_elements($2) v ON s.name=v->>'name' AND s.year IS NOT DISTINCT FROM (v->>'year')::integer JOIN vod_m3useriesrelation r ON r.series_id=s.id WHERE r.m3u_account_id::bigint<>$1) AS unsupported";
-
 const LIST_LOGO_INSERT:&str="INSERT INTO vod_vodlogo(name,url) SELECT v->>'name',v->>'url' FROM jsonb_array_elements($1) v WHERE NOT EXISTS(SELECT 1 FROM vod_vodlogo l WHERE l.url=v->>'url') ON CONFLICT(url) DO NOTHING";
 const LIST_LOGO_SELECT: &str = "SELECT id::bigint,url FROM vod_vodlogo WHERE url=ANY($1)";
 const LIST_MOVIE_INSERT:&str="INSERT INTO vod_movie(uuid,name,description,year,rating,genre,duration_secs,logo_id,tmdb_id,imdb_id,language,is_adult,custom_properties,created_at,updated_at) SELECT (v->>'uuid')::uuid,v->>'name',v->>'description',(v->>'year')::integer,v->>'rating',v->>'genre',(v->>'duration')::bigint,(v->>'logo_id')::bigint,NULL,NULL,'',COALESCE((v->>'adult')::boolean,false),NULLIF(v->'properties','null'::jsonb),(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz FROM jsonb_array_elements($1) v RETURNING id,name,year";
@@ -602,30 +547,6 @@ const LIST_MOVIE_RELATION_INSERT:&str="INSERT INTO vod_m3umovierelation(m3u_acco
 #[cfg(test)]
 mod list_metadata_tests {
     use super::*;
-    #[test]
-    fn extended_metadata_fence_preserves_legacy_sparse_year_and_adult_inputs() {
-        let sparse = json!({"name":"Owned","year":2010,"description":"","rating":null,"genre":"","duration":null,"properties":null,"logo":null,"adult":true});
-        assert!(!metadata_is_extended(&sparse, "movie"));
-        let mut series = sparse.clone();
-        series["properties"] = json!({"category_id":"11","releaseDate":"2010-01-01"});
-        assert!(!metadata_is_extended(&series, "series"));
-        for (key, value) in [
-            ("description", json!(" ")),
-            ("genre", json!("Drama")),
-            ("rating", json!("0.0")),
-            ("logo", json!("x".repeat(501))),
-        ] {
-            let mut row = sparse.clone();
-            row[key] = value;
-            assert!(metadata_is_extended(&row, "movie"));
-            assert!(metadata_is_extended(&row, "series"));
-        }
-        let mut row = sparse.clone();
-        row["duration"] = json!(0);
-        assert!(metadata_is_extended(&row, "movie"));
-        series["properties"]["director"] = json!("Director");
-        assert!(metadata_is_extended(&series, "series"));
-    }
     #[test]
     fn repeated_identity_preserves_first_nonblank_and_fills_missing_fields() {
         let mut first = json!({"description":"First","rating":null,"genre":"","duration":0,"adult":false,"properties":{"director":"first","empty":[null,""]},"logo":"x".repeat(501)});

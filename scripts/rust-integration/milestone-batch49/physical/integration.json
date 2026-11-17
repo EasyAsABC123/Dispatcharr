@@ -1,0 +1,53 @@
+{
+  "passed": true,
+  "Source_verified": false,
+  "Native_verified": false,
+  "performance_verified": false,
+  "project": "dispatcharr-matching-schema-fdadf9d981",
+  "database": "rust_probe_backup_jobs_a689fc46be",
+  "scope": "Compiled matching SQL prepare/describe only on raw restored pinned schema; no Source tasks, Beat, DVR execution, origin/media or Main",
+  "execution_inputs_sha256": "48a0fe6af3cdcf6789141eda16ae258d3975d8278db4dfa52f4406ccee6e8a0e",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "Original_container": {
+    "id": "93c1317d66c06ed09a6c293a9ce50c84e18a97aa99626610299fc4d15239d5f7",
+    "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "image_reference": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+  },
+  "owned_containers": [
+    "93c1317d66c06ed09a6c293a9ce50c84e18a97aa99626610299fc4d15239d5f7"
+  ],
+  "web_stop": {
+    "running": false,
+    "pid": 272,
+    "exit_code": 0,
+    "ok": true
+  },
+  "native_ldd": "\tlinux-vdso.so.1 (0x00007f6a8c3c1000)\n\tlibgcc_s.so.1 => /usr/lib/x86_64-linux-gnu/libgcc_s.so.1 (0x00007f6a8c385000)\n\tlibm.so.6 => /usr/lib/x86_64-linux-gnu/libm.so.6 (0x00007f6a884da000)\n\tlibc.so.6 => /usr/lib/x86_64-linux-gnu/libc.so.6 (0x00007f6a882b9000)\n\t/lib64/ld-linux-x86-64.so.2 (0x00007f6a8c3c3000)\n",
+  "actual_controller_exit": 0,
+  "actual_controller_settled": true,
+  "schema_raw_sha256": "554749a6bccffa14dc575d169561a5267604e1c2dce792eb003a8eaa4aa82833",
+  "schema_acceptance": {
+    "schema_verified": true,
+    "prepared_statements": 42,
+    "wrong_bind_controls_rejected": 18,
+    "task_media_or_DML_verified": false
+  },
+  "schema_verified": true,
+  "statements": 42,
+  "default_database_unchanged": true,
+  "default_audit_scope": {
+    "columns": 501,
+    "constraints": 198,
+    "indexes": 255,
+    "sequences": 59,
+    "tables": 62
+  },
+  "cleanup_budget": {
+    "budget_seconds": 90,
+    "elapsed_seconds": 1.2490003049897496,
+    "within_budget": true,
+    "scope": "Acceptance deadline only; physical stop/join may finish later but can never qualify then"
+  },
+  "actual_host_exit": 0
+}
