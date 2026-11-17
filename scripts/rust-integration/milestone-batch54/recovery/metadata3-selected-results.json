@@ -1,0 +1,160 @@
+{
+  "Native_qualified": true,
+  "application_contract_parity_qualified": true,
+  "dependent_NOT_RUN": [],
+  "full_M8_accepted": false,
+  "literal_HTTP_header_identity": false,
+  "peer_TCP_FIN_observed": false,
+  "performance_verified": false,
+  "plugin_install_or_execution_exercised": false,
+  "serialized_outbound_request_headers_observed": false,
+  "status": "CAPTURED_PENDING_INDEPENDENT_SOURCE_OR_PARITY_REVIEW",
+  "whole_metadata_qualified": false,
+  "observations": [
+    {
+      "stage": "anonymous-preview",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "credential_role": null,
+      "status": 401,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 538,
+        "sha256": "83f11ea553999bd25c6b5ebe24feb3fc9d6b3bc8ab170758c700b41ebbba73a6"
+      }
+    },
+    {
+      "stage": "standard-preview",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "credential_role": "standard",
+      "status": 403,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 496,
+        "sha256": "1adf2078d94273a0331c5c9851a1a3d943ee29fe21cbf37f9e4ffb7995139cd4"
+      }
+    },
+    {
+      "stage": "trusted-preview",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "credential_role": "admin",
+      "status": 200,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 649,
+        "sha256": "062b4b99df6df5f524e63777b990184587975864fe1def647fd79846e0b5e334"
+      }
+    },
+    {
+      "stage": "untrusted-preview",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "credential_role": "admin",
+      "status": 200,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 553,
+        "sha256": "0c6141217dab81bf55d415f3f963e2c7072b5c97048cc85b809b026a2347aa6c"
+      }
+    },
+    {
+      "stage": "wrong-SAN-preview",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "credential_role": "admin",
+      "status": 200,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 553,
+        "sha256": "2ec4ebc5b81d2a5c969c15297cec30ceb355d2cb6c67ff29cd7d4d6c26a0feb4"
+      }
+    },
+    {
+      "stage": "redirect-preview",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "credential_role": "admin",
+      "status": 200,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 649,
+        "sha256": "290a37295d2908cff2edb1693377cd09e95d895b31a0356441b797e1905228d5"
+      }
+    },
+    {
+      "stage": "blocked-loopback-preview",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "credential_role": "admin",
+      "status": 200,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 549,
+        "sha256": "c4a952a2dda4179a0aa7082f66aa1e15fae001af38a9424683a66fbac4ff96d9"
+      }
+    },
+    {
+      "stage": "mixed-DNS-preview",
+      "method": "POST",
+      "path": "/api/plugins/repos/preview/",
+      "credential_role": "admin",
+      "status": 200,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 549,
+        "sha256": "55a6d3f71530fa109445d19971d84fc3377ffbd8da29305928b6dd6f47b0ad52"
+      }
+    },
+    {
+      "stage": "create",
+      "method": "POST",
+      "path": "/api/plugins/repos/",
+      "credential_role": "admin",
+      "status": 201,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 1000,
+        "sha256": "cf83ce817572e89489945289b56b92ace9a9185ec4621efbb5bd71fc8ed6bb9a"
+      }
+    },
+    {
+      "stage": "refresh",
+      "method": "POST",
+      "path": "/api/plugins/repos/2/refresh/",
+      "credential_role": "admin",
+      "status": 200,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 989,
+        "sha256": "c65007430ed87c1be88f9f304d35f77785164f21e0a60ad6c0cb48ff832035c2"
+      }
+    },
+    {
+      "stage": "disable",
+      "method": "PATCH",
+      "path": "/api/plugins/repos/2/",
+      "credential_role": "admin",
+      "status": 405,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 475,
+        "sha256": "14b951e3234d65b98e8c2c1387e8a854a17c205fd40faf12d5635d598de544a5"
+      }
+    },
+    {
+      "stage": "delete",
+      "method": "DELETE",
+      "path": "/api/plugins/repos/2/",
+      "credential_role": "admin",
+      "status": 200,
+      "observations_complete": true,
+      "wire": {
+        "bytes": 443,
+        "sha256": "8ef285fc4ca5dda56293194a192c353a2f993dbe45071211960f50d5b6c03456"
+      }
+    }
+  ],
+  "raw_bodies_and_headers_not_copied": true
+}

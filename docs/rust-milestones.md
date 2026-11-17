@@ -9,6 +9,8 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+[Candidate54](rust-milestone-batch54.md) passes SDK86 (1,193 tests), the targeted PostgreSQL credential-resolver gate, its Docker build and all six package gates. Its frozen metadata rerun passes all twelve requests with 463 unchanged bound inputs and independently verified cleanup. The preceding fifteen-context run was interrupted: eleven contexts passed, two failed and two remained unrun. A fresh combined batch addresses the recording observer limit and fixture-token expiry. [Recovery evidence](rust-milestone-batch54-recovery.md) distinguishes those results and the pre-startup helper-path failure. No new performance gain or complete milestone acceptance follows.
+
 Candidate53's [Native plugin metadata transport batch](../scripts/rust-integration/plugin-repository-transport-native1/index.json)
 captures all twelve requests but exits 1 in 130.630 seconds. Strict comparison
 finds a startup notification timestamp that fails to advance. An offline

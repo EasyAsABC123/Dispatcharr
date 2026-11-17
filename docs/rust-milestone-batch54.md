@@ -37,14 +37,16 @@ plugin application response headers, outbound connection headers, and startup
 developer-notification synchronization through existing owned transports.
 Full Django admin login/session creation is not implemented by these changes.
 
-The fifteen-context Native application batch is running with the corrected
-Comskip terminal fence and the calibrated complete own-input CUT content check.
-The separate twelve-case metadata phase exits zero in 130.619 seconds, but four
-report-related bound inputs changed after launch. Its successful observations
-and six-container/five-generation cleanup remain recorded; application
-acceptance is false pending a frozen rerun. Backend Date/Connection profiles
-are separately validated, with literal header identity and peer TCP FIN
-unclaimed. Source authority and the earlier failed captures remain unchanged.
+The frozen twelve-request metadata rerun D3 passed in 133.370 seconds with all
+463 input hashes unchanged and independent six-container/five-generation
+cleanup. D2 remains invalid for application acceptance because four inputs
+changed after launch. The prior Native15 batch was interrupted by the daemon
+restart after eleven passing contexts, two failures and two unstarted contexts.
+Recovery1 failed before application startup; its independent cleanup passed.
+The frozen Recovery2 successor is now running. See the
+[restart recovery record](rust-milestone-batch54-recovery.md) for exact scope,
+receipts and remaining work. Source authority and earlier captures remain
+unchanged; literal HTTP header identity and peer TCP FIN remain unclaimed.
 
 These facts establish no new application CPU or memory gain and close no
 complete M0–M9 milestone. Native integration, remaining compatibility domains,

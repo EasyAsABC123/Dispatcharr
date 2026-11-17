@@ -1,0 +1,87 @@
+{
+  "status": "INTERRUPTED_BY_DAEMON_RESTART_NOT_ACCEPTED",
+  "actual_recorded_inner_exit": -15,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "inner_process_group_settled": true,
+  "outer_terminal_unrecoverable": true,
+  "outer_exit_not_invented": true,
+  "case_statuses": [
+    {
+      "case": "vod-repeat",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series",
+      "status": "passed"
+    },
+    {
+      "case": "comskip-manual",
+      "status": "failed"
+    },
+    {
+      "case": "vlc-live",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series-info",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series-advanced",
+      "status": "passed"
+    },
+    {
+      "case": "vod-dense-list",
+      "status": "passed"
+    },
+    {
+      "case": "vod-shared-metadata",
+      "status": "passed"
+    },
+    {
+      "case": "vod-external-identity",
+      "status": "passed"
+    },
+    {
+      "case": "vod-international-catalogue",
+      "status": "passed"
+    },
+    {
+      "case": "vod-ordered-title-identity",
+      "status": "passed"
+    },
+    {
+      "case": "vod-catalogue-scale",
+      "status": "passed"
+    },
+    {
+      "case": "vod-category-language-lifecycle",
+      "status": "failed"
+    },
+    {
+      "case": "live-vod-group-settings",
+      "status": "not_run"
+    }
+  ],
+  "passing_contexts": 11,
+  "failed_contexts": 2,
+  "not_started": [
+    "live-vod-group-settings",
+    "vod-credential-profiles"
+  ],
+  "independent_failures": [
+    "naturalComskip observer exhausted20000rows before actualMARKcompleted",
+    "language B-fr request uses expired30minute access token"
+  ],
+  "automatic_MARK_completed": true,
+  "full_causal_AutoMARK_acceptance": false,
+  "independent_cleanup": {
+    "passed": true,
+    "exact_CIDs": 18,
+    "captured_surviving_host_generations": 2,
+    "historical_removed_Main_starttimes_not_claimed": true
+  },
+  "full_milestone_passed": false,
+  "performance_gain_accepted": false
+}
