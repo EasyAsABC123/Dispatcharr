@@ -43,7 +43,12 @@ cleanup. D2 remains invalid for application acceptance because four inputs
 changed after launch. The prior Native15 batch was interrupted by the daemon
 restart after eleven passing contexts, two failures and two unstarted contexts.
 Recovery1 failed before application startup; its independent cleanup passed.
-The frozen Recovery2 successor is now running. See the
+Recovery2 exited 1 in 1,942.208 seconds: thirteen contexts passed, profile PUT501
+and natural Comskip terminal metadata failed, all 2,275 inputs stayed exact,
+and independent cleanup proved 20 containers / 19 original host generations absent.
+Natural MARK's media/SQL/events completed; its parent and child results remained
+null. The repaired 28,282-row observer closed strictly, and natural CUT was not
+run. The exact terminal/lifecycle failure remains unlocated. See the
 [restart recovery record](rust-milestone-batch54-recovery.md) for exact scope,
 receipts and remaining work. Source authority and earlier captures remain
 unchanged; literal HTTP header identity and peer TCP FIN remain unclaimed.

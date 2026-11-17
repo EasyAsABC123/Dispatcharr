@@ -1,0 +1,93 @@
+{
+  "status": "FAILED_LITERAL_APPLICATION_ACCEPTANCE",
+  "cases": [
+    {
+      "case": "vod-credential-profiles",
+      "status": "failed"
+    },
+    {
+      "case": "vod-repeat",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series",
+      "status": "passed"
+    },
+    {
+      "case": "vlc-live",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series-info",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series-advanced",
+      "status": "passed"
+    },
+    {
+      "case": "vod-dense-list",
+      "status": "passed"
+    },
+    {
+      "case": "vod-shared-metadata",
+      "status": "passed"
+    },
+    {
+      "case": "vod-external-identity",
+      "status": "passed"
+    },
+    {
+      "case": "vod-international-catalogue",
+      "status": "passed"
+    },
+    {
+      "case": "vod-ordered-title-identity",
+      "status": "passed"
+    },
+    {
+      "case": "vod-catalogue-scale",
+      "status": "passed"
+    },
+    {
+      "case": "vod-category-language-lifecycle",
+      "status": "passed"
+    },
+    {
+      "case": "live-vod-group-settings",
+      "status": "passed"
+    },
+    {
+      "case": "comskip-manual",
+      "status": "failed"
+    }
+  ],
+  "passed": 13,
+  "failed": 2,
+  "not_started_contexts": 0,
+  "manual_positive_Comskip_cells_passed": [
+    "positive-mark",
+    "mark-repeat",
+    "positive-cut",
+    "cut-repeat"
+  ],
+  "natural_MARK_accepted": false,
+  "natural_CUT_NOT_RUN": true,
+  "input_count": 2275,
+  "input_drift": [],
+  "independent_cleanup": {
+    "exact_CIDs": 20,
+    "original_host_generations": 19,
+    "passed": true
+  },
+  "actual_exit": 1,
+  "elapsed_seconds": 1942.2084862919874,
+  "Source_authority_changed": false,
+  "full_milestone_accepted": false,
+  "performance_gain_accepted": false,
+  "necessary_next_steps": [
+    "Validate real nested profile PUT/PATCH implementation in the new candidate",
+    "Locate natural parent/child terminal failure with retained health/domain states and actual DB2 result observations before teardown; keep terminal-result assertions intact",
+    "Run the next whole fifteen-context candidate and independently verify cleanup"
+  ]
+}

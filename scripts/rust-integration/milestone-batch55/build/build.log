@@ -1,0 +1,313 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load remote build context
+#1 DONE 1.5s
+
+#1 [internal] load remote build context
+#1 DONE 1.5s
+
+#2 copy /context /
+#2 DONE 0.3s
+
+#3 [internal] load metadata for docker.io/library/rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f
+#3 ...
+
+#4 [internal] load metadata for ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f
+#4 DONE 0.4s
+
+#3 [internal] load metadata for docker.io/library/rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f
+#3 DONE 0.4s
+
+#5 [internal] load metadata for docker.io/library/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+#5 DONE 0.4s
+
+#6 [internal] load metadata for docker.io/library/node:24@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40
+#6 DONE 0.4s
+
+#7 [media  1/22] FROM ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f
+#7 resolve ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f 0.0s done
+#7 DONE 0.1s
+
+#8 [stage-6  1/17] FROM docker.io/library/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc
+#8 resolve docker.io/library/debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc 0.1s done
+#8 DONE 0.1s
+
+#9 [frontend-dependencies 1/5] FROM docker.io/library/node:24@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40
+#9 resolve docker.io/library/node:24@sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40 0.1s done
+#9 DONE 0.1s
+
+#10 [build 1/7] FROM docker.io/library/rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f
+#10 resolve docker.io/library/rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f 0.1s done
+#10 DONE 0.1s
+
+#11 [build 2/7] WORKDIR /workspace
+#11 CACHED
+
+#12 [build 3/7] COPY rust/Cargo.toml rust/Cargo.lock rust/rust-toolchain.toml ./rust/
+#12 CACHED
+
+#13 [build 4/7] COPY rust/crates/ ./rust/crates/
+#13 DONE 0.6s
+
+#14 [build 5/7] COPY rust/vendor/ ./rust/vendor/
+#14 DONE 0.1s
+
+#15 [build 6/7] COPY rust/runtime/drf-static-source-1.json ./rust/runtime/drf-static-source-1.json
+#15 DONE 0.1s
+
+#16 [build 7/7] RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked     --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked     mkdir -p "/tmp/dispatcharr-target" /out &&     find rust/crates rust/vendor -type f -exec touch {} + &&     touch rust/Cargo.toml rust/Cargo.lock rust/rust-toolchain.toml rust/runtime/drf-static-source-1.json &&     cargo build --manifest-path rust/Cargo.toml --locked --release --jobs 2 -p dispatcharr-rs &&     cp "/tmp/dispatcharr-target/release/dispatcharr-rs" /out/dispatcharr-rs &&     cp "/tmp/dispatcharr-target/release/dispatcharr-operator" /out/dispatcharr-operator
+#16 0.745    Compiling sqlx-core v0.8.6 (/workspace/rust/vendor/sqlx-core-0.8.6)
+#16 0.745    Compiling dispatcharr-contracts v0.1.0 (/workspace/rust/crates/contracts)
+#16 1.380    Compiling dispatcharr-upstream-http v0.1.0 (/workspace/rust/crates/upstream-http)
+#16 1.907 warning: eliding a lifetime that's named elsewhere is confusing
+#16 1.907    --> vendor/sqlx-core-0.8.6/src/query.rs:501:17
+#16 1.907     |
+#16 1.907 501 |     statement: &'q DB::Statement<'q>,
+#16 1.907     |                 ^^               ^^ the lifetime is named here
+#16 1.907     |                 |
+#16 1.907     |                 the lifetime is named here
+#16 1.907 502 | ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+#16 1.907     |            -- the same lifetime is named here  -- the same lifetime is elided here
+#16 1.907     |
+#16 1.907     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+#16 1.907     = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+#16 1.907 help: consistently use `'q`
+#16 1.907     |
+#16 1.907 502 - ) -> Query<'q, DB, <DB as Database>::Arguments<'_>>
+#16 1.907 502 + ) -> Query<'q, DB, <DB as Database>::Arguments<'q>>
+#16 1.907     |
+#16 1.907 
+#16 1.911 warning: eliding a lifetime that's named elsewhere is confusing
+#16 1.911    --> vendor/sqlx-core-0.8.6/src/query_as.rs:388:17
+#16 1.911     |
+#16 1.911 388 |     statement: &'q DB::Statement<'q>,
+#16 1.911     |                 ^^               ^^ the lifetime is named here
+#16 1.911     |                 |
+#16 1.911     |                 the lifetime is named here
+#16 1.911 389 | ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+#16 1.911     |              -- the same lifetime is named here     -- the same lifetime is elided here
+#16 1.911     |
+#16 1.911     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+#16 1.911 help: consistently use `'q`
+#16 1.911     |
+#16 1.911 389 - ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'_>>
+#16 1.911 389 + ) -> QueryAs<'q, DB, O, <DB as Database>::Arguments<'q>>
+#16 1.911     |
+#16 1.911 
+#16 1.911 warning: eliding a lifetime that's named elsewhere is confusing
+#16 1.911    --> vendor/sqlx-core-0.8.6/src/query_scalar.rs:367:17
+#16 1.911     |
+#16 1.911 367 |     statement: &'q DB::Statement<'q>,
+#16 1.911     |                 ^^               ^^ the lifetime is named here
+#16 1.911     |                 |
+#16 1.911     |                 the lifetime is named here
+#16 1.911 368 | ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+#16 1.911     |                  -- the same lifetime is named here     -- the same lifetime is elided here
+#16 1.911     |
+#16 1.911     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+#16 1.911 help: consistently use `'q`
+#16 1.911     |
+#16 1.911 368 - ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'_>>
+#16 1.911 368 + ) -> QueryScalar<'q, DB, O, <DB as Database>::Arguments<'q>>
+#16 1.911     |
+#16 1.911 
+#16 2.370 warning: `sqlx-core` (lib) generated 3 warnings
+#16 2.370    Compiling sqlx-postgres v0.8.6 (/workspace/rust/vendor/sqlx-postgres-0.8.6)
+#16 2.995 warning: use of deprecated method `futures_channel::mpsc::UnboundedReceiver::<T>::try_next`: please use `try_recv` instead
+#16 2.995    --> vendor/sqlx-postgres-0.8.6/src/listener.rs:335:56
+#16 2.995     |
+#16 2.995 335 |         if let Ok(Some(notification)) = self.buffer_rx.try_next() {
+#16 2.995     |                                                        ^^^^^^^^
+#16 2.995     |
+#16 2.995     = note: `#[warn(deprecated)]` on by default
+#16 2.995 
+#16 3.800 warning: variant `Flush` is never constructed
+#16 3.800   --> vendor/sqlx-postgres-0.8.6/src/message/mod.rs:76:5
+#16 3.800    |
+#16 3.800 68 | pub enum FrontendMessageFormat {
+#16 3.800    |          --------------------- variant in this enum
+#16 3.800 ...
+#16 3.800 76 |     Flush = b'H',
+#16 3.800    |     ^^^^^
+#16 3.800    |
+#16 3.800    = note: `FrontendMessageFormat` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+#16 3.800    = note: `#[warn(dead_code)]` on by default
+#16 3.800 
+#16 3.800 warning: struct `Flush` is never constructed
+#16 3.800   --> vendor/sqlx-postgres-0.8.6/src/message/flush.rs:11:12
+#16 3.800    |
+#16 3.800 11 | pub struct Flush;
+#16 3.800    |            ^^^^^
+#16 3.800 
+#16 5.508 warning: `sqlx-postgres` (lib) generated 3 warnings
+#16 5.508    Compiling sqlx-macros-core v0.8.6
+#16 6.061 warning: `sqlx-core` (lib) generated 3 warnings (3 duplicates)
+#16 6.061    Compiling dispatcharr-output-store v0.1.0 (/workspace/rust/crates/output-store)
+#16 10.78    Compiling sqlx-macros v0.8.6
+#16 11.51    Compiling dispatcharr-ingest-core v0.1.0 (/workspace/rust/crates/ingest-core)
+#16 16.31    Compiling sqlx v0.8.6
+#16 16.50    Compiling dispatcharr-store v0.1.0 (/workspace/rust/crates/store)
+#16 24.16 warning: `sqlx-postgres` (lib) generated 3 warnings (3 duplicates)
+#16 24.16    Compiling dispatcharr-coordination v0.1.0 (/workspace/rust/crates/coordination)
+#16 26.07    Compiling dispatcharr-clients v0.1.0 (/workspace/rust/crates/clients)
+#16 27.78    Compiling dispatcharr-xmltv-parser v0.1.0 (/workspace/rust/crates/xmltv-parser)
+#16 27.96    Compiling dispatcharr-stream-core v0.1.0 (/workspace/rust/crates/stream-core)
+#16 28.07    Compiling dispatcharr-stream-runtime v0.1.0 (/workspace/rust/crates/stream-runtime)
+#16 28.72    Compiling dispatcharr-input-store v0.1.0 (/workspace/rust/crates/input-store)
+#16 29.75    Compiling dispatcharr-stream-http v0.1.0 (/workspace/rust/crates/stream-http)
+#16 54.34    Compiling dispatcharr-output-http v0.1.0 (/workspace/rust/crates/output-http)
+#16 72.57    Compiling dispatcharr-ingest-epg v0.1.0 (/workspace/rust/crates/ingest-epg)
+#16 85.28    Compiling dispatcharr-xc-http v0.1.0 (/workspace/rust/crates/xc-http)
+#16 103.0    Compiling dispatcharr-timeshift-core v0.1.0 (/workspace/rust/crates/timeshift-core)
+#16 103.8    Compiling dispatcharr-backups v0.1.0 (/workspace/rust/crates/backups)
+#16 107.3    Compiling dispatcharr-fmp4-core v0.1.0 (/workspace/rust/crates/fmp4-core)
+#16 107.4    Compiling dispatcharr-hls-core v0.1.0 (/workspace/rust/crates/hls-core)
+#16 108.0    Compiling dispatcharr-hls-http v0.1.0 (/workspace/rust/crates/hls-http)
+#16 115.1    Compiling dispatcharr-fmp4-http v0.1.0 (/workspace/rust/crates/fmp4-http)
+#16 115.5    Compiling dispatcharr-job-transport v0.1.0 (/workspace/rust/crates/job-transport)
+#16 165.4    Compiling dispatcharr-timeshift-http v0.1.0 (/workspace/rust/crates/timeshift-http)
+#16 193.7    Compiling dispatcharr-xmltv-http v0.1.0 (/workspace/rust/crates/xmltv-http)
+#16 210.7    Compiling dispatcharr-vod-http v0.1.0 (/workspace/rust/crates/vod-http)
+#16 230.5    Compiling dispatcharr-hdhr-http v0.1.0 (/workspace/rust/crates/hdhr-http)
+#16 241.8    Compiling dispatcharr-realtime v0.1.0 (/workspace/rust/crates/realtime)
+#16 271.4    Compiling dispatcharr-rs v0.1.0 (/workspace/rust/crates/app)
+#16 314.6     Finished `release` profile [optimized] target(s) in 5m 14s
+#16 DONE 315.2s
+
+#17 [media  8/22] COPY rust/runtime/collect_postgres.py /tmp/collect_postgres.py
+#17 CACHED
+
+#18 [media 12/22] COPY rust/runtime/collect_static.py rust/runtime/drf-static-source-1.json /tmp/
+#18 CACHED
+
+#19 [media 16/22] COPY --chmod=0555 rust/runtime/regex_bridge/ /media-runtime/opt/dispatcharr-python/bridge/
+#19 CACHED
+
+#20 [media 11/22] RUN /dispatcharrpy/bin/python /tmp/collect_vlc.py
+#20 CACHED
+
+#21 [media  4/22] COPY rust/runtime/collect_comskip.py rust/runtime/comskip-source.ini rust/runtime/comskip-LICENSE rust/runtime/comskip-NOTICE rust/runtime/comskip-Original-DispatcharrBase /tmp/
+#21 CACHED
+
+#22 [media 20/22] COPY rust/runtime/collect_python_host.py /tmp/collect_python_host.py
+#22 CACHED
+
+#23 [media 10/22] COPY rust/runtime/collect_vlc.py /tmp/collect_vlc.py
+#23 CACHED
+
+#24 [media 14/22] COPY rust/runtime/collect_regex_host.py /tmp/collect_regex_host.py
+#24 CACHED
+
+#25 [media  9/22] RUN /dispatcharrpy/bin/python /tmp/collect_postgres.py
+#25 CACHED
+
+#26 [media 13/22] RUN /dispatcharrpy/bin/python /tmp/collect_static.py
+#26 CACHED
+
+#27 [media  5/22] RUN /dispatcharrpy/bin/python /tmp/collect_comskip.py
+#27 CACHED
+
+#28 [media 18/22] COPY rust/runtime/python_host_licenses/ /tmp/python_host_licenses/
+#28 CACHED
+
+#29 [media  7/22] RUN /dispatcharrpy/bin/python /tmp/collect_crypto.py
+#29 CACHED
+
+#30 [media  2/22] COPY rust/runtime/collect_media.py /tmp/collect_media.py
+#30 CACHED
+
+#31 [media 19/22] COPY rust/runtime/python_host_exclusions/ /tmp/python_host_exclusions/
+#31 CACHED
+
+#32 [media 22/22] COPY --chmod=0555 rust/runtime/plugin_bridge/ /media-runtime/opt/dispatcharr-python/plugin-bridge/
+#32 CACHED
+
+#33 [media 21/22] RUN /dispatcharrpy/bin/python /tmp/collect_python_host.py
+#33 CACHED
+
+#34 [media  3/22] RUN /dispatcharrpy/bin/python /tmp/collect_media.py
+#34 CACHED
+
+#35 [media  6/22] COPY rust/runtime/collect_crypto.py /tmp/collect_crypto.py
+#35 CACHED
+
+#36 [media 15/22] RUN /dispatcharrpy/bin/python /tmp/collect_regex_host.py
+#36 CACHED
+
+#37 [media 17/22] COPY rust/runtime/plugin_compat_source/ /tmp/plugin_compat_source/
+#37 CACHED
+
+#38 [stage-6  2/17] COPY --from=media /media-runtime/ /
+#38 CACHED
+
+#39 [frontend-dependencies 3/5] COPY frontend/package.json frontend/package-lock.json ./
+#39 CACHED
+
+#40 [frontend-dependencies 4/5] RUN npm ci --no-audit --no-fund
+#40 CACHED
+
+#41 [frontend-dependencies 2/5] WORKDIR /dispatcharr-frontend
+#41 CACHED
+
+#42 [frontend-dependencies 5/5] COPY frontend/ ./
+#42 CACHED
+
+#43 [frontend 1/1] RUN npm run build
+#43 CACHED
+
+#44 [stage-6  3/17] COPY --from=build /out/dispatcharr-rs /usr/local/bin/dispatcharr-rs
+#44 DONE 0.1s
+
+#45 [stage-6  4/17] COPY --from=build /out/dispatcharr-operator /usr/local/bin/dispatcharr-operator
+#45 DONE 0.1s
+
+#46 [stage-6  5/17] COPY --from=frontend /dispatcharr-frontend/dist/ /opt/dispatcharr-frontend/
+#46 DONE 0.1s
+
+#47 [stage-6  6/17] COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
+#47 DONE 0.1s
+
+#48 [stage-6  7/17] COPY rust/crates/output-http/data/Django-LICENSE /usr/share/doc/dispatcharr/Django-LICENSE
+#48 DONE 0.1s
+
+#49 [stage-6  8/17] COPY rust/crates/store/third-party/PYTHON-COPYRIGHT /usr/share/doc/dispatcharr/Python-COPYRIGHT
+#49 DONE 0.1s
+
+#50 [stage-6  9/17] COPY rust/crates/store/third-party/REQUESTS-LICENSE /usr/share/doc/dispatcharr/Requests-LICENSE
+#50 DONE 0.1s
+
+#51 [stage-6 10/17] COPY rust/crates/store/datasets/Celery-LICENSE /usr/share/doc/dispatcharr/Celery-LICENSE
+#51 DONE 0.1s
+
+#52 [stage-6 11/17] COPY rust/crates/store/datasets/Kombu-LICENSE /usr/share/doc/dispatcharr/Kombu-LICENSE
+#52 DONE 0.1s
+
+#53 [stage-6 12/17] COPY rust/vendor/sqlx-core-0.8.6/LICENSE-MIT rust/vendor/sqlx-core-0.8.6/LICENSE-APACHE /usr/share/doc/dispatcharr/sqlx-core/
+#53 DONE 0.1s
+
+#54 [stage-6 13/17] COPY rust/vendor/sqlx-postgres-0.8.6/LICENSE-MIT rust/vendor/sqlx-postgres-0.8.6/LICENSE-APACHE /usr/share/doc/dispatcharr/sqlx-postgres/
+#54 DONE 0.1s
+
+#55 [stage-6 14/17] COPY rust/crates/xmltv-parser/vendor/Copyright /usr/share/doc/dispatcharr/libxml2-Copyright
+#55 DONE 0.1s
+
+#56 [stage-6 15/17] COPY rust/crates/xmltv-parser/vendor/NOTICES /usr/share/doc/dispatcharr/libxml2-NOTICES
+#56 DONE 0.1s
+
+#57 [stage-6 16/17] RUN mkdir -p /app /data/logos && ln -s /data /app/media && chown 65532:65532 /data /data/logos
+#57 DONE 0.2s
+
+#58 [stage-6 17/17] WORKDIR /app
+#58 DONE 1.3s
+
+#59 exporting to image
+#59 exporting layers
+#59 exporting layers 3.0s done
+#59 exporting manifest sha256:5e01150e1c8388b5563bf50a4c899a1a2906b4aa152e16b497ad9411c832c159 0.0s done
+#59 exporting config sha256:97b83e38af23b71db8cfd655312c3edea5d4af05375f06cf30ac673cc2616aa7 done
+#59 exporting attestation manifest sha256:417f487c8a313eac682c8d4633c7bbb94449e7cf23402093ad837ba459ac60f7 0.0s done
+#59 exporting manifest list sha256:ec3125bdb57a7e109b28c7be5f3c0b2beb3a7702ff523b7078d084f8762625dd done
+#59 naming to docker.io/library/dispatcharr-rust-candidate:milestone55 done
+#59 unpacking to docker.io/library/dispatcharr-rust-candidate:milestone55
+#59 unpacking to docker.io/library/dispatcharr-rust-candidate:milestone55 1.2s done
+#59 DONE 4.2s

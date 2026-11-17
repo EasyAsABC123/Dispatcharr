@@ -1,0 +1,108 @@
+{
+  "status": "FAILED_ACTUAL_TERMINAL_RESULTS_NOT_OBSERVED",
+  "primary_failure": {
+    "type": "TimeoutError",
+    "message": "natural-automatic-mark-parent-terminal:None"
+  },
+  "recording": {
+    "id": 1,
+    "status": "completed",
+    "remux_success": true,
+    "bytes_written": 40247604,
+    "started_at": "2026-11-17 17:21:06.261162",
+    "ended_at": "2026-11-17 17:29:47.684831",
+    "comskip": {
+      "status": "completed",
+      "mode": "mark",
+      "commercials": 2
+    }
+  },
+  "task_lineage": {
+    "recording": {
+      "id": "71b07d8e-2ece-4350-8783-f4aad71cd738",
+      "task": "apps.channels.tasks.run_recording",
+      "root_id": "71b07d8e-2ece-4350-8783-f4aad71cd738",
+      "parent_id": null,
+      "ignore_result": false
+    },
+    "comskip": {
+      "id": "e039fa73-7bbf-4cc6-8c73-385148627a66",
+      "task": "apps.channels.tasks.comskip_process_recording",
+      "root_id": "71b07d8e-2ece-4350-8783-f4aad71cd738",
+      "parent_id": "71b07d8e-2ece-4350-8783-f4aad71cd738",
+      "ignore_result": false
+    }
+  },
+  "recording_backend": null,
+  "comskip_backend": null,
+  "artwork_backend_status": "SUCCESS",
+  "observer": {
+    "actual_rows": 28282,
+    "captured_bytes": 4508347,
+    "row_limit": 60000,
+    "byte_limit": 16777216,
+    "terminal_barrier_observed": true,
+    "terminal_barrier_fsynced": true,
+    "writer_closed": true,
+    "thread_settled": true,
+    "observer_error": null,
+    "terminal_reader_error": null,
+    "database_filter": 1,
+    "complete_all_database_journal": false
+  },
+  "journal_capture_failed": false,
+  "publications": [
+    {
+      "task": "apps.channels.tasks.prefetch_recording_artwork",
+      "id": "d7af62cb-fbbc-4214-8e30-6b88df2151bd",
+      "actual_redis_time": 1794936060.218587
+    },
+    {
+      "task": "apps.channels.tasks.run_recording",
+      "id": "71b07d8e-2ece-4350-8783-f4aad71cd738",
+      "actual_redis_time": 1794936066.186391
+    },
+    {
+      "task": "apps.channels.tasks.comskip_process_recording",
+      "id": "e039fa73-7bbf-4cc6-8c73-385148627a66",
+      "actual_redis_time": 1794936587.71373
+    }
+  ],
+  "actual_completion_events": [
+    {
+      "observed_epoch": 1794936587.754538,
+      "event": {
+        "type": "recording_ended"
+      }
+    },
+    {
+      "observed_epoch": 1794936587.7546234,
+      "event": {
+        "type": "comskip_status",
+        "status": "started",
+        "recording_id": 1
+      }
+    },
+    {
+      "observed_epoch": 1794936590.0093257,
+      "event": {
+        "type": "comskip_status",
+        "status": "completed",
+        "recording_id": 1,
+        "commercials": 2,
+        "mode": "mark"
+      }
+    }
+  ],
+  "EDL": [
+    {
+      "sha256": "984238c523502b3c23dc3e07e9fcdaf3bead2446328e74315bec4671af4dfbbc",
+      "text": "150.52\t181.48\t3\n332.52\t363.48\t3\n"
+    }
+  ],
+  "natural_CUT_NOT_RUN": true,
+  "whole_natural_MARK_accepted": false,
+  "production_assertions_weakened": false,
+  "exact_failure_cause": "Unlocated terminal/lifecycle failure; completed SQL/media/events do not establish task terminal metadata acceptance. DB1 journal excludes DB2 result commands.",
+  "Main_shutdown_observation": "queue_pollers settled; queue_admissions, queue_heads and queue unsettled; selected worker drain incomplete. No precise operational stage was retained."
+}

@@ -5,11 +5,11 @@ task and algorithm credit. These results concern bounded migration tests;
 all M0–M9 milestones remain open and no CPU or memory gain is established.
 
 The [compact receipt index](../scripts/rust-integration/milestone-batch54/recovery/index.json)
-contains SHA256 references to the original local evidence and ten small public
+contains SHA256 references to the original local evidence and fifteen small public
 files, including the index. It publishes terminal, integrity and cleanup
-receipts, selected status/wire hashes and an interrupted-run summary. Raw
-credentials, cookies, tokens, private keys, response bodies and full captures
-are excluded.
+receipts, selected status/wire hashes and failed-run summaries. The small profile
+501 response is retained as direct evidence. Raw credentials, cookies, tokens,
+private keys, complete wires, media and full journals are excluded.
 
 ## Frozen metadata phase D3 passed
 
@@ -62,8 +62,56 @@ for absence. This attempt establishes no application parity result. See its
 [UID proof](../scripts/rust-integration/milestone-batch54/recovery/recovery1-uid.json)
 and [independent cleanup](../scripts/rust-integration/milestone-batch54/recovery/recovery1-cleanup.json).
 
-Recovery2 is now running as a separate frozen successor, with 45 runtime files,
-46 UID-readable files and 2,275 bound inputs. Its results and independent cleanup
-must be consumed before acceptance. Remaining work includes finishing that
-Native cohort, the prepared Source provider/admin/alias characterization,
-remaining compatibility domains and a fresh quiet paired performance campaign.
+## Recovery2 completed with thirteen passes and two failures
+
+The frozen fifteen-context successor exited **1 in 1,942.208 seconds**. Its actual
+terminal was consumed; both streams reached EOF and its process group settled.
+All **2,275 bound inputs** remained unchanged. Thirteen contexts passed, including
+category/language lifecycle and live/VOD group settings; credential profiles and
+Comskip failed. Independent cleanup proved **20 exact containers and 19 original
+host generations**, plus the owned project's container/network/volume inventories,
+absent. This remains a literal failed application batch. See the
+[summary](../scripts/rust-integration/milestone-batch54/recovery/recovery2-summary.json),
+[terminal](../scripts/rust-integration/milestone-batch54/recovery/recovery2-terminal.json)
+and [cleanup](../scripts/rust-integration/milestone-batch54/recovery/recovery2-cleanup.json).
+
+The credential context stopped at its first actual nested profile PUT:
+`/api/m3u/accounts/5/profiles/6/` returned 501 with the explicit unported-management
+error. No reader/capacity qualification followed that failure. The
+[retained response](../scripts/rust-integration/milestone-batch54/recovery/recovery2-profile-put.json)
+identifies the production endpoint that the next candidate must validate.
+
+All four manual positive Comskip cells passed. Natural automatic MARK completed
+the recording and remux, recorded two commercials and produced the 32-byte EDL;
+its actual completion event was observed. However, the recording parent's result
+remained null through its 40-second terminal wait, and final capture also found
+the Comskip child's result null. Artwork's result was SUCCESS. Natural CUT was
+not run. Completed media/SQL/events do not satisfy the missing parent/child
+terminal assertions, which remain intact.
+
+The repaired observer closed successfully with **28,282 rows / 4,508,347 bytes**,
+below its 60,000-row / 16 MiB limits. Its strict terminal barrier, fsync, writer close
+and thread settlement passed. This failure is separate from the earlier observer
+budget exhaustion. The retained Main shutdown log reports unsettled queue
+admissions/heads/drain, but does not locate the failing operational stage. The
+DB1 journal excludes DB2 result commands, so it does not establish whether a
+terminal write was attempted or rejected. The exact terminal/lifecycle failure
+remains unlocated; no backend-configuration cause is claimed. See the compact
+[natural MARK evidence](../scripts/rust-integration/milestone-batch54/recovery/recovery2-natural-mark.json).
+
+The next diagnostic capture needs retained health/domain state and actual DB2
+result observations before teardown, alongside the whole-cohort rerun. Remaining
+work also includes the prepared Source management/provider/admin/alias contexts,
+other compatibility domains and a fresh quiet paired performance campaign.
+
+## Candidate55 targeted PostgreSQL prerequisite
+
+The existing targeted resolver test against the immutable SDK89 source passed
+with actual exit 0 in **49.663 seconds**, reusing the existing Compose/bootstrap,
+supervisor, seed and shared Cargo target. Independent cleanup proved its one
+container, original host generation and owned project absent. All 24 owned command
+receipts have EOF on both streams and settled process groups; readiness polling
+exit 1 observations remain literal. Root consumed the direct tool's actual exit 0
+but did not separately instrument a whole-outer process group. That limitation
+is explicit in the [compact PG receipt index](../scripts/rust-integration/milestone-batch55/resolver-PG/index.json).
+This prerequisite establishes no Candidate55 application or performance acceptance.
