@@ -89,3 +89,15 @@ model candidate from35 tests. The register now has29 partial HTTP Source
 assignments and1 partial non-HTTP assignment. Stable592/798/250 identities,322
 unresolved methods and fully_verified=0 remain unchanged. The80 historical named
 successes do not claim new Source execution, Native parity or a settings REST test.
+
+## Retained task/operator Source cohort
+
+[Seven exact task/operator definitions](retained-task-operator7/README.md) add
+31 historical worker observations and17 Original command subprocess cases without
+Source replay or new HTTP/Native coverage. The current register has139 partial
+HTTP assignments and15 partial non-HTTP assignments;235 static non-HTTP candidates
+remain. The existing six-task validator remains unchanged. A separate typed,
+fail-closed input validates these five task/two command identities, declared task
+name overrides, exact Source frames/results/fixture actors and expected failures.
+Do not infer full roles, method aliases, received signals, raw backend wire or
+Native parity from these assignments. M0/M1 remain formally open.

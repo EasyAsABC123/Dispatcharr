@@ -57,7 +57,8 @@ class NotificationMutationControls(unittest.TestCase):
    'scripts/rust-contracts/vod-access/bindings.json',
    'scripts/rust-contracts/logo-source/bindings.json',
    'scripts/rust-contracts/channel-matching-source51-bindings.json',
-   'scripts/rust-contracts/station-aggregate-source53-55-bindings.json'])
+   'scripts/rust-contracts/station-aggregate-source53-55-bindings.json',
+   'scripts/rust-contracts/retained-task-operator7/bindings.json'])
   later_ids=[]
   for ref in later:
    value=source_contracts.checked(ROOT,ref)
@@ -83,8 +84,32 @@ class NotificationMutationControls(unittest.TestCase):
   self.assertEqual(historical,new['runtime_routes'])
   self.assertEqual(mapping,new['executable_Source_mapping'])
   self.assertEqual(subject.digest([{k:v for k,v in r.items()if k!='operations'}for r in new['runtime_routes']]),old['routes_structural_projection_sha256'])
-  self.assertEqual(subject.digest(new['openapi_operations']),old['openapi_operations_sha256']);self.assertEqual(subject.digest(new['non_HTTP_candidates']),old['non_HTTP_candidates_sha256']);self.assertEqual(subject.digest(new['observations_for_methods_not_declared_in_discovery']),old['observations_for_methods_not_declared_sha256'])
-  self.assertEqual(new['executable_Source_non_HTTP_mapping'],old['non_HTTP_mapping'])
+  self.assertEqual(subject.digest(new['openapi_operations']),old['openapi_operations_sha256']);self.assertEqual(subject.digest(new['observations_for_methods_not_declared_in_discovery']),old['observations_for_methods_not_declared_sha256'])
+  # Only seven exact validator-pinned Source assignments supersede this old
+  # non-HTTP digest. Reverse their known assignment fields, preserve every
+  # source/identity/unrelated field, then require the immutable full old SHA.
+  import retained_task_operator_contracts
+  reference=next(r for r in later if r['kind']==retained_task_operator_contracts.KIND)
+  retained=source_contracts.checked(ROOT,reference)
+  retained_task_operator_contracts.validate(ROOT,retained)
+  retained_ids={row['candidate_id']for row in retained['non_HTTP_contracts']}
+  self.assertEqual(retained_ids,{row['candidate_id']for row in retained_task_operator_contracts.IDENTITIES})
+  self.assertEqual(len(retained_ids),7)
+  historical_non_HTTP=copy.deepcopy(new['non_HTTP_candidates'])
+  self.assertEqual(sum(row['candidate_id']not in retained_ids for row in historical_non_HTTP),243)
+  for row in historical_non_HTTP:
+   if row['candidate_id']in retained_ids:
+    for field in('setup_fixture','owning_milestone','assertions','executable_Source_contract'):
+     row.pop(field)
+    row.update(state='static_candidate_requires_runtime_contract',result=None)
+  self.assertEqual(subject.digest(historical_non_HTTP),old['non_HTTP_candidates_sha256'])
+  # Reapply actual checked public Source data and require every new field too;
+  # dropping arbitrary fields or accepting a changed seven-row oracle cannot pass.
+  non_HTTP_mapping=source_contracts.apply_non_HTTP(ROOT,historical_non_HTTP)
+  self.assertEqual(historical_non_HTTP,new['non_HTTP_candidates'])
+  self.assertEqual(non_HTTP_mapping,new['executable_Source_non_HTTP_mapping'])
+  self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+7)
+  self.assertEqual(non_HTTP_mapping['fully_verified_added'],0)
   expected=old['base_HTTP_assignments']+len(selected)+len(later_ids)
   self.assertEqual(expected,139);self.assertEqual(mapping['operations'],expected)
   self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)

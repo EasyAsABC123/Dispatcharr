@@ -225,6 +225,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'captured_original_scanner_task_observations':
             import scanner_task_contracts
             scanner_task_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_task_operator7_observations':
+            import retained_task_operator_contracts
+            retained_task_operator_contracts.validate(root, value, bindings)
         elif reference['kind'] == 'pinned_original_channel_guide_tests':
             import channel_guide_contracts
             channel_guide_contracts.validate(root, value, bindings)
@@ -301,7 +304,7 @@ def apply_non_HTTP(root, entries):
     index = {entry['candidate_id']: entry for entry in entries}
     seen = set()
     for reference in manifest['inputs']:
-        if reference['kind'] not in ['pinned_original_account_settings_tests', 'captured_original_scanner_task_observations', 'pinned_original_provider_output_consumer_tests']:
+        if reference['kind'] not in ['pinned_original_account_settings_tests', 'captured_original_scanner_task_observations', 'pinned_original_provider_output_consumer_tests', 'retained_original_task_operator7_observations']:
             continue
         value = checked(root, reference)
         if reference['kind'] == 'pinned_original_account_settings_tests':
@@ -312,6 +315,10 @@ def apply_non_HTTP(root, entries):
             import scanner_task_contracts
             scanner_task_contracts.validate(root, value)
             source_kind = 'task_candidate'
+        elif reference['kind'] == 'retained_original_task_operator7_observations':
+            import retained_task_operator_contracts
+            retained_task_operator_contracts.validate(root, value)
+            source_kind = None  # Only the seven validator-pinned task/command identities.
         else:
             import provider_output_contracts
             provider_output_contracts.validate(root, value)
@@ -322,15 +329,21 @@ def apply_non_HTTP(root, entries):
             seen.add(identifier)
             entry = index[identifier]
             assert entry['source'] == contract['source'], 'exact nonHTTP source identity'
-            assert entry['source']['kind'] == source_kind
+            current_kind = contract['source']['kind'] if source_kind is None else source_kind
+            if source_kind is None:
+                assert current_kind in ['task_candidate', 'management_command']
+            assert entry['source']['kind'] == current_kind
             assert entry['fully_verified'] is False and contract['fully_verified'] is False
-            entry['setup_fixture'] = (copy.deepcopy(value['fixtures'][contract['fixture_id']]) if source_kind in ['model_candidate', 'websocket_consumer_candidate']
+            entry['setup_fixture'] = (copy.deepcopy(value['fixtures'][contract['fixture_id']]) if current_kind in ['model_candidate', 'websocket_consumer_candidate']
                                       else {key: copy.deepcopy(value['fixtures'][key]) for key in contract['fixture_ids']})
+            if reference['kind'] == 'retained_original_task_operator7_observations':
+                entry['owning_milestone'] = contract['owning_milestone']
             entry['assertions'] = copy.deepcopy(contract['assertions'])
             entry['result'] = copy.deepcopy(contract['result'])
             entry['executable_Source_contract'] = copy.deepcopy(contract)
-            entry['state'] = ('partial_executable_Original_model_tests' if source_kind == 'model_candidate'
-                              else 'partial_executable_Original_task_observations' if source_kind == 'task_candidate'
+            entry['state'] = ('partial_executable_Original_model_tests' if current_kind == 'model_candidate'
+                              else 'partial_executable_Original_task_observations' if current_kind == 'task_candidate'
+                              else 'partial_executable_Original_management_subprocess_observations' if current_kind == 'management_command'
                               else 'partial_executable_Original_synthetic_consumer_method_tests')
-    return {'state': 'typed partial Original model/task/synthetic-consumer assertions, not HTTP or Native verification',
+    return {'state': 'typed partial Original model/task/management/synthetic-consumer assertions, not HTTP or Native verification',
             'candidates': len(seen), 'fully_verified_added': 0}

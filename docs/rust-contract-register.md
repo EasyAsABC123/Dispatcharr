@@ -65,3 +65,24 @@ At the Source51 mapping checkpoint, the register had 136 partial executable Sour
 The [station/aggregate binding input](../scripts/rust-contracts/station-aggregate-source53-55-bindings.json) attaches eight retained admin POST cases to three existing operation IDs. [Source53](../scripts/rust-integration/channel-stations-source53/README.md) supplies three source-create cases and one lineup-add case, with natural HTTP201/200, actual ETA/immediate task frames, SUCCESS/null results, persisted stations and channel-layer progress. [Source55](../scripts/rust-integration/milestone-batch38/Source55/qualification.json) supplies four collection-refresh cases covering zero active accounts, local STD ingestion and caught XC/default-custom errors with actual active membership, child trail/results, SQL/audit/updates and cleanup. No Source application was replayed for this mapping.
 
 There are now **139 partial executable Source assignments**. The aggregate route retains its existing `METHOD_UNRESOLVED` operation ID and null method/action: the binding records observed POST cases without upgrading runtime method discovery. All 798 operation IDs, 592 route identities, 250 non-HTTP entries, 362 OpenAPI operations, 403 existing packaged comparisons and 795 unrelated operation dictionaries remain unchanged from the preceding register. Prior Source definitions are retained. These are incomplete admin-only Source observations; Native qualification, other roles, format/method/schema variants and full milestones/performance remain separate. Every fully-verified flag remains false.
+
+## Retained task and operator Source assignments
+
+[Seven typed retained Source definitions](../scripts/rust-contracts/retained-task-operator7/README.md)
+add five task candidates and two management-command candidates. They reuse31
+actual Original worker observations (VOD11, selected matching5, single matching7,
+station discovery4, aggregate4) and17 Original operator subprocess cases; no Source
+application or command was replayed. Actual expected FAILURE and CLI exits1/2,
+partial actor/input domains, absent received signals/raw backend wire and exact
+Source fixture effects remain explicit. The station function's `sd_tasks.py`
+source identity and explicit `apps.epg.tasks.fetch_schedules_direct_stations`
+broker name are kept distinct.
+
+The register retains139 partial HTTP assignments and now has15 partial non-HTTP
+assignments;235 non-HTTP candidates remain static. All592 route identities,
+798 operation IDs/methods/role fields,362 OpenAPI operations,250 non-HTTP identities
+and403 packaged observations remain unchanged. Only the seven exact candidate
+rows gain definitions; previous eight definitions and every unrelated row are
+unchanged. Fully_verified staysfalse. Contract tooling includes19 prepared
+portable corruption controls; their execution and shared SDK integration remain
+separate validation steps. Formal M0/M1 and complete backend parity remain open.

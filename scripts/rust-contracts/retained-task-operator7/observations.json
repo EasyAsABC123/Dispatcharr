@@ -1,0 +1,4212 @@
+{
+  "language": [
+    {
+      "case_name": "language-A-initial",
+      "frame": {
+        "body": "W1s1XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "6d77a8fc-c565-4487-9a8c-90c95200e8f1",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "6d77a8fc-c565-4487-9a8c-90c95200e8f1",
+          "parent_id": null,
+          "argsrepr": "(5,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "6d77a8fc-c565-4487-9a8c-90c95200e8f1",
+          "reply_to": "f7f64fc1-0e2d-351f-b949-25588ce307ba",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "7b7dd9a0-aa9b-40c9-86b2-4677ee912e36"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in 0.05 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:02:49.721280+00:00",
+        "task_id": "6d77a8fc-c565-4487-9a8c-90c95200e8f1"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-A-initial",
+        "status": "passed",
+        "actual_root": "6d77a8fc-c565-4487-9a8c-90c95200e8f1",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "59ed3719c2c308e65e4732a9d77f3c9379c28131ab2d08e3a0e826048e24024b",
+        "backend": "26d8f9dc3567cdcba26e7d6dea1aca7339686841fc049845a181d66dd8048614",
+        "HTTP": "dceb6c93c836e356c3efab1afa42417786af6f53c08ce7955b929c9b9a94147e"
+      }
+    },
+    {
+      "case_name": "language-B-shared",
+      "frame": {
+        "body": "W1s4XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "d2e2fd58-ad45-416b-b366-305c2ddf0a74",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "d2e2fd58-ad45-416b-b366-305c2ddf0a74",
+          "parent_id": null,
+          "argsrepr": "(8,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "d2e2fd58-ad45-416b-b366-305c2ddf0a74",
+          "reply_to": "f7f64fc1-0e2d-351f-b949-25588ce307ba",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "8f8f13d2-b8a0-4a58-97c3-a933515c28a6"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD shared B in 0.03 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:02:57.134554+00:00",
+        "task_id": "d2e2fd58-ad45-416b-b366-305c2ddf0a74"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/8/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD shared B"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-B-shared",
+        "status": "passed",
+        "actual_root": "d2e2fd58-ad45-416b-b366-305c2ddf0a74",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "f85d831aa109ac7979d4e96b499ba926db361f99826d0027b2a761a9e671b2ee",
+        "backend": "89233a12cb7f851b3e148446fef7d208fbf5622b6048058b17bb42ddc8afab5b",
+        "HTTP": "b1f2a925948fe70fa5dae586e60e3b42f7f2071c77124e6f742bd3d8dd698ef9"
+      }
+    },
+    {
+      "case_name": "language-A-en",
+      "frame": {
+        "body": "W1s1XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "cc89a8d0-c391-42fb-8fbb-ae1c65dfbe19",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "cc89a8d0-c391-42fb-8fbb-ae1c65dfbe19",
+          "parent_id": null,
+          "argsrepr": "(5,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "cc89a8d0-c391-42fb-8fbb-ae1c65dfbe19",
+          "reply_to": "f7f64fc1-0e2d-351f-b949-25588ce307ba",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "179f6883-2eae-4bf0-a2ae-f9d5341bceb4"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in 0.08 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:03:16.879521+00:00",
+        "task_id": "cc89a8d0-c391-42fb-8fbb-ae1c65dfbe19"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-A-en",
+        "status": "passed",
+        "actual_root": "cc89a8d0-c391-42fb-8fbb-ae1c65dfbe19",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "d8ff4014a09bb3b0b6b6e454cb9e5392881e933d27cd7e6f745dd1e632f0134a",
+        "backend": "e61016234ffd105c5b5e1214efe98e3a71692bc5ec643658d577b218cdc3f5af",
+        "HTTP": "dceb6c93c836e356c3efab1afa42417786af6f53c08ce7955b929c9b9a94147e"
+      }
+    },
+    {
+      "case_name": "language-A-fr",
+      "frame": {
+        "body": "W1s1XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "7038b1dc-b4e0-4ffd-ac32-8540d8076cce",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "7038b1dc-b4e0-4ffd-ac32-8540d8076cce",
+          "parent_id": null,
+          "argsrepr": "(5,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "7038b1dc-b4e0-4ffd-ac32-8540d8076cce",
+          "reply_to": "f7f64fc1-0e2d-351f-b949-25588ce307ba",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "842fd381-7fb6-4568-9e94-6467f784f634"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in 0.04 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:03:31.171685+00:00",
+        "task_id": "7038b1dc-b4e0-4ffd-ac32-8540d8076cce"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-A-fr",
+        "status": "passed",
+        "actual_root": "7038b1dc-b4e0-4ffd-ac32-8540d8076cce",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "50d17025377c1ae972f7d736d31a05fa269623d99b65e834e4f2982582618643",
+        "backend": "9fb7901e69b4c39dd1acea9acb27be2c360919a5c11ec634951689f6b9a43d2d",
+        "HTTP": "dceb6c93c836e356c3efab1afa42417786af6f53c08ce7955b929c9b9a94147e"
+      }
+    },
+    {
+      "case_name": "language-A-clear",
+      "frame": {
+        "body": "W1s1XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "0b9f6909-fe67-46a0-8705-2ee79fc08869",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "0b9f6909-fe67-46a0-8705-2ee79fc08869",
+          "parent_id": null,
+          "argsrepr": "(5,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "0b9f6909-fe67-46a0-8705-2ee79fc08869",
+          "reply_to": "76da9c53-2a7b-304b-9d18-720758fc9870",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "965c79d2-3a77-42f6-a1ea-3b1acfa40a5e"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in 0.05 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:03:45.507086+00:00",
+        "task_id": "0b9f6909-fe67-46a0-8705-2ee79fc08869"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-A-clear",
+        "status": "passed",
+        "actual_root": "0b9f6909-fe67-46a0-8705-2ee79fc08869",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "d903ec6b4fd4948ad8c6d86b218dbb4ef1bb2f601d728b20c3b59fb6e3d7399d",
+        "backend": "38208921fac2142fa7d2be05befda5c41661946f48e6397c0aabae4b6cf4c642",
+        "HTTP": "dceb6c93c836e356c3efab1afa42417786af6f53c08ce7955b929c9b9a94147e"
+      }
+    },
+    {
+      "case_name": "language-A-en-again",
+      "frame": {
+        "body": "W1s1XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "9309eede-1a73-48e0-a3d3-517a68f982dc",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "9309eede-1a73-48e0-a3d3-517a68f982dc",
+          "parent_id": null,
+          "argsrepr": "(5,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "9309eede-1a73-48e0-a3d3-517a68f982dc",
+          "reply_to": "7df7082b-349b-384c-b233-b80143ecacba",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "fe4daa2d-e10b-439e-8ec0-14343a82a9c4"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in 0.05 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:03:59.920609+00:00",
+        "task_id": "9309eede-1a73-48e0-a3d3-517a68f982dc"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-A-en-again",
+        "status": "passed",
+        "actual_root": "9309eede-1a73-48e0-a3d3-517a68f982dc",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "78fc3661dbb06f0bb965acf2400e66da2df583c5a2a3e1e77efc8b15e29f035a",
+        "backend": "83ccaa007edd6db21859c87065ffe067e0ed0045b08a8f5a2de8f19bc42ddb95",
+        "HTTP": "dceb6c93c836e356c3efab1afa42417786af6f53c08ce7955b929c9b9a94147e"
+      }
+    },
+    {
+      "case_name": "language-B-fr",
+      "frame": {
+        "body": "W1s4XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "3c909f78-4cfd-4279-a827-cda825b1bc91",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "3c909f78-4cfd-4279-a827-cda825b1bc91",
+          "parent_id": null,
+          "argsrepr": "(8,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "3c909f78-4cfd-4279-a827-cda825b1bc91",
+          "reply_to": "76da9c53-2a7b-304b-9d18-720758fc9870",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "1947a99f-6590-440a-96cb-f06fd8e5a2f2"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD shared B in 0.04 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:04:14.277920+00:00",
+        "task_id": "3c909f78-4cfd-4279-a827-cda825b1bc91"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/8/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD shared B"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-B-fr",
+        "status": "passed",
+        "actual_root": "3c909f78-4cfd-4279-a827-cda825b1bc91",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "7836c46aabf71bf19e92aabf04d56c3f6b6c621370a3a5c441b5c665565ff52a",
+        "backend": "83b42dfbfd4cbacf87d8c00c7ffbeb1f61eeaf96522dda2f10001b2ffa695cf2",
+        "HTTP": "b1f2a925948fe70fa5dae586e60e3b42f7f2071c77124e6f742bd3d8dd698ef9"
+      }
+    },
+    {
+      "case_name": "language-A-claim-fr",
+      "frame": {
+        "body": "W1s1XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "e4cc35af-e37c-4d5d-8e9c-4840375f7c03",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "e4cc35af-e37c-4d5d-8e9c-4840375f7c03",
+          "parent_id": null,
+          "argsrepr": "(5,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "e4cc35af-e37c-4d5d-8e9c-4840375f7c03",
+          "reply_to": "76da9c53-2a7b-304b-9d18-720758fc9870",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "1d1ac665-fac0-4d41-9371-bed6efd252b5"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in 0.05 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:04:28.688698+00:00",
+        "task_id": "e4cc35af-e37c-4d5d-8e9c-4840375f7c03"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-A-claim-fr",
+        "status": "passed",
+        "actual_root": "e4cc35af-e37c-4d5d-8e9c-4840375f7c03",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "108a9d2c9fafb27216c7179b42a2718acf9e34fb32a4cfae415526975d5fc256",
+        "backend": "37f9969b0cf4fb2c1081824f1332e52faac5bd3e004d460fe062ba936b2b5d3e",
+        "HTTP": "dceb6c93c836e356c3efab1afa42417786af6f53c08ce7955b929c9b9a94147e"
+      }
+    },
+    {
+      "case_name": "language-repeat",
+      "frame": {
+        "body": "W1s1XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "79054ff1-76fd-4d80-90ca-3e3de7a0b28d",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "79054ff1-76fd-4d80-90ca-3e3de7a0b28d",
+          "parent_id": null,
+          "argsrepr": "(5,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "79054ff1-76fd-4d80-90ca-3e3de7a0b28d",
+          "reply_to": "76da9c53-2a7b-304b-9d18-720758fc9870",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "0d03dec7-3ec1-48c3-b7d9-5c8691ae791a"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in 0.03 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:04:36.096970+00:00",
+        "task_id": "79054ff1-76fd-4d80-90ca-3e3de7a0b28d"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-repeat",
+        "status": "passed",
+        "actual_root": "79054ff1-76fd-4d80-90ca-3e3de7a0b28d",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "142a67b32ec2d0f011bb8677bda557a9b93f3d8b14af8b01854de68635454b40",
+        "backend": "4d06e7de6b583a2a577364a3ceccb877efa457292211601b628911a94576bad8",
+        "HTTP": "dceb6c93c836e356c3efab1afa42417786af6f53c08ce7955b929c9b9a94147e"
+      }
+    },
+    {
+      "case_name": "language-A-prune",
+      "frame": {
+        "body": "W1s1XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "1e2c6ada-994f-47bc-a8c7-afce1b7c40e7",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "1e2c6ada-994f-47bc-a8c7-afce1b7c40e7",
+          "parent_id": null,
+          "argsrepr": "(5,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "1e2c6ada-994f-47bc-a8c7-afce1b7c40e7",
+          "reply_to": "76da9c53-2a7b-304b-9d18-720758fc9870",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "2a1b9c51-c918-4059-819e-de4d172340d7"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD ingest in 0.03 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:04:43.508716+00:00",
+        "task_id": "1e2c6ada-994f-47bc-a8c7-afce1b7c40e7"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/5/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD ingest"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-A-prune",
+        "status": "passed",
+        "actual_root": "1e2c6ada-994f-47bc-a8c7-afce1b7c40e7",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "9c3a8e987993da000e91dba7cea76d08f5b1283df3c652c49469295a86008dcc",
+        "backend": "5c529cda8800b0a02ae4d24750951b8a919398bbf5ae8b52597611f46e166da4",
+        "HTTP": "dceb6c93c836e356c3efab1afa42417786af6f53c08ce7955b929c9b9a94147e"
+      }
+    },
+    {
+      "case_name": "language-B-prune",
+      "frame": {
+        "body": "W1s4XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.vod.tasks.refresh_vod_content",
+          "id": "dd4d1337-45ad-4028-9716-aabe147d2d68",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "dd4d1337-45ad-4028-9716-aabe147d2d68",
+          "parent_id": null,
+          "argsrepr": "(8,)",
+          "kwargsrepr": "{}",
+          "origin": "gen370@664315851ce3",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "dd4d1337-45ad-4028-9716-aabe147d2d68",
+          "reply_to": "76da9c53-2a7b-304b-9d18-720758fc9870",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "ceab90e3-29c6-41f4-9fe4-adecb11aa2c1"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Batch VOD refresh completed for account Owned VOD shared B in 0.03 seconds",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-17T06:04:51.066127+00:00",
+        "task_id": "dd4d1337-45ad-4028-9716-aabe147d2d68"
+      },
+      "producer_HTTP": {
+        "context": "vod-category-language-lifecycle",
+        "method": "POST",
+        "path": "/api/m3u/accounts/8/refresh-vod/",
+        "credential_role": "admin",
+        "status": 202,
+        "body": {
+          "message": "VOD refresh initiated for account Owned VOD shared B"
+        }
+      },
+      "actual_Source_case": {
+        "name": "language-B-prune",
+        "status": "passed",
+        "actual_root": "dd4d1337-45ad-4028-9716-aabe147d2d68",
+        "actual_provider_requests": 5,
+        "actual_queued_children": 0,
+        "Source_observation_complete": true
+      },
+      "raw_member_sha256": {
+        "frame": "3e974de0ef11fecae5bbe2448d4f17adb328530cedd7ecc53934029068e56835",
+        "backend": "6190909d851577d75bfc410185ccb4728592102080266c42a6ecfbbbad1c9954",
+        "HTTP": "b1f2a925948fe70fa5dae586e60e3b42f7f2071c77124e6f742bd3d8dd698ef9"
+      }
+    }
+  ],
+  "matching": [
+    {
+      "case_name": "selected-includes-assigned-changed-and-unchanged",
+      "source_index": 1,
+      "frame": {
+        "body": "W1tbMSwgMl1dLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_selected_channels_epg",
+          "id": "e9ff1a45-03fb-4ab2-a3ac-a5f3b0285cfd",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "e9ff1a45-03fb-4ab2-a3ac-a5f3b0285cfd",
+          "parent_id": null,
+          "argsrepr": "([1, 2],)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "e9ff1a45-03fb-4ab2-a3ac-a5f3b0285cfd",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "41e3615f-c79d-45fd-b4fa-d4697b471ac3"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Done. 1 selected channel(s) updated (1 unchanged).",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T11:49:09.122968+00:00",
+        "task_id": "e9ff1a45-03fb-4ab2-a3ac-a5f3b0285cfd"
+      },
+      "setup": {
+        "channels": {
+          "changed": 1,
+          "unchanged": 2
+        },
+        "epgs": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3,
+          "grace": 4
+        },
+        "sources": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "low",
+              "priority": 1
+            },
+            {
+              "key": "high",
+              "priority": 50
+            },
+            {
+              "key": "inactive",
+              "priority": 100,
+              "active": false
+            }
+          ],
+          "epgs": [
+            {
+              "key": "low",
+              "source": "low",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "high",
+              "source": "high",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "inactive",
+              "source": "inactive",
+              "tvg": "inactive.id",
+              "name": "Inactive"
+            },
+            {
+              "key": "grace",
+              "source": "high",
+              "tvg": "12345",
+              "name": "Grace"
+            }
+          ],
+          "name": "selected-includes-assigned-changed-and-unchanged",
+          "kind": "selected",
+          "channels": [
+            {
+              "key": "changed",
+              "name": "Owned",
+              "tvg": "owned.id",
+              "assigned": "low"
+            },
+            {
+              "key": "unchanged",
+              "name": "Owned",
+              "tvg": "owned.id",
+              "assigned": "high"
+            }
+          ],
+          "expected": {
+            "changed": "high",
+            "unchanged": "high"
+          }
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/match-epg/",
+        "request": {
+          "channel_ids": [
+            1,
+            2
+          ]
+        },
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "68"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching task initiated for 2 selected channel(s)."
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHRhc2sgaW5pdGlhdGVkIGZvciAyIHNlbGVjdGVkIGNoYW5uZWwocykuIn0="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 1,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [],
+        "actual_response_body_sha256": "5b1b1b8ef1589f333292d890fa51b046cf72ea0f9518db83832c769044fd2484",
+        "actual_response_keys": [
+          "message"
+        ],
+        "backend_result_sha256": "2a360522e3d20a8ca6087a0cfaffc614af673678d5fd6a664cb68a7f256bb3ff",
+        "backend_result_type": "str",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [],
+        "manual_group_custom_after": false,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_match"
+        ],
+        "name": "selected-includes-assigned-changed-and-unchanged",
+        "output_cache_generation_after": null,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "39abf3b68468b7b63f260fc3fc7a6816b37a40984f2b54b5b7ae822017884ded",
+        "root_task": "apps.channels.tasks.match_selected_channels_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "b383c2ddab012a36537aabfba3bf3788b80f8969f92ebf67d7be9bc123025315"
+    },
+    {
+      "case_name": "selected-no-existing-ids",
+      "source_index": 2,
+      "frame": {
+        "body": "W1tbMjE0NzQ4MzY0N11dLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_selected_channels_epg",
+          "id": "a2efbe10-90a7-436f-95ca-04380d5bbd5a",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "a2efbe10-90a7-436f-95ca-04380d5bbd5a",
+          "parent_id": null,
+          "argsrepr": "([2147483647],)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "a2efbe10-90a7-436f-95ca-04380d5bbd5a",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "f0f2a710-6631-489a-8a1e-cb9ac9251f6c"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "No selected channels found for EPG matching.",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T11:49:14.546829+00:00",
+        "task_id": "a2efbe10-90a7-436f-95ca-04380d5bbd5a"
+      },
+      "setup": {
+        "channels": {
+          "untouched": 1
+        },
+        "epgs": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3,
+          "grace": 4
+        },
+        "sources": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "low",
+              "priority": 1
+            },
+            {
+              "key": "high",
+              "priority": 50
+            },
+            {
+              "key": "inactive",
+              "priority": 100,
+              "active": false
+            }
+          ],
+          "epgs": [
+            {
+              "key": "low",
+              "source": "low",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "high",
+              "source": "high",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "inactive",
+              "source": "inactive",
+              "tvg": "inactive.id",
+              "name": "Inactive"
+            },
+            {
+              "key": "grace",
+              "source": "high",
+              "tvg": "12345",
+              "name": "Grace"
+            }
+          ],
+          "name": "selected-no-existing-ids",
+          "kind": "selected",
+          "channels": [
+            {
+              "key": "untouched",
+              "name": "TV"
+            }
+          ],
+          "expected": {
+            "untouched": null
+          },
+          "selected_ids": [
+            2147483647
+          ]
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/match-epg/",
+        "request": {
+          "channel_ids": [
+            2147483647
+          ]
+        },
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "68"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching task initiated for 1 selected channel(s)."
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHRhc2sgaW5pdGlhdGVkIGZvciAxIHNlbGVjdGVkIGNoYW5uZWwocykuIn0="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 0,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [],
+        "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+        "actual_response_keys": [
+          "message"
+        ],
+        "backend_result_sha256": "a98bf0e0d51facd3e202032315c3d1462fef1e6d90bb18b9fc8620e2b015f13f",
+        "backend_result_type": "str",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [],
+        "manual_group_custom_after": false,
+        "matching_event_types": [
+          "epg_match"
+        ],
+        "name": "selected-no-existing-ids",
+        "output_cache_generation_after": null,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "2e9ac0ce7f86cf4fbb83d8be30ffbc19bbe87732d0387b8faf6730c782deafab",
+        "root_task": "apps.channels.tasks.match_selected_channels_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "82eefe2d4668d9bf3281577538c6cdb2bc3c42cba3ec17d67dd112188323d6a7"
+    },
+    {
+      "case_name": "single-exact-first-id-not-bulk-priority",
+      "source_index": 3,
+      "frame": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_single_channel_epg",
+          "id": "5944fe35-4f90-44fb-9a79-628b60f49bc5",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "5944fe35-4f90-44fb-9a79-628b60f49bc5",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "5944fe35-4f90-44fb-9a79-628b60f49bc5",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "823f0139-5a3f-453d-bde0-117a85ada973"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": {
+          "matched": true,
+          "message": "Channel 'Owned' matched with EPG 'Owned' (matched via: owned.id)",
+          "epg_name": "Owned",
+          "epg_id": 1
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T11:49:20.083648+00:00",
+        "task_id": "5944fe35-4f90-44fb-9a79-628b60f49bc5"
+      },
+      "setup": {
+        "channels": {
+          "one": 1
+        },
+        "epgs": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3,
+          "grace": 4
+        },
+        "sources": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "low",
+              "priority": 1
+            },
+            {
+              "key": "high",
+              "priority": 50
+            },
+            {
+              "key": "inactive",
+              "priority": 100,
+              "active": false
+            }
+          ],
+          "epgs": [
+            {
+              "key": "low",
+              "source": "low",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "high",
+              "source": "high",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "inactive",
+              "source": "inactive",
+              "tvg": "inactive.id",
+              "name": "Inactive"
+            },
+            {
+              "key": "grace",
+              "source": "high",
+              "tvg": "12345",
+              "name": "Grace"
+            }
+          ],
+          "name": "single-exact-first-id-not-bulk-priority",
+          "kind": "single",
+          "channels": [
+            {
+              "key": "one",
+              "name": "Owned",
+              "tvg": "owned.id"
+            }
+          ],
+          "expected": {
+            "one": "low"
+          }
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/1/match-epg/",
+        "request": {},
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "85"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching started for channel 'Owned'",
+          "accepted": true,
+          "channel_id": 1
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHN0YXJ0ZWQgZm9yIGNoYW5uZWwgJ093bmVkJyIsImFjY2VwdGVkIjp0cnVlLCJjaGFubmVsX2lkIjoxfQ=="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 1,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [],
+        "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+        "actual_response_keys": [
+          "accepted",
+          "channel_id",
+          "message"
+        ],
+        "backend_result_sha256": "8a3911887bfe3ab3a80e6f3b181e5105a4682130edd19fe323dcfbbb231d818f",
+        "backend_result_type": "dict",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [],
+        "manual_group_custom_after": true,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "single_channel_epg_match"
+        ],
+        "name": "single-exact-first-id-not-bulk-priority",
+        "output_cache_generation_after": 1,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "820d2ae4fa6057cc86aeb4ba77d4e93910631dec10711b06a9c350c1a4f80d00",
+        "root_task": "apps.channels.tasks.match_single_channel_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "1d9c38ab3b54a23c41ccf91f34182554830c8ac165c838204919e6e4a63c99b5"
+    },
+    {
+      "case_name": "single-unchanged",
+      "source_index": 4,
+      "frame": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_single_channel_epg",
+          "id": "425a7698-b6b0-4e92-8fc8-525049e4825a",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "425a7698-b6b0-4e92-8fc8-525049e4825a",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "425a7698-b6b0-4e92-8fc8-525049e4825a",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "eeefdd59-0b7a-41d7-8dd5-2c239e13d314"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": {
+          "matched": true,
+          "unchanged": true,
+          "message": "Channel 'Owned' already matched with EPG 'Owned' (matched via: owned.id)",
+          "epg_name": "Owned",
+          "epg_id": 1
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T11:49:25.597587+00:00",
+        "task_id": "425a7698-b6b0-4e92-8fc8-525049e4825a"
+      },
+      "setup": {
+        "channels": {
+          "one": 1
+        },
+        "epgs": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3,
+          "grace": 4
+        },
+        "sources": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "low",
+              "priority": 1
+            },
+            {
+              "key": "high",
+              "priority": 50
+            },
+            {
+              "key": "inactive",
+              "priority": 100,
+              "active": false
+            }
+          ],
+          "epgs": [
+            {
+              "key": "low",
+              "source": "low",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "high",
+              "source": "high",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "inactive",
+              "source": "inactive",
+              "tvg": "inactive.id",
+              "name": "Inactive"
+            },
+            {
+              "key": "grace",
+              "source": "high",
+              "tvg": "12345",
+              "name": "Grace"
+            }
+          ],
+          "name": "single-unchanged",
+          "kind": "single",
+          "channels": [
+            {
+              "key": "one",
+              "name": "Owned",
+              "tvg": "owned.id",
+              "assigned": "low"
+            }
+          ],
+          "expected": {
+            "one": "low"
+          }
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/1/match-epg/",
+        "request": {},
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "85"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching started for channel 'Owned'",
+          "accepted": true,
+          "channel_id": 1
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHN0YXJ0ZWQgZm9yIGNoYW5uZWwgJ093bmVkJyIsImFjY2VwdGVkIjp0cnVlLCJjaGFubmVsX2lkIjoxfQ=="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 0,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [],
+        "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+        "actual_response_keys": [
+          "accepted",
+          "channel_id",
+          "message"
+        ],
+        "backend_result_sha256": "7c4f88ab6137053606363d95cd472db154ac77053be80d1f464543d507eb5fa7",
+        "backend_result_type": "dict",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [],
+        "manual_group_custom_after": false,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "single_channel_epg_match"
+        ],
+        "name": "single-unchanged",
+        "output_cache_generation_after": null,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "181979ad07319aa9df2d779f11c1651316e6d479db82f2ae37e814c9e67989ba",
+        "root_task": "apps.channels.tasks.match_single_channel_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "825f5101370e1f439c01935a1a5c5eef18c233d37891412ad01e8cb32a132ba7"
+    },
+    {
+      "case_name": "single-exact-nameless-catalog",
+      "source_index": 5,
+      "frame": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_single_channel_epg",
+          "id": "050317bb-26de-4fdd-ac2b-1179aed0eb6c",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "050317bb-26de-4fdd-ac2b-1179aed0eb6c",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "050317bb-26de-4fdd-ac2b-1179aed0eb6c",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "ecedbbbf-e8fc-449a-99e4-b2b1c7d2c5df"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": {
+          "matched": true,
+          "message": "Channel 'TV' matched with EPG '' (matched via: owned.nameless)",
+          "epg_name": "",
+          "epg_id": 1
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T11:49:31.361643+00:00",
+        "task_id": "050317bb-26de-4fdd-ac2b-1179aed0eb6c"
+      },
+      "setup": {
+        "channels": {
+          "one": 1
+        },
+        "epgs": {
+          "nameless": 1
+        },
+        "sources": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "low",
+              "priority": 1
+            },
+            {
+              "key": "high",
+              "priority": 50
+            },
+            {
+              "key": "inactive",
+              "priority": 100,
+              "active": false
+            }
+          ],
+          "epgs": [
+            {
+              "key": "nameless",
+              "source": "high",
+              "tvg": "owned.nameless",
+              "name": ""
+            }
+          ],
+          "name": "single-exact-nameless-catalog",
+          "kind": "single",
+          "channels": [
+            {
+              "key": "one",
+              "name": "TV",
+              "tvg": "owned.nameless"
+            }
+          ],
+          "expected": {
+            "one": "nameless"
+          }
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/1/match-epg/",
+        "request": {},
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "82"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching started for channel 'TV'",
+          "accepted": true,
+          "channel_id": 1
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHN0YXJ0ZWQgZm9yIGNoYW5uZWwgJ1RWJyIsImFjY2VwdGVkIjp0cnVlLCJjaGFubmVsX2lkIjoxfQ=="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 1,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [],
+        "actual_response_body_sha256": "ad1492badc8508d3d416a1e8b146c3271d661c309d151a31d2a9be8a0ea2cd46",
+        "actual_response_keys": [
+          "accepted",
+          "channel_id",
+          "message"
+        ],
+        "backend_result_sha256": "d5eb4b4d5596487484f45d3234433cf37d38e0af75b9bb0b098c8d6d1a77bffa",
+        "backend_result_type": "dict",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [],
+        "manual_group_custom_after": true,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "single_channel_epg_match"
+        ],
+        "name": "single-exact-nameless-catalog",
+        "output_cache_generation_after": 1,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "79b981a173eb9814e8c265e49d51e17d60d9dd72dfb56319ae52f751b8d04b53",
+        "root_task": "apps.channels.tasks.match_single_channel_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "069b687b3902f4f17c1c460629f5bf61e766f3027b37d9b6372f7015191e0a00"
+    },
+    {
+      "case_name": "single-no-match-no-model-needed",
+      "source_index": 7,
+      "frame": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_single_channel_epg",
+          "id": "9b4a2dfe-4291-4691-8392-b4fc57790b59",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "9b4a2dfe-4291-4691-8392-b4fc57790b59",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "9b4a2dfe-4291-4691-8392-b4fc57790b59",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "22639424-ba1b-4fa4-b1f4-96dcbef6838a"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": {
+          "matched": false,
+          "message": "No suitable EPG match found for channel 'TV'"
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T11:49:42.349540+00:00",
+        "task_id": "9b4a2dfe-4291-4691-8392-b4fc57790b59"
+      },
+      "setup": {
+        "channels": {
+          "one": 1
+        },
+        "epgs": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3,
+          "grace": 4
+        },
+        "sources": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "low",
+              "priority": 1
+            },
+            {
+              "key": "high",
+              "priority": 50
+            },
+            {
+              "key": "inactive",
+              "priority": 100,
+              "active": false
+            }
+          ],
+          "epgs": [
+            {
+              "key": "low",
+              "source": "low",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "high",
+              "source": "high",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "inactive",
+              "source": "inactive",
+              "tvg": "inactive.id",
+              "name": "Inactive"
+            },
+            {
+              "key": "grace",
+              "source": "high",
+              "tvg": "12345",
+              "name": "Grace"
+            }
+          ],
+          "name": "single-no-match-no-model-needed",
+          "kind": "single",
+          "channels": [
+            {
+              "key": "one",
+              "name": "TV"
+            }
+          ],
+          "expected": {
+            "one": null
+          }
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/1/match-epg/",
+        "request": {},
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "82"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching started for channel 'TV'",
+          "accepted": true,
+          "channel_id": 1
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHN0YXJ0ZWQgZm9yIGNoYW5uZWwgJ1RWJyIsImFjY2VwdGVkIjp0cnVlLCJjaGFubmVsX2lkIjoxfQ=="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 0,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [],
+        "actual_response_body_sha256": "ad1492badc8508d3d416a1e8b146c3271d661c309d151a31d2a9be8a0ea2cd46",
+        "actual_response_keys": [
+          "accepted",
+          "channel_id",
+          "message"
+        ],
+        "backend_result_sha256": "e2ca7e037b6d38b149c75870374c6b66fb359c2eb31ce504e40a6d34ab4e005b",
+        "backend_result_type": "dict",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [],
+        "manual_group_custom_after": false,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "single_channel_epg_match"
+        ],
+        "name": "single-no-match-no-model-needed",
+        "output_cache_generation_after": null,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "26e55b967cf7f710f1815bfa5ef3a7ef31d66313ee0c1201af0fd206cb36e180",
+        "root_task": "apps.channels.tasks.match_single_channel_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "eb1bf890293ecbfebcf1c66e2267705fe0e8739b05a916b2397e421e4ed29b04"
+    },
+    {
+      "case_name": "single-caught-SQL-failure",
+      "source_index": 8,
+      "frame": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_single_channel_epg",
+          "id": "282f2e14-2b2c-4f7e-b926-85eb00a29c83",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "282f2e14-2b2c-4f7e-b926-85eb00a29c83",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "282f2e14-2b2c-4f7e-b926-85eb00a29c83",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "d7915f5f-cfe6-4452-b235-107d151548ec"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": {
+          "matched": false,
+          "message": "Error during matching: owned-matching-failure\nCONTEXT:  PL/pgSQL function owned_matching_failure() line 1 at RAISE"
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T11:49:48.570139+00:00",
+        "task_id": "282f2e14-2b2c-4f7e-b926-85eb00a29c83"
+      },
+      "setup": {
+        "channels": {
+          "one": 1
+        },
+        "epgs": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3,
+          "grace": 4
+        },
+        "sources": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "low",
+              "priority": 1
+            },
+            {
+              "key": "high",
+              "priority": 50
+            },
+            {
+              "key": "inactive",
+              "priority": 100,
+              "active": false
+            }
+          ],
+          "epgs": [
+            {
+              "key": "low",
+              "source": "low",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "high",
+              "source": "high",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "inactive",
+              "source": "inactive",
+              "tvg": "inactive.id",
+              "name": "Inactive"
+            },
+            {
+              "key": "grace",
+              "source": "high",
+              "tvg": "12345",
+              "name": "Grace"
+            }
+          ],
+          "name": "single-caught-SQL-failure",
+          "kind": "single",
+          "channels": [
+            {
+              "key": "one",
+              "name": "Owned",
+              "tvg": "owned.id"
+            }
+          ],
+          "expected": {
+            "one": null
+          },
+          "failure": true
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/1/match-epg/",
+        "request": {},
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "85"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching started for channel 'Owned'",
+          "accepted": true,
+          "channel_id": 1
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHN0YXJ0ZWQgZm9yIGNoYW5uZWwgJ093bmVkJyIsImFjY2VwdGVkIjp0cnVlLCJjaGFubmVsX2lkIjoxfQ=="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 0,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [],
+        "actual_response_body_sha256": "0e75e9f1d5c483a1892f7d24ef32f243d752f9d2174ff4da6f4189db21600adf",
+        "actual_response_keys": [
+          "accepted",
+          "channel_id",
+          "message"
+        ],
+        "backend_result_sha256": "c51e49f96dab9b9cd12408af3f87d25448e403371f8b3351ec6676400d913ac9",
+        "backend_result_type": "dict",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [],
+        "manual_group_custom_after": false,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "single_channel_epg_match"
+        ],
+        "name": "single-caught-SQL-failure",
+        "output_cache_generation_after": null,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "646f58a88c9da60e93a378aa9d97d62ef5e46c37261d3db68ba4c8821d383698",
+        "root_task": "apps.channels.tasks.match_single_channel_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "0e3cd5a4ec16b9131793f0ec99764b926a6bb729dcfbb464fbdb5f7b95a7e0e6"
+    },
+    {
+      "case_name": "selected-SQL-failure-and-following-continuation",
+      "source_index": 9,
+      "frame": {
+        "body": "W1tbMV1dLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_selected_channels_epg",
+          "id": "4916a75b-aa5b-4e2e-b619-793b29e39cdb",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "4916a75b-aa5b-4e2e-b619-793b29e39cdb",
+          "parent_id": null,
+          "argsrepr": "([1],)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "4916a75b-aa5b-4e2e-b619-793b29e39cdb",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "72e8cf21-9f49-417d-8de4-e65da99a2afe"
+        }
+      },
+      "backend": {
+        "status": "FAILURE",
+        "result": "owned-matching-failure\nCONTEXT:  PL/pgSQL function owned_matching_failure() line 1 at RAISE",
+        "traceback": "Traceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\npsycopg.errors.RaiseException: owned-matching-failure\nCONTEXT:  PL/pgSQL function owned_matching_failure() line 1 at RAISE\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 585, in trace_task\n    R = retval = fun(*args, **kwargs)\n                 ~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/celery/app/trace.py\", line 858, in __protected_call__\n    return self.run(*args, **kwargs)\n           ~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/app/apps/channels/tasks.py\", line 420, in match_selected_channels_epg\n    changed_associations = apply_matched_epg_to_channels(channels_to_update_dicts)\n  File \"/app/apps/channels/epg_matching.py\", line 417, in apply_matched_epg_to_channels\n    Channel.objects.bulk_update(channels_to_bulk, [\"epg_data\"])\n    ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/manager.py\", line 87, in manager_method\n    return getattr(self.get_queryset(), name)(*args, **kwargs)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 963, in bulk_update\n    rows_updated += queryset.filter(pk__in=pks).update(**update_kwargs)\n                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/query.py\", line 1300, in update\n    rows = query.get_compiler(self.db).execute_sql(ROW_COUNT)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 2111, in execute_sql\n    row_count = super().execute_sql(result_type)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/models/sql/compiler.py\", line 1624, in execute_sql\n    cursor.execute(sql, params)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 79, in execute\n    return self._execute_with_wrappers(\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~^\n        sql, params, many=False, executor=self._execute\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 92, in _execute_with_wrappers\n    return executor(sql, params, many, context)\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 100, in _execute\n    with self.db.wrap_database_errors:\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/utils.py\", line 94, in __exit__\n    raise dj_exc_value.with_traceback(traceback) from exc_value\n  File \"/dispatcharrpy/lib/python3.13/site-packages/django/db/backends/utils.py\", line 105, in _execute\n    return self.cursor.execute(sql, params)\n           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^\n  File \"/dispatcharrpy/lib/python3.13/site-packages/psycopg/cursor.py\", line 117, in execute\n    raise ex.with_traceback(None)\ndjango.db.utils.ProgrammingError: owned-matching-failure\nCONTEXT:  PL/pgSQL function owned_matching_failure() line 1 at RAISE\n",
+        "children": [],
+        "date_done": "2026-11-16T11:49:55.438408+00:00",
+        "task_id": "4916a75b-aa5b-4e2e-b619-793b29e39cdb"
+      },
+      "setup": {
+        "channels": {
+          "one": 1
+        },
+        "epgs": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3,
+          "grace": 4
+        },
+        "sources": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "low",
+              "priority": 1
+            },
+            {
+              "key": "high",
+              "priority": 50
+            },
+            {
+              "key": "inactive",
+              "priority": 100,
+              "active": false
+            }
+          ],
+          "epgs": [
+            {
+              "key": "low",
+              "source": "low",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "high",
+              "source": "high",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "inactive",
+              "source": "inactive",
+              "tvg": "inactive.id",
+              "name": "Inactive"
+            },
+            {
+              "key": "grace",
+              "source": "high",
+              "tvg": "12345",
+              "name": "Grace"
+            }
+          ],
+          "name": "selected-SQL-failure-and-following-continuation",
+          "kind": "selected",
+          "channels": [
+            {
+              "key": "one",
+              "name": "Owned",
+              "tvg": "owned.id"
+            }
+          ],
+          "expected": {
+            "one": null
+          },
+          "failure": true
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/match-epg/",
+        "request": {
+          "channel_ids": [
+            1
+          ]
+        },
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "68"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching task initiated for 1 selected channel(s)."
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHRhc2sgaW5pdGlhdGVkIGZvciAxIHNlbGVjdGVkIGNoYW5uZWwocykuIn0="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 0,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [],
+        "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+        "actual_response_keys": [
+          "message"
+        ],
+        "backend_result_sha256": "51ad5ad6ef13c2b665b9820435ec3ac1ea921ec0da677db727cf3bec4ab8fba6",
+        "backend_result_type": "str",
+        "backend_status": "FAILURE",
+        "child_terminal_statuses": [],
+        "manual_group_custom_after": false,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_matching_progress"
+        ],
+        "name": "selected-SQL-failure-and-following-continuation",
+        "output_cache_generation_after": null,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "d8d41df318bf369776eafb1b7069a200e65d5b616932fb037d4d69ca4d4202a6",
+        "root_task": "apps.channels.tasks.match_selected_channels_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "bdd462221ff1884cc003d061acbf347e63ce223b37058696cce1fccce24b8ca7"
+    },
+    {
+      "case_name": "single-high-confidence-normalization",
+      "source_index": 10,
+      "frame": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_single_channel_epg",
+          "id": "7ca59684-e2d4-42b8-986e-57aca5936e70",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "7ca59684-e2d4-42b8-986e-57aca5936e70",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "7ca59684-e2d4-42b8-986e-57aca5936e70",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "5f3926fb-9f82-40f8-a499-127c3cd0ae81"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": {
+          "matched": true,
+          "message": "Channel 'HD:Owned Plus East 4K' matched with EPG 'Owned' (matched via: owned.id)",
+          "epg_name": "Owned",
+          "epg_id": 2
+        },
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T11:50:01.652936+00:00",
+        "task_id": "7ca59684-e2d4-42b8-986e-57aca5936e70"
+      },
+      "setup": {
+        "channels": {
+          "one": 1
+        },
+        "epgs": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3,
+          "grace": 4
+        },
+        "sources": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "low",
+              "priority": 1
+            },
+            {
+              "key": "high",
+              "priority": 50
+            },
+            {
+              "key": "inactive",
+              "priority": 100,
+              "active": false
+            }
+          ],
+          "epgs": [
+            {
+              "key": "low",
+              "source": "low",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "high",
+              "source": "high",
+              "tvg": "owned.id",
+              "name": "Owned"
+            },
+            {
+              "key": "inactive",
+              "source": "inactive",
+              "tvg": "inactive.id",
+              "name": "Inactive"
+            },
+            {
+              "key": "grace",
+              "source": "high",
+              "tvg": "12345",
+              "name": "Grace"
+            }
+          ],
+          "name": "single-high-confidence-normalization",
+          "kind": "single",
+          "channels": [
+            {
+              "key": "one",
+              "name": "HD:Owned Plus East 4K"
+            }
+          ],
+          "expected": {
+            "one": "high"
+          },
+          "settings": {
+            "epg_match_mode": "advanced",
+            "epg_match_ignore_prefixes": [
+              "HD:"
+            ],
+            "epg_match_ignore_suffixes": [
+              " 4K"
+            ],
+            "epg_match_ignore_custom": [
+              "Plus"
+            ]
+          }
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/1/match-epg/",
+        "request": {},
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "101"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching started for channel 'HD:Owned Plus East 4K'",
+          "accepted": true,
+          "channel_id": 1
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHN0YXJ0ZWQgZm9yIGNoYW5uZWwgJ0hEOk93bmVkIFBsdXMgRWFzdCA0SyciLCJhY2NlcHRlZCI6dHJ1ZSwiY2hhbm5lbF9pZCI6MX0="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 1,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [],
+        "actual_response_body_sha256": "0f51162dfcbdd704dde3017d3a8d541d3f3d370468555d178fcdfec022a32c36",
+        "actual_response_keys": [
+          "accepted",
+          "channel_id",
+          "message"
+        ],
+        "backend_result_sha256": "244f8f957ca3de75382611f398a2c291de2e34a0691ed6981d1b74024157f490",
+        "backend_result_type": "dict",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [],
+        "manual_group_custom_after": true,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "single_channel_epg_match"
+        ],
+        "name": "single-high-confidence-normalization",
+        "output_cache_generation_after": 1,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "fae7655daeb2a4983c7e92bebd50c5c578f2e4716b4c3f2e14456836dd3356e3",
+        "root_task": "apps.channels.tasks.match_single_channel_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "d34f4f5aa0a434a9c7bc7a51e4bd02ed1108f43ba5ef25dfa7529cf0c7fcc9b1"
+    },
+    {
+      "case_name": "selected-region-priority-fuzzy",
+      "source_index": 11,
+      "frame": {
+        "body": "W1tbMV1dLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_selected_channels_epg",
+          "id": "542cb98b-af04-459a-bf9f-e04dd338c401",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "542cb98b-af04-459a-bf9f-e04dd338c401",
+          "parent_id": null,
+          "argsrepr": "([1],)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "542cb98b-af04-459a-bf9f-e04dd338c401",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "76ff1c42-525c-4a3b-9c1f-7df22fbe9c05"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Done. 1 selected channel(s) updated (0 unchanged).",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T11:50:07.052853+00:00",
+        "task_id": "542cb98b-af04-459a-bf9f-e04dd338c401"
+      },
+      "setup": {
+        "channels": {
+          "one": 1
+        },
+        "epgs": {
+          "gb": 1,
+          "us": 2
+        },
+        "sources": {
+          "low": 1,
+          "high": 2,
+          "inactive": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "low",
+              "priority": 1
+            },
+            {
+              "key": "high",
+              "priority": 50
+            },
+            {
+              "key": "inactive",
+              "priority": 100,
+              "active": false
+            }
+          ],
+          "epgs": [
+            {
+              "key": "gb",
+              "source": "high",
+              "tvg": "owned.gb",
+              "name": "Owned"
+            },
+            {
+              "key": "us",
+              "source": "low",
+              "tvg": "owned.us",
+              "name": "Owned"
+            }
+          ],
+          "name": "selected-region-priority-fuzzy",
+          "kind": "selected",
+          "channels": [
+            {
+              "key": "one",
+              "name": "Owned"
+            }
+          ],
+          "expected": {
+            "one": "us"
+          },
+          "region": "us"
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/match-epg/",
+        "request": {
+          "channel_ids": [
+            1
+          ]
+        },
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "68"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching task initiated for 1 selected channel(s)."
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHRhc2sgaW5pdGlhdGVkIGZvciAxIHNlbGVjdGVkIGNoYW5uZWwocykuIn0="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 1,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [],
+        "actual_response_body_sha256": "cc34df16427bc9bae034035ff63430adc94f71eac1f7126753bf2d1be57e94d1",
+        "actual_response_keys": [
+          "message"
+        ],
+        "backend_result_sha256": "4f5f54d403a47b754c811c3a74f72b6bbcfbb74e7260ec74b846f02fb9aece9c",
+        "backend_result_type": "str",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [],
+        "manual_group_custom_after": false,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_match"
+        ],
+        "name": "selected-region-priority-fuzzy",
+        "output_cache_generation_after": null,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "593b5e15b0a7bd2cab50f31b7f514428315f5cfa3f812c94a8e80b8b304e1d67",
+        "root_task": "apps.channels.tasks.match_selected_channels_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "21c7c1cf694321b0e3566cdbf0cc1e614194c8346888736f8487c609cffba8b6"
+    },
+    {
+      "case_name": "selected-mixed-SD-batch-XML-dummy",
+      "source_index": 12,
+      "frame": {
+        "body": "W1tbMSwgMiwgMywgNCwgNV1dLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_selected_channels_epg",
+          "id": "141d7b66-b38d-4b5b-9981-bbbc1dc85364",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "141d7b66-b38d-4b5b-9981-bbbc1dc85364",
+          "parent_id": null,
+          "argsrepr": "([1, 2, 3, 4, 5],)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "141d7b66-b38d-4b5b-9981-bbbc1dc85364",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "ea88b989-75a2-4731-953b-6eacbd70427e"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Done. 5 selected channel(s) updated (0 unchanged).",
+        "traceback": null,
+        "children": [
+          [
+            [
+              "01aa878a-6151-4240-8311-04f84709ea91",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "55c07d88-011c-46ca-b3b1-42643b9a7e4c",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-16T11:50:12.570630+00:00",
+        "task_id": "141d7b66-b38d-4b5b-9981-bbbc1dc85364"
+      },
+      "setup": {
+        "channels": {
+          "sd0": 1,
+          "sd1": 2,
+          "sd2": 3,
+          "xml": 4,
+          "dummy": 5
+        },
+        "epgs": {
+          "sd0": 1,
+          "sd1": 2,
+          "sd2": 3,
+          "xml": 4,
+          "dummy": 5
+        },
+        "sources": {
+          "sd": 1,
+          "xml": 2,
+          "dummy": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "sd",
+              "type": "schedules_direct"
+            },
+            {
+              "key": "xml",
+              "type": "xmltv"
+            },
+            {
+              "key": "dummy"
+            }
+          ],
+          "epgs": [
+            {
+              "key": "sd0",
+              "source": "sd",
+              "tvg": "sd.0",
+              "name": "SD 0"
+            },
+            {
+              "key": "sd1",
+              "source": "sd",
+              "tvg": "sd.1",
+              "name": "SD 1"
+            },
+            {
+              "key": "sd2",
+              "source": "sd",
+              "tvg": "sd.2",
+              "name": "SD 2"
+            },
+            {
+              "key": "xml",
+              "source": "xml",
+              "tvg": "xml.id",
+              "name": "XML"
+            },
+            {
+              "key": "dummy",
+              "source": "dummy",
+              "tvg": "dummy.id",
+              "name": "Dummy"
+            }
+          ],
+          "name": "selected-mixed-SD-batch-XML-dummy",
+          "kind": "selected",
+          "channels": [
+            {
+              "key": "sd0",
+              "name": "SD 0",
+              "tvg": "sd.0"
+            },
+            {
+              "key": "sd1",
+              "name": "SD 1",
+              "tvg": "sd.1"
+            },
+            {
+              "key": "sd2",
+              "name": "SD 2",
+              "tvg": "sd.2"
+            },
+            {
+              "key": "xml",
+              "name": "XML",
+              "tvg": "xml.id"
+            },
+            {
+              "key": "dummy",
+              "name": "Dummy",
+              "tvg": "dummy.id"
+            }
+          ],
+          "expected": {
+            "sd0": "sd0",
+            "sd1": "sd1",
+            "sd2": "sd2",
+            "xml": "xml",
+            "dummy": "dummy"
+          },
+          "children": "bulk-sd"
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/match-epg/",
+        "request": {
+          "channel_ids": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "68"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching task initiated for 5 selected channel(s)."
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHRhc2sgaW5pdGlhdGVkIGZvciA1IHNlbGVjdGVkIGNoYW5uZWwocykuIn0="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 5,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [
+          "apps.epg.tasks.parse_programs_for_tvg_id",
+          "apps.epg.tasks.fetch_sd_mapped_guide_batch"
+        ],
+        "actual_response_body_sha256": "e8fafec6cb54093cfaa676c9cfc71dd8131f4f7e05e0655b52ecf28e944cf08f",
+        "actual_response_keys": [
+          "message"
+        ],
+        "backend_result_sha256": "4221bb3a88e3cbdad7b31f84b528ec257a7a52b997759b270244f92c4d005869",
+        "backend_result_type": "str",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [
+          "SUCCESS",
+          "SUCCESS"
+        ],
+        "manual_group_custom_after": false,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "epg_match"
+        ],
+        "name": "selected-mixed-SD-batch-XML-dummy",
+        "output_cache_generation_after": null,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "96d0a7ee45c019b4438fa8774b9a3260c61c4d92819a1a33a33a51f5df9705c5",
+        "root_task": "apps.channels.tasks.match_selected_channels_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "9deb6a89e3fb34cfdf4fc242895904466d32e600635f5f27ed9f9cb198daf462"
+    },
+    {
+      "case_name": "single-SD-direct-parse-cache-group",
+      "source_index": 13,
+      "frame": {
+        "body": "W1sxXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.channels.tasks.match_single_channel_epg",
+          "id": "2ba3db44-9bf3-48dd-b162-51ca4e70d330",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "2ba3db44-9bf3-48dd-b162-51ca4e70d330",
+          "parent_id": null,
+          "argsrepr": "(1,)",
+          "kwargsrepr": "{}",
+          "origin": "gen330@f1f413c799ba",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "2ba3db44-9bf3-48dd-b162-51ca4e70d330",
+          "reply_to": "661d35df-0d31-3cce-91c0-8f81d8a64132",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "5f515e77-4d21-4571-8313-2672e1280a15"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": {
+          "matched": true,
+          "message": "Channel 'SD' matched with EPG 'SD 0' (matched via: sd.0)",
+          "epg_name": "SD 0",
+          "epg_id": 1
+        },
+        "traceback": null,
+        "children": [
+          [
+            [
+              "d9b2dbaa-845a-4931-a9fb-82426fb5ac9e",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-16T11:50:19.533570+00:00",
+        "task_id": "2ba3db44-9bf3-48dd-b162-51ca4e70d330"
+      },
+      "setup": {
+        "channels": {
+          "one": 1
+        },
+        "epgs": {
+          "sd0": 1,
+          "sd1": 2,
+          "sd2": 3,
+          "xml": 4,
+          "dummy": 5
+        },
+        "sources": {
+          "sd": 1,
+          "xml": 2,
+          "dummy": 3
+        },
+        "group_id": 3,
+        "declared": {
+          "sources": [
+            {
+              "key": "sd",
+              "type": "schedules_direct"
+            },
+            {
+              "key": "xml",
+              "type": "xmltv"
+            },
+            {
+              "key": "dummy"
+            }
+          ],
+          "epgs": [
+            {
+              "key": "sd0",
+              "source": "sd",
+              "tvg": "sd.0",
+              "name": "SD 0"
+            },
+            {
+              "key": "sd1",
+              "source": "sd",
+              "tvg": "sd.1",
+              "name": "SD 1"
+            },
+            {
+              "key": "sd2",
+              "source": "sd",
+              "tvg": "sd.2",
+              "name": "SD 2"
+            },
+            {
+              "key": "xml",
+              "source": "xml",
+              "tvg": "xml.id",
+              "name": "XML"
+            },
+            {
+              "key": "dummy",
+              "source": "dummy",
+              "tvg": "dummy.id",
+              "name": "Dummy"
+            }
+          ],
+          "name": "single-SD-direct-parse-cache-group",
+          "kind": "single",
+          "channels": [
+            {
+              "key": "one",
+              "name": "SD",
+              "tvg": "sd.0"
+            }
+          ],
+          "expected": {
+            "one": "sd0"
+          },
+          "children": "single-sd"
+        }
+      },
+      "producer_HTTP": {
+        "status": 202,
+        "path": "/api/channels/channels/1/match-epg/",
+        "request": {},
+        "headers": [
+          [
+            "Content-Type",
+            "application/json"
+          ],
+          [
+            "Vary",
+            "Accept, origin"
+          ],
+          [
+            "Allow",
+            "POST, OPTIONS"
+          ],
+          [
+            "X-Frame-Options",
+            "DENY"
+          ],
+          [
+            "Content-Length",
+            "82"
+          ],
+          [
+            "X-Content-Type-Options",
+            "nosniff"
+          ],
+          [
+            "Referrer-Policy",
+            "same-origin"
+          ],
+          [
+            "Cross-Origin-Opener-Policy",
+            "same-origin"
+          ]
+        ],
+        "reply": {
+          "message": "EPG matching started for channel 'SD'",
+          "accepted": true,
+          "channel_id": 1
+        },
+        "raw_body_base64": "eyJtZXNzYWdlIjoiRVBHIG1hdGNoaW5nIHN0YXJ0ZWQgZm9yIGNoYW5uZWwgJ1NEJyIsImFjY2VwdGVkIjp0cnVlLCJjaGFubmVsX2lkIjoxfQ=="
+      },
+      "actual_Source_case": {
+        "DB1_journal_terminal_durable": true,
+        "actual_HTTP_status": 202,
+        "actual_changed_assignments": 1,
+        "actual_child_parent_and_root_match": true,
+        "actual_direct_child_tasks": [
+          "apps.epg.tasks.parse_programs_for_tvg_id"
+        ],
+        "actual_response_body_sha256": "2dddb2878828e9f3da37f3547940a9d48a9c158a82c47bdbf9884faecb3a30e8",
+        "actual_response_keys": [
+          "accepted",
+          "channel_id",
+          "message"
+        ],
+        "backend_result_sha256": "28001d004a76e2c49d01b26f1212ca58505be572ca19e48a666f526317647002",
+        "backend_result_type": "dict",
+        "backend_status": "SUCCESS",
+        "child_terminal_statuses": [
+          "SUCCESS"
+        ],
+        "manual_group_custom_after": true,
+        "matching_event_types": [
+          "epg_matching_progress",
+          "epg_matching_progress",
+          "single_channel_epg_match"
+        ],
+        "name": "single-SD-direct-parse-cache-group",
+        "output_cache_generation_after": 1,
+        "output_cache_generation_before": null,
+        "raw_full_values_published": false,
+        "root_frame_sha256": "072aeaaa14df48c7abf8a3ac43bd3b5b4efbcefdafe0aec3df2bddcf7585285e",
+        "root_task": "apps.channels.tasks.match_single_channel_epg",
+        "status": "passed"
+      },
+      "raw_case_sha256": "e7cbfbe3f0692c46e73913c3af4298cd6d108d14056bed0012f2c435825b680f"
+    }
+  ],
+  "aggregate": [
+    {
+      "case_name": "natural-POST-zero-active",
+      "source_index": 0,
+      "frame": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.m3u.tasks.refresh_m3u_accounts",
+          "id": "1afbe401-6f1c-4e10-a34c-77b87110853b",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "1afbe401-6f1c-4e10-a34c-77b87110853b",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen336@8d7248318da2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "1afbe401-6f1c-4e10-a34c-77b87110853b",
+          "reply_to": "34c5a8b1-42a6-314e-b4ed-002319460767",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "2923d58d-5cc3-4629-8326-0e2a31e487b0"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Queued M3U refresh for 0 active account(s).",
+        "traceback": null,
+        "children": [],
+        "date_done": "2026-11-16T14:04:02.638680+00:00",
+        "task_id": "1afbe401-6f1c-4e10-a34c-77b87110853b"
+      },
+      "actual_Source_case": {
+        "actual_HTTP_body": {
+          "message": "M3U refresh initiated.",
+          "success": true
+        },
+        "actual_HTTP_status": 202,
+        "actual_M3U_updates": 0,
+        "actual_child_backend_result_hashes": [],
+        "actual_child_backend_result_values": [],
+        "actual_child_backend_statuses": [],
+        "actual_direct_children": 0,
+        "actual_journal_terminal": {
+          "complete_all_database_journal": false,
+          "database_filter": 1,
+          "terminal_barrier_fsynced": true,
+          "terminal_barrier_observed": true,
+          "thread_settled": true,
+          "writer_closed": true
+        },
+        "actual_parent_backend_status": "SUCCESS",
+        "actual_parent_result": "Queued M3U refresh for 0 active account(s).",
+        "actual_root_parent_and_child_lineage_assertions_passed": true,
+        "actual_update_group_payload_count": 0,
+        "child_account_membership_count": 0,
+        "child_tasks": "apps.m3u.tasks.refresh_single_m3u_account",
+        "durable_DB1_journal_sha256": "d4fef3becebfb02abc04449808f9ccc5867e3729b35c80e8d8cd632218ecc63e",
+        "name": "natural-POST-zero-active",
+        "parent_children_trail_matches_actual_publication_order": true,
+        "raw_phase_authority": {
+          "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/natural-POST-zero-active-actual.json",
+          "sha256": "4541bdbbaaa7d9f961870a9f1df8b719e8ecb5c9a0aa7ac12718e7463114d467"
+        },
+        "status": "passed",
+        "updates_are_Channels_group_observations_not_browser_WS": true
+      },
+      "actual_root": "1afbe401-6f1c-4e10-a34c-77b87110853b",
+      "actual_direct_child_ids": [],
+      "raw_member_sha256": {
+        "durable-journal": "533615e3abc4b844e4fd7ddd83a96d8458d5e01c899c8dfb216ecf515c02a94a",
+        "parent-backend": "6bec93dbf87e77fd16da8953ecb7a52deb332ec9242230cfcce9de1144e3fb6c"
+      }
+    },
+    {
+      "case_name": "natural-POST-local-STD-whole-children",
+      "source_index": 1,
+      "frame": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.m3u.tasks.refresh_m3u_accounts",
+          "id": "ba1e9615-078d-42d4-b46a-9237ba5737fc",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "ba1e9615-078d-42d4-b46a-9237ba5737fc",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen336@8d7248318da2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "ba1e9615-078d-42d4-b46a-9237ba5737fc",
+          "reply_to": "34c5a8b1-42a6-314e-b4ed-002319460767",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "c4c5e18b-4465-4f1f-bdf3-0cfb4eff65cd"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Queued M3U refresh for 2 active account(s).",
+        "traceback": null,
+        "children": [
+          [
+            [
+              "917ca97e-c28c-4fcc-832f-cad9cb9c2d12",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "a74fa596-05ea-4235-a69b-39d28945da54",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-16T14:04:08.404000+00:00",
+        "task_id": "ba1e9615-078d-42d4-b46a-9237ba5737fc"
+      },
+      "actual_Source_case": {
+        "actual_HTTP_body": {
+          "message": "M3U refresh initiated.",
+          "success": true
+        },
+        "actual_HTTP_status": 202,
+        "actual_M3U_updates": 6,
+        "actual_child_backend_result_hashes": [
+          "944b79efa1f030fe3a06b1a7a70b3952bb7a0cf2b461cc716c7389a1e9359692",
+          "944b79efa1f030fe3a06b1a7a70b3952bb7a0cf2b461cc716c7389a1e9359692"
+        ],
+        "actual_child_backend_result_values": [
+          "Dispatched jobs complete.",
+          "Dispatched jobs complete."
+        ],
+        "actual_child_backend_statuses": [
+          "SUCCESS",
+          "SUCCESS"
+        ],
+        "actual_direct_children": 2,
+        "actual_journal_terminal": {
+          "complete_all_database_journal": false,
+          "database_filter": 1,
+          "terminal_barrier_fsynced": true,
+          "terminal_barrier_observed": true,
+          "thread_settled": true,
+          "writer_closed": true
+        },
+        "actual_parent_backend_status": "SUCCESS",
+        "actual_parent_result": "Queued M3U refresh for 2 active account(s).",
+        "actual_root_parent_and_child_lineage_assertions_passed": true,
+        "actual_update_group_payload_count": 6,
+        "child_account_membership_count": 2,
+        "child_tasks": "apps.m3u.tasks.refresh_single_m3u_account",
+        "durable_DB1_journal_sha256": "cfb0f7fe6d5de25b1f0df2addc3bdeef11b39999068cb7a77af5f2a28b075c4e",
+        "name": "natural-POST-local-STD-whole-children",
+        "parent_children_trail_matches_actual_publication_order": true,
+        "raw_phase_authority": {
+          "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/natural-POST-local-STD-whole-children-actual.json",
+          "sha256": "c5cbe7693b953bfaedc55e76c015b85be898e594c910e97d835cfc9e57801fc0"
+        },
+        "status": "passed",
+        "updates_are_Channels_group_observations_not_browser_WS": true
+      },
+      "actual_root": "ba1e9615-078d-42d4-b46a-9237ba5737fc",
+      "actual_direct_child_ids": [
+        "917ca97e-c28c-4fcc-832f-cad9cb9c2d12",
+        "a74fa596-05ea-4235-a69b-39d28945da54"
+      ],
+      "raw_member_sha256": {
+        "durable-journal": "d6edd52438bd9c1a7df8a58afe6c318e7c3dcab5beee4dc9b62ac86a7ba738f4",
+        "parent-backend": "74a3f2723e9e19082a8b11a2803e924b6f33338c65ee2b0a1f4e7401bacddfde"
+      }
+    },
+    {
+      "case_name": "natural-POST-XC-caught-error-readonly-cache-miss",
+      "source_index": 2,
+      "frame": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.m3u.tasks.refresh_m3u_accounts",
+          "id": "6d8c6722-42ae-4ec3-8e19-742749e454fc",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "6d8c6722-42ae-4ec3-8e19-742749e454fc",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen336@8d7248318da2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "6d8c6722-42ae-4ec3-8e19-742749e454fc",
+          "reply_to": "34c5a8b1-42a6-314e-b4ed-002319460767",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "884f5213-210a-4895-998f-f285e27d57ec"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Queued M3U refresh for 1 active account(s).",
+        "traceback": null,
+        "children": [
+          [
+            [
+              "aebfd1c0-1a27-4009-a4df-43f7b11edd7e",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-16T14:04:16.182142+00:00",
+        "task_id": "6d8c6722-42ae-4ec3-8e19-742749e454fc"
+      },
+      "actual_Source_case": {
+        "actual_HTTP_body": {
+          "message": "M3U refresh initiated.",
+          "success": true
+        },
+        "actual_HTTP_status": 202,
+        "actual_M3U_updates": 1,
+        "actual_child_backend_result_hashes": [
+          "5066143c689ae5c6f14e65f00d3850947288e5cd7db0fa23ebb0e716cdafccf6"
+        ],
+        "actual_child_backend_result_values": [
+          "Failed to update m3u account - download failed or other error"
+        ],
+        "actual_child_backend_statuses": [
+          "SUCCESS"
+        ],
+        "actual_direct_children": 1,
+        "actual_journal_terminal": {
+          "complete_all_database_journal": true,
+          "database_filter": null,
+          "terminal_barrier_fsynced": true,
+          "terminal_barrier_observed": true,
+          "thread_settled": true,
+          "writer_closed": true
+        },
+        "actual_parent_backend_status": "SUCCESS",
+        "actual_parent_result": "Queued M3U refresh for 1 active account(s).",
+        "actual_root_parent_and_child_lineage_assertions_passed": true,
+        "actual_update_group_payload_count": 1,
+        "child_account_membership_count": 1,
+        "child_tasks": "apps.m3u.tasks.refresh_single_m3u_account",
+        "durable_DB1_journal_sha256": "28e3a4e8e27e9290d91dfcae0e2e99dfa4f58a86ba3c5d4691d869ff918fba85",
+        "name": "natural-POST-XC-caught-error-readonly-cache-miss",
+        "parent_children_trail_matches_actual_publication_order": true,
+        "raw_phase_authority": {
+          "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/natural-POST-XC-caught-error-readonly-cache-miss-actual.json",
+          "sha256": "bd75327bd595a0d31ecaa38238306dfb623541289958a792e39d6e09f20924be"
+        },
+        "status": "passed",
+        "updates_are_Channels_group_observations_not_browser_WS": true
+      },
+      "actual_root": "6d8c6722-42ae-4ec3-8e19-742749e454fc",
+      "actual_direct_child_ids": [
+        "aebfd1c0-1a27-4009-a4df-43f7b11edd7e"
+      ],
+      "raw_member_sha256": {
+        "durable-journal": "1332dfc312399079b349214a95365e589a3772908664ba83c6d89c5316ddb64e",
+        "parent-backend": "27179684f425d739378395942f784ff029fbd729312adeba0551a3ae70f6e369"
+      }
+    },
+    {
+      "case_name": "natural-POST-mixed-Source-authority-or-Native-preclaim-refusal",
+      "source_index": 3,
+      "frame": {
+        "body": "W1tdLCB7fSwgeyJjYWxsYmFja3MiOiBudWxsLCAiZXJyYmFja3MiOiBudWxsLCAiY2hhaW4iOiBudWxsLCAiY2hvcmQiOiBudWxsfV0=",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "lang": "py",
+          "task": "apps.m3u.tasks.refresh_m3u_accounts",
+          "id": "7bbe264b-fc08-44ce-9141-8d1657a337c1",
+          "shadow": null,
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "retries": 0,
+          "timelimit": [
+            null,
+            null
+          ],
+          "root_id": "7bbe264b-fc08-44ce-9141-8d1657a337c1",
+          "parent_id": null,
+          "argsrepr": "()",
+          "kwargsrepr": "{}",
+          "origin": "gen336@8d7248318da2",
+          "ignore_result": false,
+          "replaced_task_nesting": 0,
+          "stamped_headers": null,
+          "stamps": {}
+        },
+        "properties": {
+          "correlation_id": "7bbe264b-fc08-44ce-9141-8d1657a337c1",
+          "reply_to": "34c5a8b1-42a6-314e-b4ed-002319460767",
+          "delivery_mode": 2,
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "priority": 0,
+          "body_encoding": "base64",
+          "delivery_tag": "e77d1123-0ce5-4ac1-a575-5ca314403307"
+        }
+      },
+      "backend": {
+        "status": "SUCCESS",
+        "result": "Queued M3U refresh for 2 active account(s).",
+        "traceback": null,
+        "children": [
+          [
+            [
+              "f6b4969b-10b0-4dd2-a098-ba9961d49cc1",
+              null
+            ],
+            null
+          ],
+          [
+            [
+              "00e9d575-9443-457e-86d9-109502a1cf20",
+              null
+            ],
+            null
+          ]
+        ],
+        "date_done": "2026-11-16T14:04:24.337051+00:00",
+        "task_id": "7bbe264b-fc08-44ce-9141-8d1657a337c1"
+      },
+      "actual_Source_case": {
+        "actual_HTTP_body": {
+          "message": "M3U refresh initiated.",
+          "success": true
+        },
+        "actual_HTTP_status": 202,
+        "actual_M3U_updates": 2,
+        "actual_child_backend_result_hashes": [
+          "5066143c689ae5c6f14e65f00d3850947288e5cd7db0fa23ebb0e716cdafccf6",
+          "5066143c689ae5c6f14e65f00d3850947288e5cd7db0fa23ebb0e716cdafccf6"
+        ],
+        "actual_child_backend_result_values": [
+          "Failed to update m3u account - download failed or other error",
+          "Failed to update m3u account - download failed or other error"
+        ],
+        "actual_child_backend_statuses": [
+          "SUCCESS",
+          "SUCCESS"
+        ],
+        "actual_direct_children": 2,
+        "actual_journal_terminal": {
+          "complete_all_database_journal": false,
+          "database_filter": 1,
+          "terminal_barrier_fsynced": true,
+          "terminal_barrier_observed": true,
+          "thread_settled": true,
+          "writer_closed": true
+        },
+        "actual_parent_backend_status": "SUCCESS",
+        "actual_parent_result": "Queued M3U refresh for 2 active account(s).",
+        "actual_root_parent_and_child_lineage_assertions_passed": true,
+        "actual_update_group_payload_count": 2,
+        "child_account_membership_count": 2,
+        "child_tasks": "apps.m3u.tasks.refresh_single_m3u_account",
+        "durable_DB1_journal_sha256": "f8968ef70598d52de2ece770be4321d3898902ad64f3b578cb41cedad1e1b4e6",
+        "name": "natural-POST-mixed-Source-authority-or-Native-preclaim-refusal",
+        "parent_children_trail_matches_actual_publication_order": true,
+        "raw_phase_authority": {
+          "path": "artifacts/rust/normal-graph-batch55-m3u-aggregate-source-1/fixtures/Original-87494eb9/m6-m3u-refresh-all/private/natural-POST-mixed-Source-authority-or-Native-preclaim-refusal-actual.json",
+          "sha256": "4963fd66e5fea116e71a6bc5efc0e4ddd410feb49056c6e9acd3a1673c8ef9fa"
+        },
+        "status": "passed",
+        "updates_are_Channels_group_observations_not_browser_WS": true
+      },
+      "actual_root": "7bbe264b-fc08-44ce-9141-8d1657a337c1",
+      "actual_direct_child_ids": [
+        "f6b4969b-10b0-4dd2-a098-ba9961d49cc1",
+        "00e9d575-9443-457e-86d9-109502a1cf20"
+      ],
+      "raw_member_sha256": {
+        "durable-journal": "f0e4a2016db1d5fb98c7fad703f019864a8d71bba4790f694ebcec47932d6a1f",
+        "parent-backend": "3ef16edfdaad71a0838ba263ee0fe0aab76019c172b9d0565f444a2cea8fbf37"
+      }
+    }
+  ],
+  "stations": [
+    {
+      "case_name": "natural-create-or-explicit-native-worker",
+      "source_index": 0,
+      "frame": {
+        "body": "W1szXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "argsrepr": "(3,)",
+          "eta": "2026-11-16T13:28:09.239622+00:00",
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "id": "6b697703-1d4b-4ff4-a6d2-883f372f0f49",
+          "ignore_result": false,
+          "kwargsrepr": "{}",
+          "lang": "py",
+          "origin": "gen356@4cfed8326237",
+          "parent_id": null,
+          "replaced_task_nesting": 0,
+          "retries": 0,
+          "root_id": "6b697703-1d4b-4ff4-a6d2-883f372f0f49",
+          "shadow": null,
+          "stamped_headers": null,
+          "stamps": {},
+          "task": "apps.epg.tasks.fetch_schedules_direct_stations",
+          "timelimit": [
+            null,
+            null
+          ]
+        },
+        "properties": {
+          "body_encoding": "base64",
+          "correlation_id": "6b697703-1d4b-4ff4-a6d2-883f372f0f49",
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "delivery_mode": 2,
+          "delivery_tag": "dba60efc-7362-456b-9282-92edc06b47dd",
+          "priority": 0,
+          "reply_to": "90c36858-a816-3678-b422-da1fcbf6b121"
+        }
+      },
+      "backend": {
+        "children": [],
+        "date_done": "2026-11-16T13:28:09.415512+00:00",
+        "result": null,
+        "status": "SUCCESS",
+        "task_id": "6b697703-1d4b-4ff4-a6d2-883f372f0f49",
+        "traceback": null
+      },
+      "actual_Source_case": {
+        "source_dataset": "Source53",
+        "source_index": 0,
+        "name": "natural-create-or-explicit-native-worker",
+        "record_authority": {
+          "path": "scripts/rust-integration/channel-stations-source53/report.json",
+          "sha256": "7bd689b89a8126d51b3dc065b5ba0ae9466ff602038ce1d8bb168035fbcabfe4"
+        },
+        "record_json_pointer": "/cases/0",
+        "record_sha256": "e1fe695d55616dd69148dfbf5fd7dfbe81fd229dd116e569fa56d32d66c4533c",
+        "method": "POST",
+        "role": "admin",
+        "actual_path": "/api/epg/sources/",
+        "actual_HTTP_status": 201,
+        "actual_response_body_keys": [
+          "created_at",
+          "cron_expression",
+          "custom_properties",
+          "epg_data_count",
+          "file_path",
+          "has_channels",
+          "id",
+          "is_active",
+          "last_message",
+          "name",
+          "priority",
+          "refresh_interval",
+          "source_type",
+          "status",
+          "updated_at",
+          "url",
+          "username"
+        ],
+        "actual_response_body_sha256": "9b6ea74d5ebb639f80dde03432944dc99493028330aa5592e49a15b02549902e",
+        "private_raw_HTTP_reference": {
+          "path": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/sd-station-discovery/private/creation-API.json",
+          "sha256": "6fc4d6aad169eddfcad06c27dc01b55d28e189423f8d39c9439a4751a508d259"
+        },
+        "actual_task_frame": {
+          "path": "scripts/rust-integration/channel-stations-source53/creation-actual-frame.json",
+          "sha256": "aa7a1915a32c1ceff70d2d0f7b5caba05c3f3456d268b2357ebe7fa3b6515a54"
+        },
+        "actual_backend": {
+          "path": "scripts/rust-integration/channel-stations-source53/creation-backend.json",
+          "sha256": "6576808085d269c5ec383e20dcd66386d7a83598cb0f4cb306ca98648b21d041"
+        },
+        "actual_root_task": "apps.epg.tasks.fetch_schedules_direct_stations",
+        "backend_status": "SUCCESS",
+        "backend_result": null,
+        "actual_ETA_present": true,
+        "result": "retained_Source_case_passed_Native_unmeasured"
+      },
+      "frame_sha256": "aa7a1915a32c1ceff70d2d0f7b5caba05c3f3456d268b2357ebe7fa3b6515a54",
+      "backend_sha256": "6576808085d269c5ec383e20dcd66386d7a83598cb0f4cb306ca98648b21d041"
+    },
+    {
+      "case_name": "partial-detail-error-continues",
+      "source_index": 2,
+      "frame": {
+        "body": "W1s0XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "argsrepr": "(4,)",
+          "eta": "2026-11-16T13:28:17.933550+00:00",
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "id": "27e50a0f-ee18-423e-9a7b-b79bd16b0c19",
+          "ignore_result": false,
+          "kwargsrepr": "{}",
+          "lang": "py",
+          "origin": "gen356@4cfed8326237",
+          "parent_id": null,
+          "replaced_task_nesting": 0,
+          "retries": 0,
+          "root_id": "27e50a0f-ee18-423e-9a7b-b79bd16b0c19",
+          "shadow": null,
+          "stamped_headers": null,
+          "stamps": {},
+          "task": "apps.epg.tasks.fetch_schedules_direct_stations",
+          "timelimit": [
+            null,
+            null
+          ]
+        },
+        "properties": {
+          "body_encoding": "base64",
+          "correlation_id": "27e50a0f-ee18-423e-9a7b-b79bd16b0c19",
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "delivery_mode": 2,
+          "delivery_tag": "fe6be84d-c141-4b41-b13c-9a3628a551b3",
+          "priority": 0,
+          "reply_to": "366f489c-fda8-3b0e-b8e9-a0aee214e0ec"
+        }
+      },
+      "backend": {
+        "children": [],
+        "date_done": "2026-11-16T13:28:18.084549+00:00",
+        "result": null,
+        "status": "SUCCESS",
+        "task_id": "27e50a0f-ee18-423e-9a7b-b79bd16b0c19",
+        "traceback": null
+      },
+      "actual_Source_case": {
+        "source_dataset": "Source53",
+        "source_index": 2,
+        "name": "partial-detail-error-continues",
+        "record_authority": {
+          "path": "scripts/rust-integration/channel-stations-source53/report.json",
+          "sha256": "7bd689b89a8126d51b3dc065b5ba0ae9466ff602038ce1d8bb168035fbcabfe4"
+        },
+        "record_json_pointer": "/cases/2",
+        "record_sha256": "32c905302ad2992e4bcd0d8c69b42d974edfd534eb9f3c50ddc303505c5a5be3",
+        "method": "POST",
+        "role": "admin",
+        "actual_path": "/api/epg/sources/",
+        "actual_HTTP_status": 201,
+        "actual_response_body_keys": [
+          "created_at",
+          "cron_expression",
+          "custom_properties",
+          "epg_data_count",
+          "file_path",
+          "has_channels",
+          "id",
+          "is_active",
+          "last_message",
+          "name",
+          "priority",
+          "refresh_interval",
+          "source_type",
+          "status",
+          "updated_at",
+          "url",
+          "username"
+        ],
+        "actual_response_body_sha256": "1cb064bb34ebaf124c044466df68a724e946dc4b760ef8ef2b39b894a155a6a6",
+        "private_raw_HTTP_reference": {
+          "path": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/sd-station-discovery/private/partial-API.json",
+          "sha256": "3b31ae88bd7efefb51c792581dcab387b0db177f5afa64ac8442e6f82aca80b9"
+        },
+        "actual_task_frame": {
+          "path": "scripts/rust-integration/channel-stations-source53/partial-actual-frame.json",
+          "sha256": "c25fe0abcf635bc422d2b61485b61f56767896ef7d350d0b1b6cd35d39efea47"
+        },
+        "actual_backend": {
+          "path": "scripts/rust-integration/channel-stations-source53/partial-backend.json",
+          "sha256": "b2e878b7c3d6aeab73c5de6e6daa90b6d63412c723d862050e1651b2ca39eb1d"
+        },
+        "actual_root_task": "apps.epg.tasks.fetch_schedules_direct_stations",
+        "backend_status": "SUCCESS",
+        "backend_result": null,
+        "actual_ETA_present": true,
+        "result": "retained_Source_case_passed_Native_unmeasured"
+      },
+      "frame_sha256": "c25fe0abcf635bc422d2b61485b61f56767896ef7d350d0b1b6cd35d39efea47",
+      "backend_sha256": "b2e878b7c3d6aeab73c5de6e6daa90b6d63412c723d862050e1651b2ca39eb1d"
+    },
+    {
+      "case_name": "no-lineups4102-idle-terminal-success",
+      "source_index": 3,
+      "frame": {
+        "body": "W1s1XSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "argsrepr": "(5,)",
+          "eta": "2026-11-16T13:28:23.262383+00:00",
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "id": "9769b9a7-6def-4638-9561-e38dbaf29881",
+          "ignore_result": false,
+          "kwargsrepr": "{}",
+          "lang": "py",
+          "origin": "gen356@4cfed8326237",
+          "parent_id": null,
+          "replaced_task_nesting": 0,
+          "retries": 0,
+          "root_id": "9769b9a7-6def-4638-9561-e38dbaf29881",
+          "shadow": null,
+          "stamped_headers": null,
+          "stamps": {},
+          "task": "apps.epg.tasks.fetch_schedules_direct_stations",
+          "timelimit": [
+            null,
+            null
+          ]
+        },
+        "properties": {
+          "body_encoding": "base64",
+          "correlation_id": "9769b9a7-6def-4638-9561-e38dbaf29881",
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "delivery_mode": 2,
+          "delivery_tag": "d0cb2975-6967-4019-adb3-4a80fbd908e9",
+          "priority": 0,
+          "reply_to": "366f489c-fda8-3b0e-b8e9-a0aee214e0ec"
+        }
+      },
+      "backend": {
+        "children": [],
+        "date_done": "2026-11-16T13:28:23.326785+00:00",
+        "result": null,
+        "status": "SUCCESS",
+        "task_id": "9769b9a7-6def-4638-9561-e38dbaf29881",
+        "traceback": null
+      },
+      "actual_Source_case": {
+        "source_dataset": "Source53",
+        "source_index": 3,
+        "name": "no-lineups4102-idle-terminal-success",
+        "record_authority": {
+          "path": "scripts/rust-integration/channel-stations-source53/report.json",
+          "sha256": "7bd689b89a8126d51b3dc065b5ba0ae9466ff602038ce1d8bb168035fbcabfe4"
+        },
+        "record_json_pointer": "/cases/3",
+        "record_sha256": "664993fcc834c1e015d5ed82fc49ae39357b823ec0575590fc78053a774d634d",
+        "method": "POST",
+        "role": "admin",
+        "actual_path": "/api/epg/sources/",
+        "actual_HTTP_status": 201,
+        "actual_response_body_keys": [
+          "created_at",
+          "cron_expression",
+          "custom_properties",
+          "epg_data_count",
+          "file_path",
+          "has_channels",
+          "id",
+          "is_active",
+          "last_message",
+          "name",
+          "priority",
+          "refresh_interval",
+          "source_type",
+          "status",
+          "updated_at",
+          "url",
+          "username"
+        ],
+        "actual_response_body_sha256": "efba8586c784d07fd04c22e9440b08fae2ebc6d3ac6576b8b3388570121e245a",
+        "private_raw_HTTP_reference": {
+          "path": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/sd-station-discovery/private/empty4102-API.json",
+          "sha256": "695973a4b628d10a9d826842e56ac0e102ef0084c4f69de2fe817f3f5eb42f52"
+        },
+        "actual_task_frame": {
+          "path": "scripts/rust-integration/channel-stations-source53/empty4102-actual-frame.json",
+          "sha256": "90c1897cfb99360aa2e9cb31a7a9d08b442f8e1a64f4e6d3d4e1e7ad0e957963"
+        },
+        "actual_backend": {
+          "path": "scripts/rust-integration/channel-stations-source53/empty4102-backend.json",
+          "sha256": "51069a28257f0aed600bf97dcb976d31234dd4eb54e155abcf59acdd1f910753"
+        },
+        "actual_root_task": "apps.epg.tasks.fetch_schedules_direct_stations",
+        "backend_status": "SUCCESS",
+        "backend_result": null,
+        "actual_ETA_present": true,
+        "result": "retained_Source_case_passed_Native_unmeasured"
+      },
+      "frame_sha256": "90c1897cfb99360aa2e9cb31a7a9d08b442f8e1a64f4e6d3d4e1e7ad0e957963",
+      "backend_sha256": "51069a28257f0aed600bf97dcb976d31234dd4eb54e155abcf59acdd1f910753"
+    },
+    {
+      "case_name": "natural-lineup-add-or-explicit-native-worker",
+      "source_index": 1,
+      "frame": {
+        "body": "W1szXSwge30sIHsiY2FsbGJhY2tzIjogbnVsbCwgImVycmJhY2tzIjogbnVsbCwgImNoYWluIjogbnVsbCwgImNob3JkIjogbnVsbH1d",
+        "content-encoding": "utf-8",
+        "content-type": "application/json",
+        "headers": {
+          "argsrepr": "(3,)",
+          "eta": null,
+          "expires": null,
+          "group": null,
+          "group_index": null,
+          "id": "2c3b14b3-7150-4eba-854c-c70540aaf757",
+          "ignore_result": false,
+          "kwargsrepr": "{}",
+          "lang": "py",
+          "origin": "gen356@4cfed8326237",
+          "parent_id": null,
+          "replaced_task_nesting": 0,
+          "retries": 0,
+          "root_id": "2c3b14b3-7150-4eba-854c-c70540aaf757",
+          "shadow": null,
+          "stamped_headers": null,
+          "stamps": {},
+          "task": "apps.epg.tasks.fetch_schedules_direct_stations",
+          "timelimit": [
+            null,
+            null
+          ]
+        },
+        "properties": {
+          "body_encoding": "base64",
+          "correlation_id": "2c3b14b3-7150-4eba-854c-c70540aaf757",
+          "delivery_info": {
+            "exchange": "",
+            "routing_key": "celery"
+          },
+          "delivery_mode": 2,
+          "delivery_tag": "c2d053e4-ff64-45e3-8eaf-cbb48307cc91",
+          "priority": 0,
+          "reply_to": "366f489c-fda8-3b0e-b8e9-a0aee214e0ec"
+        }
+      },
+      "backend": {
+        "children": [],
+        "date_done": "2026-11-16T13:28:12.336402+00:00",
+        "result": null,
+        "status": "SUCCESS",
+        "task_id": "2c3b14b3-7150-4eba-854c-c70540aaf757",
+        "traceback": null
+      },
+      "actual_Source_case": {
+        "source_dataset": "Source53",
+        "source_index": 1,
+        "name": "natural-lineup-add-or-explicit-native-worker",
+        "record_authority": {
+          "path": "scripts/rust-integration/channel-stations-source53/report.json",
+          "sha256": "7bd689b89a8126d51b3dc065b5ba0ae9466ff602038ce1d8bb168035fbcabfe4"
+        },
+        "record_json_pointer": "/cases/1",
+        "record_sha256": "68dc0d4560d70e5d4150616b7ba3f2c9b996f36e108897d01d9befba5bfc734a",
+        "method": "POST",
+        "role": "admin",
+        "actual_path": "/api/epg/sources/3/sd-lineups/",
+        "actual_HTTP_status": 200,
+        "actual_response_body_keys": [
+          "changesRemaining",
+          "changes_remaining",
+          "code",
+          "response"
+        ],
+        "actual_response_body_sha256": "0dcf5b892ff5ce1672684b29120572953a8c167917c529f2973ad4f40a2f5e8f",
+        "private_raw_HTTP_reference": {
+          "path": "artifacts/rust/normal-graph-batch53-sd-stations-1/fixtures/Original-a22a06d3/sd-station-discovery/private/lineup-add-API.json",
+          "sha256": "7345360b20311eb870f0c76b4592a243d4c118ea31f0154d7f944797dc4412dc"
+        },
+        "actual_task_frame": {
+          "path": "scripts/rust-integration/channel-stations-source53/lineup-add-actual-frame.json",
+          "sha256": "96272be76e37259c723f64c614dcdb69184a75bde908f5ade9a4a4157fe91b22"
+        },
+        "actual_backend": {
+          "path": "scripts/rust-integration/channel-stations-source53/lineup-add-backend.json",
+          "sha256": "faeb0199d5560bc2f4232d50d8ec4c5dca0a051e9c0252d6cbc030f929239f47"
+        },
+        "actual_root_task": "apps.epg.tasks.fetch_schedules_direct_stations",
+        "backend_status": "SUCCESS",
+        "backend_result": null,
+        "actual_ETA_present": false,
+        "result": "retained_Source_case_passed_Native_unmeasured"
+      },
+      "frame_sha256": "96272be76e37259c723f64c614dcdb69184a75bde908f5ade9a4a4157fe91b22",
+      "backend_sha256": "faeb0199d5560bc2f4232d50d8ec4c5dca0a051e9c0252d6cbc030f929239f47"
+    }
+  ]
+}
