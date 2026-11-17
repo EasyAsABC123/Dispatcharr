@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-live-vod-settings-source-driver-1/cohort/live_vod_settings_cases.py", line 137, in run
+    check(f._live_setup,label,request,before,after,response)
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/justin/github/Dispatcharr/artifacts/rust/m6-live-vod-settings-source-driver-1/cohort/live_vod_settings_cases.py", line 108, in check
+    target=next(r for r in expected['live']['channels_channelgroupm3uaccount']if r['m3u_account_id']==setup['account']and r['channel_group_id']==value['channel_group'])
+                           ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'channels_channelgroupm3uaccount'

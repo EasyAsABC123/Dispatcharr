@@ -1,0 +1,968 @@
+{
+  "bad-start": {
+    "HTTP": {
+      "context": "live-vod-group-settings",
+      "method": "PATCH",
+      "path": "/api/m3u/accounts/5/group-settings/",
+      "credential_role": "admin",
+      "status": 400,
+      "body": {
+        "error": "Channel group 3: channel range must be >= 1."
+      }
+    },
+    "sequence_states": {
+      "before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 16,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      },
+      "after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 16,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      }
+    }
+  },
+  "bad-end": {
+    "HTTP": {
+      "context": "live-vod-group-settings",
+      "method": "PATCH",
+      "path": "/api/m3u/accounts/5/group-settings/",
+      "credential_role": "admin",
+      "status": 400,
+      "body": {
+        "error": "Channel group 3: channel range must be >= 1."
+      }
+    },
+    "sequence_states": {
+      "before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 16,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      },
+      "after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 16,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      }
+    }
+  },
+  "reversed-range": {
+    "HTTP": {
+      "context": "live-vod-group-settings",
+      "method": "PATCH",
+      "path": "/api/m3u/accounts/5/group-settings/",
+      "credential_role": "admin",
+      "status": 400,
+      "body": {
+        "error": "Channel group 3: auto_sync_channel_end must be >= auto_sync_channel_start."
+      }
+    },
+    "sequence_states": {
+      "before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 16,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      },
+      "after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 16,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      }
+    }
+  },
+  "bad-category": {
+    "HTTP": {
+      "context": "live-vod-group-settings",
+      "method": "PATCH",
+      "path": "/api/m3u/accounts/5/group-settings/",
+      "credential_role": "admin",
+      "status": 400,
+      "body": {
+        "error": "Category 1: language must be a 2-letter ISO 639-1 code or null."
+      }
+    },
+    "sequence_states": {
+      "before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 16,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      },
+      "after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 16,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      }
+    }
+  },
+  "duplicate-live": {
+    "HTTP": {
+      "context": "live-vod-group-settings",
+      "method": "PATCH",
+      "path": "/api/m3u/accounts/5/group-settings/",
+      "credential_role": "admin",
+      "status": 400,
+      "body": {
+        "error": "Failed to update group settings: ON CONFLICT DO UPDATE command cannot affect row a second time\nHINT:  Ensure that no rows proposed for insertion within the same command have duplicate constrained values."
+      }
+    },
+    "sequence_states": {
+      "before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 16,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      },
+      "after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 19,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      }
+    }
+  },
+  "missing-live-FK": {
+    "HTTP": {
+      "context": "live-vod-group-settings",
+      "method": "PATCH",
+      "path": "/api/m3u/accounts/5/group-settings/",
+      "credential_role": "admin",
+      "status": 400,
+      "body": {
+        "error": "Failed to update group settings: insert or update on table \"dispatcharr_channels_channelgroupm3uaccount\" violates foreign key constraint \"dispatcharr_channels_channel_group_id_349e35c9_fk_dispatcha\"\nDETAIL:  Key (channel_group_id)=(2147483001) is not present in table \"dispatcharr_channels_channelgroup\"."
+      }
+    },
+    "sequence_states": {
+      "before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 11,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 19,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      },
+      "after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 13,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 21,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      }
+    }
+  },
+  "missing-category-FK": {
+    "HTTP": {
+      "context": "live-vod-group-settings",
+      "method": "PATCH",
+      "path": "/api/m3u/accounts/5/group-settings/",
+      "credential_role": "admin",
+      "status": 400,
+      "body": {
+        "error": "Failed to update group settings: insert or update on table \"vod_m3uvodcategoryrelation\" violates foreign key constraint \"vod_m3uvodcategoryre_category_id_f3a1c233_fk_vod_vodca\"\nDETAIL:  Key (category_id)=(2147483002) is not present in table \"vod_vodcategory\"."
+      }
+    },
+    "sequence_states": {
+      "before": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 13,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 21,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      },
+      "after": {
+        "public.m3u_m3uaccount_id_seq": {
+          "last_value": 7,
+          "is_called": true
+        },
+        "public.vod_movie_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_series_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_episode_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3umovierelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3useriesrelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_m3uepisoderelation_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodlogo_id_seq": {
+          "last_value": 1,
+          "is_called": false
+        },
+        "public.vod_vodcategory_id_seq": {
+          "last_value": 2,
+          "is_called": true
+        },
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "last_value": 15,
+          "is_called": true
+        },
+        "public.core_systemevent_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroup_id_seq": {
+          "last_value": 4,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "last_value": 23,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofile_id_seq": {
+          "last_value": 1,
+          "is_called": true
+        },
+        "public.dispatcharr_channels_channelprofilemembership_id_seq": {
+          "last_value": 12,
+          "is_called": true
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,197 @@
+{
+  "setup-result": {
+    "scope": "Explicit import of actually captured combined-save selected15tables/all15sequences; no business request replay",
+    "tables": [
+      "core_systemevent",
+      "dispatcharr_channels_channelgroup",
+      "dispatcharr_channels_channelgroupm3uaccount",
+      "dispatcharr_channels_channelprofile",
+      "dispatcharr_channels_channelprofilemembership",
+      "m3u_m3uaccount",
+      "vod_episode",
+      "vod_m3uepisoderelation",
+      "vod_m3umovierelation",
+      "vod_m3useriesrelation",
+      "vod_m3uvodcategoryrelation",
+      "vod_movie",
+      "vod_series",
+      "vod_vodcategory",
+      "vod_vodlogo"
+    ],
+    "sequence_count": 15
+  },
+  "journal": {
+    "actual_journal_rows": 4,
+    "DVR_claim_or_ACK_commands": [
+      {
+        "time": 1794904893.297782,
+        "db": 1,
+        "client_address": "127.0.0.1",
+        "client_port": "46094",
+        "client_type": "tcp",
+        "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+      }
+    ],
+    "publications": [],
+    "recording_recovery_offset_publications": [],
+    "queue_operations": [
+      {
+        "time": 1794904893.297782,
+        "db": 1,
+        "client_address": "127.0.0.1",
+        "client_port": "46094",
+        "client_type": "tcp",
+        "command": "BRPOP dvr dvr\\x06\\x163 dvr\\x06\\x166 dvr\\x06\\x169 1"
+      },
+      {
+        "time": 1794904893.498367,
+        "db": 1,
+        "client_address": "127.0.0.1",
+        "client_port": "45956",
+        "client_type": "tcp",
+        "command": "BRPOP celery celery\\x06\\x163 celery\\x06\\x166 celery\\x06\\x169 1"
+      }
+    ],
+    "raw_journal_path": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/data/live-vod-group-settings/dvr-domain-observer-c507a5bc/private-startup-monitor.jsonl",
+    "raw_journal_sha256": "63e82b9929abe3c5a4b790d53f420298c7261ccd8b40d79acc0b025f231578bc",
+    "terminal": {
+      "thread_settled": true,
+      "actual_rows": 4,
+      "written_rows": 4,
+      "persisted_rows": 4,
+      "captured_bytes": 709,
+      "row_limit": 20000,
+      "byte_limit": 16777216,
+      "terminal_reader_error": null,
+      "close_after_cases": true,
+      "terminal_marker": "plugin-startup-terminal-1ef7fc89a34347ceaadc28bdb7129b8e",
+      "terminal_marker_read": true,
+      "terminal_barrier_observed": true,
+      "terminal_barrier_fsynced": true,
+      "writer_closed": true,
+      "flush_calls": 2,
+      "fsync_calls": 1,
+      "database_filter": 1,
+      "received_byte_unit": "serialized_parsed_monitor_JSON_bytes",
+      "raw_rows_received": 8,
+      "raw_bytes_received": 1365,
+      "excluded_rows_by_database": {
+        "0": 4
+      },
+      "excluded_bytes_by_database": {
+        "0": 656
+      },
+      "complete_all_database_journal": false,
+      "scope": "Only actual database1 commands through the actual database1 terminal ECHO are retained; other databases counted but excluded before retained byte/row budgets. Flush/fsync barrier is unchanged; no all-database coverage claimed.",
+      "observer_error": null
+    },
+    "observer_stop": {
+      "role": "dvr-domain-observer-c507a5bc",
+      "socket": "/tmp/normal-dvr-roles/084e8e12a6934b8a97bcd695a62035e9.sock",
+      "owner_pid": 744,
+      "owner_starttime": "21786105",
+      "pid": 745,
+      "starttime": "21786108",
+      "actual_pgid": 745,
+      "process_group_authority": "successful Popen(start_new_session=True)",
+      "actual_argv": [
+        "/dispatcharrpy/bin/python",
+        "/normal-dvr-tools/startup_observer.py"
+      ],
+      "log_paths": {
+        "stdout": "/tmp/normal-dvr-roles/084e8e12a6934b8a97bcd695a62035e9/stdout.log",
+        "stderr": "/tmp/normal-dvr-roles/084e8e12a6934b8a97bcd695a62035e9/stderr.log"
+      },
+      "shutdown_started": true,
+      "signal_settled": true,
+      "actual_master_SIGTERM_sent": true,
+      "shutdown_settled": true,
+      "running": false,
+      "actual_exit": 0,
+      "actual_wait_completed": true,
+      "forced": false,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "failures": [],
+      "actual_reaped_adopted_children": [],
+      "owned_generations": [
+        {
+          "pid": 745,
+          "starttime": "21786108",
+          "absent": true
+        }
+      ],
+      "all_original_process_generations_absent": true
+    },
+    "strict_Beat_equality_relaxed": false
+  },
+  "WS": {
+    "actual_receiver": "specific.aggregate_ccf82f40edf444e08280b776c59f0cec!receiver",
+    "events": [],
+    "raw_events_base64": []
+  },
+  "cache-before": [
+    [
+      ":1:coresettings:default_user_agent",
+      null
+    ],
+    [
+      ":1:coresettings:default_user_agent:ver",
+      "73378707203fb80e423b89324fe7c321b0cae8dc"
+    ],
+    [
+      ":1:coresettings:group:system_settings",
+      "563f669113a83c0242d27c23e219c0da2ca65889"
+    ],
+    [
+      ":1:coresettings:group:stream_settings",
+      null
+    ],
+    [
+      ":1:coresettings:groupver:system_settings",
+      null
+    ],
+    [
+      ":1:coresettings:groupver:stream_settings",
+      null
+    ]
+  ],
+  "cache-after": [
+    [
+      ":1:coresettings:default_user_agent",
+      null
+    ],
+    [
+      ":1:coresettings:default_user_agent:ver",
+      "73378707203fb80e423b89324fe7c321b0cae8dc"
+    ],
+    [
+      ":1:coresettings:group:system_settings",
+      "563f669113a83c0242d27c23e219c0da2ca65889"
+    ],
+    [
+      ":1:coresettings:group:stream_settings",
+      null
+    ],
+    [
+      ":1:coresettings:groupver:system_settings",
+      null
+    ],
+    [
+      ":1:coresettings:groupver:stream_settings",
+      null
+    ]
+  ],
+  "broker-before": {
+    "celery": 0,
+    "dvr": 0,
+    "unacked": 0,
+    "unacked_index": 0
+  },
+  "broker-after": {
+    "celery": 0,
+    "dvr": 0,
+    "unacked": 0,
+    "unacked_index": 0
+  }
+}

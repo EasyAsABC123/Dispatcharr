@@ -1,0 +1,466 @@
+{
+  "status": "ACTUAL_REMAINING11_SOURCE_PEER_PASSED",
+  "first_controller_still_failed": true,
+  "new_cases": 11,
+  "raw_chain_from_declared_import_exact": true,
+  "all_business_support_rows_and15seq_checked": true,
+  "cells": [
+    {
+      "name": "repeat",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "message": "Group settings updated successfully"
+        }
+      },
+      "sequence_changes": {
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "before": {
+            "last_value": 5,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 7,
+            "is_called": true
+          }
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "before": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 10,
+            "is_called": true
+          }
+        }
+      },
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/repeat/SQL-before.json",
+          "sha256": "2e897b6c9e07583959be1988e9fc6af35c7a23e4a9c603aa180be748193f7cae"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/repeat/SQL-after.json",
+          "sha256": "55a1006e74cd4b3c712274795b232c95d3a2abf834931372399ed153d3f6676e"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/repeat/HTTP.json",
+          "sha256": "45677da725242a6462414ee9256b9399c1d25a3dd6a23fa214ec3b6b606f7bd1"
+        }
+      ]
+    },
+    {
+      "name": "partial-category",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "message": "Group settings updated successfully"
+        }
+      },
+      "sequence_changes": {
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "before": {
+            "last_value": 7,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 8,
+            "is_called": true
+          }
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "before": {
+            "last_value": 10,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 12,
+            "is_called": true
+          }
+        }
+      },
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/partial-category/SQL-before.json",
+          "sha256": "50781b4eaef66ecb21667265e9c0c8f3cd4089e2c5d5d999a9d1e1f8987f3424"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/partial-category/SQL-after.json",
+          "sha256": "ded83fe2fbf976936a08a401ea8a906ba8c79eb38ad931fba89e144f652b8b1a"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/partial-category/HTTP.json",
+          "sha256": "45677da725242a6462414ee9256b9399c1d25a3dd6a23fa214ec3b6b606f7bd1"
+        }
+      ]
+    },
+    {
+      "name": "explicit-null",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "message": "Group settings updated successfully"
+        }
+      },
+      "sequence_changes": {
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "before": {
+            "last_value": 8,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 9,
+            "is_called": true
+          }
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "before": {
+            "last_value": 12,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 14,
+            "is_called": true
+          }
+        }
+      },
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/explicit-null/SQL-before.json",
+          "sha256": "8a1d18f8fbca7294c3899d93fc3c1fa8a51604f77a479de6d677495e3e11b4df"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/explicit-null/SQL-after.json",
+          "sha256": "ec49a104579c6a7f3298d6b339b29416315beded6db847cb85fa31f9c813c60e"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/explicit-null/HTTP.json",
+          "sha256": "45677da725242a6462414ee9256b9399c1d25a3dd6a23fa214ec3b6b606f7bd1"
+        }
+      ]
+    },
+    {
+      "name": "profiles",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 200,
+        "body": {
+          "message": "Group settings updated successfully"
+        }
+      },
+      "sequence_changes": {
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "before": {
+            "last_value": 9,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 11,
+            "is_called": true
+          }
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "before": {
+            "last_value": 14,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 16,
+            "is_called": true
+          }
+        }
+      },
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/profiles/SQL-before.json",
+          "sha256": "6c90a9614c9cea4345a85b66cd9ffb06db9d4dff623dc54f82d4202ae79acaa5"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/profiles/SQL-after.json",
+          "sha256": "59279b60437a9c8a7ac0480df2a07ed1a8b14a2e0afda7798cfab88c9a60cad6"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/profiles/HTTP.json",
+          "sha256": "45677da725242a6462414ee9256b9399c1d25a3dd6a23fa214ec3b6b606f7bd1"
+        }
+      ]
+    },
+    {
+      "name": "bad-start",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 400,
+        "body": {
+          "error": "Channel group 3: channel range must be >= 1."
+        }
+      },
+      "sequence_changes": {},
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/bad-start/SQL-before.json",
+          "sha256": "b9d4e4c98ea45aa7aab759fe6876dd6cd2f8d00122c2af9e49e29e2635013e8f"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/bad-start/SQL-after.json",
+          "sha256": "aa271d3ec9ae5975c8d02daa4ff99f69eb91984dad9ea74b49169bde31d2219b"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/bad-start/HTTP.json",
+          "sha256": "65fe9d96a35eb0b9bb8f7c2db92c76ec11533ef00dd81d8a6d23250b4e14fff2"
+        }
+      ]
+    },
+    {
+      "name": "bad-end",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 400,
+        "body": {
+          "error": "Channel group 3: channel range must be >= 1."
+        }
+      },
+      "sequence_changes": {},
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/bad-end/SQL-before.json",
+          "sha256": "2bdae0c1b2c7b5d093f1186f4269399df20c249847aae822fc83b8fd960d320f"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/bad-end/SQL-after.json",
+          "sha256": "80cdf93ea4aac3c640af344d6deaca226da60c84c62fca5e52cefd21b3ef1714"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/bad-end/HTTP.json",
+          "sha256": "65fe9d96a35eb0b9bb8f7c2db92c76ec11533ef00dd81d8a6d23250b4e14fff2"
+        }
+      ]
+    },
+    {
+      "name": "reversed-range",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 400,
+        "body": {
+          "error": "Channel group 3: auto_sync_channel_end must be >= auto_sync_channel_start."
+        }
+      },
+      "sequence_changes": {},
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/reversed-range/SQL-before.json",
+          "sha256": "33d045dda6eae570e4801817834cdb34848101e070eea51b4cf183b792712c96"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/reversed-range/SQL-after.json",
+          "sha256": "fb0c29bf2fc611b2c58487fe80aa16a8319f03b36280f523de70d8b1a7b30fb9"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/reversed-range/HTTP.json",
+          "sha256": "d13265dd0424093c412690947d74a2d00916009d3e95290c41c7b730d6f3a42c"
+        }
+      ]
+    },
+    {
+      "name": "bad-category",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 400,
+        "body": {
+          "error": "Category 1: language must be a 2-letter ISO 639-1 code or null."
+        }
+      },
+      "sequence_changes": {},
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/bad-category/SQL-before.json",
+          "sha256": "651471fbfaad2678a64ec5ac08605ed46979be084704eedf68e332dccc4d1f9c"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/bad-category/SQL-after.json",
+          "sha256": "56522fd7dcc1a9a08c26b888c9638ae5d4ddfe8b79a76da26c4b7198e9425527"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/bad-category/HTTP.json",
+          "sha256": "7e54ba6cb4fea3740b2fe0c9d19bbd188f80e0c78463fb0b44d56fbc5a2c70ec"
+        }
+      ]
+    },
+    {
+      "name": "duplicate-live",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 400,
+        "body": {
+          "error": "Failed to update group settings: ON CONFLICT DO UPDATE command cannot affect row a second time\nHINT:  Ensure that no rows proposed for insertion within the same command have duplicate constrained values."
+        }
+      },
+      "sequence_changes": {
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "before": {
+            "last_value": 16,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 19,
+            "is_called": true
+          }
+        }
+      },
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/duplicate-live/SQL-before.json",
+          "sha256": "f7ae49151d8c5139a8bbbe3baf13c087c3324ab263d2c5419bcf087cc01b8945"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/duplicate-live/SQL-after.json",
+          "sha256": "173cf18cf5505bc4640991e00e7aa90d34a6e74fdf9b5f8b6850fff65879b7b8"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/duplicate-live/HTTP.json",
+          "sha256": "1dabff17638a61d27f1c2cec3a6253c8fb85fe6daae8306ab82be9c5ec1408fb"
+        }
+      ]
+    },
+    {
+      "name": "missing-live-FK",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 400,
+        "body": {
+          "error": "Failed to update group settings: insert or update on table \"dispatcharr_channels_channelgroupm3uaccount\" violates foreign key constraint \"dispatcharr_channels_channel_group_id_349e35c9_fk_dispatcha\"\nDETAIL:  Key (channel_group_id)=(2147483001) is not present in table \"dispatcharr_channels_channelgroup\"."
+        }
+      },
+      "sequence_changes": {
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "before": {
+            "last_value": 11,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 13,
+            "is_called": true
+          }
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "before": {
+            "last_value": 19,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 21,
+            "is_called": true
+          }
+        }
+      },
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/missing-live-FK/SQL-before.json",
+          "sha256": "244f0da68f57942423a3cdebdd5b13c1b75d5856dd0b0da270b6a473e3c1af81"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/missing-live-FK/SQL-after.json",
+          "sha256": "b8788d0a8b8e27b2966fe4ead466da6908016e92a2b55ad440dc40f7d39596c5"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/missing-live-FK/HTTP.json",
+          "sha256": "557a9a1508abce113456ff9bbf65b39d82b788430a18f4eb522d52024169eae4"
+        }
+      ]
+    },
+    {
+      "name": "missing-category-FK",
+      "response": {
+        "context": "live-vod-group-settings",
+        "method": "PATCH",
+        "path": "/api/m3u/accounts/5/group-settings/",
+        "credential_role": "admin",
+        "status": 400,
+        "body": {
+          "error": "Failed to update group settings: insert or update on table \"vod_m3uvodcategoryrelation\" violates foreign key constraint \"vod_m3uvodcategoryre_category_id_f3a1c233_fk_vod_vodca\"\nDETAIL:  Key (category_id)=(2147483002) is not present in table \"vod_vodcategory\"."
+        }
+      },
+      "sequence_changes": {
+        "public.vod_m3uvodcategoryrelation_id_seq": {
+          "before": {
+            "last_value": 13,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 15,
+            "is_called": true
+          }
+        },
+        "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+          "before": {
+            "last_value": 21,
+            "is_called": true
+          },
+          "after": {
+            "last_value": 23,
+            "is_called": true
+          }
+        }
+      },
+      "business_rows_checked": true,
+      "snapshot_refs": [
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/missing-category-FK/SQL-before.json",
+          "sha256": "06fac7b178ba4ae1babf0cf6b623b41cbb57599938b76a7494a096eb1d8d9ea7"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/missing-category-FK/SQL-after.json",
+          "sha256": "04fd147db5f1e3049f25bace5391233efac38fadeaeb7bf235900283484f6d97"
+        },
+        {
+          "path": "artifacts/rust/normal-graph-live-vod-settings-source-2/fixtures/Original-5235e392/live-vod-group-settings/private/missing-category-FK/HTTP.json",
+          "sha256": "15095b303a5085ffbd386e18f2f4e9f835fd184c33a67cb4af97126cbcf32431"
+        }
+      ]
+    }
+  ],
+  "Native_accepted": false
+}

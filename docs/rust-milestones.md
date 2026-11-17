@@ -9,6 +9,8 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+[Combined live/VOD settings reference](rust-milestone-batch53.md) qualifies twelve new admin PATCH/account-GET cells: one retained combined save checked offline after controller1, then eleven new cells under controller0 with an exact declared fifteen-table/fifteen-sequence import. Full rows/errors and all sequence effects are retained with only232 login-field redactions. Deferred FK failures consume both live/category sequence values while rolling back business writes. The Rust handler/physical-settlement correction remains private and uncompiled; the accepted image still refuses nonempty live groups. No M5, performance or complete milestone closure follows.
+
 [Positive Comskip reference](../scripts/rust-integration/comskip-positive-source1/README.md)
 now includes a real two-range commercial detection and an unchanged target
 repeat. The whole controller exits 1 because an unrelated periodic scan and

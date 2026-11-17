@@ -102,6 +102,8 @@ not retroactively accepted.
 This accepts the selected category-language workflow, not complete UI or
 migration parity. The React combined live/VOD save sends nonempty live groups;
 that branch remains explicitly unavailable in the accepted Rust image. Its
-first Source save is captured and independently checked offline, while eleven
-remaining Source cells and the Rust live-group extension remain pending. New
+[twelve-cell Source reference](rust-milestone-batch53.md) now qualifies one retained
+combined save offline plus eleven new continuation cells, with literal controller
+exits1 and0 and an exact declared fifteen-table/fifteen-sequence import. The Rust
+live-group extension remains private and uncompiled. New
 performance and complete M0–M9 acceptance remain open.

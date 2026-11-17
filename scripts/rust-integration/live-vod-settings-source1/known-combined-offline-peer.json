@@ -1,0 +1,82 @@
+{
+  "status": "RETAINED_ACTUAL_COMBINED_BUSINESS_CHECKS_PASSED_OFFLINE_WHOLE_CONTROLLER_FAILED",
+  "actual_whole_controller_exit": 1,
+  "known_combined_replay_needed": false,
+  "offline_derivation": "Frozen helper check executed on copies with only actual table-key mapping dispatcharr_channels_channelgroupm3uaccount -> historical checker spelling; no row/sequence/value changed.",
+  "exact_full_business_support_live_rows_matched": true,
+  "full_six_field_PATCH_and_GET_receipts_valid": true,
+  "publications_empty": true,
+  "raw_and_decoded_WS_empty": true,
+  "cache_and_broker_unchanged": true,
+  "sequence_effects": {
+    "public.vod_m3uvodcategoryrelation_id_seq": {
+      "before": {
+        "last_value": 3,
+        "is_called": true
+      },
+      "after": {
+        "last_value": 5,
+        "is_called": true
+      }
+    },
+    "public.dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+      "before": {
+        "last_value": 6,
+        "is_called": true
+      },
+      "after": {
+        "last_value": 8,
+        "is_called": true
+      }
+    }
+  },
+  "raw_refs": [
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/GET.json",
+      "sha256": "2ea50cabcc4e95da25c386f3cfc76c04795f123d526e76a09726384b486fab66"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/HTTP.json",
+      "sha256": "45677da725242a6462414ee9256b9399c1d25a3dd6a23fa214ec3b6b606f7bd1"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/SQL-after.json",
+      "sha256": "e05016ef8c6d3af758ced084ef45ffbd2eddb1809dc0bc5e73c931bfc1d836a9"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/SQL-before.json",
+      "sha256": "39e70c08cbbf81a8a60f1c5747732510d846b81f71d35922dd42e82170538060"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/WS.json",
+      "sha256": "00989ecded1346639ab3ba1e150eb5b1c47fe70356af99381cf00f4492226c35"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/broker-after.json",
+      "sha256": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/broker-before.json",
+      "sha256": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/cache-after.json",
+      "sha256": "2b09aab880f686f831eaae8c817a476b0217e3aea3522b896aca1dbf66c632e6"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/cache-before.json",
+      "sha256": "2b09aab880f686f831eaae8c817a476b0217e3aea3522b896aca1dbf66c632e6"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/journal.json",
+      "sha256": "0a5fe5f060d40e15f54723bdddc1274e71b3b8956cc929aaaf217294fe4d4768"
+    },
+    {
+      "path": "artifacts/rust/normal-graph-live-vod-settings-source-1/fixtures/Original-2a0c13cf/live-vod-group-settings/private/combined/request.json",
+      "sha256": "97272d2693a0793b2783b7081cb055ef5acd0a766494ace03aebcc437a65bc53"
+    }
+  ],
+  "remaining11_cells_NOT_RUN": true,
+  "Native_acceptance": false,
+  "production_bug": "Private LIVE_UPSERT table must use actual dispatcharr_channels_channelgroupm3uaccount; old unprefixed channels_* name is wrong."
+}
