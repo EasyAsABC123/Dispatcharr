@@ -59,27 +59,18 @@ pub(super) async fn apply(
             occurrences.push(vec![ordinal]);
         }
     }
-    // Cross-key duplicate provider identities were not in Source9. Refuse them
-    // before logo writes rather than import an arbitrary SQL UPDATE winner.
-    let mut provider_keys = std::collections::HashSet::new();
-    for group in &occurrences {
-        for ordinal in group {
-            if !provider_keys.insert(rows[*ordinal].0.external.clone()) {
-                return Err(unsupported());
-            }
-        }
-    }
     super::sql::prepare_logos(auth, owner.clone(), &mut representatives).await?;
     let session = auth.borrow_task_sql_session(owner).await?;
     let observed=session.run(move|c|Box::pin(async move{
         sqlx::query("BEGIN").execute(&mut*c).await?;
         let result=async{
-            let initial=super::sql::list_snapshot(sqlx::query(ADVANCED_SERIES_EXISTING).fetch_all(&mut*c).await?)?;
+            let provider_ids:Vec<String>=rows.iter().map(|(item,_)|item.external.clone()).collect();
+            let prefetched=sqlx::query(ADVANCED_SERIES_RELATION_EXISTING).bind(account).bind(&provider_ids).fetch_all(&mut*c).await?;
+            let prefetched:HashMap<String,i64>=prefetched.into_iter().map(|r|Ok((r.try_get("provider")?,r.try_get("target")?))).collect::<Result<_,StoreError>>()?;
+            let initial=super::sql::list_snapshot(sqlx::query(ADVANCED_SERIES_EXISTING).bind(json!(representatives)).fetch_all(&mut*c).await?)?;
             for row in &mut representatives {row["initial_id"]=json!(super::sql::list_existing(row,&initial,false));row["resolved_id"]=row["initial_id"].clone();}
-            let mut initial_targets=std::collections::HashSet::new();
-            for row in &representatives { if let Some(id)=row["initial_id"].as_i64() { if !initial_targets.insert(id) { return Err(unsupported()); } } }
             // Fresh database snapshot, not a map extended with other candidates.
-            let second=super::sql::list_snapshot(sqlx::query(ADVANCED_SERIES_EXISTING).fetch_all(&mut*c).await?)?;
+            let second=super::sql::list_snapshot(sqlx::query(ADVANCED_SERIES_EXISTING).bind(json!(representatives)).fetch_all(&mut*c).await?)?;
             for row in &mut representatives {if row["initial_id"].is_null() {row["resolved_id"]=json!(super::sql::list_existing(row,&second,true));}}
             let new_rows:Vec<Value>=representatives.iter().filter(|row|row["resolved_id"].is_null()).cloned().collect();
             let created=sqlx::query(ADVANCED_SERIES_INSERT).bind(json!(new_rows)).fetch_all(&mut*c).await?;
@@ -91,9 +82,10 @@ pub(super) async fn apply(
                 let id=representative["resolved_id"].as_i64().ok_or_else(unsupported)?;
                 for ordinal in group {let(item,category)=&rows[*ordinal];relations.push(json!({"series":id,"category":category,"external":item.external,"basic":super::series_values::basic(item,*category),"candidate":representative["initial_id"].is_null(),"stamp":Utc::now()}));}
             }
+            let updates=super::sql::existing_relation_updates(&relations,&prefetched,"external","series");
             let relations=json!(relations);
             sqlx::query(ADVANCED_SERIES_RELATION_INSERT).bind(account).bind(&relations).bind(scan).execute(&mut*c).await?;
-            sqlx::query(ADVANCED_SERIES_RELATION_UPDATE).bind(account).bind(&relations).bind(scan).execute(&mut*c).await?;
+            sqlx::query(ADVANCED_SERIES_RELATION_UPDATE).bind(account).bind(json!(updates)).bind(scan).execute(&mut*c).await?;
             Ok::<_,StoreError>(())
         }.await;
         match result{Ok(())=>{sqlx::query("COMMIT").execute(c).await?;Ok(())},Err(error)=>{sqlx::query("ROLLBACK").execute(c).await?;match error{StoreError::Database(_)=>Ok(()),other=>Err(other)}}}
@@ -102,13 +94,19 @@ pub(super) async fn apply(
     observed?
 }
 
-const ADVANCED_SERIES_EXISTING:&str="SELECT id::bigint,name,year,tmdb_id,imdb_id FROM vod_series WHERE language='' ORDER BY id LIMIT 129";
+const ADVANCED_SERIES_RELATION_EXISTING:&str="SELECT external_series_id AS provider,series_id::bigint AS target FROM vod_m3useriesrelation WHERE m3u_account_id::bigint=$1 AND external_series_id=ANY($2)";
+
+const ADVANCED_SERIES_EXISTING:&str="WITH wanted AS MATERIALIZED (SELECT v FROM jsonb_array_elements($1) v), matches AS (SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id FROM vod_series m JOIN wanted w ON m.tmdb_id=w.v->>'tmdb_id' WHERE m.language='' UNION SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id FROM vod_series m JOIN wanted w ON m.imdb_id=w.v->>'imdb_id' WHERE m.language='' UNION SELECT m.id::bigint,m.name,m.year,m.tmdb_id,m.imdb_id FROM vod_series m JOIN wanted w ON m.name=w.v->>'name' AND m.year IS NOT DISTINCT FROM (w.v->>'year')::integer WHERE m.language='' AND m.tmdb_id IS NULL AND m.imdb_id IS NULL AND w.v->>'tmdb_id' IS NULL AND w.v->>'imdb_id' IS NULL) SELECT id,name,year,tmdb_id,imdb_id FROM matches ORDER BY id LIMIT 2001";
 const ADVANCED_SERIES_INSERT: &str = "INSERT INTO vod_series(uuid,name,description,year,rating,genre,logo_id,tmdb_id,imdb_id,language,custom_properties,created_at,updated_at) SELECT (v->>'uuid')::uuid,v->>'name',v->>'description',(v->>'year')::integer,v->>'rating',v->>'genre',(v->>'logo_id')::bigint,v->>'tmdb_id',v->>'imdb_id','',NULLIF(v->'properties','null'::jsonb),(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz FROM jsonb_array_elements($1) v RETURNING id::bigint,uuid";
-const ADVANCED_SERIES_UPDATE: &str = "WITH projected AS MATERIALIZED (SELECT s.id,COALESCE((v->>'year')::integer,s.year) AS year,COALESCE(v->>'tmdb_id',s.tmdb_id) AS tmdb_id,COALESCE(v->>'imdb_id',s.imdb_id) AS imdb_id,CASE WHEN v->>'description'<>'' THEN v->>'description' ELSE s.description END AS description, COALESCE(v->>'rating',s.rating) AS rating, CASE WHEN v->>'genre'<>'' THEN v->>'genre' ELSE s.genre END AS genre, CASE WHEN (COALESCE(s.custom_properties,'{}'::jsonb)||COALESCE((SELECT jsonb_object_agg(p.key,p.value) FROM jsonb_each(COALESCE(NULLIF(v->'properties','null'::jsonb),'{}'::jsonb)) p WHERE NOT (p.value IN ('null'::jsonb,'\"\"'::jsonb,'[]'::jsonb) OR (jsonb_typeof(p.value)='array' AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.value)='array' THEN p.value ELSE '[]'::jsonb END) element WHERE element NOT IN ('null'::jsonb,'\"\"'::jsonb))))),'{}'::jsonb)) IS DISTINCT FROM COALESCE(s.custom_properties,'{}'::jsonb) THEN COALESCE(s.custom_properties,'{}'::jsonb)||COALESCE((SELECT jsonb_object_agg(p.key,p.value) FROM jsonb_each(COALESCE(NULLIF(v->'properties','null'::jsonb),'{}'::jsonb)) p WHERE NOT (p.value IN ('null'::jsonb,'\"\"'::jsonb,'[]'::jsonb) OR (jsonb_typeof(p.value)='array' AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.value)='array' THEN p.value ELSE '[]'::jsonb END) element WHERE element NOT IN ('null'::jsonb,'\"\"'::jsonb))))),'{}'::jsonb) ELSE s.custom_properties END AS custom_properties, (v->>'logo_id')::bigint AS logo_id FROM vod_series s CROSS JOIN jsonb_array_elements($1) v WHERE s.id::bigint=(v->>'initial_id')::bigint) UPDATE vod_series s SET year=p.year,tmdb_id=p.tmdb_id,imdb_id=p.imdb_id,description=p.description,rating=p.rating,genre=p.genre,custom_properties=p.custom_properties,logo_id=p.logo_id FROM projected p WHERE s.id=p.id AND ROW(s.year,s.tmdb_id,s.imdb_id,s.description,s.rating,s.genre,s.custom_properties,s.logo_id) IS DISTINCT FROM ROW(p.year,p.tmdb_id,p.imdb_id,p.description,p.rating,p.genre,p.custom_properties,p.logo_id)";
+const ADVANCED_SERIES_UPDATE: &str = "WITH projected AS MATERIALIZED (SELECT s.id,input.ordinal,(v->>'name' IS DISTINCT FROM s.name) AS queue_name_change,COALESCE((v->>'year')::integer,s.year) AS year,COALESCE(v->>'tmdb_id',s.tmdb_id) AS tmdb_id,COALESCE(v->>'imdb_id',s.imdb_id) AS imdb_id,CASE WHEN v->>'description'<>'' THEN v->>'description' ELSE s.description END AS description, COALESCE(v->>'rating',s.rating) AS rating, CASE WHEN v->>'genre'<>'' THEN v->>'genre' ELSE s.genre END AS genre, CASE WHEN (COALESCE(s.custom_properties,'{}'::jsonb)||COALESCE((SELECT jsonb_object_agg(p.key,p.value) FROM jsonb_each(COALESCE(NULLIF(v->'properties','null'::jsonb),'{}'::jsonb)) p WHERE NOT (p.value IN ('null'::jsonb,'\"\"'::jsonb,'[]'::jsonb) OR (jsonb_typeof(p.value)='array' AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.value)='array' THEN p.value ELSE '[]'::jsonb END) element WHERE element NOT IN ('null'::jsonb,'\"\"'::jsonb))))),'{}'::jsonb)) IS DISTINCT FROM COALESCE(s.custom_properties,'{}'::jsonb) THEN COALESCE(s.custom_properties,'{}'::jsonb)||COALESCE((SELECT jsonb_object_agg(p.key,p.value) FROM jsonb_each(COALESCE(NULLIF(v->'properties','null'::jsonb),'{}'::jsonb)) p WHERE NOT (p.value IN ('null'::jsonb,'\"\"'::jsonb,'[]'::jsonb) OR (jsonb_typeof(p.value)='array' AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(p.value)='array' THEN p.value ELSE '[]'::jsonb END) element WHERE element NOT IN ('null'::jsonb,'\"\"'::jsonb))))),'{}'::jsonb) ELSE s.custom_properties END AS custom_properties, (v->>'logo_id')::bigint AS logo_id FROM vod_series s CROSS JOIN jsonb_array_elements($1) WITH ORDINALITY AS input(v,ordinal) WHERE s.id::bigint=(v->>'initial_id')::bigint), changed AS MATERIALIZED (SELECT DISTINCT ON(p.id) p.*,CASE WHEN EXISTS(SELECT 1 FROM projected q WHERE q.id=p.id AND q.logo_id IS DISTINCT FROM s.logo_id) THEN (SELECT q.logo_id FROM projected q WHERE q.id=p.id AND q.logo_id IS DISTINCT FROM s.logo_id ORDER BY q.ordinal DESC LIMIT 1) ELSE s.logo_id END AS final_logo_id FROM projected p JOIN vod_series s ON s.id=p.id WHERE (p.queue_name_change OR ROW(s.year,s.tmdb_id,s.imdb_id,s.description,s.rating,s.genre,s.custom_properties,s.logo_id) IS DISTINCT FROM ROW(p.year,p.tmdb_id,p.imdb_id,p.description,p.rating,p.genre,p.custom_properties,p.logo_id)) ORDER BY p.id,p.ordinal) UPDATE vod_series s SET year=p.year,tmdb_id=p.tmdb_id,imdb_id=p.imdb_id,description=p.description,rating=p.rating,genre=p.genre,custom_properties=p.custom_properties,logo_id=p.final_logo_id FROM changed p WHERE s.id=p.id AND ROW(s.year,s.tmdb_id,s.imdb_id,s.description,s.rating,s.genre,s.custom_properties,s.logo_id) IS DISTINCT FROM ROW(p.year,p.tmdb_id,p.imdb_id,p.description,p.rating,p.genre,p.custom_properties,p.final_logo_id)";
 
 #[cfg(test)]
 pub(super) fn schema_statements() -> Vec<(&'static str, String)> {
     vec![
+        (
+            "advanced_series_relation_existing",
+            ADVANCED_SERIES_RELATION_EXISTING.to_owned(),
+        ),
         (
             "advanced_series_relation_update",
             ADVANCED_SERIES_RELATION_UPDATE.to_owned(),
@@ -128,7 +126,7 @@ pub(super) fn schema_statements() -> Vec<(&'static str, String)> {
 
 const ADVANCED_SERIES_RELATION_INSERT: &str = "INSERT INTO vod_m3useriesrelation(m3u_account_id,series_id,category_id,external_series_id,custom_properties,created_at,updated_at,last_episode_refresh,last_seen) SELECT $1::bigint,(v->>'series')::bigint,(v->>'category')::bigint,v->>'external',jsonb_build_object('basic_data',v->'basic','detailed_fetched',false,'episodes_fetched',false),(v->>'stamp')::timestamptz,(v->>'stamp')::timestamptz,NULL,$3 FROM jsonb_array_elements($2) WITH ORDINALITY AS input(v,ordinal) WHERE NOT EXISTS(SELECT 1 FROM vod_m3useriesrelation r WHERE r.m3u_account_id::bigint=$1 AND r.external_series_id=v->>'external') ORDER BY input.ordinal ON CONFLICT(m3u_account_id,external_series_id) DO NOTHING";
 
-const ADVANCED_SERIES_RELATION_UPDATE:&str="UPDATE vod_m3useriesrelation r SET series_id=(v->>'series')::bigint,category_id=(v->>'category')::bigint,custom_properties=COALESCE(r.custom_properties,'{}'::jsonb)||jsonb_build_object('basic_data',v->'basic')||CASE WHEN COALESCE((v->>'candidate')::boolean,false) OR r.series_id IS DISTINCT FROM (v->>'series')::bigint THEN jsonb_build_object('detailed_fetched',false,'episodes_fetched',false) ELSE '{}'::jsonb END,last_seen=$3 FROM jsonb_array_elements($2) v WHERE r.m3u_account_id=$1 AND r.external_series_id=v->>'external'";
+const ADVANCED_SERIES_RELATION_UPDATE:&str="UPDATE vod_m3useriesrelation r SET series_id=(v->>'series')::bigint,category_id=(v->>'category')::bigint,custom_properties=COALESCE(r.custom_properties,'{}'::jsonb)||jsonb_build_object('basic_data',v->'basic')||CASE WHEN COALESCE((v->>'reset')::boolean,false) OR r.series_id IS DISTINCT FROM (v->>'series')::bigint THEN jsonb_build_object('detailed_fetched',false,'episodes_fetched',false) ELSE '{}'::jsonb END,last_seen=$3 FROM jsonb_array_elements($2) v WHERE r.m3u_account_id=$1 AND r.external_series_id=v->>'external'";
 
 #[cfg(test)]
 mod tests {

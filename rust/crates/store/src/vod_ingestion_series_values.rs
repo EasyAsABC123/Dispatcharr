@@ -30,37 +30,21 @@ fn scalar(value: &Value) -> Result<String, StoreError> {
     }
     Ok(result)
 }
-/// Source extract_year uses the leading date component, never the title.
-/// Bound this provisional slice to ASCII strings and PostgreSQL integer years;
-/// Python-only Unicode digits/underscores and truthy nonstrings stay refused.
+/// Source int(date.split('-')[0]) differs from str.strip and never reads title.
+/// Unicode numeric syntax reuses the existing Source15.1 integer decoder.
 fn date_year(value: Option<&Value>) -> Result<Option<i32>, StoreError> {
     let Some(value) = value.filter(|v| crate::xc_live_provider::truthy(v)) else {
         return Ok(None);
     };
     let text = value
         .as_str()
-        .filter(|v| v.is_ascii() && v.len() <= 255)
+        .filter(|v| v.len() <= 255)
         .ok_or_else(unsupported)?;
-    if text.contains('_') {
-        return Err(unsupported());
-    }
-    let head = text
-        .split('-')
-        .next()
-        .unwrap_or_default()
-        .trim_matches(|c: char| matches!(c, ' ' | '\t' | '\n' | '\x0b' | '\x0c' | '\r'));
-    match head.parse::<i32>() {
-        Ok(year) => Ok(Some(year)),
-        Err(_)
-            if !head.trim_start_matches('+').is_empty()
-                && head
-                    .trim_start_matches('+')
-                    .bytes()
-                    .all(|v| v.is_ascii_digit()) =>
-        {
-            Err(unsupported())
-        }
-        Err(_) => Ok(None),
+    match dispatcharr_ingest_core::source_integer_literal(
+        text.split('-').next().unwrap_or_default(),
+    ) {
+        None => Ok(None),
+        Some(integer) => integer.parse::<i32>().map(Some).map_err(|_| unsupported()),
     }
 }
 fn list_year(row: &serde_json::Map<String, Value>) -> Result<Option<i32>, StoreError> {
@@ -83,9 +67,8 @@ pub(super) fn series(
 ) -> Result<Vec<Series>, StoreError> {
     let rows = value
         .as_array()
-        .filter(|rows| rows.len() <= 64)
+        .filter(|rows| rows.len() <= 1000)
         .ok_or_else(unsupported)?;
-    let mut provider_ids = std::collections::HashMap::new();
     rows.iter()
         .map(|value| {
             if is_draining() {
@@ -117,15 +100,8 @@ pub(super) fn series(
                 .get("name")
                 .and_then(Value::as_str)
                 .ok_or_else(unsupported)?;
-            if !name.is_ascii() {
-                return Err(unsupported());
-            }
-            let name = name
-                .trim_matches(|c: char| {
-                    c.is_ascii_whitespace() || matches!(c, '\x0b' | '\x1c'..='\x1f')
-                })
-                .to_owned();
-            if name.is_empty() || name.len() > 255 {
+            let name = super::values::list_props::python_trim(name).to_owned();
+            if name.is_empty() || name.contains('\0') || name.chars().count() > 255 {
                 return Err(unsupported());
             }
             let external = scalar(row.get("series_id").ok_or_else(unsupported)?)?;
@@ -136,13 +112,6 @@ pub(super) fn series(
             let props = super::values::list_props::series(row)?;
             let year = list_year(row)?;
             let ids = super::values::external_identity::series(row)?;
-            let identity = super::values::external_identity::key(&ids, &name, year);
-            if provider_ids
-                .insert(external.clone(), identity.clone())
-                .is_some_and(|previous| previous != identity)
-            {
-                return Err(unsupported());
-            }
             Ok(Series {
                 name,
                 year,
@@ -206,8 +175,6 @@ mod tests {
             json!(2010),
             json!(["2010"]),
             json!({"year":2010}),
-            json!("2_010"),
-            json!("２０１０"),
             json!("2147483648"),
         ] {
             assert!(series(
@@ -285,11 +252,16 @@ mod tests {
             row[0][key] = json!("unqualified");
             assert!(series(row, &|| false).is_err(), "{key}");
         }
-        assert!(series(
+        let cross_key = series(
             json!([{"series_id":1,"name":"Owned"},{"series_id":1,"name":"Other"}]),
-            &|| false
+            &|| false,
         )
-        .is_err());
+        .unwrap();
+        assert_eq!(cross_key.len(), 2);
+        assert_eq!(
+            (cross_key[0].name.as_str(), cross_key[1].name.as_str()),
+            ("Owned", "Other")
+        );
     }
     #[test]
     fn source_same_identity_series_provider_repeats_keep_order_and_short_alias_priority() {
@@ -305,5 +277,20 @@ mod tests {
         assert_eq!(rows[1].basic, input[1]);
         assert_eq!(rows[0].tmdb_id.as_deref(), Some("101"));
         assert_eq!(rows[1].tmdb_id.as_deref(), Some("101"));
+    }
+    #[test]
+    fn international_series_uses_date_only_and_preserves_source_character_limits() {
+        let rows=series(json!([
+            {"series_id":1,"name":"\u{2003}Été Série 東京\u{a0}","releaseDate":"\u{2003}2011-09-19\u{a0}"},
+            {"series_id":2,"name":"Série (٢٠١٢)"},
+            {"series_id":3,"name":"語".repeat(255),"releaseDate":"２０１３-01-01"}
+        ]),&||false).unwrap();
+        assert_eq!(rows[0].name, "Été Série 東京");
+        assert_eq!(
+            rows.iter().map(|r| r.year).collect::<Vec<_>>(),
+            vec![Some(2011), None, Some(2013)]
+        );
+        assert_eq!(date_year(Some(&json!("2_010"))).unwrap(), Some(2010));
+        assert!(series(json!([{"series_id":1,"name":"語".repeat(256)}]), &|| false).is_err());
     }
 }

@@ -1,6 +1,7 @@
 //! Exact compiled matching, station and aggregate SQL against an owned migrated Source PostgreSQL schema.
 //! Original Dispatcharr/Django/SQLx authors retain model/algorithm/library credit.
-//! This peer prepares production statements; it never executes application DML.
+//! The 47/30 schema peer only prepares statements. A separate ignored control
+//! executes production UPDATEs on transaction-local shadow tables, then rolls back.
 use serde_json::{json, Value};
 use sqlx::{postgres::PgTypeInfo, Column, Connection, Executor, Statement, Type, TypeInfo};
 use std::{collections::BTreeSet, path::Path, str::FromStr};
@@ -39,10 +40,18 @@ fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
     // provide PostgreSQL the production Rust wire types, rather than asking it
     // to infer convenient types from otherwise-unbound SQL placeholders.
     match name {
-        "list_logo_insert" | "list_movie_insert" | "list_movie_update" => {
+        "list_logo_insert"
+        | "list_movie_insert"
+        | "list_movie_update"
+        | "advanced_series_existing"
+        | "list_movie_existing" => {
             vec![<Value as Type<sqlx::Postgres>>::type_info()]
         }
         "list_logo_select" => vec![<Vec<String> as Type<sqlx::Postgres>>::type_info()],
+        "list_movie_relation_existing" | "advanced_series_relation_existing" => vec![
+            <i64 as Type<sqlx::Postgres>>::type_info(),
+            <Vec<String> as Type<sqlx::Postgres>>::type_info(),
+        ],
         "list_movie_relation_insert"
         | "list_movie_relation_update"
         | "advanced_series_relation_update" => vec![
@@ -70,10 +79,7 @@ fn parameter_types(name: &str) -> Vec<PgTypeInfo> {
             <Value as Type<sqlx::Postgres>>::type_info(),
             <chrono::DateTime<chrono::Utc> as Type<sqlx::Postgres>>::type_info(),
         ],
-        "advanced_series_existing"
-        | "list_movie_existing"
-        | "advanced_guard"
-        | "advanced_orphan_series" => vec![],
+        "advanced_guard" | "advanced_orphan_series" => vec![],
         "advanced_series_insert" | "advanced_series_update" => {
             vec![<Value as Type<sqlx::Postgres>>::type_info()]
         }
@@ -131,6 +137,9 @@ fn outputs(name: &str) -> Vec<(&'static str, Output)> {
         | "list_movie_relation_update"
         | "advanced_series_relation_update" => vec![],
         "list_logo_select" => vec![("id", Int8), ("url", Text)],
+        "list_movie_relation_existing" | "advanced_series_relation_existing" => {
+            vec![("provider", Text), ("target", Int8)]
+        }
         "list_movie_insert" | "advanced_series_insert" => vec![("id", Int8), ("uuid", Uuid)],
         "advanced_category_insert"
         | "advanced_uncategorized_insert"
@@ -215,7 +224,7 @@ fn compatible(kind: Output, actual: &PgTypeInfo) -> bool {
 #[test]
 fn compiled_matching_statements_and_bind_ordinals_are_complete() {
     let rows = statements();
-    assert_eq!(rows.len(), 45);
+    assert_eq!(rows.len(), 47);
     let names: BTreeSet<_> = rows.iter().map(|(name, _)| *name).collect();
     assert_eq!(names.len(), rows.len());
     assert_eq!(
@@ -243,6 +252,8 @@ fn compiled_matching_statements_and_bind_ordinals_are_complete() {
             "list_logo_insert",
             "list_logo_select",
             "list_movie_existing",
+            "list_movie_relation_existing",
+            "advanced_series_relation_existing",
             "list_movie_relation_update",
             "advanced_series_relation_update",
             "list_movie_insert",
@@ -279,6 +290,8 @@ fn compiled_matching_statements_and_bind_ordinals_are_complete() {
                 || sql.starts_with("DELETE ")
                 || (matches!(name, "list_movie_update" | "advanced_series_update")
                     && sql.starts_with("WITH projected AS MATERIALIZED (SELECT "))
+                || (matches!(name, "list_movie_existing" | "advanced_series_existing")
+                    && sql.starts_with("WITH wanted AS MATERIALIZED (SELECT "))
         );
         let used: BTreeSet<_> = ordinal
             .captures_iter(&sql)
@@ -384,6 +397,12 @@ async fn actual_compiled_matching_schema_prepare_only() {
         ("advanced_series_relation_update", 0),
         ("advanced_series_relation_update", 1),
         ("advanced_series_relation_update", 2),
+        ("list_movie_existing", 0),
+        ("advanced_series_existing", 0),
+        ("list_movie_relation_existing", 0),
+        ("list_movie_relation_existing", 1),
+        ("advanced_series_relation_existing", 0),
+        ("advanced_series_relation_existing", 1),
     ] {
         let sql = statements()
             .into_iter()
@@ -391,13 +410,20 @@ async fn actual_compiled_matching_schema_prepare_only() {
             .unwrap()
             .1;
         let mut types = parameter_types(name);
-        types[index] = if name == "list_logo_select" {
+        types[index] = if name == "list_logo_select"
+            || (matches!(
+                name,
+                "list_movie_relation_existing" | "advanced_series_relation_existing"
+            ) && index == 1)
+        {
             <Vec<bool> as Type<sqlx::Postgres>>::type_info()
         } else if matches!(
             name,
             "list_movie_relation_insert"
                 | "list_movie_relation_update"
                 | "advanced_series_relation_update"
+                | "list_movie_relation_existing"
+                | "advanced_series_relation_existing"
         ) && index == 0
         {
             <bool as Type<sqlx::Postgres>>::type_info()
@@ -420,18 +446,18 @@ async fn actual_compiled_matching_schema_prepare_only() {
     }
     let ready = connection.ping().await;
     let closed = connection.close().await;
-    let passed = rows.len() == 45
+    let passed = rows.len() == 47
         && rows.iter().all(|r| {
             r["prepared"] == true
                 && r["row_decoder_compatible"] == true
                 && r["server_parameter_types_match"] == true
         })
-        && negatives.len() == 24
+        && negatives.len() == 30
         && negatives.iter().all(|r| r["rejected"] == true)
         && ready.is_ok()
         && closed.is_ok();
     let report = json!({"passed":passed,"schema_only":true,"DML_executed":false,"task_or_media_executed":false,
-        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1,"comskip":4,"vod_advanced":19,"vod_list_metadata":7},"statements":rows,"wrong_bind_type_controls":negatives,
+        "actual_readonly":readonly,"statement_cache_disabled":true,"components":{"matching":11,"station":3,"aggregate":1,"comskip":4,"vod_advanced":20,"vod_list_metadata":8},"statements":rows,"wrong_bind_type_controls":negatives,
         "ready":format!("{ready:?}"),"closed":format!("{closed:?}"),"scope":"Compiled production SQL/constants and audited actual Rust bind types; prepares/row shapes only, not DML/data/event/task parity."});
     let bytes = serde_json::to_vec_pretty(&report).expect("report");
     assert!(bytes.len() <= 131072);
@@ -447,5 +473,150 @@ async fn actual_compiled_matching_schema_prepare_only() {
     assert!(
         passed,
         "actual compiled matching/station/aggregate SQL/schema/type prepare failed"
+    );
+}
+
+#[tokio::test]
+#[ignore = "owned copied Source schema; actual production UPDATE on transaction-local shadow tables, then rollback"]
+async fn actual_compiled_vod_name_queue_rollback() {
+    let url = std::env::var("OWNED_MATCHING_SCHEMA_URL").expect("explicit owned Source schema URL");
+    let options = sqlx::postgres::PgConnectOptions::from_str(&url).expect("SQL options");
+    assert_eq!(options.get_host(), "localhost");
+    assert_eq!(options.get_port(), 5432);
+    assert_eq!(options.get_username(), "dispatch");
+    assert!(options
+        .get_database()
+        .is_some_and(|v| v.starts_with("rust_probe_backup_jobs_") && v.len() <= 64));
+    assert_eq!(
+        std::env::var("OWNED_MATCHING_SCHEMA_DISPOSABLE").as_deref(),
+        Ok("copied-schema-only-no-tasks")
+    );
+    // This distinct connection intentionally permits DML. The existing 47/30
+    // Parse/Describe test remains read-only and publishes its separate receipt.
+    let mut connection =
+        sqlx::PgConnection::connect_with(&options.statement_cache_capacity(0).options([
+            ("default_transaction_read_only", "off"),
+            ("statement_timeout", "5000"),
+        ]))
+        .await
+        .expect("owned semantic-control connection");
+    let public_sql = "SELECT jsonb_build_object('movie',COALESCE((SELECT jsonb_agg(to_jsonb(m) ORDER BY m.id) FROM public.vod_movie m),'[]'::jsonb),'series',COALESCE((SELECT jsonb_agg(to_jsonb(s) ORDER BY s.id) FROM public.vod_series s),'[]'::jsonb),'sequences',COALESCE((SELECT jsonb_agg(to_jsonb(q) ORDER BY q.sequencename) FROM pg_sequences q WHERE q.schemaname='public'),'[]'::jsonb))";
+    for table in ["vod_movie", "vod_series"] {
+        let count: i64 = sqlx::query_scalar(&format!("SELECT count(*) FROM public.{table}"))
+            .fetch_one(&mut connection)
+            .await
+            .expect("bounded public observation");
+        assert!(count <= 4096);
+    }
+    let public_before: Value = sqlx::query_scalar(public_sql)
+        .fetch_one(&mut connection)
+        .await
+        .expect("public baseline");
+    let mut tx = connection
+        .begin()
+        .await
+        .expect("owned rollback transaction");
+    sqlx::query("SET LOCAL search_path TO pg_temp,public")
+        .execute(&mut *tx)
+        .await
+        .expect("explicit temporary namespace");
+    let mut cases = Vec::new();
+    for (table, statement) in [
+        ("vod_movie", "list_movie_update"),
+        ("vod_series", "advanced_series_update"),
+    ] {
+        sqlx::query(&format!(
+            "CREATE TEMP TABLE {table} ON COMMIT DROP AS SELECT * FROM public.{table} WITH NO DATA"
+        ))
+        .execute(&mut *tx)
+        .await
+        .expect("shadow table without defaults, FKs or sequence allocation");
+        let shadowed: bool = sqlx::query_scalar(&format!("SELECT to_regclass('{table}')=to_regclass('pg_temp.{table}') AND to_regclass('{table}')<>to_regclass('public.{table}')"))
+            .fetch_one(&mut *tx).await.expect("temporary table resolution");
+        assert!(shadowed);
+        let sql = statements()
+            .into_iter()
+            .find(|(name, _)| *name == statement)
+            .expect("actual exported production UPDATE")
+            .1;
+        for reversed in [false, true] {
+            sqlx::query(&format!("DELETE FROM pg_temp.{table}"))
+                .execute(&mut *tx)
+                .await
+                .expect("reset temporary row only");
+            let extra_columns = if table == "vod_movie" {
+                ",is_adult,duration_secs"
+            } else {
+                ""
+            };
+            let extra_values = if table == "vod_movie" {
+                ",false,NULL"
+            } else {
+                ""
+            };
+            let insert = format!("INSERT INTO pg_temp.{table}(id,uuid,name,description,year,tmdb_id,imdb_id,language,genre,rating,logo_id,custom_properties,created_at,updated_at{extra_columns}) VALUES(1700000001,'39124190-2be3-42d6-9ccf-18e13d72a8d2'::uuid,'Owned old','old description',2010,'7101','tt8101','','',NULL,NULL,NULL,'2020-01-01T00:00:00Z'::timestamptz,'2020-01-02T00:00:00Z'::timestamptz{extra_values})");
+            sqlx::query(&insert)
+                .execute(&mut *tx)
+                .await
+                .expect("explicit seed without nextval");
+            let select = format!("SELECT to_jsonb(m) FROM pg_temp.{table} m WHERE id=1700000001");
+            let before: Value = sqlx::query_scalar(&select)
+                .fetch_one(&mut *tx)
+                .await
+                .expect("complete seed row");
+            let first = json!({"initial_id":1700000001,"name":"Incoming renamed","description":"","year":2010,"tmdb_id":"7101","imdb_id":"tt8101","genre":"","rating":null,"duration":null,"adult":null,"properties":null,"logo_id":null});
+            let mut second = first.clone();
+            second["name"] = json!("Owned old");
+            second["description"] = json!("second description");
+            let payload = if reversed {
+                json!([second, first])
+            } else {
+                json!([first, second])
+            };
+            let observed = sqlx::query(&sql)
+                .bind(payload)
+                .execute(&mut *tx)
+                .await
+                .expect("actual production UPDATE control");
+            let after: Value = sqlx::query_scalar(&select)
+                .fetch_one(&mut *tx)
+                .await
+                .expect("complete resulting row");
+            let mut expected = before.clone();
+            if reversed {
+                expected["description"] = json!("second description");
+            }
+            let affected_expected = if reversed { 1u64 } else { 0u64 };
+            cases.push(json!({"statement":statement,"reverse_order":reversed,"production_SQL":sql,"actual_rows_affected":observed.rows_affected(),"expected_rows_affected":affected_expected,"full_seed_row_expected":expected,"full_observed_row":after,"passed":after==expected && observed.rows_affected()==affected_expected,"temporary_table_resolution_verified":shadowed}));
+        }
+    }
+    tx.rollback()
+        .await
+        .expect("rollback all temporary schema and actual DML");
+    let public_after: Value = sqlx::query_scalar(public_sql)
+        .fetch_one(&mut connection)
+        .await
+        .expect("public state after rollback");
+    let no_temp: bool = sqlx::query_scalar("SELECT to_regclass('pg_temp.vod_movie') IS NULL AND to_regclass('pg_temp.vod_series') IS NULL")
+        .fetch_one(&mut connection).await.expect("rollback removes shadow tables");
+    let ready = connection.ping().await;
+    let closed = connection.close().await;
+    let passed = cases.len() == 4
+        && cases.iter().all(|v| v["passed"] == true)
+        && public_before == public_after
+        && no_temp
+        && ready.is_ok()
+        && closed.is_ok();
+    let report = json!({"passed":passed,"schema_only":false,"DML_executed":true,"DML_scope":"Actual production Movie/Series UPDATE on transaction-local shadow tables only","transaction_rolled_back":true,"public_model_rows_and_sequence_catalog_exact":public_before==public_after,"temporary_tables_absent_after_rollback":no_temp,"explicit_seed_no_nextval":true,"statement_cache_disabled":true,"cases":cases,"ready":format!("{ready:?}"),"closed":format!("{closed:?}"),"task_or_media_executed":false,"performance_verified":false,"full_milestone_accepted":false});
+    let bytes = serde_json::to_vec_pretty(&report).expect("semantic report");
+    assert!(bytes.len() <= 131072);
+    std::fs::write(
+        Path::new("/evidence/native-vod-name-queue-rollback-private.json"),
+        bytes,
+    )
+    .expect("persist semantic receipt before assertion");
+    assert!(
+        passed,
+        "actual production name-only queue ordering rollback control failed"
     );
 }

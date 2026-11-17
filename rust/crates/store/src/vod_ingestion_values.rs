@@ -70,32 +70,57 @@ fn scalar(value: &Value) -> Result<String, StoreError> {
     }
     Ok(result)
 }
+fn parsed_integer(value: &str) -> Option<i32> {
+    dispatcharr_ingest_core::source_integer_literal(value)?
+        .parse()
+        .ok()
+}
 fn year(row: &serde_json::Map<String, Value>, name: &str) -> Result<Option<i32>, StoreError> {
-    if let Some(value) = row.get("year") {
-        if crate::xc_live_provider::truthy(value) {
-            let value = match value {
-                Value::String(text) => text.trim().parse::<i32>().ok(),
-                Value::Number(number) if number.as_i64().is_some() => {
-                    number.as_i64().and_then(|v| i32::try_from(v).ok())
-                }
-                _ => return Err(unsupported()),
-            };
-            if let Some(value) = value.filter(|v| (1900..=2030).contains(v)) {
-                return Ok(Some(value));
+    if let Some(value) = row
+        .get("year")
+        .filter(|v| crate::xc_live_provider::truthy(v))
+    {
+        let parsed = match value {
+            Value::String(text) if text.len() <= 255 => parsed_integer(text),
+            Value::Number(number) if number.as_i64().is_some() => {
+                number.as_i64().and_then(|v| i32::try_from(v).ok())
+            }
+            _ => return Err(unsupported()),
+        };
+        if let Some(year) = parsed.filter(|v| (1900..=2030).contains(v)) {
+            return Ok(Some(year));
+        }
+    }
+    // Source Movie year considers both date spellings before title fallbacks;
+    // this is independent of the narrower release_date custom property field.
+    for key in ["releaseDate", "release_date"] {
+        if let Some(value) = row.get(key).filter(|v| crate::xc_live_provider::truthy(v)) {
+            let text = value
+                .as_str()
+                .filter(|v| v.len() <= 1024)
+                .ok_or_else(unsupported)?;
+            let head = list_props::python_trim(text.split('-').next().unwrap_or_default());
+            if let Some(year) = parsed_integer(head).filter(|v| (1900..=2030).contains(v)) {
+                return Ok(Some(year));
             }
         }
     }
     for pattern in [
         r"\((\d{4})\)",
-        r"[\t\n\r\x0B\x0C\x1c-\x1f ]-[\t\n\r\x0B\x0C\x1c-\x1f ](\d{4})",
-        r"[\t\n\r\x0B\x0C\x1c-\x1f ](\d{4})(?:\n)?$",
+        r"[\s\x1c-\x1f]-[\s\x1c-\x1f](\d{4})",
+        r"[\s\x1c-\x1f](\d{4})(?:\n)?$",
     ] {
         let expression = regex::Regex::new(pattern).map_err(|_| unsupported())?;
-        if let Some(found) = expression.captures(name) {
-            if let Ok(value) = found[1].parse::<i32>() {
-                if (1900..=2030).contains(&value) {
-                    return Ok(Some(value));
+        for found in expression.captures_iter(name) {
+            // The existing integer decoder pins Source's Unicode15.1 digits;
+            // newer regex-library Nd characters cannot hide a later Source match.
+            if let Some(literal) = dispatcharr_ingest_core::source_integer_literal(&found[1]) {
+                if let Ok(year) = literal.parse::<i32>() {
+                    if (1900..=2030).contains(&year) {
+                        return Ok(Some(year));
+                    }
                 }
+                break; // Python re.search considers only its first matching group.
             }
         }
     }
@@ -109,9 +134,8 @@ pub(super) fn movies(
 ) -> Result<Vec<Movie>, StoreError> {
     let rows = value
         .as_array()
-        .filter(|rows| rows.len() <= 64)
+        .filter(|rows| rows.len() <= 1000)
         .ok_or_else(unsupported)?;
-    let mut streams = std::collections::HashMap::new();
     rows.iter()
         .map(|value| {
             if is_draining() {
@@ -121,7 +145,7 @@ pub(super) fn movies(
             if serde_json::to_vec(value).map_err(|_| unsupported())?.len() > 16384 {
                 return Err(unsupported());
             }
-            for key in ["episode_run_time", "releaseDate"] {
+            for key in ["episode_run_time"] {
                 if row.get(key).is_some_and(crate::xc_live_provider::truthy) {
                     return Err(unsupported());
                 }
@@ -130,14 +154,8 @@ pub(super) fn movies(
                 .get("name")
                 .and_then(Value::as_str)
                 .ok_or_else(unsupported)?;
-            let name = raw_name;
-            if !name.is_ascii() {
-                return Err(unsupported());
-            }
-            let name = name
-                .trim_matches(|c: char| c.is_ascii_whitespace() || matches!(c, '\x1c'..='\x1f'))
-                .to_owned();
-            if name.is_empty() || name.len() > 255 {
+            let name = list_props::python_trim(raw_name).to_owned();
+            if name.is_empty() || name.contains('\0') || name.chars().count() > 255 {
                 return Err(unsupported());
             }
             let stream = scalar(row.get("stream_id").ok_or_else(unsupported)?)?;
@@ -155,13 +173,6 @@ pub(super) fn movies(
             };
             let year = year(row, raw_name)?;
             let ids = external_identity::movie(row)?;
-            let identity = external_identity::key(&ids, &name, year);
-            if streams
-                .insert(stream.clone(), identity.clone())
-                .is_some_and(|previous| previous != identity)
-            {
-                return Err(unsupported());
-            }
             let props = list_props::movie(row)?;
             Ok(Movie {
                 year,
@@ -221,19 +232,22 @@ mod source_basic_list_controls {
     fn unsupported_metadata_identity_and_shutdown_do_not_become_sparse_imports() {
         let plain = json!([{"stream_id":1,"name":"Owned - 2020","is_adult":true}]);
         assert!(movies(plain.clone(), &|| true).is_err());
-        for field in ["episode_run_time", "releaseDate"] {
-            let mut metadata = plain.clone();
-            metadata[0][field] = json!("unsupported");
-            assert!(movies(metadata, &|| false).is_err(), "{field}");
-        }
+        let mut metadata = plain.clone();
+        metadata[0]["episode_run_time"] = json!("unsupported");
+        assert!(movies(metadata, &|| false).is_err());
         let imported = movies(plain, &|| false).unwrap();
         assert_eq!(imported[0].adult, Some(true));
         assert_eq!(imported[0].year, Some(2020));
-        assert!(movies(
+        let cross_key = movies(
             json!([{"stream_id":1,"name":"Owned"},{"stream_id":1,"name":"Other"}]),
-            &|| false
+            &|| false,
         )
-        .is_err());
+        .unwrap();
+        assert_eq!(cross_key.len(), 2);
+        assert_eq!(
+            (cross_key[0].name.as_str(), cross_key[1].name.as_str()),
+            ("Owned", "Other")
+        );
     }
     #[test]
     fn multiple_provider_streams_share_identity_and_missing_adult_is_distinct() {
@@ -261,5 +275,33 @@ mod source_basic_list_controls {
         assert_eq!(rows[1].basic, input[1]);
         assert_eq!(rows[0].tmdb_id.as_deref(), Some("101"));
         assert_eq!(rows[1].imdb_id.as_deref(), Some("tt-second"));
+    }
+    #[test]
+    fn international_names_dates_and_title_digits_preserve_source_identity() {
+        let rows=movies(json!([
+            {"stream_id":1,"name":"\u{2003}Été 東京\u{a0}","releaseDate":"\u{2003}2011-09-19\u{a0}"},
+            {"stream_id":2,"name":"Film (٢٠١٢)"},
+            {"stream_id":3,"name":"Cinéma\u{2003}1990"},
+            {"stream_id":4,"name":"界".repeat(255)},
+            {"stream_id":5,"name":"Café"},{"stream_id":6,"name":"Cafe\u{301}"}
+        ]),&||false).unwrap();
+        assert_eq!(rows[0].name, "Été 東京");
+        assert_eq!(
+            rows.iter().take(4).map(|r| r.year).collect::<Vec<_>>(),
+            vec![Some(2011), Some(2012), Some(1990), None]
+        );
+        assert_eq!(rows[3].name.chars().count(), 255);
+        assert_ne!(rows[4].name, rows[5].name);
+        assert!(movies(json!([{"stream_id":1,"name":"界".repeat(256)}]), &|| false).is_err());
+        assert_eq!(
+            year(
+                json!({"year":"\u{1c}2011","name":"Movie (2012)"})
+                    .as_object()
+                    .unwrap(),
+                "Movie (2012)"
+            )
+            .unwrap(),
+            Some(2012)
+        );
     }
 }

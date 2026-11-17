@@ -18,10 +18,22 @@ fn ascii(value: &str, limit: usize) -> Result<&str, StoreError> {
     }
     Ok(value)
 }
+/// Python str.strip: Unicode White_Space plus the four ASCII information separators.
+pub(in crate::vod_ingestion) fn python_trim(value: &str) -> &str {
+    value.trim_matches(|c: char| c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}'))
+}
+/// Preserve existing per-value byte budgets while admitting well-formed UTF8.
+/// Schema character limits and the unchanged16KiB serialized-row cap are separate.
+fn bounded_text(value: &str, byte_limit: usize) -> Result<&str, StoreError> {
+    if value.contains('\0') || value.len() > byte_limit {
+        return Err(unsupported());
+    }
+    Ok(value)
+}
 fn direct_text(row: &Map<String, Value>, key: &str, limit: usize) -> Result<String, StoreError> {
     match row.get(key) {
         None => Ok(String::new()),
-        Some(Value::String(value)) => Ok(ascii(value, limit)?.to_owned()),
+        Some(Value::String(value)) => Ok(bounded_text(value, limit)?.to_owned()),
         _ => Err(unsupported()),
     }
 }
@@ -34,7 +46,7 @@ fn fallback_text(
         .map(|v| {
             v.as_str()
                 .ok_or_else(unsupported)
-                .and_then(|v| ascii(v, limit))
+                .and_then(|v| bounded_text(v, limit))
         })
         .transpose()
         .map(|v| v.unwrap_or_default().to_owned())
@@ -42,11 +54,11 @@ fn fallback_text(
 fn string_shape(value: &Value) -> Result<(), StoreError> {
     match value {
         Value::String(value) => {
-            ascii(value, 1024)?;
+            bounded_text(value, 1024)?;
         }
         Value::Array(values) if values.len() <= 16 => {
             for value in values {
-                ascii(value.as_str().ok_or_else(unsupported)?, 256)?;
+                bounded_text(value.as_str().ok_or_else(unsupported)?, 256)?;
             }
         }
         _ => return Err(unsupported()),
@@ -69,11 +81,7 @@ fn actors(value: Option<&Value>) -> Result<Option<String>, StoreError> {
         let values = values
             .iter()
             .map(|v| v.as_str().expect("validated strings"))
-            .map(|v| {
-                v.trim_matches(|c: char| {
-                    c.is_ascii_whitespace() || matches!(c, '\x0b' | '\x1c'..='\x1f')
-                })
-            })
+            .map(python_trim)
             .filter(|v| !v.is_empty())
             .collect::<Vec<_>>();
         let joined = values.join(", ");
@@ -285,12 +293,25 @@ mod tests {
             json!({"rating":"1e2"}),
             json!({"genre":"x".repeat(256)}),
             json!({"duration":1.5}),
-            json!({"description":"é"}),
+            json!({"description":"é".repeat(2049)}),
         ] {
             assert!(movie(row.as_object().unwrap()).is_err());
         }
         let raw = "x".repeat(501);
         let props = movie(json!({"stream_icon":raw}).as_object().unwrap()).unwrap();
         assert_eq!(props.logo.as_ref().unwrap().len(), 501);
+    }
+    #[test]
+    fn international_metadata_uses_python_strip_without_lifting_byte_budgets() {
+        let row = json!({"description":"映画の説明","genre":"ドラマ","director":["\u{2003}監督 一\u{a0}","unused"],"actors":["\u{2003}俳優 一\u{a0}","俳優 二"]});
+        let props = movie(row.as_object().unwrap()).unwrap();
+        assert_eq!(props.description, "映画の説明");
+        assert_eq!(
+            props.properties,
+            Some(json!({"director":"監督 一","actors":"俳優 一, 俳優 二"}))
+        );
+        assert_eq!(python_trim("\u{1c}\u{2003}é\u{a0}\u{1f}"), "é");
+        assert!(movie(json!({"description":"é".repeat(2049)}).as_object().unwrap()).is_err());
+        assert!(movie(json!({"description":"a\0b"}).as_object().unwrap()).is_err());
     }
 }

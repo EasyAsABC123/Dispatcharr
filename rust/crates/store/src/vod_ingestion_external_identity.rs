@@ -14,7 +14,7 @@ fn bounded(value: &Value) -> Result<(), StoreError> {
     let valid = match value {
         Value::Null => true,
         Value::String(text) => {
-            text.bytes().all(|byte| (b' '..=b'~').contains(&byte)) && text.len() <= 50
+            !text.chars().any(char::is_control) && text.chars().count() <= 50 && text.len() <= 200
         }
         Value::Number(number) => {
             let text = number.to_string();
@@ -62,24 +62,6 @@ pub(crate) fn series(row: &Map<String, Value>) -> Result<ExternalIds, StoreError
         imdb_id: selected(row, "imdb", "imdb_id")?,
     })
 }
-/// Source primary key precedence, used only to guard unqualified cross-key
-/// provider-ID duplicates. Input rows remain in original order for SQL grouping.
-#[derive(Clone, PartialEq, Eq)]
-pub(crate) enum Key {
-    Tmdb(String),
-    Imdb(String),
-    NameYear(String, Option<i32>),
-}
-pub(crate) fn key(ids: &ExternalIds, name: &str, year: Option<i32>) -> Key {
-    if let Some(id) = &ids.tmdb_id {
-        Key::Tmdb(id.clone())
-    } else if let Some(id) = &ids.imdb_id {
-        Key::Imdb(id.clone())
-    } else {
-        Key::NameYear(name.to_owned(), year)
-    }
-}
-
 #[cfg(test)]
 mod source_alias_controls {
     use super::*;
@@ -147,7 +129,6 @@ mod source_alias_controls {
         assert!(movie(json!({"tmdb_id":101,"tmdb":true}).as_object().unwrap()).is_err());
         for value in [
             json!("x".repeat(51)),
-            json!("é"),
             json!("a\0b"),
             json!("\tID\n"),
             json!("\u{007f}"),
@@ -160,5 +141,20 @@ mod source_alias_controls {
         ] {
             assert!(movie(json!({"tmdb_id":value}).as_object().unwrap()).is_err());
         }
+    }
+    #[test]
+    fn unicode_identifiers_remain_opaque_bounded_and_untrimmed() {
+        for id in ["映画-5104", "連続-6104", " é ", "界界"] {
+            assert_eq!(
+                movie(json!({"tmdb_id":id}).as_object().unwrap())
+                    .unwrap()
+                    .tmdb_id
+                    .as_deref(),
+                Some(id)
+            );
+        }
+        assert!(movie(json!({"tmdb_id":"界".repeat(50)}).as_object().unwrap()).is_ok());
+        assert!(movie(json!({"tmdb_id":"界".repeat(51)}).as_object().unwrap()).is_err());
+        assert!(movie(json!({"tmdb_id":"界\0界"}).as_object().unwrap()).is_err());
     }
 }

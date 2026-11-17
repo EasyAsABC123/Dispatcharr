@@ -109,6 +109,19 @@ async fn update(
 async fn action(client: &mut Client, action: &str) -> Result<Value, Step> {
     client.vod_action(action).await?.map_err(Step::Caught)
 }
+/// Source fetches each complete list once, then processes raw chunks of 1000.
+/// Take owned rows without cloning the full provider document; filter disabled
+/// categories only inside each chunk so its atomic failure boundary stays exact.
+fn source_batches(document: Value) -> Result<impl Iterator<Item = Value>, StoreError> {
+    let Value::Array(rows) = document else {
+        return Err(unsupported());
+    };
+    let mut rows = rows.into_iter();
+    Ok(std::iter::from_fn(move || {
+        let batch: Vec<_> = rows.by_ref().take(1000).collect();
+        (!batch.is_empty()).then_some(Value::Array(batch))
+    }))
+}
 /// Only actual claimed tasks call execute. Source's direct decorated helpers
 /// remain ordinary in-process phases: no fake Celery children are synthesized.
 pub async fn execute(
@@ -200,27 +213,30 @@ pub async fn execute(
         let enabled = sql::enabled(&auth, owner.clone(), account.id).await?;
         draining(cancellation.as_ref())?;
         let document = action(&mut client, "get_vod_streams").await?;
-        let retained = owner.clone();
-        let draining_cpu = cancellation.clone();
-        let rows = tokio::task::spawn_blocking(move || {
-            let _owner = retained;
-            values::movies(document, &|| draining_cpu.is_draining())
-        })
-        .await
-        .map_err(|_| unsupported())??;
-        let mut imported = Vec::new();
-        for movie in rows {
-            let category = movie
-                .provider
-                .as_ref()
-                .and_then(|provider| movie_map.get(provider))
-                .copied()
-                .unwrap_or(uncategorized);
-            if enabled.get(&category).copied().unwrap_or(true) {
-                imported.push((movie, category));
+        for document in source_batches(document)? {
+            draining(cancellation.as_ref())?;
+            let retained = owner.clone();
+            let draining_cpu = cancellation.clone();
+            let rows = tokio::task::spawn_blocking(move || {
+                let _owner = retained;
+                values::movies(document, &|| draining_cpu.is_draining())
+            })
+            .await
+            .map_err(|_| unsupported())??;
+            let mut imported = Vec::new();
+            for movie in rows {
+                let category = movie
+                    .provider
+                    .as_ref()
+                    .and_then(|provider| movie_map.get(provider))
+                    .copied()
+                    .unwrap_or(uncategorized);
+                if enabled.get(&category).copied().unwrap_or(true) {
+                    imported.push((movie, category));
+                }
             }
+            sql::movies(&auth, owner.clone(), account.id, imported, scan).await?;
         }
-        sql::movies(&auth, owner.clone(), account.id, imported, scan).await?;
         let uncategorized_series = sql::uncategorized(
             &auth,
             owner.clone(),
@@ -234,22 +250,25 @@ pub async fn execute(
         // Source refresh_series calls the decorated batch helper inline. It
         // creates no Celery child and does not fetch episodes/details here.
         let document = action(&mut client, "get_series").await?;
-        let retained = owner.clone();
-        let draining_cpu = cancellation.clone();
-        let rows = tokio::task::spawn_blocking(move || {
-            let _owner = retained;
-            series_values::series(document, &|| draining_cpu.is_draining())
-        }).await.map_err(|_| unsupported())??;
-        let mut imported = Vec::new();
-        for series in rows {
-            let category = series.provider.as_ref()
-                .and_then(|provider| series_map.get(provider)).copied()
-                .unwrap_or(uncategorized_series);
-            if enabled.get(&category).copied().unwrap_or(true) {
-                imported.push((series, category));
+        for document in source_batches(document)? {
+            draining(cancellation.as_ref())?;
+            let retained = owner.clone();
+            let draining_cpu = cancellation.clone();
+            let rows = tokio::task::spawn_blocking(move || {
+                let _owner = retained;
+                series_values::series(document, &|| draining_cpu.is_draining())
+            }).await.map_err(|_| unsupported())??;
+            let mut imported = Vec::new();
+            for series in rows {
+                let category = series.provider.as_ref()
+                    .and_then(|provider| series_map.get(provider)).copied()
+                    .unwrap_or(uncategorized_series);
+                if enabled.get(&category).copied().unwrap_or(true) {
+                    imported.push((series, category));
+                }
             }
+            series_sql::apply(&auth, owner.clone(), account.id, imported, scan).await?;
         }
-        series_sql::apply(&auth, owner.clone(), account.id, imported, scan).await?;
         // Source leaves its XtreamCodesClient context BEFORE reconcile/cleanup.
         drop(client);
         // None of the newly created identities is language tagged, so Source's
