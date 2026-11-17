@@ -74,12 +74,13 @@ impl OperationError {
 }
 enum CommandScript {
     OneOff(Script),
+    ResultWithPreflight(Script),
     Prepared(Arc<Script>),
 }
 impl CommandScript {
     fn script(&self) -> &Script {
         match self {
-            Self::OneOff(script) => script,
+            Self::OneOff(script) | Self::ResultWithPreflight(script) => script,
             Self::Prepared(script) => script,
         }
     }
@@ -186,6 +187,49 @@ impl RedisTransport {
         guard: G,
         diagnostic: Option<CommandDiagnostic>,
     ) -> Result<(T, G), ClassifiedError> {
+        self.command_diagnostic_inner(
+            CommandScript::OneOff(Script::new(source)),
+            keys,
+            args,
+            guard,
+            diagnostic,
+        )
+        .await
+    }
+    /// Celery result persistence health check before the unchanged one mutation.
+    /// Only the fixed-response read-only PING may repeat after a settled dropped
+    /// connection. The owned permit/guard/deadline covers both checks and script.
+    pub async fn command_result_classified_with_diagnostic<
+        T: redis::FromRedisValue + Send + 'static,
+        G: Send + 'static,
+    >(
+        &self,
+        source: &str,
+        keys: &[String],
+        args: &[&[u8]],
+        guard: G,
+        diagnostic: Option<CommandDiagnostic>,
+    ) -> Result<(T, G), ClassifiedError> {
+        self.command_diagnostic_inner(
+            CommandScript::ResultWithPreflight(Script::new(source)),
+            keys,
+            args,
+            guard,
+            diagnostic,
+        )
+        .await
+    }
+    async fn command_diagnostic_inner<
+        T: redis::FromRedisValue + Send + 'static,
+        G: Send + 'static,
+    >(
+        &self,
+        script: CommandScript,
+        keys: &[String],
+        args: &[&[u8]],
+        guard: G,
+        diagnostic: Option<CommandDiagnostic>,
+    ) -> Result<(T, G), ClassifiedError> {
         let trace = diagnostic.map(result_diagnostics::Trace::new);
         if let Some(t) = &trace {
             t.emit(
@@ -209,16 +253,9 @@ impl RedisTransport {
                 return Err(error.classified());
             }
         };
-        self.command_admitted_observed(
-            CommandScript::OneOff(Script::new(source)),
-            keys,
-            args,
-            guard,
-            operation,
-            trace,
-        )
-        .await
-        .map_err(OperationError::classified)
+        self.command_admitted_observed(script, keys, args, guard, operation, trace)
+            .await
+            .map_err(OperationError::classified)
     }
     /// Reuse a caller-owned compiled script without a transport-wide cache.
     /// Admission, physical response ownership and error classification are the
@@ -300,8 +337,15 @@ impl RedisTransport {
             for arg in args {
                 invocation.arg(arg);
             }
-            let result: Result<T, redis::RedisError> =
-                invocation.invoke_async(&mut connection).await;
+            let result: Result<T, redis::RedisError> = async {
+                if matches!(&script, CommandScript::ResultWithPreflight(_)) {
+                    result_preflight(&mut connection).await?;
+                }
+                // Do not retry a script after any error: its mutation/reply may
+                // already have happened, including a disconnect at this point.
+                invocation.invoke_async(&mut connection).await
+            }
+            .await;
             observed.returned(&result);
             (result, guard, operation)
         });
@@ -428,6 +472,26 @@ impl RedisTransport {
         })
         .await
         .map_err(|_| SubscriptionError::Closed)?
+    }
+}
+
+// redis-rs swaps its shared manager connection AFTER returning the dropped
+// command's error. Repeating one settled read-only PING waits that replacement;
+// no owner/admission is released and no result mutation has begun yet.
+async fn result_preflight(connection: &mut ConnectionManager) -> redis::RedisResult<()> {
+    async fn ping(connection: &mut ConnectionManager) -> redis::RedisResult<()> {
+        let reply: String = redis::cmd("PING").query_async(connection).await?;
+        if reply != "PONG" {
+            return Err(redis::RedisError::from((
+                redis::ErrorKind::TypeError,
+                "Unexpected result health response",
+            )));
+        }
+        Ok(())
+    }
+    match ping(connection).await {
+        Err(error) if error.is_connection_dropped() => ping(connection).await,
+        outcome => outcome,
     }
 }
 

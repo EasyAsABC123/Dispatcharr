@@ -6,9 +6,17 @@ impl Jobs {
         publication: dispatcharr_store::CoreTaskPublication,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<(), Error> {
-        let message =
-            crate::normal_core_tasks::parse(publication.bytes()).map_err(|_| Error::Protocol)?;
-        if message.id != publication.task_id() {
+        // The same sealed Store producer also owns Source's new STD-account
+        // refresh_m3u_groups.delay publication; normal queue dispatch already
+        // delegates this exact root envelope to its existing STD implementation.
+        let task_id = if let Ok(message) = crate::normal_core_tasks::parse(publication.bytes()) {
+            message.id
+        } else {
+            crate::normal_xc_live::parse(publication.bytes())
+                .map_err(|_| Error::Protocol)?
+                .id
+        };
+        if task_id != publication.task_id() {
             return Err(Error::Protocol);
         }
         let maximum = self.inner.config.max_queued_jobs.to_string();
@@ -26,7 +34,7 @@ impl Jobs {
             Ok((n, _)) if n > 0 => Ok(()),
             Ok((-2, _)) => Err(Error::Capacity),
             Ok(_) => Err(Error::Corrupt),
-            Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(message.id)),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(task_id)),
             Err(error) => Err(map(error)),
         }
     }

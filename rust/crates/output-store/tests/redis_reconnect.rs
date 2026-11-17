@@ -21,6 +21,7 @@ struct Proxy {
     drop_reply: Arc<AtomicBool>,
     accepted: Arc<AtomicUsize>,
     task: JoinHandle<()>,
+    drop_after: Arc<AtomicUsize>,
 }
 impl Drop for Proxy {
     fn drop(&mut self) {
@@ -106,11 +107,13 @@ async fn proxy() -> Proxy {
     let counter = Arc::new(AtomicUsize::new(0));
     let count = counter.clone();
 
+    let drop_after = Arc::new(AtomicUsize::new(0));
+    let countdown = drop_after.clone();
     let task = tokio::spawn(async move {
         let mut tasks = JoinSet::new();
         loop {
-            tokio::select! {accepted=listener.accept(),if tasks.len()<4=>{let(client,_)=accepted.unwrap();connected.fetch_add(1,Ordering::SeqCst);let address=address.clone();let mut hold=receiver.clone();let gate=gate.clone();let count=count.clone();tasks.spawn(async move{let server=TcpStream::connect(address).await?;let(mut cr,mut cw)=client.into_split();let(mut sr,mut sw)=server.into_split();let inbound=async move{let mut data=Vec::with_capacity(65536);let mut buf=[0u8;16384];loop{let n=sr.read(&mut buf).await?;if n==0{return Ok::<(),std::io::Error>(())}
-                       if data.len()+n>65536{return Err(std::io::ErrorKind::InvalidData.into());}data.extend_from_slice(&buf[..n]);while let Some(end)=end_frame(&data,0,0)?{count.fetch_add(1,Ordering::SeqCst);if gate.swap(false,Ordering::SeqCst){return Err(std::io::ErrorKind::ConnectionReset.into());}
+            tokio::select! {accepted=listener.accept(),if tasks.len()<4=>{let(client,_)=accepted.unwrap();connected.fetch_add(1,Ordering::SeqCst);let address=address.clone();let mut hold=receiver.clone();let gate=gate.clone();let count=count.clone();let countdown=countdown.clone();tasks.spawn(async move{let server=TcpStream::connect(address).await?;let(mut cr,mut cw)=client.into_split();let(mut sr,mut sw)=server.into_split();let inbound=async move{let mut data=Vec::with_capacity(65536);let mut buf=[0u8;16384];loop{let n=sr.read(&mut buf).await?;if n==0{return Ok::<(),std::io::Error>(())}
+                       if data.len()+n>65536{return Err(std::io::ErrorKind::InvalidData.into());}data.extend_from_slice(&buf[..n]);while let Some(end)=end_frame(&data,0,0)?{count.fetch_add(1,Ordering::SeqCst);let drop_now=countdown.fetch_update(Ordering::SeqCst,Ordering::SeqCst,|n|(n>0).then(||n-1)).is_ok_and(|previous|previous==1);if gate.swap(false,Ordering::SeqCst)||drop_now{return Err(std::io::ErrorKind::ConnectionReset.into());}
             if hold.wait_for(|value|!*value).await.is_err(){return Ok(())}cw.write_all(&data[..end]).await?;data.drain(..end);}}};tokio::try_join!(async{tokio::io::copy(&mut cr,&mut sw).await.map(|_|())},inbound).map(|_|())});},_=tasks.join_next(),if !tasks.is_empty()=>{}}
         }
     });
@@ -120,6 +123,7 @@ async fn proxy() -> Proxy {
         drop_reply: pause,
         accepted,
         task,
+        drop_after,
     }
 }
 
@@ -315,6 +319,192 @@ async fn logical_timeout_does_not_reconnect_or_free_a_still_pending_physical_rep
     assert_eq!(
         value, 2,
         "same compiled script executes again after settlement"
+    );
+    assert_eq!(proxy.accepted.load(Ordering::SeqCst), 1);
+    let _: () = redis.del(key).await.unwrap();
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires actual owned Redis and exact client idle-close equivalent"]
+async fn result_preflight_recovers_closed_socket_before_one_mutation() {
+    let mut redis = raw().await;
+    let script = "return redis.call('INCR',KEYS[1])";
+    let _: String = redis::cmd("SCRIPT")
+        .arg("LOAD")
+        .arg(script)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    // Published Docker ports can translate the upstream peer address. Use
+    // exact server IDs, not a guessed hostIP:port, and fail closed if anything
+    // besides our one newly connected/marked client appeared in this fixture.
+    async fn client_rows(
+        redis: &mut redis::aio::MultiplexedConnection,
+    ) -> std::collections::BTreeMap<u64, String> {
+        let raw: String = redis::cmd("CLIENT")
+            .arg("LIST")
+            .query_async(redis)
+            .await
+            .unwrap();
+        assert!(raw.len() <= 262144);
+        let mut rows = std::collections::BTreeMap::new();
+        for row in raw.lines() {
+            assert!(rows.len() < 128);
+            let id = row
+                .split_whitespace()
+                .find_map(|v| v.strip_prefix("id="))
+                .unwrap()
+                .parse::<u64>()
+                .unwrap();
+            let command = row
+                .split_whitespace()
+                .find_map(|v| v.strip_prefix("cmd="))
+                .unwrap()
+                .to_owned();
+            assert!(rows.insert(id, command).is_none());
+        }
+        rows
+    }
+    let before = client_rows(&mut redis).await;
+    let proxy = proxy().await;
+    let transport =
+        RedisTransport::connect_classified(&proxy.url, config(1, Duration::from_secs(2)))
+            .await
+            .unwrap();
+    let (marker, _) = transport
+        .command_classified::<i64, _>("return 7", &[], &[], ())
+        .await
+        .unwrap();
+    assert_eq!(marker, 7);
+    assert_eq!(proxy.accepted.load(Ordering::SeqCst), 1);
+    let after = client_rows(&mut redis).await;
+    let fresh: Vec<_> = after
+        .iter()
+        .filter(|(id, _)| !before.contains_key(*id))
+        .collect();
+    assert_eq!(
+        fresh.len(),
+        1,
+        "ambiguous client identity must never choose a victim"
+    );
+    let (id, command) = fresh[0];
+    assert_eq!(
+        command, "evalsha",
+        "exact new client must carry our transport marker"
+    );
+    let killed: i64 = redis::cmd("CLIENT")
+        .arg("KILL")
+        .arg("ID")
+        .arg(id)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert_eq!(
+        killed, 1,
+        "close only the exact transport socket, as idle expiry does"
+    );
+    let key = format!("owned:result-preflight:closed:{}", uuid_suffix());
+    let (value, _) = transport
+        .command_result_classified_with_diagnostic::<i64, _>(
+            script,
+            std::slice::from_ref(&key),
+            &[],
+            (),
+            None,
+        )
+        .await
+        .unwrap();
+    assert_eq!(value, 1);
+    assert_eq!(redis.get::<_, i64>(&key).await.unwrap(), 1);
+    assert_eq!(
+        proxy.accepted.load(Ordering::SeqCst),
+        2,
+        "one shared reconnect"
+    );
+    let _: () = redis.del(key).await.unwrap();
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires actual owned Redis and dropped result mutation reply"]
+async fn result_preflight_does_not_replay_an_uncertain_mutation() {
+    let mut redis = raw().await;
+    let script = "return redis.call('INCR',KEYS[1])";
+    let _: String = redis::cmd("SCRIPT")
+        .arg("LOAD")
+        .arg(script)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    let proxy = proxy().await;
+    let transport =
+        RedisTransport::connect_classified(&proxy.url, config(1, Duration::from_secs(2)))
+            .await
+            .unwrap();
+    let key = format!("owned:result-preflight:uncertain:{}", uuid_suffix());
+    // First reply is PONG; drop the second actual EVALSHA reply after INCR.
+    proxy.drop_after.store(2, Ordering::SeqCst);
+    let result = transport
+        .command_result_classified_with_diagnostic::<i64, _>(
+            script,
+            std::slice::from_ref(&key),
+            &[],
+            (),
+            None,
+        )
+        .await;
+    assert!(matches!(result, Err(ClassifiedError::Backend)));
+    assert_eq!(
+        redis.get::<_, i64>(&key).await.unwrap(),
+        1,
+        "mutation is never replayed"
+    );
+    let _: () = redis.del(key).await.unwrap();
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires actual owned Redis and held health reply"]
+async fn pending_result_preflight_retains_owner_and_admission_without_mutating() {
+    let mut redis = raw().await;
+    let script = "return redis.call('INCR',KEYS[1])";
+    let _: String = redis::cmd("SCRIPT")
+        .arg("LOAD")
+        .arg(script)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    let proxy = proxy().await;
+    let transport =
+        RedisTransport::connect_classified(&proxy.url, config(1, Duration::from_millis(75)))
+            .await
+            .unwrap();
+    let key = format!("owned:result-preflight:held:{}", uuid_suffix());
+    let dropped = Arc::new(AtomicUsize::new(0));
+    proxy.hold.send_replace(true);
+    let result = transport
+        .command_result_classified_with_diagnostic::<i64, _>(
+            script,
+            std::slice::from_ref(&key),
+            &[],
+            Arc::new(Owner(dropped.clone())),
+            None,
+        )
+        .await;
+    assert!(matches!(result, Err(ClassifiedError::Backend)));
+    assert_eq!(dropped.load(Ordering::SeqCst), 0);
+    assert!(
+        !redis.exists::<_, bool>(&key).await.unwrap(),
+        "no mutation before PONG"
+    );
+    assert!(matches!(
+        transport
+            .command_classified::<i64, _>("return 0", &[], &[], ())
+            .await,
+        Err(ClassifiedError::Capacity)
+    ));
+    proxy.hold.send_replace(false);
+    wait(async || dropped.load(Ordering::SeqCst) == 1).await;
+    assert_eq!(
+        redis.get::<_, i64>(&key).await.unwrap(),
+        1,
+        "one detached physical completion"
     );
     assert_eq!(proxy.accepted.load(Ordering::SeqCst), 1);
     let _: () = redis.del(key).await.unwrap();

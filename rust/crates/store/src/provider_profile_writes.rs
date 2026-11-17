@@ -1,6 +1,6 @@
 //! Nested profile PUT/PATCH from Dispatcharr's original view, serializer and
 //! model.save(). Original authors retain full application/algorithm credit.
-//! POST/DELETE remain separate migration domains; these writes allocate no IDs.
+//! Profile lifecycle draft grounded in actual Source positive create/delete.
 use crate::{
     admin_writes::{body_object, boolean, character, integer, parse_datetime},
     xc_account_tasks::SavedProfile,
@@ -252,6 +252,111 @@ pub(crate) async fn patch(
     body: Body,
 ) -> Result<Json<Value>, StoreError> {
     change(auth, peer, headers, raw, body, true).await
+}
+
+// Positive Source create/delete observed; physical acceptance remains pending.
+pub(crate) async fn create(
+    State(auth): State<AuthService>,
+    Path(parent): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    body: Body,
+) -> Result<(axum::http::StatusCode, Json<Value>), StoreError> {
+    auth.account_user(peer, headers, true).await?;
+    // Source validates submitted fields BEFORE perform_create resolves parent.
+    // Even is_default=true requires both supplied patterns when instance=None.
+    let old = json!({"name":"","max_streams":0,"is_active":true,
+        "is_default":false,"current_viewers":0,"search_pattern":"",
+        "replace_pattern":"","custom_properties":{},"exp_date":null});
+    let mut saved = validate(body_object(body)?, &old, false)?;
+    let parent = key(parent)?; // malformed-parent Source error remains a gate.
+    let signal = auth
+        .profile_save_signal
+        .clone()
+        .ok_or(StoreError::Unsupported(
+            "Profile post-save notification transport is unavailable.",
+        ))?;
+    let owner: Arc<dyn Send + Sync> = Arc::new(auth.clone());
+    let session = auth.borrow_task_sql_session(owner.clone()).await?;
+    let operation = tokio::spawn(async move {
+        let outcome: Result<(axum::http::StatusCode, Json<Value>), StoreError> = async {
+            let account: Value = session.run(move |c| Box::pin(async move {
+                sqlx::query_scalar("SELECT to_jsonb(a) FROM m3u_m3uaccount a WHERE id=$1")
+                    .bind(parent).fetch_optional(c).await
+            })).await??.ok_or(StoreError::UnhandledRestFault)?;
+            let expiration = model_expiration(&saved, &account["account_type"])?;
+            saved["exp_date"] = json!(expiration);
+            let name = saved["name"].as_str().expect("validated profile name").to_owned();
+            let max = saved["max_streams"].as_i64().expect("validated capacity") as i32;
+            let active = saved["is_active"].as_bool().expect("validated active");
+            let default = saved["is_default"].as_bool().expect("validated default");
+            let viewers = saved["current_viewers"].as_i64().expect("validated viewers") as i32;
+            let search = saved["search_pattern"].as_str().expect("validated search").to_owned();
+            let replace = saved["replace_pattern"].as_str().expect("validated replace").to_owned();
+            let properties = if saved["custom_properties"].is_null() {None}
+                else {Some(sqlx::types::Json(saved["custom_properties"].clone()))};
+            // ModelSerializer creates one row without calling full_clean().
+            // Keep the actual unique(account,name) constraint and sequence
+            // consumption; do not invent a uniqueness SELECT/400 response.
+            // INSERT is autocommitted before Source's caught post_save signal.
+            let after: Value = session.run(move |c| Box::pin(async move {
+                sqlx::query_scalar("INSERT INTO m3u_m3uaccountprofile(m3u_account_id,name,max_streams,is_active,is_default,current_viewers,search_pattern,replace_pattern,custom_properties,exp_date) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING to_jsonb(m3u_m3uaccountprofile)")
+                    .bind(parent).bind(name).bind(max).bind(active).bind(default)
+                    .bind(viewers).bind(search).bind(replace).bind(properties)
+                    .bind(expiration).fetch_one(c).await
+            })).await??;
+            let id = after["id"].as_i64().ok_or(StoreError::UnhandledRestFault)?;
+            signal.guard(session.clone(), id, owner.clone()).await?;
+            signal.after_save(session.clone(), SavedProfile {
+                id,account_id:parent,name:after["name"].as_str().unwrap_or_default().to_owned(),
+                account_name:account["name"].as_str().unwrap_or_default().to_owned(),expiration,
+            },owner).await?;
+            Ok((axum::http::StatusCode::CREATED,
+                Json(crate::provider_reads::profile(&after,&account))))
+        }.await;
+        let closed = session.close().await;
+        let value = outcome?;
+        closed?;
+        Ok::<_, StoreError>(value)
+    });
+    operation.await.map_err(|_| {
+        StoreError::StatusBody(503, json!({"detail":"Profile create processing failed."}))
+    })?
+}
+
+// Source's ViewSet has no destroy override: Serializer.destroy is NOT called.
+// Therefore default profiles are deletable through this route as well.
+pub(crate) async fn delete(
+    State(auth): State<AuthService>,
+    Path(raw): Path<(String, String)>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Result<axum::http::StatusCode, StoreError> {
+    auth.account_user(peer, headers, true).await?;
+    let (parent, id) = (key(raw.0)?, key(raw.1)?);
+    let signal = auth
+        .profile_save_signal
+        .clone()
+        .ok_or(StoreError::Unsupported(
+            "Profile lifecycle callback unavailable.",
+        ))?;
+    let owner: Arc<dyn Send + Sync> = Arc::new(auth.clone());
+    let session = auth.borrow_task_sql_session(owner.clone()).await?;
+    let operation = tokio::spawn(async move {
+        let outcome = signal
+            .delete_profile(session.clone(), parent, id, owner)
+            .await;
+        let closed = session.close().await;
+        let deleted = outcome?;
+        closed?;
+        if !deleted {
+            return Err(missing());
+        }
+        Ok(axum::http::StatusCode::NO_CONTENT)
+    });
+    operation.await.map_err(|_| {
+        StoreError::StatusBody(503, json!({"detail":"Profile delete processing failed."}))
+    })?
 }
 
 #[cfg(test)]

@@ -154,7 +154,22 @@ impl ChannelDeletionSelection {
     pub(crate) async fn execute_without_stops(self) -> Result<ChannelDeletion, StoreError> {
         self.execute_with_stop(false).await
     }
+    pub(crate) async fn execute_with_account(
+        self,
+        auth: AuthService,
+        account: i64,
+    ) -> Result<ChannelDeletion, StoreError> {
+        self.execute_with_stop_and_account(true, Some((auth, account)))
+            .await
+    }
     async fn execute_with_stop(self, stop: bool) -> Result<ChannelDeletion, StoreError> {
+        self.execute_with_stop_and_account(stop, None).await
+    }
+    async fn execute_with_stop_and_account(
+        self,
+        stop: bool,
+        account: Option<(AuthService, i64)>,
+    ) -> Result<ChannelDeletion, StoreError> {
         let operation = self.operation;
         let mut report = ChannelDeletion {
             selected: self.selected,
@@ -258,6 +273,9 @@ impl ChannelDeletionSelection {
                     "DELETE FROM dispatcharr_channels_recurringrecordingrule WHERE channel_id IN(SELECT channel_id FROM native_task_channel_selection WHERE operation=$1)",
                 ]{sqlx::query(statement).bind(operation).execute(&mut*c).await?;}
                 report.deleted=sqlx::query("DELETE FROM dispatcharr_channels_channel WHERE id IN(SELECT channel_id FROM native_task_channel_selection WHERE operation=$1)").bind(operation).execute(&mut*c).await?.rows_affected();
+                if let Some((auth,id))=account {
+                    crate::provider_account_writes::delete_in_collector(c,auth,id,owner.clone()).await?;
+                }
                 // Same-channel rollup rows are deleted; no save/API file/event
                 // hooks or RecurringRule ViewSet purge belong to Collector.
                 sqlx::query("COMMIT").execute(&mut*c).await?;

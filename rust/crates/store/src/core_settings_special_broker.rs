@@ -145,6 +145,7 @@ pub(crate) async fn publish(
     use base64::Engine;
     if ![
         "core.tasks.rehash_streams",
+        "apps.m3u.tasks.refresh_m3u_groups",
         "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
     ]
     .contains(&task)

@@ -443,24 +443,27 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/m3u/accounts/{parent}/group-settings/",
             axum::routing::patch(crate::vod_category_settings::patch),
         )
-        .route("/api/m3u/accounts/", get(accounts).post(mutation))
+        .route(
+            "/api/m3u/accounts/",
+            get(accounts).post(crate::provider_account_writes::create),
+        )
         .route(
             "/api/m3u/accounts/{parent}/",
             get(account_detail)
-                .patch(mutation)
-                .put(mutation)
-                .delete(mutation),
+                .patch(crate::provider_account_writes::patch)
+                .put(crate::provider_account_writes::put)
+                .delete(crate::provider_account_writes::delete),
         )
         .route(
             "/api/m3u/accounts/{parent}/profiles/",
-            get(profiles).post(mutation),
+            get(profiles).post(crate::provider_profile_writes::create),
         )
         .route(
             "/api/m3u/accounts/{parent}/profiles/{id}/",
             get(profile_detail)
                 .patch(crate::provider_profile_writes::patch)
                 .put(crate::provider_profile_writes::put)
-                .delete(mutation),
+                .delete(crate::provider_profile_writes::delete),
         )
         .route(
             "/api/m3u/accounts/{parent}/filters/",
@@ -495,25 +498,14 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route(
             "/api/epg/sources/{id}/",
             get(epg_source)
-                .patch(mutation)
-                .put(mutation)
-                .delete(mutation),
+                .patch(crate::epg_source_writes::patch)
+                .put(crate::epg_source_writes::put)
+                .delete(crate::epg_source_writes::delete),
         )
         .route("/api/epg/epgdata/", get(epg_data))
         .route("/api/epg/epgdata/{id}/", get(epg_entry))
         .with_state(auth)
 }
-async fn mutation(
-    State(auth): State<AuthService>,
-    ConnectInfo(peer): ConnectInfo<SocketAddr>,
-    headers: HeaderMap,
-) -> Result<Json<Value>, StoreError> {
-    auth.account_user(peer, headers, true).await?;
-    Err(StoreError::Unsupported(
-        "This management mutation has not been ported.",
-    ))
-}
-#[cfg(test)]
 pub(crate) async fn physical_account_detail(
     connection: &mut sqlx::PgConnection,
     id: i64,

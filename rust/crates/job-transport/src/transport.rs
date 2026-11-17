@@ -1521,7 +1521,7 @@ impl Jobs {
         match self
             .inner
             .result
-            .command_classified_with_diagnostic::<i64, _>(
+            .command_result_classified_with_diagnostic::<i64, _>(
                 WRITE_SUCCESS,
                 &keys,
                 &[&bytes],

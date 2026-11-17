@@ -25,6 +25,51 @@ pub enum SignalOutcome {
 }
 /// Required normal production callback. No no-op/default constructor exists.
 pub trait ProfileSaveSignal: Send + Sync {
+    /// DRAFT extension: explicit unsupported fallback, never a no-op success.
+    /// The normal production implementation owns the Collector transaction.
+    fn delete_profile(
+        &self,
+        _session: TaskSqlSession,
+        _account_id: i64,
+        _profile_id: i64,
+        _owner: Owner,
+    ) -> BoxFuture<'_, Result<bool, StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "Profile deletion lifecycle is unavailable.",
+            ))
+        })
+    }
+
+    /// All profile rows have already been deleted by the owned account Collector;
+    /// this is only the shared Source post_delete receiver sequence.
+    fn after_profile_delete_in_collector<'a>(
+        &'a self,
+        _connection: &'a mut sqlx::PgConnection,
+        _account_id: i64,
+        _profile_id: i64,
+        _owner: Owner,
+    ) -> BoxFuture<'a, Result<(), StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "Profile post-delete Collector unavailable.",
+            ))
+        })
+    }
+    /// Original account pre_save cleanup; no profile deletion/allow-list scrub.
+    fn deactivate_account(
+        &self,
+        _session: TaskSqlSession,
+        _account_id: i64,
+        _owner: Owner,
+    ) -> BoxFuture<'_, Result<SignalOutcome, StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "Account deactivation signal unavailable.",
+            ))
+        })
+    }
+
     fn guard(
         &self,
         session: TaskSqlSession,
@@ -354,4 +399,60 @@ async fn emit(
 ) -> Result<(), StoreError> {
     crate::core_task_offsets::retained_event(events, json!({"type":"update","data":data}), owner)
         .await
+}
+
+/// Source Python equality, including bool/int and integral float matches.
+/// Used by the deletion transaction; no API token/cache invalidation is added.
+pub fn scrub_deleted_profile_value(properties: &Value, id: i64) -> Option<Value> {
+    let mut updated = properties.as_object()?.clone();
+    let old = updated.get("allowed_m3u_profile_ids")?.as_array()?;
+    let kept = old
+        .iter()
+        .filter(|item| !crate::json_compat::python_equal(item, &json!(id)))
+        .cloned()
+        .collect::<Vec<_>>();
+    if kept.len() == old.len() {
+        return None;
+    }
+    updated.insert("allowed_m3u_profile_ids".into(), Value::Array(kept));
+    Some(Value::Object(updated)) // preserve [] and every unrelated field/type.
+}
+
+#[cfg(test)]
+mod deleted_profile_allowlist_tests {
+    use super::*;
+    #[test]
+    fn source_python_numeric_equality_preserves_unrelated_restrictions() {
+        let before =
+            json!({"allowed_m3u_profile_ids":[6,6.0,"6",true,7,{},[6]],"untouched":{"n":1}});
+        assert_eq!(
+            scrub_deleted_profile_value(&before, 6),
+            Some(json!({
+            "allowed_m3u_profile_ids":["6",true,7,{},[6]],"untouched":{"n":1}}))
+        );
+        assert_eq!(
+            scrub_deleted_profile_value(
+                &json!({"allowed_m3u_profile_ids":[1,1.0,true,"1",false]}),
+                1
+            ),
+            Some(json!({"allowed_m3u_profile_ids":["1",false]}))
+        );
+    }
+    #[test]
+    fn source_observed_last_restriction_keeps_empty_key_and_nonlists_unchanged() {
+        assert_eq!(
+            scrub_deleted_profile_value(&json!({"allowed_m3u_profile_ids":[7]}), 7),
+            Some(json!({"allowed_m3u_profile_ids":[]}))
+        );
+        for value in [
+            json!(null),
+            json!([]),
+            json!({}),
+            json!({"allowed_m3u_profile_ids":null}),
+            json!({"allowed_m3u_profile_ids":"7"}),
+            json!({"allowed_m3u_profile_ids":["7"]}),
+        ] {
+            assert_eq!(scrub_deleted_profile_value(&value, 7), None);
+        }
+    }
 }

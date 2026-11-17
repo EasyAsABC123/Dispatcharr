@@ -1,0 +1,478 @@
+//! DRAFT Source-qualified positive EPG detail PUT/PATCH/DELETE behavior.
+//! Original Dispatcharr/Django/Celery/Channels authors retain all behavior credit.
+//! No upload, create, SD credential changes or caught SQL-fault parity is claimed.
+use crate::{
+    admin_writes::{body_object, boolean, character, integer, parse_datetime},
+    AuthService, StoreError, TaskSqlSession,
+};
+use axum::{
+    extract::{rejection::JsonRejection, ConnectInfo, Path, State},
+    http::{HeaderMap, StatusCode},
+    Json,
+};
+use serde_json::{json, Map, Value};
+use sqlx::{Connection, PgConnection, Row};
+use std::{net::SocketAddr, sync::Arc};
+type Body = Result<Json<Value>, JsonRejection>;
+type Owner = Arc<dyn Send + Sync>;
+fn unsupported() -> StoreError {
+    StoreError::Unsupported("EPG detail lifecycle outside Source-qualified bounded positive domain")
+}
+fn missing() -> StoreError {
+    StoreError::StatusBody(
+        404,
+        json!({"detail":"No EPGSource matches the given query."}),
+    )
+}
+fn key(value: String) -> Result<i64, StoreError> {
+    value.parse().map_err(|_| StoreError::NotFound)
+}
+fn field(name: &str, message: &str) -> StoreError {
+    StoreError::InvalidInput(json!({name:[message]}))
+}
+fn nullable_character(
+    name: &str,
+    value: &Value,
+    maximum: Option<usize>,
+) -> Result<Value, StoreError> {
+    if value.is_null() {
+        Ok(Value::Null)
+    } else {
+        character(name, value, maximum, true).map(Value::String)
+    }
+}
+fn positive_integer(name: &str, value: &Value) -> Result<Value, StoreError> {
+    let minimum = || field(name, "Ensure this value is greater than or equal to 0.");
+    let number = integer(name, value).map_err(|error| match error {
+        StoreError::InvalidInput(ref v)
+            if v[name] == json!(["Ensure this value is greater than or equal to -2147483648."]) =>
+        {
+            minimum()
+        }
+        other => other,
+    })?;
+    if number < 0 {
+        Err(minimum())
+    } else {
+        Ok(json!(number))
+    }
+}
+fn captured_dummy_name_domain(saved: &Value) -> bool {
+    saved["name"].as_str().is_some_and(str::is_ascii)
+}
+fn truth(value: &Value) -> bool {
+    match value {
+        Value::Null => false,
+        Value::Bool(v) => *v,
+        Value::String(v) => !v.is_empty(),
+        Value::Array(v) => !v.is_empty(),
+        Value::Object(v) => !v.is_empty(),
+        Value::Number(v) => v.as_f64().is_some_and(|n| n != 0.0),
+    }
+}
+struct Validated {
+    saved: Value,
+    cron: String,
+}
+fn validate(
+    mut input: Map<String, Value>,
+    old: &Value,
+    linked_cron: &str,
+    partial: bool,
+) -> Result<Validated, StoreError> {
+    // Source partial_update mutates request.status using the RAW value first;
+    // pre_save then compares the parsed is_active value against the old row.
+    if partial {
+        if let Some(raw) = input.get("is_active") {
+            if !crate::json_compat::python_equal(&old["is_active"], raw) {
+                input.insert(
+                    "status".into(),
+                    json!(if truth(raw) { "idle" } else { "disabled" }),
+                );
+            }
+        }
+    }
+    let mut saved = old.clone();
+    let mut errors = Map::new();
+    for name in [
+        "name",
+        "source_type",
+        "url",
+        "username",
+        "password",
+        "is_active",
+        "file_path",
+        "refresh_interval",
+        "priority",
+        "status",
+        "last_message",
+        "updated_at",
+        "custom_properties",
+    ] {
+        let Some(value) = input.get(name) else {
+            if !partial && matches!(name, "name" | "source_type") {
+                errors.insert(name.into(), json!(["This field is required."]));
+            }
+            continue;
+        };
+        let result = match name {
+            "name" => character(name, value, Some(255), false).map(Value::String),
+            "source_type" | "status" => {
+                let choices: &[&str] = if name == "source_type" {
+                    &["xmltv", "dummy", "schedules_direct"]
+                } else {
+                    &[
+                        "idle", "fetching", "parsing", "error", "success", "disabled",
+                    ]
+                };
+                match value.as_str() {
+                    Some(s) if choices.contains(&s) => Ok(value.clone()),
+                    None if value.is_null() => Err(field(name, "This field may not be null.")),
+                    _ => Err(field(
+                        name,
+                        &format!(
+                            "\"{}\" is not a valid choice.",
+                            value
+                                .as_str()
+                                .map_or_else(|| value.to_string(), str::to_owned)
+                        ),
+                    )),
+                }
+            }
+            "is_active" => boolean(name, value).map(Value::Bool),
+            "refresh_interval" => integer(name, value).map(|v| json!(v)),
+            "priority" => positive_integer(name, value),
+            "username" | "password" => nullable_character(name, value, Some(255)),
+            "file_path" => nullable_character(name, value, Some(1024)),
+            "last_message" => nullable_character(name, value, None),
+            // URL validator/source-type changes need separate Source branches;
+            // unchanged URL is admitted, never silently cleared or normalized.
+            "url" if value == &old["url"] => Ok(value.clone()),
+            "url" => Err(unsupported()),
+            "updated_at" => parse_datetime(name, value, true).map(|v| json!(v)),
+            _ => Ok(value.clone()),
+        };
+        match result {
+            Ok(value) => {
+                // Source skips empty/null password updates.
+                if name != "password" || truth(&value) {
+                    saved[name] = value;
+                }
+            }
+            Err(StoreError::InvalidInput(Value::Object(e))) => errors.extend(e),
+            Err(error) => return Err(error),
+        }
+    }
+    let cron = match input.get("cron_expression") {
+        Some(value) => character("cron_expression", value, None, true)?,
+        None if partial => linked_cron.to_owned(),
+        None => String::new(), // Source serializer's explicit default on full PUT.
+    };
+    if !errors.is_empty() {
+        return Err(StoreError::InvalidInput(Value::Object(errors)));
+    }
+    if saved["source_type"] != old["source_type"]
+        || !matches!(saved["source_type"].as_str(), Some("dummy" | "xmltv"))
+    {
+        return Err(unsupported());
+    }
+    if saved["username"] != old["username"] || saved["password"] != old["password"] {
+        return Err(unsupported());
+    }
+    if !cron.trim().is_empty() && cron.split_whitespace().count() != 5 {
+        return Err(unsupported());
+    }
+    if saved["source_type"] == "dummy" {
+        saved["status"] = json!("idle");
+        saved["last_message"] = Value::Null;
+    } else if saved["is_active"] != old["is_active"] {
+        saved["status"] = json!(if saved["is_active"] == true {
+            "idle"
+        } else {
+            "disabled"
+        });
+    }
+    Ok(Validated { saved, cron })
+}
+async fn no_custom_triggers(c: &mut PgConnection) -> Result<(), StoreError> {
+    let custom:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled<>'D' AND tgrelid IN('epg_epgsource'::regclass,'epg_epgdata'::regclass,'epg_programdata'::regclass,'epg_epgsourceindex'::regclass,'epg_sdprogrammd5'::regclass,'epg_sdschedulemd5'::regclass,'django_celery_beat_periodictask'::regclass,'django_celery_beat_intervalschedule'::regclass,'django_celery_beat_crontabschedule'::regclass,'django_celery_beat_periodictasks'::regclass))").fetch_one(c).await?;
+    if custom {
+        Err(unsupported())
+    } else {
+        Ok(())
+    }
+}
+async fn project(
+    session: &TaskSqlSession,
+    id: i64,
+    cron: Option<String>,
+) -> Result<Json<Value>, StoreError> {
+    let row = session
+        .run(move |c| {
+            Box::pin(async move {
+                sqlx::query(crate::provider_reads::epg_read_query(true))
+                    .bind(Some(id))
+                    .bind(None::<i64>)
+                    .fetch_one(c)
+                    .await
+            })
+        })
+        .await??;
+    let mut value = crate::provider_reads::epg_read_projection(row, true)?;
+    if let Some(cron) = cron {
+        value["cron_expression"] = json!(cron);
+    }
+    Ok(Json(value))
+}
+async fn dummy_signal(
+    session: &TaskSqlSession,
+    auth: AuthService,
+    id: i64,
+    name: String,
+    owner: Owner,
+) -> Result<(), StoreError> {
+    let friendly = format!(
+        "dummy_{}",
+        name.replace([' ', '-'], "_")
+            .chars()
+            .filter(|v| v.is_alphanumeric() || *v == '_')
+            .collect::<String>()
+            .to_lowercase()
+    );
+    let saved_name = name.clone();
+    let (epg,created)=session.run(move|c|Box::pin(async move{
+        let existing:Option<(i64,String)>=sqlx::query_as("SELECT id::bigint,name FROM epg_epgdata WHERE epg_source_id=$1 AND tvg_id=$2").bind(id).bind(&friendly).fetch_optional(&mut*c).await?;
+        if let Some((epg,old_name))=existing {
+            if old_name!=name {sqlx::query("UPDATE epg_epgdata SET name=$2 WHERE id=$1").bind(epg).bind(name).execute(c).await?;}
+            return Ok::<_,StoreError>((epg,false));
+        }
+        let inserted:Option<i64>=sqlx::query_scalar("INSERT INTO epg_epgdata(tvg_id,name,icon_url,epg_source_id) VALUES($1,$2,NULL,$3) ON CONFLICT(tvg_id,epg_source_id) DO NOTHING RETURNING id::bigint").bind(&friendly).bind(&name).bind(id).fetch_optional(&mut*c).await?;
+        if let Some(epg)=inserted {return Ok((epg,true));}
+        let(epg,old_name):(i64,String)=sqlx::query_as("SELECT id::bigint,name FROM epg_epgdata WHERE epg_source_id=$1 AND tvg_id=$2").bind(id).bind(friendly).fetch_one(&mut*c).await?;
+        if old_name!=name{sqlx::query("UPDATE epg_epgdata SET name=$2 WHERE id=$1").bind(epg).bind(name).execute(c).await?;}
+        Ok((epg,false))
+    })).await??;
+    if created {
+        let sink = auth.event_sink.clone().ok_or_else(unsupported)?;
+        crate::core_task_offsets::retained_event(sink,json!({"type":"update","data":{"type":"epg_data_created","source_id":id,"source_name":saved_name,"epg_data_id":epg}}),owner).await?;
+    }
+    Ok(())
+}
+async fn change(
+    auth: AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    raw: String,
+    body: Body,
+    partial: bool,
+) -> Result<Json<Value>, StoreError> {
+    auth.account_user(peer, headers, true).await?;
+    let id = key(raw)?;
+    let owner: Owner = Arc::new(auth.clone());
+    let session = auth.borrow_task_sql_session(owner.clone()).await?;
+    let operation = tokio::spawn(async move {
+        let outcome=async{
+            let row=session.run(move|c|Box::pin(async move{
+                sqlx::query("SELECT to_jsonb(e) AS raw,COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week),'') AS cron FROM epg_epgsource e LEFT JOIN django_celery_beat_periodictask p ON p.id=e.refresh_task_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=p.crontab_id WHERE e.id=$1").bind(id).fetch_optional(c).await
+            })).await??.ok_or_else(missing)?;
+            let old:Value=row.try_get("raw")?;let old_cron:String=row.try_get("cron")?;
+            let validated=validate(body_object(body)?,&old,&old_cron,partial)?;let saved=validated.saved;let cron=validated.cron;
+            let dummy=saved["source_type"]=="dummy";
+            if dummy && (!old["refresh_task_id"].is_null() || auth.event_sink.is_none() || !captured_dummy_name_domain(&saved)){return Err(unsupported());}
+            let zone=if !dummy && !cron.trim().is_empty(){
+                let settings=session.system_settings(auth.clone()).await?;
+                match &settings["time_zone"] {Value::Null=>"UTC".into(),Value::String(v)if v.is_empty()=>"UTC".into(),Value::String(v)if v.len()<=255=>v.clone(),_=>return Err(unsupported())}
+            }else{"UTC".into()};
+            let saved_name=saved["name"].as_str().ok_or_else(unsupported)?.to_owned();
+            let updated=saved.get("updated_at").cloned().unwrap_or(Value::Null);let updated=parse_datetime("updated_at",&updated,true)?;
+            let new_name=saved_name.clone();let new_value=saved.clone();
+            session.run(move|c|Box::pin(async move{
+                no_custom_triggers(c).await?;
+                let collision:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE name=$1 AND id<>$2)").bind(&new_name).bind(id).fetch_one(&mut*c).await?;
+                if collision{return Err(field("name","epg source with this name already exists."));}
+                sqlx::query("UPDATE epg_epgsource SET name=$2,source_type=$3,url=$4,username=$5,password=$6,is_active=$7,file_path=$8,refresh_interval=$9,priority=$10,status=$11,last_message=$12,custom_properties=$13,updated_at=$14 WHERE id=$1")
+                    .bind(id).bind(new_name).bind(new_value["source_type"].as_str()).bind(new_value["url"].as_str()).bind(new_value["username"].as_str()).bind(new_value["password"].as_str()).bind(new_value["is_active"].as_bool()).bind(new_value["file_path"].as_str()).bind(new_value["refresh_interval"].as_i64().ok_or_else(unsupported)? as i32).bind(new_value["priority"].as_i64().ok_or_else(unsupported)? as i32).bind(new_value["status"].as_str()).bind(new_value["last_message"].as_str()).bind(if new_value["custom_properties"].is_null(){None}else{Some(sqlx::types::Json(new_value["custom_properties"].clone()))}).bind(updated).execute(c).await?;
+                Ok::<_,StoreError>(())
+            })).await??;
+            if dummy{dummy_signal(&session,auth.clone(),id,saved_name,owner.clone()).await?;}
+            else{
+                let interval=saved["refresh_interval"].as_i64().ok_or_else(unsupported)? as i32;
+                let active=saved["is_active"].as_bool().ok_or_else(unsupported)?;
+                let name=format!("epg_source-refresh-{id}");let kwargs=format!("{{\"source_id\": {id}}}");let schedule_cron=cron.clone();
+                let periodic=session.run(move|c|Box::pin(async move{
+                    // Shared core.scheduling implementation owned by the account
+                    // draft; this module must not fork its interval/cron logic.
+                    crate::provider_schedule::upsert(c,crate::provider_schedule::Spec{name:&name,task:"apps.epg.tasks.refresh_epg_data",kwargs:&kwargs,interval_hours:interval,cron:&schedule_cron,active,timezone:&zone}).await
+                })).await??;
+                let periodic = i32::try_from(periodic).map_err(|_| unsupported())?;
+                session.run(move|c|Box::pin(async move{sqlx::query("UPDATE epg_epgsource SET refresh_task_id=$2 WHERE id=$1 AND refresh_task_id IS DISTINCT FROM $2").bind(id).bind(periodic).execute(c).await.map(|_|())})).await??;
+            }
+            project(&session,id,Some(cron)).await
+        }.await;
+        let close = session.close().await;
+        let value = outcome?;
+        close?;
+        Ok::<_, StoreError>(value)
+    });
+    operation
+        .await
+        .map_err(|_| StoreError::Unsupported("EPG update supervisor failed"))?
+}
+pub(crate) async fn put(
+    State(auth): State<AuthService>,
+    Path(id): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    body: Body,
+) -> Result<Json<Value>, StoreError> {
+    change(auth, peer, headers, id, body, false).await
+}
+pub(crate) async fn patch(
+    State(auth): State<AuthService>,
+    Path(id): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    body: Body,
+) -> Result<Json<Value>, StoreError> {
+    change(auth, peer, headers, id, body, true).await
+}
+
+async fn delete_files(paths: Vec<String>, owner: Owner) -> Result<(), StoreError> {
+    tokio::task::spawn_blocking(move || {
+        let _retained = owner;
+        for path in paths {
+            // Source uses a textual prefix check, deliberately not canonicalize.
+            if path.starts_with("/data/epgs")
+                || path.starts_with("/data/uploads")
+                || path.starts_with("/data/m3us")
+            {
+                continue;
+            }
+            if std::path::Path::new(&path).exists() && std::fs::remove_file(&path).is_err() {
+                eprintln!("EPG delete: caught cached file unlink failure");
+            }
+        }
+    })
+    .await
+    .map_err(|_| unsupported())
+}
+pub(crate) async fn delete(
+    State(auth): State<AuthService>,
+    Path(raw): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Result<StatusCode, StoreError> {
+    auth.account_user(peer, headers, true).await?;
+    let id = key(raw)?;
+    let owner: Owner = Arc::new(auth.clone());
+    let session = auth.borrow_task_sql_session(owner.clone()).await?;
+    let operation = tokio::spawn(async move {
+        let outcome=session.run(move|c|Box::pin(async move{
+            let old:Option<Value>=sqlx::query_scalar("SELECT to_jsonb(e) FROM epg_epgsource e WHERE id=$1").bind(id).fetch_optional(&mut*c).await?;let old=old.ok_or_else(missing)?;
+            if !matches!(old["source_type"].as_str(),Some("xmltv"|"dummy")){return Err(unsupported());}
+            let mut paths=Vec::new();
+            for path in [old["file_path"].as_str(),old["extracted_file_path"].as_str()].into_iter().flatten().filter(|p|!p.is_empty()){if !paths.iter().any(|v|v==path){paths.push(path.to_owned());}}
+            if paths.iter().any(|p|!p.starts_with("/data/")||p.len()>1024){return Err(unsupported());}
+            no_custom_triggers(c).await?;
+            // Wider collectors need independent Source rows before activation.
+            let channels:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channel WHERE epg_data_id IN(SELECT id FROM epg_epgdata WHERE epg_source_id=$1) UNION ALL SELECT 1 FROM dispatcharr_channels_channeloverride WHERE epg_data_id IN(SELECT id FROM epg_epgdata WHERE epg_source_id=$1))").bind(id).fetch_one(&mut*c).await?;
+            if channels{return Err(unsupported());}
+            let mut tx=c.begin().await?;
+            let result=async{
+                sqlx::query("DELETE FROM epg_programdata WHERE epg_id IN(SELECT id FROM epg_epgdata WHERE epg_source_id=$1)").bind(id).execute(&mut*tx).await?;
+                sqlx::query("DELETE FROM epg_epgsourceindex WHERE source_id=$1").bind(id).execute(&mut*tx).await?;
+                sqlx::query("DELETE FROM epg_sdprogrammd5 WHERE epg_source_id=$1").bind(id).execute(&mut*tx).await?;
+                sqlx::query("DELETE FROM epg_sdschedulemd5 WHERE epg_source_id=$1").bind(id).execute(&mut*tx).await?;
+                sqlx::query("DELETE FROM epg_epgdata WHERE epg_source_id=$1").bind(id).execute(&mut*tx).await?;
+                sqlx::query("DELETE FROM epg_epgsource WHERE id=$1").bind(id).execute(&mut*tx).await?;
+                // Legacy EPG helper is intentionally NOT core.delete_periodic_task:
+                // it deletes the named task, cleans only an orphan INTERVAL,
+                // and leaves orphan CRON rows (actual Source2 retains cron5).
+                let name=format!("epg_source-refresh-{id}");
+                // Reject nonlocal refresh-task collectors before deleting the
+                // named task; their SET_NULL branches lack Source qualification.
+                let refs:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE refresh_task_id=(SELECT id FROM django_celery_beat_periodictask WHERE name=$1) UNION ALL SELECT 1 FROM m3u_m3uaccount WHERE refresh_task_id=(SELECT id FROM django_celery_beat_periodictask WHERE name=$1))").bind(&name).fetch_one(&mut*tx).await?;
+                if refs{return Err(unsupported());}
+                crate::provider_schedule::legacy_delete(&mut tx,&name).await?;
+                delete_files(paths,owner).await?;
+                Ok::<_,StoreError>(())
+            }.await;
+            match result{Ok(())=>{tx.commit().await?;Ok(())},Err(e)=>{tx.rollback().await?;Err(e)}}
+        })).await;
+        let close = session.close().await;
+        outcome??;
+        close?;
+        Ok::<_, StoreError>(StatusCode::NO_CONTENT)
+    });
+    operation
+        .await
+        .map_err(|_| StoreError::Unsupported("EPG delete supervisor failed"))?
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn old() -> Value {
+        json!({"id":3,"name":"Old","source_type":"dummy","url":null,"username":null,"password":null,"is_active":false,"file_path":null,"refresh_interval":0,"priority":0,"status":"idle","last_message":null,"custom_properties":{},"updated_at":null})
+    }
+    #[test]
+    fn dummy_rename_clears_only_signal_owned_status_fields() {
+        let v=validate(json!({"name":"Renamed","source_type":"dummy","status":"error","last_message":"discard"}).as_object().unwrap().clone(),&old(),"",false).unwrap();
+        assert_eq!(v.saved["status"], "idle");
+        assert_eq!(v.saved["last_message"], Value::Null);
+        assert_eq!(v.saved["is_active"], false);
+    }
+    #[test]
+    fn patch_preserves_cron_but_full_put_uses_serializer_default() {
+        let mut old = old();
+        old["source_type"] = json!("xmltv");
+        assert_eq!(
+            validate(Map::new(), &old, "11 4 29 2 *", true)
+                .unwrap()
+                .cron,
+            "11 4 29 2 *"
+        );
+        assert_eq!(
+            validate(
+                json!({"name":"Old","source_type":"xmltv"})
+                    .as_object()
+                    .unwrap()
+                    .clone(),
+                &old,
+                "11 4 29 2 *",
+                false
+            )
+            .unwrap()
+            .cron,
+            ""
+        );
+    }
+    #[test]
+    fn status_presave_follows_parsed_boolean_but_partial_view_uses_raw_truth() {
+        let mut old = old();
+        old["source_type"] = json!("xmltv");
+        old["status"] = json!("disabled");
+        assert_eq!(
+            validate(
+                json!({"is_active":true}).as_object().unwrap().clone(),
+                &old,
+                "",
+                true
+            )
+            .unwrap()
+            .saved["status"],
+            "idle"
+        );
+        assert_eq!(
+            validate(
+                json!({"is_active":"false"}).as_object().unwrap().clone(),
+                &old,
+                "",
+                true
+            )
+            .unwrap()
+            .saved["status"],
+            "idle"
+        );
+    }
+}

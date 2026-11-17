@@ -220,25 +220,93 @@ pub(crate) async fn collect_on_connection(
     keep: Option<Vec<String>>,
     effect: Effect,
 ) -> Result<Vec<String>, ReportError> {
-    let c = connection;
-    async {
-            let rows:Vec<(i64,Option<String>)>=if let Some(keys)=keys {
-                sqlx::query_as("SELECT id::bigint,CASE WHEN octet_length(notification_key)<=1020 THEN notification_key ELSE NULL END FROM core_systemnotification WHERE notification_key=ANY($1) ORDER BY priority DESC,created_at DESC LIMIT 129").bind(keys).fetch_all(&mut *c).await.map_err(Error::Sql)?
-            }else{
-                sqlx::query_as(&format!("SELECT id::bigint,CASE WHEN octet_length(notification_key)<=1020 THEN notification_key ELSE NULL END FROM core_systemnotification WHERE {FILTER} AND ($1::text[] IS NULL OR NOT(notification_key=ANY($1))) ORDER BY priority DESC,created_at DESC LIMIT 129")).bind(keep).fetch_all(&mut *c).await.map_err(Error::Sql)?
-            };
-            if rows.len()>128 || rows.iter().any(|v|v.1.as_ref().is_none_or(|k|k.chars().count()>255)){return Err(Error::Unsupported.into());}
-            let ids:Vec<i64>=rows.iter().map(|v|v.0).collect();let mut tx=c.begin().await.map_err(Error::Sql)?;
-            let deleted=async {
-                sqlx::query_scalar::<_,i64>("SELECT id::bigint FROM core_systemnotification WHERE id=ANY($1) FOR UPDATE").bind(&ids).fetch_all(&mut *tx).await.map_err(Error::Sql)?;
-                let related:i64=sqlx::query_scalar("SELECT count(*) FROM core_notificationdismissal WHERE notification_id=ANY($1)").bind(&ids).fetch_one(&mut *tx).await.map_err(Error::Sql)?;
-                if related>1024{return Err(Error::Unsupported.into());}
-                sqlx::query("DELETE FROM core_notificationdismissal WHERE notification_id=ANY($1)").bind(&ids).execute(&mut *tx).await.map_err(|error|ReportError::effect(error,effect))?;
-                sqlx::query("DELETE FROM core_systemnotification WHERE id=ANY($1)").bind(&ids).execute(&mut *tx).await.map_err(|error|ReportError::effect(error,effect))?;Ok::<_,ReportError>(())
-            }.await;
-            match deleted{Ok(())=>tx.commit().await.map_err(Error::Sql)?,Err(e)=>{tx.rollback().await.map_err(Error::Sql)?;return Err(e);}}
-            Ok::<_,ReportError>(rows.into_iter().map(|v|v.1.expect("bounded key checked")).collect::<Vec<_>>())
-        }.await
+    // Preserve accepted post-save/task query and transaction ordering.
+    let rows = collector_rows(connection, keys, keep).await?;
+    let mut tx = connection.begin().await.map_err(Error::Sql)?;
+    let deleted = delete_collector_rows(&mut tx, &rows, effect).await;
+    match deleted {
+        Ok(()) => tx.commit().await.map_err(Error::Sql)?,
+        Err(error) => {
+            tx.rollback().await.map_err(Error::Sql)?;
+            return Err(error);
+        }
+    }
+    Ok(rows
+        .into_iter()
+        .map(|v| v.1.expect("bounded key checked"))
+        .collect())
+}
+/// Same Collector core for Source's existing raw BEGIN owner. This verifies
+/// physical transaction status; it does not open, commit or detach a TX.
+pub(crate) async fn collect_in_open_transaction(
+    c: &mut PgConnection,
+    keys: Option<Vec<String>>,
+    keep: Option<Vec<String>>,
+    effect: Effect,
+) -> Result<Vec<String>, ReportError> {
+    if c.protocol_transaction_is_idle().await.map_err(Error::Sql)? {
+        return Err(Error::Unsupported.into());
+    }
+    let rows = collector_rows(c, keys, keep).await?;
+    delete_collector_rows(c, &rows, effect).await?;
+    Ok(rows
+        .into_iter()
+        .map(|v| v.1.expect("bounded key checked"))
+        .collect())
+}
+async fn collector_rows(
+    c: &mut PgConnection,
+    keys: Option<Vec<String>>,
+    keep: Option<Vec<String>>,
+) -> Result<Vec<(i64, Option<String>)>, ReportError> {
+    let rows: Vec<(i64, Option<String>)> = if let Some(keys) = keys {
+        sqlx::query_as("SELECT id::bigint,CASE WHEN octet_length(notification_key)<=1020 THEN notification_key ELSE NULL END FROM core_systemnotification WHERE notification_key=ANY($1) ORDER BY priority DESC,created_at DESC LIMIT 129").bind(keys).fetch_all(&mut *c).await.map_err(Error::Sql)?
+    } else {
+        sqlx::query_as(&format!("SELECT id::bigint,CASE WHEN octet_length(notification_key)<=1020 THEN notification_key ELSE NULL END FROM core_systemnotification WHERE {FILTER} AND ($1::text[] IS NULL OR NOT(notification_key=ANY($1))) ORDER BY priority DESC,created_at DESC LIMIT 129")).bind(keep).fetch_all(&mut *c).await.map_err(Error::Sql)?
+    };
+    if rows.len() > 128
+        || rows
+            .iter()
+            .any(|v| v.1.as_ref().is_none_or(|k| k.chars().count() > 255))
+    {
+        return Err(Error::Unsupported.into());
+    }
+    Ok(rows)
+}
+async fn delete_collector_rows(
+    c: &mut PgConnection,
+    rows: &[(i64, Option<String>)],
+    effect: Effect,
+) -> Result<(), ReportError> {
+    let ids: Vec<i64> = rows.iter().map(|v| v.0).collect();
+    sqlx::query_scalar::<_, i64>(
+        "SELECT id::bigint FROM core_systemnotification WHERE id=ANY($1) FOR UPDATE",
+    )
+    .bind(&ids)
+    .fetch_all(&mut *c)
+    .await
+    .map_err(Error::Sql)?;
+    let related: i64 = sqlx::query_scalar(
+        "SELECT count(*) FROM core_notificationdismissal WHERE notification_id=ANY($1)",
+    )
+    .bind(&ids)
+    .fetch_one(&mut *c)
+    .await
+    .map_err(Error::Sql)?;
+    if related > 1024 {
+        return Err(Error::Unsupported.into());
+    }
+    sqlx::query("DELETE FROM core_notificationdismissal WHERE notification_id=ANY($1)")
+        .bind(&ids)
+        .execute(&mut *c)
+        .await
+        .map_err(|error| ReportError::effect(error, effect))?;
+    sqlx::query("DELETE FROM core_systemnotification WHERE id=ANY($1)")
+        .bind(&ids)
+        .execute(&mut *c)
+        .await
+        .map_err(|error| ReportError::effect(error, effect))?;
+    Ok(())
 }
 /// Exact legacy notification upsert on the caller's session. Legacy caller
 /// retains its title-domain guard; signal caller lets actual PG reject an
