@@ -1,0 +1,46 @@
+{
+  "credit": "Original Dispatcharr, Django/DRF and dependency authors retain application/protocol/framework credit.",
+  "Source_controller_actual_exit": 1,
+  "Source_scenarios_planned": 10,
+  "new_SD_captures_qualified": 4,
+  "new_timeshift_captures_qualified": 0,
+  "new_timeshift_media_requests": 0,
+  "actual_SD_statuses": [
+    {
+      "method": "DELETE",
+      "case": "owned provider503 service error",
+      "status": 502
+    },
+    {
+      "method": "HEAD",
+      "case": "administrator existing SD source",
+      "status": 500,
+      "response_body_bytes": 0
+    },
+    {
+      "method": "PUT",
+      "case": "administrator method refusal",
+      "status": 405
+    },
+    {
+      "method": "OPTIONS",
+      "case": "anonymous request",
+      "status": 401
+    }
+  ],
+  "all_four_before_after_SQL_tables": 61,
+  "all_four_before_after_SQL_sequences": 59,
+  "SQL_tables_and_sequences_unchanged": true,
+  "websocket_events": 0,
+  "cleanup": {
+    "exact_CIDs_absent": 3,
+    "original_host_generations_absent": 2
+  },
+  "sealed_inputs": 5419,
+  "input_drift": [],
+  "timeshift_failure": "Before first media request: cross-UID /proc/exe observer could not establish worker identity. Missing runtime behavior is not inferred; sameUID observer successor required.",
+  "earlier_SD20_and_separate_recovered21_replayed": false,
+  "full25_Source_controller_passed": false,
+  "Native_or_milestone_accepted": false,
+  "performance_verified": false
+}
