@@ -60,6 +60,8 @@ class RetainedAuthPluginControls(unittest.TestCase):
         proof = json.loads((ROOT / 'scripts/rust-contracts/retained-auth-plugin/preservation.json').read_bytes())
         register = json.loads((ROOT / 'docs/rust-contract-register.json').read_bytes())
         current_rows = copy.deepcopy(register['runtime_routes'])
+        import retained_source12_contracts
+        retained_source12_contracts.restore_pre_Source12(register['runtime_routes'])
         import framework_suite_contracts
         framework_suite_contracts.restore_pre_framework(register['runtime_routes'])
         import retained_sd_contracts
@@ -83,7 +85,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
         mapping = source_contracts.apply(ROOT, rows, json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes()))
         self.assertEqual(rows, current_rows)
         self.assertEqual([row for row in mapping['unmapped_method_Source_observations'] if row['route_id'] != 'route-7e6941c073eccaa2b6dd'], self.value['unmapped_method_Source_observations'])
-        self.assertEqual(mapping['operations'], 173)
+        self.assertEqual(mapping['operations'], 174)
         self.assertEqual(sum(o['method'] is None for o in operations.values()), 322)
         self.assertTrue(all(o['fully_verified'] is False for o in operations.values()))
 

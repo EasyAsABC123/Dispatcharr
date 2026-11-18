@@ -1,0 +1,100 @@
+[
+  {
+    "argv": [
+      "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+      "container",
+      "ls",
+      "--all",
+      "--filter",
+      "name=^/dispatcharr-pure-resolver-091d4cf7f5$",
+      "--format",
+      "{{.ID}}"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "seconds": 0.010241326999675948
+  },
+  {
+    "argv": [
+      "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+      "run",
+      "--pull=never",
+      "--rm",
+      "--network",
+      "none",
+      "--read-only",
+      "--cap-drop",
+      "ALL",
+      "--security-opt",
+      "no-new-privileges",
+      "--user",
+      "65532:65532",
+      "--pids-limit",
+      "32",
+      "--cpus",
+      "1",
+      "--memory",
+      "256m",
+      "--memory-swap",
+      "256m",
+      "--tmpfs",
+      "/tmp:rw,nosuid,nodev,size=64m,mode=1777",
+      "--name",
+      "dispatcharr-pure-resolver-091d4cf7f5",
+      "--cidfile",
+      "/home/justin/github/Dispatcharr/artifacts/rust/m0-source12-resolver-UID-1/probe.cid",
+      "--mount",
+      "type=bind,src=/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-vod-normal-provider-lifecycle-source-3/Original-source,dst=/app,readonly",
+      "--mount",
+      "type=bind,src=/home/justin/github/Dispatcharr/artifacts/rust/m0-source12-resolver-prep-1,dst=/resolver,readonly",
+      "--env",
+      "DISPATCHARR_ENV=aio",
+      "--env",
+      "PYTHONDONTWRITEBYTECODE=1",
+      "--entrypoint",
+      "/dispatcharrpy/bin/python",
+      "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "-B",
+      "/resolver/qualify_resolver.py"
+    ],
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"/resolver/qualify_resolver.py\", line 25, in <module>\n    assert len(request['cases']) == 4 and len(request['routes']) == 592\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+    "seconds": 0.35044897699845023
+  },
+  {
+    "argv": [
+      "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+      "container",
+      "ls",
+      "--all",
+      "--no-trunc",
+      "--filter",
+      "id=db19b85d57a74381286dcdee7ba5cef822984d107b064167f67515de9ad0e17c",
+      "--format",
+      "{{.ID}}"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "seconds": 0.009982338997360785
+  },
+  {
+    "argv": [
+      "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+      "container",
+      "ls",
+      "--all",
+      "--no-trunc",
+      "--filter",
+      "id=db19b85d57a74381286dcdee7ba5cef822984d107b064167f67515de9ad0e17c",
+      "--format",
+      "{{.ID}}"
+    ],
+    "actual_exit": 0,
+    "stdout": "",
+    "stderr": "",
+    "seconds": 0.008981771999970078
+  }
+]

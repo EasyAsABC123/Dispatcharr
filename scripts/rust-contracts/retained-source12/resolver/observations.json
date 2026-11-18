@@ -1,0 +1,301 @@
+{
+  "passed": true,
+  "actual_UID": 65532,
+  "Django_version": "6.0.9",
+  "actual_pinned_Django_app_registry_loaded": true,
+  "required_import_signing_key_generated_only_in_memory": true,
+  "token_issuance_or_verification_invoked": false,
+  "actual_shell_initialization_skipped": true,
+  "all592_resolver_identities_order_actions_exact": true,
+  "Source_files": 1211,
+  "Source_HTTP_business_calls": 0,
+  "Source_or_Native_acceptance": false,
+  "counts": {
+    "SQL_connection_or_cursor_attempts": 0,
+    "network_attempts": 1,
+    "thread_attempts": 0,
+    "child_attempts": 0,
+    "handler_invocations": 0
+  },
+  "observations": [
+    {
+      "path": "/api/epg/sources/3/sd-lineups/search/",
+      "retained_observation_count": 8,
+      "retained_observations": [
+        {
+          "Source_group": "Source12-sd-headends-search",
+          "label": "anonymous-search",
+          "method": "POST",
+          "HTTP_status": 401,
+          "private_wire_sha256": "fb35c61cfa031afe266d0e4cb12870a4f25f9543b0595a75091d1cdea0492f12",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/anonymous-search/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source12-sd-headends-search",
+          "label": "expired-token-retry-plus-query-space",
+          "method": "POST",
+          "HTTP_status": 200,
+          "private_wire_sha256": "8077f4670e2205a11ca68f715979c61da2610555faa9f2a14b28fe361db2424e",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/expired-token-retry-plus-query-space/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source12-sd-headends-search",
+          "label": "headends-service503",
+          "method": "POST",
+          "HTTP_status": 502,
+          "private_wire_sha256": "8e1c9062a133cd01e755da2bf25b7e18604cdaca6c2d3a43f67a676fce8b6fd5",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/headends-service503/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source12-sd-headends-search",
+          "label": "nonlist-headends-empty-list",
+          "method": "POST",
+          "HTTP_status": 200,
+          "private_wire_sha256": "01f9b5838b670fb1c2418d1a22880aecb31b6d1c3d765e3f05e97d46b45c7d06",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/nonlist-headends-empty-list/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source12-sd-headends-search",
+          "label": "ordered-duplicate-and-missing-null-flatten",
+          "method": "POST",
+          "HTTP_status": 200,
+          "private_wire_sha256": "72b9eb337fdc54f5bb8203077912f3fcc8a7b9fc8be12a041d3756582e21397e",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/ordered-duplicate-and-missing-null-flatten/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source12-sd-headends-search",
+          "label": "persistent2055-after-cached-token",
+          "method": "POST",
+          "HTTP_status": 400,
+          "private_wire_sha256": "6358fbe0e2e88411bbec6dc807e665daf3d85badf7878477c88b167b7dca24da",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/persistent2055-after-cached-token/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source12-sd-headends-search",
+          "label": "required-country-before-token",
+          "method": "POST",
+          "HTTP_status": 400,
+          "private_wire_sha256": "e2c782b04b4e8fb3ed146e1301bb58b05546817b5d9d3cbf6d71acff5d5173de",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/required-country-before-token/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source12-sd-headends-search",
+          "label": "standard-search-forbidden",
+          "method": "POST",
+          "HTTP_status": 403,
+          "private_wire_sha256": "5a551c7c6943f938c86fd39470814c8b4228d154f0b0ff36de3033c6ccac3655",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/standard-search-forbidden/wire.json",
+          "query_credentials_projected": false
+        }
+      ],
+      "expected_resolver_ordinal": 157,
+      "expected_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "expected_view_name": "api:epg:epg-source-sd-lineups-search",
+      "expected_pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/search/$",
+      "expected_action_map": {
+        "post": "sd_lineups_search"
+      },
+      "expected_kwargs": {
+        "pk": "3"
+      },
+      "actual_resolver_ordinal": 157,
+      "actual_pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/search/$",
+      "actual_view_name": "api:epg:epg-source-sd-lineups-search",
+      "actual_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "actual_action_map": {
+        "post": "sd_lineups_search"
+      },
+      "actual_kwargs": {
+        "pk": "3"
+      },
+      "Source_HTTP_replayed": false,
+      "method_permission_or_role_acceptance_added": false
+    },
+    {
+      "path": "/api/epg/sources/4/sd-lineups/search/",
+      "retained_observation_count": 1,
+      "retained_observations": [
+        {
+          "Source_group": "Source12-sd-headends-search",
+          "label": "wrong-source-type-before-body",
+          "method": "POST",
+          "HTTP_status": 400,
+          "private_wire_sha256": "37f8372606080c808327d47db4c0fc91f425529b284c3f2517c554863c70e1d7",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/wrong-source-type-before-body/wire.json",
+          "query_credentials_projected": false
+        }
+      ],
+      "expected_resolver_ordinal": 157,
+      "expected_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "expected_view_name": "api:epg:epg-source-sd-lineups-search",
+      "expected_pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/search/$",
+      "expected_action_map": {
+        "post": "sd_lineups_search"
+      },
+      "expected_kwargs": {
+        "pk": "4"
+      },
+      "actual_resolver_ordinal": 157,
+      "actual_pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/search/$",
+      "actual_view_name": "api:epg:epg-source-sd-lineups-search",
+      "actual_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "actual_action_map": {
+        "post": "sd_lineups_search"
+      },
+      "actual_kwargs": {
+        "pk": "4"
+      },
+      "Source_HTTP_replayed": false,
+      "method_permission_or_role_acceptance_added": false
+    },
+    {
+      "path": "/get.php",
+      "retained_observation_count": 3,
+      "retained_observations": [
+        {
+          "Source_group": "Source12-m3u-direct-allowlist-three",
+          "label": "empty-effective-inactive-missing",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "bbf2ef2f68b256e0c8d30470f258e74f98f0a3e5f7156cb926feb78df2a22e10",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/m3u-direct-allowlist-three/private/empty-effective-inactive-missing/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source12-m3u-direct-allowlist-three",
+          "label": "ordered-default-no-secondary-fallback",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "d6b9e08597143055c03001dd46ebd1c325d6d81519936060d17deca2254b8de1",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/m3u-direct-allowlist-three/private/ordered-default-no-secondary-fallback/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source12-m3u-direct-allowlist-three",
+          "label": "raw-xc-chosen-stream-catchup",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "ec18a652991a7c62dee24b7e46b825dce768baaf660510f1d6e59028f4c6270c",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/m3u-direct-allowlist-three/private/raw-xc-chosen-stream-catchup/wire.json",
+          "query_credentials_projected": false
+        }
+      ],
+      "expected_resolver_ordinal": 407,
+      "expected_handler": "apps.output.views.xc_get",
+      "expected_view_name": "xc_get",
+      "expected_pattern": "get.php",
+      "expected_action_map": null,
+      "expected_kwargs": {},
+      "actual_resolver_ordinal": 407,
+      "actual_pattern": "get.php",
+      "actual_view_name": "xc_get",
+      "actual_handler": "apps.output.views.xc_get",
+      "actual_action_map": null,
+      "actual_kwargs": {},
+      "Source_HTTP_replayed": false,
+      "method_permission_or_role_acceptance_added": false
+    }
+  ],
+  "denied_operations": [
+    {
+      "kind": "network_attempts",
+      "operation": "socket.socket.bind",
+      "stage": "django_setup",
+      "caller": {
+        "module": "urllib3.util.connection",
+        "function": "_has_ipv6",
+        "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+        "lineno": 127
+      },
+      "caller_frames": [
+        {
+          "module": "urllib3.util.connection",
+          "function": "_has_ipv6",
+          "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+          "lineno": 127
+        },
+        {
+          "module": "urllib3.util.connection",
+          "function": "<module>",
+          "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+          "lineno": 137
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_call_with_frames_removed",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 488
+        },
+        {
+          "module": "importlib._bootstrap_external",
+          "function": "exec_module",
+          "filename": "<frozen importlib._bootstrap_external>",
+          "lineno": 1027
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 935
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 1340
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 1369
+        },
+        {
+          "module": "urllib3.util",
+          "function": "<module>",
+          "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/__init__.py",
+          "lineno": 4
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_call_with_frames_removed",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 488
+        },
+        {
+          "module": "importlib._bootstrap_external",
+          "function": "exec_module",
+          "filename": "<frozen importlib._bootstrap_external>",
+          "lineno": 1027
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 935
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 1340
+        }
+      ],
+      "caller_file_sha256": "2633bbdb69731e5ccb5cf4e4afd65605d86c7979cc5633126f50c92d5ad74a74",
+      "original_operation_executed": false,
+      "socket_family": 10,
+      "IPv6_loopback_ephemeral_bind": true
+    }
+  ],
+  "qualified_blocked_import_probe_count": 1,
+  "network_scope": "All network operations denied; one measured urllib3 import-only IPv6 loopback bind capability probe may be separately qualified, preserving network_attempts=1",
+  "network_initialization_or_runtime_parity_claimed": false,
+  "credit": "Original Dispatcharr and Django/DRF authors retain all application/framework credit."
+}

@@ -1,0 +1,11 @@
+All application and algorithm credit belongs to the original Dispatcharr authors and contributors. Existing licenses apply.
+
+This additive packet assigns the unformatted SD search POST operation from nine already qualified Source12 captures and supplements the existing `get.php` unresolved-method operation with three direct-playlist observations. It preserves the original M3U primary definition and all 173 preceding Source definitions. The format-suffixed search route remains unassigned; the M3U declared method/action remain null. Effective roles are unclaimed.
+
+Source12 completed with controller exit zero. A separate UID65532, network-none control loaded the pinned 1,211-file Original tree, verified the complete ordered 592-route forest, and resolved only the three already captured query-stripped paths. No HTTP request, handler, SQL, media, thread or child operation was performed. The actual single denied urllib3 import-only IPv6 bind is retained as network_attempts=1, with its exact caller/package/AST qualification and original operation not executed. It is not represented as zero network attempts or runtime network parity.
+
+The first pure-resolver attempt remains a real failure: a stale four-case bootstrap assertion failed before Django initialization; an empty-stdout parser then reported IndexError. Its Root terminal, UID report and exact original stderr are retained. Successor2 corrected the three-case cardinality and empty-output diagnostics, then actually exited zero with both EOFs, settled process group and exact container absence.
+
+Public case descriptors contain status, body/request/wire digests and actor labels, with no query credentials, authorization tokens or body content projected. Raw private captures remain private. Full original qualification and resolver input/output byte custody are hash-bound in inventory.json.
+
+Run `python3 -m unittest test_register_evidence` from scripts/rust-contracts for the intended portable gate, or `python3 -m unittest test_retained_source12_contracts` for focused rejection and preservation controls. The resulting register has 174 assigned HTTP operations and 624 still absent. These are partial Source assignments; all milestone, Native parity, role coverage and performance gates remain open.

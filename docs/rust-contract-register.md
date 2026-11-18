@@ -112,3 +112,9 @@ Four actual paths were resolved in a separate UID65532/network-none control: all
 The [framework cohort](../scripts/rust-contracts/framework-suite/README.md) adds ten partial operation definitions from 36 asserted request sites in 34 named methods that passed in the retained 3,362-test Original suite. Eight exact Source files bind direct API clients and explicit request-factory/ViewSet action maps. The register reaches 173 HTTP assignments with 625 absent; every prior 163 definition and 788 unrelated operation dictionaries remain unchanged.
 
 The portable register gate passes 354 tests with zero failures and one optional skip. No Source request, application or resolver is replayed. Two unresolved declared methods remain null, all 322 unresolved declarations remain unchanged, and this cohort claims no authentication-role, TCP or Native evidence. Original file bytes, including their existing trailing whitespace, are preserved. Full milestones and performance remain open.
+
+## Source12 search and direct-M3U assignments
+
+The [Source12 cohort](../scripts/rust-contracts/retained-source12/README.md) adds one partial search POST definition from nine qualified HTTP captures and supplements the existing M3U unresolved-method definition with three exports. The register reaches 174 HTTP assignments and 624 absent. All 173 prior primary definitions, the existing M3U primary, 796 unrelated operation dictionaries and all 322 unresolved declarations remain unchanged.
+
+The portable gate passes 358 tests with zero failures and one optional skip. A separate three-path pure resolver control binds the actual search and get.php handlers without query credentials or HTTP replay. Its first stale-cardinality failure remains recorded; the minimal corrected control exits0 with exact cleanup. Source captures and handler custody do not establish full Native endpoints, roles, milestones or performance.
