@@ -58,14 +58,16 @@ candidate URL comparisons stopped before vectors because of bind-mount
 permissions; the third passes after an actual UID check of every mounted input.
 The private Source proof retains its original mode and is not published.
 
-The source-contract register has 173 partial HTTP assignments and 625 absent
-assignments. Its portable 354-test gate passes with one optional skip. These
+The source-contract register has 174 partial HTTP assignments and 624 absent
+assignments. Its portable 358-test gate passes with one optional skip. These
 Source definitions do not establish complete Native endpoints or roles.
 
-The expanded twenty-two-context Native batch is prepared against this image,
+The [twenty-two-context Native batch](../scripts/rust-integration/milestone-batch64/native22/started-checkpoint.json)
+has started against this image,
 adding the two new feature contexts to the prior twenty. Its setup and comparison
 checks retain Source/Native fixture identity differences and raw transport limits
-explicitly. No new application terminal is accepted at this checkpoint.
+explicitly. All 76 runtime inputs passed actual UID readability before the application
+fixture started. Its actual application terminal remains pending.
 **All complete M0–M9 milestones remain open**, including remaining compatibility,
 default recovery activation, representative performance, soak and rollback.
 Previous scoped CPU/memory results are not transferred to this candidate.
