@@ -1,0 +1,168 @@
+{
+  "passed": true,
+  "image_id": "sha256:830f909cfcb5e392d8126b97dfc05eee6490227be90ae66b75587ada7e0bd8bb",
+  "git_revision": "61f3a5b5db045a8189169ac8a15e3dbe263835af",
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "actual_UID": 65532,
+  "manifest_ELF_records": 51,
+  "prefix_files": 657,
+  "all_exact_files_and_notices": 684,
+  "actual_isolated_cli": {
+    "python": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+    "regex": "2026.9.29",
+    "packaging": "26.3",
+    "prefix": "/opt/dispatcharr-python",
+    "Django_dependency_available": true,
+    "Source_application_on_generic_sys_path": false
+  },
+  "actual_framed_dependency_roundtrip": [
+    {
+      "kind": "ready",
+      "actual_pid": 1,
+      "version": "3.13.18 (main, Oct 26 2026, 15:28:14) [GCC 15.2.0]",
+      "regex_version": "2026.9.29",
+      "application_server_started": false,
+      "dependency_only": true
+    },
+    {
+      "kind": "result",
+      "id": 1,
+      "result": {
+        "active": true,
+        "matches": [
+          true,
+          false
+        ],
+        "caught": null
+      },
+      "error": null
+    },
+    {
+      "kind": "result",
+      "id": 2,
+      "result": {
+        "capacity": false,
+        "rows": [
+          {
+            "url": "http://provider.invalid/base/live/u%2F part/p%3F x/17.ts",
+            "source_exception": null,
+            "caught": null
+          }
+        ]
+      },
+      "error": null
+    },
+    {
+      "kind": "result",
+      "id": 3,
+      "result": {
+        "kind": "parsed",
+        "newer": true,
+        "ordering": 1
+      },
+      "error": null
+    },
+    {
+      "kind": "result",
+      "id": 4,
+      "result": {
+        "kind": "invalid",
+        "exception": "InvalidVersion"
+      },
+      "error": null
+    },
+    {
+      "kind": "result",
+      "id": 5,
+      "result": null,
+      "error": null
+    }
+  ],
+  "actual_profile_urls_opcode": true,
+  "profile_urls_retained_Source45_reference": {
+    "kind": "retained_actual_Source45_profile_URL_package_probe",
+    "label": "XC-percent-and-space",
+    "rows": [
+      {
+        "account_type": "XC",
+        "server_url": "http://provider.invalid/base/player_api.php?ignored=1",
+        "username": "u%2F part",
+        "password": "p%3F x",
+        "stored_url": "http://stored.invalid/obsolete.ts",
+        "stream_id": 17,
+        "search": "^(.*)$",
+        "replacement": "$1"
+      }
+    ],
+    "expected": {
+      "capacity": false,
+      "rows": [
+        {
+          "url": "http://provider.invalid/base/live/u%2F part/p%3F x/17.ts",
+          "source_exception": null,
+          "caught": null
+        }
+      ]
+    },
+    "Source_vectors": {
+      "path": "artifacts/rust/m7-m3u-direct-pure-source-prep-1/runtime/vectors.json",
+      "sha256": "e56973a1deffec7ce77046ea3c2efe18f5992370f186f7a45abb2e38453a55d5"
+    },
+    "Source_golden": {
+      "path": "artifacts/rust/m7-m3u-direct-pure-source-actual-1/golden-vectors.json",
+      "sha256": "e49744285b3de94183ab2e7f47fb16e39a4bd97ab5a0041b81f6e156adcc35f8"
+    },
+    "Source_actual_terminal": {
+      "path": "artifacts/rust/m7-m3u-direct-pure-source-actual-1/Root-terminal.json",
+      "sha256": "be465f5d8cb96d89117d6fbf97b4ab98bf53a3ade099e982e48bb2610f2c6f9b"
+    },
+    "scope": "One actual framed candidate opcode against retained pure Source value. No Source replay/SQL/HTTP/ORM or full M7 qualification."
+  },
+  "profile_urls_fixture_sha256": "960acbd4b91bee2be154d18848ee50251b89260f86e9ef6ae80215a67644af3d",
+  "profile_urls_SQL_HTTP_qualified": false,
+  "exact_bridge_bytes_match_Git": true,
+  "actual_version_compare_epoch_and_InvalidVersion_opcode": true,
+  "version_compare_retained_Source33_reference": {
+    "Source_golden": {
+      "path": "artifacts/rust/m6-version-pep440-pure-actual-1/golden-vectors.json",
+      "sha256": "b94e37d21e5f4e90beb38fca4cf0cfb235700d4514c2c4cb10d5799178d16bcc"
+    },
+    "Source_actual_terminal": {
+      "path": "artifacts/rust/m6-version-pep440-pure-actual-1/Root-terminal.json",
+      "sha256": "6e5a734a469d934176b3f15aa2164c848fafb83c7f465bf5192fa4aa9f9fba53"
+    },
+    "Source_version": {
+      "path": "artifacts/rust/normal-graph-vod-normal-provider-lifecycle-source-3/Original-source/version.py",
+      "sha256": "077c13e40f3deaf1308f5bd1869961f6ae78154ca245465c14e4a9aef1c6eb82"
+    },
+    "packaging_version": "26.3",
+    "packaging_module_sha256": "558b2fb50fd198c660a4c082f96b8919c565911b6b4b6e07f34b6b60c074be97",
+    "current": "0.33.0",
+    "rows": [
+      {
+        "latest": "1!0.1",
+        "expected": {
+          "kind": "parsed",
+          "newer": true,
+          "ordering": 1
+        }
+      },
+      {
+        "latest": "1.2?",
+        "expected": {
+          "kind": "invalid",
+          "exception": "InvalidVersion"
+        }
+      }
+    ],
+    "Source_HTTP_SQL_or_Django_setup_replayed": false
+  },
+  "version_compare_fixture_sha256": "82c17fbbd65967b5e8c93663b944306939b5577e44d19c42a6916261924263e8",
+  "actual_packaging_version": "26.3",
+  "actual_packaging_licenses_hashed": 3,
+  "version_SQL_HTTP_worker_qualified": false,
+  "failure": null,
+  "exact_cleanup": true,
+  "commands": "commands.json"
+}

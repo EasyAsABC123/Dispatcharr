@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "actual_Docker_build_exit": 0,
+  "required_actual_recompilations": {
+    "dispatcharr-store": true,
+    "dispatcharr-rs": true
+  },
+  "reason": "Candidate66 actual changed Rust source is Store only; Main must recompile/link its changed route response implementation. Unchanged-source dependent crate cache reuse is valid. Every Rust input binds the actual passing SDK with no exclusions, including vendored original manifests.",
+  "build_log_sha256": "5faec0227ae6522ed57d986317ac57ea774755879edafd2f74c9555096dde7e3",
+  "build_log_source": "artifacts/rust/milestone-batch66-build-1/build.log",
+  "original_build_json_sha256": "9561cb9086e5cdf8bfbc2b7870264aec1ecbca489e282fab519efcc6230f39ed",
+  "original_build_owner_session": 64777,
+  "original_build_owner_tool_terminal_consumed": false,
+  "original_build_owner_wait_state": "Lost tool session; original build.json records actual Docker wait0, preserved original compile log only",
+  "recovery_build_actual_owner_receipt_required": true,
+  "recovery_source_archive_and_all_source_inputs_exact_original": true,
+  "original_image_index": "sha256:fe4f19a524db02ed4a46a4a6bc8d62c28df6bace8b7e5e8b689fa6f19f701f49",
+  "recovery_image_index": "sha256:830f909cfcb5e392d8126b97dfc05eee6490227be90ae66b75587ada7e0bd8bb",
+  "cross_index_rootfs_equality_claimed": false,
+  "old_image_no_longer_addressable_after_retag": true,
+  "recovery_Rust_build_stage_CACHED": true,
+  "recovery_build_log_sha256": "6057e8480c22a91a82ebe02799ea7b97297035e92fc3e32354cf16eead702cf3",
+  "application_performance_verified": false,
+  "changed_Rust_inputs_vs65": [
+    "rust/crates/store/src/channels.rs"
+  ],
+  "unchanged_source_cached_crates_need_not_recompile": [
+    "dispatcharr-job-transport",
+    "dispatcharr-output-http",
+    "dispatcharr-vod-http",
+    "dispatcharr-output-store"
+  ]
+}
