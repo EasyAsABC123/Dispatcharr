@@ -21,7 +21,7 @@ def generate(root,register_path=None,historical_log=None):
  for reference in manifest['inputs']:
   source=root/reference['path'];assert sha(source)==reference['sha256'],'exact Source assignment input';binding=json.loads(source.read_bytes());source_inputs.append(reference)
   for contract in binding['contracts']:
-   if contract['contract_id']in types and reference['kind']=='retained_original_management12_channelguide25_HTTP':continue
+   if contract['contract_id']in types and reference['kind']in['retained_original_management12_channelguide25_HTTP','retained_original_auth51_plugin35_resolver_scoped_HTTP']:continue
    assert contract['contract_id']not in types,'one primary Source definition per operation';types[contract['contract_id']]=(reference['kind'],contract)
  assigned=[];missing=[];unknown=[];seen=set()
  for route in register['runtime_routes']:

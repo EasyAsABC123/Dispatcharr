@@ -1,0 +1,1625 @@
+{
+  "passed": false,
+  "state": "ATTEMPTED_NOT_QUALIFIED",
+  "Source_HTTP_business_calls": 0,
+  "Source_requests_replayed": 0,
+  "Native_acceptance": false,
+  "full_milestone_accepted": false,
+  "performance_claims": false,
+  "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "prepared_closure_sha256": "e6a8798739d5513f5008b3869bb75e07200e0c15abcf773454ffc088f844cc3a",
+  "control_actual_exit": 1,
+  "control_failure": {
+    "passed": false,
+    "actual_UID": 65532,
+    "failure_stage": "resolve_retained_paths",
+    "error_type": "AssertionError",
+    "counts": {
+      "SQL_connection_or_cursor_attempts": 0,
+      "network_attempts": 1,
+      "thread_attempts": 0,
+      "child_attempts": 0,
+      "handler_invocations": 0
+    },
+    "callback_code_objects_loaded": 15,
+    "denied_operations": [
+      {
+        "kind": "network_attempts",
+        "operation": "socket.socket.bind",
+        "stage": "django_setup",
+        "caller": {
+          "module": "urllib3.util.connection",
+          "function": "_has_ipv6",
+          "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+          "lineno": 127
+        },
+        "caller_frames": [
+          {
+            "module": "urllib3.util.connection",
+            "function": "_has_ipv6",
+            "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+            "lineno": 127
+          },
+          {
+            "module": "urllib3.util.connection",
+            "function": "<module>",
+            "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+            "lineno": 137
+          },
+          {
+            "module": "importlib._bootstrap",
+            "function": "_call_with_frames_removed",
+            "filename": "<frozen importlib._bootstrap>",
+            "lineno": 488
+          },
+          {
+            "module": "importlib._bootstrap_external",
+            "function": "exec_module",
+            "filename": "<frozen importlib._bootstrap_external>",
+            "lineno": 1027
+          },
+          {
+            "module": "importlib._bootstrap",
+            "function": "_load_unlocked",
+            "filename": "<frozen importlib._bootstrap>",
+            "lineno": 935
+          },
+          {
+            "module": "importlib._bootstrap",
+            "function": "_find_and_load_unlocked",
+            "filename": "<frozen importlib._bootstrap>",
+            "lineno": 1340
+          },
+          {
+            "module": "importlib._bootstrap",
+            "function": "_find_and_load",
+            "filename": "<frozen importlib._bootstrap>",
+            "lineno": 1369
+          },
+          {
+            "module": "urllib3.util",
+            "function": "<module>",
+            "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/__init__.py",
+            "lineno": 4
+          },
+          {
+            "module": "importlib._bootstrap",
+            "function": "_call_with_frames_removed",
+            "filename": "<frozen importlib._bootstrap>",
+            "lineno": 488
+          },
+          {
+            "module": "importlib._bootstrap_external",
+            "function": "exec_module",
+            "filename": "<frozen importlib._bootstrap_external>",
+            "lineno": 1027
+          },
+          {
+            "module": "importlib._bootstrap",
+            "function": "_load_unlocked",
+            "filename": "<frozen importlib._bootstrap>",
+            "lineno": 935
+          },
+          {
+            "module": "importlib._bootstrap",
+            "function": "_find_and_load_unlocked",
+            "filename": "<frozen importlib._bootstrap>",
+            "lineno": 1340
+          }
+        ],
+        "caller_file_sha256": "2633bbdb69731e5ccb5cf4e4afd65605d86c7979cc5633126f50c92d5ad74a74",
+        "original_operation_executed": false,
+        "socket_family": 10,
+        "IPv6_loopback_ephemeral_bind": true
+      }
+    ],
+    "all592_resolver_identities_order_actions_exact": true,
+    "completed_resolutions": [
+      {
+        "group": "auth1",
+        "Source_index": 0,
+        "method": "POST",
+        "path": "/api/accounts/auth/login/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 1,
+        "method": "GET",
+        "path": "/api/accounts/users/me/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 13,
+        "actual_pattern": "api/accounts/^users/me/$",
+        "actual_view_name": "api:accounts:user-me",
+        "actual_handler": "apps.accounts.api_views.UserViewSet",
+        "actual_action_map": {
+          "get": "me",
+          "patch": "me"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 2,
+        "method": "POST",
+        "path": "/api/accounts/token/refresh/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 3,
+        "method": "GET",
+        "path": "/api/accounts/users/me/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 13,
+        "actual_pattern": "api/accounts/^users/me/$",
+        "actual_view_name": "api:accounts:user-me",
+        "actual_handler": "apps.accounts.api_views.UserViewSet",
+        "actual_action_map": {
+          "get": "me",
+          "patch": "me"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 4,
+        "method": "GET",
+        "path": "/admin/login/?next=/admin/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 417,
+        "actual_pattern": "admin/login/",
+        "actual_view_name": "admin:login",
+        "actual_handler": "apps.accounts.admin._rate_limited_admin_login",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 5,
+        "method": "POST",
+        "path": "/admin/login/?next=/admin/",
+        "role": "admin",
+        "observed_HTTP_status": 302,
+        "actual_resolver_ordinal": 417,
+        "actual_pattern": "admin/login/",
+        "actual_view_name": "admin:login",
+        "actual_handler": "apps.accounts.admin._rate_limited_admin_login",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 6,
+        "method": "GET",
+        "path": "/admin/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 416,
+        "actual_pattern": "admin/",
+        "actual_view_name": "admin:index",
+        "actual_handler": "django.contrib.admin.sites.AdminSite.index",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 7,
+        "method": "POST",
+        "path": "/api/accounts/auth/logout/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 8,
+        "method": "GET",
+        "path": "/admin/",
+        "role": "admin",
+        "observed_HTTP_status": 302,
+        "actual_resolver_ordinal": 416,
+        "actual_pattern": "admin/",
+        "actual_view_name": "admin:index",
+        "actual_handler": "django.contrib.admin.sites.AdminSite.index",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 9,
+        "method": "GET",
+        "path": "/api/accounts/users/me/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 13,
+        "actual_pattern": "api/accounts/^users/me/$",
+        "actual_view_name": "api:accounts:user-me",
+        "actual_handler": "apps.accounts.api_views.UserViewSet",
+        "actual_action_map": {
+          "get": "me",
+          "patch": "me"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 10,
+        "method": "POST",
+        "path": "/api/accounts/auth/login/",
+        "role": "standard",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 11,
+        "method": "GET",
+        "path": "/api/accounts/users/me/",
+        "role": "standard",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 13,
+        "actual_pattern": "api/accounts/^users/me/$",
+        "actual_view_name": "api:accounts:user-me",
+        "actual_handler": "apps.accounts.api_views.UserViewSet",
+        "actual_action_map": {
+          "get": "me",
+          "patch": "me"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 12,
+        "method": "POST",
+        "path": "/api/accounts/token/refresh/",
+        "role": "standard",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 13,
+        "method": "GET",
+        "path": "/api/accounts/users/me/",
+        "role": "standard",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 13,
+        "actual_pattern": "api/accounts/^users/me/$",
+        "actual_view_name": "api:accounts:user-me",
+        "actual_handler": "apps.accounts.api_views.UserViewSet",
+        "actual_action_map": {
+          "get": "me",
+          "patch": "me"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 14,
+        "method": "POST",
+        "path": "/api/accounts/auth/logout/",
+        "role": "standard",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 15,
+        "method": "GET",
+        "path": "/api/accounts/users/me/",
+        "role": "standard",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 13,
+        "actual_pattern": "api/accounts/^users/me/$",
+        "actual_view_name": "api:accounts:user-me",
+        "actual_handler": "apps.accounts.api_views.UserViewSet",
+        "actual_action_map": {
+          "get": "me",
+          "patch": "me"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 16,
+        "method": "POST",
+        "path": "/api/accounts/auth/login/",
+        "role": "streamer",
+        "observed_HTTP_status": 429,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 17,
+        "method": "POST",
+        "path": "/api/accounts/auth/login/",
+        "role": "owned_admin_wrong_password",
+        "observed_HTTP_status": 429,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 18,
+        "method": "POST",
+        "path": "/api/accounts/auth/login/",
+        "role": "anonymous",
+        "observed_HTTP_status": 429,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 19,
+        "method": "GET",
+        "path": "/api/accounts/auth/login/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 20,
+        "method": "HEAD",
+        "path": "/api/accounts/auth/login/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 21,
+        "method": "OPTIONS",
+        "path": "/api/accounts/auth/login/",
+        "role": "anonymous",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 22,
+        "method": "PUT",
+        "path": "/api/accounts/auth/login/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 23,
+        "method": "PATCH",
+        "path": "/api/accounts/auth/login/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 24,
+        "method": "DELETE",
+        "path": "/api/accounts/auth/login/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 25,
+        "method": "TRACE",
+        "path": "/api/accounts/auth/login/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 26,
+        "method": "POST",
+        "path": "/api/accounts/auth/login/",
+        "role": "invalid_JWT",
+        "observed_HTTP_status": 401,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 27,
+        "method": "POST",
+        "path": "/api/accounts/auth/logout/",
+        "role": "anonymous",
+        "observed_HTTP_status": 401,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 28,
+        "method": "GET",
+        "path": "/api/accounts/auth/logout/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 29,
+        "method": "HEAD",
+        "path": "/api/accounts/auth/logout/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 30,
+        "method": "OPTIONS",
+        "path": "/api/accounts/auth/logout/",
+        "role": "anonymous",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 31,
+        "method": "PUT",
+        "path": "/api/accounts/auth/logout/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 32,
+        "method": "PATCH",
+        "path": "/api/accounts/auth/logout/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 33,
+        "method": "DELETE",
+        "path": "/api/accounts/auth/logout/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 34,
+        "method": "TRACE",
+        "path": "/api/accounts/auth/logout/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 35,
+        "method": "POST",
+        "path": "/api/accounts/auth/logout/",
+        "role": "invalid_JWT",
+        "observed_HTTP_status": 401,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 36,
+        "method": "POST",
+        "path": "/api/accounts/token/refresh/",
+        "role": "anonymous",
+        "observed_HTTP_status": 400,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 37,
+        "method": "GET",
+        "path": "/api/accounts/token/refresh/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 38,
+        "method": "HEAD",
+        "path": "/api/accounts/token/refresh/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 39,
+        "method": "OPTIONS",
+        "path": "/api/accounts/token/refresh/",
+        "role": "anonymous",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 40,
+        "method": "PUT",
+        "path": "/api/accounts/token/refresh/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 41,
+        "method": "PATCH",
+        "path": "/api/accounts/token/refresh/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 42,
+        "method": "DELETE",
+        "path": "/api/accounts/token/refresh/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 43,
+        "method": "TRACE",
+        "path": "/api/accounts/token/refresh/",
+        "role": "anonymous",
+        "observed_HTTP_status": 405,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth1",
+        "Source_index": 44,
+        "method": "POST",
+        "path": "/api/accounts/token/refresh/",
+        "role": "invalid_JWT",
+        "observed_HTTP_status": 400,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth2",
+        "Source_index": 0,
+        "method": "POST",
+        "path": "/api/accounts/auth/login/",
+        "role": "streamer",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 0,
+        "actual_pattern": "api/accounts/auth/login/",
+        "actual_view_name": "api:accounts:user-login",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "login"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth2",
+        "Source_index": 1,
+        "method": "GET",
+        "path": "/api/accounts/users/me/",
+        "role": "streamer",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 13,
+        "actual_pattern": "api/accounts/^users/me/$",
+        "actual_view_name": "api:accounts:user-me",
+        "actual_handler": "apps.accounts.api_views.UserViewSet",
+        "actual_action_map": {
+          "get": "me",
+          "patch": "me"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth2",
+        "Source_index": 2,
+        "method": "POST",
+        "path": "/api/accounts/token/refresh/",
+        "role": "streamer",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 6,
+        "actual_pattern": "api/accounts/token/refresh/",
+        "actual_view_name": "api:accounts:token_refresh",
+        "actual_handler": "apps.accounts.api_views.TokenRefreshView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth2",
+        "Source_index": 3,
+        "method": "GET",
+        "path": "/api/accounts/users/me/",
+        "role": "streamer",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 13,
+        "actual_pattern": "api/accounts/^users/me/$",
+        "actual_view_name": "api:accounts:user-me",
+        "actual_handler": "apps.accounts.api_views.UserViewSet",
+        "actual_action_map": {
+          "get": "me",
+          "patch": "me"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth2",
+        "Source_index": 4,
+        "method": "POST",
+        "path": "/api/accounts/auth/logout/",
+        "role": "streamer",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 2,
+        "actual_pattern": "api/accounts/auth/logout/",
+        "actual_view_name": "api:accounts:user-logout",
+        "actual_handler": "apps.accounts.api_views.AuthViewSet",
+        "actual_action_map": {
+          "post": "logout"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "auth2",
+        "Source_index": 5,
+        "method": "GET",
+        "path": "/api/accounts/users/me/",
+        "role": "streamer",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 13,
+        "actual_pattern": "api/accounts/^users/me/$",
+        "actual_view_name": "api:accounts:user-me",
+        "actual_handler": "apps.accounts.api_views.UserViewSet",
+        "actual_action_map": {
+          "get": "me",
+          "patch": "me"
+        },
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 0,
+        "method": "GET",
+        "path": "/api/plugins/plugins/",
+        "role": "anonymous",
+        "observed_HTTP_status": 401,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 1,
+        "method": "GET",
+        "path": "/api/plugins/plugins/",
+        "role": "standard",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 2,
+        "method": "GET",
+        "path": "/api/plugins/plugins/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 3,
+        "method": "HEAD",
+        "path": "/api/plugins/plugins/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 4,
+        "method": "OPTIONS",
+        "path": "/api/plugins/plugins/",
+        "role": "standard",
+        "observed_HTTP_status": 403,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 5,
+        "method": "OPTIONS",
+        "path": "/api/plugins/plugins/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 6,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/run/",
+        "role": "admin",
+        "observed_HTTP_status": 403,
+        "actual_resolver_ordinal": 255,
+        "actual_pattern": "api/plugins/plugins/<str:key>/run/",
+        "actual_view_name": "api:plugins:run",
+        "actual_handler": "apps.plugins.api_views.PluginRunAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 7,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/run/",
+        "role": "admin",
+        "observed_HTTP_status": 400,
+        "actual_resolver_ordinal": 255,
+        "actual_pattern": "api/plugins/plugins/<str:key>/run/",
+        "actual_view_name": "api:plugins:run",
+        "actual_handler": "apps.plugins.api_views.PluginRunAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 8,
+        "method": "POST",
+        "path": "/api/plugins/plugins/missing/run/",
+        "role": "admin",
+        "observed_HTTP_status": 404,
+        "actual_resolver_ordinal": 255,
+        "actual_pattern": "api/plugins/plugins/<str:key>/run/",
+        "actual_view_name": "api:plugins:run",
+        "actual_handler": "apps.plugins.api_views.PluginRunAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "missing"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 9,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/settings/",
+        "role": "standard",
+        "observed_HTTP_status": 403,
+        "actual_resolver_ordinal": 254,
+        "actual_pattern": "api/plugins/plugins/<str:key>/settings/",
+        "actual_view_name": "api:plugins:settings",
+        "actual_handler": "apps.plugins.api_views.PluginSettingsAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 10,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/settings/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 254,
+        "actual_pattern": "api/plugins/plugins/<str:key>/settings/",
+        "actual_view_name": "api:plugins:settings",
+        "actual_handler": "apps.plugins.api_views.PluginSettingsAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 11,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/enabled/",
+        "role": "admin",
+        "observed_HTTP_status": 400,
+        "actual_resolver_ordinal": 256,
+        "actual_pattern": "api/plugins/plugins/<str:key>/enabled/",
+        "actual_view_name": "api:plugins:enabled",
+        "actual_handler": "apps.plugins.api_views.PluginEnabledAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 12,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/enabled/",
+        "role": "admin",
+        "observed_HTTP_status": 400,
+        "actual_resolver_ordinal": 256,
+        "actual_pattern": "api/plugins/plugins/<str:key>/enabled/",
+        "actual_view_name": "api:plugins:enabled",
+        "actual_handler": "apps.plugins.api_views.PluginEnabledAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 13,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/enabled/",
+        "role": "admin",
+        "observed_HTTP_status": 400,
+        "actual_resolver_ordinal": 256,
+        "actual_pattern": "api/plugins/plugins/<str:key>/enabled/",
+        "actual_view_name": "api:plugins:enabled",
+        "actual_handler": "apps.plugins.api_views.PluginEnabledAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 14,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/enabled/",
+        "role": "admin",
+        "observed_HTTP_status": 400,
+        "actual_resolver_ordinal": 256,
+        "actual_pattern": "api/plugins/plugins/<str:key>/enabled/",
+        "actual_view_name": "api:plugins:enabled",
+        "actual_handler": "apps.plugins.api_views.PluginEnabledAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 15,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/enabled/",
+        "role": "admin",
+        "observed_HTTP_status": 400,
+        "actual_resolver_ordinal": 256,
+        "actual_pattern": "api/plugins/plugins/<str:key>/enabled/",
+        "actual_view_name": "api:plugins:enabled",
+        "actual_handler": "apps.plugins.api_views.PluginEnabledAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 16,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/enabled/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 256,
+        "actual_pattern": "api/plugins/plugins/<str:key>/enabled/",
+        "actual_view_name": "api:plugins:enabled",
+        "actual_handler": "apps.plugins.api_views.PluginEnabledAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 17,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/run/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 255,
+        "actual_pattern": "api/plugins/plugins/<str:key>/run/",
+        "actual_view_name": "api:plugins:run",
+        "actual_handler": "apps.plugins.api_views.PluginRunAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 18,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/run/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 255,
+        "actual_pattern": "api/plugins/plugins/<str:key>/run/",
+        "actual_view_name": "api:plugins:run",
+        "actual_handler": "apps.plugins.api_views.PluginRunAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 19,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/run/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 255,
+        "actual_pattern": "api/plugins/plugins/<str:key>/run/",
+        "actual_view_name": "api:plugins:run",
+        "actual_handler": "apps.plugins.api_views.PluginRunAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 20,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/run/",
+        "role": "admin",
+        "observed_HTTP_status": 500,
+        "actual_resolver_ordinal": 255,
+        "actual_pattern": "api/plugins/plugins/<str:key>/run/",
+        "actual_view_name": "api:plugins:run",
+        "actual_handler": "apps.plugins.api_views.PluginRunAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 21,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/run/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 255,
+        "actual_pattern": "api/plugins/plugins/<str:key>/run/",
+        "actual_view_name": "api:plugins:run",
+        "actual_handler": "apps.plugins.api_views.PluginRunAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 22,
+        "method": "GET",
+        "path": "/api/plugins/plugins/owned_contract/logo/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 257,
+        "actual_pattern": "api/plugins/plugins/<str:key>/logo/",
+        "actual_view_name": "api:plugins:logo",
+        "actual_handler": "apps.plugins.api_views.PluginLogoAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 23,
+        "method": "GET",
+        "path": "/api/plugins/plugins/owned_contract/logo/",
+        "role": "anonymous",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 257,
+        "actual_pattern": "api/plugins/plugins/<str:key>/logo/",
+        "actual_view_name": "api:plugins:logo",
+        "actual_handler": "apps.plugins.api_views.PluginLogoAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 24,
+        "method": "POST",
+        "path": "/api/plugins/plugins/reload/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 251,
+        "actual_pattern": "api/plugins/plugins/reload/",
+        "actual_view_name": "api:plugins:reload",
+        "actual_handler": "apps.plugins.api_views.PluginReloadAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 25,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/enabled/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 256,
+        "actual_pattern": "api/plugins/plugins/<str:key>/enabled/",
+        "actual_view_name": "api:plugins:enabled",
+        "actual_handler": "apps.plugins.api_views.PluginEnabledAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 26,
+        "method": "GET",
+        "path": "/api/plugins/plugins/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 27,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/run/",
+        "role": "admin",
+        "observed_HTTP_status": 403,
+        "actual_resolver_ordinal": 255,
+        "actual_pattern": "api/plugins/plugins/<str:key>/run/",
+        "actual_view_name": "api:plugins:run",
+        "actual_handler": "apps.plugins.api_views.PluginRunAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 28,
+        "method": "POST",
+        "path": "/api/plugins/plugins/owned_contract/enabled/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 256,
+        "actual_pattern": "api/plugins/plugins/<str:key>/enabled/",
+        "actual_view_name": "api:plugins:enabled",
+        "actual_handler": "apps.plugins.api_views.PluginEnabledAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 29,
+        "method": "DELETE",
+        "path": "/api/plugins/plugins/owned_contract/delete/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 253,
+        "actual_pattern": "api/plugins/plugins/<str:key>/delete/",
+        "actual_view_name": "api:plugins:delete",
+        "actual_handler": "apps.plugins.api_views.PluginDeleteAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {
+          "key": "owned_contract"
+        },
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 30,
+        "method": "GET",
+        "path": "/api/plugins/plugins/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 31,
+        "method": "GET",
+        "path": "/api/plugins/plugins/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 32,
+        "method": "GET",
+        "path": "/api/plugins/plugins/",
+        "role": "admin",
+        "observed_HTTP_status": 406,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 33,
+        "method": "GET",
+        "path": "/api/plugins/plugins/",
+        "role": "admin",
+        "observed_HTTP_status": 406,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      },
+      {
+        "group": "plugin35",
+        "Source_index": 34,
+        "method": "GET",
+        "path": "/api/plugins/plugins/",
+        "role": "admin",
+        "observed_HTTP_status": 200,
+        "actual_resolver_ordinal": 250,
+        "actual_pattern": "api/plugins/plugins/",
+        "actual_view_name": "api:plugins:list",
+        "actual_handler": "apps.plugins.api_views.PluginsListAPIView",
+        "actual_action_map": null,
+        "actual_kwargs": {},
+        "Source_HTTP_replayed": false,
+        "method_permission_or_role_acceptance_added": false
+      }
+    ],
+    "Source_HTTP_business_calls": 0,
+    "Source_or_Native_acceptance": false,
+    "required_import_signing_key_value_published": false
+  },
+  "error_type": "AssertionError",
+  "exact_CID": "6fda5e19d08cd789646c98e44168ba444bfcbc5e441e34de82867c67e542d646",
+  "exact_CID_absent": true
+}

@@ -1,7 +1,7 @@
 # Partial executable Source contract assignments
 
 Original Dispatcharr authors retain all application/algorithm credit and licensing.
-The current register has 152 partial HTTP assignments and 15 partial model,
+The current register has 161 partial HTTP assignments and 15 partial model,
 task, command or consumer assignments. These preserve the initial and subsequent cohorts
 documented below. They do not resolve missing methods, complete endpoint role or
 grammar matrices, establish new Native behavior or accept M0/M1.
@@ -32,6 +32,15 @@ observations, reaching 152 partial HTTP assignments with 646 still absent. It
 reuses the complete executed setup/definition closure and existing privacy-adapted
 validator. API-key framework authority, recorder `passed:false`, actual controller
 exit 0 and unexecuted public projection stay explicit; no Source API is replayed.
+
+The [retained auth51/plugin35 cohort](retained-auth-plugin/README.md) adds nine
+definitions and four supplemental captures, reaching 161 partial HTTP assignments
+with 637 still absent. Seventy-two observations attach to 13 operation roots;
+fourteen method-refusal observations remain separately recorded without invented
+IDs. Actual pinned Django successful URLPattern-chain ordinals qualify the
+resolver bindings. The separate offline UID3 component preserves its failed exit 1,
+raw `passed:false` and one measured, denied urllib3 import probe at `django_setup`;
+no business request or resolver is replayed.
 
 `register.py` consumes `executable-source-inputs.json`, verifies each input hash,
 validates the declared Source authority and applies exact operation-ID, handler,

@@ -213,10 +213,14 @@ def apply(root, rows, bindings):
     seen = set()
     primary_kinds = {}
     supplemented = set()
+    unmapped_method_observations = []
     loaded = []
     for reference in manifest['inputs']:
         value = checked(root, reference)
-        if reference['kind'] == 'retained_original_core_settings_Source32_framework':
+        if reference['kind'] == 'retained_original_auth51_plugin35_resolver_scoped_HTTP':
+            import retained_auth_plugin_contracts
+            retained_auth_plugin_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_core_settings_Source32_framework':
             import core_settings_source_contracts
             core_settings_source_contracts.validate(root, value, bindings)
         elif reference['kind'] == 'retained_original_management12_channelguide25_HTTP':
@@ -275,9 +279,17 @@ def apply(root, rows, bindings):
             validate_station_aggregate_source53_55(root, value)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
+        if reference['kind'] == 'retained_original_auth51_plugin35_resolver_scoped_HTTP':
+            route_index = {route['route_id']: route for route in rows}
+            for observation in value['unmapped_method_Source_observations']:
+                route = route_index[observation['route_id']]
+                assert observation['contract_id'] is None and observation['fully_verified'] is False
+                assert observation['pattern_exact'] == route['pattern_exact'] and observation['source_handler'] == route['source_handler']
+                assert observation['observed_method'] not in {op['method'] for op in route['operations']}
+                unmapped_method_observations.append(copy.deepcopy(observation))
         for contract in value['contracts']:
             identifier = contract['contract_id']
-            supplemental = (reference['kind'] == 'retained_original_management12_channelguide25_HTTP'
+            supplemental = (reference['kind'] in ['retained_original_management12_channelguide25_HTTP', 'retained_original_auth51_plugin35_resolver_scoped_HTTP']
                             and identifier in seen
                             and primary_kinds[identifier] != reference['kind']
                             and identifier not in supplemented)
@@ -315,13 +327,14 @@ def apply(root, rows, bindings):
             if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture', 'retained_original_notification_Source20_real_credentials_framework', 'retained_original_core_settings_Source32_framework']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
-            if reference['kind'] in ['captured_original_Source51_matching_admin_HTTP', 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP', 'retained_original_management12_channelguide25_HTTP']:
+            if reference['kind'] in ['captured_original_Source51_matching_admin_HTTP', 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP', 'retained_original_management12_channelguide25_HTTP', 'retained_original_auth51_plugin35_resolver_scoped_HTTP']:
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'
         loaded.append({'path': reference['path'], 'sha256': reference['sha256'], 'kind': reference['kind']})
     return {'state': 'partial executable Source definitions, not endpoint verification',
-            'operations': len(seen), 'inputs': loaded, 'fully_verified_added': 0}
+            'operations': len(seen), 'inputs': loaded, 'fully_verified_added': 0,
+            **({'unmapped_method_Source_observations': unmapped_method_observations} if unmapped_method_observations else {})}
 
 
 def apply_non_HTTP(root, entries):

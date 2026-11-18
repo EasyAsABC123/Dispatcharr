@@ -42,6 +42,33 @@ class CoreSettingsSourceControls(unittest.TestCase):
     def test_original146_definitions_and_all_unrelated_rows_preserved(self):
         proof = json.loads((ROOT / 'scripts/rust-contracts/core-settings-source32-assignments/preservation.json').read_text())
         register = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())
+        # Validate and reverse only the exact later auth/plugin assignments,
+        # then require the immutable preceding Core32 full-row digests. Exact
+        # reapplication must reproduce every current field, so no corruption is
+        # hidden by restoring an older partial-source snapshot.
+        import retained_auth_plugin_contracts
+        auth = json.loads((ROOT / retained_auth_plugin_contracts.INPUT).read_text())
+        retained_auth_plugin_contracts.validate(ROOT, auth)
+        auth_proof = json.loads((ROOT / 'scripts/rust-contracts/retained-auth-plugin/preservation.json').read_text())
+        original_rows = copy.deepcopy(register['runtime_routes'])
+        prior_rows = register['runtime_routes']
+        by_id = {o['contract_id']: o for r in prior_rows for o in r['operations']}
+        for identifier in auth_proof['existing_supplemental_target_ids']:
+            operation = by_id[identifier]
+            captures = operation.pop('supplemental_executable_Source_captures')
+            self.assertEqual(len(captures), 1)
+            self.assertEqual(captures[0]['input']['kind'], retained_auth_plugin_contracts.KIND)
+        for identifier in auth_proof['new_contract_ids']:
+            operation = by_id[identifier]
+            operation.pop('executable_Source_contract')
+            operation.update(setup_fixture=None, assertions=[], result=None,
+                             coverage_state='scoped_evidence_needs_case_mapping' if operation['related_evidence'] else 'not_yet_mapped')
+            for field in ['observed_fixture_definitions', 'complete', 'observed_roles']:
+                operation['role_matrix'].pop(field, None)
+            operation['role_matrix']['state'] = 'unmapped'
+        rebuilt = copy.deepcopy(prior_rows)
+        source_contracts.apply(ROOT, rebuilt, json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_text()))
+        self.assertEqual(rebuilt, original_rows)
         selected = set(proof['new_selected_contract_ids'])
         operations = {o['contract_id']: o for r in register['runtime_routes'] for o in r['operations']}
         self.assertEqual(len(selected), 6)

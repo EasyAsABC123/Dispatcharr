@@ -1,0 +1,25 @@
+{
+  "owner_exec_session": 23480,
+  "actual_exit": 1,
+  "actual_terminal_consumed": true,
+  "qualified": false,
+  "actual_route_forest_exact": true,
+  "retained_resolutions": 86,
+  "denied_operation_count": 1,
+  "denied_operation": {
+    "operation": "socket.socket.bind",
+    "stage": "django_setup",
+    "caller": {
+      "module": "urllib3.util.connection",
+      "function": "_has_ipv6",
+      "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+      "lineno": 127
+    },
+    "caller_file_sha256": "2633bbdb69731e5ccb5cf4e4afd65605d86c7979cc5633126f50c92d5ad74a74",
+    "original_operation_executed": false,
+    "socket_family": 10,
+    "IPv6_loopback_ephemeral_bind": true
+  },
+  "exact_UID_CID_absent": true,
+  "scope": "Actual failure preserved; separate scoped offline import-probe qualification pending; no business replay"
+}
