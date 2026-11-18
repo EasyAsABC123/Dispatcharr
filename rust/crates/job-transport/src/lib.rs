@@ -234,6 +234,7 @@ pub mod configured_series_application;
 pub mod refresh_series_handoff;
 
 pub mod version_application;
+mod version_compare;
 mod version_protocol;
 pub mod version_service;
 

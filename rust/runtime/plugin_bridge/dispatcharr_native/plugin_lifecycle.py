@@ -80,6 +80,23 @@ def list_plugins(value):
   if plugin.get('logo_url'):plugin['logo_url']=urljoin(value['origin'],plugin['logo_url'])
  return rendered(200,{'plugins':plugins})
 
+def plugin_logo(value):
+ # Source PluginLogoAPIView: cached discovery defaults sync_db=True and may
+ # import enabled modules. Do not replace it with static manifest metadata.
+ import os
+ from apps.plugins.loader import PluginManager
+ pm=PluginManager.get();pm.discover_plugins(use_cache=True)
+ from .task_registry import seal
+ seal()
+ key=value['key'];logo_path=os.path.join(pm.plugins_dir,key,'logo.png')
+ lp=pm.get_plugin(key)
+ if lp and getattr(lp,'path',None):logo_path=os.path.join(lp.path,'logo.png')
+ abs_plugins=os.path.abspath(pm.plugins_dir)+os.sep
+ abs_target=os.path.abspath(logo_path)
+ if not abs_target.startswith(abs_plugins):return{'status':400}
+ if not os.path.isfile(logo_path):return{'status':404}
+ return{'status':200,'path':abs_target,'plugins_root':os.path.abspath(pm.plugins_dir)}
+
 def stop_all(value):
  from apps.plugins.loader import PluginManager
  return PluginManager.get().stop_all_plugins(reason=value['reason'])

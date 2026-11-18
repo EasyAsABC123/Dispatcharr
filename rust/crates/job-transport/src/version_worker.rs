@@ -119,13 +119,22 @@ impl Worker {
         .await
         .map_err(|_| Error::Supervisor)?
     }
+    pub(crate) fn begin_drain(&self, budget: Duration) {
+        self.inner.service.begin_drain(budget);
+    }
     pub async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
+        let deadline = tokio::time::Instant::now() + timeout;
         self.inner.closed.store(true, Ordering::Release);
-        let permit = tokio::time::timeout(timeout, self.inner.slots.clone().acquire_owned())
+        self.begin_drain(timeout);
+        let permit = tokio::time::timeout_at(deadline, self.inner.slots.clone().acquire_owned())
             .await
             .map_err(|_| Error::Drain)?
             .map_err(|_| Error::Drain)?;
         drop(permit);
-        Ok(())
+        self.inner
+            .service
+            .shutdown_dependencies(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+            .map_err(Error::Service)
     }
 }

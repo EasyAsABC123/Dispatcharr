@@ -235,6 +235,26 @@ impl PluginRuntime {
             .await
             .map_err(host_error)
     }
+    /// Same admitted SQL session and physical request owner as plugin actions.
+    pub async fn logo_descriptor(
+        &self,
+        key: String,
+        session: TaskSqlSession,
+        owner: Owner,
+    ) -> Result<Value, StoreError> {
+        self.inner
+            .actions
+            .call(
+                "plugin_logo".into(),
+                json!({"key":key}),
+                Invocation {
+                    owner,
+                    sql: Some(session),
+                },
+            )
+            .await
+            .map_err(host_error)
+    }
     pub async fn list_plugins(
         &self,
         origin: String,

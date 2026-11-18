@@ -1,4 +1,4 @@
-"""Build-only pinned lazy CPython/regex-only dependency closure.
+"""Build-only pinned lazy CPython/regex/packaging dependency closure.
 Original Dispatcharr, CPython, Debian and distribution authors retain credit.
 No Django/application import, install, DB/HTTP/cache operation or runtime keys.
 The copied dependency interpreter runs only a bounded module-origin audit.
@@ -36,7 +36,7 @@ copy_file(exe,PREFIX/'bin/python3.13');tree(stdlib,PREFIX/'lib/python3.13');reta
 # Dependency-only mode copies no Source Python/application assets. The final
 # Docker stage retains the repository LICENSE and ATTRIBUTION.md explicitly.
 licenses={};wheel_owners={}
-for distribution in [metadata.distribution('regex')]:
+for distribution in [metadata.distribution('regex'),metadata.distribution('packaging')]:
  for item in distribution.files or[]:
   source=Path(distribution.locate_file(item))
   if not source.resolve().is_relative_to(site.resolve()):raise RuntimeError('Regex distribution escapes pinned site-packages')
@@ -107,24 +107,27 @@ if not loader:raise RuntimeError('Pinned Python dynamic ELF loader missing')
 audit_code=r"""
 import hashlib,importlib.util,json,sys
 from pathlib import Path
-import regex
+import regex,packaging.version
 root=Path(sys.argv[1]).resolve()
 assert Path(sys.prefix).resolve()==root
 assert importlib.util.find_spec('django') is None
 modules=[]
 for name,module in list(sys.modules.items()):
- if name=='regex' or name.startswith('regex.'):
+ if name=='regex' or name.startswith('regex.') or name=='packaging' or name.startswith('packaging.'):
   filename=getattr(module,'__file__',None)
   if filename is None:continue
   path=Path(filename).resolve();assert path.is_relative_to(root)
   modules.append({'name':name,'relative_origin':str(path.relative_to(root)),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
 assert modules and any(m['relative_origin'].endswith('.so')for m in modules)
+assert any(m['name']=='packaging.version'for m in modules)
+assert packaging.version.parse('1!0.1')>packaging.version.parse('9.0')
 assert all(Path(path).is_relative_to(root)for path in sys.path if path)
-print(json.dumps({'python':sys.version,'regex':regex.__version__,'prefix':str(root),'modules':modules,'Django_available':False}))
+print(json.dumps({'python':sys.version,'regex':regex.__version__,'packaging':packaging.__version__,'prefix':str(root),'modules':modules,'Django_available':False}))
 """
 audit=subprocess.run([str(lib/loader),'--library-path',str(lib),str(PREFIX/'bin/python3.13'),'-B','-I','-c',audit_code,str(PREFIX)],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,timeout=15,check=False)
 if audit.returncode or audit.stderr or len(audit.stdout)>65536:raise RuntimeError('Copied isolated dependency module-origin audit failed: '+audit.stderr[:4096])
 manifest['actual_relocated_module_audit']=json.loads(audit.stdout)
+assert manifest['actual_relocated_module_audit']['packaging']==licenses['packaging']['version']
 manifest['retained_distribution_directory']='/'+str(retained_site.relative_to(OUT))
 wrapper=OUT/'usr/local/bin/dispatcharr-regex-python';wrapper.parent.mkdir(parents=True,exist_ok=True)
 wrapper.write_text('#!/bin/sh\nunset PYTHONHOME PYTHONPATH\nexec /opt/dispatcharr-python/elf/'+loader+' --library-path /opt/dispatcharr-python/elf /opt/dispatcharr-python/bin/python3.13 -I /opt/dispatcharr-python/bridge/regex_bootstrap.py "$@"\n');wrapper.chmod(0o755)

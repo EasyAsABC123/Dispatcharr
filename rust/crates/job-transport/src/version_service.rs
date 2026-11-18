@@ -28,6 +28,8 @@ pub enum Error {
     Supervisor,
     Http(String),
     Event,
+    VersionParser(dispatcharr_store::PythonRegexError),
+    SourceInvalidVersion,
     Sql {
         primary: Option<Box<sqlx::Error>>,
         rollback: Option<Box<sqlx::Error>>,
@@ -44,6 +46,7 @@ pub struct Service {
     pool: PgPool,
     sink: Arc<dyn UpdateEventSink>,
     options: Options,
+    comparator: crate::version_compare::Comparator,
     uncertain: Arc<Mutex<Option<Arc<dyn Send + Sync>>>>,
 }
 struct Receipt {
@@ -161,8 +164,19 @@ impl Service {
             pool,
             sink,
             options,
+            comparator: crate::version_compare::Comparator::new(),
             uncertain: Arc::new(Mutex::new(None)),
         })
+    }
+    pub(crate) fn begin_drain(&self, budget: Duration) {
+        self.comparator
+            .begin_drain(tokio::time::Instant::now() + budget);
+    }
+    pub(crate) async fn shutdown_dependencies(&self, budget: Duration) -> Result<(), Error> {
+        self.comparator
+            .shutdown(budget)
+            .await
+            .map_err(Error::VersionParser)
     }
     async fn emit(&self, value: Value, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
         let (tx, rx) = oneshot::channel();
@@ -216,6 +230,9 @@ impl Service {
                     caught_source_exception: Some(diagnostic),
                 })
             }
+            Err(Error::SourceInvalidVersion) => Ok(Report {
+                caught_source_exception: Some("InvalidVersion".into()),
+            }),
             Err(error) => Err(error),
         }
     }
@@ -238,25 +255,30 @@ impl Service {
         if tag.is_empty() {
             return Ok(());
         }
-        // PEP440 needs a numeric release component. Known invalid nonnumeric
-        // tags are caught by Source; plausible prerelease/dev forms remain an
-        // explicit unsupported domain instead of silently comparing semver.
-        if !tag.bytes().any(|b| b.is_ascii_digit()) {
-            return Ok(());
-        }
-        let Some(latest) = stable(tag) else {
-            return Err(Error::Unsupported(
-                "Unmeasured PEP440 prerelease/dev/local tag",
-            ));
-        };
-        let current =
-            stable(&self.options.version).ok_or(Error::Unsupported("Stable source version"))?;
-        if compare(&latest, &current) != Ordering::Greater {
-            let count = delete(self.pool.clone(), Delete::All, owner.clone()).await?;
-            return self.cleared(count, owner).await;
-        }
         if tag.len() > 247 {
             return Err(Error::Capacity);
+        }
+        // Preserve the proven numeric fast path. Other tags use precisely the
+        // Source's pinned packaging.version parser, not a semver approximation.
+        let newer = match (stable(tag), stable(&self.options.version)) {
+            (Some(latest), Some(current)) => compare(&latest, &current) == Ordering::Greater,
+            _ => match self
+                .comparator
+                .newer(&self.options.version, tag, owner.clone())
+                .await
+                .map_err(Error::VersionParser)?
+            {
+                crate::version_compare::Decision::Parsed(newer) => newer,
+                // Source catches the real dependency's InvalidVersion and
+                // returns normally after the already completed current cleanup.
+                crate::version_compare::Decision::InvalidVersion => {
+                    return Err(Error::SourceInvalidVersion)
+                }
+            },
+        };
+        if !newer {
+            let count = delete(self.pool.clone(), Delete::All, owner.clone()).await?;
+            return self.cleared(count, owner).await;
         }
         let release_url = object.get("html_url").cloned().unwrap_or(json!(""));
         if release_url.to_string().len() > 8192 {

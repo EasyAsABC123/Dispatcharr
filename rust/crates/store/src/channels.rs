@@ -582,6 +582,194 @@ async fn lightweight(
     }
     Ok(Json(Value::Array(values)))
 }
+// Source ChannelViewSet.numbers_in_range: the group editor uses this bounded
+// advisory scan. Reuse only the shared ACL, never management-list filters.
+// Static Source port; actual Source/Native action characterization is pending.
+fn range_boundary(raw: &str, field: &str) -> Result<f64, StoreError> {
+    // The ordinary finite ASCII float domain covers the unchanged React caller.
+    // Python additionally accepts Unicode decimal digits and underscores; retain
+    // explicit guards until those forms and nonfinite SQL behavior are measured.
+    if raw.len() > 128 || !raw.is_ascii() || raw.contains('_') {
+        return Err(StoreError::Unsupported(
+            "Channel range numeric grammar unqualified",
+        ));
+    }
+    let value = raw.trim_matches(|c: char| matches!(c, '\t'..='\r' | ' '));
+    let parsed = value.parse::<f64>().map_err(|_| {
+        StoreError::InvalidInput(json!({"detail":format!("Invalid {field} value")}))
+    })?;
+    if !parsed.is_finite() {
+        return Err(StoreError::Unsupported(
+            "Channel range nonfinite boundary unqualified",
+        ));
+    }
+    Ok(parsed)
+}
+// Same pinned DRF JSONRenderer separator replacements as the bounded SD
+// search response. Float spelling reuses the existing Source-differential
+// finite formatter; no arbitrary JSON number grammar is introduced here.
+struct RangeJsonFormatter;
+impl serde_json::ser::Formatter for RangeJsonFormatter {
+    fn write_string_fragment<W>(&mut self, writer: &mut W, fragment: &str) -> std::io::Result<()>
+    where
+        W: ?Sized + std::io::Write,
+    {
+        let mut rest = fragment;
+        while let Some((index, separator)) = rest
+            .char_indices()
+            .find(|(_, c)| matches!(*c, '\u{2028}' | '\u{2029}'))
+        {
+            writer.write_all(&rest.as_bytes()[..index])?;
+            writer.write_all(if separator == '\u{2028}' {
+                b"\\u2028"
+            } else {
+                b"\\u2029"
+            })?;
+            rest = &rest[index + separator.len_utf8()..];
+        }
+        writer.write_all(rest.as_bytes())
+    }
+    fn write_f64<W>(&mut self, writer: &mut W, value: f64) -> std::io::Result<()>
+    where
+        W: ?Sized + std::io::Write,
+    {
+        let raw = crate::source_finite_float_string(value)
+            .ok_or_else(|| std::io::Error::other("finite channel range number required"))?;
+        writer.write_all(raw.as_bytes())
+    }
+    fn write_number_str<W>(&mut self, writer: &mut W, value: &str) -> std::io::Result<()>
+    where
+        W: ?Sized + std::io::Write,
+    {
+        // serde_json's enabled arbitrary_precision representation delivers
+        // Number::from_f64 through this callback. IDs remain literal integers;
+        // the sole fractional/exponent field is the finite effective number.
+        if value.bytes().any(|b| matches!(b, b'.' | b'e' | b'E')) {
+            let value = value
+                .parse::<f64>()
+                .map_err(|_| std::io::Error::other("channel range number shape"))?;
+            self.write_f64(writer, value)
+        } else {
+            writer.write_all(value.as_bytes())
+        }
+    }
+}
+fn range_reply(value: &Value) -> Result<Response, StoreError> {
+    const OUTPUT: usize = 16 * 1024 * 1024;
+    let capacity = || StoreError::Unsupported("Channel range rendered response capacity");
+    struct Count(usize);
+    impl std::io::Write for Count {
+        fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+            self.0 = self
+                .0
+                .checked_add(bytes.len())
+                .filter(|n| *n <= OUTPUT)
+                .ok_or_else(|| std::io::Error::other("bounded channel range JSON"))?;
+            Ok(bytes.len())
+        }
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+    let mut count = Count(0);
+    serde::Serialize::serialize(
+        value,
+        &mut serde_json::Serializer::with_formatter(&mut count, RangeJsonFormatter),
+    )
+    .map_err(|_| capacity())?;
+    let mut bytes = Vec::new();
+    bytes.try_reserve_exact(count.0).map_err(|_| capacity())?;
+    let allocated = bytes.capacity();
+    if allocated > OUTPUT {
+        return Err(capacity());
+    }
+    serde::Serialize::serialize(
+        value,
+        &mut serde_json::Serializer::with_formatter(&mut bytes, RangeJsonFormatter),
+    )
+    .map_err(|_| capacity())?;
+    if bytes.len() != count.0 || bytes.capacity() != allocated {
+        return Err(capacity());
+    }
+    Ok(([("content-type", "application/json")], bytes).into_response())
+}
+
+async fn numbers_in_range(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+    method: axum::http::Method,
+) -> Result<Response, StoreError> {
+    let user = auth.account_user(peer, headers, false).await?;
+    if user.user_level < 1 {
+        return Err(StoreError::PermissionDenied);
+    }
+    if method != axum::http::Method::GET {
+        return Err(StoreError::Unsupported("Channel range method unqualified"));
+    }
+    let raw = uri.query().unwrap_or_default();
+    if raw.len() > 16384 {
+        return Err(StoreError::Unsupported("Channel range query capacity"));
+    }
+    // QueryDict.get selects the final repeated value. Unknown list-filter and
+    // pagination parameters are ignored by the Source action.
+    let pairs = url::form_urlencoded::parse(raw.as_bytes()).collect::<Vec<_>>();
+    let last = |key: &str| {
+        pairs
+            .iter()
+            .rev()
+            .find(|(k, _)| k == key)
+            .map(|(_, v)| v.as_ref())
+    };
+    let Some(raw_start) = last("start").filter(|s| !s.is_empty()) else {
+        return range_reply(&json!({"occupants":[]}));
+    };
+    let mut start = range_boundary(raw_start, "start")?;
+    let mut end = match last("end").filter(|s| !s.is_empty()) {
+        Some(value) => range_boundary(value, "end")?,
+        None => start,
+    };
+    if end < start {
+        std::mem::swap(&mut start, &mut end);
+    }
+    // ChannelGroup.name is a TextField. Bound it in SQL before transfer, without
+    // dropping an oversized occupant or changing the Source's top-50 selection.
+    // Channel and override names are schema-bounded to 512 characters.
+    let mut query = QueryBuilder::new("SELECT c.id::bigint AS id,COALESCE(o.name,c.name) AS name,COALESCE(o.channel_number,c.channel_number) AS channel_number,COALESCE(o.channel_group_id,c.channel_group_id)::bigint AS channel_group_id,CASE WHEN octet_length(g.name)<=32768 THEN g.name ELSE NULL END AS channel_group,g.name IS NULL OR octet_length(g.name)<=32768 AS group_capacity,c.auto_created,NULLIF(c.auto_created_by_id,0)::bigint AS auto_created_by_account_id,(o.id IS NOT NULL AND o.channel_number IS NOT NULL) AS has_channel_number_override FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id LEFT JOIN dispatcharr_channels_channelgroup g ON g.id=COALESCE(o.channel_group_id,c.channel_group_id) WHERE true");
+    scope(&mut query, &user);
+    query
+        .push(" AND COALESCE(o.channel_number,c.channel_number)>=")
+        .push_bind(start);
+    query
+        .push(" AND COALESCE(o.channel_number,c.channel_number)<=")
+        .push_bind(end);
+    // No invented ID tiebreaker: Source orders solely by effective number.
+    query.push(" ORDER BY COALESCE(o.channel_number,c.channel_number) LIMIT 50");
+    let rows = query.build().fetch_all(auth.store.pool()).await?;
+    let mut occupants = Vec::with_capacity(rows.len());
+    for row in rows {
+        if !row.try_get::<bool, _>("group_capacity")? {
+            return Err(StoreError::Unsupported("Channel range group name capacity"));
+        }
+        let number: f64 = row.try_get("channel_number")?;
+        // Finite bounds exclude infinities; PostgreSQL NaN cannot satisfy both.
+        let number = serde_json::Number::from_f64(number)
+            .ok_or(StoreError::Unsupported("Channel range output nonfinite"))?;
+        occupants.push(json!({
+            "id":row.try_get::<i64,_>("id")?,
+            "name":row.try_get::<String,_>("name")?,
+            "channel_number":number,
+            "channel_group":row.try_get::<Option<String>,_>("channel_group")?,
+            "channel_group_id":row.try_get::<Option<i64>,_>("channel_group_id")?,
+            "auto_created":row.try_get::<bool,_>("auto_created")?,
+            "auto_created_by_account_id":row.try_get::<Option<i64>,_>("auto_created_by_account_id")?,
+            "has_channel_number_override":row.try_get::<bool,_>("has_channel_number_override")?
+        }));
+    }
+    range_reply(&json!({"occupants":occupants}))
+}
+
 async fn ids(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -705,6 +893,10 @@ fn source_action_error() -> Response {
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/channels/channels/by-uuids/", post(by_uuids))
+        .route(
+            "/api/channels/channels/numbers-in-range/",
+            get(numbers_in_range),
+        )
         .route("/api/channels/channels/ids/", get(ids))
         .route("/api/channels/channels/summary/", get(summary))
         .route(

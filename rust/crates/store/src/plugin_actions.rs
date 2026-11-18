@@ -449,6 +449,59 @@ impl PluginActions {
                 ),
             });
         }
+        // Logo discovery imports enabled modules through the same owned host as
+        // Source PluginLogoAPIView. Static disabled/history guards cannot serve
+        // this operation when normal configured plugins are enabled.
+        if matches!(action, Action::Logo)
+            && key
+                .as_deref()
+                .is_some_and(|key| key != "." && key != ".." && !key.contains(['/', '\\']))
+        {
+            if let Some(runtime) = self.inner.runtime.get() {
+                let descriptor = runtime
+                    .logo_descriptor(
+                        key.clone().ok_or_else(guard)?,
+                        session.clone(),
+                        live.clone(),
+                    )
+                    .await?;
+                match descriptor["status"].as_u64() {
+                    Some(400) => {
+                        return Ok(reply(
+                            400,
+                            json!({"success":false,"error":"Invalid plugin path"}),
+                        ))
+                    }
+                    Some(404) => {
+                        return Ok(reply(
+                            404,
+                            json!({"success":false,"error":"Logo not found"}),
+                        ))
+                    }
+                    Some(200) => {
+                        let raw_path = descriptor["path"].as_str().ok_or_else(guard)?;
+                        let raw_root = descriptor["plugins_root"].as_str().ok_or_else(guard)?;
+                        if raw_path.len() > 16384 || raw_root.len() > 16384 {
+                            return Err(guard());
+                        }
+                        let path = PathBuf::from(raw_path);
+                        let root = PathBuf::from(raw_root);
+                        if !path.is_absolute()
+                            || !root.is_absolute()
+                            || !path.starts_with(&root)
+                            || path.file_name() != Some(std::ffi::OsStr::new("logo.png"))
+                            || path
+                                .components()
+                                .any(|c| matches!(c, std::path::Component::ParentDir))
+                        {
+                            return Err(guard());
+                        }
+                        return self.logo_file(request, path, live).await;
+                    }
+                    _ => return Err(guard()),
+                }
+            }
+        }
         let mut snapshot = registry::snapshot(session).await?;
         if matches!(action, Action::Run) {
             let value = json_body(request).await?;
@@ -783,6 +836,14 @@ impl PluginActions {
             .map(|p| p.folder.as_str())
             .unwrap_or(&key);
         let path = self.inner.root.join(folder).join("logo.png");
+        self.logo_file(request, path, live).await
+    }
+    async fn logo_file(
+        &self,
+        request: Request,
+        path: PathBuf,
+        live: Arc<Live>,
+    ) -> Result<Response, StoreError> {
         let held = live.clone();
         let opened = tokio::task::spawn_blocking(move || {
             let _held = held;

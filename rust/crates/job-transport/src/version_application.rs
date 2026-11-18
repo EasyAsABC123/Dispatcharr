@@ -174,6 +174,9 @@ struct NormalHandler {
     app: Application,
 }
 impl crate::milestone_dispatch::Lifecycle for NormalHandler {
+    fn begin_drain(&self, budget: Duration) {
+        self.app.inner.worker.begin_drain(budget);
+    }
     fn shutdown(
         &self,
         timeout: Duration,

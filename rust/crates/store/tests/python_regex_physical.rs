@@ -90,6 +90,33 @@ async fn actual_packaged_grammar_remote_error_timeout_and_normal_wait_eof() {
         .unwrap();
     emit("actual-fullcase-search", filter.clone());
     assert_eq!(filter["matches"], json!([true, true, false]));
+    let version_newer = executor
+        .execute(
+            json!({"kind":"version_compare","current":"0.33.0","latest":"1!0.1"}),
+            Arc::new(()),
+        )
+        .await
+        .unwrap();
+    emit("actual-pinned-packaging-epoch-order", version_newer.clone());
+    assert_eq!(
+        version_newer,
+        json!({"kind":"parsed","newer":true,"ordering":1})
+    );
+    let version_invalid = executor
+        .execute(
+            json!({"kind":"version_compare","current":"0.33.0","latest":"1.2?"}),
+            Arc::new(()),
+        )
+        .await
+        .unwrap();
+    emit(
+        "actual-pinned-packaging-InvalidVersion",
+        version_invalid.clone(),
+    );
+    assert_eq!(
+        version_invalid,
+        json!({"kind":"invalid","exception":"InvalidVersion"})
+    );
     let invalid = executor
         .execute(
             json!({"kind":"filter","names":["x"],"config":{"pattern":"("}}),

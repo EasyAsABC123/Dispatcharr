@@ -11,6 +11,9 @@ def caught(error):
 
 def evaluate(value):
  if not isinstance(value,dict):raise CompatibilityUnavailable('Regex request shape')
+ if value.get('kind')=='version_compare':
+  from dispatcharr_native.version_compare import compare
+  return compare(value.get('current'),value.get('latest'))
  if value.get('kind')=='profile_urls':
   from dispatcharr_native.profile_urls import evaluate as profile_urls
   try:return profile_urls(value.get('rows'))

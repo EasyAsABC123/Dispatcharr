@@ -408,3 +408,10 @@ captured auto-sync Unicode metadata follows the pinned CPython implementation;
 it establishes no new claim to authorship of Python or Unicode algorithms/data.
 Rust owns backend orchestration and effects; dependency packaging does not
 establish compatibility before the combined application checks pass.
+
+
+The dependency-only version comparison worker uses the pinned Original image's
+PyPA `packaging.version` parser. `rust/runtime/collect_regex_host.py` retains that
+installed distribution's exact files and license notices and audits relocated
+module origins. Original Dispatcharr, PyPA packaging and CPython authors retain
+all application, comparison and dependency credit.
