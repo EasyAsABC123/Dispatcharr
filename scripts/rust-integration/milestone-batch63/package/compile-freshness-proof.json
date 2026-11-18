@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "actual_Docker_build_exit": 0,
+  "required_actual_recompilations": {
+    "dispatcharr-vod-http": true,
+    "dispatcharr-store": true,
+    "dispatcharr-job-transport": true,
+    "dispatcharr-output-store": true,
+    "dispatcharr-rs": true
+  },
+  "reason": "Candidate63 changes Main, VOD HTTP, Store, JobTransport and OutputStore after Candidate62. Actual recompilation of all five is required; every Rust input binds the actual passing SDK with no exclusions, including vendored original manifests.",
+  "build_log_sha256": "58a18d76ad1bdee9082ba34a9cc9649f5c7f030f5ffa01ba9b6e2b17177c071d",
+  "application_performance_verified": false
+}
