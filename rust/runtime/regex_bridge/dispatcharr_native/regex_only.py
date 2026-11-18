@@ -11,6 +11,10 @@ def caught(error):
 
 def evaluate(value):
  if not isinstance(value,dict):raise CompatibilityUnavailable('Regex request shape')
+ if value.get('kind')=='profile_urls':
+  from dispatcharr_native.profile_urls import evaluate as profile_urls
+  try:return profile_urls(value.get('rows'))
+  except Exception as error:raise CompatibilityUnavailable('Profile URL dependency input/result unavailable')from error
  names=value.get('names');config=value.get('config')
  if not isinstance(names,list)or len(names)>100 or any(not isinstance(s,str)or len(s)>512 for s in names):raise CompatibilityUnavailable('Regex name batch capacity')
  if not isinstance(config,dict)or len(json.dumps(config,ensure_ascii=False).encode('utf8'))>65536:raise CompatibilityUnavailable('Regex configuration capacity')

@@ -38,6 +38,13 @@ pub fn append_output_visibility(
 }
 
 pub async fn read(store: &Store, request: Read<'_>) -> Result<Channels, StoreError> {
+    read_with_profile_scope(store, request, None).await
+}
+pub async fn read_with_profile_scope(
+    store: &Store,
+    request: Read<'_>,
+    scope: Option<&std::sync::Arc<crate::epg_custom_scope::Scope>>,
+) -> Result<Channels, StoreError> {
     let profile = if request.user.is_none() {
         if let Some(profile) = request.profile {
             Some(
@@ -55,18 +62,22 @@ pub async fn read(store: &Store, request: Read<'_>) -> Result<Channels, StoreErr
     } else {
         None
     };
-    let provider_allowlist = request
-        .user
-        .and_then(|user| user.custom_properties.get("allowed_m3u_profile_ids"))
-        .filter(|value| !value.is_null());
-    let restricted = request.direct && provider_allowlist.is_some();
-    if request.direct
-        && provider_allowlist
-            .and_then(Value::as_array)
-            .is_some_and(|values| !values.is_empty())
-    {
+    let allowed = if request.direct {
+        crate::direct_profiles::Allowed::read(store, request.user, request.max_metadata_bytes)
+            .await?
+    } else {
+        None
+    };
+    let restricted = allowed.is_some();
+    if allowed.as_ref().is_some_and(|v| v.is_empty()) {
+        return Ok(Channels {
+            rows: Vec::new(),
+            restricted_direct: true,
+        });
+    }
+    if restricted && scope.is_none() {
         return Err(StoreError::Unsupported(
-            "M3U direct provider allowlist transforms are not yet implemented",
+            "Restricted direct M3U requires its admitted output dependency scope",
         ));
     }
     let mut query=QueryBuilder::<Postgres>::new("SELECT c.id::bigint AS id,c.uuid,COALESCE(o.name,c.name) AS name,COALESCE(o.channel_number,c.channel_number) AS number,COALESCE(o.tvg_id,c.tvg_id) AS tvg_id,COALESCE(o.tvc_guide_stationid,c.tvc_guide_stationid) AS guide,COALESCE(o.is_radio,c.is_radio) AS radio,CASE WHEN octet_length(g.name)>65536 THEN NULL ELSE g.name END AS group_name,l.id::bigint AS logo_id,CASE WHEN octet_length(l.url)>65536 THEN NULL ELSE l.url END AS logo_url,c.is_catchup,c.catchup_days,(COALESCE(octet_length(g.name),0)>65536 OR COALESCE(octet_length(l.url),0)>65536) AS large_metadata");
@@ -84,7 +95,7 @@ pub async fn read(store: &Store, request: Read<'_>) -> Result<Channels, StoreErr
         .push_bind((request.max_channels.saturating_add(1)) as i64);
     let mut rows = query.build().fetch(store.pool());
     let mut channels = Vec::new();
-    let mut metadata_bytes = 0usize;
+    let mut metadata_bytes = allowed.as_ref().map_or(0, |a| a.bytes());
     while let Some(row) = rows.try_next().await? {
         if channels.len() >= request.max_channels
             || row.try_get::<bool, _>("large_metadata")?
@@ -151,6 +162,20 @@ pub async fn read(store: &Store, request: Read<'_>) -> Result<Channels, StoreErr
             .filter(|bytes| *bytes <= request.max_metadata_bytes)
             .ok_or_else(capacity)?;
         channels.push(channel);
+    }
+    drop(rows);
+    if let Some(allowed) = allowed {
+        allowed
+            .apply(
+                store,
+                &mut channels,
+                scope.ok_or(StoreError::Unsupported(
+                    "Missing direct M3U dependency scope",
+                ))?,
+                &mut metadata_bytes,
+                request.max_metadata_bytes,
+            )
+            .await?;
     }
     Ok(Channels {
         rows: channels,

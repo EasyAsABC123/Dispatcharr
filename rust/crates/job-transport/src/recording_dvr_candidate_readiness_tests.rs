@@ -22,6 +22,7 @@ struct State {
     raw: Vec<u8>,
 }
 struct Peer {
+    port: u16,
     state: Arc<State>,
     stop: watch::Sender<bool>,
     task: JoinHandle<()>,
@@ -114,7 +115,15 @@ async fn start_peer(mode: u8, named: bool, timeout: Duration) -> (Jobs, Peer) {
     )
     .await
     .unwrap();
-    (jobs, Peer { state, stop, task })
+    (
+        jobs,
+        Peer {
+            port,
+            state,
+            stop,
+            task,
+        },
+    )
 }
 fn frame(named: bool) -> Vec<u8> {
     let raw = crate::protocol::encode(
@@ -252,6 +261,115 @@ async fn pending_candidate_readiness_retains_owner_and_operation_through_physica
         peer.state.release.store(true, Ordering::Release);
         until(|| retired.load(Ordering::Acquire)).await;
         assert_eq!(peer.state.reads.load(Ordering::SeqCst), 1);
+        finish(jobs, peer).await;
+    }
+}
+
+// Exercise the actual publisher adoption entry, including its independent Jobs
+// connection and detached owner. SQL is deliberately closed: a successful read
+// must reach the real SQL acquisition boundary, never fabricate adoption proof.
+async fn publisher(peer: &Peer) -> crate::normal_recording_publication::NormalRecordingPublisher {
+    let pool = sqlx::postgres::PgPoolOptions::new()
+        .connect_lazy("postgres://fixture:fixture@127.0.0.1:1/fixture")
+        .unwrap();
+    pool.close().await;
+    crate::normal_recording_publication::NormalRecordingPublisher::prepare(
+        pool,
+        &format!("redis://127.0.0.1:{}/1", peer.port),
+        &format!("redis://127.0.0.1:{}/2", peer.port),
+    )
+    .await
+    .unwrap()
+    .0
+}
+#[tokio::test]
+async fn actual_publisher_adoption_preflights_and_reaches_sql_without_mutation() {
+    for named in [false, true] {
+        let (jobs, peer) = start_peer(1, named, Duration::from_secs(2)).await;
+        let publisher = publisher(&peer).await;
+        let result = publisher
+            .adopt_existing(Arc::from(peer.state.raw.clone()), Arc::new(()))
+            .await;
+        assert!(matches!(
+            result,
+            Err(crate::normal_recording_publication::Error::Database {
+                primary: Some(_),
+                ..
+            })
+        ));
+        assert_eq!(peer.state.pings.load(Ordering::SeqCst), 2);
+        assert_eq!(peer.state.reads.load(Ordering::SeqCst), 1);
+        publisher.shutdown(Duration::from_secs(1)).await.unwrap();
+        finish(jobs, peer).await;
+    }
+}
+#[tokio::test]
+async fn actual_publisher_adoption_executed_read_loss_is_not_replayed() {
+    for named in [false, true] {
+        let (jobs, peer) = start_peer(2, named, Duration::from_secs(2)).await;
+        let publisher = publisher(&peer).await;
+        let result = publisher
+            .adopt_existing(Arc::from(peer.state.raw.clone()), Arc::new(()))
+            .await;
+        assert!(matches!(
+            result,
+            Err(crate::normal_recording_publication::Error::Transport(
+                Error::Backend
+            ))
+        ));
+        assert_eq!(peer.state.pings.load(Ordering::SeqCst), 1);
+        assert_eq!(peer.state.reads.load(Ordering::SeqCst), 1);
+        publisher.shutdown(Duration::from_secs(1)).await.unwrap();
+        finish(jobs, peer).await;
+    }
+}
+#[tokio::test]
+async fn actual_publisher_cancelled_adoption_retains_owner_until_physical_read_finishes() {
+    struct Owner(Arc<AtomicBool>);
+    impl Drop for Owner {
+        fn drop(&mut self) {
+            self.0.store(true, Ordering::Release);
+        }
+    }
+    for named in [false, true] {
+        let (jobs, peer) = start_peer(3, named, Duration::from_secs(2)).await;
+        let publisher = publisher(&peer).await;
+        let retired = Arc::new(AtomicBool::new(false));
+        let raw: Arc<[u8]> = Arc::from(peer.state.raw.clone());
+        let caller = Arc::new(Owner(retired.clone()));
+        let accepted = publisher.clone();
+        let task = tokio::spawn(async move { accepted.adopt_existing(raw, caller).await });
+        until(|| peer.state.pings.load(Ordering::SeqCst) == 1).await;
+        task.abort();
+        assert!(task.await.unwrap_err().is_cancelled());
+        assert_eq!(peer.state.reads.load(Ordering::SeqCst), 0);
+        assert!(!retired.load(Ordering::Acquire));
+        assert!(matches!(
+            publisher.shutdown(Duration::from_millis(20)).await,
+            Err(crate::normal_recording_publication::Error::DrainTimeout)
+        ));
+        assert!(!retired.load(Ordering::Acquire));
+        peer.state.release.store(true, Ordering::Release);
+        until(|| retired.load(Ordering::Acquire)).await;
+        assert_eq!(peer.state.reads.load(Ordering::SeqCst), 1);
+        publisher.shutdown(Duration::from_secs(1)).await.unwrap();
+        finish(jobs, peer).await;
+    }
+}
+#[tokio::test]
+async fn direct_publisher_peek_preflights_and_preserves_literal_frame() {
+    for named in [false, true] {
+        let (jobs, peer) = start_peer(1, named, Duration::from_secs(2)).await;
+        let publisher = publisher(&peer).await;
+        let raw = publisher
+            .peek_existing(Arc::new(()))
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(raw.as_ref(), peer.state.raw.as_slice());
+        assert_eq!(peer.state.pings.load(Ordering::SeqCst), 2);
+        assert_eq!(peer.state.reads.load(Ordering::SeqCst), 1);
+        publisher.shutdown(Duration::from_secs(1)).await.unwrap();
         finish(jobs, peer).await;
     }
 }

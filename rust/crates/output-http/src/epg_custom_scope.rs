@@ -312,6 +312,28 @@ impl Scope {
         .await
         .map_err(|_| unsettled())?
     }
+    /// Same existing output owner/permit/memory/deadline; no independent pool.
+    pub async fn profile_urls(
+        &self,
+        rows: Vec<serde_json::Value>,
+    ) -> Result<serde_json::Value, StoreError> {
+        let (flow, regex) = self.begin_call()?;
+        tokio::spawn(async move {
+            let result = regex
+                .execute(
+                    json!({"kind":"profile_urls","rows":rows}),
+                    flow.owner.clone(),
+                )
+                .await;
+            flow.active.fetch_sub(1, Ordering::AcqRel);
+            if result.is_err() {
+                flow.fault.store(true, Ordering::Release);
+            }
+            result.map_err(|_| unsettled())
+        })
+        .await
+        .map_err(|_| unsettled())?
+    }
     pub async fn finish(&self, aborted: bool) -> Result<CompletedScope, StoreError> {
         Flow::start_retirement(self.inner.clone(), aborted);
         loop {

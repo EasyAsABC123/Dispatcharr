@@ -496,6 +496,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
             axum::routing::any(crate::sd_source_http::lineup),
         )
         .route(
+            "/api/epg/sources/{id}/sd-lineups/search/",
+            axum::routing::any(crate::sd_source_http::search),
+        )
+        .route(
             "/api/epg/sources/{id}/",
             get(epg_source)
                 .patch(crate::epg_source_writes::patch)

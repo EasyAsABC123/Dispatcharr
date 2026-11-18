@@ -80,7 +80,9 @@ redis.call('HSET',KEYS[1],'active_streams',count,'last_activity',ARGV[2])
 return count
 "#;
 const DELETE: &str = r#"
-if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] then return 0 end
+-- -1: foreign/missing metadata; release only the immutable original ledger.
+--  0: this public generation is active; never stop or release it.
+if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] then return -1 end
 if tonumber(redis.call('HGET',KEYS[1],'active_streams') or '0')~=0 then return 0 end
 redis.call('DEL',KEYS[1])
 return 1
@@ -1565,6 +1567,28 @@ impl Drop for Ticket {
                 drop(state);
                 let mut shutdown=pool.stopped.subscribe();
                 if !*shutdown.borrow(){tokio::select!{_=tokio::time::sleep(pool.idle_grace)=>{},_=shutdown.changed()=>{}}}
+                // The previous local Session may have been replaced while
+                // retaining this public ID. Share the true physical transition
+                // lock; do not turn an observer timeout into early cleanup.
+                {
+                    let _generation = match session.scope.get() {
+                        Some(scope) => match scope.legacy_finalizer_guard(
+                            &session.lease, &session.metadata_token,
+                            session.candidate.profile_id,
+                        ).await {
+                            Some(guard) => Some(guard),
+                            None => return,
+                        },
+                        None => None,
+                    };
+                    let state = session.state.lock().await;
+                    if state.active != 0 || state.epoch != epoch
+                        || !pool.sessions.lock().await.get(&session.id)
+                            .is_some_and(|current| Arc::ptr_eq(current, &session))
+                    {
+                        return;
+                    }
+                }
                 // Every eligible Source timer can announce the stop. Do this
                 // outside state/pool locks: a statistics read must not form a
                 // cycle with the lifecycle actor. Physical cleanup remains
@@ -1575,16 +1599,34 @@ impl Drop for Ticket {
                         let _ = events.emit(transition(&session, false)).await;
                     }
                 }
+                // Publication above holds no lifecycle/Session/registry lock.
+                // Revalidate after it, retaining serial -> Session -> registry
+                // order through the actual metadata decision and lease release.
+                let _generation = match session.scope.get() {
+                    Some(scope) => match scope.legacy_finalizer_guard(
+                        &session.lease, &session.metadata_token,
+                        session.candidate.profile_id,
+                    ).await {
+                        Some(guard) => Some(guard),
+                        None => return,
+                    },
+                    None => None,
+                };
                 let mut state = session.state.lock().await;
-                if state.active != 0 || state.epoch != epoch {
+                if state.active != 0 || state.epoch != epoch
+                    || !pool.sessions.lock().await.get(&session.id)
+                        .is_some_and(|current| Arc::ptr_eq(current, &session))
+                {
                     return;
                 }
                 let deleted = match Script::new(DELETE).key(key(&session.id)).arg(&session.metadata_token).invoke_async::<i64>(&mut connection).await {
-                    Ok(deleted)=>deleted,Err(_)=>{pool.cleanup_failed.store(true,Ordering::Release);0}
+                    Ok(deleted)=>deleted,Err(_)=>{pool.cleanup_failed.store(true,Ordering::Release);-1}
                 };
 
                 if deleted == 0 {
-                    state.closed = true;
+                    // Still this owned public token, now active. Unlike a
+                    // foreign/missing hash, releasing would kill its readers.
+                    return;
                 }
                 state.closed = true;
                 session.stop.send_replace(true);

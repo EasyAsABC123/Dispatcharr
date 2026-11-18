@@ -138,6 +138,9 @@ impl Schedule {
         let observed=async{
    let mut tx=connection.begin().await?;
    let old:Option<(i64,Option<i64>,Option<i64>)>=sqlx::query_as("SELECT id::bigint,interval_id::bigint,crontab_id::bigint FROM django_celery_beat_periodictask WHERE name='backup-scheduled-task' FOR UPDATE").fetch_optional(&mut *tx).await?;
+   // Source delete_periodic_task returns immediately when the named task is
+   // absent. Disabled startup must not invalidate Beat for a nonexistent row.
+   if config["enabled"]==json!(false)&&old.is_none(){tx.commit().await?;return Ok(config)}
    if config["enabled"]==json!(false){sqlx::query("DELETE FROM django_celery_beat_periodictask WHERE name='backup-scheduled-task'").execute(&mut *tx).await?;}
    else{
     let advanced=config["cron_expression"].as_str().unwrap_or("");let expression=if !advanced.is_empty(){advanced.to_string()}else{let time=config["time"].as_str().unwrap_or("");let parts=time.split(':').collect::<Vec<_>>();if parts.len()!=2{return Err(failed("Invalid stored backup schedule time"))}format!("{} {} * * {}",parts[1],parts[0],if config["frequency"]==json!("daily"){ "*".to_string()}else{config["day_of_week"].to_string()})};

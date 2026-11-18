@@ -43,6 +43,13 @@ impl VodResolver for Resolver {
                     candidate.max_streams = 1;
                 }
             }
+            // Test-only fresh inactive-A/default-B snapshot; the packaged
+            // normal-graph capture supplies real SQL/auth/profile authority.
+            if source.name == "Owned inactive profile handoff movie"
+                && request.playback.header("x-owned-inactive-profile") == Some("B")
+            {
+                source.candidates[0].profile_id += 1;
+            }
             // Test-only request subject switch; no SQL/JWT authentication claim.
             if source.name == "Owned request identity movie"
                 && request.playback.header("x-owned-initial-user").is_none()
@@ -50,6 +57,18 @@ impl VodResolver for Resolver {
                 source.user = None;
             }
             Ok(source)
+        })
+    }
+    fn inactive_profile_in_account(
+        &self,
+        profile: i64,
+        account: i64,
+    ) -> BoxFuture<'_, Result<bool, StoreError>> {
+        Box::pin(async move {
+            Ok(self.0.name == "Owned inactive profile handoff movie"
+                && self.0.candidates.first().is_some_and(|candidate| {
+                    candidate.profile_id == profile && candidate.account_id == account
+                }))
         })
     }
     fn default_redirect(&self) -> BoxFuture<'_, Result<bool, StoreError>> {
@@ -162,6 +181,9 @@ async fn actual_http_old_and_new_bodies_survive_state_loss_and_source_close_acco
 #[ignore = "owned valid MP4 + actual HTTP current-generation additional entry"]
 async fn actual_http_recovered_current_additional_entry_reuses_provider() {
     run_case(true, false, false, None).await;
+    // Reuse this exact HTTP/media/Redis harness for the original legacy timer
+    // versus an inactive-profile replacement, keeping all original phases.
+    run_case(false, false, false, Some("idle-inactive-profile")).await;
 }
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "owned valid MP4 + actual HTTP public-retired generation reopen"]
@@ -237,6 +259,7 @@ async fn run_case(
     // metadata producers: fresh CREATE, absent-generation reopen, StillOwned.
     let worker_identity = (extra_entry && !retired_reopen && !immediate && public_stop.is_none())
         .then(expected_ascii_worker_identity);
+    let inactive_handoff_case = public_stop == Some("idle-inactive-profile");
     let idle_case = matches!(public_stop, Some("idle" | "idle-busy"));
     let idle_busy = public_stop == Some("idle-busy");
     let identity_case = public_stop == Some("identity");
@@ -317,7 +340,9 @@ async fn run_case(
     let resolver = Arc::new(Resolver(VodSource {
         kind: ContentKind::Movie,
         content_uuid: content.clone(),
-        name: if identity_case {
+        name: if inactive_handoff_case {
+            "Owned inactive profile handoff movie"
+        } else if identity_case {
             "Owned request identity movie"
         } else if idle_busy {
             "Owned fresh idle capacity movie"
@@ -325,14 +350,20 @@ async fn run_case(
             "Owned recovery movie"
         }
         .into(),
-        user: (public_stop == Some("cap") || identity_case).then(|| User {
-            id: (uuid::Uuid::new_v4().as_u128() % 1_000_000_000) as i64 + 1,
-            username: "owned-capped-viewer".into(),
-            password: "!".into(),
-            is_active: true,
-            user_level: 0,
-            stream_limit: if identity_case { 0 } else { 1 },
-            custom_properties: serde_json::json!({}),
+        user: (public_stop == Some("cap") || identity_case || inactive_handoff_case).then(|| {
+            User {
+                id: (uuid::Uuid::new_v4().as_u128() % 1_000_000_000) as i64 + 1,
+                username: "owned-capped-viewer".into(),
+                password: "!".into(),
+                is_active: true,
+                user_level: 0,
+                stream_limit: if identity_case || inactive_handoff_case {
+                    0
+                } else {
+                    1
+                },
+                custom_properties: serde_json::json!({}),
+            }
         }),
         redirect: false,
         limit_policy: Default::default(),
@@ -475,9 +506,10 @@ async fn run_case(
     let token: String = redis.get(&owner).await.unwrap();
     let ledger = format!("{namespace}:lease:{token}");
     assert_eq!(requests.load(Ordering::SeqCst), 1);
-    if public_stop == Some("idle-initial") {
+    if public_stop == Some("idle-initial") || inactive_handoff_case {
         let created: String = redis.hget(&metadata, "created_at").await.unwrap();
         drop(old);
+        let original_body_closed = tokio::time::Instant::now();
         wait(async || {
             redis
                 .hget::<_, _, Option<i64>>(&metadata, "active_streams")
@@ -492,12 +524,27 @@ async fn run_case(
                     == 0
         })
         .await;
-        let response = client
-            .get(format!("{base}/proxy/vod/movie/{content}/{id}"))
-            .send()
-            .await
-            .unwrap();
+        let requested_id = if inactive_handoff_case {
+            uuid::Uuid::new_v4().to_string()
+        } else {
+            id.clone()
+        };
+        let mut request = client.get(format!("{base}/proxy/vod/movie/{content}/{requested_id}"));
+        if inactive_handoff_case {
+            request = request.header("x-owned-inactive-profile", "B");
+        }
+        let response = request.send().await.unwrap();
         assert_eq!(response.status(), 200);
+        if inactive_handoff_case {
+            assert_worker_metadata_and_http(
+                &mut redis,
+                &metadata,
+                &response,
+                &expected_ascii_worker_identity(),
+                "inactive-profile-handoff",
+            )
+            .await;
+        }
         let mut resumed = Reader {
             response,
             pending: bytes::Bytes::new(),
@@ -518,7 +565,57 @@ async fn run_case(
             2
         );
         tokio::time::sleep(Duration::from_millis(1200)).await;
-        assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+        let selected_counter = if inactive_handoff_case {
+            format!("profile_connections:{}", profile + 1)
+        } else {
+            counter.clone()
+        };
+        assert_eq!(redis.get::<_, i64>(&selected_counter).await.unwrap(), 1);
+        if inactive_handoff_case {
+            assert!(original_body_closed.elapsed() > Duration::from_secs(1));
+            assert_eq!(redis.get::<_, String>(&owner).await.unwrap(), token);
+            assert_eq!(
+                redis
+                    .hget::<_, _, i64>(&metadata, "active_streams")
+                    .await
+                    .unwrap(),
+                1
+            );
+            assert_eq!(
+                redis
+                    .hget::<_, _, i64>(&metadata, "m3u_profile_id")
+                    .await
+                    .unwrap(),
+                profile + 1
+            );
+            assert_eq!(
+                redis
+                    .hget::<_, _, String>(&ledger, "profile")
+                    .await
+                    .unwrap(),
+                selected_counter
+            );
+            assert_eq!(
+                redis.hget::<_, _, i64>(&ledger, "reserved").await.unwrap(),
+                1
+            );
+            assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 0);
+            assert!(!redis
+                .exists::<_, bool>(format!("vod_persistent_connection:{requested_id}"))
+                .await
+                .unwrap());
+            assert_eq!(resumed.take(8192).await, &media[8192..16384]);
+            assert_eq!(requests.load(Ordering::SeqCst), 2);
+            println!(
+                "INACTIVE_HANDOFF_RETAINED:{}",
+                serde_json::json!({
+                    "old_deadline_passed":true,"active_streams":1,
+                    "old_provider_counter":0,"selected_provider_counter":1,
+                    "same_owned_ledger":true,"prefix_and_next_bytes_matched":true,
+                    "requested_alias_metadata_absent":true,
+                })
+            );
+        }
         drop(resumed);
         wait(async || {
             redis
@@ -526,6 +623,12 @@ async fn run_case(
                 .await
                 .unwrap()
                 == Some(0)
+                && redis
+                    .get::<_, Option<i64>>(&selected_counter)
+                    .await
+                    .unwrap()
+                    .unwrap_or(0)
+                    == 0
         })
         .await;
         assert_eq!(
@@ -533,8 +636,11 @@ async fn run_case(
             0,
             "Source normal-close provider release precedes its delayed metadata timer"
         );
+        assert_eq!(redis.get::<_, i64>(&selected_counter).await.unwrap(), 0);
         wait(async || !redis.exists::<_, bool>(&metadata).await.unwrap()).await;
         assert!(engine.shutdown().await);
+        assert!(!redis.exists::<_, bool>(&owner).await.unwrap());
+        assert!(!redis.exists::<_, bool>(&ledger).await.unwrap());
         app_task.abort();
         origin_task.abort();
         return;

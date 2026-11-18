@@ -25,6 +25,8 @@ use std::{
     time::Duration,
 };
 use tokio::sync::{watch, OwnedSemaphorePermit, Semaphore};
+// Additional sealed dependency + driver allocation grant in the SAME output pool.
+const PROFILE_REGEX_MEMORY: usize = 64 * 1024 * 1024;
 const NOT_FOUND:&str="\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Not Found</title>\n</head>\n<body>\n  <h1>Not Found</h1><p>The requested resource was not found on this server.</p>\n</body>\n</html>\n";
 #[derive(Clone)]
 pub struct OutputConfig {
@@ -59,6 +61,7 @@ struct Inner {
     bytes: Arc<Semaphore>,
     stop: watch::Sender<bool>,
     stopped: AtomicBool,
+    profile_regex: crate::epg_custom_scope::Registry,
 }
 #[derive(Clone)]
 pub struct OutputGateway {
@@ -123,6 +126,7 @@ impl OutputGateway {
                 bytes,
                 stop,
                 stopped: AtomicBool::new(false),
+                profile_regex: crate::epg_custom_scope::Registry::new(),
             }),
         })
     }
@@ -138,13 +142,16 @@ impl OutputGateway {
     pub async fn shutdown(&self) -> bool {
         self.inner.stopped.store(true, Ordering::SeqCst);
         self.inner.stop.send_replace(true);
-        tokio::time::timeout(Duration::from_secs(5), async {
+        let deadline = tokio::time::Instant::now() + Duration::from_secs(5);
+        self.inner.profile_regex.begin_drain(deadline);
+        let requests = tokio::time::timeout_at(deadline, async {
             while self.inner.requests.available_permits() != self.inner.config.max_requests {
                 tokio::time::sleep(Duration::from_millis(10)).await
             }
         })
         .await
-        .is_ok()
+        .is_ok();
+        self.inner.profile_regex.shutdown(deadline).await && requests
     }
     async fn get_cache(
         &self,
@@ -235,6 +242,7 @@ impl OutputGateway {
         }.await;
         let _ = result;
     }
+    #[allow(clippy::too_many_arguments)]
     async fn response(
         &self,
         identity: PlaybackRequest,
@@ -243,6 +251,7 @@ impl OutputGateway {
         headers: HeaderMap,
         body: Vec<u8>,
         reservation: Reservation,
+        build_deadline: tokio::time::Instant,
     ) -> Result<Response, StoreError> {
         if let Err(failure) = csrf::check(&method, &headers, &body) {
             return Ok(html(StatusCode::FORBIDDEN, failure.body()));
@@ -332,7 +341,31 @@ impl OutputGateway {
             .parameter("direct")
             .is_some_and(|value| value.eq_ignore_ascii_case("true"))
             && user.as_ref().is_none_or(|user| user.user_level >= 10);
-        let channels = match reader::read(
+        let profile_scope = if direct
+            && user
+                .as_ref()
+                .and_then(|u| u.custom_properties.get("allowed_m3u_profile_ids"))
+                .and_then(Value::as_array)
+                .is_some_and(|v| !v.is_empty())
+        {
+            // No independent admission: charge the lazy worker/driver grant to
+            // the existing shared output budget before any dependency spawn.
+            let worker_memory = self
+                .inner
+                .bytes
+                .clone()
+                .try_acquire_many_owned(PROFILE_REGEX_MEMORY as u32)
+                .map_err(|_| unavailable())?;
+            let owner: Arc<dyn Send + Sync> = Arc::new((
+                reservation.request.clone(),
+                reservation.memory.clone(),
+                worker_memory,
+            ));
+            Some(self.inner.profile_regex.open(owner, build_deadline)?)
+        } else {
+            None
+        };
+        let channel_result = reader::read_with_profile_scope(
             &self.inner.store,
             reader::Read {
                 user: user.as_ref(),
@@ -341,9 +374,13 @@ impl OutputGateway {
                 max_channels: self.inner.config.max_channels,
                 max_metadata_bytes: self.inner.config.max_metadata_bytes,
             },
+            profile_scope.as_ref(),
         )
-        .await
-        {
+        .await;
+        if let Some(scope) = profile_scope {
+            scope.finish(false).await?;
+        }
+        let channels = match channel_result {
             Err(StoreError::NotFound) => return Ok(html(StatusCode::NOT_FOUND, NOT_FOUND)),
             value => value?,
         };
@@ -436,7 +473,7 @@ fn unavailable() -> StoreError {
     StoreError::StatusBody(503, json!({"detail":"M3U output unavailable."}))
 }
 struct Reservation {
-    request: OwnedSemaphorePermit,
+    request: Arc<OwnedSemaphorePermit>,
     memory: Arc<MemoryReservation>,
 }
 impl OutputGateway {
@@ -630,7 +667,7 @@ async fn dispatch(
             )
             .map_err(|_| unavailable())?;
         let reservation = Reservation {
-            request: permit,
+            request: Arc::new(permit),
             memory: Arc::new(MemoryReservation { permit: memory }),
         };
         let peer = request
@@ -663,11 +700,11 @@ async fn dispatch(
         )
         .await?;
         let owned = engine.clone();
-        let deadline = engine.inner.config.build_deadline;
+        let deadline = tokio::time::Instant::now() + engine.inner.config.build_deadline;
         tokio::spawn(async move {
-            tokio::time::timeout(
+            tokio::time::timeout_at(
                 deadline,
-                owned.response(identity, path, method, headers, body, reservation),
+                owned.response(identity, path, method, headers, body, reservation, deadline),
             )
             .await
             .map_err(|_| unavailable())?
@@ -790,7 +827,7 @@ mod tests {
         assert!(allocation >= 4096);
         let total = gateway.inner.config.max_memory_bytes;
         let reservation = Reservation {
-            request: gateway.inner.requests.clone().try_acquire_owned().unwrap(),
+            request: Arc::new(gateway.inner.requests.clone().try_acquire_owned().unwrap()),
             memory: Arc::new(MemoryReservation {
                 permit:
                     gateway

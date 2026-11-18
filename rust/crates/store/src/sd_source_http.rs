@@ -75,6 +75,35 @@ impl SdSourceHttp {
             .await
             .is_ok_and(|v| v.is_ok())
     }
+    // Statically derived draft only: new search behavior awaits owned Source
+    // captures. The same HTTP admission and retained owner cover every stage.
+    async fn handle_search(&self, peer: SocketAddr, request: Request) -> Response {
+        if self.inner.closed.load(Ordering::Acquire) {
+            return unavailable("SD HTTP admission closed").into_response();
+        }
+        let Ok(slot) = self.inner.slots.clone().try_acquire_owned() else {
+            return unavailable("SD HTTP capacity").into_response();
+        };
+        let owner = Arc::new(Owner {
+            _slot: slot,
+            inner: self.inner.clone(),
+        });
+        let mut response = match tokio::spawn(search_lineups(peer, request, owner)).await {
+            Ok(Ok(response)) => response,
+            Ok(Err(error)) => error.into_response(),
+            Err(_) => StoreError::UnhandledRestFault.into_response(),
+        };
+        if response.status() != StatusCode::INTERNAL_SERVER_ERROR {
+            response
+                .headers_mut()
+                .insert("vary", axum::http::HeaderValue::from_static("Accept"));
+            response.headers_mut().insert(
+                "allow",
+                axum::http::HeaderValue::from_static("POST, OPTIONS"),
+            );
+        }
+        response
+    }
     async fn handle(&self, peer: SocketAddr, request: Request, lineup: bool) -> Response {
         if self.inner.closed.load(Ordering::Acquire) {
             return unavailable("SD HTTP admission closed").into_response();
@@ -218,6 +247,311 @@ async fn extended_lineup(
     closed?;
     Ok(response)
 }
+// Proposed Source search slice: JSON objects, text fields, a bounded postal
+// query grammar and dictionary/list headends. Unsupported domains remain501;
+// this is not an assertion of already captured Source/Native parity.
+async fn search_lineups(
+    peer: SocketAddr,
+    request: Request,
+    owner: Arc<Owner>,
+) -> Result<Response, StoreError> {
+    let scoped = owner.inner.auth.clone().with_retained_scope(owner.clone());
+    let user = scoped
+        .account_user(peer, request.headers().clone(), false)
+        .await?;
+    let minimum = if request.method() == Method::GET {
+        1
+    } else {
+        10
+    };
+    if user.user_level < minimum {
+        return Err(StoreError::PermissionDenied);
+    }
+    if request.method() != Method::POST {
+        return Err(StoreError::Unsupported(
+            "SD search non-POST/metadata contracts remain unqualified",
+        ));
+    }
+    let writer = scoped.task_sql_writer()?;
+    let scoped = scoped.with_request_writer_permit(writer)?;
+    let physical = scoped.core_publication_owner(owner);
+    crate::m3u_refresh_all::require_supported_domain(&scoped, physical.clone()).await?;
+    let id = request
+        .uri()
+        .path()
+        .trim_matches('/')
+        .split('/')
+        .nth(3)
+        .and_then(|v| v.parse::<i64>().ok())
+        .filter(|v| (1..=i64::from(i32::MAX)).contains(v))
+        .ok_or_else(missing)?;
+    let session = scoped.borrow_task_sql_session(physical.clone()).await?;
+    let operation=async {
+        // Source resolves/checks the object BEFORE request.data and authenticates
+        // its SD token only AFTER required country/postal fields are validated.
+        let mut source=match Source::read(id,session.clone(),scoped,physical).await.map_err(auth_error)? {
+            Read::Missing=>return Err(missing()),
+            Read::Other=>return Ok(StoreError::StatusBody(400,json!({"error":"This action is only available for Schedules Direct sources."})).into_response()),
+            Read::Source(source)=>*source,
+        };
+        let custom:bool=source.session.run(|c|Box::pin(async move {sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled <> 'D' AND tgrelid='epg_epgsource'::regclass)").fetch_one(c).await})).await??;
+        if custom {return Err(StoreError::Unsupported("SD search custom SQL triggers require separate Source authority"))}
+        let media=request.headers().get("content-type").and_then(|v|v.to_str().ok()).map(|v|v.split(';').next().unwrap_or(v).trim().to_ascii_lowercase());
+        if media.as_deref().is_some_and(|v|v!="application/json") {return Err(StoreError::Unsupported("SD search non-JSON request parser remains unqualified"))}
+        let bytes=to_bytes(request.into_body(),65536).await.map_err(|_|StoreError::Unsupported("SD search body capacity outside bounded draft domain"))?;
+        if !bytes.is_empty()&&media.as_deref()!=Some("application/json") {return Err(StoreError::Unsupported("SD search missing JSON Content-Type remains unqualified"))}
+        let value:Value=if bytes.is_empty(){json!({})}else{serde_json::from_slice(&bytes).map_err(|_|StoreError::Unsupported("SD search malformed JSON parser fault remains unqualified"))?};
+        let object=value.as_object().ok_or(StoreError::Unsupported("SD search nonobject request remains unqualified"))?;
+        let country=search_text(object,"country")?;let postalcode=search_text(object,"postalcode")?;
+        if country.is_empty()||postalcode.is_empty() {return Ok(StoreError::StatusBody(400,json!({"error":"country and postalcode are required."})).into_response())}
+        let query=search_query(country,postalcode)?;
+        let mut token=match lineup_token(&mut source).await? {Ok(token)=>token,Err(response)=>return Ok(response)};
+        let reply=source.authorized_api(reqwest::Method::GET,&query,&mut token,None,Duration::from_secs(15)).await.map_err(|error|match error {
+            auth::Error::Http(http::Error::Transport)=>StoreError::Unsupported("SD search Requests transport exception spelling remains unqualified"),
+            other=>auth_error(other),
+        })?;
+        if (300..400).contains(&reply.status)||reply.actual_url!=format!("{}{}",http::BASE,query) {return Err(StoreError::Unsupported("SD search redirected/final URL domain remains unqualified"))}
+        if reply.value.as_ref().and_then(|v|v.get("code")).and_then(Value::as_f64)==Some(2055.0) {
+            return Ok(StoreError::StatusBody(400,json!({"error":"Schedules Direct rejected the debug routing header (code 2055). Extra Schedules Direct Debugging has been turned off."})).into_response());
+        }
+        if let Some(error)=reply.request_error() {return Ok(StoreError::StatusBody(502,json!({"error":format!("Failed to search headends: {error}")})).into_response())}
+        search_reply(reply.value.as_ref())
+    }.await;
+    let closed = session.close().await;
+    let response = operation?;
+    closed?;
+    Ok(response)
+}
+#[derive(serde::Serialize)]
+struct SearchLineup<'a> {
+    lineup: Option<&'a str>,
+    name: Option<&'a str>,
+    transport: Option<&'a str>,
+    location: Option<&'a str>,
+    headend: Option<&'a str>,
+}
+fn search_field<'a>(
+    object: &'a serde_json::Map<String, Value>,
+    name: &str,
+) -> Result<Option<&'a str>, StoreError> {
+    match object.get(name) {
+        None | Some(Value::Null) => Ok(None),
+        Some(Value::String(value)) => Ok(Some(value.as_str())),
+        _ => Err(StoreError::Unsupported(
+            "SD search nontext/non-null output field remains unqualified",
+        )),
+    }
+}
+struct SearchHeadend<'a> {
+    rows: &'a [Value],
+    transport: Option<&'a str>,
+    location: Option<&'a str>,
+    headend: Option<&'a str>,
+}
+fn search_headend(headend: &Value) -> Result<SearchHeadend<'_>, StoreError> {
+    let object = headend.as_object().ok_or(StoreError::Unsupported(
+        "SD search nonobject headend remains unqualified",
+    ))?;
+    let rows = match object.get("lineups") {
+        None => &[][..],
+        Some(Value::Array(rows)) => rows.as_slice(),
+        _ => {
+            return Err(StoreError::Unsupported(
+                "SD search nonlist headend.lineups remains unqualified",
+            ))
+        }
+    };
+    // Validate each shared string only once per headend/pass. Repeating a large
+    // location across many rows must not multiply validation CPU work.
+    let (transport, location, headend) = if rows.is_empty() {
+        (None, None, None)
+    } else {
+        (
+            search_field(object, "transport")?,
+            search_field(object, "location")?,
+            search_field(object, "headend")?,
+        )
+    };
+    Ok(SearchHeadend {
+        rows,
+        transport,
+        location,
+        headend,
+    })
+}
+fn search_row<'a>(
+    headend: &SearchHeadend<'a>,
+    row: &'a Value,
+) -> Result<SearchLineup<'a>, StoreError> {
+    let row = row.as_object().ok_or(StoreError::Unsupported(
+        "SD search nonobject lineup remains unqualified",
+    ))?;
+    Ok(SearchLineup {
+        lineup: search_field(row, "lineup")?,
+        name: search_field(row, "name")?,
+        transport: headend.transport,
+        location: headend.location,
+        headend: headend.headend,
+    })
+}
+// Pinned DRF3.18.3 JSONRenderer.render applies these two replacements after
+// json.dumps. Scope this formatter to the new scalar/null search DTO only.
+struct SearchJsonFormatter;
+impl serde_json::ser::Formatter for SearchJsonFormatter {
+    fn write_string_fragment<W>(&mut self, writer: &mut W, fragment: &str) -> std::io::Result<()>
+    where
+        W: ?Sized + std::io::Write,
+    {
+        let mut rest = fragment;
+        while let Some((index, separator)) = rest
+            .char_indices()
+            .find(|(_, c)| matches!(*c, '\u{2028}' | '\u{2029}'))
+        {
+            writer.write_all(&rest.as_bytes()[..index])?;
+            writer.write_all(if separator == '\u{2028}' {
+                b"\\u2028"
+            } else {
+                b"\\u2029"
+            })?;
+            rest = &rest[index + separator.len_utf8()..];
+        }
+        writer.write_all(rest.as_bytes())
+    }
+}
+fn search_reply(value: Option<&Value>) -> Result<Response, StoreError> {
+    const ROWS: usize = 65536;
+    const OUTPUT: usize = 16 * 1024 * 1024;
+    const WORK: usize = 32 * 1024 * 1024;
+    let capacity = || {
+        StoreError::Unsupported("SD search actual flattened capacity outside bounded draft domain")
+    };
+    let headends = value
+        .and_then(Value::as_array)
+        .map(Vec::as_slice)
+        .unwrap_or(&[]);
+    // Validate every shape/field and count before constructing even the row Vec.
+    // Rows borrow scalar strings/null only: no Value/map/key/string is cloned.
+    let mut count = 0usize;
+    for headend in headends {
+        let headend = search_headend(headend)?;
+        count = count
+            .checked_add(headend.rows.len())
+            .filter(|n| *n <= ROWS)
+            .ok_or_else(capacity)?;
+        for row in headend.rows {
+            let _ = search_row(&headend, row)?;
+        }
+    }
+    let requested_rows = count
+        .checked_mul(std::mem::size_of::<SearchLineup<'_>>())
+        .filter(|n| *n <= WORK)
+        .ok_or_else(capacity)?;
+    let mut lineups = Vec::new();
+    lineups.try_reserve_exact(count).map_err(|_| capacity())?;
+    let row_capacity = lineups
+        .capacity()
+        .checked_mul(std::mem::size_of::<SearchLineup<'_>>())
+        .filter(|n| *n <= WORK)
+        .ok_or_else(capacity)?;
+    if row_capacity < requested_rows {
+        return Err(capacity());
+    }
+    for headend in headends {
+        let headend = search_headend(headend)?;
+        for row in headend.rows {
+            lineups.push(search_row(&headend, row)?);
+        }
+    }
+    #[derive(serde::Serialize)]
+    struct Reply<'a, 'b> {
+        lineups: &'a [SearchLineup<'b>],
+    }
+    let reply = Reply { lineups: &lineups };
+    struct Count(usize);
+    impl std::io::Write for Count {
+        fn write(&mut self, bytes: &[u8]) -> std::io::Result<usize> {
+            self.0 = self
+                .0
+                .checked_add(bytes.len())
+                .filter(|n| *n <= OUTPUT)
+                .ok_or_else(|| std::io::Error::other("bounded expanded search response"))?;
+            Ok(bytes.len())
+        }
+        fn flush(&mut self) -> std::io::Result<()> {
+            Ok(())
+        }
+    }
+    // This pass allocates no output buffer. It stops before output allocation
+    // even when one borrowed headend string would amplify across many lineups.
+    let mut size = Count(0);
+    {
+        let mut encoder = serde_json::Serializer::with_formatter(&mut size, SearchJsonFormatter);
+        serde::Serialize::serialize(&reply, &mut encoder).map_err(|_| capacity())?;
+    }
+    row_capacity
+        .checked_add(size.0)
+        .filter(|n| *n <= WORK)
+        .ok_or_else(capacity)?;
+    let mut bytes = Vec::new();
+    bytes.try_reserve_exact(size.0).map_err(|_| capacity())?;
+    row_capacity
+        .checked_add(bytes.capacity())
+        .filter(|n| *n <= WORK)
+        .ok_or_else(capacity)?;
+    let allocated = bytes.capacity();
+    {
+        let mut encoder = serde_json::Serializer::with_formatter(&mut bytes, SearchJsonFormatter);
+        serde::Serialize::serialize(&reply, &mut encoder)
+            .map_err(|_| StoreError::UnhandledRestFault)?;
+    }
+    // Immutable scalar references serialize identically in both passes; actual
+    // capacities were charged before this write, with no Value-tree duplicate.
+    if bytes.len() != size.0 || bytes.capacity() != allocated {
+        return Err(capacity());
+    }
+    Ok((
+        StatusCode::OK,
+        [("content-type", "application/json")],
+        bytes,
+    )
+        .into_response())
+}
+fn search_text<'a>(
+    object: &'a serde_json::Map<String, Value>,
+    name: &str,
+) -> Result<&'a str, StoreError> {
+    match object.get(name) {
+        None => Ok(""),
+        Some(Value::String(value)) => Ok(value.trim_matches(|c: char| {
+            c.is_whitespace() || matches!(c, '\u{1c}' | '\u{1d}' | '\u{1e}' | '\u{1f}')
+        })),
+        _ => Err(StoreError::Unsupported(
+            "SD search nontext country/postalcode remains unqualified",
+        )),
+    }
+}
+fn search_query(country: &str, postalcode: &str) -> Result<String, StoreError> {
+    // On this explicit grammar, Python Requests quote_plus and the following
+    // encoding are identical. Other query character domains remain501.
+    let allowed = |value: &str, limit: usize| {
+        !value.is_empty()
+            && value.len() <= limit
+            && value
+                .bytes()
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, b' ' | b'-'))
+    };
+    if !allowed(country, 32) || !allowed(postalcode, 128) {
+        return Err(StoreError::Unsupported(
+            "SD search country/postal query grammar remains unqualified",
+        ));
+    }
+    Ok(format!(
+        "/headends?country={}&postalcode={}",
+        country.replace(' ', "+"),
+        postalcode.replace(' ', "+")
+    ))
+}
+
 async fn lineup_token(source: &mut Source) -> Result<Result<String, Response>, StoreError> {
     let result = source
         .obtain_with_timeout(Duration::from_secs(15))
@@ -602,5 +936,27 @@ pub(crate) async fn lineup(
                 Err(e) => e.into_response(),
             }
         }
+    }
+}
+
+/// Proposed administrator search action; selected consumer ownership is shared.
+pub(crate) async fn search(
+    State(auth): State<AuthService>,
+    api: Option<Extension<SdSourceHttp>>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Response {
+    match api {
+        Some(Extension(api)) => api.handle_search(peer, request).await,
+        None => match auth
+            .account_user(peer, request.headers().clone(), true)
+            .await
+        {
+            Ok(_) => {
+                StoreError::Unsupported("Schedules Direct search requires the prepared SD consumer")
+                    .into_response()
+            }
+            Err(error) => error.into_response(),
+        },
     }
 }

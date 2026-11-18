@@ -512,6 +512,26 @@ impl LocalScope {
     pub(crate) fn activate_initial_idle(&self) {
         self.inner.activated.store(true, Ordering::Release);
     }
+    /// Serialize an original legacy timer against actual physical handoff and
+    /// recovery completion, including after its caller's observer times out.
+    /// A replaced profile/generation owns its own close/retention lifecycle.
+    pub(crate) async fn legacy_finalizer_guard(
+        &self,
+        lease: &Lease,
+        metadata_token: &str,
+        profile: i64,
+    ) -> Option<tokio::sync::OwnedMutexGuard<()>> {
+        let serial = self.inner.serial.clone().lock_owned().await;
+        let current = self.inner.state.lock().await.current.clone();
+        if current.retired.load(Ordering::Acquire)
+            || current.lease.token() != lease.token()
+            || current.token != metadata_token
+            || self.profile_id() != profile
+        {
+            return None;
+        }
+        Some(serial)
+    }
     pub async fn current_identity(&self) -> (Arc<Lease>, String) {
         let current = self.inner.state.lock().await.current.clone();
         (current.lease.clone(), current.token.clone())

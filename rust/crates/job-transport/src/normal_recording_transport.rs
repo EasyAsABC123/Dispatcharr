@@ -70,7 +70,7 @@ impl Jobs {
         let (reply, _held) = self
             .inner
             .broker
-            .command_classified::<(i64, Vec<u8>), _>(
+            .command_read_classified::<(i64, Vec<u8>), _>(
                 PEEK_CREATE,
                 &["dvr".into()],
                 &[],
@@ -95,7 +95,7 @@ impl Jobs {
         let (reply, _held) = self
             .inner
             .broker
-            .command_classified::<(i64, Vec<u8>), _>(
+            .command_read_classified::<(i64, Vec<u8>), _>(
                 PEEK_CREATE,
                 &["dvr".into()],
                 &[],
