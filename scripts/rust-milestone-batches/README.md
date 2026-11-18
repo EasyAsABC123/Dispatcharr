@@ -26,6 +26,11 @@ dispatch. There are no automatic application retries. The process-level lock
 prevents a second coordinator from creating another three-slot pool. Do not run
 owner fixtures alongside a coordinator invocation.
 
+The public [functional lease helper](functional-leases.md) keeps this default
+exclusive behavior and adds durable cleanup interlocks. Its separate two-backend
+functional mode remains opt-in and requires actual namespace/resource
+qualification; no owner or performance phase is switched automatically.
+
 A binding may strengthen isolation with `exclusive_heavy: true` or additional
 `exclusive_resources`. The scheduler combines these with inventory reservations;
 it never downgrades a heavy cohort or removes a declared resource. Replacing a

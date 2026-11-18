@@ -5,7 +5,6 @@ module schedules those bindings; a process exit alone never accepts a milestone.
 """
 import argparse
 import concurrent.futures
-import fcntl
 import hashlib
 import importlib.util
 import json
@@ -31,6 +30,12 @@ def module(path, name):
     loaded = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(loaded)
     return loaded
+
+
+# Load the generic sibling by path so absolute-path owner imports need no sys.path mutation.
+_functional_leases = module(HERE / "functional_lease.py", "migration_functional_lease")
+fixture_lease = _functional_leases.fixture_lease
+functional_backend = _functional_leases.functional_backend
 
 
 def inventory():
@@ -616,8 +621,7 @@ def main():
     validate(nodes, bound["nodes"])
     authorities = owner_readiness(nodes, bound)
     # Lock across scheduler invocations; owner adapters never create their own pool.
-    with (HERE / ".dispatcher.lock").open("a") as lock:
-        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    with fixture_lease(HERE / ".dispatcher.lock"):
         report = schedule(nodes, bound["nodes"], args.output, bound["candidate"], authorities=authorities)
     return 0 if report["full_batch_passed"] else 2
 
