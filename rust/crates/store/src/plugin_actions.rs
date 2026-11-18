@@ -886,6 +886,7 @@ impl PluginActions {
         Response::builder()
             .status(200)
             .header("Content-Type", "image/png")
+            .header("Vary", "Accept, origin")
             .header("Content-Length", size.to_string())
             .header("Content-Disposition", "inline; filename=\"logo.png\"")
             .body(body)

@@ -1,6 +1,6 @@
-//! DRAFT Source-qualified positive EPG detail PUT/PATCH/DELETE behavior.
+//! Source-backed EPG detail lifecycle and bounded dummy JSON creation.
 //! Original Dispatcharr/Django/Celery/Channels authors retain all behavior credit.
-//! No upload, create, SD credential changes or caught SQL-fault parity is claimed.
+//! No upload, XMLTV create or SD credential changes are admitted here.
 use crate::{
     admin_writes::{body_object, boolean, character, integer, parse_datetime},
     AuthService, StoreError, TaskSqlSession,
@@ -239,6 +239,16 @@ async fn dummy_signal(
             .collect::<String>()
             .to_lowercase()
     );
+    dummy_signal_value(session, auth, id, name, friendly, owner).await
+}
+async fn dummy_signal_value(
+    session: &TaskSqlSession,
+    auth: AuthService,
+    id: i64,
+    name: String,
+    friendly: String,
+    owner: Owner,
+) -> Result<(), StoreError> {
     let saved_name = name.clone();
     let (epg,created)=session.run(move|c|Box::pin(async move{
         let existing:Option<(i64,String)>=sqlx::query_as("SELECT id::bigint,name FROM epg_epgdata WHERE epg_source_id=$1 AND tvg_id=$2").bind(id).bind(&friendly).fetch_optional(&mut*c).await?;
@@ -257,6 +267,134 @@ async fn dummy_signal(
         crate::core_task_offsets::retained_event(sink,json!({"type":"update","data":{"type":"epg_data_created","source_id":id,"source_name":saved_name,"epg_data_id":epg}}),owner).await?;
     }
     Ok(())
+}
+// The shared JSON parser retains number lexemes. Source's JSON parser creates
+// Python int/float values before JSONField sees nested properties. Preserve that
+// distinction before BOTH persistence and the in-memory create representation.
+fn dummy_json_numbers(value: &mut Value) -> Result<(), StoreError> {
+    match value {
+        Value::Array(values) => {
+            for value in values {
+                dummy_json_numbers(value)?;
+            }
+        }
+        Value::Object(values) => {
+            for value in values.values_mut() {
+                dummy_json_numbers(value)?;
+            }
+        }
+        Value::Number(number) => {
+            let raw = number.to_string();
+            if raw.bytes().any(|value| matches!(value, b'.' | b'e' | b'E')) {
+                let float = raw.parse::<f64>().map_err(|_| unsupported())?;
+                *number = serde_json::Number::from_f64(float).ok_or_else(unsupported)?;
+            } else {
+                let integer =
+                    num_bigint::BigInt::parse_bytes(raw.as_bytes(), 10).ok_or_else(unsupported)?;
+                *number = serde_json::from_str::<Value>(&integer.to_string())
+                    .map_err(|_| unsupported())?
+                    .as_number()
+                    .ok_or_else(unsupported)?
+                    .clone();
+            }
+        }
+        _ => {}
+    }
+    Ok(())
+}
+// Dummy create follows the original serializer/pre-save/post-save sequence.
+// No dummy refresh actor or Beat publication exists in the Source signal graph.
+pub(super) async fn create_dummy(
+    auth: AuthService,
+    value: &Value,
+    owner: Owner,
+    names: &crate::RegexExecutor,
+) -> Result<Value, StoreError> {
+    let mut input = value.as_object().ok_or_else(unsupported)?.clone();
+    // Source-qualified SD CharField strip predicate includes Python's four
+    // extra ASCII whitespace controls. Validation still owns length/errors.
+    if let Some(Value::String(name)) = input.get_mut("name") {
+        *name = name
+            .trim_matches(|c: char| c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}'))
+            .to_owned();
+    }
+    let defaults = json!({"name":"","source_type":"dummy","url":null,
+        "username":null,"password":null,"is_active":true,"file_path":null,
+        "refresh_interval":0,"priority":0,"status":"idle","last_message":null,
+        "custom_properties":{},"updated_at":null});
+    // Create does not share update's empty-password preservation semantics.
+    if ["username", "password"]
+        .iter()
+        .any(|key| input.get(*key).is_some_and(|value| !value.is_null()))
+    {
+        return Err(unsupported());
+    }
+    if let Some(properties) = input.get_mut("custom_properties") {
+        dummy_json_numbers(properties)?;
+    }
+    let validated = validate(input, &defaults, "", false)?;
+    let saved = validated.saved;
+    // URL/file/credential and nonempty cron domains stay separate.
+    // Unicode name normalization uses the pinned family dependency below.
+    if saved["source_type"] != "dummy"
+        || !validated.cron.is_empty()
+        || !saved["url"].is_null()
+        || !saved["file_path"].is_null()
+        || !saved["username"].is_null()
+        || !saved["password"].is_null()
+        || auth.event_sink.is_none()
+    {
+        return Err(unsupported());
+    }
+    let name = saved["name"].as_str().ok_or_else(unsupported)?.to_owned();
+    let updated = parse_datetime("updated_at", &saved["updated_at"], true)?;
+    let response_properties = saved["custom_properties"].clone();
+    let friendly = names
+        .dummy_epg_name(&name, owner.clone())
+        .await
+        .map_err(|_| unsupported())?;
+    let session = auth.borrow_task_sql_session(owner.clone()).await?;
+    let result = async {
+        let saved_name = name.clone();
+        let id = session.run(move |c| Box::pin(async move {
+            no_custom_triggers(c).await?;
+            let collision: bool = sqlx::query_scalar(
+                "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE name=$1)",
+            ).bind(&name).fetch_one(&mut *c).await?;
+            if collision {
+                return Err(field("name", "epg source with this name already exists."));
+            }
+            // Source autocommits its source row before dummy EPGData and WS.
+            // Do not make event delivery or the follow-up signal transactional.
+            let id: i64 = sqlx::query_scalar(
+                "INSERT INTO epg_epgsource(name,source_type,url,username,password,is_active,file_path,extracted_file_path,refresh_interval,refresh_task_id,created_at,updated_at,status,last_message,custom_properties,priority) VALUES($1,'dummy',NULL,NULL,NULL,$2,NULL,NULL,$3,NULL,$4,$5,'idle',NULL,$6,$7) RETURNING id::bigint",
+            ).bind(name).bind(saved["is_active"].as_bool())
+                .bind(saved["refresh_interval"].as_i64().ok_or_else(unsupported)? as i32)
+                .bind(chrono::Utc::now()).bind(updated)
+                .bind(if saved["custom_properties"].is_null() { None } else {
+                    Some(sqlx::types::Json(saved["custom_properties"].clone()))
+                })
+                .bind(saved["priority"].as_i64().ok_or_else(unsupported)? as i32)
+                .fetch_one(c).await?;
+            Ok::<_, StoreError>(id)
+        })).await??;
+        // No friendly-ID length check before INSERT: Source may commit its
+        // source row and then fail EPGData's255-character DB constraint.
+        dummy_signal_value(&session, auth.clone(), id, saved_name, friendly, owner).await?;
+        let mut reply = project(&session, id, Some(String::new())).await?.0;
+        // Source serializes the created model's original JSON value; jsonb's
+        // storage key ordering must not replace that public response ordering.
+        reply["custom_properties"] = response_properties;
+        Ok::<_, StoreError>(reply)
+    }.await;
+    let closed = session.close().await;
+    closed?;
+    // Serializer/model save faults escape DRF as Django500. In particular,
+    // a long derived tvg_id fails only AFTER the source row was committed.
+    result.map_err(|error| match error {
+        StoreError::Database(_) => StoreError::UnhandledRestFault,
+        error => error,
+    })
 }
 async fn change(
     auth: AuthService,

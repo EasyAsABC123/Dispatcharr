@@ -117,6 +117,40 @@ async fn actual_packaged_grammar_remote_error_timeout_and_normal_wait_eof() {
         version_invalid,
         json!({"kind":"invalid","exception":"InvalidVersion"})
     );
+    // Literal cases derived from Original create_dummy_epg_data's primitive
+    // ordering; these are dependency controls, never HTTP/model qualification.
+    for (name, expected) in [
+        ("İ", "dummy_i\u{307}"),
+        ("Α ΟΣ", "dummy_α_ος"),
+        ("\u{345}\u{5b0}A\u{301}", "dummy_a"),
+        ("²Ⅷ四١", "dummy_²ⅷ四١"),
+        ("X\tY\n Z", "dummy_xy_z"),
+        ("♥!$", "dummy_"),
+        ("Foo-Bar Baz", "dummy_foo_bar_baz"),
+    ] {
+        let actual = executor.dummy_epg_name(name, Arc::new(())).await.unwrap();
+        emit(
+            "actual-pinned-dummy-name-primitives",
+            json!({"input":name,"actual":actual}),
+        );
+        assert_eq!(actual, expected);
+    }
+    // Never truncate or reject a post-save ID just for exceeding the model's
+    // varchar255 limit; the caller must reach that DB operation after save.
+    let maximum = "A".repeat(255);
+    assert_eq!(
+        executor
+            .dummy_epg_name(&maximum, Arc::new(()))
+            .await
+            .unwrap(),
+        format!("dummy_{}", "a".repeat(255))
+    );
+    assert!(matches!(
+        executor
+            .dummy_epg_name(&"A".repeat(256), Arc::new(()))
+            .await,
+        Err(PythonRegexError::Capacity)
+    ));
     let invalid = executor
         .execute(
             json!({"kind":"filter","names":["x"],"config":{"pattern":"("}}),

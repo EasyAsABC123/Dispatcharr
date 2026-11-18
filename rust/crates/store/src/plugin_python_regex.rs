@@ -1,4 +1,4 @@
-//! Sealed regex-only dependency process. No Django/plugin/DB/cache/Jobs ports.
+//! Sealed language/regex dependency process. No Django/plugin/DB/cache/Jobs ports.
 //! The admitted native caller owns ordering/effects and its SAME resource scope.
 use super::plugin_python_host::{Config, Error, Host, Identity, Ports, Receipt};
 use dispatcharr_contracts::BoxFuture;
@@ -197,6 +197,29 @@ impl RegexExecutor {
                     .ok_or(Error::Protocol)
             })
             .collect()
+    }
+    /// Pinned CPython Unicode primitives; no Source application or effect port.
+    /// Input is already validated by the Source serializer-compatible caller.
+    pub async fn dummy_epg_name(&self, name: &str, owner: Owner) -> Result<String, Error> {
+        if name.chars().count() > 255 {
+            return Err(Error::Capacity);
+        }
+        let value = self
+            .execute(
+                serde_json::json!({"kind":"dummy_epg_name","name":name}),
+                owner,
+            )
+            .await?;
+        let object = value
+            .as_object()
+            .filter(|value| value.len() == 1)
+            .ok_or(Error::Protocol)?;
+        object
+            .get("tvg_id")
+            .and_then(Value::as_str)
+            .filter(|value| value.len() <= 4096 && value.starts_with("dummy_"))
+            .map(str::to_owned)
+            .ok_or(Error::Protocol)
     }
     pub fn no_spawn_retirement(&self) -> Option<super::plugin_python_host::NoSpawnRetirement> {
         self.host.no_spawn_retirement()

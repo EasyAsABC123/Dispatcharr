@@ -1,4 +1,4 @@
-//! Narrow Source SD HTTP producers on real shared Auth/SQL/SD consumer ports.
+//! EPG source JSON producers on shared Auth/SQL/SD/event/dependency owners.
 //! Original Dispatcharr/Django/Celery authors retain all API/algorithm credit.
 use crate::{
     sd_guide_auth::{self as auth, Read, Source},
@@ -45,6 +45,7 @@ struct Inner {
     jobs: Arc<dyn Publisher>,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
+    names: crate::RegexExecutor,
 }
 #[derive(Clone)]
 pub struct SdSourceHttp {
@@ -63,6 +64,12 @@ impl SdSourceHttp {
                 jobs,
                 slots: Arc::new(Semaphore::new(4)),
                 closed: AtomicBool::new(false),
+                // One persistent family dependency, never a request-owned pool.
+                // The actual child remains lazy until a bounded accepted call.
+                names: crate::RegexExecutor::prepare(
+                    "/usr/local/bin/dispatcharr-regex-python".into(),
+                    Arc::new(()),
+                ),
             }),
         }
     }
@@ -71,9 +78,35 @@ impl SdSourceHttp {
     }
     pub async fn shutdown(&self, timeout: Duration) -> bool {
         self.close_admission();
-        tokio::time::timeout(timeout, self.inner.slots.clone().acquire_many_owned(4))
+        let deadline = tokio::time::Instant::now() + timeout;
+        self.inner.names.interrupt_at(deadline);
+        let slots_settled =
+            tokio::time::timeout_at(deadline, self.inner.slots.clone().acquire_many_owned(4))
+                .await
+                .is_ok_and(|value| value.is_ok());
+        // Stop the shared family only after admitted requests can no longer
+        // submit work. Its own supervisor retains physical wait/EOF ownership.
+        match self
+            .inner
+            .names
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
-            .is_ok_and(|v| v.is_ok())
+        {
+            Ok(Some(receipt)) => slots_settled && receipt.wait_observed,
+            Ok(None) => {
+                // Host sends the Stop reply before its normal epilogue marks
+                // no-spawn retirement. Observe that actual marker, using the
+                // same deadline as the HTTP slots and dependency shutdown.
+                while self.inner.names.no_spawn_retirement().is_none() {
+                    if tokio::time::Instant::now() >= deadline {
+                        return false;
+                    }
+                    tokio::time::sleep(Duration::from_millis(1)).await;
+                }
+                slots_settled
+            }
+            Err(_) => false,
+        }
     }
     // Statically derived draft only: new search behavior awaits owned Source
     // captures. The same HTTP admission and retained owner cover every stage.
@@ -142,6 +175,10 @@ impl SdSourceHttp {
     if publish{owner.inner.jobs.publish(source,Trigger::LineupAdded,owner.clone()).await?;}
     Ok(StoreError::StatusBody(status,reply).into_response())
    }else{
+    if value.get("source_type").and_then(Value::as_str)==Some("dummy") {
+     let reply=crate::epg_source_writes::create_dummy(scoped,&value,owner.clone(),&owner.inner.names).await?;
+     return Ok((StatusCode::CREATED,crate::provider_reads::dummy_create_reply(&reply)?).into_response());
+    }
     let input=crate::sd_source_writes::validate(&value)?;
     let(id,active,reply)=crate::sd_source_writes::create(scoped,input,owner.clone()).await?;
     if active{owner.inner.jobs.publish(id,Trigger::Created,owner.clone()).await?;}
@@ -150,6 +187,7 @@ impl SdSourceHttp {
   }).await;
         let mut response = match result {
             Ok(Ok(response)) => response,
+            Ok(Err(error)) if !lineup => crate::provider_reads::provider_validation_error(error),
             Ok(Err(error)) => error.into_response(),
             Err(_) => StoreError::UnhandledRestFault.into_response(),
         };
@@ -902,7 +940,7 @@ pub(crate) async fn create(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Response {
-    match api {
+    let mut response = match api {
         Some(Extension(api)) => api.handle(peer, request, false).await,
         None => {
             match auth
@@ -914,7 +952,20 @@ pub(crate) async fn create(
                 Err(e) => e.into_response(),
             }
         }
+    };
+    // Same Source collection policy as the existing plugin-repository surface.
+    // Django unhandled500 responses bypass DRF finalization.
+    if response.status() != StatusCode::INTERNAL_SERVER_ERROR {
+        response.headers_mut().insert(
+            axum::http::header::ALLOW,
+            axum::http::HeaderValue::from_static("GET, POST, HEAD, OPTIONS"),
+        );
+        response.headers_mut().insert(
+            axum::http::header::VARY,
+            axum::http::HeaderValue::from_static("Accept"),
+        );
     }
+    response
 }
 pub(crate) async fn lineup(
     State(auth): State<AuthService>,

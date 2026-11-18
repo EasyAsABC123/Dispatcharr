@@ -11,6 +11,16 @@ def caught(error):
 
 def evaluate(value):
  if not isinstance(value,dict):raise CompatibilityUnavailable('Regex request shape')
+ if value.get('kind')=='dummy_epg_name':
+  # Pure pinned CPython str primitives only. The native caller owns validation,
+  # SQL/save/signal/event ordering and the same admitted operation scope.
+  name=value.get('name')
+  if not isinstance(name,str)or len(name)>255:raise CompatibilityUnavailable('Dummy EPG name capacity')
+  friendly=name.replace(' ','_').replace('-','_')
+  friendly=''.join(c for c in friendly if c.isalnum()or c=='_')
+  friendly='dummy_'+friendly.lower()
+  if len(friendly.encode('utf8'))>4096:raise CompatibilityUnavailable('Dummy EPG name result capacity')
+  return {'tvg_id':friendly}
  if value.get('kind')=='version_compare':
   from dispatcharr_native.version_compare import compare
   return compare(value.get('current'),value.get('latest'))
