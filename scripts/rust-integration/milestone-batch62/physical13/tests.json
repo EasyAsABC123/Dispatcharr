@@ -1,0 +1,63 @@
+[
+  {
+    "names": [
+      "lost_publication_reply_is_not_replayed_and_future_commands_reconnect",
+      "concurrent_future_operations_share_one_bounded_reconnect_attempt",
+      "logical_timeout_does_not_reconnect_or_free_a_still_pending_physical_reply",
+      "result_preflight_recovers_closed_socket_before_one_mutation",
+      "result_preflight_does_not_replay_an_uncertain_mutation",
+      "pending_result_preflight_retains_owner_and_admission_without_mutating",
+      "artwork_preflight_recovers_closed_socket_before_one_publication",
+      "artwork_preflight_does_not_replay_an_uncertain_publication",
+      "pending_artwork_preflight_retains_owner_and_admission_without_publishing"
+    ],
+    "actual_exit": 0,
+    "observed_passes": {
+      "lost_publication_reply_is_not_replayed_and_future_commands_reconnect": true,
+      "concurrent_future_operations_share_one_bounded_reconnect_attempt": true,
+      "logical_timeout_does_not_reconnect_or_free_a_still_pending_physical_reply": true,
+      "result_preflight_recovers_closed_socket_before_one_mutation": true,
+      "result_preflight_does_not_replay_an_uncertain_mutation": true,
+      "pending_result_preflight_retains_owner_and_admission_without_mutating": true,
+      "artwork_preflight_recovers_closed_socket_before_one_publication": true,
+      "artwork_preflight_does_not_replay_an_uncertain_publication": true,
+      "pending_artwork_preflight_retains_owner_and_admission_without_publishing": true
+    }
+  },
+  {
+    "names": [
+      "idle_profile_handoff_preserves_retained_public_generation_and_owned_counters"
+    ],
+    "actual_exit": 0,
+    "observed_passes": {
+      "idle_profile_handoff_preserves_retained_public_generation_and_owned_counters": true
+    }
+  },
+  {
+    "names": [
+      "idle_profile_handoff_full_target_preserves_foreign_reservation"
+    ],
+    "actual_exit": 0,
+    "observed_passes": {
+      "idle_profile_handoff_full_target_preserves_foreign_reservation": true
+    }
+  },
+  {
+    "names": [
+      "recovery_idle_changed_requested_id_retains_one_metadata_identity"
+    ],
+    "actual_exit": 0,
+    "observed_passes": {
+      "recovery_idle_changed_requested_id_retains_one_metadata_identity": true
+    }
+  },
+  {
+    "names": [
+      "idle_profile_handoff_commit_lost_reply_retires_owned_lease_only"
+    ],
+    "actual_exit": 0,
+    "observed_passes": {
+      "idle_profile_handoff_commit_lost_reply_retires_owned_lease_only": true
+    }
+  }
+]
