@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "actual_captured_no_update_positive": 1,
+  "negative_controls": [
+    {
+      "case": "unrelated-warning-mutated",
+      "rejected": true
+    },
+    {
+      "case": "unrelated-warning-removed",
+      "rejected": true
+    },
+    {
+      "case": "obsolete-version-not-cleared",
+      "rejected": true
+    },
+    {
+      "case": "version-sequence-advanced",
+      "rejected": true
+    },
+    {
+      "case": "wrong-clear-event-count",
+      "rejected": true
+    },
+    {
+      "case": "missing-clear-event",
+      "rejected": true
+    },
+    {
+      "case": "incorrect-task-status",
+      "rejected": true
+    }
+  ],
+  "module_sha256": "248c816435057dbc3cb6d47c2110be32f9669923b0da487b823f7dfeaa03a852",
+  "scope": "Pure observer correction on retained actual first task capture; remaining three Version4 tasks unexecuted; no controller or milestone promotion",
+  "application_or_Docker_or_Source_replayed": false
+}

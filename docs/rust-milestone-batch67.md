@@ -36,14 +36,25 @@ single causal WebSocket publication. Authentication, missing-object and invalid
 input responses remain part of that reference. Source observations alone do not
 prove Native parity.
 
-The affected Native batch selects eight changed or previously failed contexts
-and two current-image viewing smokes. Its first execution is still in progress.
+The affected [ten-context Native batch](../scripts/rust-integration/milestone-batch67/native10-checkpoint.json)
+completed with actual exit 1 in 1,103.821 seconds: **four passed, six failed**.
+Guide coupling, enabled logos, live viewing and VOD adoption pass. Actual wait,
+stream EOF, settled process group, unchanged inputs and independent absence of
+11 containers and ten captured host generations verify.
+
 Two new capture contexts fail before HTTP because the observer closure omits a
-real helper import. Schedules Direct captures encounter a stale observer scope
-check expecting 25 contexts instead of the selected ten. Those failures remain
-literal while independent cells continue; corrections are prepared separately
-without changing active inputs or repeating Source characterization. Captured
-responses require explicit review before any offline qualification.
+real helper import. Schedules Direct and range captures encounter a stale
+observer scope check expecting 25 contexts instead of the selected ten. Those
+captures require narrow offline qualification with the raw differences retained.
+The first version task correctly clears its obsolete version notification and
+preserves an unrelated startup warning; the observer wrongly compares the entire
+notification table to its older reference. The remaining three version tasks
+were not executed. A corrected observer passes the retained first-task capture
+and seven negative controls, including unrelated-row mutation and wrong events.
+
+The next batch contains only preview, dummy creation and the complete four-task
+version context. It reuses the existing image and Source authority. Its actual
+execution and qualification remain pending; no failed controller is relabeled.
 
 The [development plan](rust-development-and-validation-plan.md) uses three active
 agent lanes plus integration, one coordinated Cargo target, one candidate image
