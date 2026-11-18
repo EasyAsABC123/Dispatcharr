@@ -216,7 +216,10 @@ def apply(root, rows, bindings):
     loaded = []
     for reference in manifest['inputs']:
         value = checked(root, reference)
-        if reference['kind'] == 'retained_original_management12_channelguide25_HTTP':
+        if reference['kind'] == 'retained_original_core_settings_Source32_framework':
+            import core_settings_source_contracts
+            core_settings_source_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_management12_channelguide25_HTTP':
             import retained_management_contracts
             retained_management_contracts.validate(root, value, bindings)
         elif reference['kind'] == 'captured_HTTP_Source_contracts':
@@ -309,7 +312,7 @@ def apply(root, rows, bindings):
             if reference['kind'] in ['pinned_original_framework_tests', 'pinned_original_account_settings_tests', 'pinned_original_channel_guide_tests', 'pinned_original_dvr_import_tests', 'pinned_original_provider_output_consumer_tests', 'pinned_original_admin_rest_tests', 'pinned_original_proxy_plugin_tests', 'pinned_original_schema_cache_tests', 'pinned_original_vod_access_tests', 'pinned_original_logo_path_tests']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_test_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
-            if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture', 'retained_original_notification_Source20_real_credentials_framework']:
+            if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture', 'retained_original_notification_Source20_real_credentials_framework', 'retained_original_core_settings_Source32_framework']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             if reference['kind'] in ['captured_original_Source51_matching_admin_HTTP', 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP', 'retained_original_management12_channelguide25_HTTP']:

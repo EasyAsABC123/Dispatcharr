@@ -90,3 +90,7 @@ separate validation steps. Formal M0/M1 and complete backend parity remain open.
 ## Retained management and guide Source assignments
 
 The [37 retained positive admin observations](../scripts/rust-contracts/retained-management/README.md) add seven partial Source definitions and supplement five existing definitions without replacing their setup, assertions or result. The register now has 146/798 HTTP operation assignments and 15/250 non-HTTP assignments. These are Source assignments, not verified endpoints or a migration completion percentage. The 322 unresolved declaration/method placeholders remain unchanged; observed XML GET requests do not resolve that route’s declared method set. All formal milestones remain open.
+
+## CoreSettings Source32 assignments
+
+The [retained Source32 cohort](../scripts/rust-contracts/core-settings-source32-assignments/README.md) adds six definitions from 32 real-resolver/APIClient observations, reaching 152 partial HTTP assignments; 646 remain absent. Every case binds its actual class/action/URL-name and unformatted path. All preceding assignments, supplemental captures and 792 unrelated operation dictionaries remain unchanged. The full executed setup/definition closure and existing privacy-adapted validator are reused; recorder `passed:false`, actual controller exit 0 and unexecuted public projection stay distinct. Source TCP/JWT, Native, full endpoint/role coverage and performance remain unqualified.

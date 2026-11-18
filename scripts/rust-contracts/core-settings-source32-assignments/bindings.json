@@ -1,0 +1,1605 @@
+{
+  "format_version": 1,
+  "binding_kind": "retained_original_core_settings_Source32_framework",
+  "credit": "Original Dispatcharr and dependency authors retain all application/model/signal/algorithm credit and licenses.",
+  "contracts": [
+    {
+      "contract_id": "route-4e613bb9583a369dde8a:POST",
+      "source_handler": "core.api_views.CoreSettingsViewSet",
+      "pattern_exact": "api/core/^settings/$",
+      "method": "POST",
+      "source_action": "create",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Source32:route-4e613bb9583a369dde8a:POST",
+      "observed_roles": [
+        "admin",
+        "admin_denied",
+        "anonymous",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "Source_role_definition": {
+            "id": 1,
+            "user_level": 10
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        },
+        "admin_denied": {
+          "Source_role_definition": {
+            "id": 3,
+            "user_level": 10,
+            "custom_ui": "192.0.2.0/24"
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        },
+        "anonymous": {
+          "Source_role_definition": null,
+          "authentication": "anonymous",
+          "TCP_or_JWT_qualified": false
+        },
+        "standard": {
+          "Source_role_definition": {
+            "id": 2,
+            "user_level": 1
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        }
+      },
+      "cases": [
+        {
+          "Source_index": 0,
+          "label": "anonymous_create",
+          "role": "anonymous",
+          "method": "POST",
+          "path": "/api/core/settings/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "create",
+            "kwargs": {},
+            "url_name": "coresettings-list"
+          },
+          "status": 401,
+          "response_body_bytes": 58,
+          "response_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "public_observation_json_pointer": "/requests/0",
+          "privacy_projected_observation_sha256": "6e3e2b12c6b5c36b28e724c85eaaf977c8e29e07831cde1b20d4085641baec7e",
+          "case_definition_sha256": "cbb4a5b0170299e1883943106628961eddd1166a174d9052eaadbd1316efe8d8",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 1,
+          "label": "standard_create",
+          "role": "standard",
+          "method": "POST",
+          "path": "/api/core/settings/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "create",
+            "kwargs": {},
+            "url_name": "coresettings-list"
+          },
+          "status": 403,
+          "response_body_bytes": 63,
+          "response_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "public_observation_json_pointer": "/requests/1",
+          "privacy_projected_observation_sha256": "0a74a02fd7d9c90a7db56a6a678b0b3a51dca291997acf62198faadecdd3f15e",
+          "case_definition_sha256": "b3cedf45a7da30076ddd8675dc903f6d5b6011b74645ee84466e53dfb512289d",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 2,
+          "label": "UI_denied_admin_create",
+          "role": "admin_denied",
+          "method": "POST",
+          "path": "/api/core/settings/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "create",
+            "kwargs": {},
+            "url_name": "coresettings-list"
+          },
+          "status": 403,
+          "response_body_bytes": 63,
+          "response_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "public_observation_json_pointer": "/requests/2",
+          "privacy_projected_observation_sha256": "6e977e236c7f70fbc669ffb902b526d6bbb9bbcb68bef7d525bccf6acc66269b",
+          "case_definition_sha256": "ae3e400e117d1584e909d55c6d3edf2eb02b7e516e5f81ada3107094a1a99f09",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 3,
+          "label": "required_key_name",
+          "role": "admin",
+          "method": "POST",
+          "path": "/api/core/settings/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "create",
+            "kwargs": {},
+            "url_name": "coresettings-list"
+          },
+          "status": 400,
+          "response_body_bytes": 70,
+          "response_body_sha256": "b26621600cf821b1e6adae1e3b7f3aabcf1ec6341ae51922cc7a5ae4727ace23",
+          "public_observation_json_pointer": "/requests/3",
+          "privacy_projected_observation_sha256": "61599b2d85961202d18d5d4ba6bf08ca26db61cee47884cb0303b84f0741db52",
+          "case_definition_sha256": "de7aa47407a46dc792c068174bef0101b3a9337e1ce4141b58d15d5544c20d49",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 4,
+          "label": "create_default_value",
+          "role": "admin",
+          "method": "POST",
+          "path": "/api/core/settings/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "create",
+            "kwargs": {},
+            "url_name": "coresettings-list"
+          },
+          "status": 201,
+          "response_body_bytes": 68,
+          "response_body_sha256": "478ea7122f46175ae0ae247a37b19bf2b0f79c6dc18e5add3566ab263ef53520",
+          "public_observation_json_pointer": "/requests/4",
+          "privacy_projected_observation_sha256": "8a5df133b6d8209975c5d40d5fc50d270fcf349c266660006fed2bf8e7e34d67",
+          "case_definition_sha256": "614e6bdbbaeaf33d01af24b50a241dc6c03653213d94b7dd526fadee87dc639a",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 5,
+          "label": "duplicate_key",
+          "role": "admin",
+          "method": "POST",
+          "path": "/api/core/settings/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "create",
+            "kwargs": {},
+            "url_name": "coresettings-list"
+          },
+          "status": 400,
+          "response_body_bytes": 55,
+          "response_body_sha256": "01a11e7b8dcdc7f74190be62cfa8cdc4df23b3af22bb57fa6c6aa7a381060253",
+          "public_observation_json_pointer": "/requests/5",
+          "privacy_projected_observation_sha256": "1bee196d72d4e9d08da11efb35aec7f2d8502cf3ebb198d3f2eff1c447e92278",
+          "case_definition_sha256": "67fc23f6ed4ef78d079243c3f96ccff3e4a158ac6b282cd1ee89c885739a566b",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 17,
+          "label": "create_array_value",
+          "role": "admin",
+          "method": "POST",
+          "path": "/api/core/settings/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "create",
+            "kwargs": {},
+            "url_name": "coresettings-list"
+          },
+          "status": 201,
+          "response_body_bytes": 77,
+          "response_body_sha256": "c916b094e85823db74d819d258ce800842f5d7b28a8cb368c33df48debdc13c5",
+          "public_observation_json_pointer": "/requests/17",
+          "privacy_projected_observation_sha256": "0cce07c71f1c0c98e8e81bd313351b4bfca7e692a18628ec737375ac838d05b8",
+          "case_definition_sha256": "083af873f92a8bd21a9e9597b98206994bcc4afa284dedec886d8a5c58c8c377",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 22,
+          "label": "create_epg_clamps",
+          "role": "admin",
+          "method": "POST",
+          "path": "/api/core/settings/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "create",
+            "kwargs": {},
+            "url_name": "coresettings-list"
+          },
+          "status": 201,
+          "response_body_bytes": 169,
+          "response_body_sha256": "8f56bb0737797e54959a563e8b774a423124d4b2c27761eed77c8c2db158237d",
+          "public_observation_json_pointer": "/requests/22",
+          "privacy_projected_observation_sha256": "07984d73ab905af2c93716a812cd429a8e05792fe3ce4fec89599b46c690522e",
+          "case_definition_sha256": "785f7182de29542b36bfbcca1cdaea23425e25d67016606d3cfc8c0ca536c1d1",
+          "projection_executed": false
+        }
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Exact observed resolver class/action/URL-name and unformatted path bind every case to one pinned discovery operation; no format aliases or collection GET inferred",
+        "Existing public verifier checks all 32 privacy-adapted semantic predicates, exact case/setup definitions, full mandatory snapshot coverage and physically settled lifecycle",
+        "Raw recorder passed:false, actual controller exit0 and unexecuted public privacy projection remain distinct; no public redecoding of omitted private bytes"
+      ],
+      "result": {
+        "state": "partial_retained_Original_framework_API_key_Source32",
+        "Source_cases_passed": 8,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false,
+        "fully_verified": false,
+        "performance_verified": false,
+        "raw_recorder_passed": false,
+        "projection_executed": false
+      },
+      "remaining": [
+        "Only recorded roles/input/error cases; no complete endpoint role/grammar matrix",
+        "APIClient/API-key authority only; no Source TCP/JWT, Native, packaged Main or browser verification",
+        "Privacy-adapted public predicates preserve opaque evidence for omitted credential/SQL/binary Redis bytes, without claiming their public redecoding"
+      ]
+    },
+    {
+      "contract_id": "route-2560f46761708905bcfa:GET",
+      "source_handler": "core.api_views.CoreSettingsViewSet",
+      "pattern_exact": "api/core/^settings/(?P<pk>[^/.]+)/$",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Source32:route-2560f46761708905bcfa:GET",
+      "observed_roles": [
+        "standard"
+      ],
+      "source_role_specs": {
+        "standard": {
+          "Source_role_definition": {
+            "id": 2,
+            "user_level": 1
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        }
+      },
+      "cases": [
+        {
+          "Source_index": 6,
+          "label": "standard_retrieve",
+          "role": "standard",
+          "method": "GET",
+          "path": "/api/core/settings/1003/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "retrieve",
+            "kwargs": {
+              "pk": "1003"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 200,
+          "response_body_bytes": 68,
+          "response_body_sha256": "478ea7122f46175ae0ae247a37b19bf2b0f79c6dc18e5add3566ab263ef53520",
+          "public_observation_json_pointer": "/requests/6",
+          "privacy_projected_observation_sha256": "6121fc0aa30bc385bd0b6985b0c863d5170fff537824773393292d42338a1b19",
+          "case_definition_sha256": "1a511ae7581bba1450dd2afead7b84ca2bcd6b78e0ef6d0f017e92ccc5b3cce4",
+          "projection_executed": false
+        }
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Exact observed resolver class/action/URL-name and unformatted path bind every case to one pinned discovery operation; no format aliases or collection GET inferred",
+        "Existing public verifier checks all 32 privacy-adapted semantic predicates, exact case/setup definitions, full mandatory snapshot coverage and physically settled lifecycle",
+        "Raw recorder passed:false, actual controller exit0 and unexecuted public privacy projection remain distinct; no public redecoding of omitted private bytes"
+      ],
+      "result": {
+        "state": "partial_retained_Original_framework_API_key_Source32",
+        "Source_cases_passed": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false,
+        "fully_verified": false,
+        "performance_verified": false,
+        "raw_recorder_passed": false,
+        "projection_executed": false
+      },
+      "remaining": [
+        "Only recorded roles/input/error cases; no complete endpoint role/grammar matrix",
+        "APIClient/API-key authority only; no Source TCP/JWT, Native, packaged Main or browser verification",
+        "Privacy-adapted public predicates preserve opaque evidence for omitted credential/SQL/binary Redis bytes, without claiming their public redecoding"
+      ]
+    },
+    {
+      "contract_id": "route-2560f46761708905bcfa:PATCH",
+      "source_handler": "core.api_views.CoreSettingsViewSet",
+      "pattern_exact": "api/core/^settings/(?P<pk>[^/.]+)/$",
+      "method": "PATCH",
+      "source_action": "partial_update",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Source32:route-2560f46761708905bcfa:PATCH",
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "Source_role_definition": {
+            "id": 1,
+            "user_level": 10
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        }
+      },
+      "cases": [
+        {
+          "Source_index": 7,
+          "label": "typed_json_patch",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1003/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1003"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 200,
+          "response_body_bytes": 141,
+          "response_body_sha256": "160df0b3d4c76a5d0ccb793ca58be345073a832a7d435687031f0205a223d0aa",
+          "public_observation_json_pointer": "/requests/7",
+          "privacy_projected_observation_sha256": "e60a3df01029c9d98efdf097887228dd62f4ab6b092c6fcdd0d64b12f4ca5a62",
+          "case_definition_sha256": "a5f0b97a9afbd0dd54377a6a9a41fbcad58e4e8b62b4eec0c5431fe3e10b7abd",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 10,
+          "label": "readonly_unknown_ignored",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1003/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1003"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 200,
+          "response_body_bytes": 147,
+          "response_body_sha256": "183249143a1b95810613cfabc961f35409c79530e0bbd9f3c3a5fcd1d882caf6",
+          "public_observation_json_pointer": "/requests/10",
+          "privacy_projected_observation_sha256": "6eafb25866a677bd2d3b2495d4cc94f7875d0a06d6f3647a008eb539c6cacb99",
+          "case_definition_sha256": "6fa049afe2e2e62be262caa74b1f1f14199a23c7b465b2b20acfc9bdcb65a192",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 11,
+          "label": "rename_key_cache_boundary",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1003/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1003"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 200,
+          "response_body_bytes": 151,
+          "response_body_sha256": "a5710cbdf3a9cc9b5670a1a84f82a57b09afed2ff2fbca6d75b2b6008f24691e",
+          "public_observation_json_pointer": "/requests/11",
+          "privacy_projected_observation_sha256": "c9872316973698dbe5b4389dc2cb2d2297c3f0b1ac8ec1976cabf24b05e16e1d",
+          "case_definition_sha256": "fbb08fb4f63409953e017b453e17d643c55e95afb3eb4a8af9755e9bdef831d8",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 12,
+          "label": "missing_lookup_before_bad_json",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1000001002/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1000001002"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 404,
+          "response_body_bytes": 53,
+          "response_body_sha256": "fd0ca29c308e5f3a4e11317aaa112de68bfd6a1fd55dc06be72817064feadb89",
+          "public_observation_json_pointer": "/requests/12",
+          "privacy_projected_observation_sha256": "ea482dc63ae2d1c0d235ab9053576fb7f58fecfad1678ef7cba83b95d2c9766e",
+          "case_definition_sha256": "65618233aa5670a9eca4d72e73e05532f0c1d6b511774fb3bbf2366211898a83",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 18,
+          "label": "patch_scalar_value",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1004/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1004"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 200,
+          "response_body_bytes": 69,
+          "response_body_sha256": "e525564ebf27da5c5da09158302e263e9fa2de0c0fea6aeaf3cee48a58e4d634",
+          "public_observation_json_pointer": "/requests/18",
+          "privacy_projected_observation_sha256": "311a94dca564e18710ebf5922782db659a4344e5352547221d635f4c50b75a84",
+          "case_definition_sha256": "29ef0e8be8203842406459ed1158fcd38f864d9730b51b64c61ced450876db78",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 19,
+          "label": "null_value_rejected",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1004/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1004"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 400,
+          "response_body_bytes": 41,
+          "response_body_sha256": "ab1aba411b151ddebdfaac8385c91728e193df494dd582f585e338b717202d7a",
+          "public_observation_json_pointer": "/requests/19",
+          "privacy_projected_observation_sha256": "40046ea48335acbe0c82e44fc3535f375698b64011a3d9d6d6d4bdd935e18a98",
+          "case_definition_sha256": "168cde29e48f0686ac71db3abb02ccfb8905ce4f5f08047a2b79bb1b569b2917",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 20,
+          "label": "blank_name_rejected",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1004/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1004"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 400,
+          "response_body_bytes": 41,
+          "response_body_sha256": "4b2fc1a317f4e836a609cf28b8c00a991eb9c60e10f33d0d5c4f35d88b3c95fa",
+          "public_observation_json_pointer": "/requests/20",
+          "privacy_projected_observation_sha256": "0b4926c300ebc3fa860caeca0e67caa89da12597350be2b1fce74ced35bb1f0f",
+          "case_definition_sha256": "c862ff82bd556c51f954e027a87df529c62d6c07c635281ace2e04e5557ab240",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 21,
+          "label": "rename_duplicate_rejected",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1004/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1004"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 400,
+          "response_body_bytes": 55,
+          "response_body_sha256": "01a11e7b8dcdc7f74190be62cfa8cdc4df23b3af22bb57fa6c6aa7a381060253",
+          "public_observation_json_pointer": "/requests/21",
+          "privacy_projected_observation_sha256": "c888975ebae14acb709e20c33b8a058ac9f80b82dbfbc3478ae3c1f3437c7037",
+          "case_definition_sha256": "731591238cadae5d7c4b36bc08ec6a3a449cfe9718c6f9ee8a38299ab99b05c3",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 23,
+          "label": "patch_epg_ordered_clamps",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1005/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1005"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 200,
+          "response_body_bytes": 154,
+          "response_body_sha256": "5e509f14d5723ce5727a1fdd2c2cce4de206367257a19bd1e6ad3f7f8a245436",
+          "public_observation_json_pointer": "/requests/23",
+          "privacy_projected_observation_sha256": "7fd9e76168465441c69d3cb907e3efe412f91b91bc91ec978c1812553926186f",
+          "case_definition_sha256": "e54e5dad47b0257b656472c6cbae1f5e301ecd4e3ec0790454e24147cd9645f4",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 24,
+          "label": "patch_epg_array",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1005/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1005"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 200,
+          "response_body_bytes": 62,
+          "response_body_sha256": "068d08673b5764a037a16120933c9afa2c9cbd6fd5d16e57508d5db7cb1e17a6",
+          "public_observation_json_pointer": "/requests/24",
+          "privacy_projected_observation_sha256": "73756339d27d4715f05a88266b22feb9d689a8a311c15b7c370bcd60233d1527",
+          "case_definition_sha256": "47790a252403cc30edd229d6bf4d6b10445368912ab38349dbf3160f3abfbf47",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 25,
+          "label": "empty_epg_patch",
+          "role": "admin",
+          "method": "PATCH",
+          "path": "/api/core/settings/1005/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "partial_update",
+            "kwargs": {
+              "pk": "1005"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 200,
+          "response_body_bytes": 62,
+          "response_body_sha256": "068d08673b5764a037a16120933c9afa2c9cbd6fd5d16e57508d5db7cb1e17a6",
+          "public_observation_json_pointer": "/requests/25",
+          "privacy_projected_observation_sha256": "de79d887aeb6743a125bbd65a1cc427b584278ac913637b89f2d2eb361aa728f",
+          "case_definition_sha256": "a99cf2427d3fa7f92d5afe15b09254364b768146a7139a0a538646b2d5456d4d",
+          "projection_executed": false
+        }
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Exact observed resolver class/action/URL-name and unformatted path bind every case to one pinned discovery operation; no format aliases or collection GET inferred",
+        "Existing public verifier checks all 32 privacy-adapted semantic predicates, exact case/setup definitions, full mandatory snapshot coverage and physically settled lifecycle",
+        "Raw recorder passed:false, actual controller exit0 and unexecuted public privacy projection remain distinct; no public redecoding of omitted private bytes"
+      ],
+      "result": {
+        "state": "partial_retained_Original_framework_API_key_Source32",
+        "Source_cases_passed": 11,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false,
+        "fully_verified": false,
+        "performance_verified": false,
+        "raw_recorder_passed": false,
+        "projection_executed": false
+      },
+      "remaining": [
+        "Only recorded roles/input/error cases; no complete endpoint role/grammar matrix",
+        "APIClient/API-key authority only; no Source TCP/JWT, Native, packaged Main or browser verification",
+        "Privacy-adapted public predicates preserve opaque evidence for omitted credential/SQL/binary Redis bytes, without claiming their public redecoding"
+      ]
+    },
+    {
+      "contract_id": "route-2560f46761708905bcfa:PUT",
+      "source_handler": "core.api_views.CoreSettingsViewSet",
+      "pattern_exact": "api/core/^settings/(?P<pk>[^/.]+)/$",
+      "method": "PUT",
+      "source_action": "update",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Source32:route-2560f46761708905bcfa:PUT",
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "Source_role_definition": {
+            "id": 1,
+            "user_level": 10
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        }
+      },
+      "cases": [
+        {
+          "Source_index": 8,
+          "label": "PUT_required_key",
+          "role": "admin",
+          "method": "PUT",
+          "path": "/api/core/settings/1003/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "update",
+            "kwargs": {
+              "pk": "1003"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 400,
+          "response_body_bytes": 35,
+          "response_body_sha256": "e91d8384954b90e00e2dc78944179dd6a1e9655785925002dd1de2ddf4cb291e",
+          "public_observation_json_pointer": "/requests/8",
+          "privacy_projected_observation_sha256": "730a296f77fb26181032346b569af4f6db9d5962d00836317b4d94adf71d7571",
+          "case_definition_sha256": "6108aeb93a2380aaa496b8dffbce427c6b3b472720041f4ed7fa2a5fb83075ff",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 9,
+          "label": "PUT_optional_value_retains",
+          "role": "admin",
+          "method": "PUT",
+          "path": "/api/core/settings/1003/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "update",
+            "kwargs": {
+              "pk": "1003"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 200,
+          "response_body_bytes": 147,
+          "response_body_sha256": "183249143a1b95810613cfabc961f35409c79530e0bbd9f3c3a5fcd1d882caf6",
+          "public_observation_json_pointer": "/requests/9",
+          "privacy_projected_observation_sha256": "3b2253f4937e3d5e110f24b97d8b0a1e4ab3fa24c7f791833a1c2088a6cbf8d6",
+          "case_definition_sha256": "54f9a7184ad8643c38ded0e4135f7910d173c61e6599d3b391cbd486d557d519",
+          "projection_executed": false
+        }
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Exact observed resolver class/action/URL-name and unformatted path bind every case to one pinned discovery operation; no format aliases or collection GET inferred",
+        "Existing public verifier checks all 32 privacy-adapted semantic predicates, exact case/setup definitions, full mandatory snapshot coverage and physically settled lifecycle",
+        "Raw recorder passed:false, actual controller exit0 and unexecuted public privacy projection remain distinct; no public redecoding of omitted private bytes"
+      ],
+      "result": {
+        "state": "partial_retained_Original_framework_API_key_Source32",
+        "Source_cases_passed": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false,
+        "fully_verified": false,
+        "performance_verified": false,
+        "raw_recorder_passed": false,
+        "projection_executed": false
+      },
+      "remaining": [
+        "Only recorded roles/input/error cases; no complete endpoint role/grammar matrix",
+        "APIClient/API-key authority only; no Source TCP/JWT, Native, packaged Main or browser verification",
+        "Privacy-adapted public predicates preserve opaque evidence for omitted credential/SQL/binary Redis bytes, without claiming their public redecoding"
+      ]
+    },
+    {
+      "contract_id": "route-2560f46761708905bcfa:DELETE",
+      "source_handler": "core.api_views.CoreSettingsViewSet",
+      "pattern_exact": "api/core/^settings/(?P<pk>[^/.]+)/$",
+      "method": "DELETE",
+      "source_action": "destroy",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Source32:route-2560f46761708905bcfa:DELETE",
+      "observed_roles": [
+        "admin",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "Source_role_definition": {
+            "id": 1,
+            "user_level": 10
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        },
+        "standard": {
+          "Source_role_definition": {
+            "id": 2,
+            "user_level": 1
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        }
+      },
+      "cases": [
+        {
+          "Source_index": 13,
+          "label": "missing_delete_ignores_body",
+          "role": "admin",
+          "method": "DELETE",
+          "path": "/api/core/settings/1000001002/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "destroy",
+            "kwargs": {
+              "pk": "1000001002"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 404,
+          "response_body_bytes": 53,
+          "response_body_sha256": "fd0ca29c308e5f3a4e11317aaa112de68bfd6a1fd55dc06be72817064feadb89",
+          "public_observation_json_pointer": "/requests/13",
+          "privacy_projected_observation_sha256": "dd6d3805574ff343ee786e66ea60023c6f8930fd7de3113ab7b75de4d15932e7",
+          "case_definition_sha256": "b9cd37706e2ab7041998510febebce86883ed4989dba954e43120b6e39925852",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 14,
+          "label": "standard_delete_refusal",
+          "role": "standard",
+          "method": "DELETE",
+          "path": "/api/core/settings/1003/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "destroy",
+            "kwargs": {
+              "pk": "1003"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 403,
+          "response_body_bytes": 63,
+          "response_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "public_observation_json_pointer": "/requests/14",
+          "privacy_projected_observation_sha256": "4f83aaf02af5dee7f733802839f1838e4398a42bd9df6098582c753c6aa45626",
+          "case_definition_sha256": "39c43f902404f08dfeb2c4e7e6fc34623b675d21c54b27a1690a2c1b5ad78098",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 15,
+          "label": "delete_created",
+          "role": "admin",
+          "method": "DELETE",
+          "path": "/api/core/settings/1003/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "destroy",
+            "kwargs": {
+              "pk": "1003"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 204,
+          "response_body_bytes": 0,
+          "response_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "public_observation_json_pointer": "/requests/15",
+          "privacy_projected_observation_sha256": "127be403023bdd03d1f64f0f76d28f9a08baab81c54635504d7758c4eed13a45",
+          "case_definition_sha256": "a569f271bad8d2394df44b19993aa80e1023d5777a1d5f9c52f28a8f33bf2b31",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 16,
+          "label": "repeat_delete_missing",
+          "role": "admin",
+          "method": "DELETE",
+          "path": "/api/core/settings/1003/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "destroy",
+            "kwargs": {
+              "pk": "1003"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 404,
+          "response_body_bytes": 53,
+          "response_body_sha256": "fd0ca29c308e5f3a4e11317aaa112de68bfd6a1fd55dc06be72817064feadb89",
+          "public_observation_json_pointer": "/requests/16",
+          "privacy_projected_observation_sha256": "bed2443f08a37db6cfe987fbcdd4c83ad909b830b8a90a3c35cd38cf343b0196",
+          "case_definition_sha256": "ca23ff2823772d27b15ff15a8ceae97519c7fe77d73c77af054f9bd66e62ff9d",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 26,
+          "label": "delete_epg",
+          "role": "admin",
+          "method": "DELETE",
+          "path": "/api/core/settings/1005/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "destroy",
+            "kwargs": {
+              "pk": "1005"
+            },
+            "url_name": "coresettings-detail"
+          },
+          "status": 204,
+          "response_body_bytes": 0,
+          "response_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "public_observation_json_pointer": "/requests/26",
+          "privacy_projected_observation_sha256": "2394ee59bb466d9a2e2a8175047e9f301457aaff4d5f2b7b18b74c99f5e86253",
+          "case_definition_sha256": "b9c627f4a35afa86bd29d3b3481e2a633aef134cb3a655ff6e1f8d7913ff6ca1",
+          "projection_executed": false
+        }
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Exact observed resolver class/action/URL-name and unformatted path bind every case to one pinned discovery operation; no format aliases or collection GET inferred",
+        "Existing public verifier checks all 32 privacy-adapted semantic predicates, exact case/setup definitions, full mandatory snapshot coverage and physically settled lifecycle",
+        "Raw recorder passed:false, actual controller exit0 and unexecuted public privacy projection remain distinct; no public redecoding of omitted private bytes"
+      ],
+      "result": {
+        "state": "partial_retained_Original_framework_API_key_Source32",
+        "Source_cases_passed": 5,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false,
+        "fully_verified": false,
+        "performance_verified": false,
+        "raw_recorder_passed": false,
+        "projection_executed": false
+      },
+      "remaining": [
+        "Only recorded roles/input/error cases; no complete endpoint role/grammar matrix",
+        "APIClient/API-key authority only; no Source TCP/JWT, Native, packaged Main or browser verification",
+        "Privacy-adapted public predicates preserve opaque evidence for omitted credential/SQL/binary Redis bytes, without claiming their public redecoding"
+      ]
+    },
+    {
+      "contract_id": "route-162671b3862403093cd4:POST",
+      "source_handler": "core.api_views.CoreSettingsViewSet",
+      "pattern_exact": "api/core/^settings/check/$",
+      "method": "POST",
+      "source_action": "check",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Source32:route-162671b3862403093cd4:POST",
+      "observed_roles": [
+        "admin",
+        "admin_denied",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "Source_role_definition": {
+            "id": 1,
+            "user_level": 10
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        },
+        "admin_denied": {
+          "Source_role_definition": {
+            "id": 3,
+            "user_level": 10,
+            "custom_ui": "192.0.2.0/24"
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        },
+        "standard": {
+          "Source_role_definition": {
+            "id": 2,
+            "user_level": 1
+          },
+          "authentication": "real persisted Source API key; private bytes retained by hash",
+          "TCP_or_JWT_qualified": false
+        }
+      },
+      "cases": [
+        {
+          "Source_index": 27,
+          "label": "check_network_membership",
+          "role": "admin",
+          "method": "POST",
+          "path": "/api/core/settings/check/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "check",
+            "kwargs": {},
+            "url_name": "coresettings-check"
+          },
+          "status": 200,
+          "response_body_bytes": 56,
+          "response_body_sha256": "957321b6f4a48241b29e7502c75a726c1d880891eaa2841e7025ed708dbfa60d",
+          "public_observation_json_pointer": "/requests/27",
+          "privacy_projected_observation_sha256": "4f6a2d36398c96f17b72cd15b142e98e8204967cfd048730d54612d4bd47d2bf",
+          "case_definition_sha256": "15e55c606b8c4939694c04c76f57ebff2dff53c866048b4b81a83d14b1818be6",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 28,
+          "label": "check_invalid_CIDR",
+          "role": "admin",
+          "method": "POST",
+          "path": "/api/core/settings/check/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "check",
+            "kwargs": {},
+            "url_name": "coresettings-check"
+          },
+          "status": 200,
+          "response_body_bytes": 57,
+          "response_body_sha256": "38839d2d3745894eca0cb88c2ed57c0ce97fe94b727e890127cf8851fcbe9339",
+          "public_observation_json_pointer": "/requests/28",
+          "privacy_projected_observation_sha256": "9812b69d3555a77e95aa1810628135d8b9804a82853daf01cb684dd52be081d7",
+          "case_definition_sha256": "c384ded9b4bc739a6420e15a02eb1985eaa0d95c856c12384d085e3f0b932a85",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 29,
+          "label": "standard_check_refusal",
+          "role": "standard",
+          "method": "POST",
+          "path": "/api/core/settings/check/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "check",
+            "kwargs": {},
+            "url_name": "coresettings-check"
+          },
+          "status": 403,
+          "response_body_bytes": 63,
+          "response_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "public_observation_json_pointer": "/requests/29",
+          "privacy_projected_observation_sha256": "402eaa83903434bb5de8142cf662afa1204d33440ebe3e663b6b50f0aa33f58a",
+          "case_definition_sha256": "a5635bf9e73bad003a9deab9b670bfc5a73115b650b053414d72a9a5e6f26d80",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 30,
+          "label": "UI_denied_admin_check",
+          "role": "admin_denied",
+          "method": "POST",
+          "path": "/api/core/settings/check/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "check",
+            "kwargs": {},
+            "url_name": "coresettings-check"
+          },
+          "status": 403,
+          "response_body_bytes": 63,
+          "response_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "public_observation_json_pointer": "/requests/30",
+          "privacy_projected_observation_sha256": "2ea41b8fd9795449de7aec07cdf4aa30bade91792dc7e09ab4ea9718874ef85c",
+          "case_definition_sha256": "e9890371e21f9625b908a0062c574b1597760c27938279c392d70ff4f71c2d9f",
+          "projection_executed": false
+        },
+        {
+          "Source_index": 31,
+          "label": "check_unknown_key",
+          "role": "admin",
+          "method": "POST",
+          "path": "/api/core/settings/check/",
+          "actual_resolver": {
+            "class": "core.api_views.CoreSettingsViewSet",
+            "action": "check",
+            "kwargs": {},
+            "url_name": "coresettings-check"
+          },
+          "status": 200,
+          "response_body_bytes": 2,
+          "response_body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+          "public_observation_json_pointer": "/requests/31",
+          "privacy_projected_observation_sha256": "508369a30e402aecef118deff4e907c8d58edf1c44053a252c8e196656d3b1c6",
+          "case_definition_sha256": "f265888a1d3ed0acae7e8d48b65b54f3dd594abcce1cc3eb5dd67f755ebeb413",
+          "projection_executed": false
+        }
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Exact observed resolver class/action/URL-name and unformatted path bind every case to one pinned discovery operation; no format aliases or collection GET inferred",
+        "Existing public verifier checks all 32 privacy-adapted semantic predicates, exact case/setup definitions, full mandatory snapshot coverage and physically settled lifecycle",
+        "Raw recorder passed:false, actual controller exit0 and unexecuted public privacy projection remain distinct; no public redecoding of omitted private bytes"
+      ],
+      "result": {
+        "state": "partial_retained_Original_framework_API_key_Source32",
+        "Source_cases_passed": 5,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false,
+        "fully_verified": false,
+        "performance_verified": false,
+        "raw_recorder_passed": false,
+        "projection_executed": false
+      },
+      "remaining": [
+        "Only recorded roles/input/error cases; no complete endpoint role/grammar matrix",
+        "APIClient/API-key authority only; no Source TCP/JWT, Native, packaged Main or browser verification",
+        "Privacy-adapted public predicates preserve opaque evidence for omitted credential/SQL/binary Redis bytes, without claiming their public redecoding"
+      ]
+    }
+  ],
+  "fixtures": {
+    "retained-Source32:route-4e613bb9583a369dde8a:POST": {
+      "id": "retained-Source32:route-4e613bb9583a369dde8a:POST",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "original_executed_executor_seal_sha256": "a56abb23005deed4791f08cc986bb175098ca40dc699f156abb93f4927f6c5d8",
+      "original_private_capture_sha256": "1582281e1ed139075077e66f583e266cf209855a913ff5a040c056831a9ea801",
+      "executed_definition_path": "scripts/rust-contracts/core-settings-source32/executed-executor/definition/plan.json",
+      "executed_definition_sha256": "8179281cf99bf879e549ad51758aaf968bd712096a23e55a9ec65e2d5541f442",
+      "public_packet_inventory": {
+        "path": "scripts/rust-contracts/core-settings-source32/packet-inventory.json",
+        "sha256": "846b118db1a7497e98cc617b815f3a90a8ba9a68a3e7246017d0d2b30902a3f2"
+      },
+      "setup": {
+        "owned_seed_and_API_key_roles": {
+          "mode": "owned_database_only; retain initialized rows before replacing exact selected fixture tables",
+          "settings": [
+            {
+              "id": 1000,
+              "key": "network_access",
+              "name": "Owned network",
+              "value": {
+                "UI": "127.0.0.0/8"
+              }
+            },
+            {
+              "id": 1001,
+              "key": "system_settings",
+              "name": "Owned system",
+              "value": {
+                "time_zone": "UTC"
+              }
+            },
+            {
+              "id": 1002,
+              "key": "owned.settings.foreign",
+              "name": "Foreign sentinel",
+              "value": {
+                "untouched": true
+              }
+            }
+          ],
+          "settings_sequence": {
+            "last_value": 1002,
+            "is_called": true
+          },
+          "epg_row": "absent",
+          "cache": "explicit fixture sentinels for owned.settings.new and owned.settings.renamed only, preserve raw before first request; no imported auth/version/system cache"
+        },
+        "auth": {
+          "kind": "persisted_API_key_only",
+          "force_authenticate": false,
+          "REMOTE_ADDR": "127.0.0.1",
+          "roles": {
+            "admin": {
+              "id": 1,
+              "user_level": 10
+            },
+            "standard": {
+              "id": 2,
+              "user_level": 1
+            },
+            "admin_denied": {
+              "id": 3,
+              "user_level": 10,
+              "custom_ui": "192.0.2.0/24"
+            },
+            "anonymous": null
+          }
+        },
+        "target_policy": {
+          "created": "actual successful case5 returned id, retain binding after delete",
+          "array": "actual case18 returned id",
+          "epg": "actual case23 returned id",
+          "missing": 1000001002
+        },
+        "ownership": {
+          "no_external_IO": true,
+          "network": "internal owned PostgreSQL/Redis only",
+          "startup": "real management-shell marker before django.setup and assert should_skip_initialization; no app method patches",
+          "default_audit": "literal before/after named11 plus full62tables/59sequences, untouched default DB",
+          "cleanup": "begin 90s overall deadline before post-request checks; all child waits/pipes, backend absence, exact project/CID and observed host PID identities",
+          "once": "exact reviewed seal + fresh output and one request sequence, no automatic retry"
+        },
+        "named_case_definition_indices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          17,
+          22
+        ]
+      },
+      "actual_controller_exit": 0,
+      "raw_recorder_passed": false,
+      "projected_observations_executed": false,
+      "transport_scope": "Actual Original URL resolver/DRF APIClient with persisted API keys; no TCP/JWT, Native/Main/default-worker or performance authority",
+      "privacy_scope": "Existing Root-reviewed projection keeps exact response bytes/resolver/roles/settings/effects. Credential/derivation bytes, accounts-user serialization and binary Redis/receiver identities remain private-hash evidence; adapted predicates do not publicly recompute them."
+    },
+    "retained-Source32:route-2560f46761708905bcfa:GET": {
+      "id": "retained-Source32:route-2560f46761708905bcfa:GET",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "original_executed_executor_seal_sha256": "a56abb23005deed4791f08cc986bb175098ca40dc699f156abb93f4927f6c5d8",
+      "original_private_capture_sha256": "1582281e1ed139075077e66f583e266cf209855a913ff5a040c056831a9ea801",
+      "executed_definition_path": "scripts/rust-contracts/core-settings-source32/executed-executor/definition/plan.json",
+      "executed_definition_sha256": "8179281cf99bf879e549ad51758aaf968bd712096a23e55a9ec65e2d5541f442",
+      "public_packet_inventory": {
+        "path": "scripts/rust-contracts/core-settings-source32/packet-inventory.json",
+        "sha256": "846b118db1a7497e98cc617b815f3a90a8ba9a68a3e7246017d0d2b30902a3f2"
+      },
+      "setup": {
+        "owned_seed_and_API_key_roles": {
+          "mode": "owned_database_only; retain initialized rows before replacing exact selected fixture tables",
+          "settings": [
+            {
+              "id": 1000,
+              "key": "network_access",
+              "name": "Owned network",
+              "value": {
+                "UI": "127.0.0.0/8"
+              }
+            },
+            {
+              "id": 1001,
+              "key": "system_settings",
+              "name": "Owned system",
+              "value": {
+                "time_zone": "UTC"
+              }
+            },
+            {
+              "id": 1002,
+              "key": "owned.settings.foreign",
+              "name": "Foreign sentinel",
+              "value": {
+                "untouched": true
+              }
+            }
+          ],
+          "settings_sequence": {
+            "last_value": 1002,
+            "is_called": true
+          },
+          "epg_row": "absent",
+          "cache": "explicit fixture sentinels for owned.settings.new and owned.settings.renamed only, preserve raw before first request; no imported auth/version/system cache"
+        },
+        "auth": {
+          "kind": "persisted_API_key_only",
+          "force_authenticate": false,
+          "REMOTE_ADDR": "127.0.0.1",
+          "roles": {
+            "admin": {
+              "id": 1,
+              "user_level": 10
+            },
+            "standard": {
+              "id": 2,
+              "user_level": 1
+            },
+            "admin_denied": {
+              "id": 3,
+              "user_level": 10,
+              "custom_ui": "192.0.2.0/24"
+            },
+            "anonymous": null
+          }
+        },
+        "target_policy": {
+          "created": "actual successful case5 returned id, retain binding after delete",
+          "array": "actual case18 returned id",
+          "epg": "actual case23 returned id",
+          "missing": 1000001002
+        },
+        "ownership": {
+          "no_external_IO": true,
+          "network": "internal owned PostgreSQL/Redis only",
+          "startup": "real management-shell marker before django.setup and assert should_skip_initialization; no app method patches",
+          "default_audit": "literal before/after named11 plus full62tables/59sequences, untouched default DB",
+          "cleanup": "begin 90s overall deadline before post-request checks; all child waits/pipes, backend absence, exact project/CID and observed host PID identities",
+          "once": "exact reviewed seal + fresh output and one request sequence, no automatic retry"
+        },
+        "named_case_definition_indices": [
+          6
+        ]
+      },
+      "actual_controller_exit": 0,
+      "raw_recorder_passed": false,
+      "projected_observations_executed": false,
+      "transport_scope": "Actual Original URL resolver/DRF APIClient with persisted API keys; no TCP/JWT, Native/Main/default-worker or performance authority",
+      "privacy_scope": "Existing Root-reviewed projection keeps exact response bytes/resolver/roles/settings/effects. Credential/derivation bytes, accounts-user serialization and binary Redis/receiver identities remain private-hash evidence; adapted predicates do not publicly recompute them."
+    },
+    "retained-Source32:route-2560f46761708905bcfa:PATCH": {
+      "id": "retained-Source32:route-2560f46761708905bcfa:PATCH",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "original_executed_executor_seal_sha256": "a56abb23005deed4791f08cc986bb175098ca40dc699f156abb93f4927f6c5d8",
+      "original_private_capture_sha256": "1582281e1ed139075077e66f583e266cf209855a913ff5a040c056831a9ea801",
+      "executed_definition_path": "scripts/rust-contracts/core-settings-source32/executed-executor/definition/plan.json",
+      "executed_definition_sha256": "8179281cf99bf879e549ad51758aaf968bd712096a23e55a9ec65e2d5541f442",
+      "public_packet_inventory": {
+        "path": "scripts/rust-contracts/core-settings-source32/packet-inventory.json",
+        "sha256": "846b118db1a7497e98cc617b815f3a90a8ba9a68a3e7246017d0d2b30902a3f2"
+      },
+      "setup": {
+        "owned_seed_and_API_key_roles": {
+          "mode": "owned_database_only; retain initialized rows before replacing exact selected fixture tables",
+          "settings": [
+            {
+              "id": 1000,
+              "key": "network_access",
+              "name": "Owned network",
+              "value": {
+                "UI": "127.0.0.0/8"
+              }
+            },
+            {
+              "id": 1001,
+              "key": "system_settings",
+              "name": "Owned system",
+              "value": {
+                "time_zone": "UTC"
+              }
+            },
+            {
+              "id": 1002,
+              "key": "owned.settings.foreign",
+              "name": "Foreign sentinel",
+              "value": {
+                "untouched": true
+              }
+            }
+          ],
+          "settings_sequence": {
+            "last_value": 1002,
+            "is_called": true
+          },
+          "epg_row": "absent",
+          "cache": "explicit fixture sentinels for owned.settings.new and owned.settings.renamed only, preserve raw before first request; no imported auth/version/system cache"
+        },
+        "auth": {
+          "kind": "persisted_API_key_only",
+          "force_authenticate": false,
+          "REMOTE_ADDR": "127.0.0.1",
+          "roles": {
+            "admin": {
+              "id": 1,
+              "user_level": 10
+            },
+            "standard": {
+              "id": 2,
+              "user_level": 1
+            },
+            "admin_denied": {
+              "id": 3,
+              "user_level": 10,
+              "custom_ui": "192.0.2.0/24"
+            },
+            "anonymous": null
+          }
+        },
+        "target_policy": {
+          "created": "actual successful case5 returned id, retain binding after delete",
+          "array": "actual case18 returned id",
+          "epg": "actual case23 returned id",
+          "missing": 1000001002
+        },
+        "ownership": {
+          "no_external_IO": true,
+          "network": "internal owned PostgreSQL/Redis only",
+          "startup": "real management-shell marker before django.setup and assert should_skip_initialization; no app method patches",
+          "default_audit": "literal before/after named11 plus full62tables/59sequences, untouched default DB",
+          "cleanup": "begin 90s overall deadline before post-request checks; all child waits/pipes, backend absence, exact project/CID and observed host PID identities",
+          "once": "exact reviewed seal + fresh output and one request sequence, no automatic retry"
+        },
+        "named_case_definition_indices": [
+          7,
+          10,
+          11,
+          12,
+          18,
+          19,
+          20,
+          21,
+          23,
+          24,
+          25
+        ]
+      },
+      "actual_controller_exit": 0,
+      "raw_recorder_passed": false,
+      "projected_observations_executed": false,
+      "transport_scope": "Actual Original URL resolver/DRF APIClient with persisted API keys; no TCP/JWT, Native/Main/default-worker or performance authority",
+      "privacy_scope": "Existing Root-reviewed projection keeps exact response bytes/resolver/roles/settings/effects. Credential/derivation bytes, accounts-user serialization and binary Redis/receiver identities remain private-hash evidence; adapted predicates do not publicly recompute them."
+    },
+    "retained-Source32:route-2560f46761708905bcfa:PUT": {
+      "id": "retained-Source32:route-2560f46761708905bcfa:PUT",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "original_executed_executor_seal_sha256": "a56abb23005deed4791f08cc986bb175098ca40dc699f156abb93f4927f6c5d8",
+      "original_private_capture_sha256": "1582281e1ed139075077e66f583e266cf209855a913ff5a040c056831a9ea801",
+      "executed_definition_path": "scripts/rust-contracts/core-settings-source32/executed-executor/definition/plan.json",
+      "executed_definition_sha256": "8179281cf99bf879e549ad51758aaf968bd712096a23e55a9ec65e2d5541f442",
+      "public_packet_inventory": {
+        "path": "scripts/rust-contracts/core-settings-source32/packet-inventory.json",
+        "sha256": "846b118db1a7497e98cc617b815f3a90a8ba9a68a3e7246017d0d2b30902a3f2"
+      },
+      "setup": {
+        "owned_seed_and_API_key_roles": {
+          "mode": "owned_database_only; retain initialized rows before replacing exact selected fixture tables",
+          "settings": [
+            {
+              "id": 1000,
+              "key": "network_access",
+              "name": "Owned network",
+              "value": {
+                "UI": "127.0.0.0/8"
+              }
+            },
+            {
+              "id": 1001,
+              "key": "system_settings",
+              "name": "Owned system",
+              "value": {
+                "time_zone": "UTC"
+              }
+            },
+            {
+              "id": 1002,
+              "key": "owned.settings.foreign",
+              "name": "Foreign sentinel",
+              "value": {
+                "untouched": true
+              }
+            }
+          ],
+          "settings_sequence": {
+            "last_value": 1002,
+            "is_called": true
+          },
+          "epg_row": "absent",
+          "cache": "explicit fixture sentinels for owned.settings.new and owned.settings.renamed only, preserve raw before first request; no imported auth/version/system cache"
+        },
+        "auth": {
+          "kind": "persisted_API_key_only",
+          "force_authenticate": false,
+          "REMOTE_ADDR": "127.0.0.1",
+          "roles": {
+            "admin": {
+              "id": 1,
+              "user_level": 10
+            },
+            "standard": {
+              "id": 2,
+              "user_level": 1
+            },
+            "admin_denied": {
+              "id": 3,
+              "user_level": 10,
+              "custom_ui": "192.0.2.0/24"
+            },
+            "anonymous": null
+          }
+        },
+        "target_policy": {
+          "created": "actual successful case5 returned id, retain binding after delete",
+          "array": "actual case18 returned id",
+          "epg": "actual case23 returned id",
+          "missing": 1000001002
+        },
+        "ownership": {
+          "no_external_IO": true,
+          "network": "internal owned PostgreSQL/Redis only",
+          "startup": "real management-shell marker before django.setup and assert should_skip_initialization; no app method patches",
+          "default_audit": "literal before/after named11 plus full62tables/59sequences, untouched default DB",
+          "cleanup": "begin 90s overall deadline before post-request checks; all child waits/pipes, backend absence, exact project/CID and observed host PID identities",
+          "once": "exact reviewed seal + fresh output and one request sequence, no automatic retry"
+        },
+        "named_case_definition_indices": [
+          8,
+          9
+        ]
+      },
+      "actual_controller_exit": 0,
+      "raw_recorder_passed": false,
+      "projected_observations_executed": false,
+      "transport_scope": "Actual Original URL resolver/DRF APIClient with persisted API keys; no TCP/JWT, Native/Main/default-worker or performance authority",
+      "privacy_scope": "Existing Root-reviewed projection keeps exact response bytes/resolver/roles/settings/effects. Credential/derivation bytes, accounts-user serialization and binary Redis/receiver identities remain private-hash evidence; adapted predicates do not publicly recompute them."
+    },
+    "retained-Source32:route-2560f46761708905bcfa:DELETE": {
+      "id": "retained-Source32:route-2560f46761708905bcfa:DELETE",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "original_executed_executor_seal_sha256": "a56abb23005deed4791f08cc986bb175098ca40dc699f156abb93f4927f6c5d8",
+      "original_private_capture_sha256": "1582281e1ed139075077e66f583e266cf209855a913ff5a040c056831a9ea801",
+      "executed_definition_path": "scripts/rust-contracts/core-settings-source32/executed-executor/definition/plan.json",
+      "executed_definition_sha256": "8179281cf99bf879e549ad51758aaf968bd712096a23e55a9ec65e2d5541f442",
+      "public_packet_inventory": {
+        "path": "scripts/rust-contracts/core-settings-source32/packet-inventory.json",
+        "sha256": "846b118db1a7497e98cc617b815f3a90a8ba9a68a3e7246017d0d2b30902a3f2"
+      },
+      "setup": {
+        "owned_seed_and_API_key_roles": {
+          "mode": "owned_database_only; retain initialized rows before replacing exact selected fixture tables",
+          "settings": [
+            {
+              "id": 1000,
+              "key": "network_access",
+              "name": "Owned network",
+              "value": {
+                "UI": "127.0.0.0/8"
+              }
+            },
+            {
+              "id": 1001,
+              "key": "system_settings",
+              "name": "Owned system",
+              "value": {
+                "time_zone": "UTC"
+              }
+            },
+            {
+              "id": 1002,
+              "key": "owned.settings.foreign",
+              "name": "Foreign sentinel",
+              "value": {
+                "untouched": true
+              }
+            }
+          ],
+          "settings_sequence": {
+            "last_value": 1002,
+            "is_called": true
+          },
+          "epg_row": "absent",
+          "cache": "explicit fixture sentinels for owned.settings.new and owned.settings.renamed only, preserve raw before first request; no imported auth/version/system cache"
+        },
+        "auth": {
+          "kind": "persisted_API_key_only",
+          "force_authenticate": false,
+          "REMOTE_ADDR": "127.0.0.1",
+          "roles": {
+            "admin": {
+              "id": 1,
+              "user_level": 10
+            },
+            "standard": {
+              "id": 2,
+              "user_level": 1
+            },
+            "admin_denied": {
+              "id": 3,
+              "user_level": 10,
+              "custom_ui": "192.0.2.0/24"
+            },
+            "anonymous": null
+          }
+        },
+        "target_policy": {
+          "created": "actual successful case5 returned id, retain binding after delete",
+          "array": "actual case18 returned id",
+          "epg": "actual case23 returned id",
+          "missing": 1000001002
+        },
+        "ownership": {
+          "no_external_IO": true,
+          "network": "internal owned PostgreSQL/Redis only",
+          "startup": "real management-shell marker before django.setup and assert should_skip_initialization; no app method patches",
+          "default_audit": "literal before/after named11 plus full62tables/59sequences, untouched default DB",
+          "cleanup": "begin 90s overall deadline before post-request checks; all child waits/pipes, backend absence, exact project/CID and observed host PID identities",
+          "once": "exact reviewed seal + fresh output and one request sequence, no automatic retry"
+        },
+        "named_case_definition_indices": [
+          13,
+          14,
+          15,
+          16,
+          26
+        ]
+      },
+      "actual_controller_exit": 0,
+      "raw_recorder_passed": false,
+      "projected_observations_executed": false,
+      "transport_scope": "Actual Original URL resolver/DRF APIClient with persisted API keys; no TCP/JWT, Native/Main/default-worker or performance authority",
+      "privacy_scope": "Existing Root-reviewed projection keeps exact response bytes/resolver/roles/settings/effects. Credential/derivation bytes, accounts-user serialization and binary Redis/receiver identities remain private-hash evidence; adapted predicates do not publicly recompute them."
+    },
+    "retained-Source32:route-162671b3862403093cd4:POST": {
+      "id": "retained-Source32:route-162671b3862403093cd4:POST",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "original_executed_executor_seal_sha256": "a56abb23005deed4791f08cc986bb175098ca40dc699f156abb93f4927f6c5d8",
+      "original_private_capture_sha256": "1582281e1ed139075077e66f583e266cf209855a913ff5a040c056831a9ea801",
+      "executed_definition_path": "scripts/rust-contracts/core-settings-source32/executed-executor/definition/plan.json",
+      "executed_definition_sha256": "8179281cf99bf879e549ad51758aaf968bd712096a23e55a9ec65e2d5541f442",
+      "public_packet_inventory": {
+        "path": "scripts/rust-contracts/core-settings-source32/packet-inventory.json",
+        "sha256": "846b118db1a7497e98cc617b815f3a90a8ba9a68a3e7246017d0d2b30902a3f2"
+      },
+      "setup": {
+        "owned_seed_and_API_key_roles": {
+          "mode": "owned_database_only; retain initialized rows before replacing exact selected fixture tables",
+          "settings": [
+            {
+              "id": 1000,
+              "key": "network_access",
+              "name": "Owned network",
+              "value": {
+                "UI": "127.0.0.0/8"
+              }
+            },
+            {
+              "id": 1001,
+              "key": "system_settings",
+              "name": "Owned system",
+              "value": {
+                "time_zone": "UTC"
+              }
+            },
+            {
+              "id": 1002,
+              "key": "owned.settings.foreign",
+              "name": "Foreign sentinel",
+              "value": {
+                "untouched": true
+              }
+            }
+          ],
+          "settings_sequence": {
+            "last_value": 1002,
+            "is_called": true
+          },
+          "epg_row": "absent",
+          "cache": "explicit fixture sentinels for owned.settings.new and owned.settings.renamed only, preserve raw before first request; no imported auth/version/system cache"
+        },
+        "auth": {
+          "kind": "persisted_API_key_only",
+          "force_authenticate": false,
+          "REMOTE_ADDR": "127.0.0.1",
+          "roles": {
+            "admin": {
+              "id": 1,
+              "user_level": 10
+            },
+            "standard": {
+              "id": 2,
+              "user_level": 1
+            },
+            "admin_denied": {
+              "id": 3,
+              "user_level": 10,
+              "custom_ui": "192.0.2.0/24"
+            },
+            "anonymous": null
+          }
+        },
+        "target_policy": {
+          "created": "actual successful case5 returned id, retain binding after delete",
+          "array": "actual case18 returned id",
+          "epg": "actual case23 returned id",
+          "missing": 1000001002
+        },
+        "ownership": {
+          "no_external_IO": true,
+          "network": "internal owned PostgreSQL/Redis only",
+          "startup": "real management-shell marker before django.setup and assert should_skip_initialization; no app method patches",
+          "default_audit": "literal before/after named11 plus full62tables/59sequences, untouched default DB",
+          "cleanup": "begin 90s overall deadline before post-request checks; all child waits/pipes, backend absence, exact project/CID and observed host PID identities",
+          "once": "exact reviewed seal + fresh output and one request sequence, no automatic retry"
+        },
+        "named_case_definition_indices": [
+          27,
+          28,
+          29,
+          30,
+          31
+        ]
+      },
+      "actual_controller_exit": 0,
+      "raw_recorder_passed": false,
+      "projected_observations_executed": false,
+      "transport_scope": "Actual Original URL resolver/DRF APIClient with persisted API keys; no TCP/JWT, Native/Main/default-worker or performance authority",
+      "privacy_scope": "Existing Root-reviewed projection keeps exact response bytes/resolver/roles/settings/effects. Credential/derivation bytes, accounts-user serialization and binary Redis/receiver identities remain private-hash evidence; adapted predicates do not publicly recompute them."
+    }
+  },
+  "Source_observations": 32,
+  "operation_count": 6,
+  "new_Source_executions": 0,
+  "Native_coverage_increased": false,
+  "fully_verified_operations": 0
+}
