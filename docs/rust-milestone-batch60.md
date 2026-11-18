@@ -74,3 +74,29 @@ pre-application manifest failure and later helper initialization failure remain
 preserved. No complete M0–M9 milestone, full migration, full transport identity
 or application CPU/memory improvement is accepted here. Earlier Candidate47/52
 measurements are not carried forward as current gains.
+
+
+A separate [offline credential component qualification](../scripts/rust-integration/milestone-batch60/credential-offline-component/index.json)
+compares all nine retained observations and rejects fourteen negative controls.
+The original current credential context remains failed: its Movie after snapshot
+contains ten Source events versus seven Native events. Later retained snapshots
+contain all ten events in both runs. Per-reader snapshots observe different
+concurrent-stop phases. The scoped successor checks every intermediate row and
+sequence against its actual timestamp-bounded complete lifecycle, requires all
+three reader owners stopped and all six counters released, and retains all raw
+IDs, timestamps and prefix differences. An explicit injective event identity
+bijection checks every remaining field and observed FK; other SQL and ten
+non-event sequences remain strict. Actual per-run gateway IPs are independently
+bound to Docker namespace/network and published-port evidence.
+
+Raw stop allocation order and gateway addresses differ and remain visible; full
+literal SQL/event/header identity stays false. Retained complete-end evidence is
+explicitly distinct from a new Source capture. A future Native successor adds a
+fresh post-join event/counter SQL fence, without replaying Source business. This
+offline component pass does not change the current whole17 controller or grant
+application, milestone or performance acceptance.
+
+
+The [restart recovery](../scripts/rust-integration/milestone-batch60/restart-recovery/summary.json) preserves Candidate60 whole17 as **interrupted**, with no observed terminal exit. Its retained report contains thirteen passed contexts, three failed contexts, and the aggregate Comskip context still running. Nested manual Comskip3 and positive4 captures passed; natural automatic MARK started without a terminal capture, and natural CUT did not start. Credential event snapshot ordering, guide broker composition and the provider multiple-fresh-logo guard remain separate failures. Prepared fixes do not relabel this run.
+
+A host reboot retired the original command and Docker daemon. The original 3,121-input binding verifies 3,119 persistent files; two temporary helper scripts disappeared from `/tmp`, so complete input integrity cannot be claimed. The validation daemon was restored with its existing data and images. Three exact stopped containers were removed and project containers, networks and volumes were independently empty afterward. This recovery cleanup is distinct from successful original graceful teardown. All M0–M9 remain open; no current application performance gain is accepted.
