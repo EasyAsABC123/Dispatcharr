@@ -5,14 +5,15 @@ use std::{ffi::OsString, sync::OnceLock};
 
 const MAX_HOSTNAME_BYTES: usize = 255;
 const MAX_HEADER_BYTES: usize = 512;
-static PROCESS: OnceLock<Result<HeaderValue, InvalidIdentity>> = OnceLock::new();
+static PROCESS: OnceLock<Result<String, InvalidIdentity>> = OnceLock::new();
+static RESPONSE: OnceLock<Result<HeaderValue, InvalidIdentity>> = OnceLock::new();
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(super) struct InvalidIdentity;
 
 /// The Source manager mints its worker identity once, not once per response.
 /// A failed hostname syscall uses Source's four-digit fallback, not HOSTNAME.
-fn cached() -> &'static Result<HeaderValue, InvalidIdentity> {
+fn cached() -> &'static Result<String, InvalidIdentity> {
     cached_with(
         &PROCESS,
         || nix::unistd::gethostname().map_err(|_| ()),
@@ -21,24 +22,40 @@ fn cached() -> &'static Result<HeaderValue, InvalidIdentity> {
     )
 }
 fn cached_with(
-    cache: &OnceLock<Result<HeaderValue, InvalidIdentity>>,
+    cache: &OnceLock<Result<String, InvalidIdentity>>,
     hostname: impl FnOnce() -> Result<OsString, ()>,
     pid: impl FnOnce() -> u32,
     fallback: impl FnOnce() -> u16,
-) -> &Result<HeaderValue, InvalidIdentity> {
-    cache.get_or_init(|| build(hostname(), pid(), fallback))
+) -> &Result<String, InvalidIdentity> {
+    cache.get_or_init(|| build_raw(hostname(), pid(), fallback))
 }
 pub(super) fn initialize() {
-    let _ = cached();
+    let _ = current();
 }
 pub(super) fn current() -> Result<HeaderValue, InvalidIdentity> {
+    RESPONSE
+        .get_or_init(|| {
+            cached()
+                .as_ref()
+                .map_err(|_| InvalidIdentity)
+                .and_then(|value| response_value(value))
+        })
+        .clone()
+}
+/// Redis stores the original identity, while HTTP uses Django's conversion.
+/// Both originate from the same one-time hostname/PID or fallback decision.
+pub(super) fn metadata() -> Result<String, InvalidIdentity> {
     cached().clone()
 }
-fn build(
+/// Reject an invalid cached identity before any session or recovery mutation.
+pub(super) fn validate() -> Result<(), InvalidIdentity> {
+    cached().as_ref().map(|_| ()).map_err(|_| InvalidIdentity)
+}
+fn build_raw(
     hostname: Result<OsString, ()>,
     pid: u32,
     fallback: impl FnOnce() -> u16,
-) -> Result<HeaderValue, InvalidIdentity> {
+) -> Result<String, InvalidIdentity> {
     let value = match hostname {
         Ok(hostname) => {
             // Linux gethostname is bounded by nix's 256-byte syscall buffer.
@@ -58,7 +75,16 @@ fn build(
             format!("worker-{number}")
         }
     };
-    response_value(&value)
+    response_value(&value)?;
+    Ok(value)
+}
+#[cfg(test)]
+fn build(
+    hostname: Result<OsString, ()>,
+    pid: u32,
+    fallback: impl FnOnce() -> u16,
+) -> Result<HeaderValue, InvalidIdentity> {
+    response_value(&build_raw(hostname, pid, fallback)?)
 }
 
 /// Same Latin-1 / UTF-8 encoded-word choice as the existing Source image
@@ -216,6 +242,43 @@ mod tests {
         }
     }
     #[test]
+    fn raw_metadata_and_response_share_identity_without_losing_unicode() {
+        for name in ["ascii", "éclair", "東京"] {
+            let cache = OnceLock::new();
+            let raw = cached_with(
+                &cache,
+                || Ok(name.into()),
+                || 42,
+                || panic!("hostname succeeded"),
+            )
+            .as_ref()
+            .unwrap();
+            assert_eq!(raw, &format!("{name}-42"));
+            let header = response_value(raw).unwrap();
+            assert_eq!(
+                header,
+                build(Ok(name.into()), 42, || panic!("no fallback")).unwrap()
+            );
+            assert_eq!(
+                cached_with(
+                    &cache,
+                    || panic!("cached hostname"),
+                    || panic!("cached PID"),
+                    || panic!("cached fallback")
+                )
+                .as_ref()
+                .unwrap(),
+                raw,
+            );
+        }
+    }
+    #[test]
+    fn process_metadata_and_ascii_header_use_the_same_real_identity() {
+        let raw = metadata().unwrap();
+        assert_eq!(response_value(&raw).unwrap(), current().unwrap());
+        assert_eq!(metadata().unwrap(), raw);
+    }
+    #[test]
     fn process_cache_is_shared_by_threads_and_header_clones() {
         let expected = current().unwrap();
         for join in (0..8)
@@ -255,6 +318,7 @@ mod tests {
             nix::unistd::gethostname().unwrap().to_str().unwrap()
         );
         assert_ne!(row["hostname"], "untrusted-header-spoof");
+        assert_eq!(row["header"], row["metadata"],);
         assert_eq!(
             row["header"],
             format!(
@@ -272,7 +336,7 @@ mod tests {
         assert_eq!(value, current().unwrap());
         println!(
             "WORKER_PROBE:{}",
-            serde_json::json!({"hostname":nix::unistd::gethostname().unwrap().to_str().unwrap(),"pid":std::process::id(),"header":value.to_str().unwrap()})
+            serde_json::json!({"hostname":nix::unistd::gethostname().unwrap().to_str().unwrap(),"pid":std::process::id(),"header":value.to_str().unwrap(),"metadata":metadata().unwrap()})
         );
     }
     #[test]

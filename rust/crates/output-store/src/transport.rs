@@ -76,6 +76,7 @@ enum CommandScript {
     OneOff(Script),
     ResultWithPreflight(Script),
     PublicationWithPreflight(Script),
+    ReadWithPreflight(Script),
     Prepared(Arc<Script>),
 }
 impl CommandScript {
@@ -83,7 +84,8 @@ impl CommandScript {
         match self {
             Self::OneOff(script)
             | Self::ResultWithPreflight(script)
-            | Self::PublicationWithPreflight(script) => script,
+            | Self::PublicationWithPreflight(script)
+            | Self::ReadWithPreflight(script) => script,
             Self::Prepared(script) => script,
         }
     }
@@ -245,6 +247,29 @@ impl RedisTransport {
         )
         .await
     }
+    /// Socket readiness for a trusted compiled read-only Lua observation.
+    /// One existing permit, owner and physical deadline span PING and the
+    /// unchanged single script. Only a settled dropped PING may repeat once;
+    /// the script and every claim/mutation are never replayed here.
+    pub async fn command_read_classified<
+        T: redis::FromRedisValue + Send + 'static,
+        G: Send + 'static,
+    >(
+        &self,
+        source: &str,
+        keys: &[String],
+        args: &[&[u8]],
+        guard: G,
+    ) -> Result<(T, G), ClassifiedError> {
+        self.command_diagnostic_inner(
+            CommandScript::ReadWithPreflight(Script::new(source)),
+            keys,
+            args,
+            guard,
+            None,
+        )
+        .await
+    }
     async fn command_diagnostic_inner<
         T: redis::FromRedisValue + Send + 'static,
         G: Send + 'static,
@@ -368,6 +393,7 @@ impl RedisTransport {
                     &script,
                     CommandScript::ResultWithPreflight(_)
                         | CommandScript::PublicationWithPreflight(_)
+                        | CommandScript::ReadWithPreflight(_)
                 ) {
                     result_preflight(&mut connection).await?;
                 }

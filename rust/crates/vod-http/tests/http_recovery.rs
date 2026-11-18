@@ -107,6 +107,52 @@ async fn wait(mut condition: impl AsyncFnMut() -> bool) {
     .await
     .unwrap();
 }
+// Independent fixture expectation: do not ask the production identity helper,
+// since Redis and HTTP could otherwise agree on the same incorrect label.
+fn expected_ascii_worker_identity() -> String {
+    let hostname = nix::unistd::gethostname()
+        .expect("owned fixture kernel hostname")
+        .into_string()
+        .expect("owned fixture Unicode hostname");
+    assert!(
+        !hostname.is_empty()
+            && hostname.len() <= 255
+            && hostname
+                .bytes()
+                .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'.' | b'-' | b'_')),
+        "this physical fixture requires a nonempty ASCII hostname with letters/digits/period/hyphen/underscore; Unicode raw/header conversion has separate Source-bound coverage"
+    );
+    format!("{hostname}-{}", std::process::id())
+}
+
+async fn assert_worker_metadata_and_http(
+    redis: &mut redis::aio::MultiplexedConnection,
+    metadata: &str,
+    response: &reqwest::Response,
+    expected: &str,
+    phase: &str,
+) {
+    let raw: String = redis.hget(metadata, "worker_id").await.unwrap();
+    assert_eq!(raw, expected, "{phase}: Redis must use kernel hostname/PID");
+    assert!(
+        !raw.starts_with("rust-vod:"),
+        "{phase}: legacy Rust-only display label is not Source identity"
+    );
+    let header = response
+        .headers()
+        .get("x-worker-id")
+        .expect("actual HTTP worker identity header");
+    assert_eq!(
+        header.as_bytes(),
+        expected.as_bytes(),
+        "{phase}: actual HTTP must use the same independently expected ASCII identity"
+    );
+    println!(
+        "WORKER_METADATA_PHASE:{}",
+        serde_json::json!({"phase":phase,"independent_kernel_hostname_PID":expected,"Redis_worker_id":raw,"HTTP_X_Worker_ID":header.to_str().unwrap()}),
+    );
+}
+
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "owned valid MP4 + actual HTTP/Redis opt-in generation recovery"]
 async fn actual_http_old_and_new_bodies_survive_state_loss_and_source_close_accounting() {
@@ -187,6 +233,10 @@ async fn run_case(
             .unwrap();
     assert!(media.len() > 1_000_000 && media.len() <= 5 * 1024 * 1024);
     assert_eq!(&media[4..8], b"ftyp");
+    // Exactly the existing additional-entry fixture traverses all three
+    // metadata producers: fresh CREATE, absent-generation reopen, StillOwned.
+    let worker_identity = (extra_entry && !retired_reopen && !immediate && public_stop.is_none())
+        .then(expected_ascii_worker_identity);
     let idle_case = matches!(public_stop, Some("idle" | "idle-busy"));
     let idle_busy = public_stop == Some("idle-busy");
     let identity_case = public_stop == Some("identity");
@@ -408,6 +458,16 @@ async fn run_case(
     let owner = format!("{namespace}:vod:session:{id}:owner");
     let metadata = format!("vod_persistent_connection:{id}");
     let counter = format!("profile_connections:{profile}");
+    if let Some(expected) = worker_identity.as_deref() {
+        assert_worker_metadata_and_http(
+            &mut redis,
+            &metadata,
+            &old.response,
+            expected,
+            "fresh-create",
+        )
+        .await;
+    }
     if identity_case {
         let user: String = redis.hget(&metadata, "user_id").await.unwrap();
         assert_ne!(user, "unknown");
@@ -556,6 +616,16 @@ async fn run_case(
         .await
         .unwrap();
     assert_eq!(response.status(), 200);
+    if let Some(expected) = worker_identity.as_deref() {
+        assert_worker_metadata_and_http(
+            &mut redis,
+            &metadata,
+            &response,
+            expected,
+            "absent-generation-reopen",
+        )
+        .await;
+    }
     let mut young = Reader {
         response,
         pending: bytes::Bytes::new(),
@@ -579,6 +649,16 @@ async fn run_case(
             .await
             .unwrap();
         assert_eq!(response.status(), 200);
+        if let Some(expected) = worker_identity.as_deref() {
+            assert_worker_metadata_and_http(
+                &mut redis,
+                &metadata,
+                &response,
+                expected,
+                "owned-current-entry",
+            )
+            .await;
+        }
         let mut third = Reader {
             response,
             pending: bytes::Bytes::new(),
@@ -885,8 +965,11 @@ async fn run_case(
         wait(async || !redis.exists::<_, bool>(&metadata).await.unwrap()).await;
     }
     // Retain bounded valid MP4 prefixes for independent strict first-second decode.
-    std::fs::write("/evidence/old-prefix.mp4", old_bytes).unwrap();
-    std::fs::write("/evidence/young-prefix.mp4", young_bytes).unwrap();
+    let evidence = std::env::var_os("VOD_RECOVERY_EVIDENCE_DIR")
+        .map(std::path::PathBuf::from)
+        .unwrap_or_else(|| std::path::PathBuf::from("/evidence"));
+    std::fs::write(evidence.join("old-prefix.mp4"), old_bytes).unwrap();
+    std::fs::write(evidence.join("young-prefix.mp4"), young_bytes).unwrap();
     drop(young);
     assert!(
         engine.shutdown().await,

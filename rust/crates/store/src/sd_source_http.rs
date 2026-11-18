@@ -125,6 +125,10 @@ impl SdSourceHttp {
             Err(_) => StoreError::UnhandledRestFault.into_response(),
         };
         if lineup && response.status() != StatusCode::INTERNAL_SERVER_ERROR {
+            // Captured DRF content negotiation varies JSON and browsable HTML.
+            response
+                .headers_mut()
+                .insert("vary", axum::http::HeaderValue::from_static("Accept"));
             response.headers_mut().insert(
                 "allow",
                 axum::http::HeaderValue::from_static("GET, POST, DELETE, HEAD, OPTIONS"),
@@ -133,7 +137,7 @@ impl SdSourceHttp {
         response
     }
 }
-/// Source20 plus separately recovered21 action scope; no station job publication.
+/// Source20 plus separately recovered21 and new Source4 scoped action captures.
 async fn extended_lineup(
     peer: SocketAddr,
     request: Request,
@@ -155,9 +159,17 @@ async fn extended_lineup(
             serde_json::from_str(LINEUP_OPTIONS).map_err(|_| StoreError::UnhandledRestFault)?;
         return Ok(axum::Json(value).into_response());
     }
-    if method != Method::GET && method != Method::DELETE {
+    if method == Method::PUT {
+        // New Source4 administrator PUT capture: DRF rejects the
+        // method after authentication/permissions, before object/provider work.
+        return Err(StoreError::StatusBody(
+            405,
+            json!({"detail":"Method \"PUT\" not allowed."}),
+        ));
+    }
+    if method != Method::GET && method != Method::DELETE && method != Method::HEAD {
         return Err(StoreError::Unsupported(
-            "SD HEAD/PUT and wider method contracts remain unqualified",
+            "SD wider method contracts remain unqualified",
         ));
     }
     let writer = scoped.task_sql_writer()?;
@@ -184,6 +196,16 @@ async fn extended_lineup(
         if custom {return Err(StoreError::Unsupported("SD action custom SQL triggers require separate Source authority"))}
         // Source authenticates BEFORE touching DELETE request.data/lineup.
         let token=match lineup_token(&mut source).await? {Ok(token)=>token,Err(response)=>return Ok(response)};
+        if method==Method::HEAD {
+            // Source resolves the object and authenticates its SD token before
+            // falling through the action's GET/POST/DELETE branches. DRF's
+            // missing Response becomes Django's pinned stock500; HEAD emits
+            // no body, retaining the existing error representation's length.
+            // This does not run GET or fetch countries/provider lineups.
+            let mut response=StoreError::UnhandledRestFault.into_response();
+            *response.body_mut()=axum::body::Body::empty();
+            return Ok(response);
+        }
         if method==Method::GET {return get_lineups(&mut source,token).await}
         let media=request.headers().get("content-type").and_then(|v|v.to_str().ok()).map(|v|v.split(';').next().unwrap_or(v).trim().to_ascii_lowercase());
         if media.as_deref().is_some_and(|v|v!="application/json"){return Err(StoreError::StatusBody(415,json!({"detail":format!("Unsupported media type \"{}\" in request.",media.unwrap_or_default())})))}
@@ -330,11 +352,22 @@ async fn delete_lineup(
             ),
             other => auth_error(other),
         })?;
-    // Four remaining Source cases include service-error DELETE. Preserve a
-    // refusal for that unrun branch rather than claiming its error fidelity.
+    // Source4 actual service-error DELETE was provider503. Requests
+    // raises before decoding/persisting its payload; preserve the actual URL.
+    // Other service statuses still need independent Source characterization.
+    if reply.status == 503 {
+        let error = reply
+            .request_error()
+            .ok_or(StoreError::UnhandledRestFault)?;
+        return Ok(StoreError::StatusBody(
+            502,
+            json!({"error":format!("Failed to remove lineup: {error}")}),
+        )
+        .into_response());
+    }
     if reply.status >= 500 {
         return Err(StoreError::Unsupported(
-            "SD DELETE service-error response remains unqualified",
+            "SD DELETE other service-error responses remain unqualified",
         ));
     }
     let data = reply

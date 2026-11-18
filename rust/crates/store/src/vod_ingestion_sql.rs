@@ -539,7 +539,7 @@ pub(super) fn schema_statements() -> Vec<(&'static str, String)> {
     ]
 }
 
-const ADVANCED_CATEGORY_INSERT: &str = "INSERT INTO vod_vodcategory(name,category_type,created_at,updated_at) SELECT incoming.value,$2,$3,$3 FROM jsonb_array_elements_text($1) AS incoming(value) WHERE NOT EXISTS(SELECT 1 FROM vod_vodcategory c WHERE c.name=incoming.value AND c.category_type=$2) ON CONFLICT(name,category_type) DO NOTHING";
+const ADVANCED_CATEGORY_INSERT: &str = "INSERT INTO vod_vodcategory(name,category_type,created_at,updated_at) SELECT incoming.value,$2,$3,$3 FROM jsonb_array_elements_text($1) WITH ORDINALITY AS incoming(value,ordinal) WHERE NOT EXISTS(SELECT 1 FROM vod_vodcategory c WHERE c.name=incoming.value AND c.category_type=$2) ORDER BY incoming.ordinal ON CONFLICT(name,category_type) DO NOTHING";
 
 const ADVANCED_UNCATEGORIZED_INSERT: &str = "INSERT INTO vod_vodcategory(name,category_type,created_at,updated_at) SELECT 'Uncategorized',$1,$2,$2 WHERE NOT EXISTS(SELECT 1 FROM vod_vodcategory c WHERE c.name='Uncategorized' AND c.category_type=$1) ON CONFLICT(name,category_type) DO NOTHING";
 

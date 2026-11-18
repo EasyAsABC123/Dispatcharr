@@ -56,7 +56,7 @@ impl Jobs {
         let (reply, _held) = self
             .inner
             .broker
-            .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &["dvr".into()], &[], lease)
+            .command_read_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &["dvr".into()], &[], lease)
             .await
             .map_err(map)?;
         match reply.0 {
@@ -139,3 +139,7 @@ impl Jobs {
         .await
     }
 }
+
+#[cfg(test)]
+#[path = "recording_dvr_candidate_readiness_tests.rs"]
+mod candidate_readiness_tests;

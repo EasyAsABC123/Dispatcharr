@@ -39,6 +39,13 @@ fn now() -> String {
 fn unavailable() -> dispatcharr_store::StoreError {
     dispatcharr_store::StoreError::StatusBody(503, json!("No available stream"))
 }
+fn invalid_worker_identity() -> dispatcharr_store::StoreError {
+    dispatcharr_store::StoreError::StatusBody(
+        500,
+        json!("Streaming error: invalid worker response header"),
+    )
+}
+
 fn redis_error() -> dispatcharr_store::StoreError {
     dispatcharr_store::StoreError::StatusBody(503, json!({"error":"Redis unavailable"}))
 }
@@ -579,7 +586,7 @@ impl SessionPool {
                         &previous.candidate
                     },
                     &previous.metadata_token,
-                );
+                )?;
                 let limit = source
                     .user
                     .as_ref()
@@ -699,7 +706,7 @@ impl SessionPool {
             .attach_pending(request_permit.clone(), hook)
             .await
             .map_err(scope_error)?;
-        let fields = metadata_fields(id, &source, request, &candidate, "recovery-pending");
+        let fields = metadata_fields(id, &source, request, &candidate, "recovery-pending")?;
         let limit = source
             .user
             .as_ref()
@@ -804,6 +811,9 @@ impl SessionPool {
         request: &VodRequest,
         resolver: Option<Arc<dyn crate::resolver::VodResolver>>,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
+        // All entry/recovery paths share this immutable process identity. Fail
+        // before a pending body, retirement job, ledger or quota can be created.
+        crate::worker_identity::validate().map_err(|_| invalid_worker_identity())?;
         // Bound work before spawning. Dropping the caller only abandons its
         // observer; setup keeps admission through actual Redis replies and any
         // token-fenced cleanup, including before PendingCreate is installed.
@@ -1064,7 +1074,7 @@ impl SessionPool {
         }
         let initial = source.candidates.first().ok_or_else(unavailable)?;
         let metadata_token = format!("rust-vod-metadata:{}", uuid::Uuid::new_v4());
-        let fields = metadata_fields(id, &source, request, initial, &metadata_token);
+        let fields = metadata_fields(id, &source, request, initial, &metadata_token)?;
         let mut pending = PendingCreate {
             connection: connection.clone(),
             id: id.into(),
@@ -1204,13 +1214,15 @@ fn metadata_fields(
     request: &VodRequest,
     initial: &VodCandidate,
     metadata_token: &str,
-) -> BTreeMap<String, String> {
+) -> Result<BTreeMap<String, String>, dispatcharr_store::StoreError> {
+    // Resolve identity before admission; conversion failure cannot invent a
+    // different Redis owner label from the response identity.
+    let worker_id = crate::worker_identity::metadata().map_err(|_| invalid_worker_identity())?;
     let timestamp = now();
     let user_id = source
         .user
         .as_ref()
         .map_or("unknown".into(), |user| user.id.to_string());
-    let worker_id = format!("rust-vod:{}", std::process::id());
     let fields = vec![
         ("session_id", id.to_string()),
         ("stream_url", initial.url.clone()),
@@ -1246,10 +1258,10 @@ fn metadata_fields(
         ("rust_owner_token", metadata_token.to_owned()),
     ];
 
-    fields
+    Ok(fields
         .into_iter()
         .map(|(key, value)| (key.to_owned(), value))
-        .collect()
+        .collect())
 }
 
 fn key(id: &str) -> String {

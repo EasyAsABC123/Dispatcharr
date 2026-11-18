@@ -53,7 +53,96 @@ pub async fn apply(request: Request, next: Next) -> Response {
         .flat_map(|value| value.split(','))
         .any(|part| part.trim() == "*" || part.trim().eq_ignore_ascii_case("origin"));
     if !varies {
-        headers.append(header::VARY, HeaderValue::from_static("origin"));
+        // Django patch_vary_headers keeps a single comma-separated field.
+        // Separate Vary lines otherwise hide Accept from simple HTTP readers.
+        let existing = headers
+            .get_all(header::VARY)
+            .iter()
+            .map(|value| value.to_str().map(str::to_owned))
+            .collect::<Result<Vec<_>, _>>();
+        if let Ok(existing) = existing {
+            let value = if existing.is_empty() {
+                "origin".to_owned()
+            } else {
+                format!("{}, origin", existing.join(", "))
+            };
+            if let Ok(value) = HeaderValue::from_str(&value) {
+                headers.insert(header::VARY, value);
+            }
+        } else {
+            // Preserve an unqualified non-text upstream field losslessly.
+            headers.append(header::VARY, HeaderValue::from_static("origin"));
+        }
     }
     response
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::{body::Body, http::Request, middleware, routing::get, Router};
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn cors_preserves_negotiation_and_cookie_variation_in_one_http_field() {
+        let app = Router::new()
+            .route(
+                "/",
+                get(|| async {
+                    let mut response = Response::new(Body::empty());
+                    response
+                        .headers_mut()
+                        .append(header::VARY, HeaderValue::from_static("Accept"));
+                    response
+                        .headers_mut()
+                        .append(header::VARY, HeaderValue::from_static("Cookie"));
+                    response
+                }),
+            )
+            .layer(middleware::from_fn(apply));
+        let response = app
+            .oneshot(Request::builder().uri("/").body(Body::empty()).unwrap())
+            .await
+            .unwrap();
+        assert_eq!(response.headers().get_all(header::VARY).iter().count(), 1);
+        assert_eq!(response.headers()[header::VARY], "Accept, Cookie, origin");
+    }
+
+    #[tokio::test]
+    async fn cors_respects_an_existing_wildcard_and_source_static_bypass() {
+        let app = Router::new()
+            .route(
+                "/wildcard",
+                get(|| async {
+                    let mut response = Response::new(Body::empty());
+                    response
+                        .headers_mut()
+                        .insert(header::VARY, HeaderValue::from_static("*"));
+                    response
+                }),
+            )
+            .route(
+                "/static",
+                get(|| async {
+                    let mut response = Response::new(Body::empty());
+                    response.extensions_mut().insert(SourceStaticResponse);
+                    response
+                }),
+            )
+            .layer(middleware::from_fn(apply));
+        for (path, expected) in [("/wildcard", Some("*")), ("/static", None)] {
+            let response = app
+                .clone()
+                .oneshot(Request::builder().uri(path).body(Body::empty()).unwrap())
+                .await
+                .unwrap();
+            assert_eq!(
+                response
+                    .headers()
+                    .get(header::VARY)
+                    .map(|v| v.to_str().unwrap()),
+                expected
+            );
+        }
+    }
 }
