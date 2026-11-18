@@ -1,0 +1,21 @@
+{
+  "scope": "Default-off test-infrastructure proposal; no live fixture policy change or application performance measurement.",
+  "kernel_controls_passed": true,
+  "checks": [
+    "old exclusive blocks both shared lanes",
+    "Source Native shared coexist across Root/support without self-deadlock",
+    "same backend refuses",
+    "partial-acquisition failure releases PRIMARY before child exit",
+    "uncertain cleanup fsynced owner-generation interlock survives owner exit",
+    "interlock blocks shared reuse and exclusive quiet/performance admission",
+    "exclusive reuse succeeds after independently recorded process absence and scoped cleanup",
+    "default off and mixed-backend/performance plan refusal"
+  ],
+  "actual_child_waits": 10,
+  "helper_source_sha256": "37bd9b2899af03a1c13a4ff820626a8c85d65d12a347aaf612eb4dc96f5b3d1a",
+  "full_control_receipt_sha256": "03315816ec35d4f78be71f4f0849b8e2864c8880e9ecc57642bf5e20f1c78136",
+  "canonical_PRIMARY_touched": false,
+  "real_two_fixture_isolation_qualified": false,
+  "application_performance_gain_accepted": false,
+  "credit": "Original Dispatcharr and dependency authors retain all application, model and protocol credit."
+}
