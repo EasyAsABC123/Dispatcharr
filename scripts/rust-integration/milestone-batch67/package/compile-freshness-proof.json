@@ -1,0 +1,29 @@
+{
+  "passed": true,
+  "actual_Docker_build_exit": 0,
+  "required_actual_recompilations": {
+    "dispatcharr-store": true,
+    "dispatcharr-rs": true
+  },
+  "reason": "Actual Store changes require Store/Main release recompilation; unchanged JobTransport/viewing crates may reuse exact-source caches. Every Rust input binds actual SDK115 without exclusions; runtime collector/bridge match final8 authority.",
+  "build_log_sha256": "5f09966c2988031c7ffb03242c83fad34e37c534be69f42f5ef13f8e7e38e08e",
+  "build_log_source": "artifacts/rust/milestone-batch67-build-2/build.log",
+  "changed_Rust_inputs_vs66": [
+    "rust/crates/store/src/epg_source_writes.rs",
+    "rust/crates/store/src/plugin_actions.rs",
+    "rust/crates/store/src/plugin_python_regex.rs",
+    "rust/crates/store/src/provider_reads.rs",
+    "rust/crates/store/src/sd_source_http.rs",
+    "rust/crates/store/tests/python_regex_physical.rs",
+    "rust/runtime/collect_regex_host.py",
+    "rust/runtime/regex_bridge/dispatcharr_native/regex_only.py"
+  ],
+  "final8_authority_sha256": "2cf2c21fefb652d323f173a7333a40b1ee8eef24c46c33461ed6038eef20f122",
+  "unchanged_source_cached_crates_need_not_recompile": [
+    "dispatcharr-job-transport",
+    "dispatcharr-output-http",
+    "dispatcharr-vod-http",
+    "dispatcharr-output-store"
+  ],
+  "application_performance_verified": false
+}

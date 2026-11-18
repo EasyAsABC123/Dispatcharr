@@ -1,0 +1,38 @@
+{
+  "passed": true,
+  "owner_agent": "/root/remaining_resume",
+  "exact_CID": "ab4ebe96f2695cd8d461b566a154fe92b523279ef2ca1ad1cc847b226e8e2baa",
+  "exact_CID_absent": true,
+  "actual_readonly_inventory_command_receipt": {
+    "label": "separate-readonly-CID-inventory",
+    "argv": [
+      "docker",
+      "container",
+      "ls",
+      "--all",
+      "--no-trunc",
+      "--filter",
+      "id=ab4ebe96f2695cd8d461b566a154fe92b523279ef2ca1ad1cc847b226e8e2baa",
+      "--format",
+      "{{.ID}}"
+    ],
+    "actual_exit": 0,
+    "seconds": 0.009556959999827086,
+    "failure": null,
+    "forced": false,
+    "CLI_PID": 692282,
+    "CLI_generation": "1238727",
+    "CLI_wait_completed": true,
+    "CLI_generation_absent": true,
+    "stdout_EOF": true,
+    "stderr_EOF": true,
+    "stdout": "separate-readonly-CID-inventory.stdout",
+    "stderr": "separate-readonly-CID-inventory.stderr",
+    "stdout_bytes": 0,
+    "stderr_bytes": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "scope": "Separate read-only Docker inventory after existing Probe cleanup; same controller, no independent Root process claim",
+  "cleanup_mutations": 0
+}

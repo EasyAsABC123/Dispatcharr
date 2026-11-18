@@ -1,0 +1,288 @@
+{
+  "passed": true,
+  "owner_agent": "/root/remaining_resume",
+  "SDK": 115,
+  "sdk_inputs_sha256": "b319f702946ca951431cb354b67c47a922a6b080fb7ca5202d381c7e593c8ec3",
+  "sdk_Root_terminal_sha256": "d76f9452f1885e719fb81eca5b1ee00983769511a6326c7fc495119d9c03a84c",
+  "image_id": "sha256:75af355bcb7f90304ac22a1db2a7ebe6b4da9549bbb5fc8d932257424e00ef8b",
+  "git_revision": "a05b6745d651603097417686c18d0fcdad208f83",
+  "source_tree_sha256": "ec6eb1dc0cfdc173285cd87e9457030107fbb0e44426ed01cc85d74fc5edf625",
+  "controller_sha256": "8463b0cf3cff58ac0de89450bf5f4d745c05ebd721b7d841dd53ca075df914ca",
+  "test_source_sha256": "f7974058f2be8ad4edf029fff5d288e856c555301d31c6d20d6dc0aaefdbe1dc",
+  "helper_sha256": "b3057eea2ac2c5a3f6ad007eee64c62ad2ed92d39544ed9d895e4324c6802a45",
+  "expected_tests": [
+    "actual_packaged_grammar_remote_error_timeout_and_normal_wait_eof",
+    "actual_unbounded_search_caller_loss_retains_owner_until_physical_retirement",
+    "actual_pre_ready_stop_releases_caller_only_after_child_absence"
+  ],
+  "full_Main_acceptance": false,
+  "performance_verified": false,
+  "application_started": false,
+  "wrapper_process_group_absence_claimed": false,
+  "three_tests_executed": true,
+  "actual_UID": 65532,
+  "actual_controller_boot": {
+    "physical_controller_boot": true,
+    "actual_UID": 65532,
+    "actual_GID": 65532,
+    "PID": 1,
+    "generation": "1238590"
+  },
+  "Unicode_RPC_verified": true,
+  "normal_wait_eof_verified": true,
+  "cancel_owner_retirement_verified": true,
+  "pre_ready_cancel_absence_verified": true,
+  "actual_child_receipts": [
+    {
+      "pid": 8,
+      "generation": "1238599",
+      "namespace": "pid:[4026533750]",
+      "exit": 0,
+      "wait": true,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "forced": false,
+      "descendants_absent": true,
+      "callbacks_settled": true
+    },
+    {
+      "pid": 13,
+      "generation": "1238648",
+      "namespace": "pid:[4026533750]",
+      "exit": null,
+      "wait": true,
+      "stdout_EOF": true,
+      "stderr_EOF": true,
+      "forced": true,
+      "descendants_absent": true,
+      "callbacks_settled": true
+    }
+  ],
+  "actual_startup_interruption": {
+    "pid": 11,
+    "generation": "1238626",
+    "shutdown": "Err(Drain)",
+    "call": "Err(Protocol)",
+    "receipt": null,
+    "component_only_injected_startup_gate": true
+  },
+  "actual_unicode_vectors": [
+    {
+      "input": "\u0130",
+      "actual": "dummy_i\u0307"
+    },
+    {
+      "input": "\u0391 \u039f\u03a3",
+      "actual": "dummy_\u03b1_\u03bf\u03c2"
+    },
+    {
+      "input": "\u0345\u05b0A\u0301",
+      "actual": "dummy_a"
+    },
+    {
+      "input": "\u00b2\u2167\u56db\u0661",
+      "actual": "dummy_\u00b2\u2177\u56db\u0661"
+    },
+    {
+      "input": "X\tY\n Z",
+      "actual": "dummy_xy_z"
+    },
+    {
+      "input": "\u2665!$",
+      "actual": "dummy_"
+    },
+    {
+      "input": "Foo-Bar Baz",
+      "actual": "dummy_foo_bar_baz"
+    }
+  ],
+  "actual_structured_records": [
+    {
+      "regex_physical_case": "actual-fullcase-search",
+      "actual": {
+        "active": true,
+        "matches": [
+          true,
+          true,
+          false
+        ],
+        "caught": null
+      }
+    },
+    {
+      "regex_physical_case": "actual-pinned-packaging-epoch-order",
+      "actual": {
+        "kind": "parsed",
+        "newer": true,
+        "ordering": 1
+      }
+    },
+    {
+      "regex_physical_case": "actual-pinned-packaging-InvalidVersion",
+      "actual": {
+        "kind": "invalid",
+        "exception": "InvalidVersion"
+      }
+    },
+    {
+      "regex_physical_case": "actual-pinned-dummy-name-primitives",
+      "actual": {
+        "input": "\u0130",
+        "actual": "dummy_i\u0307"
+      }
+    },
+    {
+      "regex_physical_case": "actual-pinned-dummy-name-primitives",
+      "actual": {
+        "input": "\u0391 \u039f\u03a3",
+        "actual": "dummy_\u03b1_\u03bf\u03c2"
+      }
+    },
+    {
+      "regex_physical_case": "actual-pinned-dummy-name-primitives",
+      "actual": {
+        "input": "\u0345\u05b0A\u0301",
+        "actual": "dummy_a"
+      }
+    },
+    {
+      "regex_physical_case": "actual-pinned-dummy-name-primitives",
+      "actual": {
+        "input": "\u00b2\u2167\u56db\u0661",
+        "actual": "dummy_\u00b2\u2177\u56db\u0661"
+      }
+    },
+    {
+      "regex_physical_case": "actual-pinned-dummy-name-primitives",
+      "actual": {
+        "input": "X\tY\n Z",
+        "actual": "dummy_xy_z"
+      }
+    },
+    {
+      "regex_physical_case": "actual-pinned-dummy-name-primitives",
+      "actual": {
+        "input": "\u2665!$",
+        "actual": "dummy_"
+      }
+    },
+    {
+      "regex_physical_case": "actual-pinned-dummy-name-primitives",
+      "actual": {
+        "input": "Foo-Bar Baz",
+        "actual": "dummy_foo_bar_baz"
+      }
+    },
+    {
+      "regex_physical_case": "actual-invalid-filter",
+      "actual": {
+        "active": false,
+        "matches": null,
+        "caught": {
+          "actual_class": "error",
+          "message": "missing ) at position 1"
+        }
+      }
+    },
+    {
+      "regex_physical_case": "actual-TypeError",
+      "actual": {
+        "error": "Remote(Object {\"actual_class\": String(\"TypeError\"), \"message\": String(\"first argument must be a string or compiled pattern\")})"
+      }
+    },
+    {
+      "regex_physical_case": "actual-branchreset-replacement-after-error",
+      "actual": {
+        "items": [
+          {
+            "name": "Selected 123",
+            "caught": null,
+            "other_failure": null
+          },
+          {
+            "name": "Selected Stra\u00dfe",
+            "caught": null,
+            "other_failure": null
+          }
+        ]
+      }
+    },
+    {
+      "regex_physical_case": "actual100ms-substitution-timeout",
+      "actual": {
+        "items": [
+          {
+            "name": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab",
+            "caught": {
+              "actual_class": "TimeoutError",
+              "message": "regex timed out"
+            },
+            "other_failure": null
+          }
+        ]
+      }
+    },
+    {
+      "regex_physical_case": "normal-physical-wait",
+      "actual": {
+        "pid": 8,
+        "generation": "1238599",
+        "namespace": "pid:[4026533750]",
+        "exit": 0,
+        "wait": true,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "forced": false,
+        "descendants_absent": true,
+        "callbacks_settled": true
+      }
+    },
+    {
+      "regex_physical_case": "actual-startup-interruption",
+      "actual": {
+        "pid": 11,
+        "generation": "1238626",
+        "shutdown": "Err(Drain)",
+        "call": "Err(Protocol)",
+        "receipt": null,
+        "component_only_injected_startup_gate": true
+      }
+    },
+    {
+      "regex_physical_case": "actual-held-search",
+      "actual": {
+        "pid": 13,
+        "generation": "1238648",
+        "CPUticks_before": 11,
+        "CPUticks_later": 36
+      }
+    },
+    {
+      "regex_physical_case": "interrupted-search-not-nonmatch",
+      "actual": {
+        "shutdown": "Err(Drain)"
+      }
+    },
+    {
+      "regex_physical_case": "actual-interrupted-physical-wait",
+      "actual": {
+        "pid": 13,
+        "generation": "1238648",
+        "namespace": "pid:[4026533750]",
+        "exit": null,
+        "wait": true,
+        "stdout_EOF": true,
+        "stderr_EOF": true,
+        "forced": true,
+        "descendants_absent": true,
+        "callbacks_settled": true
+      }
+    }
+  ],
+  "actual_test_exit": 0,
+  "failure": null,
+  "CLI_waits_and_pipe_EOF": true,
+  "input_integrity_passed": true,
+  "input_drift": [],
+  "exact_cleanup": true
+}
