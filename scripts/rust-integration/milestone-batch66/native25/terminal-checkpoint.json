@@ -1,0 +1,131 @@
+{
+  "code": "61f3a5b5db045a8189169ac8a15e3dbe263835af",
+  "image": "sha256:830f909cfcb5e392d8126b97dfc05eee6490227be90ae66b75587ada7e0bd8bb",
+  "actual_exit": 1,
+  "actual_terminal_consumed": true,
+  "seconds": 3872.9748528789996,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "process_group_settled": true,
+  "input_integrity_passed": true,
+  "input_drift": [],
+  "independent_cleanup": {
+    "passed": true,
+    "exact_CIDs": 30,
+    "host_generations": 29
+  },
+  "cases": [
+    {
+      "case": "vod-credential-profiles",
+      "status": "passed"
+    },
+    {
+      "case": "vod-repeat",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series",
+      "status": "passed"
+    },
+    {
+      "case": "vlc-live",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series-info",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series-advanced",
+      "status": "passed"
+    },
+    {
+      "case": "vod-dense-list",
+      "status": "passed"
+    },
+    {
+      "case": "vod-shared-metadata",
+      "status": "passed"
+    },
+    {
+      "case": "vod-external-identity",
+      "status": "passed"
+    },
+    {
+      "case": "vod-international-catalogue",
+      "status": "passed"
+    },
+    {
+      "case": "vod-ordered-title-identity",
+      "status": "passed"
+    },
+    {
+      "case": "vod-catalogue-scale",
+      "status": "passed"
+    },
+    {
+      "case": "vod-category-language-lifecycle",
+      "status": "passed"
+    },
+    {
+      "case": "live-vod-group-settings",
+      "status": "passed"
+    },
+    {
+      "case": "channel-guide-coupling",
+      "status": "passed"
+    },
+    {
+      "case": "vod-normal-provider-lifecycle",
+      "status": "passed"
+    },
+    {
+      "case": "vod-adoption-safe3",
+      "status": "passed"
+    },
+    {
+      "case": "sd-lineup-contracts",
+      "status": "passed"
+    },
+    {
+      "case": "sd-lineup-source4-contracts",
+      "status": "passed"
+    },
+    {
+      "case": "sd-headends-search",
+      "status": "passed"
+    },
+    {
+      "case": "m3u-direct-allowlist-three",
+      "status": "passed"
+    },
+    {
+      "case": "channel-number-range",
+      "status": "failed"
+    },
+    {
+      "case": "plugin-enabled-logo",
+      "status": "failed"
+    },
+    {
+      "case": "version-update-contracts",
+      "status": "failed"
+    },
+    {
+      "case": "comskip-manual",
+      "status": "passed"
+    }
+  ],
+  "passed": 22,
+  "failed": 3,
+  "report_sha256": "0b56eff7141214c6fd2595a2c8f036cfaac6977389212cc0240e274e49c0e951",
+  "findings": {
+    "channel-number-range": "Nine raw bodies exact; cap50 only equal-number permutations. Same50 full raw row payloads, explicit Source partial-order semantics; original raw mismatch retained. Narrow offline comparator qualifies observations without Source replay.",
+    "plugin-enabled-logo": "Both200/equal68bytePNG and plugin effects; Vary origin differs from Source Accept, origin. Production fix required.",
+    "version-update-contracts": "Guest-owned0755 parent prevents host creating origin scratch; failed before version Main/HTTP. Writable host/guest preflight fixture fix required.",
+    "comskip-manual": "Manual3,positive4,naturalMARK and naturalCUT all passed."
+  },
+  "full_milestone_passed": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr and dependency authors retain all application and protocol credit."
+}

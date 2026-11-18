@@ -30,11 +30,27 @@ original compilation log and exact-source cached-build provenance. These duratio
 are build timings, not application performance gains.
 
 All six package families pass with actual waits observed and 55 exact containers
-independently absent. The expanded twenty-five-context application batch has
-started under a durable service after its actual UID85 check. Its application
-terminal and full acceptance remain pending. The expanded batch adds
-channel-range, enabled-plugin-logo and normal version-task contexts to the earlier twenty-two; it includes the two
-narrow observer corrections and reuses already captured Source authorities.
+independently absent. The expanded twenty-five-context application batch completed
+with actual exit 1 in 3,872.975 seconds: **22 passed and three failed**. All selected
+inputs remain unchanged; EOF, settled process group and independent cleanup of
+30 containers and 29 original host generations verify. All manual, positive,
+automatic MARK and automatic CUT Comskip cases pass.
+
+The range cap50 observer demanded byte-identical order within equal channel
+numbers, which Source does not guarantee. Nine responses are raw-byte exact;
+the remaining case has the same fifty IDs and every full raw row payload, with
+only equal-number permutations. A narrow offline correction qualifies those
+observations while preserving the original raw mismatch and failed controller.
+The logo endpoints both return the correct PNG with matching plugin effects;
+they omit Source's Vary Accept token. Version setup fails before Main because
+the host cannot create scratch under a guest-owned directory. These production
+and fixture fixes are queued for the affected-workflow batch.
+
+New Source characterization and the next candidate's affected batch will cover
+the changed routes, dependency worker, Schedules Direct interfaces, guide coupling
+and these three failed contexts. Unrelated catalogue and long recording tests
+will not be repeated solely for response-header or fixture fixes. Full milestone
+and performance acceptance remain pending.
 
 The host rebooted after the completed Candidate65 checks. The retained rootless
 Docker service was recreated; its container inventory was empty at recovery
