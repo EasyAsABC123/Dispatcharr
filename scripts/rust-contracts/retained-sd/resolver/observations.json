@@ -1,0 +1,422 @@
+{
+  "passed": true,
+  "actual_UID": 65532,
+  "Django_version": "6.0.9",
+  "actual_pinned_Django_app_registry_loaded": true,
+  "required_import_signing_key_generated_only_in_memory": true,
+  "token_issuance_or_verification_invoked": false,
+  "actual_shell_initialization_skipped": true,
+  "all592_resolver_identities_order_actions_exact": true,
+  "Source_files": 1211,
+  "Source_HTTP_business_calls": 0,
+  "Source_or_Native_acceptance": false,
+  "counts": {
+    "SQL_connection_or_cursor_attempts": 0,
+    "network_attempts": 1,
+    "thread_attempts": 0,
+    "child_attempts": 0,
+    "handler_invocations": 0
+  },
+  "observations": [
+    {
+      "path": "/api/epg/sources/1005/sd-lineups/",
+      "retained_observation_count": 2,
+      "retained_observations": [
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "missing-get",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "private_wire_sha256": "8df716e6e6de7a8055c114fb70204e59bce410b548182c9241d713597e51e6fd",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/missing-get/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "admin-options-missing",
+          "method": "OPTIONS",
+          "role": "admin",
+          "HTTP_status": 200,
+          "private_wire_sha256": "e9662b5dfc8734777ec9f73f73ab8c6b7bb81fdf2a7cc4d9b2cd22ec2a6c871f",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/admin-options-missing/wire.json"
+        }
+      ],
+      "actual_resolver_ordinal": 155,
+      "actual_pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/$",
+      "actual_view_name": "api:epg:epg-source-sd-lineups",
+      "actual_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "actual_action_map": {
+        "get": "sd_lineups",
+        "post": "sd_lineups",
+        "delete": "sd_lineups"
+      },
+      "actual_kwargs": {
+        "pk": "1005"
+      },
+      "Source_HTTP_replayed": false,
+      "method_permission_or_role_acceptance_added": false
+    },
+    {
+      "path": "/api/epg/sources/3/sd-lineups/",
+      "retained_observation_count": 19,
+      "retained_observations": [
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "anonymous-get",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "private_wire_sha256": "ccc31270decd56041a895d5f6891043dd732364b424b07cd766bb01235fde62c",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/anonymous-get/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "viewer-get",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "private_wire_sha256": "f85e10607d2e5019ce6310e905017708526a5816f87c3a4c8d3296d8e6e2f719",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/viewer-get/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "standard-positive-get",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "private_wire_sha256": "29db6164611ac07e0e5e1640a2bb95dab5bae486c4c56b51f5abe37d0b666f7d",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/standard-positive-get/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "empty4102-get",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "private_wire_sha256": "e5faef92d56a7090f3e24c8e62a12ed849930a1c60fae77c7cb8fa9ccea43597",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/empty4102-get/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "countries-error-still-list-get",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "private_wire_sha256": "a476ea64bd18fa8150bfb86978db70fc10f2d012ad91b8448af3663157c35948",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/countries-error-still-list-get/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "standard-delete",
+          "method": "DELETE",
+          "role": "standard",
+          "HTTP_status": 403,
+          "private_wire_sha256": "71c952b9bcb736219ecf6f518009b82ea4fe3884dbc8270affb769c3cb0adbd0",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/standard-delete/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "viewer-delete",
+          "method": "DELETE",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "private_wire_sha256": "0dbf5a55753bf567f0dd178791a33526569887567fbfe44cefbd3ae60de3439b",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/viewer-delete/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "delete-required-field",
+          "method": "DELETE",
+          "role": "admin",
+          "HTTP_status": 400,
+          "private_wire_sha256": "6a3e1e946c66cf52b7909f9c45bf1eaa803c50686ee8219fd6f1cd693df10ad4",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/delete-required-field/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "positive-delete",
+          "method": "DELETE",
+          "role": "admin",
+          "HTTP_status": 200,
+          "private_wire_sha256": "b3dbfce02c78c76c7131244a96219e6c087c2b91ea53c27f558790a9ca97349c",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/positive-delete/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "already-removed2103-delete",
+          "method": "DELETE",
+          "role": "admin",
+          "HTTP_status": 200,
+          "private_wire_sha256": "723ed29b14b365ae41c42240746fd9b206e4d26fb3dd1832157a4afdc584a7b1",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/already-removed2103-delete/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "provider-limit4100-delete",
+          "method": "DELETE",
+          "role": "admin",
+          "HTTP_status": 200,
+          "private_wire_sha256": "680894e80c155ed252d3e52e4b65e442f462027daa4d5e2ffdda72cb294dd20d",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/provider-limit4100-delete/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "cached-quota-delete",
+          "method": "DELETE",
+          "role": "admin",
+          "HTTP_status": 200,
+          "private_wire_sha256": "4a2b87a95b48ca24ad46e8685346bbc058bfcb3aa9a9369413ce0fff3a6cdb83",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/cached-quota-delete/wire.json"
+        },
+        {
+          "Source_group": "Source3-separate-recovered21",
+          "label": "expired-quota-delete",
+          "method": "DELETE",
+          "role": "admin",
+          "HTTP_status": 200,
+          "private_wire_sha256": "b388f517c6cb0fd238bd8efb8d2bc9954c4403ac84418be7bc49fb2bdea56f83",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/expired-quota-delete/wire.json"
+        },
+        {
+          "Source_group": "Source10-qualified-SD4",
+          "label": "provider-service-error-delete",
+          "method": "DELETE",
+          "role": "admin",
+          "HTTP_status": 502,
+          "private_wire_sha256": "953de003e685ed899f01eb6293dc1908c722865cf0f56f875f70a2619c46da6c",
+          "private_wire_path": "artifacts/rust/normal-graph-m4-m6-source-ten-1/fixtures/Original-14e52222/sd-timeshift-recovery-ten/private/provider-service-error-delete/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "standard-options",
+          "method": "OPTIONS",
+          "role": "standard",
+          "HTTP_status": 403,
+          "private_wire_sha256": "5a64c7280d6188adcb8a2d4edc8254b26afaf9effbca578cae7302b1eef810cd",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/standard-options/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "admin-options",
+          "method": "OPTIONS",
+          "role": "admin",
+          "HTTP_status": 200,
+          "private_wire_sha256": "0a8b84416476794f7ba2c43946e2faae0403fd2ba848a74adbe9bfd5dd8aef94",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/admin-options/wire.json"
+        },
+        {
+          "Source_group": "Source10-qualified-SD4",
+          "label": "implicit-head-contract",
+          "method": "HEAD",
+          "role": "admin",
+          "HTTP_status": 500,
+          "private_wire_sha256": "a0df9f59bb3f2bf84b7ac4963487e865b74212dae2198dd1e4fa0b774426c974",
+          "private_wire_path": "artifacts/rust/normal-graph-m4-m6-source-ten-1/fixtures/Original-14e52222/sd-timeshift-recovery-ten/private/implicit-head-contract/wire.json"
+        },
+        {
+          "Source_group": "Source10-qualified-SD4",
+          "label": "unsupported-put-contract",
+          "method": "PUT",
+          "role": "admin",
+          "HTTP_status": 405,
+          "private_wire_sha256": "46a709bc2c8e4501211e8b9733ac8f0c4915203c7c600bf6febd1193ced0fd98",
+          "private_wire_path": "artifacts/rust/normal-graph-m4-m6-source-ten-1/fixtures/Original-14e52222/sd-timeshift-recovery-ten/private/unsupported-put-contract/wire.json"
+        },
+        {
+          "Source_group": "Source10-qualified-SD4",
+          "label": "anonymous-options",
+          "method": "OPTIONS",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "private_wire_sha256": "45d39cd649dc1af87d1b23570c8c34df0d8000afb44e672dd72fd632a7d9edae",
+          "private_wire_path": "artifacts/rust/normal-graph-m4-m6-source-ten-1/fixtures/Original-14e52222/sd-timeshift-recovery-ten/private/anonymous-options/wire.json"
+        }
+      ],
+      "actual_resolver_ordinal": 155,
+      "actual_pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/$",
+      "actual_view_name": "api:epg:epg-source-sd-lineups",
+      "actual_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "actual_action_map": {
+        "get": "sd_lineups",
+        "post": "sd_lineups",
+        "delete": "sd_lineups"
+      },
+      "actual_kwargs": {
+        "pk": "3"
+      },
+      "Source_HTTP_replayed": false,
+      "method_permission_or_role_acceptance_added": false
+    },
+    {
+      "path": "/api/epg/sources/4/sd-lineups/",
+      "retained_observation_count": 2,
+      "retained_observations": [
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "missing-credentials-get",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 400,
+          "private_wire_sha256": "cebdd52701a03b275016c0b6e2ab0975a8b1672841ef452a57139838e578c35e",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/missing-credentials-get/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "missing-credentials-delete-before-field",
+          "method": "DELETE",
+          "role": "admin",
+          "HTTP_status": 400,
+          "private_wire_sha256": "42ed33f629a8ecf61db3ce2a7d36b5986ee27c524f3462a8c0c62bb1447895b4",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/missing-credentials-delete-before-field/wire.json"
+        }
+      ],
+      "actual_resolver_ordinal": 155,
+      "actual_pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/$",
+      "actual_view_name": "api:epg:epg-source-sd-lineups",
+      "actual_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "actual_action_map": {
+        "get": "sd_lineups",
+        "post": "sd_lineups",
+        "delete": "sd_lineups"
+      },
+      "actual_kwargs": {
+        "pk": "4"
+      },
+      "Source_HTTP_replayed": false,
+      "method_permission_or_role_acceptance_added": false
+    },
+    {
+      "path": "/api/epg/sources/5/sd-lineups/",
+      "retained_observation_count": 2,
+      "retained_observations": [
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "standard-wrong-type-get",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 400,
+          "private_wire_sha256": "54177cd92cfb3c66fa91caac932629f417e4506b4d0ef16dfaafd303cb8e2e70",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/standard-wrong-type-get/wire.json"
+        },
+        {
+          "Source_group": "Source3-qualified20",
+          "label": "wrong-type-delete",
+          "method": "DELETE",
+          "role": "admin",
+          "HTTP_status": 400,
+          "private_wire_sha256": "16c93434d5861bd4ea61087ea8d182b1508f969501c901ad99338f48f8d09bb7",
+          "private_wire_path": "artifacts/rust/normal-graph-m6-sd-lineup-source-3/fixtures/Original-8771be83/sd-lineup-contracts/private/wrong-type-delete/wire.json"
+        }
+      ],
+      "actual_resolver_ordinal": 155,
+      "actual_pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/$",
+      "actual_view_name": "api:epg:epg-source-sd-lineups",
+      "actual_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "actual_action_map": {
+        "get": "sd_lineups",
+        "post": "sd_lineups",
+        "delete": "sd_lineups"
+      },
+      "actual_kwargs": {
+        "pk": "5"
+      },
+      "Source_HTTP_replayed": false,
+      "method_permission_or_role_acceptance_added": false
+    }
+  ],
+  "denied_operations": [
+    {
+      "kind": "network_attempts",
+      "operation": "socket.socket.bind",
+      "stage": "django_setup",
+      "caller": {
+        "module": "urllib3.util.connection",
+        "function": "_has_ipv6",
+        "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+        "lineno": 127
+      },
+      "caller_frames": [
+        {
+          "module": "urllib3.util.connection",
+          "function": "_has_ipv6",
+          "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+          "lineno": 127
+        },
+        {
+          "module": "urllib3.util.connection",
+          "function": "<module>",
+          "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+          "lineno": 137
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_call_with_frames_removed",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 488
+        },
+        {
+          "module": "importlib._bootstrap_external",
+          "function": "exec_module",
+          "filename": "<frozen importlib._bootstrap_external>",
+          "lineno": 1027
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 935
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 1340
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 1369
+        },
+        {
+          "module": "urllib3.util",
+          "function": "<module>",
+          "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/__init__.py",
+          "lineno": 4
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_call_with_frames_removed",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 488
+        },
+        {
+          "module": "importlib._bootstrap_external",
+          "function": "exec_module",
+          "filename": "<frozen importlib._bootstrap_external>",
+          "lineno": 1027
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 935
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 1340
+        }
+      ],
+      "caller_file_sha256": "2633bbdb69731e5ccb5cf4e4afd65605d86c7979cc5633126f50c92d5ad74a74",
+      "original_operation_executed": false,
+      "socket_family": 10,
+      "IPv6_loopback_ephemeral_bind": true
+    }
+  ],
+  "qualified_blocked_import_probe_count": 1,
+  "network_scope": "All network operations denied; one measured urllib3 import-only IPv6 loopback bind capability probe may be separately qualified, preserving network_attempts=1",
+  "network_initialization_or_runtime_parity_claimed": false,
+  "credit": "Original Dispatcharr and Django/DRF authors retain all application/framework credit."
+}

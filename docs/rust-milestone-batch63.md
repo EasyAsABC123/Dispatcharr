@@ -56,6 +56,13 @@ twelve responses across six new scenarios, but qualify none fully because servin
 worker identity remains unproved. Their controller exit1 and counter/race samples
 are preserved without inferring a permanent leak or Native equivalence.
 
+The source-contract register now has 163 partial HTTP assignments and 635 absent
+assignments. The two added SD operations reuse 19 retained observations, with four
+actual pure-resolver path checks and no new HTTP calls. The portable register
+gate passes 350 tests with zero failures and one optional skip. An unsupported
+broad host discovery failed because Django was absent; that exit1 is retained.
+These assignments do not establish complete Native endpoint acceptance.
+
 **All complete M0–M9 milestones remain open.** Whole application compatibility,
 remaining API/job/admin/SQLite behavior, default recovery activation, performance,
 soak and rollback still require acceptance. No current CPU or memory gain is
