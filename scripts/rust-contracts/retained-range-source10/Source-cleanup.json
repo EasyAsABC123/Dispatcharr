@@ -1,0 +1,90 @@
+{
+  "passed": true,
+  "exact_CIDs": 3,
+  "host_generations": 2,
+  "exact_CIDs_absent": [
+    "1aa0a874f662fca715a319c5e775304e1d052ecb7ec5772dceac17fe6652cb7a",
+    "3ea5123edacad039d7ef10fa1494b6acaba1807589cb9fa3e65edcba2997afd7",
+    "a0ce4022514adc5f1269f88889df1d3f8b6d7c990272b7fd535d9833e64ed985"
+  ],
+  "original_generations": [
+    {
+      "pid": 1628076,
+      "starttime": "2233477",
+      "absent": true
+    },
+    {
+      "pid": 1627959,
+      "starttime": "2233462",
+      "absent": true
+    }
+  ],
+  "actual_commands": [
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "container",
+        "ls",
+        "--all",
+        "--no-trunc",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-51e9f761c3",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "network",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-51e9f761c3",
+        "--format",
+        "{{.ID}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "actual_wait_and_pipe_EOF": true
+    },
+    {
+      "argv": [
+        "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+        "volume",
+        "ls",
+        "--filter",
+        "label=com.docker.compose.project=dispatcharr-normal-dvr-51e9f761c3",
+        "--format",
+        "{{.Name}}"
+      ],
+      "actual_exit": 0,
+      "stdout": "",
+      "stderr": "",
+      "actual_wait_and_pipe_EOF": true
+    }
+  ],
+  "report": "/home/justin/github/Dispatcharr/artifacts/rust/normal-graph-m1-channel-range-source-ten-2/results/report.json",
+  "report_sha256": "6122b0ba48ba31db51982bbe2f2cfb982cb7fec84897e79af72b8b9b8f1aa315",
+  "cleanup_mutations": 0,
+  "boot_id": "209c3592-7593-4044-a50a-845b4daafc9d"
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "argv": [
+      "/home/justin/github/Dispatcharr/artifacts/rust/tooling/docker/docker",
+      "container",
+      "ls",
+      "--all",
+      "--filter",
+      "name=^/dispatcharr-pure-resolver-7a8d213f3f$",
+      "--format",
+      "{{.ID}}"
+    ],
+    "actual_exit": 1,
+    "stdout": "",
+    "stderr": "failed to connect to the docker API at unix:///tmp/dispatcharr-docker.sock; check if the path is correct and if the daemon is running: dial unix /tmp/dispatcharr-docker.sock: connect: no such file or directory\n",
+    "seconds": 0.031736069000032785
+  }
+]

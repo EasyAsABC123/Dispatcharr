@@ -127,6 +127,11 @@ class SourceContracts(unittest.TestCase):
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
+        import retained_range_source10_contracts
+        for name in retained_range_source10_contracts.dependencies():
+            p = self.root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, p)
         import retained_source12_contracts
         for name in retained_source12_contracts.dependencies():
             p = self.root / name

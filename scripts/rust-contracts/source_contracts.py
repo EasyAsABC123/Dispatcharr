@@ -217,7 +217,10 @@ def apply(root, rows, bindings):
     loaded = []
     for reference in manifest['inputs']:
         value = checked(root, reference)
-        if reference['kind'] == 'retained_original_Source12_search_M3U_resolver_HTTP':
+        if reference['kind'] == 'retained_original_range_Source10_resolver_HTTP':
+            import retained_range_source10_contracts
+            retained_range_source10_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_Source12_search_M3U_resolver_HTTP':
             import retained_source12_contracts
             retained_source12_contracts.validate(root, value, bindings)
         elif reference['kind'] == 'retained_original_full_suite_asserted_framework':
@@ -298,7 +301,7 @@ def apply(root, rows, bindings):
                 unmapped_method_observations.append(copy.deepcopy(observation))
         for contract in value['contracts']:
             identifier = contract['contract_id']
-            supplemental = (reference['kind'] in ['retained_original_Source12_search_M3U_resolver_HTTP', 'retained_original_management12_channelguide25_HTTP', 'retained_original_auth51_plugin35_resolver_scoped_HTTP']
+            supplemental = (reference['kind'] in ['retained_original_range_Source10_resolver_HTTP', 'retained_original_Source12_search_M3U_resolver_HTTP', 'retained_original_management12_channelguide25_HTTP', 'retained_original_auth51_plugin35_resolver_scoped_HTTP']
                             and identifier in seen
                             and primary_kinds[identifier] != reference['kind']
                             and identifier not in supplemented)

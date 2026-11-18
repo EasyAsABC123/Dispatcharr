@@ -60,6 +60,8 @@ class RetainedAuthPluginControls(unittest.TestCase):
         proof = json.loads((ROOT / 'scripts/rust-contracts/retained-auth-plugin/preservation.json').read_bytes())
         register = json.loads((ROOT / 'docs/rust-contract-register.json').read_bytes())
         current_rows = copy.deepcopy(register['runtime_routes'])
+        import retained_range_source10_contracts
+        retained_range_source10_contracts.restore_pre_range(register['runtime_routes'])
         import retained_source12_contracts
         retained_source12_contracts.restore_pre_Source12(register['runtime_routes'])
         import framework_suite_contracts

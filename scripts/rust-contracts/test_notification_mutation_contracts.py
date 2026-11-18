@@ -64,7 +64,8 @@ class NotificationMutationControls(unittest.TestCase):
    'scripts/rust-contracts/retained-auth-plugin/bindings.json',
    'scripts/rust-contracts/retained-sd/bindings.json',
    'scripts/rust-contracts/framework-suite/bindings.json',
-   'scripts/rust-contracts/retained-source12/bindings.json'])
+   'scripts/rust-contracts/retained-source12/bindings.json',
+   'scripts/rust-contracts/retained-range-source10/bindings.json'])
   later_ids=[];supplemental_ids=[]
   import retained_management_contracts
   import retained_auth_plugin_contracts
@@ -90,9 +91,13 @@ class NotificationMutationControls(unittest.TestCase):
     for contract in value['contracts']:
      if contract['method']is None:supplemental_ids.append(contract['contract_id'])
      else:later_ids.append(contract['contract_id'])
+   elif ref['kind']=='retained_original_range_Source10_resolver_HTTP':
+    import retained_range_source10_contracts
+    retained_range_source10_contracts.validate(ROOT,value)
+    supplemental_ids.extend(c['contract_id']for c in value['contracts'])
    else:later_ids.extend(c['contract_id']for c in value['contracts'])
   self.assertEqual(len(later_ids),54);self.assertEqual(len(set(later_ids)),54)
-  self.assertEqual(len(supplemental_ids),10)
+  self.assertEqual(len(supplemental_ids),11)
   self.assertFalse(selected.intersection(later_ids))
   historical=copy.deepcopy(new['runtime_routes'])
   historical_ops={o['contract_id']:o for r in historical for o in r['operations']}
@@ -101,7 +106,7 @@ class NotificationMutationControls(unittest.TestCase):
    # still have to satisfy the immutable historical full-row digest.
    captures=historical_ops[key].pop('supplemental_executable_Source_captures')
    self.assertEqual(len(captures),1)
-   self.assertIn(captures[0]['input']['kind'],[retained_management_contracts.KIND,retained_auth_plugin_contracts.KIND,retained_source12_contracts.KIND])
+   self.assertIn(captures[0]['input']['kind'],[retained_management_contracts.KIND,retained_auth_plugin_contracts.KIND,retained_source12_contracts.KIND,retained_range_source10_contracts.KIND])
   for key in later_ids:
    operation=historical_ops[key]
    operation.pop('executable_Source_contract')

@@ -1,0 +1,4427 @@
+{
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "runtime_discovery": {
+    "path": "docs/rust-runtime-contracts.json",
+    "sha256": "ee4a7d841782761cf8e93c1cd94a41eba9fe752019a1224627f938d64920827b"
+  },
+  "routes": [
+    {
+      "methods": {
+        "post": "login"
+      },
+      "name": "api:accounts:user-login",
+      "pattern": "api/accounts/auth/login/",
+      "view": "apps.accounts.api_views.AuthViewSet"
+    },
+    {
+      "methods": {
+        "post": "proxy_login"
+      },
+      "name": "api:accounts:user-proxy-login",
+      "pattern": "api/accounts/auth/proxy-login/",
+      "view": "apps.accounts.api_views.AuthViewSet"
+    },
+    {
+      "methods": {
+        "post": "logout"
+      },
+      "name": "api:accounts:user-logout",
+      "pattern": "api/accounts/auth/logout/",
+      "view": "apps.accounts.api_views.AuthViewSet"
+    },
+    {
+      "methods": null,
+      "name": "api:accounts:initialize_superuser",
+      "pattern": "api/accounts/initialize-superuser/",
+      "view": "apps.accounts.api_views.initialize_superuser"
+    },
+    {
+      "methods": null,
+      "name": "api:accounts:list-permissions",
+      "pattern": "api/accounts/permissions/",
+      "view": "apps.accounts.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:accounts:token_obtain_pair",
+      "pattern": "api/accounts/token/",
+      "view": "apps.accounts.api_views.TokenObtainPairView"
+    },
+    {
+      "methods": null,
+      "name": "api:accounts:token_refresh",
+      "pattern": "api/accounts/token/refresh/",
+      "view": "apps.accounts.api_views.TokenRefreshView"
+    },
+    {
+      "methods": null,
+      "name": "api:accounts:user-app-data-me",
+      "pattern": "api/accounts/users/me/app-data/",
+      "view": "apps.accounts.api_views.UserAppDataCollectionView"
+    },
+    {
+      "methods": null,
+      "name": "api:accounts:user-app-data-me-key",
+      "pattern": "api/accounts/users/me/app-data/<str:key>/",
+      "view": "apps.accounts.api_views.UserAppDataKeyView"
+    },
+    {
+      "methods": null,
+      "name": "api:accounts:user-app-data",
+      "pattern": "api/accounts/users/<int:user_id>/app-data/",
+      "view": "apps.accounts.api_views.UserAppDataCollectionView"
+    },
+    {
+      "methods": null,
+      "name": "api:accounts:user-app-data-key",
+      "pattern": "api/accounts/users/<int:user_id>/app-data/<str:key>/",
+      "view": "apps.accounts.api_views.UserAppDataKeyView"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:accounts:user-list",
+      "pattern": "api/accounts/^users/$",
+      "view": "apps.accounts.api_views.UserViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:accounts:user-list",
+      "pattern": "api/accounts/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.accounts.api_views.UserViewSet"
+    },
+    {
+      "methods": {
+        "get": "me",
+        "patch": "me"
+      },
+      "name": "api:accounts:user-me",
+      "pattern": "api/accounts/^users/me/$",
+      "view": "apps.accounts.api_views.UserViewSet"
+    },
+    {
+      "methods": {
+        "get": "me",
+        "patch": "me"
+      },
+      "name": "api:accounts:user-me",
+      "pattern": "api/accounts/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.accounts.api_views.UserViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:accounts:user-detail",
+      "pattern": "api/accounts/^users/(?P<pk>[^/.]+)/$",
+      "view": "apps.accounts.api_views.UserViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:accounts:user-detail",
+      "pattern": "api/accounts/^users/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.accounts.api_views.UserViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:accounts:group-list",
+      "pattern": "api/accounts/^groups/$",
+      "view": "apps.accounts.api_views.GroupViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:accounts:group-list",
+      "pattern": "api/accounts/^groups\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.accounts.api_views.GroupViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:accounts:group-detail",
+      "pattern": "api/accounts/^groups/(?P<pk>[^/.]+)/$",
+      "view": "apps.accounts.api_views.GroupViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:accounts:group-detail",
+      "pattern": "api/accounts/^groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.accounts.api_views.GroupViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:accounts:api-key-list",
+      "pattern": "api/accounts/^api-keys/$",
+      "view": "apps.accounts.api_views.APIKeyViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:accounts:api-key-list",
+      "pattern": "api/accounts/^api-keys\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.accounts.api_views.APIKeyViewSet"
+    },
+    {
+      "methods": {
+        "post": "generate"
+      },
+      "name": "api:accounts:api-key-generate",
+      "pattern": "api/accounts/^api-keys/generate/$",
+      "view": "apps.accounts.api_views.APIKeyViewSet"
+    },
+    {
+      "methods": {
+        "post": "generate"
+      },
+      "name": "api:accounts:api-key-generate",
+      "pattern": "api/accounts/^api-keys/generate\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.accounts.api_views.APIKeyViewSet"
+    },
+    {
+      "methods": {
+        "post": "revoke"
+      },
+      "name": "api:accounts:api-key-revoke",
+      "pattern": "api/accounts/^api-keys/revoke/$",
+      "view": "apps.accounts.api_views.APIKeyViewSet"
+    },
+    {
+      "methods": {
+        "post": "revoke"
+      },
+      "name": "api:accounts:api-key-revoke",
+      "pattern": "api/accounts/^api-keys/revoke\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.accounts.api_views.APIKeyViewSet"
+    },
+    {
+      "methods": null,
+      "name": "api:accounts:api-root",
+      "pattern": "api/accounts/",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:accounts:api-root",
+      "pattern": "api/accounts/<drf_format_suffix:format>",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:bulk_delete_streams",
+      "pattern": "api/channels/streams/bulk-delete/",
+      "view": "apps.channels.api_views.BulkDeleteStreamsAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:bulk_delete_channels",
+      "pattern": "api/channels/channels/bulk-delete/",
+      "view": "apps.channels.api_views.BulkDeleteChannelsAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:bulk_delete_logos",
+      "pattern": "api/channels/logos/bulk-delete/",
+      "view": "apps.channels.api_views.BulkDeleteLogosAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:cleanup_unused_logos",
+      "pattern": "api/channels/logos/cleanup/",
+      "view": "apps.channels.api_views.CleanupUnusedLogosAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:get_channel_streams",
+      "pattern": "api/channels/channels/<int:channel_id>/streams/",
+      "view": "apps.channels.api_views.GetChannelStreamsAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:get_channel_stream_stats",
+      "pattern": "api/channels/channels/<int:channel_id>/streams/stats/",
+      "view": "apps.channels.api_views.GetChannelStreamStatsAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:update_channel_membership",
+      "pattern": "api/channels/profiles/<int:profile_id>/channels/<int:channel_id>/",
+      "view": "apps.channels.api_views.UpdateChannelMembershipAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:bulk_update_channel_membership",
+      "pattern": "api/channels/profiles/<int:profile_id>/channels/bulk-update/",
+      "view": "apps.channels.api_views.BulkUpdateChannelMembershipAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:series_rules",
+      "pattern": "api/channels/series-rules/",
+      "view": "apps.channels.api_views.SeriesRulesAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:series_rules_preview",
+      "pattern": "api/channels/series-rules/preview/",
+      "view": "apps.channels.api_views.SeriesRulePreviewAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:evaluate_series_rules",
+      "pattern": "api/channels/series-rules/evaluate/",
+      "view": "apps.channels.api_views.EvaluateSeriesRulesAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:bulk_remove_series_recordings",
+      "pattern": "api/channels/series-rules/bulk-remove/",
+      "view": "apps.channels.api_views.BulkRemoveSeriesRecordingsAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:bulk_delete_upcoming_recordings",
+      "pattern": "api/channels/recordings/bulk-delete-upcoming/",
+      "view": "apps.channels.api_views.BulkDeleteUpcomingRecordingsAPIView"
+    },
+    {
+      "methods": {
+        "get": "hls"
+      },
+      "name": "api:channels:recording-hls",
+      "pattern": "api/channels/recordings/<int:pk>/hls/<path:seg_path>",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:comskip_config",
+      "pattern": "api/channels/dvr/comskip-config/",
+      "view": "apps.channels.api_views.ComskipConfigAPIView"
+    },
+    {
+      "methods": {
+        "get": "cache"
+      },
+      "name": "api:channels:logo-cache-noslash",
+      "pattern": "api/channels/logos/<int:pk>/cache",
+      "view": "apps.channels.api_views.LogoViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:stream-list",
+      "pattern": "api/channels/^streams/$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:stream-list",
+      "pattern": "api/channels/^streams\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "post": "get_by_ids"
+      },
+      "name": "api:channels:stream-get-by-ids",
+      "pattern": "api/channels/^streams/by-ids/$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "post": "get_by_ids"
+      },
+      "name": "api:channels:stream-get-by-ids",
+      "pattern": "api/channels/^streams/by-ids\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_filter_options"
+      },
+      "name": "api:channels:stream-get-filter-options",
+      "pattern": "api/channels/^streams/filter-options/$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_filter_options"
+      },
+      "name": "api:channels:stream-get-filter-options",
+      "pattern": "api/channels/^streams/filter-options\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_groups"
+      },
+      "name": "api:channels:stream-get-groups",
+      "pattern": "api/channels/^streams/groups/$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_groups"
+      },
+      "name": "api:channels:stream-get-groups",
+      "pattern": "api/channels/^streams/groups\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_ids"
+      },
+      "name": "api:channels:stream-get-ids",
+      "pattern": "api/channels/^streams/ids/$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_ids"
+      },
+      "name": "api:channels:stream-get-ids",
+      "pattern": "api/channels/^streams/ids\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "get": "regex_preview"
+      },
+      "name": "api:channels:stream-regex-preview",
+      "pattern": "api/channels/^streams/regex-preview/$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "get": "regex_preview"
+      },
+      "name": "api:channels:stream-regex-preview",
+      "pattern": "api/channels/^streams/regex-preview\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:stream-detail",
+      "pattern": "api/channels/^streams/(?P<pk>[^/.]+)/$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:stream-detail",
+      "pattern": "api/channels/^streams/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.StreamViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:channel-group-list",
+      "pattern": "api/channels/^groups/$",
+      "view": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:channel-group-list",
+      "pattern": "api/channels/^groups\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    {
+      "methods": {
+        "post": "cleanup_unused_groups"
+      },
+      "name": "api:channels:channel-group-cleanup-unused-groups",
+      "pattern": "api/channels/^groups/cleanup/$",
+      "view": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    {
+      "methods": {
+        "post": "cleanup_unused_groups"
+      },
+      "name": "api:channels:channel-group-cleanup-unused-groups",
+      "pattern": "api/channels/^groups/cleanup\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:channel-group-detail",
+      "pattern": "api/channels/^groups/(?P<pk>[^/.]+)/$",
+      "view": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:channel-group-detail",
+      "pattern": "api/channels/^groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    {
+      "methods": {
+        "post": "claim_custom"
+      },
+      "name": "api:channels:channel-group-claim-custom",
+      "pattern": "api/channels/^groups/(?P<pk>[^/.]+)/claim-custom/$",
+      "view": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    {
+      "methods": {
+        "post": "claim_custom"
+      },
+      "name": "api:channels:channel-group-claim-custom",
+      "pattern": "api/channels/^groups/(?P<pk>[^/.]+)/claim-custom\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    {
+      "methods": {
+        "post": "unclaim_custom"
+      },
+      "name": "api:channels:channel-group-unclaim-custom",
+      "pattern": "api/channels/^groups/(?P<pk>[^/.]+)/unclaim-custom/$",
+      "view": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    {
+      "methods": {
+        "post": "unclaim_custom"
+      },
+      "name": "api:channels:channel-group-unclaim-custom",
+      "pattern": "api/channels/^groups/(?P<pk>[^/.]+)/unclaim-custom\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:channel-list",
+      "pattern": "api/channels/^channels/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:channel-list",
+      "pattern": "api/channels/^channels\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "assign"
+      },
+      "name": "api:channels:channel-assign",
+      "pattern": "api/channels/^channels/assign/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "assign"
+      },
+      "name": "api:channels:channel-assign",
+      "pattern": "api/channels/^channels/assign\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "batch_set_epg"
+      },
+      "name": "api:channels:channel-batch-set-epg",
+      "pattern": "api/channels/^channels/batch-set-epg/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "batch_set_epg"
+      },
+      "name": "api:channels:channel-batch-set-epg",
+      "pattern": "api/channels/^channels/batch-set-epg\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "bulk_regex_rename"
+      },
+      "name": "api:channels:channel-bulk-regex-rename",
+      "pattern": "api/channels/^channels/edit/bulk-regex/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "bulk_regex_rename"
+      },
+      "name": "api:channels:channel-bulk-regex-rename",
+      "pattern": "api/channels/^channels/edit/bulk-regex\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "patch": "edit_bulk"
+      },
+      "name": "api:channels:channel-edit-bulk",
+      "pattern": "api/channels/^channels/edit/bulk/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "patch": "edit_bulk"
+      },
+      "name": "api:channels:channel-edit-bulk",
+      "pattern": "api/channels/^channels/edit/bulk\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "from_stream"
+      },
+      "name": "api:channels:channel-from-stream",
+      "pattern": "api/channels/^channels/from-stream/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "from_stream"
+      },
+      "name": "api:channels:channel-from-stream",
+      "pattern": "api/channels/^channels/from-stream\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "from_stream_bulk"
+      },
+      "name": "api:channels:channel-from-stream-bulk",
+      "pattern": "api/channels/^channels/from-stream/bulk/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "from_stream_bulk"
+      },
+      "name": "api:channels:channel-from-stream-bulk",
+      "pattern": "api/channels/^channels/from-stream/bulk\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "get_by_uuids"
+      },
+      "name": "api:channels:channel-get-by-uuids",
+      "pattern": "api/channels/^channels/by-uuids/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "get_by_uuids"
+      },
+      "name": "api:channels:channel-get-by-uuids",
+      "pattern": "api/channels/^channels/by-uuids\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_ids"
+      },
+      "name": "api:channels:channel-get-ids",
+      "pattern": "api/channels/^channels/ids/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_ids"
+      },
+      "name": "api:channels:channel-get-ids",
+      "pattern": "api/channels/^channels/ids\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "match_epg"
+      },
+      "name": "api:channels:channel-match-epg",
+      "pattern": "api/channels/^channels/match-epg/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "match_epg"
+      },
+      "name": "api:channels:channel-match-epg",
+      "pattern": "api/channels/^channels/match-epg\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "get": "numbers_in_range"
+      },
+      "name": "api:channels:channel-numbers-in-range",
+      "pattern": "api/channels/^channels/numbers-in-range/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "get": "numbers_in_range"
+      },
+      "name": "api:channels:channel-numbers-in-range",
+      "pattern": "api/channels/^channels/numbers-in-range\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "set_logos_from_epg"
+      },
+      "name": "api:channels:channel-set-logos-from-epg",
+      "pattern": "api/channels/^channels/set-logos-from-epg/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "set_logos_from_epg"
+      },
+      "name": "api:channels:channel-set-logos-from-epg",
+      "pattern": "api/channels/^channels/set-logos-from-epg\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "set_names_from_epg"
+      },
+      "name": "api:channels:channel-set-names-from-epg",
+      "pattern": "api/channels/^channels/set-names-from-epg/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "set_names_from_epg"
+      },
+      "name": "api:channels:channel-set-names-from-epg",
+      "pattern": "api/channels/^channels/set-names-from-epg\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "set_tvg_ids_from_epg"
+      },
+      "name": "api:channels:channel-set-tvg-ids-from-epg",
+      "pattern": "api/channels/^channels/set-tvg-ids-from-epg/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "set_tvg_ids_from_epg"
+      },
+      "name": "api:channels:channel-set-tvg-ids-from-epg",
+      "pattern": "api/channels/^channels/set-tvg-ids-from-epg\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "get": "summary"
+      },
+      "name": "api:channels:channel-summary",
+      "pattern": "api/channels/^channels/summary/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "get": "summary"
+      },
+      "name": "api:channels:channel-summary",
+      "pattern": "api/channels/^channels/summary\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:channel-detail",
+      "pattern": "api/channels/^channels/(?P<pk>[^/.]+)/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:channel-detail",
+      "pattern": "api/channels/^channels/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "match_channel_epg"
+      },
+      "name": "api:channels:channel-match-channel-epg",
+      "pattern": "api/channels/^channels/(?P<pk>[^/.]+)/match-epg/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "match_channel_epg"
+      },
+      "name": "api:channels:channel-match-channel-epg",
+      "pattern": "api/channels/^channels/(?P<pk>[^/.]+)/match-epg\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "reorder"
+      },
+      "name": "api:channels:channel-reorder",
+      "pattern": "api/channels/^channels/(?P<pk>[^/.]+)/reorder/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "reorder"
+      },
+      "name": "api:channels:channel-reorder",
+      "pattern": "api/channels/^channels/(?P<pk>[^/.]+)/reorder\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "set_epg"
+      },
+      "name": "api:channels:channel-set-epg",
+      "pattern": "api/channels/^channels/(?P<pk>[^/.]+)/set-epg/$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "post": "set_epg"
+      },
+      "name": "api:channels:channel-set-epg",
+      "pattern": "api/channels/^channels/(?P<pk>[^/.]+)/set-epg\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:logo-list",
+      "pattern": "api/channels/^logos/$",
+      "view": "apps.channels.api_views.LogoViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:logo-list",
+      "pattern": "api/channels/^logos\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.LogoViewSet"
+    },
+    {
+      "methods": {
+        "post": "upload"
+      },
+      "name": "api:channels:logo-upload",
+      "pattern": "api/channels/^logos/upload/$",
+      "view": "apps.channels.api_views.LogoViewSet"
+    },
+    {
+      "methods": {
+        "post": "upload"
+      },
+      "name": "api:channels:logo-upload",
+      "pattern": "api/channels/^logos/upload\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.LogoViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:logo-detail",
+      "pattern": "api/channels/^logos/(?P<pk>[^/.]+)/$",
+      "view": "apps.channels.api_views.LogoViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:logo-detail",
+      "pattern": "api/channels/^logos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.LogoViewSet"
+    },
+    {
+      "methods": {
+        "get": "cache"
+      },
+      "name": "api:channels:logo-cache",
+      "pattern": "api/channels/^logos/(?P<pk>[^/.]+)/cache/$",
+      "view": "apps.channels.api_views.LogoViewSet"
+    },
+    {
+      "methods": {
+        "get": "cache"
+      },
+      "name": "api:channels:logo-cache",
+      "pattern": "api/channels/^logos/(?P<pk>[^/.]+)/cache\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.LogoViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:profile-list",
+      "pattern": "api/channels/^profiles/$",
+      "view": "apps.channels.api_views.ChannelProfileViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:profile-list",
+      "pattern": "api/channels/^profiles\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelProfileViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:profile-detail",
+      "pattern": "api/channels/^profiles/(?P<pk>[^/.]+)/$",
+      "view": "apps.channels.api_views.ChannelProfileViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:profile-detail",
+      "pattern": "api/channels/^profiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelProfileViewSet"
+    },
+    {
+      "methods": {
+        "post": "duplicate"
+      },
+      "name": "api:channels:profile-duplicate",
+      "pattern": "api/channels/^profiles/(?P<pk>[^/.]+)/duplicate/$",
+      "view": "apps.channels.api_views.ChannelProfileViewSet"
+    },
+    {
+      "methods": {
+        "post": "duplicate"
+      },
+      "name": "api:channels:profile-duplicate",
+      "pattern": "api/channels/^profiles/(?P<pk>[^/.]+)/duplicate\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.ChannelProfileViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:recording-list",
+      "pattern": "api/channels/^recordings/$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:recording-list",
+      "pattern": "api/channels/^recordings\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:recording-detail",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:recording-detail",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "post": "comskip"
+      },
+      "name": "api:channels:recording-comskip",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/comskip/$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "post": "comskip"
+      },
+      "name": "api:channels:recording-comskip",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/comskip\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "post": "extend"
+      },
+      "name": "api:channels:recording-extend",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/extend/$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "post": "extend"
+      },
+      "name": "api:channels:recording-extend",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/extend\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "get": "file"
+      },
+      "name": "api:channels:recording-file",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/file/$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "get": "file"
+      },
+      "name": "api:channels:recording-file",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/file\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "get": "hls"
+      },
+      "name": "api:channels:recording-hls",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/hls/(?P<seg_path>.+)/$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "get": "hls"
+      },
+      "name": "api:channels:recording-hls",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/hls/(?P<seg_path>.+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "post": "refresh_artwork"
+      },
+      "name": "api:channels:recording-refresh-artwork",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/refresh-artwork/$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "post": "refresh_artwork"
+      },
+      "name": "api:channels:recording-refresh-artwork",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/refresh-artwork\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "post": "stop"
+      },
+      "name": "api:channels:recording-stop",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/stop/$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "post": "stop"
+      },
+      "name": "api:channels:recording-stop",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/stop\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "post": "update_metadata"
+      },
+      "name": "api:channels:recording-update-metadata",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "post": "update_metadata"
+      },
+      "name": "api:channels:recording-update-metadata",
+      "pattern": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecordingViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:recurring-rule-list",
+      "pattern": "api/channels/^recurring-rules/$",
+      "view": "apps.channels.api_views.RecurringRecordingRuleViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:channels:recurring-rule-list",
+      "pattern": "api/channels/^recurring-rules\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecurringRecordingRuleViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:recurring-rule-detail",
+      "pattern": "api/channels/^recurring-rules/(?P<pk>[^/.]+)/$",
+      "view": "apps.channels.api_views.RecurringRecordingRuleViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:channels:recurring-rule-detail",
+      "pattern": "api/channels/^recurring-rules/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.channels.api_views.RecurringRecordingRuleViewSet"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:api-root",
+      "pattern": "api/channels/",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:channels:api-root",
+      "pattern": "api/channels/<drf_format_suffix:format>",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:epg:epg_grid",
+      "pattern": "api/epg/grid/",
+      "view": "apps.epg.api_grid.EPGGridAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:epg:epg_import",
+      "pattern": "api/epg/import/",
+      "view": "apps.epg.api_views.EPGImportAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:epg:current_programs",
+      "pattern": "api/epg/current-programs/",
+      "view": "apps.epg.api_views.CurrentProgramsAPIView"
+    },
+    {
+      "methods": {
+        "get": "poster"
+      },
+      "name": "api:epg:program-poster-noslash",
+      "pattern": "api/epg/programs/<int:pk>/poster",
+      "view": "apps.epg.api_views.ProgramViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:epg:epg-source-list",
+      "pattern": "api/epg/^sources/$",
+      "view": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:epg:epg-source-list",
+      "pattern": "api/epg/^sources\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "methods": {
+        "post": "upload"
+      },
+      "name": "api:epg:epg-source-upload",
+      "pattern": "api/epg/^sources/upload/$",
+      "view": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "methods": {
+        "post": "upload"
+      },
+      "name": "api:epg:epg-source-upload",
+      "pattern": "api/epg/^sources/upload\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:epg:epg-source-detail",
+      "pattern": "api/epg/^sources/(?P<pk>[^/.]+)/$",
+      "view": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:epg:epg-source-detail",
+      "pattern": "api/epg/^sources/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "methods": {
+        "delete": "sd_lineups",
+        "get": "sd_lineups",
+        "post": "sd_lineups"
+      },
+      "name": "api:epg:epg-source-sd-lineups",
+      "pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/$",
+      "view": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "methods": {
+        "delete": "sd_lineups",
+        "get": "sd_lineups",
+        "post": "sd_lineups"
+      },
+      "name": "api:epg:epg-source-sd-lineups",
+      "pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "methods": {
+        "post": "sd_lineups_search"
+      },
+      "name": "api:epg:epg-source-sd-lineups-search",
+      "pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/search/$",
+      "view": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "methods": {
+        "post": "sd_lineups_search"
+      },
+      "name": "api:epg:epg-source-sd-lineups-search",
+      "pattern": "api/epg/^sources/(?P<pk>[^/.]+)/sd-lineups/search\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:epg:program-list",
+      "pattern": "api/epg/^programs/$",
+      "view": "apps.epg.api_views.ProgramViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:epg:program-list",
+      "pattern": "api/epg/^programs\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.ProgramViewSet"
+    },
+    {
+      "methods": {
+        "get": "search"
+      },
+      "name": "api:epg:program-search",
+      "pattern": "api/epg/^programs/search/$",
+      "view": "apps.epg.api_views.ProgramViewSet"
+    },
+    {
+      "methods": {
+        "get": "search"
+      },
+      "name": "api:epg:program-search",
+      "pattern": "api/epg/^programs/search\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.ProgramViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:epg:program-detail",
+      "pattern": "api/epg/^programs/(?P<pk>[^/.]+)/$",
+      "view": "apps.epg.api_views.ProgramViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:epg:program-detail",
+      "pattern": "api/epg/^programs/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.ProgramViewSet"
+    },
+    {
+      "methods": {
+        "get": "poster"
+      },
+      "name": "api:epg:program-poster",
+      "pattern": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+      "view": "apps.epg.api_views.ProgramViewSet"
+    },
+    {
+      "methods": {
+        "get": "poster"
+      },
+      "name": "api:epg:program-poster",
+      "pattern": "api/epg/^programs/(?P<pk>[^/.]+)/poster\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.ProgramViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:epg:epgdata-list",
+      "pattern": "api/epg/^epgdata/$",
+      "view": "apps.epg.api_views.EPGDataViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:epg:epgdata-list",
+      "pattern": "api/epg/^epgdata\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.EPGDataViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:epg:epgdata-detail",
+      "pattern": "api/epg/^epgdata/(?P<pk>[^/.]+)/$",
+      "view": "apps.epg.api_views.EPGDataViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:epg:epgdata-detail",
+      "pattern": "api/epg/^epgdata/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.epg.api_views.EPGDataViewSet"
+    },
+    {
+      "methods": null,
+      "name": "api:epg:api-root",
+      "pattern": "api/epg/",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:epg:api-root",
+      "pattern": "api/epg/<drf_format_suffix:format>",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:hdhr:discover",
+      "pattern": "api/hdhr/discover.json",
+      "view": "apps.hdhr.api_views.DiscoverAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:hdhr:lineup",
+      "pattern": "api/hdhr/lineup.json",
+      "view": "apps.hdhr.api_views.LineupAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:hdhr:lineup_status",
+      "pattern": "api/hdhr/lineup_status.json",
+      "view": "apps.hdhr.api_views.LineupStatusAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:hdhr:device_xml",
+      "pattern": "api/hdhr/device.xml",
+      "view": "apps.hdhr.api_views.HDHRDeviceXMLAPIView"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:hdhr:hdhr-device-list",
+      "pattern": "api/hdhr/^devices/$",
+      "view": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:hdhr:hdhr-device-list",
+      "pattern": "api/hdhr/^devices\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:hdhr:hdhr-device-detail",
+      "pattern": "api/hdhr/^devices/(?P<pk>[^/.]+)/$",
+      "view": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:hdhr:hdhr-device-detail",
+      "pattern": "api/hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    },
+    {
+      "methods": null,
+      "name": "api:hdhr:api-root",
+      "pattern": "api/hdhr/",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:hdhr:api-root",
+      "pattern": "api/hdhr/<drf_format_suffix:format>",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:m3u:m3u_refresh",
+      "pattern": "api/m3u/refresh/",
+      "view": "apps.m3u.api_views.RefreshM3UAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:m3u:m3u_refresh_single",
+      "pattern": "api/m3u/refresh/<int:account_id>/",
+      "view": "apps.m3u.api_views.RefreshSingleM3UAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:m3u:m3u_refresh_account_info",
+      "pattern": "api/m3u/refresh-account-info/<int:profile_id>/",
+      "view": "apps.m3u.api_views.RefreshAccountInfoAPIView"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:m3u:m3u-account-list",
+      "pattern": "api/m3u/^accounts/$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:m3u:m3u-account-list",
+      "pattern": "api/m3u/^accounts\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:m3u:m3u-account-detail",
+      "pattern": "api/m3u/^accounts/(?P<pk>[^/.]+)/$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:m3u:m3u-account-detail",
+      "pattern": "api/m3u/^accounts/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "get": "auto_created_channels_count"
+      },
+      "name": "api:m3u:m3u-account-auto-created-channels-count",
+      "pattern": "api/m3u/^accounts/(?P<pk>[^/.]+)/auto-created-channels-count/$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "get": "auto_created_channels_count"
+      },
+      "name": "api:m3u:m3u-account-auto-created-channels-count",
+      "pattern": "api/m3u/^accounts/(?P<pk>[^/.]+)/auto-created-channels-count\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "post": "refresh_vod"
+      },
+      "name": "api:m3u:m3u-account-refresh-vod",
+      "pattern": "api/m3u/^accounts/(?P<pk>[^/.]+)/refresh-vod/$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "post": "refresh_vod"
+      },
+      "name": "api:m3u:m3u-account-refresh-vod",
+      "pattern": "api/m3u/^accounts/(?P<pk>[^/.]+)/refresh-vod\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "post": "repack_group"
+      },
+      "name": "api:m3u:m3u-account-repack-group",
+      "pattern": "api/m3u/^accounts/(?P<pk>[^/.]+)/repack-group/$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "post": "repack_group"
+      },
+      "name": "api:m3u:m3u-account-repack-group",
+      "pattern": "api/m3u/^accounts/(?P<pk>[^/.]+)/repack-group\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "patch": "update_group_settings"
+      },
+      "name": "api:m3u:m3u-account-update-group-settings",
+      "pattern": "api/m3u/^accounts/(?P<pk>[^/.]+)/group-settings/$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "patch": "update_group_settings"
+      },
+      "name": "api:m3u:m3u-account-update-group-settings",
+      "pattern": "api/m3u/^accounts/(?P<pk>[^/.]+)/group-settings\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.M3UAccountViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:m3u:m3u-account-profiles-list",
+      "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/$",
+      "view": "apps.m3u.api_views.M3UAccountProfileViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:m3u:m3u-account-profiles-list",
+      "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.M3UAccountProfileViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:m3u:m3u-account-profiles-detail",
+      "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)/$",
+      "view": "apps.m3u.api_views.M3UAccountProfileViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:m3u:m3u-account-profiles-detail",
+      "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.M3UAccountProfileViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:m3u:m3u-filters-list",
+      "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/$",
+      "view": "apps.m3u.api_views.M3UFilterViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:m3u:m3u-filters-list",
+      "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/filters\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.M3UFilterViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:m3u:m3u-filters-detail",
+      "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)/$",
+      "view": "apps.m3u.api_views.M3UFilterViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:m3u:m3u-filters-detail",
+      "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.M3UFilterViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:m3u:server-group-list",
+      "pattern": "api/m3u/^server-groups/$",
+      "view": "apps.m3u.api_views.ServerGroupViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:m3u:server-group-list",
+      "pattern": "api/m3u/^server-groups\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.ServerGroupViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:m3u:server-group-detail",
+      "pattern": "api/m3u/^server-groups/(?P<pk>[^/.]+)/$",
+      "view": "apps.m3u.api_views.ServerGroupViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:m3u:server-group-detail",
+      "pattern": "api/m3u/^server-groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.m3u.api_views.ServerGroupViewSet"
+    },
+    {
+      "methods": null,
+      "name": "api:m3u:api-root",
+      "pattern": "api/m3u/",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:m3u:api-root",
+      "pattern": "api/m3u/<drf_format_suffix:format>",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:core:token_refresh",
+      "pattern": "api/core/settings/env/",
+      "view": "core.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:core:version",
+      "pattern": "api/core/version/",
+      "view": "core.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:core:rehash_streams",
+      "pattern": "api/core/rehash-streams/",
+      "view": "core.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:core:timezones",
+      "pattern": "api/core/timezones/",
+      "view": "core.api_views.TimezoneListView"
+    },
+    {
+      "methods": null,
+      "name": "api:core:system_events",
+      "pattern": "api/core/system-events/",
+      "view": "core.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:core:log_files",
+      "pattern": "api/core/logs/",
+      "view": "core.log_files.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:core:log_file_download",
+      "pattern": "api/core/logs/<str:name>/download/",
+      "view": "core.log_files.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:core:log_file",
+      "pattern": "api/core/logs/<str:name>/",
+      "view": "core.log_files.WrappedAPIView"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:core:useragent-list",
+      "pattern": "api/core/^useragents/$",
+      "view": "core.api_views.UserAgentViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:core:useragent-list",
+      "pattern": "api/core/^useragents\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.UserAgentViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:core:useragent-detail",
+      "pattern": "api/core/^useragents/(?P<pk>[^/.]+)/$",
+      "view": "core.api_views.UserAgentViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:core:useragent-detail",
+      "pattern": "api/core/^useragents/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.UserAgentViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:core:streamprofile-list",
+      "pattern": "api/core/^streamprofiles/$",
+      "view": "core.api_views.StreamProfileViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:core:streamprofile-list",
+      "pattern": "api/core/^streamprofiles\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.StreamProfileViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:core:streamprofile-detail",
+      "pattern": "api/core/^streamprofiles/(?P<pk>[^/.]+)/$",
+      "view": "core.api_views.StreamProfileViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:core:streamprofile-detail",
+      "pattern": "api/core/^streamprofiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.StreamProfileViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:core:outputprofile-list",
+      "pattern": "api/core/^outputprofiles/$",
+      "view": "core.api_views.OutputProfileViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:core:outputprofile-list",
+      "pattern": "api/core/^outputprofiles\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.OutputProfileViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:core:outputprofile-detail",
+      "pattern": "api/core/^outputprofiles/(?P<pk>[^/.]+)/$",
+      "view": "core.api_views.OutputProfileViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:core:outputprofile-detail",
+      "pattern": "api/core/^outputprofiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.OutputProfileViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:core:coresettings-list",
+      "pattern": "api/core/^settings/$",
+      "view": "core.api_views.CoreSettingsViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:core:coresettings-list",
+      "pattern": "api/core/^settings\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.CoreSettingsViewSet"
+    },
+    {
+      "methods": {
+        "post": "check"
+      },
+      "name": "api:core:coresettings-check",
+      "pattern": "api/core/^settings/check/$",
+      "view": "core.api_views.CoreSettingsViewSet"
+    },
+    {
+      "methods": {
+        "post": "check"
+      },
+      "name": "api:core:coresettings-check",
+      "pattern": "api/core/^settings/check\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.CoreSettingsViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:core:coresettings-detail",
+      "pattern": "api/core/^settings/(?P<pk>[^/.]+)/$",
+      "view": "core.api_views.CoreSettingsViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:core:coresettings-detail",
+      "pattern": "api/core/^settings/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.CoreSettingsViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:core:systemnotification-list",
+      "pattern": "api/core/^notifications/$",
+      "view": "core.api_views.SystemNotificationViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:core:systemnotification-list",
+      "pattern": "api/core/^notifications\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.SystemNotificationViewSet"
+    },
+    {
+      "methods": {
+        "post": "dismiss_all"
+      },
+      "name": "api:core:systemnotification-dismiss-all",
+      "pattern": "api/core/^notifications/dismiss-all/$",
+      "view": "core.api_views.SystemNotificationViewSet"
+    },
+    {
+      "methods": {
+        "post": "dismiss_all"
+      },
+      "name": "api:core:systemnotification-dismiss-all",
+      "pattern": "api/core/^notifications/dismiss-all\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.SystemNotificationViewSet"
+    },
+    {
+      "methods": {
+        "get": "unread_count"
+      },
+      "name": "api:core:systemnotification-unread-count",
+      "pattern": "api/core/^notifications/count/$",
+      "view": "core.api_views.SystemNotificationViewSet"
+    },
+    {
+      "methods": {
+        "get": "unread_count"
+      },
+      "name": "api:core:systemnotification-unread-count",
+      "pattern": "api/core/^notifications/count\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.SystemNotificationViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:core:systemnotification-detail",
+      "pattern": "api/core/^notifications/(?P<pk>[^/.]+)/$",
+      "view": "core.api_views.SystemNotificationViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:core:systemnotification-detail",
+      "pattern": "api/core/^notifications/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.SystemNotificationViewSet"
+    },
+    {
+      "methods": {
+        "post": "dismiss"
+      },
+      "name": "api:core:systemnotification-dismiss",
+      "pattern": "api/core/^notifications/(?P<pk>[^/.]+)/dismiss/$",
+      "view": "core.api_views.SystemNotificationViewSet"
+    },
+    {
+      "methods": {
+        "post": "dismiss"
+      },
+      "name": "api:core:systemnotification-dismiss",
+      "pattern": "api/core/^notifications/(?P<pk>[^/.]+)/dismiss\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "core.api_views.SystemNotificationViewSet"
+    },
+    {
+      "methods": null,
+      "name": "api:core:api-root",
+      "pattern": "api/core/",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:core:api-root",
+      "pattern": "api/core/<drf_format_suffix:format>",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:list",
+      "pattern": "api/plugins/plugins/",
+      "view": "apps.plugins.api_views.PluginsListAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:reload",
+      "pattern": "api/plugins/plugins/reload/",
+      "view": "apps.plugins.api_views.PluginReloadAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:import",
+      "pattern": "api/plugins/plugins/import/",
+      "view": "apps.plugins.api_views.PluginImportAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:delete",
+      "pattern": "api/plugins/plugins/<str:key>/delete/",
+      "view": "apps.plugins.api_views.PluginDeleteAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:settings",
+      "pattern": "api/plugins/plugins/<str:key>/settings/",
+      "view": "apps.plugins.api_views.PluginSettingsAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:run",
+      "pattern": "api/plugins/plugins/<str:key>/run/",
+      "view": "apps.plugins.api_views.PluginRunAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:enabled",
+      "pattern": "api/plugins/plugins/<str:key>/enabled/",
+      "view": "apps.plugins.api_views.PluginEnabledAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:logo",
+      "pattern": "api/plugins/plugins/<str:key>/logo/",
+      "view": "apps.plugins.api_views.PluginLogoAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:repo-list",
+      "pattern": "api/plugins/repos/",
+      "view": "apps.plugins.api_views.PluginRepoListCreateAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:available-plugins",
+      "pattern": "api/plugins/repos/available/",
+      "view": "apps.plugins.api_views.AvailablePluginsAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:plugin-detail-manifest",
+      "pattern": "api/plugins/repos/plugin-detail/",
+      "view": "apps.plugins.api_views.PluginDetailManifestAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:repo-install",
+      "pattern": "api/plugins/repos/install/",
+      "view": "apps.plugins.api_views.PluginInstallFromRepoAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:repo-settings",
+      "pattern": "api/plugins/repos/settings/",
+      "view": "apps.plugins.api_views.PluginRepoSettingsAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:repo-preview",
+      "pattern": "api/plugins/repos/preview/",
+      "view": "apps.plugins.api_views.PluginRepoPreviewAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:repo-detail",
+      "pattern": "api/plugins/repos/<int:pk>/",
+      "view": "apps.plugins.api_views.PluginRepoDetailAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:plugins:repo-refresh",
+      "pattern": "api/plugins/repos/<int:pk>/refresh/",
+      "view": "apps.plugins.api_views.PluginRepoRefreshAPIView"
+    },
+    {
+      "methods": {
+        "get": "cache"
+      },
+      "name": "api:vod:vodlogo-cache-noslash",
+      "pattern": "api/vod/vodlogos/<int:pk>/cache",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": {
+        "get": "image"
+      },
+      "name": "api:vod:movie-image-noslash",
+      "pattern": "api/vod/movies/<int:pk>/image",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "image"
+      },
+      "name": "api:vod:series-image-noslash",
+      "pattern": "api/vod/series/<int:pk>/image",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "image"
+      },
+      "name": "api:vod:episode-image-noslash",
+      "pattern": "api/vod/episodes/<int:pk>/image",
+      "view": "apps.vod.api_views.EpisodeViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:vod:movie-list",
+      "pattern": "api/vod/^movies/$",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:vod:movie-list",
+      "pattern": "api/vod/^movies\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:vod:movie-detail",
+      "pattern": "api/vod/^movies/(?P<pk>[^/.]+)/$",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:vod:movie-detail",
+      "pattern": "api/vod/^movies/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_providers"
+      },
+      "name": "api:vod:movie-get-providers",
+      "pattern": "api/vod/^movies/(?P<pk>[^/.]+)/providers/$",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_providers"
+      },
+      "name": "api:vod:movie-get-providers",
+      "pattern": "api/vod/^movies/(?P<pk>[^/.]+)/providers\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "image"
+      },
+      "name": "api:vod:movie-image",
+      "pattern": "api/vod/^movies/(?P<pk>[^/.]+)/image/$",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "image"
+      },
+      "name": "api:vod:movie-image",
+      "pattern": "api/vod/^movies/(?P<pk>[^/.]+)/image\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "provider_info"
+      },
+      "name": "api:vod:movie-provider-info",
+      "pattern": "api/vod/^movies/(?P<pk>[^/.]+)/provider-info/$",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "provider_info"
+      },
+      "name": "api:vod:movie-provider-info",
+      "pattern": "api/vod/^movies/(?P<pk>[^/.]+)/provider-info\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.MovieViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:vod:episode-list",
+      "pattern": "api/vod/^episodes/$",
+      "view": "apps.vod.api_views.EpisodeViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:vod:episode-list",
+      "pattern": "api/vod/^episodes\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.EpisodeViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:vod:episode-detail",
+      "pattern": "api/vod/^episodes/(?P<pk>[^/.]+)/$",
+      "view": "apps.vod.api_views.EpisodeViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:vod:episode-detail",
+      "pattern": "api/vod/^episodes/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.EpisodeViewSet"
+    },
+    {
+      "methods": {
+        "get": "image"
+      },
+      "name": "api:vod:episode-image",
+      "pattern": "api/vod/^episodes/(?P<pk>[^/.]+)/image/$",
+      "view": "apps.vod.api_views.EpisodeViewSet"
+    },
+    {
+      "methods": {
+        "get": "image"
+      },
+      "name": "api:vod:episode-image",
+      "pattern": "api/vod/^episodes/(?P<pk>[^/.]+)/image\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.EpisodeViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:vod:series-list",
+      "pattern": "api/vod/^series/$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:vod:series-list",
+      "pattern": "api/vod/^series\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:vod:series-detail",
+      "pattern": "api/vod/^series/(?P<pk>[^/.]+)/$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:vod:series-detail",
+      "pattern": "api/vod/^series/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_episodes"
+      },
+      "name": "api:vod:series-get-episodes",
+      "pattern": "api/vod/^series/(?P<pk>[^/.]+)/episodes/$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_episodes"
+      },
+      "name": "api:vod:series-get-episodes",
+      "pattern": "api/vod/^series/(?P<pk>[^/.]+)/episodes\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_providers"
+      },
+      "name": "api:vod:series-get-providers",
+      "pattern": "api/vod/^series/(?P<pk>[^/.]+)/providers/$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "get_providers"
+      },
+      "name": "api:vod:series-get-providers",
+      "pattern": "api/vod/^series/(?P<pk>[^/.]+)/providers\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "image"
+      },
+      "name": "api:vod:series-image",
+      "pattern": "api/vod/^series/(?P<pk>[^/.]+)/image/$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "image"
+      },
+      "name": "api:vod:series-image",
+      "pattern": "api/vod/^series/(?P<pk>[^/.]+)/image\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "series_info"
+      },
+      "name": "api:vod:series-series-info",
+      "pattern": "api/vod/^series/(?P<pk>[^/.]+)/provider-info/$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "series_info"
+      },
+      "name": "api:vod:series-series-info",
+      "pattern": "api/vod/^series/(?P<pk>[^/.]+)/provider-info\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.SeriesViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:vod:vodcategory-list",
+      "pattern": "api/vod/^categories/$",
+      "view": "apps.vod.api_views.VODCategoryViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:vod:vodcategory-list",
+      "pattern": "api/vod/^categories\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.VODCategoryViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:vod:vodcategory-detail",
+      "pattern": "api/vod/^categories/(?P<pk>[^/.]+)/$",
+      "view": "apps.vod.api_views.VODCategoryViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:vod:vodcategory-detail",
+      "pattern": "api/vod/^categories/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.VODCategoryViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:vod:unified-content-list",
+      "pattern": "api/vod/^all/$",
+      "view": "apps.vod.api_views.UnifiedContentViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:vod:unified-content-list",
+      "pattern": "api/vod/^all\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.UnifiedContentViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:vod:unified-content-detail",
+      "pattern": "api/vod/^all/(?P<pk>[^/.]+)/$",
+      "view": "apps.vod.api_views.UnifiedContentViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:vod:unified-content-detail",
+      "pattern": "api/vod/^all/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.UnifiedContentViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:vod:vodlogo-list",
+      "pattern": "api/vod/^vodlogos/$",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:vod:vodlogo-list",
+      "pattern": "api/vod/^vodlogos\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": {
+        "delete": "bulk_delete"
+      },
+      "name": "api:vod:vodlogo-bulk-delete",
+      "pattern": "api/vod/^vodlogos/bulk-delete/$",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": {
+        "delete": "bulk_delete"
+      },
+      "name": "api:vod:vodlogo-bulk-delete",
+      "pattern": "api/vod/^vodlogos/bulk-delete\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": {
+        "post": "cleanup"
+      },
+      "name": "api:vod:vodlogo-cleanup",
+      "pattern": "api/vod/^vodlogos/cleanup/$",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": {
+        "post": "cleanup"
+      },
+      "name": "api:vod:vodlogo-cleanup",
+      "pattern": "api/vod/^vodlogos/cleanup\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:vod:vodlogo-detail",
+      "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)/$",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:vod:vodlogo-detail",
+      "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": {
+        "get": "cache"
+      },
+      "name": "api:vod:vodlogo-cache",
+      "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)/cache/$",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": {
+        "get": "cache"
+      },
+      "name": "api:vod:vodlogo-cache",
+      "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)/cache\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.vod.api_views.VODLogoViewSet"
+    },
+    {
+      "methods": null,
+      "name": "api:vod:api-root",
+      "pattern": "api/vod/",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:vod:api-root",
+      "pattern": "api/vod/<drf_format_suffix:format>",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:catchup:catchup-session-create",
+      "pattern": "api/catchup/sessions/",
+      "view": "apps.timeshift.api_views.CatchupSessionCreateAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:catchup:catchup-session-position",
+      "pattern": "api/catchup/sessions/<str:session_id>/position/",
+      "view": "apps.timeshift.api_views.CatchupSessionPositionAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:catchup:catchup-session-destroy",
+      "pattern": "api/catchup/sessions/<str:session_id>/",
+      "view": "apps.timeshift.api_views.CatchupSessionDestroyAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:hls:hls-session-destroy",
+      "pattern": "api/proxy/hls/sessions/<str:token>/",
+      "view": "apps.proxy.live_proxy.output.hls.api_views.HlsSessionDestroyAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:backups:backup-list",
+      "pattern": "api/backups/",
+      "view": "apps.backups.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:backups:backup-create",
+      "pattern": "api/backups/create/",
+      "view": "apps.backups.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:backups:backup-upload",
+      "pattern": "api/backups/upload/",
+      "view": "apps.backups.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:backups:backup-schedule-get",
+      "pattern": "api/backups/schedule/",
+      "view": "apps.backups.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:backups:backup-schedule-update",
+      "pattern": "api/backups/schedule/update/",
+      "view": "apps.backups.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:backups:backup-status",
+      "pattern": "api/backups/status/<str:task_id>/",
+      "view": "apps.backups.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:backups:backup-download-token",
+      "pattern": "api/backups/<str:filename>/download-token/",
+      "view": "apps.backups.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:backups:backup-download",
+      "pattern": "api/backups/<str:filename>/download/",
+      "view": "apps.backups.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:backups:backup-delete",
+      "pattern": "api/backups/<str:filename>/delete/",
+      "view": "apps.backups.api_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:backups:backup-restore",
+      "pattern": "api/backups/<str:filename>/restore/",
+      "view": "apps.backups.api_views.WrappedAPIView"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:connect:integration-list",
+      "pattern": "api/connect/^integrations/$",
+      "view": "apps.connect.api_views.IntegrationViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:connect:integration-list",
+      "pattern": "api/connect/^integrations\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.connect.api_views.IntegrationViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:connect:integration-detail",
+      "pattern": "api/connect/^integrations/(?P<pk>[^/.]+)/$",
+      "view": "apps.connect.api_views.IntegrationViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:connect:integration-detail",
+      "pattern": "api/connect/^integrations/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.connect.api_views.IntegrationViewSet"
+    },
+    {
+      "methods": {
+        "get": "list_subscriptions"
+      },
+      "name": "api:connect:integration-list-subscriptions",
+      "pattern": "api/connect/^integrations/(?P<pk>[^/.]+)/subscriptions/$",
+      "view": "apps.connect.api_views.IntegrationViewSet"
+    },
+    {
+      "methods": {
+        "get": "list_subscriptions"
+      },
+      "name": "api:connect:integration-list-subscriptions",
+      "pattern": "api/connect/^integrations/(?P<pk>[^/.]+)/subscriptions\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.connect.api_views.IntegrationViewSet"
+    },
+    {
+      "methods": {
+        "put": "set_subscriptions"
+      },
+      "name": "api:connect:integration-set-subscriptions",
+      "pattern": "api/connect/^integrations/(?P<pk>[^/.]+)/subscriptions/set/$",
+      "view": "apps.connect.api_views.IntegrationViewSet"
+    },
+    {
+      "methods": {
+        "put": "set_subscriptions"
+      },
+      "name": "api:connect:integration-set-subscriptions",
+      "pattern": "api/connect/^integrations/(?P<pk>[^/.]+)/subscriptions/set\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.connect.api_views.IntegrationViewSet"
+    },
+    {
+      "methods": {
+        "post": "test"
+      },
+      "name": "api:connect:integration-test",
+      "pattern": "api/connect/^integrations/(?P<pk>[^/.]+)/test/$",
+      "view": "apps.connect.api_views.IntegrationViewSet"
+    },
+    {
+      "methods": {
+        "post": "test"
+      },
+      "name": "api:connect:integration-test",
+      "pattern": "api/connect/^integrations/(?P<pk>[^/.]+)/test\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.connect.api_views.IntegrationViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:connect:subscription-list",
+      "pattern": "api/connect/^subscriptions/$",
+      "view": "apps.connect.api_views.EventSubscriptionViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "api:connect:subscription-list",
+      "pattern": "api/connect/^subscriptions\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.connect.api_views.EventSubscriptionViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:connect:subscription-detail",
+      "pattern": "api/connect/^subscriptions/(?P<pk>[^/.]+)/$",
+      "view": "apps.connect.api_views.EventSubscriptionViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "api:connect:subscription-detail",
+      "pattern": "api/connect/^subscriptions/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.connect.api_views.EventSubscriptionViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:connect:delivery-log-list",
+      "pattern": "api/connect/^logs/$",
+      "view": "apps.connect.api_views.DeliveryLogViewSet"
+    },
+    {
+      "methods": {
+        "get": "list"
+      },
+      "name": "api:connect:delivery-log-list",
+      "pattern": "api/connect/^logs\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.connect.api_views.DeliveryLogViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:connect:delivery-log-detail",
+      "pattern": "api/connect/^logs/(?P<pk>[^/.]+)/$",
+      "view": "apps.connect.api_views.DeliveryLogViewSet"
+    },
+    {
+      "methods": {
+        "get": "retrieve"
+      },
+      "name": "api:connect:delivery-log-detail",
+      "pattern": "api/connect/^logs/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.connect.api_views.DeliveryLogViewSet"
+    },
+    {
+      "methods": null,
+      "name": "api:connect:api-root",
+      "pattern": "api/connect/",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:connect:api-root",
+      "pattern": "api/connect/<drf_format_suffix:format>",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "api:schema",
+      "pattern": "api/schema/",
+      "view": "apps.api.schema_views.LockedSpectacularAPIView"
+    },
+    {
+      "methods": null,
+      "name": "api:swagger-ui",
+      "pattern": "api/^swagger/?$",
+      "view": "drf_spectacular.views.SpectacularSwaggerView"
+    },
+    {
+      "methods": null,
+      "name": "api:redoc",
+      "pattern": "api/redoc/",
+      "view": "drf_spectacular.views.SpectacularRedocView"
+    },
+    {
+      "methods": null,
+      "name": "api:schema-json",
+      "pattern": "api/swagger.json",
+      "view": "apps.api.schema_views.LockedSpectacularAPIView"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "api",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "swagger/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "swagger",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "redoc/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "redoc",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "output",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "output:m3u_endpoint",
+      "pattern": "output/^m3u(?:/(?P<profile_name>[^/]+))?/?$",
+      "view": "apps.output.views.m3u_endpoint"
+    },
+    {
+      "methods": null,
+      "name": "output:epg_endpoint",
+      "pattern": "output/^epg(?:/(?P<profile_name>[^/]+))?/?$",
+      "view": "apps.output.views.epg_endpoint"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "hdhr",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:discover_with_profile_and_output",
+      "pattern": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/discover.json",
+      "view": "apps.hdhr.api_views.DiscoverAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:lineup_with_profile_and_output",
+      "pattern": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/lineup.json",
+      "view": "apps.hdhr.api_views.LineupAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:lineup_status_with_profile_and_output",
+      "pattern": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/lineup_status.json",
+      "view": "apps.hdhr.api_views.LineupStatusAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:discover_with_output",
+      "pattern": "hdhr/output_profile/<int:output_profile_id>/discover.json",
+      "view": "apps.hdhr.api_views.DiscoverAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:lineup_with_output",
+      "pattern": "hdhr/output_profile/<int:output_profile_id>/lineup.json",
+      "view": "apps.hdhr.api_views.LineupAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:lineup_status_with_output",
+      "pattern": "hdhr/output_profile/<int:output_profile_id>/lineup_status.json",
+      "view": "apps.hdhr.api_views.LineupStatusAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:discover_with_profile",
+      "pattern": "hdhr/<str:channel_profile>/discover.json",
+      "view": "apps.hdhr.api_views.DiscoverAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:lineup_with_profile",
+      "pattern": "hdhr/<str:channel_profile>/lineup.json",
+      "view": "apps.hdhr.api_views.LineupAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:lineup_status_with_profile",
+      "pattern": "hdhr/<str:channel_profile>/lineup_status.json",
+      "view": "apps.hdhr.api_views.LineupStatusAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:discover_no_profile",
+      "pattern": "hdhr/discover.json",
+      "view": "apps.hdhr.api_views.DiscoverAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:lineup_no_profile",
+      "pattern": "hdhr/lineup.json",
+      "view": "apps.hdhr.api_views.LineupAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:lineup_status_no_profile",
+      "pattern": "hdhr/lineup_status.json",
+      "view": "apps.hdhr.api_views.LineupStatusAPIView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:device_xml",
+      "pattern": "hdhr/device.xml",
+      "view": "apps.hdhr.api_views.HDHRDeviceXMLAPIView"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "hdhr:hdhr-device-list",
+      "pattern": "hdhr/^devices/$",
+      "view": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    },
+    {
+      "methods": {
+        "get": "list",
+        "post": "create"
+      },
+      "name": "hdhr:hdhr-device-list",
+      "pattern": "hdhr/^devices\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "hdhr:hdhr-device-detail",
+      "pattern": "hdhr/^devices/(?P<pk>[^/.]+)/$",
+      "view": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    },
+    {
+      "methods": {
+        "delete": "destroy",
+        "get": "retrieve",
+        "patch": "partial_update",
+        "put": "update"
+      },
+      "name": "hdhr:hdhr-device-detail",
+      "pattern": "hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "view": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:api-root",
+      "pattern": "hdhr/",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "hdhr:api-root",
+      "pattern": "hdhr/<drf_format_suffix:format>",
+      "view": "rest_framework.routers.APIRootView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:combined_stats",
+      "pattern": "proxy/stats/",
+      "view": "apps.proxy.stats_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:live_proxy:stream",
+      "pattern": "proxy/ts/stream/<str:channel_id>",
+      "view": "apps.proxy.live_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:live_proxy:change_stream",
+      "pattern": "proxy/ts/change_stream/<str:channel_id>",
+      "view": "apps.proxy.live_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:live_proxy:channel_status",
+      "pattern": "proxy/ts/status",
+      "view": "apps.proxy.live_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:live_proxy:channel_status_detail",
+      "pattern": "proxy/ts/status/<str:channel_id>",
+      "view": "apps.proxy.live_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:live_proxy:stop_channel",
+      "pattern": "proxy/ts/stop/<str:channel_id>",
+      "view": "apps.proxy.live_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:live_proxy:stop_client",
+      "pattern": "proxy/ts/stop_client/<str:channel_id>",
+      "view": "apps.proxy.live_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:live_proxy:next_stream",
+      "pattern": "proxy/ts/next_stream/<str:channel_id>",
+      "view": "apps.proxy.live_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:catchup:catchup_stats",
+      "pattern": "proxy/catchup/stats/",
+      "view": "apps.timeshift.stats_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:catchup:catchup_programmes",
+      "pattern": "proxy/catchup/programs/",
+      "view": "apps.timeshift.stats_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:catchup:catchup_stop_client",
+      "pattern": "proxy/catchup/stop_client/",
+      "view": "apps.timeshift.stats_views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:catchup:catchup",
+      "pattern": "proxy/catchup/<uuid:channel_id>",
+      "view": "apps.timeshift.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:hls_playlist",
+      "pattern": "proxy/hls/<str:token>/index.m3u8",
+      "view": "apps.proxy.live_proxy.output.hls.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:hls_segment",
+      "pattern": "proxy/hls/<str:token>/<int:seq>.ts",
+      "view": "apps.proxy.live_proxy.output.hls.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:vod_proxy:vod_stream_with_session",
+      "pattern": "proxy/vod/<str:content_type>/<uuid:content_id>/<str:session_id>",
+      "view": "apps.proxy.vod_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:vod_proxy:vod_stream_with_session_and_profile",
+      "pattern": "proxy/vod/<str:content_type>/<uuid:content_id>/<str:session_id>/<int:profile_id>/",
+      "view": "apps.proxy.vod_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:vod_proxy:vod_stream",
+      "pattern": "proxy/vod/<str:content_type>/<uuid:content_id>",
+      "view": "apps.proxy.vod_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:vod_proxy:vod_stream_with_profile",
+      "pattern": "proxy/vod/<str:content_type>/<uuid:content_id>/<int:profile_id>/",
+      "view": "apps.proxy.vod_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:vod_proxy:vod_stats",
+      "pattern": "proxy/vod/stats/",
+      "view": "apps.proxy.vod_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "proxy:vod_proxy:stop_vod_client",
+      "pattern": "proxy/vod/stop_client/",
+      "view": "apps.proxy.vod_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "proxy",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "xc_player_api",
+      "pattern": "player_api.php",
+      "view": "apps.output.views.xc_player_api"
+    },
+    {
+      "methods": null,
+      "name": "xc_panel_api",
+      "pattern": "panel_api.php",
+      "view": "apps.output.views.xc_panel_api"
+    },
+    {
+      "methods": null,
+      "name": "xc_get",
+      "pattern": "get.php",
+      "view": "apps.output.views.xc_get"
+    },
+    {
+      "methods": null,
+      "name": "xc_xmltv",
+      "pattern": "xmltv.php",
+      "view": "apps.output.views.xc_xmltv"
+    },
+    {
+      "methods": null,
+      "name": "xc_live_stream_endpoint",
+      "pattern": "live/<str:username>/<str:password>/<str:channel_id>",
+      "view": "apps.proxy.live_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "xc_stream_endpoint",
+      "pattern": "<str:username>/<str:password>/<str:channel_id>",
+      "view": "apps.proxy.live_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "timeshift_proxy",
+      "pattern": "timeshift/<str:username>/<str:password>/<str:duration>/<str:timestamp>/<str:channel_id>",
+      "view": "apps.timeshift.views.timeshift_proxy"
+    },
+    {
+      "methods": null,
+      "name": "timeshift_proxy_query",
+      "pattern": "streaming/timeshift.php",
+      "view": "apps.timeshift.views.timeshift_proxy_query"
+    },
+    {
+      "methods": null,
+      "name": "stream_xc_movie",
+      "pattern": "movie/<str:username>/<str:password>/<str:stream_id>.<str:extension>",
+      "view": "apps.proxy.vod_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "stream_xc_episode",
+      "pattern": "series/<str:username>/<str:password>/<str:stream_id>.<str:extension>",
+      "view": "apps.proxy.vod_proxy.views.WrappedAPIView"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "admin",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:index",
+      "pattern": "admin/",
+      "view": "django.contrib.admin.sites.AdminSite.index"
+    },
+    {
+      "methods": null,
+      "name": "admin:login",
+      "pattern": "admin/login/",
+      "view": "apps.accounts.admin._rate_limited_admin_login"
+    },
+    {
+      "methods": null,
+      "name": "admin:logout",
+      "pattern": "admin/logout/",
+      "view": "django.contrib.admin.sites.AdminSite.logout"
+    },
+    {
+      "methods": null,
+      "name": "admin:password_change",
+      "pattern": "admin/password_change/",
+      "view": "django.contrib.admin.sites.AdminSite.password_change"
+    },
+    {
+      "methods": null,
+      "name": "admin:password_change_done",
+      "pattern": "admin/password_change/done/",
+      "view": "django.contrib.admin.sites.AdminSite.password_change_done"
+    },
+    {
+      "methods": null,
+      "name": "admin:autocomplete",
+      "pattern": "admin/autocomplete/",
+      "view": "django.contrib.admin.sites.AdminSite.autocomplete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:jsi18n",
+      "pattern": "admin/jsi18n/",
+      "view": "django.contrib.admin.sites.AdminSite.i18n_javascript"
+    },
+    {
+      "methods": null,
+      "name": "admin:view_on_site",
+      "pattern": "admin/r/<path:content_type_id>/<path:object_id>/",
+      "view": "django.contrib.contenttypes.views.shortcut"
+    },
+    {
+      "methods": null,
+      "name": "admin:auth_user_password_change",
+      "pattern": "admin/accounts/user/<id>/password/",
+      "view": "django.contrib.auth.admin.UserAdmin.user_change_password"
+    },
+    {
+      "methods": null,
+      "name": "admin:accounts_user_changelist",
+      "pattern": "admin/accounts/user/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:accounts_user_add",
+      "pattern": "admin/accounts/user/add/",
+      "view": "django.contrib.auth.admin.UserAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:accounts_user_history",
+      "pattern": "admin/accounts/user/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:accounts_user_delete",
+      "pattern": "admin/accounts/user/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:accounts_user_change",
+      "pattern": "admin/accounts/user/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/accounts/user/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:auth_group_changelist",
+      "pattern": "admin/auth/group/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:auth_group_add",
+      "pattern": "admin/auth/group/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:auth_group_history",
+      "pattern": "admin/auth/group/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:auth_group_delete",
+      "pattern": "admin/auth/group/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:auth_group_change",
+      "pattern": "admin/auth/group/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/auth/group/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_stream_changelist",
+      "pattern": "admin/dispatcharr_channels/stream/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_stream_add",
+      "pattern": "admin/dispatcharr_channels/stream/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_stream_history",
+      "pattern": "admin/dispatcharr_channels/stream/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_stream_delete",
+      "pattern": "admin/dispatcharr_channels/stream/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_stream_change",
+      "pattern": "admin/dispatcharr_channels/stream/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/dispatcharr_channels/stream/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_channel_changelist",
+      "pattern": "admin/dispatcharr_channels/channel/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_channel_add",
+      "pattern": "admin/dispatcharr_channels/channel/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_channel_history",
+      "pattern": "admin/dispatcharr_channels/channel/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_channel_delete",
+      "pattern": "admin/dispatcharr_channels/channel/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_channel_change",
+      "pattern": "admin/dispatcharr_channels/channel/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/dispatcharr_channels/channel/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_channelgroup_changelist",
+      "pattern": "admin/dispatcharr_channels/channelgroup/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_channelgroup_add",
+      "pattern": "admin/dispatcharr_channels/channelgroup/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_channelgroup_history",
+      "pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_channelgroup_delete",
+      "pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:dispatcharr_channels_channelgroup_change",
+      "pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:epg_epgsource_changelist",
+      "pattern": "admin/epg/epgsource/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:epg_epgsource_add",
+      "pattern": "admin/epg/epgsource/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:epg_epgsource_history",
+      "pattern": "admin/epg/epgsource/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:epg_epgsource_delete",
+      "pattern": "admin/epg/epgsource/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:epg_epgsource_change",
+      "pattern": "admin/epg/epgsource/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/epg/epgsource/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:epg_programdata_changelist",
+      "pattern": "admin/epg/programdata/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:epg_programdata_add",
+      "pattern": "admin/epg/programdata/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:epg_programdata_history",
+      "pattern": "admin/epg/programdata/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:epg_programdata_delete",
+      "pattern": "admin/epg/programdata/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:epg_programdata_change",
+      "pattern": "admin/epg/programdata/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/epg/programdata/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:hdhr_hdhrdevice_changelist",
+      "pattern": "admin/hdhr/hdhrdevice/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:hdhr_hdhrdevice_add",
+      "pattern": "admin/hdhr/hdhrdevice/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:hdhr_hdhrdevice_history",
+      "pattern": "admin/hdhr/hdhrdevice/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:hdhr_hdhrdevice_delete",
+      "pattern": "admin/hdhr/hdhrdevice/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:hdhr_hdhrdevice_change",
+      "pattern": "admin/hdhr/hdhrdevice/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/hdhr/hdhrdevice/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3uaccount_changelist",
+      "pattern": "admin/m3u/m3uaccount/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3uaccount_add",
+      "pattern": "admin/m3u/m3uaccount/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3uaccount_history",
+      "pattern": "admin/m3u/m3uaccount/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3uaccount_delete",
+      "pattern": "admin/m3u/m3uaccount/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3uaccount_change",
+      "pattern": "admin/m3u/m3uaccount/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/m3u/m3uaccount/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3ufilter_changelist",
+      "pattern": "admin/m3u/m3ufilter/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3ufilter_add",
+      "pattern": "admin/m3u/m3ufilter/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3ufilter_history",
+      "pattern": "admin/m3u/m3ufilter/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3ufilter_delete",
+      "pattern": "admin/m3u/m3ufilter/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3ufilter_change",
+      "pattern": "admin/m3u/m3ufilter/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/m3u/m3ufilter/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_servergroup_changelist",
+      "pattern": "admin/m3u/servergroup/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_servergroup_add",
+      "pattern": "admin/m3u/servergroup/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_servergroup_history",
+      "pattern": "admin/m3u/servergroup/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_servergroup_delete",
+      "pattern": "admin/m3u/servergroup/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_servergroup_change",
+      "pattern": "admin/m3u/servergroup/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/m3u/servergroup/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3uaccountprofile_changelist",
+      "pattern": "admin/m3u/m3uaccountprofile/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3uaccountprofile_add",
+      "pattern": "admin/m3u/m3uaccountprofile/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3uaccountprofile_history",
+      "pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3uaccountprofile_delete",
+      "pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:m3u_m3uaccountprofile_change",
+      "pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_vodcategory_changelist",
+      "pattern": "admin/vod/vodcategory/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_vodcategory_add",
+      "pattern": "admin/vod/vodcategory/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_vodcategory_history",
+      "pattern": "admin/vod/vodcategory/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_vodcategory_delete",
+      "pattern": "admin/vod/vodcategory/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_vodcategory_change",
+      "pattern": "admin/vod/vodcategory/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/vod/vodcategory/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_series_changelist",
+      "pattern": "admin/vod/series/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_series_add",
+      "pattern": "admin/vod/series/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_series_history",
+      "pattern": "admin/vod/series/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_series_delete",
+      "pattern": "admin/vod/series/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_series_change",
+      "pattern": "admin/vod/series/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/vod/series/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_movie_changelist",
+      "pattern": "admin/vod/movie/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_movie_add",
+      "pattern": "admin/vod/movie/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_movie_history",
+      "pattern": "admin/vod/movie/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_movie_delete",
+      "pattern": "admin/vod/movie/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_movie_change",
+      "pattern": "admin/vod/movie/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/vod/movie/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_episode_changelist",
+      "pattern": "admin/vod/episode/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_episode_add",
+      "pattern": "admin/vod/episode/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_episode_history",
+      "pattern": "admin/vod/episode/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_episode_delete",
+      "pattern": "admin/vod/episode/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_episode_change",
+      "pattern": "admin/vod/episode/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/vod/episode/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3umovierelation_changelist",
+      "pattern": "admin/vod/m3umovierelation/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3umovierelation_add",
+      "pattern": "admin/vod/m3umovierelation/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3umovierelation_history",
+      "pattern": "admin/vod/m3umovierelation/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3umovierelation_delete",
+      "pattern": "admin/vod/m3umovierelation/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3umovierelation_change",
+      "pattern": "admin/vod/m3umovierelation/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/vod/m3umovierelation/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3useriesrelation_changelist",
+      "pattern": "admin/vod/m3useriesrelation/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3useriesrelation_add",
+      "pattern": "admin/vod/m3useriesrelation/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3useriesrelation_history",
+      "pattern": "admin/vod/m3useriesrelation/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3useriesrelation_delete",
+      "pattern": "admin/vod/m3useriesrelation/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3useriesrelation_change",
+      "pattern": "admin/vod/m3useriesrelation/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/vod/m3useriesrelation/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3uepisoderelation_changelist",
+      "pattern": "admin/vod/m3uepisoderelation/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3uepisoderelation_add",
+      "pattern": "admin/vod/m3uepisoderelation/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3uepisoderelation_history",
+      "pattern": "admin/vod/m3uepisoderelation/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3uepisoderelation_delete",
+      "pattern": "admin/vod/m3uepisoderelation/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:vod_m3uepisoderelation_change",
+      "pattern": "admin/vod/m3uepisoderelation/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/vod/m3uepisoderelation/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_useragent_changelist",
+      "pattern": "admin/core/useragent/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_useragent_add",
+      "pattern": "admin/core/useragent/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_useragent_history",
+      "pattern": "admin/core/useragent/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_useragent_delete",
+      "pattern": "admin/core/useragent/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_useragent_change",
+      "pattern": "admin/core/useragent/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/core/useragent/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_streamprofile_changelist",
+      "pattern": "admin/core/streamprofile/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_streamprofile_add",
+      "pattern": "admin/core/streamprofile/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_streamprofile_history",
+      "pattern": "admin/core/streamprofile/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_streamprofile_delete",
+      "pattern": "admin/core/streamprofile/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_streamprofile_change",
+      "pattern": "admin/core/streamprofile/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/core/streamprofile/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_coresettings_changelist",
+      "pattern": "admin/core/coresettings/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_coresettings_add",
+      "pattern": "admin/core/coresettings/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_coresettings_history",
+      "pattern": "admin/core/coresettings/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_coresettings_delete",
+      "pattern": "admin/core/coresettings/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:core_coresettings_change",
+      "pattern": "admin/core/coresettings/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/core/coresettings/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_periodictask_changelist",
+      "pattern": "admin/django_celery_beat/periodictask/",
+      "view": "django_celery_beat.admin.PeriodicTaskAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_periodictask_add",
+      "pattern": "admin/django_celery_beat/periodictask/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_periodictask_history",
+      "pattern": "admin/django_celery_beat/periodictask/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_periodictask_delete",
+      "pattern": "admin/django_celery_beat/periodictask/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_periodictask_change",
+      "pattern": "admin/django_celery_beat/periodictask/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/django_celery_beat/periodictask/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_clockedschedule_changelist",
+      "pattern": "admin/django_celery_beat/clockedschedule/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_clockedschedule_add",
+      "pattern": "admin/django_celery_beat/clockedschedule/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_clockedschedule_history",
+      "pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_clockedschedule_delete",
+      "pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_clockedschedule_change",
+      "pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_crontabschedule_changelist",
+      "pattern": "admin/django_celery_beat/crontabschedule/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_crontabschedule_add",
+      "pattern": "admin/django_celery_beat/crontabschedule/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_crontabschedule_history",
+      "pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_crontabschedule_delete",
+      "pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_crontabschedule_change",
+      "pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_solarschedule_changelist",
+      "pattern": "admin/django_celery_beat/solarschedule/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_solarschedule_add",
+      "pattern": "admin/django_celery_beat/solarschedule/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_solarschedule_history",
+      "pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_solarschedule_delete",
+      "pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_solarschedule_change",
+      "pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_intervalschedule_changelist",
+      "pattern": "admin/django_celery_beat/intervalschedule/",
+      "view": "django.contrib.admin.options.ModelAdmin.changelist_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_intervalschedule_add",
+      "pattern": "admin/django_celery_beat/intervalschedule/add/",
+      "view": "django.contrib.admin.options.ModelAdmin.add_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_intervalschedule_history",
+      "pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/history/",
+      "view": "django.contrib.admin.options.ModelAdmin.history_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_intervalschedule_delete",
+      "pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/delete/",
+      "view": "django.contrib.admin.options.ModelAdmin.delete_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:django_celery_beat_intervalschedule_change",
+      "pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/change/",
+      "view": "django.contrib.admin.options.ModelAdmin.change_view"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/",
+      "view": "django.views.generic.base.RedirectView"
+    },
+    {
+      "methods": null,
+      "name": "admin:app_list",
+      "pattern": "admin/^(?P<app_label>accounts|auth|dispatcharr_channels|epg|hdhr|m3u|vod|core|django_celery_beat)/$",
+      "view": "django.contrib.admin.sites.AdminSite.app_index"
+    },
+    {
+      "methods": null,
+      "name": "admin:",
+      "pattern": "admin/(?P<url>.*)$",
+      "view": "django.contrib.admin.sites.AdminSite.catch_all_view"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "",
+      "view": "django.views.generic.base.TemplateView"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "<path:unused_path>",
+      "view": "django.views.generic.base.TemplateView"
+    },
+    {
+      "methods": null,
+      "name": "",
+      "pattern": "ws/",
+      "view": "dispatcharr.consumers.MyWebSocketConsumer"
+    }
+  ],
+  "cases": [
+    {
+      "path": "/api/channels/channels/numbers-in-range/",
+      "retained_observation_count": 10,
+      "retained_observations": [
+        {
+          "Source_group": "Source2-range10",
+          "label": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "private_wire_sha256": "5429d3ea420fb48345d2c0c9e0e2fe44be45bbd6c29df0cdb9f63a9f19af78e1",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/anonymous/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "viewer-denied",
+          "method": "GET",
+          "HTTP_status": 403,
+          "private_wire_sha256": "eb7d628496a49f771d3fc15fadf172429c953cb210732873437e8f08dce4084e",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/viewer-denied/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "standard-ACL",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "5d3f538b690e5868fe61c05977083b28d83b149f33ecab9596630f48bc38df62",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/standard-ACL/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "admin-reversed-cap50",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "c671eb4e580c1b7e3037c4eb86946ff6ea290ed2992dc45000a1c631291cb025",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/admin-reversed-cap50/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "missing-start-ignores-bad-end",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "4ecc1c40909633905736471f53379ff656ce3c91a4b383004033455d736d8866",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/missing-start-ignores-bad-end/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "empty-start-ignores-bad-end",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "2056c37e4ea5aada16dd73a38e7ab70d8fa96aac5f65dcf2e0f4f4798ebb8430",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/empty-start-ignores-bad-end/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "invalid-start-before-invalid-end",
+          "method": "GET",
+          "HTTP_status": 400,
+          "private_wire_sha256": "d1a63a8ca74ff1618d02eecde408dbd04fc7c2f64543a40c33d0fcc141b9eeb2",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/invalid-start-before-invalid-end/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "invalid-end",
+          "method": "GET",
+          "HTTP_status": 400,
+          "private_wire_sha256": "728052059f0129e3a46fa1c182bdc377a7d1cf6f0823cdaa5e9629dcd918eb90",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/invalid-end/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "single-fraction-equal-duplicates",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "96a9054dab355f8e33159e9fe544408361878accc6a518869ed6b981537bc318",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/single-fraction-equal-duplicates/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "repeated-last-value",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "ea439d890ef23159f4cd63d1c00a9893defe98795e2c27ac96a2a068c6f14685",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/repeated-last-value/wire.json",
+          "query_credentials_projected": false
+        }
+      ],
+      "expected_resolver_ordinal": 89,
+      "expected_handler": "apps.channels.api_views.ChannelViewSet",
+      "expected_view_name": "api:channels:channel-numbers-in-range",
+      "expected_pattern": "api/channels/^channels/numbers-in-range/$",
+      "expected_action_map": {
+        "get": "numbers_in_range"
+      },
+      "expected_kwargs": {}
+    }
+  ],
+  "retained_case_authorities": [
+    {
+      "path": "artifacts/rust/m1-channel-range-source-ten-qualification-1/qualification.json",
+      "sha256": "21dad852b4a18bbb18f4646d0fd99c3ceb9f513def59c3cece436da2e16dce01"
+    },
+    {
+      "path": "artifacts/rust/m1-channel-range-source-ten-qualification-1/behavior-review.json",
+      "sha256": "5158472743e1950019bf5c277f7aa9ef89573c52142e549459d4bc5f9109ce8b"
+    }
+  ],
+  "expected_Source_business_calls": 0,
+  "expected_handler_invocations": 0,
+  "credit": "Original Dispatcharr and Django/DRF authors retain all application and framework credit.",
+  "scope": "Onlyone actual query-stripped Source2range path covering10 qualifiedcaptures+separate scopedbehaviorreview; existingGET supplement only, noSourceHTTP/replay/alias/role inference"
+}

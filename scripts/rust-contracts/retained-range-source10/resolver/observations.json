@@ -1,0 +1,231 @@
+{
+  "passed": true,
+  "actual_UID": 65532,
+  "Django_version": "6.0.9",
+  "actual_pinned_Django_app_registry_loaded": true,
+  "required_import_signing_key_generated_only_in_memory": true,
+  "token_issuance_or_verification_invoked": false,
+  "actual_shell_initialization_skipped": true,
+  "all592_resolver_identities_order_actions_exact": true,
+  "Source_files": 1211,
+  "Source_HTTP_business_calls": 0,
+  "Source_or_Native_acceptance": false,
+  "counts": {
+    "SQL_connection_or_cursor_attempts": 0,
+    "network_attempts": 1,
+    "thread_attempts": 0,
+    "child_attempts": 0,
+    "handler_invocations": 0
+  },
+  "observations": [
+    {
+      "path": "/api/channels/channels/numbers-in-range/",
+      "retained_observation_count": 10,
+      "retained_observations": [
+        {
+          "Source_group": "Source2-range10",
+          "label": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "private_wire_sha256": "5429d3ea420fb48345d2c0c9e0e2fe44be45bbd6c29df0cdb9f63a9f19af78e1",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/anonymous/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "viewer-denied",
+          "method": "GET",
+          "HTTP_status": 403,
+          "private_wire_sha256": "eb7d628496a49f771d3fc15fadf172429c953cb210732873437e8f08dce4084e",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/viewer-denied/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "standard-ACL",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "5d3f538b690e5868fe61c05977083b28d83b149f33ecab9596630f48bc38df62",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/standard-ACL/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "admin-reversed-cap50",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "c671eb4e580c1b7e3037c4eb86946ff6ea290ed2992dc45000a1c631291cb025",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/admin-reversed-cap50/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "missing-start-ignores-bad-end",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "4ecc1c40909633905736471f53379ff656ce3c91a4b383004033455d736d8866",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/missing-start-ignores-bad-end/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "empty-start-ignores-bad-end",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "2056c37e4ea5aada16dd73a38e7ab70d8fa96aac5f65dcf2e0f4f4798ebb8430",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/empty-start-ignores-bad-end/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "invalid-start-before-invalid-end",
+          "method": "GET",
+          "HTTP_status": 400,
+          "private_wire_sha256": "d1a63a8ca74ff1618d02eecde408dbd04fc7c2f64543a40c33d0fcc141b9eeb2",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/invalid-start-before-invalid-end/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "invalid-end",
+          "method": "GET",
+          "HTTP_status": 400,
+          "private_wire_sha256": "728052059f0129e3a46fa1c182bdc377a7d1cf6f0823cdaa5e9629dcd918eb90",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/invalid-end/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "single-fraction-equal-duplicates",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "96a9054dab355f8e33159e9fe544408361878accc6a518869ed6b981537bc318",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/single-fraction-equal-duplicates/wire.json",
+          "query_credentials_projected": false
+        },
+        {
+          "Source_group": "Source2-range10",
+          "label": "repeated-last-value",
+          "method": "GET",
+          "HTTP_status": 200,
+          "private_wire_sha256": "ea439d890ef23159f4cd63d1c00a9893defe98795e2c27ac96a2a068c6f14685",
+          "private_wire_path": "artifacts/rust/normal-graph-m1-channel-range-source-ten-2/fixtures/Original-ecc60160/channel-number-range/private/repeated-last-value/wire.json",
+          "query_credentials_projected": false
+        }
+      ],
+      "expected_resolver_ordinal": 89,
+      "expected_handler": "apps.channels.api_views.ChannelViewSet",
+      "expected_view_name": "api:channels:channel-numbers-in-range",
+      "expected_pattern": "api/channels/^channels/numbers-in-range/$",
+      "expected_action_map": {
+        "get": "numbers_in_range"
+      },
+      "expected_kwargs": {},
+      "actual_resolver_ordinal": 89,
+      "actual_pattern": "api/channels/^channels/numbers-in-range/$",
+      "actual_view_name": "api:channels:channel-numbers-in-range",
+      "actual_handler": "apps.channels.api_views.ChannelViewSet",
+      "actual_action_map": {
+        "get": "numbers_in_range"
+      },
+      "actual_kwargs": {},
+      "Source_HTTP_replayed": false,
+      "method_permission_or_role_acceptance_added": false
+    }
+  ],
+  "denied_operations": [
+    {
+      "kind": "network_attempts",
+      "operation": "socket.socket.bind",
+      "stage": "django_setup",
+      "caller": {
+        "module": "urllib3.util.connection",
+        "function": "_has_ipv6",
+        "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+        "lineno": 127
+      },
+      "caller_frames": [
+        {
+          "module": "urllib3.util.connection",
+          "function": "_has_ipv6",
+          "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+          "lineno": 127
+        },
+        {
+          "module": "urllib3.util.connection",
+          "function": "<module>",
+          "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/connection.py",
+          "lineno": 137
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_call_with_frames_removed",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 488
+        },
+        {
+          "module": "importlib._bootstrap_external",
+          "function": "exec_module",
+          "filename": "<frozen importlib._bootstrap_external>",
+          "lineno": 1027
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 935
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 1340
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 1369
+        },
+        {
+          "module": "urllib3.util",
+          "function": "<module>",
+          "filename": "/dispatcharrpy/lib/python3.13/site-packages/urllib3/util/__init__.py",
+          "lineno": 4
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_call_with_frames_removed",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 488
+        },
+        {
+          "module": "importlib._bootstrap_external",
+          "function": "exec_module",
+          "filename": "<frozen importlib._bootstrap_external>",
+          "lineno": 1027
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 935
+        },
+        {
+          "module": "importlib._bootstrap",
+          "function": "_find_and_load_unlocked",
+          "filename": "<frozen importlib._bootstrap>",
+          "lineno": 1340
+        }
+      ],
+      "caller_file_sha256": "2633bbdb69731e5ccb5cf4e4afd65605d86c7979cc5633126f50c92d5ad74a74",
+      "original_operation_executed": false,
+      "socket_family": 10,
+      "IPv6_loopback_ephemeral_bind": true
+    }
+  ],
+  "qualified_blocked_import_probe_count": 1,
+  "network_scope": "All network operations denied; one measured urllib3 import-only IPv6 loopback bind capability probe may be separately qualified, preserving network_attempts=1",
+  "network_initialization_or_runtime_parity_claimed": false,
+  "credit": "Original Dispatcharr and Django/DRF authors retain all application/framework credit."
+}

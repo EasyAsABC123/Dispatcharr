@@ -1,0 +1,119 @@
+{
+  "status": "ACTUAL_SOURCE_RANGE10_BEHAVIOR_REVIEW_PASSED_SCOPED",
+  "qualification": "/home/justin/github/Dispatcharr/artifacts/rust/m1-channel-range-source-ten-qualification-1/qualification.json",
+  "qualification_sha256": "21dad852b4a18bbb18f4646d0fd99c3ceb9f513def59c3cece436da2e16dce01",
+  "Source_controller_actual_exit": 0,
+  "Source_HTTP_observed_and_reviewed": 10,
+  "cases": [
+    {
+      "label": "anonymous",
+      "Source_behavior_reviewed": true,
+      "actual_HTTP_status": 401,
+      "occupants": 0,
+      "complete_raw_JSONRenderer_bytes_match_Source_algorithm": true,
+      "all61_SQL_tables59_sequences_unchanged": true,
+      "observed_equal_number_order_only": true
+    },
+    {
+      "label": "viewer-denied",
+      "Source_behavior_reviewed": true,
+      "actual_HTTP_status": 403,
+      "occupants": 0,
+      "complete_raw_JSONRenderer_bytes_match_Source_algorithm": true,
+      "all61_SQL_tables59_sequences_unchanged": true,
+      "observed_equal_number_order_only": true
+    },
+    {
+      "label": "standard-ACL",
+      "Source_behavior_reviewed": true,
+      "actual_HTTP_status": 200,
+      "occupants": 7,
+      "complete_raw_JSONRenderer_bytes_match_Source_algorithm": true,
+      "all61_SQL_tables59_sequences_unchanged": true,
+      "observed_equal_number_order_only": true
+    },
+    {
+      "label": "admin-reversed-cap50",
+      "Source_behavior_reviewed": true,
+      "actual_HTTP_status": 200,
+      "occupants": 50,
+      "complete_raw_JSONRenderer_bytes_match_Source_algorithm": true,
+      "all61_SQL_tables59_sequences_unchanged": true,
+      "observed_equal_number_order_only": true
+    },
+    {
+      "label": "missing-start-ignores-bad-end",
+      "Source_behavior_reviewed": true,
+      "actual_HTTP_status": 200,
+      "occupants": 0,
+      "complete_raw_JSONRenderer_bytes_match_Source_algorithm": true,
+      "all61_SQL_tables59_sequences_unchanged": true,
+      "observed_equal_number_order_only": true
+    },
+    {
+      "label": "empty-start-ignores-bad-end",
+      "Source_behavior_reviewed": true,
+      "actual_HTTP_status": 200,
+      "occupants": 0,
+      "complete_raw_JSONRenderer_bytes_match_Source_algorithm": true,
+      "all61_SQL_tables59_sequences_unchanged": true,
+      "observed_equal_number_order_only": true
+    },
+    {
+      "label": "invalid-start-before-invalid-end",
+      "Source_behavior_reviewed": true,
+      "actual_HTTP_status": 400,
+      "occupants": 0,
+      "complete_raw_JSONRenderer_bytes_match_Source_algorithm": true,
+      "all61_SQL_tables59_sequences_unchanged": true,
+      "observed_equal_number_order_only": true
+    },
+    {
+      "label": "invalid-end",
+      "Source_behavior_reviewed": true,
+      "actual_HTTP_status": 400,
+      "occupants": 0,
+      "complete_raw_JSONRenderer_bytes_match_Source_algorithm": true,
+      "all61_SQL_tables59_sequences_unchanged": true,
+      "observed_equal_number_order_only": true
+    },
+    {
+      "label": "single-fraction-equal-duplicates",
+      "Source_behavior_reviewed": true,
+      "actual_HTTP_status": 200,
+      "occupants": 2,
+      "complete_raw_JSONRenderer_bytes_match_Source_algorithm": true,
+      "all61_SQL_tables59_sequences_unchanged": true,
+      "observed_equal_number_order_only": true
+    },
+    {
+      "label": "repeated-last-value",
+      "Source_behavior_reviewed": true,
+      "actual_HTTP_status": 200,
+      "occupants": 2,
+      "complete_raw_JSONRenderer_bytes_match_Source_algorithm": true,
+      "all61_SQL_tables59_sequences_unchanged": true,
+      "observed_equal_number_order_only": true
+    }
+  ],
+  "Source_method_AST_sha256": "e5ae33aad1b2212f08822c676abf3b5c9139a86bb1fadcb35fa4cadfe4e8321d",
+  "Source_file_sha256": "0d211a4287943b47999f642fdaaec1e368ad331943901e2237c60b09474c38fa",
+  "method_AST_decorators_removed_only_for_direct_call": true,
+  "explicit_adapter_boundaries": [
+    "Source action AST executed unchanged with typed Response and captured SQL/ORM/Coalesce/FK adapters",
+    "Shared user ACL adapter follows pinned access.py over captured user level/adult/profile/membership rows; signatures/network auth are actual Source HTTP observations",
+    "Python directfloat/last-query semantics run on actual captured ASCII values; other numeric grammars remain unqualified",
+    "Equal-number ordering retained as observed only, not guaranteed by Source number-only SQLordering"
+  ],
+  "raw_header_and_transport_scope": "Capture-qualified headers preserved; no whole HTTP transport/FIN or Native middleware comparison inferred",
+  "prior_Source_HTTP_replayed": false,
+  "Native_full_milestone_or_performance_accepted": false,
+  "refs": {
+    "/home/justin/github/Dispatcharr/apps/channels/api_views.py": "0d211a4287943b47999f642fdaaec1e368ad331943901e2237c60b09474c38fa",
+    "/home/justin/github/Dispatcharr/apps/channels/access.py": "6373234f15a76da2d7e1140216401806bb4a480b6488f50837d37e01e2c0e662",
+    "/home/justin/github/Dispatcharr/apps/channels/managers.py": "0b8e2854cd47edeb1d39d6b7f58dd6c03687c289240c1a528e710e4f4c4c7126",
+    "/home/justin/github/Dispatcharr/apps/accounts/permissions.py": "407a0c6cbae122042c722e2bd3792579875a075cb6e6345ff43588250ac6fe6e",
+    "/home/justin/github/Dispatcharr/artifacts/rust/m1-channel-range-source-ten-qualification-1/review_behavior.py": "b47711df92acb8dfb1116577fe720aad347a00c016e3f2f1248bc8d3260f142b"
+  },
+  "credit": "Original Dispatcharr/DRF/CPython/dependency authors retain all behavior/application credit."
+}
