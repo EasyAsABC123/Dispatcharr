@@ -45,3 +45,41 @@ CPU or memory improvement is accepted; previous scoped gains are not transferred
 The corrected [image and package proofs](../scripts/rust-integration/milestone-batch62/package/inventory.json) now pass: image `sha256:65d085f1352588fe4cfa33b63120535211b09e6b689308d97a6181d3dd12e950`, source tree `6985b21554ec59bd576eb3e1f1b671ae565b360a831afc7381482074a88278e9`. All six actual package exits are zero, with 55 exact containers independently absent. The image matches every SDK103 Rust input. Package scripts take 73.576 seconds summed across the six families; this is validation time, not an application performance measurement. An initial pre-package invocation refused a mistyped full revision before any Docker work; the successful invocation reads the revision directly from the build receipt. The reviewed Native19 plan binds 3,833 durable inputs and 62 runtime helpers, with Source0 and no Source business replay. Native19 remains pending execution at this checkpoint.
 
 The contract register separately reaches 152 partial HTTP assignments (646 absent) through retained Source captures. The 342-test register regression passes with one optional skip. These assignments record bounded Source authority; they do not count as complete Native endpoint or milestone acceptance.
+
+
+The [complete Native19 result](../scripts/rust-integration/milestone-batch62/native19/terminal-summary.json)
+is **exit1: fifteen passed, four failed**, in 3,368.155 seconds. Every selected
+context ran; all 3,844 sealed input bytes remain unchanged, both output pipes and
+child groups settled, and independent cleanup verifies 24 exact containers and
+23 original host generations absent. The earlier running checkpoint remains a
+historical snapshot.
+
+The repaired guide passes all25 operations. Provider10 completes all ten local
+stages but fails the strict retained comparison: asymmetric Beat initialization
+changes a captured scheduler FK, and an unordered bulk category INSERT changes
+literal category IDs. The existing production default installer is present;
+matching Source's initialize-then-stop fixture lifecycle is required, together
+with a real ordered INSERT correction. No category ID normalization is accepted.
+
+VOD safe3 captures six HTTP200 bodies, but its comparison fails: Redis metadata
+uses a different worker label from the actual response header. The third case
+also ran with the existing recovery feature disabled, so it did not activate the
+new owned inactive-profile handoff. A production shared worker-identity fix and
+a context-only existing feature activation are prepared separately; default M4
+activation and broader recovery domains remain open.
+
+SD captures five role responses, then stops before sending the sixth request.
+Vary lacks Accept, and Connection:close differs from Source framing. Its shared
+observer rejects the33rd historical ECHO despite the complete4,202-row raw
+journal being below unchanged20,000-row/16MiB budgets. A bounded recent32-marker
+projection preserves the full raw history; header/framing gaps remain explicit.
+
+Manual Comskip3, positive MARK/repeat/CUT/repeat4 and natural automatic MARK pass.
+Natural CUT booking returns201 and artwork succeeds, but its queued recording
+parent is never claimed and no child appears within650 seconds. This differs
+from the earlier booking503 failure. Cold sealed-candidate reading is under
+investigation; the physical error kind is unobserved and is not invented.
+
+The selected batch remains failed. New Rust fixes, physical controls and a full
+affected application rerun are required. No new CPU/memory gain, complete
+milestone, soak or rollback acceptance follows.
