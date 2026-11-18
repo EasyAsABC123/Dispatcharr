@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "actual_Docker_build_exit": 0,
+  "required_actual_recompilations": {
+    "dispatcharr-output-http": true,
+    "dispatcharr-vod-http": true,
+    "dispatcharr-store": true,
+    "dispatcharr-job-transport": true,
+    "dispatcharr-output-store": true,
+    "dispatcharr-rs": true
+  },
+  "reason": "Candidate64 changes Main, Output HTTP, VOD HTTP, Store, JobTransport and OutputStore after Candidate63. Actual recompilation of all six is required; every Rust input binds the actual passing SDK with no exclusions, including vendored original manifests.",
+  "build_log_sha256": "584996c31cc4f30d79eae5b1ebf249de2867cf54f9a0394b5a59bd842789529e",
+  "application_performance_verified": false
+}

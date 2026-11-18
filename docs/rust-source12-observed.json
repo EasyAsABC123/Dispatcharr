@@ -1,0 +1,400 @@
+{
+  "schema": "dispatcharr-source12-observations-v1",
+  "credit": "All application/API/algorithm credit belongs to original Dispatcharr and dependency authors.",
+  "scope": "Source capture qualification and bounded observed behavior only; no Native parity/performance/formal milestone acceptance",
+  "actual_controller_exit": 0,
+  "actual_terminal_consumed": true,
+  "Source_contexts": 2,
+  "Native_contexts": 0,
+  "one_reused_Compose_bootstrap": true,
+  "real_normal_DB_Redis_media_reset_between_contexts": true,
+  "new_SD_search_POST_captures_qualified": 9,
+  "new_M3U_direct_GET_captures_qualified": 3,
+  "all_twelve_capture_qualified": true,
+  "all61_SQL_tables59_literal_sequences_captured_per_boundary": true,
+  "complete_raw_headers_and_outgoing_provenance_retained_privately": true,
+  "old_SD25_Source6_Source50_HTTP_replayed": false,
+  "independent_cleanup": {
+    "passed": true,
+    "exact_CIDs_absent": 3,
+    "original_host_generations_absent": 2
+  },
+  "URI_scope": {
+    "UI_search_template": "POST /api/epg/sources/{id}/sd-lineups/search/",
+    "owned_provider_template": "GET /20141201/headends?country=...&postalcode=...",
+    "actual_query_key_order": [
+      "country",
+      "postalcode"
+    ],
+    "actual_ASCII_space_case": "country=CAN&postalcode=H2X+1Y4",
+    "M3U_template": "GET /get.php (private query credentials omitted)",
+    "uncharacterized_URI_or_query_domains_qualified": false
+  },
+  "renderer_scope": {
+    "actual_pinned_DRF": "3.18.3",
+    "module_sha256": "ded88dfb5dcf205877654ed1daf5e5484ef3d07fa6996d6cc7c1123e5239612f",
+    "render_function_source_sha256": "ae6d2a7469abd2d2b387a531f6e89111e00f26b04695a129ced64b8d8dd35ceb",
+    "pure_UID_read_Django_setup_or_HTTP_calls": 0,
+    "actual_Source_positive_JSON_body_bytes": 381,
+    "actual_Source_U2028_U2029_are_ASCII_escaped": true,
+    "generic_allUnicode_renderer_or_shapes_claimed": false
+  },
+  "SQL_effect_scope": "Search persistent2055 changed only target EPG custom_properties; each M3U export added one core_systemevent row and advanced its serial state. All table/sequence deltas retained.",
+  "Source9_body_shapes": "Observed ordered duplicate lineups, missing fields become null, non-list headends produce empty lineups; no arbitrary malformed/nested shape qualification.",
+  "Native_parity_accepted": false,
+  "performance_accepted": false,
+  "formal_M0_M9_closed": false,
+  "leaves": [
+    {
+      "context": "sd-headends-search",
+      "label": "required-country-before-token",
+      "capture_qualified": true,
+      "actual_HTTP_status": 400,
+      "actual_body_bytes": 48,
+      "body_sha256": "1ffcaa0799b60c883ed216022c48968f657233cf4bf4fb7d760aca033b2d606a",
+      "changed_SQL_tables": [],
+      "changed_sequences": [],
+      "new_WS_events": 0,
+      "required_before_token_observation": {
+        "provider_request_count": 0,
+        "own_token_before_present": false,
+        "own_token_after_present": false
+      },
+      "provider_requests": []
+    },
+    {
+      "context": "sd-headends-search",
+      "label": "anonymous-search",
+      "capture_qualified": true,
+      "actual_HTTP_status": 401,
+      "actual_body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "changed_SQL_tables": [],
+      "changed_sequences": [],
+      "new_WS_events": 0,
+      "provider_requests": []
+    },
+    {
+      "context": "sd-headends-search",
+      "label": "standard-search-forbidden",
+      "capture_qualified": true,
+      "actual_HTTP_status": 403,
+      "actual_body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "changed_SQL_tables": [],
+      "changed_sequences": [],
+      "new_WS_events": 0,
+      "provider_requests": []
+    },
+    {
+      "context": "sd-headends-search",
+      "label": "wrong-source-type-before-body",
+      "capture_qualified": true,
+      "actual_HTTP_status": 400,
+      "actual_body_bytes": 71,
+      "body_sha256": "f4a85ed07d50f4ba02dcd551831a5687425c4b96385c77984c1723ce80bcb80c",
+      "changed_SQL_tables": [],
+      "changed_sequences": [],
+      "new_WS_events": 0,
+      "provider_requests": []
+    },
+    {
+      "context": "sd-headends-search",
+      "label": "ordered-duplicate-and-missing-null-flatten",
+      "capture_qualified": true,
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 381,
+      "body_sha256": "b11a04e43e2ff830a2f5f06ee931442641e64a5222f3153e686f5db8708d3a94",
+      "changed_SQL_tables": [],
+      "changed_sequences": [],
+      "new_WS_events": 0,
+      "renderer_UTF_observation": {
+        "decoded_name_contains_U2028": true,
+        "decoded_location_contains_U2029": true,
+        "raw_UTF8_U2028_present": false,
+        "raw_UTF8_U2029_present": false,
+        "escaped_ASCII_U2028_present": true,
+        "escaped_ASCII_U2029_present": true
+      },
+      "provider_requests": [
+        {
+          "method": "POST",
+          "path": "/20141201/token",
+          "status": 200,
+          "query_key_order": [],
+          "raw_query_ascii_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "debug_header": false
+        },
+        {
+          "method": "GET",
+          "path": "/20141201/headends",
+          "status": 200,
+          "query_key_order": [
+            "country",
+            "postalcode"
+          ],
+          "raw_query_ascii_sha256": "18d9b4f61579c22eb9143ad80c176a468cd8a4f2482e17840e999e434d76f073",
+          "debug_header": false
+        }
+      ]
+    },
+    {
+      "context": "sd-headends-search",
+      "label": "nonlist-headends-empty-list",
+      "capture_qualified": true,
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 14,
+      "body_sha256": "1801b40a369aeb55bee86a18d673edd02e4a9cfe255fb299e611f37cf2e4a8f9",
+      "changed_SQL_tables": [],
+      "changed_sequences": [],
+      "new_WS_events": 0,
+      "provider_requests": [
+        {
+          "method": "GET",
+          "path": "/20141201/headends",
+          "status": 200,
+          "query_key_order": [
+            "country",
+            "postalcode"
+          ],
+          "raw_query_ascii_sha256": "18d9b4f61579c22eb9143ad80c176a468cd8a4f2482e17840e999e434d76f073",
+          "debug_header": false
+        }
+      ]
+    },
+    {
+      "context": "sd-headends-search",
+      "label": "headends-service503",
+      "capture_qualified": true,
+      "actual_HTTP_status": 502,
+      "actual_body_bytes": 165,
+      "body_sha256": "545d0b7b60db7601c62d7b743cf65e78367a88fbad73f72101652685c8bd6ce6",
+      "changed_SQL_tables": [],
+      "changed_sequences": [],
+      "new_WS_events": 0,
+      "provider_requests": [
+        {
+          "method": "GET",
+          "path": "/20141201/headends",
+          "status": 503,
+          "query_key_order": [
+            "country",
+            "postalcode"
+          ],
+          "raw_query_ascii_sha256": "18d9b4f61579c22eb9143ad80c176a468cd8a4f2482e17840e999e434d76f073",
+          "debug_header": false
+        }
+      ]
+    },
+    {
+      "context": "sd-headends-search",
+      "label": "persistent2055-after-cached-token",
+      "capture_qualified": true,
+      "actual_HTTP_status": 400,
+      "actual_body_bytes": 129,
+      "body_sha256": "0b13b0e4b56f7259b8148276b8ef53d881aea9e6b47f5ac13b637168011b9702",
+      "changed_SQL_tables": [
+        "epg_epgsource"
+      ],
+      "changed_sequences": [],
+      "new_WS_events": 0,
+      "provider_requests": [
+        {
+          "method": "GET",
+          "path": "/20141201/headends",
+          "status": 400,
+          "query_key_order": [
+            "country",
+            "postalcode"
+          ],
+          "raw_query_ascii_sha256": "18d9b4f61579c22eb9143ad80c176a468cd8a4f2482e17840e999e434d76f073",
+          "debug_header": true
+        },
+        {
+          "method": "GET",
+          "path": "/20141201/headends",
+          "status": 400,
+          "query_key_order": [
+            "country",
+            "postalcode"
+          ],
+          "raw_query_ascii_sha256": "18d9b4f61579c22eb9143ad80c176a468cd8a4f2482e17840e999e434d76f073",
+          "debug_header": false
+        }
+      ]
+    },
+    {
+      "context": "sd-headends-search",
+      "label": "expired-token-retry-plus-query-space",
+      "capture_qualified": true,
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 381,
+      "body_sha256": "b11a04e43e2ff830a2f5f06ee931442641e64a5222f3153e686f5db8708d3a94",
+      "changed_SQL_tables": [],
+      "changed_sequences": [],
+      "new_WS_events": 0,
+      "provider_requests": [
+        {
+          "method": "GET",
+          "path": "/20141201/headends",
+          "status": 403,
+          "query_key_order": [
+            "country",
+            "postalcode"
+          ],
+          "raw_query_ascii_sha256": "45cfe8aa4ca0cbb53c9cfe5bf6e8c4fe0e4bc908ffebf4494a5853c12b6f3b91",
+          "debug_header": false
+        },
+        {
+          "method": "POST",
+          "path": "/20141201/token",
+          "status": 200,
+          "query_key_order": [],
+          "raw_query_ascii_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "debug_header": false
+        },
+        {
+          "method": "GET",
+          "path": "/20141201/headends",
+          "status": 200,
+          "query_key_order": [
+            "country",
+            "postalcode"
+          ],
+          "raw_query_ascii_sha256": "45cfe8aa4ca0cbb53c9cfe5bf6e8c4fe0e4bc908ffebf4494a5853c12b6f3b91",
+          "debug_header": false
+        }
+      ]
+    },
+    {
+      "context": "m3u-direct-allowlist-three",
+      "label": "ordered-default-no-secondary-fallback",
+      "capture_qualified": true,
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 418,
+      "body_sha256": "93cd79ffa11feb79f47e00d5436891b1f7992b981ba57c0e69923f03f2174882",
+      "changed_SQL_tables": [
+        "core_systemevent"
+      ],
+      "changed_sequences": [
+        "public.core_systemevent_id_seq"
+      ],
+      "new_WS_events": 0,
+      "M3U_counts": {
+        "EXTINF": 1,
+        "URL": 1
+      }
+    },
+    {
+      "context": "m3u-direct-allowlist-three",
+      "label": "raw-xc-chosen-stream-catchup",
+      "capture_qualified": true,
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 461,
+      "body_sha256": "4abef9f9b138faafd10db7e38b4ae6e6034ad76a0d666e09ad29a3664f8f9a83",
+      "changed_SQL_tables": [
+        "core_systemevent"
+      ],
+      "changed_sequences": [
+        "public.core_systemevent_id_seq"
+      ],
+      "new_WS_events": 0,
+      "M3U_counts": {
+        "EXTINF": 1,
+        "URL": 1
+      }
+    },
+    {
+      "context": "m3u-direct-allowlist-three",
+      "label": "empty-effective-inactive-missing",
+      "capture_qualified": true,
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 232,
+      "body_sha256": "6a8222726bc9861de90c347fd430521d205b542ae6fb165998b436e2cd0a9711",
+      "changed_SQL_tables": [
+        "core_systemevent"
+      ],
+      "changed_sequences": [
+        "public.core_systemevent_id_seq"
+      ],
+      "new_WS_events": 0,
+      "M3U_counts": {
+        "EXTINF": 0,
+        "URL": 0
+      }
+    }
+  ],
+  "provenance": {
+    "artifacts/rust/m6-m7-source-twelve-qualification-1/qualification.json": {
+      "sha256": "7c990cb60c721f99af20cd56fc062e87122bba67bf9cbaea8fa54ab1e6f1a686",
+      "bytes": 2481412,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/m6-m7-source-twelve-durable-Root-execution-1/Root-terminal.json": {
+      "sha256": "51e1f1382cd5f0618bf3c87392a5a00a047c76631256d187bd9600fd4861431d",
+      "bytes": 1472,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/m6-m7-source-twelve-durable-Root-execution-1/Root-independent-cleanup.json": {
+      "sha256": "00a0110d7259fd2adc32f469613919ae255e5ebd85f8129a5ccc92ef951a31e6",
+      "bytes": 2369,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/normal-graph-m6-m7-source-twelve-1/binding.json": {
+      "sha256": "0f9ce9131679d852d1924f02cbca3415f749653075be5feff5f9fc085f7410e0",
+      "bytes": 2363429,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/m6-m7-source-twelve-driver-1/closure.json": {
+      "sha256": "587ae022f3272788f56bfdc95533cf5148ebc3ee151424d9b8905ba1fc7dfde4",
+      "bytes": 6194,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/m6-m7-source-twelve-binding-1/actual-UID-1/report.json": {
+      "sha256": "23211179df34a2af899fbd6a19fb4b0f35979b95c90eee120aac3ab3c480fc79",
+      "bytes": 2727,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/ordered-duplicate-and-missing-null-flatten/wire.json": {
+      "sha256": "72b9eb337fdc54f5bb8203077912f3fcc8a7b9fc8be12a041d3756582e21397e",
+      "bytes": 1837,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/headends-service503/wire.json": {
+      "sha256": "8e1c9062a133cd01e755da2bf25b7e18604cdaca6c2d3a43f67a676fce8b6fd5",
+      "bytes": 1530,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/persistent2055-after-cached-token/SQL-before.json": {
+      "sha256": "a1373fecd5ea12e5fdb348f1a7a46837113e8cb3441dbe5f5db669b1d480d21c",
+      "bytes": 70889,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/persistent2055-after-cached-token/SQL-after.json": {
+      "sha256": "d595a58dea44ab072dfb4d9af61e50517f5fa8070943f155b7de0330936a02a0",
+      "bytes": 70890,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/sd-headends-search/private/expired-token-retry-plus-query-space/specific-after.json": {
+      "sha256": "cf5dbf8b1ba2d9b05bfbc547a2fdc3656b5935240cbbdc1ab6966fc4ec607d12",
+      "bytes": 14667,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/m3u-direct-allowlist-three/private/ordered-default-no-secondary-fallback/wire.json": {
+      "sha256": "d6b9e08597143055c03001dd46ebd1c325d6d81519936060d17deca2254b8de1",
+      "bytes": 1590,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/m3u-direct-allowlist-three/private/raw-xc-chosen-stream-catchup/wire.json": {
+      "sha256": "ec18a652991a7c62dee24b7e46b825dce768baaf660510f1d6e59028f4c6270c",
+      "bytes": 1646,
+      "local_raw_retained_not_copied": true
+    },
+    "artifacts/rust/normal-graph-m6-m7-source-twelve-1/fixtures/Original-c2444a65/m3u-direct-allowlist-three/private/empty-effective-inactive-missing/wire.json": {
+      "sha256": "bbf2ef2f68b256e0c8d30470f258e74f98f0a3e5f7156cb926feb78df2a22e10",
+      "bytes": 1342,
+      "local_raw_retained_not_copied": true
+    }
+  },
+  "privacy": "No JWT, credentials, private headers, private response bodies, playlist URLs or full qualification refmap copied."
+}
