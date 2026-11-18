@@ -1,0 +1,117 @@
+{
+  "code": "4826d3ad51df79cf4038e386135c54efa561d9cb",
+  "actual_exit": 1,
+  "actual_terminal_consumed": true,
+  "stdout_EOF": true,
+  "stderr_EOF": true,
+  "process_group_settled": true,
+  "input_integrity_passed": true,
+  "input_drift": [],
+  "boot_id": "209c3592-7593-4044-a50a-845b4daafc9d",
+  "unit": "dispatcharr-native22-candidate64-2.service",
+  "systemd_invocation_id": "b369f3f1acad42ff86808694e2b13795",
+  "cases": [
+    {
+      "case": "vod-credential-profiles",
+      "status": "passed"
+    },
+    {
+      "case": "vod-repeat",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series",
+      "status": "passed"
+    },
+    {
+      "case": "vlc-live",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series-info",
+      "status": "passed"
+    },
+    {
+      "case": "vod-series-advanced",
+      "status": "passed"
+    },
+    {
+      "case": "vod-dense-list",
+      "status": "passed"
+    },
+    {
+      "case": "vod-shared-metadata",
+      "status": "passed"
+    },
+    {
+      "case": "vod-external-identity",
+      "status": "passed"
+    },
+    {
+      "case": "vod-international-catalogue",
+      "status": "passed"
+    },
+    {
+      "case": "vod-ordered-title-identity",
+      "status": "passed"
+    },
+    {
+      "case": "vod-catalogue-scale",
+      "status": "passed"
+    },
+    {
+      "case": "vod-category-language-lifecycle",
+      "status": "passed"
+    },
+    {
+      "case": "live-vod-group-settings",
+      "status": "passed"
+    },
+    {
+      "case": "channel-guide-coupling",
+      "status": "passed"
+    },
+    {
+      "case": "vod-normal-provider-lifecycle",
+      "status": "passed"
+    },
+    {
+      "case": "vod-adoption-safe3",
+      "status": "passed"
+    },
+    {
+      "case": "sd-lineup-contracts",
+      "status": "passed"
+    },
+    {
+      "case": "sd-lineup-source4-contracts",
+      "status": "passed"
+    },
+    {
+      "case": "sd-headends-search",
+      "status": "passed"
+    },
+    {
+      "case": "m3u-direct-allowlist-three",
+      "status": "failed"
+    },
+    {
+      "case": "comskip-manual",
+      "status": "failed"
+    }
+  ],
+  "controller_passed": 20,
+  "controller_failed": 2,
+  "independent_cleanup": {
+    "passed": true,
+    "exact_CIDs_absent": 28,
+    "original_host_generations_absent": 27
+  },
+  "report_sha256": "1ea5fba8855f674d48cc5e911d1875edfef0231923624dac884efaac49ec82ae",
+  "observer_findings": {
+    "M3U": "Missing bounded primitive LONG4 support; corrected offline qualification passes three captured cases; original controller remains failed.",
+    "Comskip": "Natural CUT production completes; integer dictionary key crashes diagnostic path construction. Corrected offline business comparison passes; required own-EDL full audio/video content comparison remains pending."
+  },
+  "full_milestone_passed": false,
+  "performance_verified": false
+}

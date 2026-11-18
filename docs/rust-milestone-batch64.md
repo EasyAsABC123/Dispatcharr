@@ -62,12 +62,22 @@ The source-contract register has 174 partial HTTP assignments and 624 absent
 assignments. Its portable 358-test gate passes with one optional skip. These
 Source definitions do not establish complete Native endpoints or roles.
 
-The [twenty-two-context Native batch](../scripts/rust-integration/milestone-batch64/native22/started-checkpoint.json)
-has started against this image,
-adding the two new feature contexts to the prior twenty. Its setup and comparison
-checks retain Source/Native fixture identity differences and raw transport limits
-explicitly. All 76 runtime inputs passed actual UID readability before the application
-fixture started. Its actual application terminal remains pending.
+The [twenty-two-context Native batch](../scripts/rust-integration/milestone-batch64/native22/terminal-checkpoint.json)
+completed with actual exit 1: **20 contexts passed and two failed**. All 10,560
+bound inputs remain unchanged; output EOF, settled process group and independent
+cleanup of 28 containers and 27 captured host generations verify. The backup
+marker, inactive-profile handoff and all Schedules Direct contexts pass.
+
+Both remaining controller failures involve comparison code. The direct-M3U
+observer lacks primitive pickle LONG4 support; a bounded offline correction
+qualifies all three actual captures without replaying application requests.
+Natural CUT completes recording and Comskip tasks successfully, but the observer
+crashes when constructing a diagnostic path containing an integer dictionary key.
+Correcting only that diagnostic formatting permits the retained business-state
+comparison to pass. The required own-EDL full audio/video content comparison was
+not reached by the original controller and remains pending. These offline findings
+do not change the original exit or establish full batch acceptance.
+
 **All complete M0–M9 milestones remain open**, including remaining compatibility,
 default recovery activation, representative performance, soak and rollback.
 Previous scoped CPU/memory results are not transferred to this candidate.
