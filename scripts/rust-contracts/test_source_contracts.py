@@ -127,6 +127,11 @@ class SourceContracts(unittest.TestCase):
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
+        import framework_suite_contracts
+        for name in framework_suite_contracts.dependencies():
+            p = self.root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, p)
         import retained_sd_contracts
         for name in retained_sd_contracts.dependencies():
             p = self.root / name
@@ -148,10 +153,10 @@ class SourceContracts(unittest.TestCase):
 
     def test_exact_partial_assignments(self):
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 163)
+        self.assertEqual(result['operations'], 173)
         assigned = [o for r in rows for o in r['operations'] if 'executable_Source_contract' in o]
-        self.assertEqual(len(assigned), 163)
-        self.assertEqual(sum(o['method'] is None for o in assigned), 61)
+        self.assertEqual(len(assigned), 173)
+        self.assertEqual(sum(o['method'] is None for o in assigned), 63)
         self.assertEqual(sum(o['result']['new_Source_cases_this_task'] for o in assigned), 78)
         self.assertTrue(all(not o['fully_verified'] for r in rows for o in r['operations']))
 

@@ -1,0 +1,1680 @@
+{
+  "format_version": 1,
+  "binding_kind": "retained_original_full_suite_asserted_framework",
+  "credit": "Original Dispatcharr and dependency authors retain all application/algorithm credit.",
+  "contracts": [
+    {
+      "contract_id": "route-03d1095ddc488e4f9220:POST",
+      "method": "POST",
+      "source_action": "refresh_artwork",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/refresh-artwork/$",
+      "source_handler": "apps.channels.api_views.RecordingViewSet",
+      "resolver_ordinal": 133,
+      "fixture_id": "retained-suite-route-03d1095ddc488e4f9220:POST",
+      "source_role_specs": {},
+      "observed_roles": [],
+      "cases": [
+        {
+          "contract_id": "route-03d1095ddc488e4f9220:POST",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "refresh_artwork",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/refresh-artwork/$",
+          "resolver_ordinal": 133,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_metadata.RefreshArtworkTests.test_returns_200_immediately",
+          "source_path": "apps/channels/tests/test_recording_metadata.py",
+          "class": "RefreshArtworkTests",
+          "test_method": "test_returns_200_immediately",
+          "class_AST_sha256": "47e3326e81016cc7cf90560932c9d30b971f787ca0875c56db28afc59068472b",
+          "test_AST_sha256": "f797bec620335b71730346116a20bd707ce8b92ae26569c2ab7ba8b19434634e",
+          "request_AST_sha256": "ff806985e9ac279045dda9930137092468f2a021595876d8bd14d9ced20a9aea",
+          "supplied_path_template": "/api/channels/recordings/{PK}/refresh-artwork/",
+          "request_expression": "self.factory.post(f\"/api/channels/recordings/{rec.id}/refresh-artwork/\")",
+          "explicit_as_view_expression": "RecordingViewSet.as_view({\"post\": \"refresh_artwork\"})",
+          "explicit_as_view_AST_sha256": "01466842c4e21b49ee865c7ee3adaa1a032350a58d0c1a4b9cb68a65199975c0",
+          "direct_view_invocation": "view(request, pk=rec.id)",
+          "helper_method": "_refresh",
+          "helper_AST_sha256": "1e65205a9f72a8f4c27cdc356a0216d690f293a3c95af5c6ad0c0a2b18911c50",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertTrue(response.data.get(\"success\"))"
+          ],
+          "actual_retained_test_log_block_sha256": "55d70b9cad30e46a188161b9045e9ad1fef6a035bd7c88bf38453d30fd8165a6",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        }
+      ],
+      "assertions": [
+        "Exact retained Original request and bound status/workflow assertions",
+        "Pinned Original class/helper/setup/decorators and actual successful suite attestation; no new HTTP/resolver execution"
+      ],
+      "result": {
+        "state": "retained_Original_framework_assertions",
+        "asserted_request_sites": 1,
+        "new_Source_cases_this_task": 0,
+        "new_Source_execution": false,
+        "Native_coverage_added": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Effective actor roles, real HTTP/runtime side effects and Native parity remain unqualified",
+        "All milestone and performance acceptance remain open"
+      ]
+    },
+    {
+      "contract_id": "route-19bdf8661c1cb2d36711:DELETE",
+      "method": "DELETE",
+      "source_action": "destroy",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^channels/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "resolver_ordinal": 99,
+      "fixture_id": "retained-suite-route-19bdf8661c1cb2d36711:DELETE",
+      "source_role_specs": {},
+      "observed_roles": [],
+      "cases": [
+        {
+          "contract_id": "route-19bdf8661c1cb2d36711:DELETE",
+          "recorded_handler": "apps.channels.api_views.ChannelViewSet",
+          "declared_method": "DELETE",
+          "observed_request_method": "DELETE",
+          "declared_action": "destroy",
+          "pattern_exact": "api/channels/^channels/(?P<pk>[^/.]+)/$",
+          "resolver_ordinal": 99,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_channel_delete_stop_stream.ChannelDeleteStopStreamAPITests.test_delete_without_stop_stream_leaves_proxy_running",
+          "source_path": "apps/channels/tests/test_channel_delete_stop_stream.py",
+          "class": "ChannelDeleteStopStreamAPITests",
+          "test_method": "test_delete_without_stop_stream_leaves_proxy_running",
+          "class_AST_sha256": "7719de516e222e3ed2f548fda35a6c1c009d912b3cb736502d96c429ba2f8d56",
+          "test_AST_sha256": "0b4f935761ac7bf23abe5bafcc2091cc0cf3057236511caa9875aee98ce6c401",
+          "request_AST_sha256": "542719a58173f57c7b2b0569b0f8e532b6f6bb90b9b81b3440349241883cab36",
+          "supplied_path_template": "/api/channels/channels/{PK}/",
+          "request_expression": "self.client.delete(url)",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)",
+            "self.assertFalse(Channel.objects.filter(pk=self.channel.pk).exists())",
+            "mock_stop_channels.assert_not_called()"
+          ],
+          "Original_setup_AST_sha256": "736ebc2a32a388920ccf2633aaf308ea445be77ac3987076c35b2365f215fb24",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "fc79a9d701583c187ee303bb82d56a7767fd0c725b520d200eb7f029d3adde66",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-19bdf8661c1cb2d36711:DELETE",
+          "recorded_handler": "apps.channels.api_views.ChannelViewSet",
+          "declared_method": "DELETE",
+          "observed_request_method": "DELETE",
+          "declared_action": "destroy",
+          "pattern_exact": "api/channels/^channels/(?P<pk>[^/.]+)/$",
+          "resolver_ordinal": 99,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_channel_delete_stop_stream.ChannelDeleteStopStreamAPITests.test_delete_with_stop_stream_stops_before_delete",
+          "source_path": "apps/channels/tests/test_channel_delete_stop_stream.py",
+          "class": "ChannelDeleteStopStreamAPITests",
+          "test_method": "test_delete_with_stop_stream_stops_before_delete",
+          "class_AST_sha256": "7719de516e222e3ed2f548fda35a6c1c009d912b3cb736502d96c429ba2f8d56",
+          "test_AST_sha256": "db295987f20426adaa19cb970c28b31c1c3db3687a5ac8e07fb5c2d45d433dca",
+          "request_AST_sha256": "542719a58173f57c7b2b0569b0f8e532b6f6bb90b9b81b3440349241883cab36",
+          "supplied_path_template": "/api/channels/channels/{PK}/?stop_stream=true",
+          "request_expression": "self.client.delete(url)",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)",
+            "self.assertFalse(Channel.objects.filter(pk=self.channel.pk).exists())",
+            "mock_stop_channels.assert_called_once()",
+            "self.assertEqual(stopped, [channel_uuid])"
+          ],
+          "Original_setup_AST_sha256": "736ebc2a32a388920ccf2633aaf308ea445be77ac3987076c35b2365f215fb24",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "9f921f47b1f778845bacbeb0738cd9cd3f34e85db3b9d4dc6dc62c1ffe97ba75",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        }
+      ],
+      "assertions": [
+        "Exact retained Original request and bound status/workflow assertions",
+        "Pinned Original class/helper/setup/decorators and actual successful suite attestation; no new HTTP/resolver execution"
+      ],
+      "result": {
+        "state": "retained_Original_framework_assertions",
+        "asserted_request_sites": 2,
+        "new_Source_cases_this_task": 0,
+        "new_Source_execution": false,
+        "Native_coverage_added": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Effective actor roles, real HTTP/runtime side effects and Native parity remain unqualified",
+        "All milestone and performance acceptance remain open"
+      ]
+    },
+    {
+      "contract_id": "route-1b77e7ea47cd8f6a9878:POST",
+      "method": "POST",
+      "source_action": "upload",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/epg/^sources/upload/$",
+      "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "resolver_ordinal": 151,
+      "fixture_id": "retained-suite-route-1b77e7ea47cd8f6a9878:POST",
+      "source_role_specs": {},
+      "observed_roles": [],
+      "cases": [
+        {
+          "contract_id": "route-1b77e7ea47cd8f6a9878:POST",
+          "recorded_handler": "apps.epg.api_views.EPGSourceViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "upload",
+          "pattern_exact": "api/epg/^sources/upload/$",
+          "resolver_ordinal": 151,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_upload_security.EPGUploadSecurityTests.test_standard_user_forbidden",
+          "source_path": "apps/epg/tests/test_upload_security.py",
+          "class": "EPGUploadSecurityTests",
+          "test_method": "test_standard_user_forbidden",
+          "class_AST_sha256": "cfa4b5f341f16af3933a17616c119d33412fce103d1df972f43f41d56ed1beb1",
+          "test_AST_sha256": "258d4d744097f35619b67d956236bdf3172ea19fd373b19b46b05711c2dd1abb",
+          "request_AST_sha256": "3b8c941964a4dba3595ad237592bb0939c79612559fc490f995cdaaeb0cdd731",
+          "supplied_path_template": "/api/epg/sources/upload/",
+          "request_expression": "self.factory.post(\n            \"/api/epg/sources/upload/\",\n            {\"file\": content, \"name\": \"Uploaded\", \"source_type\": \"xmltv\"},\n            format=\"multipart\",\n        )",
+          "explicit_as_view_expression": "EPGSourceViewSet.as_view({\"post\": \"upload\"})",
+          "explicit_as_view_AST_sha256": "db8606861fd39c7b49604f4216dd308e6a15479f54ce04f6e7b8b76c71334cee",
+          "direct_view_invocation": "view(request)",
+          "helper_method": "_upload",
+          "helper_AST_sha256": "f31cdf61ae28edf747f57cfbdf4bf24295adb27b912e4bed23e24048c76c848b",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 403)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 403)"
+          ],
+          "actual_retained_test_log_block_sha256": "f4c286c5b591450153fcd7d8a2e4338eee2ed910e61db300e5188aebf4b92679",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-1b77e7ea47cd8f6a9878:POST",
+          "recorded_handler": "apps.epg.api_views.EPGSourceViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "upload",
+          "pattern_exact": "api/epg/^sources/upload/$",
+          "resolver_ordinal": 151,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_upload_security.EPGUploadSecurityTests.test_traversal_filename_rejected",
+          "source_path": "apps/epg/tests/test_upload_security.py",
+          "class": "EPGUploadSecurityTests",
+          "test_method": "test_traversal_filename_rejected",
+          "class_AST_sha256": "cfa4b5f341f16af3933a17616c119d33412fce103d1df972f43f41d56ed1beb1",
+          "test_AST_sha256": "fc7332f1b888d0f93aeafc0f8979afeb1912facb7b5faa4ab6b900c58ba9ec3d",
+          "request_AST_sha256": "3b8c941964a4dba3595ad237592bb0939c79612559fc490f995cdaaeb0cdd731",
+          "supplied_path_template": "/api/epg/sources/upload/",
+          "request_expression": "self.factory.post(\n            \"/api/epg/sources/upload/\",\n            {\"file\": content, \"name\": \"Uploaded\", \"source_type\": \"xmltv\"},\n            format=\"multipart\",\n        )",
+          "explicit_as_view_expression": "EPGSourceViewSet.as_view({\"post\": \"upload\"})",
+          "explicit_as_view_AST_sha256": "db8606861fd39c7b49604f4216dd308e6a15479f54ce04f6e7b8b76c71334cee",
+          "direct_view_invocation": "view(request)",
+          "helper_method": "_upload",
+          "helper_AST_sha256": "f31cdf61ae28edf747f57cfbdf4bf24295adb27b912e4bed23e24048c76c848b",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 400)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 400)",
+            "self.assertIn(\"Invalid filename\", response.data.get(\"error\", \"\"))"
+          ],
+          "actual_retained_test_log_block_sha256": "a6c1cf57b84907f485e909ffe9a78eedd49f9d7f47d828b81b038ca77531a945",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        }
+      ],
+      "assertions": [
+        "Exact retained Original request and bound status/workflow assertions",
+        "Pinned Original class/helper/setup/decorators and actual successful suite attestation; no new HTTP/resolver execution"
+      ],
+      "result": {
+        "state": "retained_Original_framework_assertions",
+        "asserted_request_sites": 2,
+        "new_Source_cases_this_task": 0,
+        "new_Source_execution": false,
+        "Native_coverage_added": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Effective actor roles, real HTTP/runtime side effects and Native parity remain unqualified",
+        "All milestone and performance acceptance remain open"
+      ]
+    },
+    {
+      "contract_id": "route-22bed3a306f31d67bbc5:GET",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^streams/$",
+      "source_handler": "apps.channels.api_views.StreamViewSet",
+      "resolver_ordinal": 45,
+      "fixture_id": "retained-suite-route-22bed3a306f31d67bbc5:GET",
+      "source_role_specs": {},
+      "observed_roles": [],
+      "cases": [
+        {
+          "contract_id": "route-22bed3a306f31d67bbc5:GET",
+          "recorded_handler": "apps.channels.api_views.StreamViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "list",
+          "pattern_exact": "api/channels/^streams/$",
+          "resolver_ordinal": 45,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_stream_url_visibility.StreamUrlVisibilityTests.test_standard_list_omits_provider_urls_but_returns_all_streams",
+          "source_path": "apps/channels/tests/test_stream_url_visibility.py",
+          "class": "StreamUrlVisibilityTests",
+          "test_method": "test_standard_list_omits_provider_urls_but_returns_all_streams",
+          "class_AST_sha256": "97b1e290c5a503727306652d44bd304deb0ff142caba513624a63a830a004a7c",
+          "test_AST_sha256": "8436a88d7f4977047e15d372598aaacf1496c572c2d1a34f26489989fc99b8c5",
+          "request_AST_sha256": "8430ea9a1d3e8bb6e79f9589c441e12e6ebd39bec40025a82aa07b32b40cec1a",
+          "supplied_path_template": "/api/channels/streams/",
+          "request_expression": "self.client.get(\n            \"/api/channels/streams/\", {\"page_size\": 50}\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_200_OK)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_200_OK)",
+            "self.assertIn(self.stream_a.id, by_id)",
+            "self.assertIn(self.stream_b.id, by_id)",
+            "self.assertNotIn(\"url\", by_id[self.stream_a.id])",
+            "self.assertNotIn(\"url\", by_id[self.stream_b.id])",
+            "self.assertNotIn(b\"alice_secret\", response.content)",
+            "self.assertNotIn(b\"bob_secret\", response.content)"
+          ],
+          "Original_setup_AST_sha256": "2fb4235d69cf5ddd05d62d1f8b7e76f27a9ff9f1d8cfc5a95db1bffcef591381",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "779fd73fea55cfa94d56234a8e0360b990abaa1f106eebff4e16e3d2753875f2",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-22bed3a306f31d67bbc5:GET",
+          "recorded_handler": "apps.channels.api_views.StreamViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "list",
+          "pattern_exact": "api/channels/^streams/$",
+          "resolver_ordinal": 45,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_stream_url_visibility.StreamUrlVisibilityTests.test_admin_list_includes_provider_urls",
+          "source_path": "apps/channels/tests/test_stream_url_visibility.py",
+          "class": "StreamUrlVisibilityTests",
+          "test_method": "test_admin_list_includes_provider_urls",
+          "class_AST_sha256": "97b1e290c5a503727306652d44bd304deb0ff142caba513624a63a830a004a7c",
+          "test_AST_sha256": "2731ea6a43eb36acce7acc2989e771754d508b0f2d4d54eb150d9b0070ba4b75",
+          "request_AST_sha256": "8430ea9a1d3e8bb6e79f9589c441e12e6ebd39bec40025a82aa07b32b40cec1a",
+          "supplied_path_template": "/api/channels/streams/",
+          "request_expression": "self.client.get(\n            \"/api/channels/streams/\", {\"page_size\": 50}\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_200_OK)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_200_OK)",
+            "self.assertEqual(by_id[self.stream_a.id][\"url\"], PROVIDER_A)",
+            "self.assertEqual(by_id[self.stream_b.id][\"url\"], PROVIDER_B)"
+          ],
+          "Original_setup_AST_sha256": "2fb4235d69cf5ddd05d62d1f8b7e76f27a9ff9f1d8cfc5a95db1bffcef591381",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "78c7e21dd0bc7b6943e58929b36034b42afa73da258fe2b8a655f8019a71e5d9",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        }
+      ],
+      "assertions": [
+        "Exact retained Original request and bound status/workflow assertions",
+        "Pinned Original class/helper/setup/decorators and actual successful suite attestation; no new HTTP/resolver execution"
+      ],
+      "result": {
+        "state": "retained_Original_framework_assertions",
+        "asserted_request_sites": 2,
+        "new_Source_cases_this_task": 0,
+        "new_Source_execution": false,
+        "Native_coverage_added": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Effective actor roles, real HTTP/runtime side effects and Native parity remain unqualified",
+        "All milestone and performance acceptance remain open"
+      ]
+    },
+    {
+      "contract_id": "route-3baa325cb0abf0609e08:POST",
+      "method": "POST",
+      "source_action": "set_logos_from_epg",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^channels/set-logos-from-epg/$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "resolver_ordinal": 91,
+      "fixture_id": "retained-suite-route-3baa325cb0abf0609e08:POST",
+      "source_role_specs": {},
+      "observed_roles": [],
+      "cases": [
+        {
+          "contract_id": "route-3baa325cb0abf0609e08:POST",
+          "recorded_handler": "apps.channels.api_views.ChannelViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "set_logos_from_epg",
+          "pattern_exact": "api/channels/^channels/set-logos-from-epg/$",
+          "resolver_ordinal": 91,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_epg_logo_apply.SetLogosFromEpgApiTests.test_accepts_channel_ids",
+          "source_path": "apps/channels/tests/test_epg_logo_apply.py",
+          "class": "SetLogosFromEpgApiTests",
+          "test_method": "test_accepts_channel_ids",
+          "class_AST_sha256": "b71922c514d92b2652a8744f5c464fbb719480a98fa49b8a5608de2a5791da9a",
+          "test_AST_sha256": "afeef635bbf6582553caeaef0cad6a62b6544504483caffd6cdf71cb54d0ab4a",
+          "request_AST_sha256": "82dc9d4786d3d7ca4a3973d3faaf5cd8352c0d94e21c79fecef98f7aff29ab5d",
+          "supplied_path_template": "/api/channels/channels/set-logos-from-epg/",
+          "request_expression": "self.client.post(\n            self.url,\n            {'channel_ids': [self.channel.id]},\n            format='json',\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_200_OK)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_200_OK)",
+            "mock_delay.assert_called_once_with(channel_ids=[self.channel.id])"
+          ],
+          "Original_setup_AST_sha256": "00d748cbfa78313cb83f6c46ef8830d9b05a414ac5d206faee8bbef1751f44bb",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "54b568632c064e04b0c635979833e32b6ad8523451eb8ef9ef735473cc62c69c",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-3baa325cb0abf0609e08:POST",
+          "recorded_handler": "apps.channels.api_views.ChannelViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "set_logos_from_epg",
+          "pattern_exact": "api/channels/^channels/set-logos-from-epg/$",
+          "resolver_ordinal": 91,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_epg_logo_apply.SetLogosFromEpgApiTests.test_accepts_epg_source_id",
+          "source_path": "apps/channels/tests/test_epg_logo_apply.py",
+          "class": "SetLogosFromEpgApiTests",
+          "test_method": "test_accepts_epg_source_id",
+          "class_AST_sha256": "b71922c514d92b2652a8744f5c464fbb719480a98fa49b8a5608de2a5791da9a",
+          "test_AST_sha256": "f54ada3cda6dea41d015ae68898c6f4c074c7ba4a43ad2886bfdedf4bc751512",
+          "request_AST_sha256": "b827774245aaa58bde3a98a1e3fb8afa12b9a8cc2d94ab93396339aaca420fd8",
+          "supplied_path_template": "/api/channels/channels/set-logos-from-epg/",
+          "request_expression": "self.client.post(\n            self.url,\n            {'epg_source_id': self.source.id},\n            format='json',\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_200_OK)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_200_OK)",
+            "mock_delay.assert_called_once_with(epg_source_id=self.source.id)",
+            "self.assertEqual(response.data['channel_count'], 1)"
+          ],
+          "Original_setup_AST_sha256": "00d748cbfa78313cb83f6c46ef8830d9b05a414ac5d206faee8bbef1751f44bb",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "15b5a975dffa3fdbc06c045f5ad35c545d09f571f12e3b1c4692202e86fc701a",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-3baa325cb0abf0609e08:POST",
+          "recorded_handler": "apps.channels.api_views.ChannelViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "set_logos_from_epg",
+          "pattern_exact": "api/channels/^channels/set-logos-from-epg/$",
+          "resolver_ordinal": 91,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_epg_logo_apply.SetLogosFromEpgApiTests.test_rejects_both_parameters",
+          "source_path": "apps/channels/tests/test_epg_logo_apply.py",
+          "class": "SetLogosFromEpgApiTests",
+          "test_method": "test_rejects_both_parameters",
+          "class_AST_sha256": "b71922c514d92b2652a8744f5c464fbb719480a98fa49b8a5608de2a5791da9a",
+          "test_AST_sha256": "93cea675d965252a24b59529b7ef6ebefcbf98cd5361be686c5e566b124ad80e",
+          "request_AST_sha256": "f6d9fb1835b0815d1517f2520d6413bf4e543a770e1dfecc324d3833b067260a",
+          "supplied_path_template": "/api/channels/channels/set-logos-from-epg/",
+          "request_expression": "self.client.post(\n            self.url,\n            {\n                'channel_ids': [self.channel.id],\n                'epg_source_id': self.source.id,\n            },\n            format='json',\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)"
+          ],
+          "Original_setup_AST_sha256": "00d748cbfa78313cb83f6c46ef8830d9b05a414ac5d206faee8bbef1751f44bb",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "acdc35002fe964295461399d399548bc7befdd742e0e27f7722d5248b94cf6c7",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        }
+      ],
+      "assertions": [
+        "Exact retained Original request and bound status/workflow assertions",
+        "Pinned Original class/helper/setup/decorators and actual successful suite attestation; no new HTTP/resolver execution"
+      ],
+      "result": {
+        "state": "retained_Original_framework_assertions",
+        "asserted_request_sites": 3,
+        "new_Source_cases_this_task": 0,
+        "new_Source_execution": false,
+        "Native_coverage_added": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Effective actor roles, real HTTP/runtime side effects and Native parity remain unqualified",
+        "All milestone and performance acceptance remain open"
+      ]
+    },
+    {
+      "contract_id": "route-71e69b54795410954f68:METHOD_UNRESOLVED",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M5",
+      "pattern_exact": "api/core/rehash-streams/",
+      "source_handler": "core.api_views.WrappedAPIView",
+      "resolver_ordinal": 214,
+      "fixture_id": "retained-suite-route-71e69b54795410954f68:METHOD_UNRESOLVED",
+      "source_role_specs": {},
+      "observed_roles": [],
+      "cases": [
+        {
+          "contract_id": "route-71e69b54795410954f68:METHOD_UNRESOLVED",
+          "recorded_handler": "core.api_views.WrappedAPIView",
+          "declared_method": null,
+          "observed_request_method": "POST",
+          "declared_action": null,
+          "pattern_exact": "api/core/rehash-streams/",
+          "resolver_ordinal": 214,
+          "owning_milestone": "M5",
+          "test_id": "apps.m3u.tests.test_hash_key_override.GlobalHashKeySavePathTests.test_rehash_endpoint_preacquires_locks",
+          "source_path": "apps/m3u/tests/test_hash_key_override.py",
+          "class": "GlobalHashKeySavePathTests",
+          "test_method": "test_rehash_endpoint_preacquires_locks",
+          "class_AST_sha256": "419adc0dd3b9064bfb2bf6926c8ef3a237ebbd0675fc52280f6f18c2fe3e9bf8",
+          "test_AST_sha256": "6abaf9854742f7863ba6ebe97b2d73b6e827cf6dcf46ad5cc680bd0c6785436b",
+          "request_AST_sha256": "25681fc716fadc49e3a184504a4ec3b70e0d548548d77baeace027fe77c4c82a",
+          "supplied_path_template": "/api/core/rehash-streams/",
+          "request_expression": "self.client.post(\"/api/core/rehash-streams/\")",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertTrue(response.data.get(\"success\"))",
+            "self.assertEqual(response.data.get(\"task_id\"), \"rehash-task-id\")",
+            "mock_delay.assert_called_once()",
+            "self.assertEqual(args[0], [\"name\", \"url\"])",
+            "self.assertTrue(kwargs[\"locks_preacquired\"])",
+            "self.assertIn(self.plain.id, kwargs[\"preacquired_lock_ids\"])",
+            "self.assertIn(self.inactive.id, kwargs[\"preacquired_lock_ids\"])",
+            "self.assertNotIn(self.override.id, kwargs[\"preacquired_lock_ids\"])",
+            "self.assertTrue(kwargs[\"preacquired_lock_token\"])"
+          ],
+          "Original_setup_AST_sha256": "11a484c5723c9c30bd75611b123c68358757fd88001cfb059be33723342980f1",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "64a829ba73c2c3faf6ac092e9e1a2accc7f3e1de45f59b6301d148fbad593257",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        }
+      ],
+      "assertions": [
+        "Exact retained Original request and bound status/workflow assertions",
+        "Pinned Original class/helper/setup/decorators and actual successful suite attestation; no new HTTP/resolver execution"
+      ],
+      "result": {
+        "state": "retained_Original_framework_assertions",
+        "asserted_request_sites": 1,
+        "new_Source_cases_this_task": 0,
+        "new_Source_execution": false,
+        "Native_coverage_added": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Effective actor roles, real HTTP/runtime side effects and Native parity remain unqualified",
+        "All milestone and performance acceptance remain open"
+      ]
+    },
+    {
+      "contract_id": "route-8cf1e1cec19e65ce238c:POST",
+      "method": "POST",
+      "source_action": "update_metadata",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+      "source_handler": "apps.channels.api_views.RecordingViewSet",
+      "resolver_ordinal": 137,
+      "fixture_id": "retained-suite-route-8cf1e1cec19e65ce238c:POST",
+      "source_role_specs": {},
+      "observed_roles": [],
+      "cases": [
+        {
+          "contract_id": "route-8cf1e1cec19e65ce238c:POST",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "update_metadata",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+          "resolver_ordinal": 137,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_metadata.UpdateMetadataTests.test_update_title_only",
+          "source_path": "apps/channels/tests/test_recording_metadata.py",
+          "class": "UpdateMetadataTests",
+          "test_method": "test_update_title_only",
+          "class_AST_sha256": "b812df4707ed2aeea8302a5a9d9f1fd8cda4d0888d462036d94bcee3f3c4e7d2",
+          "test_AST_sha256": "c91d29d665695de7d10142dd3d831213c3d43afae68c18c3bdab8361d69230e5",
+          "request_AST_sha256": "d5ea2613997ab706871cf309b606cd69e5090d5f9972ab56a09c9a0ed534003a",
+          "supplied_path_template": "/api/channels/recordings/{PK}/update-metadata/",
+          "request_expression": "self.factory.post(\n            f\"/api/channels/recordings/{rec.id}/update-metadata/\",\n            data, format=\"json\",\n        )",
+          "explicit_as_view_expression": "RecordingViewSet.as_view({\"post\": \"update_metadata\"})",
+          "explicit_as_view_AST_sha256": "e1f923fd023bd9d91b664d5d7fa6168b7ebfe544d23381d5550ec28b8f377125",
+          "direct_view_invocation": "view(request, pk=rec.id)",
+          "helper_method": "_update",
+          "helper_AST_sha256": "b90c07e91f7f128a4558b112bb9bcdb6e2b7808ba7519a3f0b82b3f941070948",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertEqual(program[\"title\"], \"My Show\")",
+            "self.assertTrue(program[\"user_edited\"])"
+          ],
+          "actual_retained_test_log_block_sha256": "fd47ef313626ad22e01d609b89bc3e3c36f48867a7502c799ded11096dff79b6",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-8cf1e1cec19e65ce238c:POST",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "update_metadata",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+          "resolver_ordinal": 137,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_metadata.UpdateMetadataTests.test_update_description_only",
+          "source_path": "apps/channels/tests/test_recording_metadata.py",
+          "class": "UpdateMetadataTests",
+          "test_method": "test_update_description_only",
+          "class_AST_sha256": "b812df4707ed2aeea8302a5a9d9f1fd8cda4d0888d462036d94bcee3f3c4e7d2",
+          "test_AST_sha256": "62310f22373854b6dffae588ffcc6cfaeb68435a85b34d047448665420f721e0",
+          "request_AST_sha256": "d5ea2613997ab706871cf309b606cd69e5090d5f9972ab56a09c9a0ed534003a",
+          "supplied_path_template": "/api/channels/recordings/{PK}/update-metadata/",
+          "request_expression": "self.factory.post(\n            f\"/api/channels/recordings/{rec.id}/update-metadata/\",\n            data, format=\"json\",\n        )",
+          "explicit_as_view_expression": "RecordingViewSet.as_view({\"post\": \"update_metadata\"})",
+          "explicit_as_view_AST_sha256": "e1f923fd023bd9d91b664d5d7fa6168b7ebfe544d23381d5550ec28b8f377125",
+          "direct_view_invocation": "view(request, pk=rec.id)",
+          "helper_method": "_update",
+          "helper_AST_sha256": "b90c07e91f7f128a4558b112bb9bcdb6e2b7808ba7519a3f0b82b3f941070948",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertEqual(program[\"description\"], \"A great episode\")",
+            "self.assertEqual(program[\"title\"], \"Existing Title\")",
+            "self.assertTrue(program[\"user_edited\"])"
+          ],
+          "actual_retained_test_log_block_sha256": "5f374b5cf1863a0355fdb1a6dd1578ad39341547249b8a6c51384ea56f934d28",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-8cf1e1cec19e65ce238c:POST",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "update_metadata",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+          "resolver_ordinal": 137,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_metadata.UpdateMetadataTests.test_update_both_fields",
+          "source_path": "apps/channels/tests/test_recording_metadata.py",
+          "class": "UpdateMetadataTests",
+          "test_method": "test_update_both_fields",
+          "class_AST_sha256": "b812df4707ed2aeea8302a5a9d9f1fd8cda4d0888d462036d94bcee3f3c4e7d2",
+          "test_AST_sha256": "7cd0b4c2e4ab811007cae30951d0f76006b5e4403f98c59137b9b1cdc591ad30",
+          "request_AST_sha256": "d5ea2613997ab706871cf309b606cd69e5090d5f9972ab56a09c9a0ed534003a",
+          "supplied_path_template": "/api/channels/recordings/{PK}/update-metadata/",
+          "request_expression": "self.factory.post(\n            f\"/api/channels/recordings/{rec.id}/update-metadata/\",\n            data, format=\"json\",\n        )",
+          "explicit_as_view_expression": "RecordingViewSet.as_view({\"post\": \"update_metadata\"})",
+          "explicit_as_view_AST_sha256": "e1f923fd023bd9d91b664d5d7fa6168b7ebfe544d23381d5550ec28b8f377125",
+          "direct_view_invocation": "view(request, pk=rec.id)",
+          "helper_method": "_update",
+          "helper_AST_sha256": "b90c07e91f7f128a4558b112bb9bcdb6e2b7808ba7519a3f0b82b3f941070948",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertEqual(program[\"title\"], \"New Title\")",
+            "self.assertEqual(program[\"description\"], \"New Desc\")",
+            "self.assertTrue(program[\"user_edited\"])"
+          ],
+          "actual_retained_test_log_block_sha256": "fd473ccda66481a60a8c46cdfa2a83026bc190de9341837ee63438f230616bd6",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-8cf1e1cec19e65ce238c:POST",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "update_metadata",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+          "resolver_ordinal": 137,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_metadata.UpdateMetadataTests.test_no_fields_returns_400",
+          "source_path": "apps/channels/tests/test_recording_metadata.py",
+          "class": "UpdateMetadataTests",
+          "test_method": "test_no_fields_returns_400",
+          "class_AST_sha256": "b812df4707ed2aeea8302a5a9d9f1fd8cda4d0888d462036d94bcee3f3c4e7d2",
+          "test_AST_sha256": "ebbb4419276f2bb1c1e883a6ccc75b28ada040b3a2ac9eb34e5a15370a3c93e6",
+          "request_AST_sha256": "d5ea2613997ab706871cf309b606cd69e5090d5f9972ab56a09c9a0ed534003a",
+          "supplied_path_template": "/api/channels/recordings/{PK}/update-metadata/",
+          "request_expression": "self.factory.post(\n            f\"/api/channels/recordings/{rec.id}/update-metadata/\",\n            data, format=\"json\",\n        )",
+          "explicit_as_view_expression": "RecordingViewSet.as_view({\"post\": \"update_metadata\"})",
+          "explicit_as_view_AST_sha256": "e1f923fd023bd9d91b664d5d7fa6168b7ebfe544d23381d5550ec28b8f377125",
+          "direct_view_invocation": "view(request, pk=rec.id)",
+          "helper_method": "_update",
+          "helper_AST_sha256": "b90c07e91f7f128a4558b112bb9bcdb6e2b7808ba7519a3f0b82b3f941070948",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 400)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 400)",
+            "self.assertFalse(response.data.get(\"success\"))"
+          ],
+          "actual_retained_test_log_block_sha256": "5e9bf5229edaac32a73182869bcdbd3fa4ec6ea4cd5c120d76ac5ad17c888ca0",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-8cf1e1cec19e65ce238c:POST",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "update_metadata",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+          "resolver_ordinal": 137,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_metadata.UpdateMetadataTests.test_whitespace_trimmed",
+          "source_path": "apps/channels/tests/test_recording_metadata.py",
+          "class": "UpdateMetadataTests",
+          "test_method": "test_whitespace_trimmed",
+          "class_AST_sha256": "b812df4707ed2aeea8302a5a9d9f1fd8cda4d0888d462036d94bcee3f3c4e7d2",
+          "test_AST_sha256": "01a30fbdbd70c2cbcfa3a104901639eeb6492116360bbd7d7cbf244fe1db97d8",
+          "request_AST_sha256": "d5ea2613997ab706871cf309b606cd69e5090d5f9972ab56a09c9a0ed534003a",
+          "supplied_path_template": "/api/channels/recordings/{PK}/update-metadata/",
+          "request_expression": "self.factory.post(\n            f\"/api/channels/recordings/{rec.id}/update-metadata/\",\n            data, format=\"json\",\n        )",
+          "explicit_as_view_expression": "RecordingViewSet.as_view({\"post\": \"update_metadata\"})",
+          "explicit_as_view_AST_sha256": "e1f923fd023bd9d91b664d5d7fa6168b7ebfe544d23381d5550ec28b8f377125",
+          "direct_view_invocation": "view(request, pk=rec.id)",
+          "helper_method": "_update",
+          "helper_AST_sha256": "b90c07e91f7f128a4558b112bb9bcdb6e2b7808ba7519a3f0b82b3f941070948",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertEqual(rec.custom_properties[\"program\"][\"title\"], \"Padded Title\")"
+          ],
+          "actual_retained_test_log_block_sha256": "25341f2b8d2f093a7b55c0d17ed8f72fcc906a3962be17eb22d57d75507f5b85",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-8cf1e1cec19e65ce238c:POST",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "update_metadata",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+          "resolver_ordinal": 137,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_metadata.UpdateMetadataTests.test_whitespace_only_title_returns_400",
+          "source_path": "apps/channels/tests/test_recording_metadata.py",
+          "class": "UpdateMetadataTests",
+          "test_method": "test_whitespace_only_title_returns_400",
+          "class_AST_sha256": "b812df4707ed2aeea8302a5a9d9f1fd8cda4d0888d462036d94bcee3f3c4e7d2",
+          "test_AST_sha256": "d926c05010d3e27fa57c1ab4134ce202f21f12f5f566be35d7e83dae39f913fa",
+          "request_AST_sha256": "d5ea2613997ab706871cf309b606cd69e5090d5f9972ab56a09c9a0ed534003a",
+          "supplied_path_template": "/api/channels/recordings/{PK}/update-metadata/",
+          "request_expression": "self.factory.post(\n            f\"/api/channels/recordings/{rec.id}/update-metadata/\",\n            data, format=\"json\",\n        )",
+          "explicit_as_view_expression": "RecordingViewSet.as_view({\"post\": \"update_metadata\"})",
+          "explicit_as_view_AST_sha256": "e1f923fd023bd9d91b664d5d7fa6168b7ebfe544d23381d5550ec28b8f377125",
+          "direct_view_invocation": "view(request, pk=rec.id)",
+          "helper_method": "_update",
+          "helper_AST_sha256": "b90c07e91f7f128a4558b112bb9bcdb6e2b7808ba7519a3f0b82b3f941070948",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 400)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 400)",
+            "self.assertFalse(response.data.get(\"success\"))"
+          ],
+          "actual_retained_test_log_block_sha256": "e3dcf60382d7babdb2af2036a05fdbcb3be0c49cc4be93474a692c2ebe9ddd18",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-8cf1e1cec19e65ce238c:POST",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "update_metadata",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+          "resolver_ordinal": 137,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_metadata.UpdateMetadataTests.test_whitespace_only_title_with_valid_description",
+          "source_path": "apps/channels/tests/test_recording_metadata.py",
+          "class": "UpdateMetadataTests",
+          "test_method": "test_whitespace_only_title_with_valid_description",
+          "class_AST_sha256": "b812df4707ed2aeea8302a5a9d9f1fd8cda4d0888d462036d94bcee3f3c4e7d2",
+          "test_AST_sha256": "04401f4c4f4ff695a53eb18691fec645ab03bf30270f720abac01bba051a8f73",
+          "request_AST_sha256": "d5ea2613997ab706871cf309b606cd69e5090d5f9972ab56a09c9a0ed534003a",
+          "supplied_path_template": "/api/channels/recordings/{PK}/update-metadata/",
+          "request_expression": "self.factory.post(\n            f\"/api/channels/recordings/{rec.id}/update-metadata/\",\n            data, format=\"json\",\n        )",
+          "explicit_as_view_expression": "RecordingViewSet.as_view({\"post\": \"update_metadata\"})",
+          "explicit_as_view_AST_sha256": "e1f923fd023bd9d91b664d5d7fa6168b7ebfe544d23381d5550ec28b8f377125",
+          "direct_view_invocation": "view(request, pk=rec.id)",
+          "helper_method": "_update",
+          "helper_AST_sha256": "b90c07e91f7f128a4558b112bb9bcdb6e2b7808ba7519a3f0b82b3f941070948",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertEqual(rec.custom_properties[\"program\"][\"title\"], \"Original\")",
+            "self.assertEqual(rec.custom_properties[\"program\"][\"description\"], \"Valid desc\")"
+          ],
+          "actual_retained_test_log_block_sha256": "709ac1eca689489eda16af24770ea70d8a15755825e25ff5eb584f76e9b28e08",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-8cf1e1cec19e65ce238c:POST",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "update_metadata",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+          "resolver_ordinal": 137,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_metadata.UpdateMetadataTests.test_creates_program_dict_when_absent",
+          "source_path": "apps/channels/tests/test_recording_metadata.py",
+          "class": "UpdateMetadataTests",
+          "test_method": "test_creates_program_dict_when_absent",
+          "class_AST_sha256": "b812df4707ed2aeea8302a5a9d9f1fd8cda4d0888d462036d94bcee3f3c4e7d2",
+          "test_AST_sha256": "8e6bb8618f3830d4fb7ba43752082e74fd658f48ec18d325e4e11255cef38378",
+          "request_AST_sha256": "d5ea2613997ab706871cf309b606cd69e5090d5f9972ab56a09c9a0ed534003a",
+          "supplied_path_template": "/api/channels/recordings/{PK}/update-metadata/",
+          "request_expression": "self.factory.post(\n            f\"/api/channels/recordings/{rec.id}/update-metadata/\",\n            data, format=\"json\",\n        )",
+          "explicit_as_view_expression": "RecordingViewSet.as_view({\"post\": \"update_metadata\"})",
+          "explicit_as_view_AST_sha256": "e1f923fd023bd9d91b664d5d7fa6168b7ebfe544d23381d5550ec28b8f377125",
+          "direct_view_invocation": "view(request, pk=rec.id)",
+          "helper_method": "_update",
+          "helper_AST_sha256": "b90c07e91f7f128a4558b112bb9bcdb6e2b7808ba7519a3f0b82b3f941070948",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertIn(\"program\", rec.custom_properties)",
+            "self.assertEqual(rec.custom_properties[\"program\"][\"title\"], \"Brand New\")"
+          ],
+          "actual_retained_test_log_block_sha256": "958f7746f82ccce568b9484652e961da646a1df5d0bef8f2b768d2db0415a13b",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-8cf1e1cec19e65ce238c:POST",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "POST",
+          "observed_request_method": "POST",
+          "declared_action": "update_metadata",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/update-metadata/$",
+          "resolver_ordinal": 137,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_metadata.UpdateMetadataTests.test_ws_failure_does_not_fail_request",
+          "source_path": "apps/channels/tests/test_recording_metadata.py",
+          "class": "UpdateMetadataTests",
+          "test_method": "test_ws_failure_does_not_fail_request",
+          "class_AST_sha256": "b812df4707ed2aeea8302a5a9d9f1fd8cda4d0888d462036d94bcee3f3c4e7d2",
+          "test_AST_sha256": "76ebeeb5aef7a0324c637e943e71b07b6d9c365a46a1fc670e98ba0d6f105667",
+          "request_AST_sha256": "d5ea2613997ab706871cf309b606cd69e5090d5f9972ab56a09c9a0ed534003a",
+          "supplied_path_template": "/api/channels/recordings/{PK}/update-metadata/",
+          "request_expression": "self.factory.post(\n            f\"/api/channels/recordings/{rec.id}/update-metadata/\",\n            data, format=\"json\",\n        )",
+          "explicit_as_view_expression": "RecordingViewSet.as_view({\"post\": \"update_metadata\"})",
+          "explicit_as_view_AST_sha256": "e1f923fd023bd9d91b664d5d7fa6168b7ebfe544d23381d5550ec28b8f377125",
+          "direct_view_invocation": "view(request, pk=rec.id)",
+          "helper_method": "_update",
+          "helper_AST_sha256": "b90c07e91f7f128a4558b112bb9bcdb6e2b7808ba7519a3f0b82b3f941070948",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertEqual(rec.custom_properties[\"program\"][\"title\"], \"Resilient\")"
+          ],
+          "actual_retained_test_log_block_sha256": "f4d2bd053f3f9b04f2afd799fcd4174dcc21de9ef3997321f541280168a38b4d",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only",
+          "static_path_binding_scope": "Direct factory request plus exact imported ViewSet.as_view method/action and matching recorded path; not router/TCP execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        }
+      ],
+      "assertions": [
+        "Exact retained Original request and bound status/workflow assertions",
+        "Pinned Original class/helper/setup/decorators and actual successful suite attestation; no new HTTP/resolver execution"
+      ],
+      "result": {
+        "state": "retained_Original_framework_assertions",
+        "asserted_request_sites": 9,
+        "new_Source_cases_this_task": 0,
+        "new_Source_execution": false,
+        "Native_coverage_added": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Effective actor roles, real HTTP/runtime side effects and Native parity remain unqualified",
+        "All milestone and performance acceptance remain open"
+      ]
+    },
+    {
+      "contract_id": "route-99cc3cf082e4249b1f20:METHOD_UNRESOLVED",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/channels/bulk-delete/",
+      "source_handler": "apps.channels.api_views.BulkDeleteChannelsAPIView",
+      "resolver_ordinal": 30,
+      "fixture_id": "retained-suite-route-99cc3cf082e4249b1f20:METHOD_UNRESOLVED",
+      "source_role_specs": {},
+      "observed_roles": [],
+      "cases": [
+        {
+          "contract_id": "route-99cc3cf082e4249b1f20:METHOD_UNRESOLVED",
+          "recorded_handler": "apps.channels.api_views.BulkDeleteChannelsAPIView",
+          "declared_method": null,
+          "observed_request_method": "DELETE",
+          "declared_action": null,
+          "pattern_exact": "api/channels/channels/bulk-delete/",
+          "resolver_ordinal": 30,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_channel_delete_stop_stream.ChannelDeleteStopStreamAPITests.test_bulk_delete_without_stop_stream",
+          "source_path": "apps/channels/tests/test_channel_delete_stop_stream.py",
+          "class": "ChannelDeleteStopStreamAPITests",
+          "test_method": "test_bulk_delete_without_stop_stream",
+          "class_AST_sha256": "7719de516e222e3ed2f548fda35a6c1c009d912b3cb736502d96c429ba2f8d56",
+          "test_AST_sha256": "3ef974b454213a8ac09fa8cc694da15293653bbde48305d18e5b3eee758f1e66",
+          "request_AST_sha256": "d1f0b5d2cdb9952b6516ff13a34598b14f767d986f44b3bd3d699cb4c3644643",
+          "supplied_path_template": "/api/channels/channels/bulk-delete/",
+          "request_expression": "self.client.delete(\n            \"/api/channels/channels/bulk-delete/\",\n            {\"channel_ids\": [self.channel.id, other.id]},\n            format=\"json\",\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)",
+            "self.assertFalse(Channel.objects.filter(pk=self.channel.pk).exists())",
+            "mock_stop_channels.assert_not_called()"
+          ],
+          "Original_setup_AST_sha256": "736ebc2a32a388920ccf2633aaf308ea445be77ac3987076c35b2365f215fb24",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "87244bc78a04013e61923236e522abdacdc6de98b5cc604ae5ed41f6e9cd9a6e",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-99cc3cf082e4249b1f20:METHOD_UNRESOLVED",
+          "recorded_handler": "apps.channels.api_views.BulkDeleteChannelsAPIView",
+          "declared_method": null,
+          "observed_request_method": "DELETE",
+          "declared_action": null,
+          "pattern_exact": "api/channels/channels/bulk-delete/",
+          "resolver_ordinal": 30,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_channel_delete_stop_stream.ChannelDeleteStopStreamAPITests.test_bulk_delete_with_stop_stream",
+          "source_path": "apps/channels/tests/test_channel_delete_stop_stream.py",
+          "class": "ChannelDeleteStopStreamAPITests",
+          "test_method": "test_bulk_delete_with_stop_stream",
+          "class_AST_sha256": "7719de516e222e3ed2f548fda35a6c1c009d912b3cb736502d96c429ba2f8d56",
+          "test_AST_sha256": "b0ef7bcd12298c98eaec17ffc51010aa0670a207963a3ba0e76cacd4e843581a",
+          "request_AST_sha256": "59a4db34cf2cd66ed0c81f68212705118bb756f0d60b80a24e1bd157d3ccceb1",
+          "supplied_path_template": "/api/channels/channels/bulk-delete/",
+          "request_expression": "self.client.delete(\n            \"/api/channels/channels/bulk-delete/\",\n            {\n                \"channel_ids\": [self.channel.id, other.id],\n                \"stop_stream\": True,\n            },\n            format=\"json\",\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)",
+            "mock_stop_channels.assert_called_once()",
+            "self.assertEqual(stopped, {self.channel.uuid, other.uuid})"
+          ],
+          "Original_setup_AST_sha256": "736ebc2a32a388920ccf2633aaf308ea445be77ac3987076c35b2365f215fb24",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "46556c5e2f58d379afc5fd2bfa40bee548e148c8103717d0498d60300e89bc09",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        }
+      ],
+      "assertions": [
+        "Exact retained Original request and bound status/workflow assertions",
+        "Pinned Original class/helper/setup/decorators and actual successful suite attestation; no new HTTP/resolver execution"
+      ],
+      "result": {
+        "state": "retained_Original_framework_assertions",
+        "asserted_request_sites": 2,
+        "new_Source_cases_this_task": 0,
+        "new_Source_execution": false,
+        "Native_coverage_added": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Effective actor roles, real HTTP/runtime side effects and Native parity remain unqualified",
+        "All milestone and performance acceptance remain open"
+      ]
+    },
+    {
+      "contract_id": "route-ccf99a08386444425d6a:GET",
+      "method": "GET",
+      "source_action": "poster",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+      "source_handler": "apps.epg.api_views.ProgramViewSet",
+      "resolver_ordinal": 165,
+      "fixture_id": "retained-suite-route-ccf99a08386444425d6a:GET",
+      "source_role_specs": {},
+      "observed_roles": [],
+      "cases": [
+        {
+          "contract_id": "route-ccf99a08386444425d6a:GET",
+          "recorded_handler": "apps.epg.api_views.ProgramViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "poster",
+          "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+          "resolver_ordinal": 165,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_schedules_direct.SDPosterProxyErrorHandlingTests.test_http_200_json_5002_locks_until_midnight_and_blocks_retry",
+          "source_path": "apps/epg/tests/test_schedules_direct.py",
+          "class": "SDPosterProxyErrorHandlingTests",
+          "test_method": "test_http_200_json_5002_locks_until_midnight_and_blocks_retry",
+          "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+          "test_AST_sha256": "126fa7644f9abb2a1f2dd9616ef98ebbda5542872695c80aecb105fb741bcdaa",
+          "request_AST_sha256": "5f3dd42778d9483fb75cb5a67159f81e4923da2cae7531831fce8a1c2175c915",
+          "supplied_path_template": "/api/epg/programs/{PK}/poster/",
+          "request_expression": "self.client.get(self.url)",
+          "response_status_assertions": [
+            "self.assertEqual(first.status_code, 429)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(first.status_code, 429)",
+            "self.assertTrue(self.source.custom_properties.get('sd_image_limit_hit'))",
+            "self.assertEqual(second.status_code, 503)",
+            "mock_get.assert_not_called()"
+          ],
+          "Original_setup_AST_sha256": "f1553050c8d6f4c201d09c92532943d98a38d222ade63f9235a21352d6ea70e2",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "8e2f2ec6450b37ca5ac72d7c1549e399c47aac11001dab8ad641edaf6768cf83",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-ccf99a08386444425d6a:GET",
+          "recorded_handler": "apps.epg.api_views.ProgramViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "poster",
+          "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+          "resolver_ordinal": 165,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_schedules_direct.SDPosterProxyErrorHandlingTests.test_http_200_json_5002_locks_until_midnight_and_blocks_retry",
+          "source_path": "apps/epg/tests/test_schedules_direct.py",
+          "class": "SDPosterProxyErrorHandlingTests",
+          "test_method": "test_http_200_json_5002_locks_until_midnight_and_blocks_retry",
+          "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+          "test_AST_sha256": "126fa7644f9abb2a1f2dd9616ef98ebbda5542872695c80aecb105fb741bcdaa",
+          "request_AST_sha256": "5f3dd42778d9483fb75cb5a67159f81e4923da2cae7531831fce8a1c2175c915",
+          "supplied_path_template": "/api/epg/programs/{PK}/poster/",
+          "request_expression": "self.client.get(self.url)",
+          "response_status_assertions": [
+            "self.assertEqual(second.status_code, 503)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(first.status_code, 429)",
+            "self.assertTrue(self.source.custom_properties.get('sd_image_limit_hit'))",
+            "self.assertEqual(second.status_code, 503)",
+            "mock_get.assert_not_called()"
+          ],
+          "Original_setup_AST_sha256": "f1553050c8d6f4c201d09c92532943d98a38d222ade63f9235a21352d6ea70e2",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "8e2f2ec6450b37ca5ac72d7c1549e399c47aac11001dab8ad641edaf6768cf83",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-ccf99a08386444425d6a:GET",
+          "recorded_handler": "apps.epg.api_views.ProgramViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "poster",
+          "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+          "resolver_ordinal": 165,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_schedules_direct.SDPosterProxyErrorHandlingTests.test_http_200_json_5003_locks_out",
+          "source_path": "apps/epg/tests/test_schedules_direct.py",
+          "class": "SDPosterProxyErrorHandlingTests",
+          "test_method": "test_http_200_json_5003_locks_out",
+          "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+          "test_AST_sha256": "ca45c5d845dac9136ee4f2311d21ec3c6704737a7f4ad16d593661f3d0be789a",
+          "request_AST_sha256": "5f3dd42778d9483fb75cb5a67159f81e4923da2cae7531831fce8a1c2175c915",
+          "supplied_path_template": "/api/epg/programs/{PK}/poster/",
+          "request_expression": "self.client.get(self.url)",
+          "response_status_assertions": [
+            "self.assertEqual(resp.status_code, 429)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(resp.status_code, 429)",
+            "self.assertTrue(self.source.custom_properties.get('sd_image_limit_hit'))",
+            "self.assertIn('5003', self.source.custom_properties.get('sd_image_limit_reason', ''))"
+          ],
+          "Original_setup_AST_sha256": "f1553050c8d6f4c201d09c92532943d98a38d222ade63f9235a21352d6ea70e2",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "a69f253e4dbd13ed0b42ea4a8bffe60b34c0a4952453e5d353c68b1d3a387cbf",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-ccf99a08386444425d6a:GET",
+          "recorded_handler": "apps.epg.api_views.ProgramViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "poster",
+          "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+          "resolver_ordinal": 165,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_schedules_direct.SDPosterProxyErrorHandlingTests.test_http_404_json_5000_clears_sd_icon",
+          "source_path": "apps/epg/tests/test_schedules_direct.py",
+          "class": "SDPosterProxyErrorHandlingTests",
+          "test_method": "test_http_404_json_5000_clears_sd_icon",
+          "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+          "test_AST_sha256": "e6ab4a17b5eb6e444d623ee3f275efa9e21588265a90d11c446304c10934627e",
+          "request_AST_sha256": "5f3dd42778d9483fb75cb5a67159f81e4923da2cae7531831fce8a1c2175c915",
+          "supplied_path_template": "/api/epg/programs/{PK}/poster/",
+          "request_expression": "self.client.get(self.url)",
+          "response_status_assertions": [
+            "self.assertEqual(resp.status_code, 404)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(resp.status_code, 404)",
+            "self.assertNotIn('sd_icon', cp)",
+            "self.assertTrue(cp.get('sd_icon_missing'))",
+            "self.assertEqual(again.status_code, 404)",
+            "mock_get.assert_not_called()"
+          ],
+          "Original_setup_AST_sha256": "f1553050c8d6f4c201d09c92532943d98a38d222ade63f9235a21352d6ea70e2",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "b6bbc165aa09ff278b236ff3b96bb38dd165bb99bd2fb36dfd66553f89da10ae",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-ccf99a08386444425d6a:GET",
+          "recorded_handler": "apps.epg.api_views.ProgramViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "poster",
+          "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+          "resolver_ordinal": 165,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_schedules_direct.SDPosterProxyErrorHandlingTests.test_http_404_json_5000_clears_sd_icon",
+          "source_path": "apps/epg/tests/test_schedules_direct.py",
+          "class": "SDPosterProxyErrorHandlingTests",
+          "test_method": "test_http_404_json_5000_clears_sd_icon",
+          "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+          "test_AST_sha256": "e6ab4a17b5eb6e444d623ee3f275efa9e21588265a90d11c446304c10934627e",
+          "request_AST_sha256": "5f3dd42778d9483fb75cb5a67159f81e4923da2cae7531831fce8a1c2175c915",
+          "supplied_path_template": "/api/epg/programs/{PK}/poster/",
+          "request_expression": "self.client.get(self.url)",
+          "response_status_assertions": [
+            "self.assertEqual(again.status_code, 404)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(resp.status_code, 404)",
+            "self.assertNotIn('sd_icon', cp)",
+            "self.assertTrue(cp.get('sd_icon_missing'))",
+            "self.assertEqual(again.status_code, 404)",
+            "mock_get.assert_not_called()"
+          ],
+          "Original_setup_AST_sha256": "f1553050c8d6f4c201d09c92532943d98a38d222ade63f9235a21352d6ea70e2",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "b6bbc165aa09ff278b236ff3b96bb38dd165bb99bd2fb36dfd66553f89da10ae",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-ccf99a08386444425d6a:GET",
+          "recorded_handler": "apps.epg.api_views.ProgramViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "poster",
+          "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+          "resolver_ordinal": 165,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_schedules_direct.SDPosterProxyErrorHandlingTests.test_bare_http_404_does_not_clear_sd_icon",
+          "source_path": "apps/epg/tests/test_schedules_direct.py",
+          "class": "SDPosterProxyErrorHandlingTests",
+          "test_method": "test_bare_http_404_does_not_clear_sd_icon",
+          "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+          "test_AST_sha256": "0f0ef3348a639e1e37d1d73f237afc76647f587925dc776a16e9af588c374306",
+          "request_AST_sha256": "5f3dd42778d9483fb75cb5a67159f81e4923da2cae7531831fce8a1c2175c915",
+          "supplied_path_template": "/api/epg/programs/{PK}/poster/",
+          "request_expression": "self.client.get(self.url)",
+          "response_status_assertions": [
+            "self.assertEqual(resp.status_code, 404)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(resp.status_code, 404)",
+            "self.assertIn('sd_icon', cp)",
+            "self.assertFalse(cp.get('sd_icon_missing'))"
+          ],
+          "Original_setup_AST_sha256": "f1553050c8d6f4c201d09c92532943d98a38d222ade63f9235a21352d6ea70e2",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "397fc5ec08825bc2cd3e1f153df9ffbcaadcf0fe78c7856944454a1ef839a000",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-ccf99a08386444425d6a:GET",
+          "recorded_handler": "apps.epg.api_views.ProgramViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "poster",
+          "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+          "resolver_ordinal": 165,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_schedules_direct.SDPosterProxyErrorHandlingTests.test_2055_disables_extra_debugging_on_auth",
+          "source_path": "apps/epg/tests/test_schedules_direct.py",
+          "class": "SDPosterProxyErrorHandlingTests",
+          "test_method": "test_2055_disables_extra_debugging_on_auth",
+          "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+          "test_AST_sha256": "51dad9049a5ea5f581f4b864e590c981b96eba9d363fdf48f5ec383b02bb40c2",
+          "request_AST_sha256": "5f3dd42778d9483fb75cb5a67159f81e4923da2cae7531831fce8a1c2175c915",
+          "supplied_path_template": "/api/epg/programs/{PK}/poster/",
+          "request_expression": "self.client.get(self.url)",
+          "response_status_assertions": [
+            "self.assertEqual(resp.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(resp.status_code, 200)",
+            "self.assertFalse(self.source.custom_properties.get('sd_extra_debugging'))",
+            "self.assertEqual(mock_post.call_count, 2)",
+            "self.assertEqual(first_headers.get('RouteTo'), 'debug')",
+            "self.assertNotIn('RouteTo', second_headers)",
+            "mock_get.assert_called_once()"
+          ],
+          "Original_setup_AST_sha256": "f1553050c8d6f4c201d09c92532943d98a38d222ade63f9235a21352d6ea70e2",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "ae92703ad09f14023839a6d211ab8ddf38b127faa117c55a5b83adf921209009",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-ccf99a08386444425d6a:GET",
+          "recorded_handler": "apps.epg.api_views.ProgramViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "poster",
+          "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+          "resolver_ordinal": 165,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_schedules_direct.SDPosterProxyErrorHandlingTests.test_successful_image_pass_through",
+          "source_path": "apps/epg/tests/test_schedules_direct.py",
+          "class": "SDPosterProxyErrorHandlingTests",
+          "test_method": "test_successful_image_pass_through",
+          "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+          "test_AST_sha256": "72a1e13338acc45dc66338c4f5148ad465a2ac99485a03e15c73a6e4a6787731",
+          "request_AST_sha256": "5f3dd42778d9483fb75cb5a67159f81e4923da2cae7531831fce8a1c2175c915",
+          "supplied_path_template": "/api/epg/programs/{PK}/poster/",
+          "request_expression": "self.client.get(self.url)",
+          "response_status_assertions": [
+            "self.assertEqual(resp.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(resp.status_code, 200)",
+            "self.assertEqual(resp['Content-Type'], 'image/jpeg')",
+            "self.assertEqual(resp.content, b'\\xff\\xd8\\xffjpeg-bytes')",
+            "self.assertEqual(resp['Cache-Control'], 'public, max-age=86400')"
+          ],
+          "Original_setup_AST_sha256": "f1553050c8d6f4c201d09c92532943d98a38d222ade63f9235a21352d6ea70e2",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "cdb294dd0d7e92cf687da41514b33213e20352a197b3179e57b5c1bd6f411245",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-ccf99a08386444425d6a:GET",
+          "recorded_handler": "apps.epg.api_views.ProgramViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "poster",
+          "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+          "resolver_ordinal": 165,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_schedules_direct.SDPosterProxyErrorHandlingTests.test_poster_serves_image_for_image_accept_header",
+          "source_path": "apps/epg/tests/test_schedules_direct.py",
+          "class": "SDPosterProxyErrorHandlingTests",
+          "test_method": "test_poster_serves_image_for_image_accept_header",
+          "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+          "test_AST_sha256": "7fb31872ae7f5760c08bec532b607e3be38e256994f6d214dfa97373b8df5765",
+          "request_AST_sha256": "02085655c4bdc787a8bed1681c7bc74636a5dcf8b61833da6f78e9bf866e3597",
+          "supplied_path_template": "/api/epg/programs/{PK}/poster/",
+          "request_expression": "self.client.get(self.url, HTTP_ACCEPT='image/*')",
+          "response_status_assertions": [
+            "self.assertEqual(resp.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(resp.status_code, 200)",
+            "self.assertEqual(resp['Content-Type'], 'image/jpeg')",
+            "self.assertEqual(resp.content, b'\\xff\\xd8\\xffjpeg-bytes')"
+          ],
+          "Original_setup_AST_sha256": "f1553050c8d6f4c201d09c92532943d98a38d222ade63f9235a21352d6ea70e2",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "c398567219de12824c758d9bf40d1b94be4ac4a5d3922505a024291c4a175b0d",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-ccf99a08386444425d6a:GET",
+          "recorded_handler": "apps.epg.api_views.ProgramViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "poster",
+          "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/poster/$",
+          "resolver_ordinal": 165,
+          "owning_milestone": "M5",
+          "test_id": "apps.epg.tests.test_schedules_direct.SDPosterProxyErrorHandlingTests.test_poster_401_clears_token_and_retries_once",
+          "source_path": "apps/epg/tests/test_schedules_direct.py",
+          "class": "SDPosterProxyErrorHandlingTests",
+          "test_method": "test_poster_401_clears_token_and_retries_once",
+          "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+          "test_AST_sha256": "15dcc3adc49f35ce7223d36815d280e79e87a1187ad23b687b5016621a446c8f",
+          "request_AST_sha256": "5f3dd42778d9483fb75cb5a67159f81e4923da2cae7531831fce8a1c2175c915",
+          "supplied_path_template": "/api/epg/programs/{PK}/poster/",
+          "request_expression": "self.client.get(self.url)",
+          "response_status_assertions": [
+            "self.assertEqual(resp.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(resp.status_code, 200)",
+            "self.assertEqual(resp.content, b'\\xff\\xd8\\xffjpeg-bytes')",
+            "self.assertEqual(mock_get.call_count, 2)",
+            "mock_post.assert_called_once()",
+            "self.assertEqual(\n            sd_get_cached_token(self.source.id, 'sduser', 'sdpass'),\n            'poster-tok',\n        )",
+            "self.assertNotIn(self.source.id, ProgramViewSet._sd_poster_error_cache)"
+          ],
+          "Original_setup_AST_sha256": "f1553050c8d6f4c201d09c92532943d98a38d222ade63f9235a21352d6ea70e2",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "276f770d46320e60855c2a888c3919ae809ce0306b8ad0bfc987b5b46ac7c01a",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        }
+      ],
+      "assertions": [
+        "Exact retained Original request and bound status/workflow assertions",
+        "Pinned Original class/helper/setup/decorators and actual successful suite attestation; no new HTTP/resolver execution"
+      ],
+      "result": {
+        "state": "retained_Original_framework_assertions",
+        "asserted_request_sites": 10,
+        "new_Source_cases_this_task": 0,
+        "new_Source_execution": false,
+        "Native_coverage_added": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Effective actor roles, real HTTP/runtime side effects and Native parity remain unqualified",
+        "All milestone and performance acceptance remain open"
+      ]
+    },
+    {
+      "contract_id": "route-e72e2d7ae61a3da5f480:GET",
+      "method": "GET",
+      "source_action": "hls",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/hls/(?P<seg_path>.+)\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.RecordingViewSet",
+      "resolver_ordinal": 132,
+      "fixture_id": "retained-suite-route-e72e2d7ae61a3da5f480:GET",
+      "source_role_specs": {},
+      "observed_roles": [],
+      "cases": [
+        {
+          "contract_id": "route-e72e2d7ae61a3da5f480:GET",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "hls",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/hls/(?P<seg_path>.+)\\.(?P<format>[a-z0-9]+)/?$",
+          "resolver_ordinal": 132,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_playback_auth.RecordingPlaybackAuthTests.test_hls_playlist_rewrites_segments_with_token_when_present",
+          "source_path": "apps/channels/tests/test_recording_playback_auth.py",
+          "class": "RecordingPlaybackAuthTests",
+          "test_method": "test_hls_playlist_rewrites_segments_with_token_when_present",
+          "class_AST_sha256": "381aa6bd8b9b01830258a9635270487ca9ce9add62945f7f3b79146e9f405f25",
+          "test_AST_sha256": "805b09aad94e905b4f3843e17b2fa410456ebe18a2411c4e09ac08fb0b27b6ef",
+          "request_AST_sha256": "3d255180263cd8f277be43c8c144f529508e3dc3d47ad070925ac345563b597b",
+          "supplied_path_template": "/api/channels/recordings/{PK}/hls/index.m3u8",
+          "request_expression": "self.client.get(\n            f\"/api/channels/recordings/{hls_rec.id}/hls/index.m3u8\",\n            {\"token\": token},\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertIn(\"token=\", body)",
+            "self.assertIn(\"seg_00001.ts\", body)",
+            "self.assertIn(\"#EXT-X-PLAYLIST-TYPE:EVENT\", body)",
+            "self.assertEqual(response[\"Cache-Control\"], \"no-cache\")"
+          ],
+          "Original_setup_AST_sha256": "e92a760af3ec1858830061c08d63ed5d89a70cf2fa4b9f29e2defbbb3593f27f",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "e8827c8d23b2db548d1665d95081fedc12a49556c922e5dc7d506f22f19ca3d1",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-e72e2d7ae61a3da5f480:GET",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "hls",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/hls/(?P<seg_path>.+)\\.(?P<format>[a-z0-9]+)/?$",
+          "resolver_ordinal": 132,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_playback_auth.RecordingPlaybackAuthTests.test_hls_playlist_omits_token_when_not_in_request",
+          "source_path": "apps/channels/tests/test_recording_playback_auth.py",
+          "class": "RecordingPlaybackAuthTests",
+          "test_method": "test_hls_playlist_omits_token_when_not_in_request",
+          "class_AST_sha256": "381aa6bd8b9b01830258a9635270487ca9ce9add62945f7f3b79146e9f405f25",
+          "test_AST_sha256": "9d3b2a3793cc601a92bf90dedc066623d60c6e3af70b07ccc43f92a4bdfc62a6",
+          "request_AST_sha256": "273e49f759ebfe55a3c895cfd520c1dacd3dd9295335c7f32d9ba5e5706976fc",
+          "supplied_path_template": "/api/channels/recordings/{PK}/hls/index.m3u8",
+          "request_expression": "self.client.get(\n            f\"/api/channels/recordings/{hls_rec.id}/hls/index.m3u8\",\n            HTTP_AUTHORIZATION=f\"Bearer {token}\",\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)",
+            "self.assertIn(\"seg_00001.ts\", body)",
+            "self.assertNotIn(\"token=\", body)"
+          ],
+          "Original_setup_AST_sha256": "e92a760af3ec1858830061c08d63ed5d89a70cf2fa4b9f29e2defbbb3593f27f",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "2804cb2f8a22c3e39ea3d2b28ac9e544abffad9170afe053ad9796963d7acb54",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-e72e2d7ae61a3da5f480:GET",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "hls",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/hls/(?P<seg_path>.+)\\.(?P<format>[a-z0-9]+)/?$",
+          "resolver_ordinal": 132,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_playback_auth.RecordingPlaybackAuthTests.test_hls_segment_accepts_jwt_query_param",
+          "source_path": "apps/channels/tests/test_recording_playback_auth.py",
+          "class": "RecordingPlaybackAuthTests",
+          "test_method": "test_hls_segment_accepts_jwt_query_param",
+          "class_AST_sha256": "381aa6bd8b9b01830258a9635270487ca9ce9add62945f7f3b79146e9f405f25",
+          "test_AST_sha256": "205309dfc97b0b6597417d10d414594358d389f0e4f660fd9aaf8bd0ed88a3fe",
+          "request_AST_sha256": "38345baab29d31130e1b9e5a4ef4f9b21ed9e40239ae5fef8e48e037ed9779a4",
+          "supplied_path_template": "/api/channels/recordings/{PK}/hls/seg_00001.ts",
+          "request_expression": "self.client.get(\n            f\"/api/channels/recordings/{hls_rec.id}/hls/seg_00001.ts\",\n            {\"token\": token},\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 200)"
+          ],
+          "Original_setup_AST_sha256": "e92a760af3ec1858830061c08d63ed5d89a70cf2fa4b9f29e2defbbb3593f27f",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "d35de445086a5708e60409ecf64a9477ba122997dfd862689fb340141e9e9ef4",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        },
+        {
+          "contract_id": "route-e72e2d7ae61a3da5f480:GET",
+          "recorded_handler": "apps.channels.api_views.RecordingViewSet",
+          "declared_method": "GET",
+          "observed_request_method": "GET",
+          "declared_action": "hls",
+          "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/hls/(?P<seg_path>.+)\\.(?P<format>[a-z0-9]+)/?$",
+          "resolver_ordinal": 132,
+          "owning_milestone": "M5",
+          "test_id": "apps.channels.tests.test_recording_playback_auth.RecordingPlaybackAuthTests.test_hls_redirect_to_file_preserves_token",
+          "source_path": "apps/channels/tests/test_recording_playback_auth.py",
+          "class": "RecordingPlaybackAuthTests",
+          "test_method": "test_hls_redirect_to_file_preserves_token",
+          "class_AST_sha256": "381aa6bd8b9b01830258a9635270487ca9ce9add62945f7f3b79146e9f405f25",
+          "test_AST_sha256": "56c96297514fdd8e00421df1098dad2b416e20e79b3b0f9211e6fb460c3ec913",
+          "request_AST_sha256": "3d255180263cd8f277be43c8c144f529508e3dc3d47ad070925ac345563b597b",
+          "supplied_path_template": "/api/channels/recordings/{PK}/hls/index.m3u8",
+          "request_expression": "self.client.get(\n            f\"/api/channels/recordings/{hls_rec.id}/hls/index.m3u8\",\n            {\"token\": token},\n        )",
+          "response_status_assertions": [
+            "self.assertEqual(response.status_code, 302)"
+          ],
+          "whole_workflow_assertions": [
+            "self.assertEqual(response.status_code, 302)",
+            "self.assertIn(\"token=\", response[\"Location\"])",
+            "self.assertIn(\"/file/\", response[\"Location\"])"
+          ],
+          "Original_setup_AST_sha256": "e92a760af3ec1858830061c08d63ed5d89a70cf2fa4b9f29e2defbbb3593f27f",
+          "Original_setUpTestData_AST_sha256": null,
+          "actual_retained_test_log_block_sha256": "f50f2c80acb4a0a4c98b6b7ee8991d7d2c5fa7a79ccefe4e8996089aab2f10a9",
+          "role_claim": "unresolved; exact Original fixture/auth/mocks only, no inferred role",
+          "static_path_binding_scope": "Recorded ordered route/method/action and exact request template; synthetic PK/UUID representative is not an observed runtime path or new resolver execution",
+          "new_Source_test_or_HTTP_execution": false,
+          "Native_coverage_added": false
+        }
+      ],
+      "assertions": [
+        "Exact retained Original request and bound status/workflow assertions",
+        "Pinned Original class/helper/setup/decorators and actual successful suite attestation; no new HTTP/resolver execution"
+      ],
+      "result": {
+        "state": "retained_Original_framework_assertions",
+        "asserted_request_sites": 4,
+        "new_Source_cases_this_task": 0,
+        "new_Source_execution": false,
+        "Native_coverage_added": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Effective actor roles, real HTTP/runtime side effects and Native parity remain unqualified",
+        "All milestone and performance acceptance remain open"
+      ]
+    }
+  ],
+  "fixtures": {
+    "retained-suite-route-03d1095ddc488e4f9220:POST": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "setup": "Exact retained Original test class/setup/decorator/mock closure; framework client/factory only",
+      "suite_exit": 0,
+      "suite_tests": 3362,
+      "new_Source_execution": false,
+      "effective_actor_roles_qualified": false,
+      "Source_HTTP_transport_proven": false
+    },
+    "retained-suite-route-19bdf8661c1cb2d36711:DELETE": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "setup": "Exact retained Original test class/setup/decorator/mock closure; framework client/factory only",
+      "suite_exit": 0,
+      "suite_tests": 3362,
+      "new_Source_execution": false,
+      "effective_actor_roles_qualified": false,
+      "Source_HTTP_transport_proven": false
+    },
+    "retained-suite-route-1b77e7ea47cd8f6a9878:POST": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "setup": "Exact retained Original test class/setup/decorator/mock closure; framework client/factory only",
+      "suite_exit": 0,
+      "suite_tests": 3362,
+      "new_Source_execution": false,
+      "effective_actor_roles_qualified": false,
+      "Source_HTTP_transport_proven": false
+    },
+    "retained-suite-route-22bed3a306f31d67bbc5:GET": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "setup": "Exact retained Original test class/setup/decorator/mock closure; framework client/factory only",
+      "suite_exit": 0,
+      "suite_tests": 3362,
+      "new_Source_execution": false,
+      "effective_actor_roles_qualified": false,
+      "Source_HTTP_transport_proven": false
+    },
+    "retained-suite-route-3baa325cb0abf0609e08:POST": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "setup": "Exact retained Original test class/setup/decorator/mock closure; framework client/factory only",
+      "suite_exit": 0,
+      "suite_tests": 3362,
+      "new_Source_execution": false,
+      "effective_actor_roles_qualified": false,
+      "Source_HTTP_transport_proven": false
+    },
+    "retained-suite-route-71e69b54795410954f68:METHOD_UNRESOLVED": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "setup": "Exact retained Original test class/setup/decorator/mock closure; framework client/factory only",
+      "suite_exit": 0,
+      "suite_tests": 3362,
+      "new_Source_execution": false,
+      "effective_actor_roles_qualified": false,
+      "Source_HTTP_transport_proven": false
+    },
+    "retained-suite-route-8cf1e1cec19e65ce238c:POST": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "setup": "Exact retained Original test class/setup/decorator/mock closure; framework client/factory only",
+      "suite_exit": 0,
+      "suite_tests": 3362,
+      "new_Source_execution": false,
+      "effective_actor_roles_qualified": false,
+      "Source_HTTP_transport_proven": false
+    },
+    "retained-suite-route-99cc3cf082e4249b1f20:METHOD_UNRESOLVED": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "setup": "Exact retained Original test class/setup/decorator/mock closure; framework client/factory only",
+      "suite_exit": 0,
+      "suite_tests": 3362,
+      "new_Source_execution": false,
+      "effective_actor_roles_qualified": false,
+      "Source_HTTP_transport_proven": false
+    },
+    "retained-suite-route-ccf99a08386444425d6a:GET": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "setup": "Exact retained Original test class/setup/decorator/mock closure; framework client/factory only",
+      "suite_exit": 0,
+      "suite_tests": 3362,
+      "new_Source_execution": false,
+      "effective_actor_roles_qualified": false,
+      "Source_HTTP_transport_proven": false
+    },
+    "retained-suite-route-e72e2d7ae61a3da5f480:GET": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "setup": "Exact retained Original test class/setup/decorator/mock closure; framework client/factory only",
+      "suite_exit": 0,
+      "suite_tests": 3362,
+      "new_Source_execution": false,
+      "effective_actor_roles_qualified": false,
+      "Source_HTTP_transport_proven": false
+    }
+  },
+  "operation_count": 10,
+  "request_sites": 36,
+  "historical_test_methods": 34,
+  "new_Source_execution": false,
+  "fully_verified_added": 0
+}

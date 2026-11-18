@@ -1,0 +1,331 @@
+{
+  "status": "RETAINED_FRAMEWORK_CLOSURE_REVIEW_INVENTORY_NOT_NEW_ASSIGNMENTS",
+  "classes": {
+    "apps/channels/tests/test_recording_metadata.py::RefreshArtworkTests": {
+      "bases": [
+        "TestCase"
+      ],
+      "decorators": [],
+      "setup_teardown_methods": {
+        "setUp": "def setUp(self):\n    self.channel = Channel.objects.create(channel_number=71, name='Artwork Test Channel')\n    self.user = _make_admin()\n    self.factory = APIRequestFactory()"
+      },
+      "method_decorators": {
+        "test_returns_200_immediately": [
+          "patch('threading.Thread')"
+        ],
+        "test_spawns_background_thread": [
+          "patch('threading.Thread')"
+        ],
+        "test_no_downgrade_to_channel_logo": [
+          "patch('django.db.close_old_connections')",
+          "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)"
+        ],
+        "test_upgrade_from_no_poster": [
+          "patch('django.db.close_old_connections')",
+          "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)"
+        ]
+      },
+      "all_mock_or_auth_statements": [
+        "patch('threading.Thread')",
+        "patch('threading.Thread')",
+        "patch('django.db.close_old_connections')",
+        "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)",
+        "patch('django.db.close_old_connections')",
+        "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)",
+        "force_authenticate(request, user=self.user)",
+        "force_authenticate(request, user=self.user)",
+        "patch('apps.channels.tasks._resolve_poster_for_program', return_value=(logo.id, None))",
+        "force_authenticate(request, user=self.user)",
+        "patch('apps.channels.tasks._resolve_poster_for_program', return_value=(555, 'https://tmdb.com/new-poster.jpg'))",
+        "patch('threading.Thread', side_effect=capture_thread)",
+        "patch('threading.Thread', side_effect=capture_thread)",
+        "force_authenticate(request, user=self.user)"
+      ],
+      "class_AST_sha256": "47e3326e81016cc7cf90560932c9d30b971f787ca0875c56db28afc59068472b",
+      "role_authority": "Exact supplied fixture/mocks only, inherited/framework behavior pinned by Source suite/image; no effective actor role inferred",
+      "HTTP_authority": "Framework client/factory tests, not real TCP/HTTP capture"
+    },
+    "apps/channels/tests/test_channel_delete_stop_stream.py::ChannelDeleteStopStreamAPITests": {
+      "bases": [
+        "TestCase"
+      ],
+      "decorators": [],
+      "setup_teardown_methods": {
+        "setUp": "def setUp(self):\n    self.user = User.objects.create_user(username='deleter', password='testpass123')\n    self.user.user_level = 10\n    self.user.save()\n    self.client = APIClient()\n    self.client.force_authenticate(user=self.user)\n    self.group = ChannelGroup.objects.create(name='Delete API Group')\n    self.channel = Channel.objects.create(channel_number=42.0, name='Playing Channel', channel_group=self.group)"
+      },
+      "method_decorators": {
+        "test_delete_without_stop_stream_leaves_proxy_running": [
+          "patch('apps.proxy.live_proxy.services.channel_service.ChannelService.stop_channels')"
+        ],
+        "test_delete_with_stop_stream_stops_before_delete": [
+          "patch('apps.proxy.live_proxy.services.channel_service.ChannelService.stop_channels')"
+        ],
+        "test_bulk_delete_without_stop_stream": [
+          "patch('apps.proxy.live_proxy.services.channel_service.ChannelService.stop_channels')"
+        ],
+        "test_bulk_delete_with_stop_stream": [
+          "patch('apps.proxy.live_proxy.services.channel_service.ChannelService.stop_channels')"
+        ]
+      },
+      "all_mock_or_auth_statements": [
+        "patch('apps.proxy.live_proxy.services.channel_service.ChannelService.stop_channels')",
+        "patch('apps.proxy.live_proxy.services.channel_service.ChannelService.stop_channels')",
+        "patch('apps.proxy.live_proxy.services.channel_service.ChannelService.stop_channels')",
+        "patch('apps.proxy.live_proxy.services.channel_service.ChannelService.stop_channels')",
+        "self.client.force_authenticate(user=self.user)"
+      ],
+      "class_AST_sha256": "7719de516e222e3ed2f548fda35a6c1c009d912b3cb736502d96c429ba2f8d56",
+      "role_authority": "Exact supplied fixture/mocks only, inherited/framework behavior pinned by Source suite/image; no effective actor role inferred",
+      "HTTP_authority": "Framework client/factory tests, not real TCP/HTTP capture"
+    },
+    "apps/epg/tests/test_upload_security.py::EPGUploadSecurityTests": {
+      "bases": [
+        "TestCase"
+      ],
+      "decorators": [],
+      "setup_teardown_methods": {
+        "setUp": "def setUp(self):\n    User = get_user_model()\n    self.admin = User.objects.create_user(username='epg_upload_admin', password='x', user_level=User.UserLevel.ADMIN)\n    self.standard = User.objects.create_user(username='epg_upload_user', password='x', user_level=User.UserLevel.STANDARD)\n    self.factory = APIRequestFactory()"
+      },
+      "method_decorators": {
+        "test_traversal_filename_rejected": [
+          "patch('apps.epg.api_views.safe_upload_path', side_effect=ValueError('bad'))"
+        ]
+      },
+      "all_mock_or_auth_statements": [
+        "patch('apps.epg.api_views.safe_upload_path', side_effect=ValueError('bad'))",
+        "force_authenticate(request, user=user)"
+      ],
+      "class_AST_sha256": "cfa4b5f341f16af3933a17616c119d33412fce103d1df972f43f41d56ed1beb1",
+      "role_authority": "Exact supplied fixture/mocks only, inherited/framework behavior pinned by Source suite/image; no effective actor role inferred",
+      "HTTP_authority": "Framework client/factory tests, not real TCP/HTTP capture"
+    },
+    "apps/channels/tests/test_stream_url_visibility.py::StreamUrlVisibilityTests": {
+      "bases": [
+        "TestCase"
+      ],
+      "decorators": [],
+      "setup_teardown_methods": {
+        "setUp": "def setUp(self):\n    self.client = APIClient()\n    self.stream_a = Stream.objects.create(name='Account A', url=PROVIDER_A)\n    self.stream_b = Stream.objects.create(name='Account B', url=PROVIDER_B)\n    self.channel_a = Channel.objects.create(channel_number=1, name='From A')\n    self.channel_a.streams.add(self.stream_a)\n    self.profile = ChannelProfile.objects.create(name='Profile A')\n    self.standard = _make_user('standard-url', User.UserLevel.STANDARD)\n    self.standard.channel_profiles.add(self.profile)\n    self.admin = _make_user('admin-url', User.UserLevel.ADMIN)"
+      },
+      "method_decorators": {},
+      "all_mock_or_auth_statements": [
+        "self.client.force_authenticate(user=self.standard)",
+        "self.client.force_authenticate(user=self.standard)",
+        "self.client.force_authenticate(user=self.admin)",
+        "self.client.force_authenticate(user=self.admin)",
+        "self.client.force_authenticate(user=self.standard)"
+      ],
+      "class_AST_sha256": "97b1e290c5a503727306652d44bd304deb0ff142caba513624a63a830a004a7c",
+      "role_authority": "Exact supplied fixture/mocks only, inherited/framework behavior pinned by Source suite/image; no effective actor role inferred",
+      "HTTP_authority": "Framework client/factory tests, not real TCP/HTTP capture"
+    },
+    "apps/channels/tests/test_epg_logo_apply.py::SetLogosFromEpgApiTests": {
+      "bases": [
+        "TestCase"
+      ],
+      "decorators": [],
+      "setup_teardown_methods": {
+        "setUp": "def setUp(self):\n    self.user = User.objects.create_user(username='testuser', password='testpass123')\n    self.user.user_level = 10\n    self.user.save()\n    self.client = APIClient()\n    self.client.force_authenticate(user=self.user)\n    self.url = '/api/channels/channels/set-logos-from-epg/'\n    self.source = EPGSource.objects.create(name='XML EPG', source_type='xmltv', url='http://example.com/epg.xml')\n    self.epg = EPGData.objects.create(tvg_id='mapped', name='Mapped', icon_url='https://example.com/mapped.png', epg_source=self.source)\n    self.channel = Channel.objects.create(channel_number=1, name='Mapped', tvg_id='mapped', epg_data=self.epg)"
+      },
+      "method_decorators": {
+        "test_accepts_channel_ids": [
+          "patch('apps.channels.tasks.set_channels_logos_from_epg.delay')"
+        ],
+        "test_accepts_epg_source_id": [
+          "patch('apps.channels.tasks.set_channels_logos_from_epg.delay')"
+        ]
+      },
+      "all_mock_or_auth_statements": [
+        "patch('apps.channels.tasks.set_channels_logos_from_epg.delay')",
+        "patch('apps.channels.tasks.set_channels_logos_from_epg.delay')",
+        "self.client.force_authenticate(user=self.user)"
+      ],
+      "class_AST_sha256": "b71922c514d92b2652a8744f5c464fbb719480a98fa49b8a5608de2a5791da9a",
+      "role_authority": "Exact supplied fixture/mocks only, inherited/framework behavior pinned by Source suite/image; no effective actor role inferred",
+      "HTTP_authority": "Framework client/factory tests, not real TCP/HTTP capture"
+    },
+    "apps/m3u/tests/test_hash_key_override.py::GlobalHashKeySavePathTests": {
+      "bases": [
+        "TestCase"
+      ],
+      "decorators": [],
+      "setup_teardown_methods": {
+        "setUp": "def setUp(self):\n    _set_global_hash_key('name,url')\n    self.client = APIClient()\n    self.admin = User.objects.create_user(username='global_hashkey_admin', password='pw', user_level=10)\n    self.client.force_authenticate(user=self.admin)\n    self.settings = CoreSettings.objects.get(key=STREAM_SETTINGS_KEY)\n    self.plain = M3UAccount.objects.create(name='Global Plain Account', is_active=True)\n    self.inactive = M3UAccount.objects.create(name='Global Inactive Account', is_active=False)\n    self.override = M3UAccount.objects.create(name='Global Override Account', is_active=True, custom_properties={'hash_key': 'tvg_id'})"
+      },
+      "method_decorators": {},
+      "all_mock_or_auth_statements": [
+        "self.client.force_authenticate(user=self.admin)",
+        "self.client.patch(f'/api/core/settings/{self.settings.id}/', {'value': new_value}, format='json')",
+        "patch('core.api_views.rehash_streams.delay', side_effect=fake_delay)",
+        "self._patch_hash_key('name,url,group')",
+        "patch('core.api_views.rehash_streams.delay')",
+        "self._patch_hash_key('url,name')",
+        "patch('core.api_views.rehash_streams.delay', side_effect=fake_delay)",
+        "patch('core.api_views.rehash_streams.delay')",
+        "self._patch_hash_key('tvg_id')",
+        "patch('core.api_views.rehash_streams.delay')",
+        "self._patch_hash_key('group')"
+      ],
+      "class_AST_sha256": "419adc0dd3b9064bfb2bf6926c8ef3a237ebbd0675fc52280f6f18c2fe3e9bf8",
+      "role_authority": "Exact supplied fixture/mocks only, inherited/framework behavior pinned by Source suite/image; no effective actor role inferred",
+      "HTTP_authority": "Framework client/factory tests, not real TCP/HTTP capture"
+    },
+    "apps/channels/tests/test_recording_metadata.py::UpdateMetadataTests": {
+      "bases": [
+        "TestCase"
+      ],
+      "decorators": [],
+      "setup_teardown_methods": {
+        "setUp": "def setUp(self):\n    self.channel = Channel.objects.create(channel_number=70, name='Meta Test Channel')\n    self.user = _make_admin()\n    self.factory = APIRequestFactory()"
+      },
+      "method_decorators": {
+        "test_update_title_only": [
+          "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)"
+        ],
+        "test_update_description_only": [
+          "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)"
+        ],
+        "test_update_both_fields": [
+          "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)"
+        ],
+        "test_whitespace_trimmed": [
+          "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)"
+        ],
+        "test_creates_program_dict_when_absent": [
+          "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)"
+        ],
+        "test_sends_websocket_event": [
+          "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)"
+        ],
+        "test_ws_failure_does_not_fail_request": [
+          "patch('core.utils.send_websocket_update', side_effect=Exception('WS down'))"
+        ]
+      },
+      "all_mock_or_auth_statements": [
+        "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)",
+        "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)",
+        "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)",
+        "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)",
+        "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)",
+        "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)",
+        "patch('core.utils.send_websocket_update', side_effect=Exception('WS down'))",
+        "force_authenticate(request, user=self.user)",
+        "force_authenticate(request, user=self.user)",
+        "patch('core.utils.send_websocket_update', side_effect=lambda *a, **kw: None)"
+      ],
+      "class_AST_sha256": "b812df4707ed2aeea8302a5a9d9f1fd8cda4d0888d462036d94bcee3f3c4e7d2",
+      "role_authority": "Exact supplied fixture/mocks only, inherited/framework behavior pinned by Source suite/image; no effective actor role inferred",
+      "HTTP_authority": "Framework client/factory tests, not real TCP/HTTP capture"
+    },
+    "apps/epg/tests/test_schedules_direct.py::SDPosterProxyErrorHandlingTests": {
+      "bases": [
+        "TestCase"
+      ],
+      "decorators": [],
+      "setup_teardown_methods": {
+        "setUp": "def setUp(self):\n    from apps.epg.api_views import ProgramViewSet\n    from apps.epg.sd_utils import sd_clear_cached_token\n    from rest_framework.test import APIClient\n    ProgramViewSet._sd_poster_error_cache.clear()\n    self.client = APIClient()\n    self.source = EPGSource.objects.create(name='SD Poster Source', source_type='schedules_direct', username='sduser', password='sdpass')\n    sd_clear_cached_token(self.source.id)\n    self.epg = EPGData.objects.create(tvg_id='station1', name='Station 1', epg_source=self.source)\n    self.program = ProgramData.objects.create(epg=self.epg, title='Show', start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=1), program_id='EP123456789012', custom_properties={'sd_icon': 'https://json.schedulesdirect.org/20141201/image/assets/test.jpg'})\n    self.url = f'/api/epg/programs/{self.program.id}/poster/'",
+        "tearDown": "def tearDown(self):\n    from apps.epg.api_views import ProgramViewSet\n    from apps.epg.sd_utils import sd_clear_cached_token\n    ProgramViewSet._sd_poster_error_cache.clear()\n    sd_clear_cached_token(self.source.id)"
+      },
+      "method_decorators": {
+        "test_http_200_json_5002_locks_until_midnight_and_blocks_retry": [
+          "patch('requests.get')",
+          "patch('requests.post')"
+        ],
+        "test_http_200_json_5003_locks_out": [
+          "patch('requests.get')",
+          "patch('requests.post')"
+        ],
+        "test_http_404_json_5000_clears_sd_icon": [
+          "patch('requests.get')",
+          "patch('requests.post')"
+        ],
+        "test_bare_http_404_does_not_clear_sd_icon": [
+          "patch('requests.get')",
+          "patch('requests.post')"
+        ],
+        "test_2055_disables_extra_debugging_on_auth": [
+          "patch('requests.get')",
+          "patch('requests.post')"
+        ],
+        "test_2055_on_authorized_request_with_cached_token": [
+          "patch('apps.epg.sd_utils.requests.get')",
+          "patch('apps.epg.sd_utils.requests.post')"
+        ],
+        "test_successful_image_pass_through": [
+          "patch('requests.get')",
+          "patch('requests.post')"
+        ],
+        "test_poster_serves_image_for_image_accept_header": [
+          "patch('requests.get')",
+          "patch('requests.post')"
+        ],
+        "test_poster_accepts_slash_less_url": [
+          "patch('requests.get')",
+          "patch('requests.post')"
+        ],
+        "test_second_poster_request_reuses_cached_token": [
+          "patch('requests.get')",
+          "patch('requests.post')"
+        ],
+        "test_poster_401_clears_token_and_retries_once": [
+          "patch('requests.get')",
+          "patch('requests.post')"
+        ]
+      },
+      "all_mock_or_auth_statements": [
+        "patch('requests.get')",
+        "patch('requests.post')",
+        "patch('requests.get')",
+        "patch('requests.post')",
+        "patch('requests.get')",
+        "patch('requests.post')",
+        "patch('requests.get')",
+        "patch('requests.post')",
+        "patch('requests.get')",
+        "patch('requests.post')",
+        "patch('apps.epg.sd_utils.requests.get')",
+        "patch('apps.epg.sd_utils.requests.post')",
+        "patch('requests.get')",
+        "patch('requests.post')",
+        "patch('requests.get')",
+        "patch('requests.post')",
+        "patch('requests.get')",
+        "patch('requests.post')",
+        "patch('requests.get')",
+        "patch('requests.post')",
+        "patch('requests.get')",
+        "patch('requests.post')"
+      ],
+      "class_AST_sha256": "386f5d2dac86c5f17ad515301187abafece84fdf885bad759204e33db159aed4",
+      "role_authority": "Exact supplied fixture/mocks only, inherited/framework behavior pinned by Source suite/image; no effective actor role inferred",
+      "HTTP_authority": "Framework client/factory tests, not real TCP/HTTP capture"
+    },
+    "apps/channels/tests/test_recording_playback_auth.py::RecordingPlaybackAuthTests": {
+      "bases": [
+        "TestCase"
+      ],
+      "decorators": [
+        "override_settings(ALLOWED_HOSTS=['testserver'])",
+        "patch('apps.channels.api_views.network_access_allowed', return_value=True)"
+      ],
+      "setup_teardown_methods": {
+        "setUp": "def setUp(self):\n    self.channel = Channel.objects.create(channel_number=42, name='Playback Auth Channel')\n    self.user = _make_admin()\n    self.client = APIClient()\n    recordings_root = Path(RECORDINGS_STORAGE_ROOT)\n    recordings_root.mkdir(parents=True, exist_ok=True)\n    self.tmp_path = recordings_root / f'_playback_auth_{uuid.uuid4().hex}.mkv'\n    self.tmp_path.write_bytes(b'\\x00' * 1024)\n    self.hls_dir = recordings_root / f'_playback_auth_hls_{uuid.uuid4().hex}'\n    self.hls_dir.mkdir(parents=True, exist_ok=True)\n    (self.hls_dir / 'index.m3u8').write_text('#EXTM3U\\n#EXT-X-PLAYLIST-TYPE:EVENT\\n#EXTINF:4.0,\\nseg_00001.ts\\n', encoding='utf-8')\n    (self.hls_dir / 'seg_00001.ts').write_bytes(b'\\x00' * 188)\n    now = timezone.now()\n    self.recording = Recording.objects.create(channel=self.channel, start_time=now, end_time=now, custom_properties={'status': 'completed', 'file_path': str(self.tmp_path), 'file_name': 'test.mkv'})",
+        "tearDown": "def tearDown(self):\n    if self.tmp_path.exists():\n        self.tmp_path.unlink()\n    if self.hls_dir.is_dir():\n        shutil.rmtree(self.hls_dir, ignore_errors=True)"
+      },
+      "method_decorators": {
+        "_jwt_for": [
+          "staticmethod"
+        ]
+      },
+      "all_mock_or_auth_statements": [
+        "patch('apps.channels.api_views.network_access_allowed', return_value=True)"
+      ],
+      "class_AST_sha256": "381aa6bd8b9b01830258a9635270487ca9ce9add62945f7f3b79146e9f405f25",
+      "role_authority": "Exact supplied fixture/mocks only, inherited/framework behavior pinned by Source suite/image; no effective actor role inferred",
+      "HTTP_authority": "Framework client/factory tests, not real TCP/HTTP capture"
+    }
+  },
+  "selected_classes": 9,
+  "effective_role_qualified": false,
+  "new_application_execution": false
+}

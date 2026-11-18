@@ -106,3 +106,9 @@ Resolver custody uses the actual pinned Django successful URLPattern chain for e
 The [retained SD cohort](../scripts/rust-contracts/retained-sd/README.md) adds two exact unformatted GET/DELETE definitions from 19 retained observations, reaching 163 partial HTTP assignments with 635 absent. Six OPTIONS/HEAD/PUT observations remain separate metadata without invented methods or format aliases. All 161 preceding definitions and 796 unrelated operation dictionaries are preserved.
 
 Four actual paths were resolved in a separate UID65532/network-none control: all 592 route identities/order/actions matched, SQL/thread/child/handler attempts were 0, and the one denied import-time IPv6 bind remained count 1 with its original operation unexecuted. The resolver controller exited 0 with settled process group/EOF and exact container absence. Existing Source3/Source10 HTTP controller exit 1 outcomes remain unchanged; no HTTP was replayed. Native parity, complete roles, full milestones and performance stay open.
+
+## Retained framework-suite Source assignments
+
+The [framework cohort](../scripts/rust-contracts/framework-suite/README.md) adds ten partial operation definitions from 36 asserted request sites in 34 named methods that passed in the retained 3,362-test Original suite. Eight exact Source files bind direct API clients and explicit request-factory/ViewSet action maps. The register reaches 173 HTTP assignments with 625 absent; every prior 163 definition and 788 unrelated operation dictionaries remain unchanged.
+
+The portable register gate passes 354 tests with zero failures and one optional skip. No Source request, application or resolver is replayed. Two unresolved declared methods remain null, all 322 unresolved declarations remain unchanged, and this cohort claims no authentication-role, TCP or Native evidence. Original file bytes, including their existing trailing whitespace, are preserved. Full milestones and performance remain open.

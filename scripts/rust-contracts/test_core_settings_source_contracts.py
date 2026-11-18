@@ -51,6 +51,8 @@ class CoreSettingsSourceControls(unittest.TestCase):
         retained_auth_plugin_contracts.validate(ROOT, auth)
         auth_proof = json.loads((ROOT / 'scripts/rust-contracts/retained-auth-plugin/preservation.json').read_text())
         original_rows = copy.deepcopy(register['runtime_routes'])
+        import framework_suite_contracts
+        framework_suite_contracts.restore_pre_framework(register['runtime_routes'])
         import retained_sd_contracts
         retained_sd_contracts.restore_pre_SD(register['runtime_routes'])
         prior_rows = register['runtime_routes']

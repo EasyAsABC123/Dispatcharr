@@ -16,6 +16,7 @@ import unittest
 from test_source_contracts import SourceContracts
 from test_retained_auth_plugin_contracts import RetainedAuthPluginControls
 from test_retained_sd_contracts import RetainedSDControls
+from test_framework_suite_contracts import FrameworkSuiteControls
 from test_logo_source_contracts import LogoSourceControls
 from test_schema_cache_contracts import SchemaCacheControls
 from test_notification_credential_contracts import CredentialSourceControls
@@ -90,6 +91,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(retained_auth_plugin_contracts.dependencies())
         import retained_sd_contracts
         refs.update(retained_sd_contracts.dependencies())
+        import framework_suite_contracts
+        refs.update(framework_suite_contracts.dependencies())
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
