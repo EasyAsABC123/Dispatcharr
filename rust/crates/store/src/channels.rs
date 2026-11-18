@@ -694,6 +694,21 @@ fn range_reply(value: &Value) -> Result<Response, StoreError> {
     Ok(([("content-type", "application/json")], bytes).into_response())
 }
 
+// Source10 observes these action headers on successful and rejected GETs.
+// Apply after IntoResponse so authentication and input errors are included;
+// the existing outer CORS middleware merges origin into this single Vary field.
+async fn range_response_headers(mut response: Response) -> Response {
+    response.headers_mut().insert(
+        axum::http::header::ALLOW,
+        axum::http::HeaderValue::from_static("GET, HEAD, OPTIONS"),
+    );
+    response.headers_mut().insert(
+        axum::http::header::VARY,
+        axum::http::HeaderValue::from_static("Accept"),
+    );
+    response
+}
+
 async fn numbers_in_range(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -895,7 +910,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route("/api/channels/channels/by-uuids/", post(by_uuids))
         .route(
             "/api/channels/channels/numbers-in-range/",
-            get(numbers_in_range),
+            get(numbers_in_range).layer(axum::middleware::map_response(range_response_headers)),
         )
         .route("/api/channels/channels/ids/", get(ids))
         .route("/api/channels/channels/summary/", get(summary))
