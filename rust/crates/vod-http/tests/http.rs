@@ -213,6 +213,7 @@ async fn fixture_with_user(
         heartbeat_interval: Some(Duration::from_secs(1)),
         ..Default::default()
     };
+    let recovery_namespace = config.namespace.clone();
     let coordinator = Coordinator::connect(&url, config).await.unwrap();
     let selected_path = if path == "recovery-idle" {
         "bytes"
@@ -274,6 +275,11 @@ async fn fixture_with_user(
     )
     .await
     .unwrap();
+    let engine = if path == "recovery-idle" {
+        engine.with_redis_recovery(&recovery_namespace).unwrap()
+    } else {
+        engine
+    };
     let _: () = connection
         .del(format!("profile_connections:{id}"))
         .await
@@ -980,9 +986,6 @@ async fn shutdown_reports_failed_quota_cleanup_instead_of_false_success() {
 #[ignore = "requires actual owned Redis and loopback Source2 changed-ID recovery bridge"]
 async fn recovery_idle_changed_requested_id_retains_one_metadata_identity() {
     let (engine, mut redis, profile, origin) = fixture("recovery-idle").await;
-    let engine = engine
-        .with_redis_recovery(&format!("owned-alias-{}", uuid::Uuid::new_v4().simple()))
-        .unwrap();
     let retained = format!("test-{}", uuid::Uuid::new_v4());
     let first = engine.respond(request(&retained, None)).await;
     assert_eq!(first.status(), 200);
@@ -1031,5 +1034,18 @@ async fn recovery_idle_changed_requested_id_retains_one_metadata_identity() {
         bytes
     );
     clean(&mut redis, &retained, profile).await;
+    assert!(engine.shutdown().await);
+    let owners: Vec<String> = {
+        let mut scan = redis
+            .scan_match::<_, String>(format!("*:vod:session:{retained}:owner"))
+            .await
+            .unwrap();
+        let mut keys = Vec::new();
+        while let Some(key) = scan.next_item().await {
+            keys.push(key);
+        }
+        keys
+    };
+    assert!(owners.is_empty(), "retained generation owner must retire");
     origin.abort();
 }

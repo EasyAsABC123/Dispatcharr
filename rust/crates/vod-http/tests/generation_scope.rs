@@ -977,7 +977,8 @@ async fn idle_profile_handoff_full_target_preserves_foreign_reservation() {
     );
     assert_eq!(f.redis.get::<_, i64>(&selected_key).await.unwrap(), 1);
     scope.close(&body).await.unwrap();
-    let _ = closing.await.unwrap();
+    assert!(closing.await.unwrap().unwrap().deleted);
+    assert!(scope.cleanup_succeeded());
     assert_eq!(f.redis.get::<_, i64>(&selected_key).await.unwrap(), 1);
     assert!(foreign.release().await.unwrap());
     f.empty().await;

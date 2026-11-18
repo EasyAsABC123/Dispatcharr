@@ -143,6 +143,11 @@ async fn proxy(kind: &str, drop_reply: bool) -> Proxy {
     let script = if kind == "RESERVE_PROVIDER" {
         let source = include_str!("../../coordination/src/scripts.rs");
         extract(source, "REAP") + &extract(source, "RESERVE_PROVIDER")
+    } else if kind == "HANDOFF_COMMIT" {
+        extract(
+            include_str!("../src/generation_profile_handoff.rs"),
+            "COMMIT",
+        )
     } else {
         extract(include_str!("../src/generation_idle.rs"), kind)
     };
@@ -757,4 +762,70 @@ async fn pending_follower_zero_provider_remains_partial() {
     scope.close(&body).await.unwrap();
     drop(body);
     empty(f, scope).await;
+}
+
+#[tokio::test]
+#[ignore = "actual handoff COMMIT executed reply lost: single owner retires without replay or foreign decrement"]
+async fn idle_profile_handoff_commit_lost_reply_retires_owned_lease_only() {
+    let p = proxy("HANDOFF_COMMIT", true).await;
+    let (mut f, scope) = begin(&p).await;
+    let selected = f.profile + 1;
+    let selected_key = format!("profile_connections:{selected}");
+    let mut other = f.request();
+    let foreign_id = uuid::Uuid::new_v4().simple().to_string();
+    other.channel_id = foreign_id.clone();
+    other.provider_profile_id = Some(selected);
+    other.provider_max_streams = 2;
+    let foreign = f.coordinator.acquire_vod(other).await.unwrap();
+    let foreign_owner = format!("{}:vod:session:{}:owner", f.namespace, foreign_id);
+    let body = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    let mut data = admission(&f);
+    data.fields
+        .insert("m3u_profile_id".into(), selected.to_string());
+    let task = tokio::spawn({
+        let scope = scope.clone();
+        let body = body.clone();
+        async move {
+            scope
+                .enter_idle_profile_handoff(&body, data, selected, 2)
+                .await
+        }
+    });
+    wait(|| p.seen.load(Ordering::SeqCst) == 1).await;
+    assert_eq!(f.redis.get::<_, i64>(&selected_key).await.unwrap(), 2);
+    assert_eq!(
+        f.redis
+            .hget::<_, _, String>(f.metadata(), "m3u_profile_id")
+            .await
+            .unwrap(),
+        selected.to_string()
+    );
+    p.release.send_replace(true);
+    assert!(task.await.unwrap().is_err());
+    wait(|| scope.control_slots() == 2).await;
+    assert_eq!(
+        p.seen.load(Ordering::SeqCst),
+        1,
+        "ambiguous COMMIT was not replayed"
+    );
+    assert!(!f.redis.exists::<_, bool>(f.owner()).await.unwrap());
+    assert!(!f.redis.exists::<_, bool>(f.ledger()).await.unwrap());
+    assert!(!f.redis.exists::<_, bool>(f.metadata()).await.unwrap());
+    assert_eq!(f.redis.get::<_, i64>(&selected_key).await.unwrap(), 1);
+    assert_eq!(
+        f.redis.get::<_, String>(&foreign_owner).await.unwrap(),
+        foreign.token()
+    );
+    scope.close(&body).await.unwrap();
+    tokio::time::timeout(Duration::from_secs(3), scope.drain())
+        .await
+        .unwrap();
+    assert!(foreign.release().await.unwrap());
+    foreign.settlement().wait().await;
+    assert_eq!(f.redis.get::<_, i64>(&selected_key).await.unwrap(), 0);
+    f.empty().await;
+    let _: () = f.redis.del(selected_key).await.unwrap();
 }

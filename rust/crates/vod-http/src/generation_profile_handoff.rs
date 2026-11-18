@@ -90,9 +90,14 @@ async fn abandon_handoff(
         ) {
             return Err(Error::PartialState);
         }
-        let released = gen.lease.release_provider().await;
+        // The same fenced single-claim proof has removed (or observed absent)
+        // our metadata. Its idle timer can no longer finalize that metadata, so
+        // retire the immutable owner/ledger as well as its provider allocation.
+        let released = gen.lease.release().await;
         gen.lease.settlement().wait().await;
         released.map_err(|_| Error::Backend)?;
+        gen.retired.store(true, Ordering::Release);
+        disarm_recovered(gen);
         receipt
             .forget(&mut inner.recovery.inner.connection.clone())
             .await
@@ -227,13 +232,16 @@ impl LocalScope {
             gen.lease.settlement().wait().await;
             drop(phase);
             if let Err(error) = reserved {
+                if error == CoordinationError::ProfileFull {
+                    // This acknowledged refusal allocated nothing. Remove only
+                    // our receipt-backed claim, preserving the old idle metadata
+                    // and its original timer's authority to retire this lease.
+                    rollback(&inner, &gen, &receipt, false).await?;
+                    return Err(Error::ProfileFull);
+                }
                 inner.failed.store(true, Ordering::Release);
                 abandon_handoff(&inner, &gen, &receipt, old, selected).await?;
-                return Err(if error == CoordinationError::ProfileFull {
-                    Error::ProfileFull
-                } else {
-                    Error::Backend
-                });
+                return Err(Error::Backend);
             }
             if *inner.stop.borrow() || *inner.shutdown.borrow() || body.is_closed() {
                 abandon_handoff(&inner, &gen, &receipt, old, selected).await?;
