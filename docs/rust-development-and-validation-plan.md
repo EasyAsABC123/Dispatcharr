@@ -24,8 +24,9 @@ and measurement window. Four concurrent agent slots are currently available.
 4. Run one acceptance batch selected by the dependency graph. Candidate67's
    planned batch covers preview, dummy creation, Schedules Direct mutation/search,
    channel-guide coupling, range, enabled logos and normal version tasks. These
-   eight contexts cover the changed interfaces and prior failed cells; ten is only
-   the new Source HTTP capture count, not the whole Native workload.
+   eight contexts cover the changed interfaces and prior failed cells. Two
+   current-image live/VOD viewing smokes bring the Native selection to ten
+   contexts; this is separate from the ten newly captured Source HTTP requests.
 5. Keep unaffected, immutable component results as explicitly scoped baseline
    evidence. Run broad integration at coherent release boundaries and when shared
    behavior changes. A smaller batch cannot silently claim a whole milestone.
