@@ -28,9 +28,9 @@ mutation. Four real TCP controls cover dropped readiness, uncertain PEEK reply
 and pending physical ownership. Full automatic CUT acceptance remains pending;
 the earlier cold-read cause was inferred without a captured physical error kind.
 
-The exact-revision Docker build passes in315.621 seconds. All six runtime package
+The exact-revision Docker build passes in 315.621 seconds. All six runtime package
 families pass: archive/assets, crypto, PostgreSQL, regex, Python compatibility and
-VLC media. Independent cleanup verifies55 exact containers absent. The image is
+VLC media. Independent cleanup verifies 55 exact containers absent. The image is
 `sha256:da1967690af90e79d4544e19468819b7b7f01e98dc2392d5fe7ae32d399b5d17`,
 source tree `b43cbd5dc7520f2131b2e9130e2ec9cd521357ab76db3d6c99c32de2b1cfd03b`.
 Build and validation duration are not application performance measurements.
@@ -41,13 +41,20 @@ The latter passed all three worker-identity phases before failing its test-only
 assumption while retaining the original default; the complete SDK107 and
 physical14 rerun pass. No earlier failed controller is relabeled successful.
 
-The twenty-context Native batch is being prepared against this image, reusing
-qualified Source observations. Its matching Beat startup epoch, existing VOD
+The [twenty-context Native batch](../scripts/rust-integration/milestone-batch63/native20/started-checkpoint.json)
+has started against this image, reusing qualified Source observations. Its actual
+application terminal remains pending. All 70 runtime files passed the actual
+UID 65532 readability check before the application fixture started. Its matching Beat startup epoch, existing VOD
 recovery opt-in and bounded recent-marker observer are explicit fixture changes.
 Connection acknowledgement differences remain visible in raw transport evidence;
 any future application-semantic classification must retain its narrow proof and
 historical provenance limits. The previous Candidate62 Native19 result remains
-failed with15 contexts passed and4 failed.
+failed with 15 contexts passed and 4 failed.
+
+The separate [Source timeshift observations](rust-source6-observed.md) retain
+twelve responses across six new scenarios, but qualify none fully because serving
+worker identity remains unproved. Their controller exit1 and counter/race samples
+are preserved without inferring a permanent leak or Native equivalence.
 
 **All complete M0–M9 milestones remain open.** Whole application compatibility,
 remaining API/job/admin/SQLite behavior, default recovery activation, performance,
