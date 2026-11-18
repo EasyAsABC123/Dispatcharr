@@ -9,6 +9,8 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+[Candidate62](rust-milestone-batch62.md) passes all four SDK103 gates (1,216 passed, zero failed, 802 ignored), thirteen explicitly executed Compose Redis controls, its exact-revision Docker build and all six package families. The combined nineteen-context Native application workflow is running on that image after its UID63 preflight passes; an earlier UID-only permission refusal is preserved separately. The batch includes corrected credential observation, channel/guide composition, provider logo allocation, retained VOD adoption and Source-qualified SD actions. The contract register has 152 scoped HTTP Source assignments and fifteen partial non-HTTP candidates; 646 HTTP assignments remain absent. All complete M0–M9 milestones, current application performance gains, soak and rollback acceptance remain open. Candidate60's whole17 run was interrupted by a host reboot, with no observed terminal exit.
+
 [Candidate60](rust-milestone-batch60.md) passes all four SDK100 gates (1,216 passed, zero failed, 792 ignored), all nine actual Redis controls, its exact-revision Docker build, and all six package families. It joins due/immediate recording producer readiness with Source-characterized channel/guide writes and literal sequence corrections. The expanded seventeen-context application workflow remains pending; complete M0–M9 acceptance and new performance gains remain open.
 
 [Candidate59](rust-milestone-batch59.md) passes SDK97 (1,214 passed, zero failed, 792 ignored), all nine actual Redis controls, an exact-revision Docker build, and all six package families. Its full application rerun remains held for a separately identified due/immediate producer readiness risk. The next combined candidate includes that repair and the [new Source channel/guide reference](rust-channel-guide-source25.md): 25 new HTTP observations, six actual programme tasks, literal sequence allocation and the cached-XML deletion quirk. These scoped results close no full milestone or new performance criterion.
@@ -530,7 +532,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 
 | ID | Deliverable | Depends on | Current status | Evidence required to pass |
 | --- | --- | --- | --- | --- |
-| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 139 scoped HTTP Source assignments plus fifteen partial non-HTTP candidates; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
+| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 152 scoped HTTP Source assignments plus fifteen partial non-HTTP candidates; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
 | M1 | Shared bounded streaming core | M0 | In progress (technical core gates passed; M0 executable-contract prerequisite open) | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
 | M2 | Authenticated live TS vertical slice | M1 | In progress | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
 | M3 | Complete live playback formats and profiles | M2 | In progress (HLS component and gateway) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
