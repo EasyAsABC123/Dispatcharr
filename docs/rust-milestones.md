@@ -16,7 +16,8 @@ completed all 12 calls in eleven cases, with controller exit 0 and verified
 cleanup. The retained capture review accounts for observed Redis queue pruning
 and expiry, qualifying all 12 calls without replay. It records pre-setup create
 responses, real profile task lineage and the category rows retained on account
-deletion. Business review and Rust parity remain in progress.
+deletion. The Source business review passes all eleven cases. Rust parity
+remains in progress.
 
 [Candidate67](rust-milestone-batch67.md) passes all four SDK115 gates (1,240 passed, zero failed, 802 ignored), its exact-revision Docker build, six runtime package families and three installed dependency lifecycle tests. Ten new Source preview/create observations are captured and reviewed. The affected ten-context Native batch completes with actual exit1: four passed/six failed, with eleven-container/ten-generation cleanup. Guide, logos and live/VOD pass; import, scope and version-observer failures are retained. The three-context retry exits 0, all ten new HTTP comparisons pass, and 23 retained calls qualify through the corrected observer. This covers the selected contexts. Both backends pass the fresh 100-viewer protocol pilot. The repeated performance comparison and all complete milestones remain open.
 
