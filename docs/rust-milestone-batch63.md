@@ -67,3 +67,37 @@ These assignments do not establish complete Native endpoint acceptance.
 remaining API/job/admin/SQLite behavior, default recovery activation, performance,
 soak and rollback still require acceptance. No current CPU or memory gain is
 accepted, and earlier scoped measurements are not transferred to this candidate.
+
+The [completed Native20 batch](../scripts/rust-integration/milestone-batch63/native20/terminal-summary.json)
+exits **1: sixteen contexts passed and four failed**, in 3,331.607 seconds.
+All 8,255 durable owner inputs remain unchanged, both pipes and process groups
+settle, and independent cleanup verifies 26 exact containers and 25 original
+host generations absent. The earlier started checkpoint remains historical.
+
+Guide25 and the existing SD21 context pass. SD21 is scoped application-semantic
+acceptance; raw Connection differences and Source historical provenance limits
+remain recorded. The provider context stops before business operations: disabled
+backup initialization updates the global Beat marker for a nonexistent task,
+where Source returns without mutation. A small production no-op fix is prepared;
+no clock-field waiver is applied.
+
+VOD adoption has six HTTP200 statuses but only five successful bounded bodies.
+The inactive-profile replacement returns an empty second body: the prior local
+session's idle timer stops the replacement stream and releases its profile lease.
+The first two adoption domains and process worker identity are positive. A
+fenced finalizer and an extension to the existing real HTTP regression are
+prepared; all wider/default M4 acceptance remains open.
+
+The new SD4 context sends zero Native target requests. Its shared TLS setup guard
+recognizes only the old context; retained credentials conceal the skipped setup.
+All four recorded errors are fixture failures. A context-specific setup and fresh
+marker fix is prepared, preserving the original failed result.
+
+Manual Comskip3, all four positive mark/cut/repeat controls and natural automatic
+MARK pass. Natural CUT times out again. Final health reports a publication backend
+transport failure before claim, now isolated to the dedicated publisher adoption
+read, which the consumer-read readiness fix did not cover. Its idle-disconnect
+explanation remains inferred; the actual error and missing claim are retained.
+The next repair audits the complete preclaim read path rather than weakening
+the timeout or replaying a mutation. No complete milestone or new performance
+gain follows from this batch.
