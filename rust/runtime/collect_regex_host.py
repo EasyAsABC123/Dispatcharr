@@ -3,9 +3,10 @@ Original Dispatcharr, CPython, Debian and distribution authors retain credit.
 No Django/application import, install, DB/HTTP/cache operation or runtime keys.
 The copied dependency interpreter runs only a bounded module-origin audit.
 """
-import hashlib,importlib.metadata as metadata,json,os,re,shutil,subprocess,sys,sysconfig
+import hashlib,importlib.metadata as metadata,json,os,re,shutil,subprocess,sys,sysconfig,unicodedata
 from pathlib import Path
 IMAGE='ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f'
+SOURCE_UNICODE=unicodedata.unidata_version
 OUT=Path('/media-runtime');PREFIX=OUT/'opt/dispatcharr-python';DOCS=OUT/'usr/share/doc/dispatcharr/regex-host';DOCS.mkdir(parents=True,exist_ok=False)
 if sys.version_info[:2]!=(3,13)or Path(sys.prefix)!=Path('/dispatcharrpy')or Path(sys.base_prefix)!=Path('/usr'):raise RuntimeError('Pinned Original CPython3.13 venv required')
 PREFIX.mkdir(parents=True,exist_ok=False)
@@ -76,7 +77,7 @@ def owners(path):
    notice=Path('/usr/share/doc')/package/'copyright';dest=DOCS/'debian'/package/'copyright';copy_file(notice,dest);package_cache[package]={'source':str(notice),'retained':'/'+str(dest.relative_to(OUT)),'sha256':sha(notice)}
   result.append({'package':owner,**package_cache[package]})
  return result
-manifest={'source_image':IMAGE,'python':sys.version,'base_prefix':sys.base_prefix,'distributions':licenses,'ELF':[],'files':[],'application_started':False,'external_key_homes_or_runtime_data_copied':False,'distribution_fixture_key_audit_required':True,'source_application_assets_copied':False,'mode':'regex-only'}
+manifest={'source_image':IMAGE,'python':sys.version,'base_prefix':sys.base_prefix,'distributions':licenses,'ELF':[],'files':[],'application_started':False,'external_key_homes_or_runtime_data_copied':False,'distribution_fixture_key_audit_required':True,'source_application_assets_copied':False,'mode':'regex-only','source_unicode_version':SOURCE_UNICODE}
 loader=None;lib=PREFIX/'elf';lib.mkdir()
 # Inspect only real retained ELF, preserving site-package-relative RPATH assets.
 # ldd is bounded and runs only against binaries from the pinned image.
@@ -105,7 +106,7 @@ if not loader:raise RuntimeError('Pinned Python dynamic ELF loader missing')
 # -I suppresses PYTHONPATH/HOME/user-site. Fail before any successful manifest if
 # the dependency or loaded extension resolves outside this exact retained tree.
 audit_code=r"""
-import hashlib,importlib.util,json,sys
+import hashlib,importlib.util,importlib.machinery,json,sys
 from pathlib import Path
 import regex,packaging.version,unicodedata
 root=Path(sys.argv[1]).resolve()
@@ -115,18 +116,29 @@ modules=[]
 for name,module in list(sys.modules.items()):
  if name=='regex' or name.startswith('regex.') or name=='packaging' or name.startswith('packaging.') or name=='unicodedata':
   filename=getattr(module,'__file__',None)
+  if name=='unicodedata'and filename is None:
+   # The pinned CPython build may compile this module into its interpreter.
+   # Bind that actual origin to the copied ELF; do not invent a module file.
+   assert name in sys.builtin_module_names
+   assert module.__spec__.origin=='built-in'
+   assert module.__spec__.loader is importlib.machinery.BuiltinImporter
+   path=(root/'bin/python3.13').resolve()
+   assert Path(sys.executable).resolve()==path and path.is_relative_to(root)
+   modules.append({'name':name,'origin_kind':'built-in','module_spec_origin':'built-in','identity_artifact':'bin/python3.13','relative_origin':str(path.relative_to(root)),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
+   continue
   if filename is None:continue
   path=Path(filename).resolve();assert path.is_relative_to(root)
   modules.append({'name':name,'relative_origin':str(path.relative_to(root)),'sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
 assert modules and any(m['relative_origin'].endswith('.so')for m in modules)
 assert any(m['name']=='packaging.version'for m in modules)
 assert any(m['name']=='unicodedata'for m in modules)
+assert unicodedata.unidata_version==sys.argv[2]
 assert str.lower.__objclass__ is str and str.isalnum.__objclass__ is str
 assert packaging.version.parse('1!0.1')>packaging.version.parse('9.0')
 assert all(Path(path).is_relative_to(root)for path in sys.path if path)
 print(json.dumps({'python':sys.version,'regex':regex.__version__,'packaging':packaging.__version__,'prefix':str(root),'modules':modules,'Django_available':False,'Unicode_version':unicodedata.unidata_version,'string_primitives':'pinned CPython str.lower/str.isalnum'}))
 """
-audit=subprocess.run([str(lib/loader),'--library-path',str(lib),str(PREFIX/'bin/python3.13'),'-B','-I','-c',audit_code,str(PREFIX)],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,timeout=15,check=False)
+audit=subprocess.run([str(lib/loader),'--library-path',str(lib),str(PREFIX/'bin/python3.13'),'-B','-I','-c',audit_code,str(PREFIX),SOURCE_UNICODE],stdout=subprocess.PIPE,stderr=subprocess.PIPE,text=True,timeout=15,check=False)
 if audit.returncode or audit.stderr or len(audit.stdout)>65536:raise RuntimeError('Copied isolated dependency module-origin audit failed: '+audit.stderr[:4096])
 manifest['actual_relocated_module_audit']=json.loads(audit.stdout)
 assert manifest['actual_relocated_module_audit']['packaging']==licenses['packaging']['version']
