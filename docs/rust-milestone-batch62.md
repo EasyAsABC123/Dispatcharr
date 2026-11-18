@@ -40,3 +40,8 @@ replaying Source business calls. Whole-application roles, faults, transport
 identity, remaining API/job/admin/SQLite coverage, performance, soak and rollback
 still require acceptance. **All formal M0–M9 milestones remain open.** No current
 CPU or memory improvement is accepted; previous scoped gains are not transferred.
+
+
+The corrected [image and package proofs](../scripts/rust-integration/milestone-batch62/package/inventory.json) now pass: image `sha256:65d085f1352588fe4cfa33b63120535211b09e6b689308d97a6181d3dd12e950`, source tree `6985b21554ec59bd576eb3e1f1b671ae565b360a831afc7381482074a88278e9`. All six actual package exits are zero, with 55 exact containers independently absent. The image matches every SDK103 Rust input. Package scripts take 73.576 seconds summed across the six families; this is validation time, not an application performance measurement. An initial pre-package invocation refused a mistyped full revision before any Docker work; the successful invocation reads the revision directly from the build receipt. The reviewed Native19 plan binds 3,833 durable inputs and 62 runtime helpers, with Source0 and no Source business replay. Native19 remains pending execution at this checkpoint.
+
+The contract register separately reaches 152 partial HTTP assignments (646 absent) through retained Source captures. The 342-test register regression passes with one optional skip. These assignments record bounded Source authority; they do not count as complete Native endpoint or milestone acceptance.

@@ -1,0 +1,11 @@
+{
+  "passed": true,
+  "actual_Docker_build_exit": 0,
+  "required_actual_recompilations": {
+    "dispatcharr-vod-http": true,
+    "dispatcharr-rs": true
+  },
+  "reason": "Candidate62 repairs M4 profile-handoff cleanup after the Candidate61 build. VOD HTTP/Main compilation is required; all Rust inputs bind the actual passing SDK with no exclusions, including vendored original manifests. Store changes already compiled in Candidate61 need not compile again when unchanged.",
+  "build_log_sha256": "0af1b412f7b35e3070b6fbf844bab5910c993414df855c3d0dcb557a6d249284",
+  "application_performance_verified": false
+}
