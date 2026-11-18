@@ -13,7 +13,7 @@ use redis::Script;
 use std::{
     collections::BTreeMap,
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool, AtomicI64, Ordering},
         Arc, Mutex as StdMutex, Weak,
     },
     time::{Duration, SystemTime, UNIX_EPOCH},
@@ -65,7 +65,7 @@ pub struct LocalScope {
 struct Inner {
     recovery: Recovery,
     id: String,
-    profile: i64,
+    profile: AtomicI64,
     credential_pool: Option<dispatcharr_coordination::CredentialPool>,
     identity: Identity,
     lifecycle: Arc<dyn Send + Sync>,
@@ -369,7 +369,7 @@ impl LocalScope {
         let inner = Arc::new(Inner {
             recovery,
             id: initial.id,
-            profile: initial.profile_id,
+            profile: AtomicI64::new(initial.profile_id),
             credential_pool: initial.credential_pool,
             identity: initial.identity,
             lifecycle: initial.lifetime,
@@ -402,8 +402,11 @@ impl LocalScope {
                 .arg(&gen.user_id)
                 .arg(&task_inner.identity.content_uuid)
                 .arg(&task_inner.identity.content_kind)
-                .arg(format!("profile_connections:{}", task_inner.profile))
-                .arg(task_inner.profile)
+                .arg(format!(
+                    "profile_connections:{}",
+                    task_inner.profile.load(Ordering::Acquire)
+                ))
+                .arg(task_inner.profile.load(Ordering::Acquire))
                 .invoke_async(&mut task_inner.recovery.inner.connection.clone())
                 .await
                 .map_err(|_| Error::Backend)?;
@@ -494,7 +497,7 @@ impl LocalScope {
         Arc::ptr_eq(&self.inner, &other.inner)
     }
     pub fn profile_id(&self) -> i64 {
-        self.inner.profile
+        self.inner.profile.load(Ordering::Acquire)
     }
     pub fn entry_fence_keys(&self, lease: &Lease) -> (String, String, String) {
         (
@@ -712,7 +715,7 @@ impl LocalScope {
             || body.is_closed()
             || body.state.admitted.load(Ordering::Acquire)
             || request.channel_id != self.inner.id
-            || request.provider_profile_id != Some(self.inner.profile)
+            || request.provider_profile_id != Some(self.inner.profile.load(Ordering::Acquire))
             || !admission
                 .fields
                 .get("user_id")
@@ -918,16 +921,22 @@ impl LocalScope {
                 .key(key(&inner.id))
                 .key(ledger(&inner, &gen.lease))
                 .key(stop_key)
-                .key(format!("profile_connections:{}", inner.profile))
+                .key(format!(
+                    "profile_connections:{}",
+                    inner.profile.load(Ordering::Acquire)
+                ))
                 .key(&receipt.key)
                 .arg(gen.lease.token())
                 .arg(&gen.token)
                 .arg(&gen.user_id)
                 .arg(&inner.identity.content_uuid)
                 .arg(&inner.identity.content_kind)
-                .arg(format!("profile_connections:{}", inner.profile))
+                .arg(format!(
+                    "profile_connections:{}",
+                    inner.profile.load(Ordering::Acquire)
+                ))
                 .arg(timestamp())
-                .arg(inner.profile)
+                .arg(inner.profile.load(Ordering::Acquire))
                 .arg(&receipt.field)
                 .arg(receipt.max_fields)
                 .arg(receipt.max_bytes)

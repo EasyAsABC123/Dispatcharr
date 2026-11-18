@@ -107,6 +107,14 @@ pub trait VodResolver: Send + Sync {
     fn admin<'a>(&'a self, _request: &'a PlaybackRequest) -> BoxFuture<'a, Result<(), StoreError>> {
         Box::pin(async { Err(StoreError::PermissionDenied) })
     }
+    /// Read-only two-ID precondition for the captured same-account inactive-profile idle handoff.
+    fn inactive_profile_in_account(
+        &self,
+        _profile: i64,
+        _account: i64,
+    ) -> BoxFuture<'_, Result<bool, StoreError>> {
+        Box::pin(async { Ok(false) })
+    }
     fn default_redirect(&self) -> BoxFuture<'_, Result<bool, StoreError>>;
 }
 
@@ -147,6 +155,20 @@ impl SqlVodResolver {
 }
 
 impl VodResolver for SqlVodResolver {
+    fn inactive_profile_in_account(
+        &self,
+        profile: i64,
+        account: i64,
+    ) -> BoxFuture<'_, Result<bool, StoreError>> {
+        Box::pin(async move {
+            if profile <= 0 || account <= 0 {
+                return Ok(false);
+            }
+            Ok(sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3uaccountprofile WHERE id=$1 AND m3u_account_id=$2 AND NOT is_active)")
+                .bind(profile).bind(account).fetch_one(self.store.pool()).await?)
+        })
+    }
+
     fn authenticate_method<'a>(
         &'a self,
         request: &'a VodRequest,

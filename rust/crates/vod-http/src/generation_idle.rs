@@ -3,6 +3,8 @@
 use super::*;
 #[path = "generation_idle_observer.rs"]
 mod observation;
+#[path = "generation_profile_handoff.rs"]
+mod profile_handoff;
 use dispatcharr_coordination::{Error as CoordinationError, ProviderReservation};
 
 // All writes require the same private owner, public generation, identity,
@@ -129,7 +131,8 @@ impl LocalScope {
             || body.state.admitted.load(Ordering::Acquire)
             || admission.fields.get("content_uuid") != Some(&self.inner.identity.content_uuid)
             || admission.fields.get("content_obj_type") != Some(&self.inner.identity.content_kind)
-            || admission.fields.get("m3u_profile_id") != Some(&self.inner.profile.to_string())
+            || admission.fields.get("m3u_profile_id")
+                != Some(&self.inner.profile.load(Ordering::Acquire).to_string())
         {
             return Err(Error::Configuration);
         }
@@ -218,9 +221,12 @@ impl LocalScope {
                 .arg(&gen.user_id)
                 .arg(&inner.identity.content_uuid)
                 .arg(&inner.identity.content_kind)
-                .arg(format!("profile_connections:{}", inner.profile))
+                .arg(format!(
+                    "profile_connections:{}",
+                    inner.profile.load(Ordering::Acquire)
+                ))
                 .arg(timestamp())
-                .arg(inner.profile)
+                .arg(inner.profile.load(Ordering::Acquire))
                 .arg(&receipt.field)
                 .arg(receipt.max_fields)
                 .arg(receipt.max_bytes)
@@ -257,7 +263,7 @@ impl LocalScope {
             let reserve = gen
                 .lease
                 .reserve_provider_retained_result(ProviderReservation {
-                    profile_id: Some(inner.profile),
+                    profile_id: Some(inner.profile.load(Ordering::Acquire)),
                     max_streams: profile_max,
                     credential_pool: inner.credential_pool.clone(),
                 })
@@ -288,9 +294,12 @@ impl LocalScope {
                 .arg(&gen.user_id)
                 .arg(&inner.identity.content_uuid)
                 .arg(&inner.identity.content_kind)
-                .arg(format!("profile_connections:{}", inner.profile))
+                .arg(format!(
+                    "profile_connections:{}",
+                    inner.profile.load(Ordering::Acquire)
+                ))
                 .arg(timestamp())
-                .arg(inner.profile)
+                .arg(inner.profile.load(Ordering::Acquire))
                 .arg(&receipt.field)
                 .arg(u8::from(profile_max > 0))
                 .invoke_async(&mut inner.recovery.inner.connection.clone())

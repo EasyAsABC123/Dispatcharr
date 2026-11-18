@@ -376,7 +376,10 @@ async fn guide_target(
     match kind {
         Some((Some(kind),)) if kind == "dummy" => Ok(GuideTarget::CacheOnly),
         Some((kind,)) if kind.as_deref().is_none_or(|v| v == "xmltv") => {
-            if !auth.normal_core_task_broker || auth.core_task_broker.get().is_none() {
+            // Main binds this sealed broker on the shared cell before serving.
+            // normal_core_task_broker belongs to the private CoreSettings Auth
+            // clone; channel/router clones instead prove the actual port here.
+            if auth.core_task_broker.get().is_none() {
                 return Err(guide_unsupported());
             }
             Ok(GuideTarget::Programme(epg))

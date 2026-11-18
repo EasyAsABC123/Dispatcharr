@@ -154,13 +154,63 @@ pub(super) async fn request(
     timeout: Duration,
     owner: Owner,
 ) -> Result<Reply, Error> {
+    request_inner(
+        method,
+        path,
+        token,
+        debug,
+        payload,
+        RequestPolicy {
+            timeout,
+            owner,
+            content_type: true,
+        },
+    )
+    .await
+}
+pub(super) async fn countries(owner: Owner) -> Result<Reply, Error> {
+    request_inner(
+        reqwest::Method::GET,
+        "/available/countries",
+        None,
+        false,
+        None,
+        RequestPolicy {
+            timeout: Duration::from_secs(15),
+            owner,
+            content_type: false,
+        },
+    )
+    .await
+}
+struct RequestPolicy {
+    timeout: Duration,
+    owner: Owner,
+    content_type: bool,
+}
+async fn request_inner(
+    method: reqwest::Method,
+    path: &str,
+    token: Option<&str>,
+    debug: bool,
+    payload: Option<&Value>,
+    policy: RequestPolicy,
+) -> Result<Reply, Error> {
+    let RequestPolicy {
+        timeout,
+        owner,
+        content_type,
+    } = policy;
     let _owner = owner; // actual admitted task lives through final body/EOF/error
     if !path.starts_with('/') || path.len() > 65536 {
         return Err(Error::Unsupported);
     }
     let url = format!("{BASE}{path}");
     let attempt = Attempt::new_requests(timeout, timeout).map_err(|_| Error::Factory)?;
-    let mut headers = vec![("Content-Type".into(), "application/json".into())];
+    let mut headers = Vec::new();
+    if content_type {
+        headers.push(("Content-Type".into(), "application/json".into()));
+    }
     if let Some(token) = token {
         if token.len() > 65536 {
             return Err(Error::Capacity);

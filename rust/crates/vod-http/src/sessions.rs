@@ -195,6 +195,12 @@ impl Progress {
         .await;
     }
 }
+struct RetainedEntry {
+    previous: Arc<Session>,
+    scope: LocalScope,
+    resolver: Option<Arc<dyn crate::resolver::VodResolver>>,
+}
+
 pub(crate) struct Ticket {
     pub session: Arc<Session>,
     pool: Weak<Inner>,
@@ -472,18 +478,86 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
         request_permit: Arc<OwnedSemaphorePermit>,
-        previous: Arc<Session>,
-        scope: LocalScope,
+        retained: RetainedEntry,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
-        if id != previous.id {
-            return Err(dispatcharr_store::StoreError::Unsupported(
-                "Recovery idle adoption is not yet implemented",
-            ));
-        }
+        let RetainedEntry {
+            previous,
+            scope,
+            resolver,
+        } = retained;
+        // Source2's changed-request-ID cases keep the one retained public ID.
+        // This is only an alias into an owned idle generation, never a new
+        // Redis hash, channel owner, scope or session-slot allocation.
+        let retained_id = previous.id.clone();
+        let requested_alias = id != retained_id;
         let candidate = source.candidates.first().ok_or_else(unavailable)?.clone();
+        let same_fingerprint = |left: &VodCandidate, right: &VodCandidate| {
+            left.relation_id == right.relation_id
+                && left.account_id == right.account_id
+                && left.max_streams == right.max_streams
+                && left.url == right.url
+                && left.user_agent == right.user_agent
+                && left
+                    .credential_pool
+                    .as_ref()
+                    .map(|p| (&p.counter_key, p.max_streams))
+                    == right
+                        .credential_pool
+                        .as_ref()
+                        .map(|p| (&p.counter_key, p.max_streams))
+        };
+        let retained_available = source.candidates.iter().any(|next| {
+            next.profile_id == previous.candidate.profile_id
+                && same_fingerprint(next, &previous.candidate)
+        });
+        let mut inactive_handoff = false;
+        if requested_alias {
+            let idle = {
+                let state = previous.state.lock().await;
+                state.active == 0 && !state.reserved && !state.closed
+            };
+            if !idle {
+                return Err(dispatcharr_store::StoreError::Unsupported(
+                    "Requested-ID adoption requires an owned idle generation",
+                ));
+            }
+            if !retained_available {
+                // The captured fallback stays in the same account/credential
+                // fingerprint with the original nonzero capacity. Absence from
+                // a permission-filtered candidate list does not prove inactive.
+                let bounded = candidate.profile_id != previous.candidate.profile_id
+                    && candidate.max_streams > 0
+                    && same_fingerprint(&candidate, &previous.candidate)
+                    && source.user.as_ref().is_some_and(|u| u.stream_limit == 0)
+                    && source.user.as_ref().map(|u| u.id)
+                        == previous.source.user.as_ref().map(|u| u.id);
+                if bounded {
+                    if let Some(policy) = resolver.as_ref() {
+                        inactive_handoff = policy
+                            .inactive_profile_in_account(
+                                previous.candidate.profile_id,
+                                previous.candidate.account_id,
+                            )
+                            .await?;
+                    }
+                }
+                if !inactive_handoff {
+                    return Err(dispatcharr_store::StoreError::Unsupported(
+                        "Requested-ID adoption outside retained profile fingerprint",
+                    ));
+                }
+            }
+        }
         // A fresh stable classification is safe; it never repeats an uncertain
         // allocation. Owned/partial cases remain explicit until separately gated.
         match scope.retire_missing_retained(request_permit.clone()).await {
+            Ok(()) | Err(recovery::Error::Capacity) if requested_alias => {
+                // Source's same-ID metadata-loss/cross-profile discrepancy is
+                // not an authority for allocating a changed requested ID.
+                return Err(dispatcharr_store::StoreError::Unsupported(
+                    "Requested-ID adoption needs retained public metadata",
+                ));
+            }
             Ok(()) => {}
             Err(recovery::Error::Capacity) => {}
             Err(recovery::Error::StillOwned) => {
@@ -496,24 +570,90 @@ impl SessionPool {
                     .await
                     .map_err(scope_error)?;
                 let fields = metadata_fields(
-                    id,
+                    &retained_id,
                     &source,
                     request,
-                    &previous.candidate,
+                    if inactive_handoff {
+                        &candidate
+                    } else {
+                        &previous.candidate
+                    },
                     &previous.metadata_token,
                 );
                 let limit = source
                     .user
                     .as_ref()
                     .map_or(0, |user| user.stream_limit.max(0));
+                let admission = recovery::NewAdmission {
+                    fields,
+                    limit: limit as u32,
+                    policy: source.limit_policy.clone(),
+                };
+                if inactive_handoff {
+                    scope
+                        .enter_idle_profile_handoff(
+                            &body,
+                            admission,
+                            candidate.profile_id,
+                            candidate.max_streams,
+                        )
+                        .await
+                        .map_err(scope_error)?;
+                    let (lease, metadata_token) = scope.current_identity().await;
+                    let session = Arc::new(Session {
+                        id: retained_id.clone(),
+                        source,
+                        candidate,
+                        stop: previous.stop.clone(),
+                        bytes: AtomicU64::new(previous.bytes.load(Ordering::Relaxed)),
+                        content_length: AtomicU64::new(
+                            previous.content_length.load(Ordering::Relaxed),
+                        ),
+                        last_request: AtomicU64::new(millis()),
+                        client_ip: request.client_ip_text(),
+                        user_agent: request.playback.header("user-agent").unwrap_or("").into(),
+                        lease,
+                        metadata_token,
+                        scope: std::sync::OnceLock::new(),
+                        state: Mutex::new(State {
+                            active: 1,
+                            reserved: false,
+                            closed: false,
+                            epoch: 0,
+                        }),
+                        _slot: previous._slot.clone(),
+                    });
+                    session
+                        .scope
+                        .set(scope.clone())
+                        .map_err(|_| unavailable())?;
+                    let mut registry = self.inner.sessions.lock().await;
+                    if registry.get(&retained_id).is_none_or(|current| {
+                        current
+                            .scope
+                            .get()
+                            .is_none_or(|value| !value.same_scope(&scope))
+                    }) {
+                        return Err(dispatcharr_store::StoreError::Unsupported(
+                            "Idle profile handoff registry changed",
+                        ));
+                    }
+                    registry.insert(retained_id, session.clone());
+                    drop(registry);
+                    return Ok(Ticket {
+                        session,
+                        pool: Arc::downgrade(&self.inner),
+                        _request: Some(request_permit),
+                        is_new: false,
+                        body_started: AtomicBool::new(false),
+                        scope_body: Some(body),
+                        cleanup_needed: true,
+                    });
+                }
                 scope
                     .enter_current_or_idle(
                         &body,
-                        recovery::NewAdmission {
-                            fields,
-                            limit: limit as u32,
-                            policy: source.limit_policy.clone(),
-                        },
+                        admission,
                         source
                             .candidates
                             .iter()
@@ -636,11 +776,33 @@ impl SessionPool {
             cleanup_needed: true,
         })
     }
+    // Ordinary component fixtures keep the original conservative constructor;
+    // production enters through the same path with its actual SQL resolver.
+    #[cfg(test)]
     pub async fn enter(
         &self,
         id: &str,
         source: VodSource,
         request: &VodRequest,
+    ) -> Result<Ticket, dispatcharr_store::StoreError> {
+        self.enter_selected(id, source, request, None).await
+    }
+    pub(crate) async fn enter_with_resolver(
+        &self,
+        id: &str,
+        source: VodSource,
+        request: &VodRequest,
+        resolver: Arc<dyn crate::resolver::VodResolver>,
+    ) -> Result<Ticket, dispatcharr_store::StoreError> {
+        self.enter_selected(id, source, request, Some(resolver))
+            .await
+    }
+    async fn enter_selected(
+        &self,
+        id: &str,
+        source: VodSource,
+        request: &VodRequest,
+        resolver: Option<Arc<dyn crate::resolver::VodResolver>>,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
         // Bound work before spawning. Dropping the caller only abandons its
         // observer; setup keeps admission through actual Redis replies and any
@@ -656,7 +818,7 @@ impl SessionPool {
         let id = id.to_owned();
         let request = request.clone();
         tokio::spawn(async move {
-            pool.enter_owned(&id, source, &request, request_permit)
+            pool.enter_owned(&id, source, &request, request_permit, resolver)
                 .await
         })
         .await
@@ -668,6 +830,7 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
         request_permit: Arc<OwnedSemaphorePermit>,
+        resolver: Option<Arc<dyn crate::resolver::VodResolver>>,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
         // This lock serializes bounded session SETUP only, never media/network body I/O.
         let mut registry = self.inner.sessions.lock().await;
@@ -699,8 +862,11 @@ impl SessionPool {
                                     source,
                                     request,
                                     request_permit,
-                                    session,
-                                    scope,
+                                    RetainedEntry {
+                                        previous: session,
+                                        scope,
+                                        resolver: resolver.clone(),
+                                    },
                                 )
                                 .await;
                         }
@@ -708,7 +874,17 @@ impl SessionPool {
                     }
                 } else {
                     return self
-                        .enter_recovered(id, source, request, request_permit, session, scope)
+                        .enter_recovered(
+                            id,
+                            source,
+                            request,
+                            request_permit,
+                            RetainedEntry {
+                                previous: session,
+                                scope,
+                                resolver: resolver.clone(),
+                            },
+                        )
                         .await;
                 }
             }
@@ -720,7 +896,17 @@ impl SessionPool {
                 if locally_idle {
                     scope.activate_initial_idle();
                     return self
-                        .enter_recovered(id, source, request, request_permit, session, scope)
+                        .enter_recovered(
+                            id,
+                            source,
+                            request,
+                            request_permit,
+                            RetainedEntry {
+                                previous: session,
+                                scope,
+                                resolver: resolver.clone(),
+                            },
+                        )
                         .await;
                 }
             }
@@ -833,7 +1019,17 @@ impl SessionPool {
                         result.map_err(|_| unavailable())?;
                     }
                     return self
-                        .enter_recovered(id, source, request, request_permit, previous, scope)
+                        .enter_recovered(
+                            id,
+                            source,
+                            request,
+                            request_permit,
+                            RetainedEntry {
+                                previous,
+                                scope,
+                                resolver: resolver.clone(),
+                            },
+                        )
                         .await;
                 }
                 ticket.session.stop.send_replace(true);

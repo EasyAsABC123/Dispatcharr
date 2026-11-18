@@ -87,6 +87,7 @@ impl SdSourceHttp {
             inner: self.inner.clone(),
         });
         let result=tokio::spawn(async move{
+   if lineup && request.method()!=Method::POST { return extended_lineup(peer,request,owner).await; }
    let scoped=owner.inner.auth.clone().with_retained_scope(owner.clone());
    let user=scoped.account_user(peer,request.headers().clone(),false).await?;if user.user_level<10{return Err(StoreError::PermissionDenied)}
    if request.method()!=Method::POST{return Err(StoreError::Unsupported("SD GET/DELETE/OPTIONS have not been ported"))}
@@ -118,13 +119,257 @@ impl SdSourceHttp {
     Ok((StatusCode::CREATED,axum::Json(reply)).into_response())
    }
   }).await;
-        match result {
+        let mut response = match result {
             Ok(Ok(response)) => response,
             Ok(Err(error)) => error.into_response(),
             Err(_) => StoreError::UnhandledRestFault.into_response(),
+        };
+        if lineup && response.status() != StatusCode::INTERNAL_SERVER_ERROR {
+            response.headers_mut().insert(
+                "allow",
+                axum::http::HeaderValue::from_static("GET, POST, DELETE, HEAD, OPTIONS"),
+            );
         }
+        response
     }
 }
+/// Source20 plus separately recovered21 action scope; no station job publication.
+async fn extended_lineup(
+    peer: SocketAddr,
+    request: Request,
+    owner: Arc<Owner>,
+) -> Result<Response, StoreError> {
+    let scoped = owner.inner.auth.clone().with_retained_scope(owner.clone());
+    let user = scoped
+        .account_user(peer, request.headers().clone(), false)
+        .await?;
+    let method = request.method().clone();
+    let minimum = if method == Method::GET { 1 } else { 10 };
+    if user.user_level < minimum {
+        return Err(StoreError::PermissionDenied);
+    }
+    if method == Method::OPTIONS {
+        // DRF metadata does not resolve the object; a missing PK yields the
+        // same metadata200 as an existing source, as actually captured.
+        let value: Value =
+            serde_json::from_str(LINEUP_OPTIONS).map_err(|_| StoreError::UnhandledRestFault)?;
+        return Ok(axum::Json(value).into_response());
+    }
+    if method != Method::GET && method != Method::DELETE {
+        return Err(StoreError::Unsupported(
+            "SD HEAD/PUT and wider method contracts remain unqualified",
+        ));
+    }
+    let writer = scoped.task_sql_writer()?;
+    let scoped = scoped.with_request_writer_permit(writer)?;
+    let physical = scoped.core_publication_owner(owner);
+    crate::m3u_refresh_all::require_supported_domain(&scoped, physical.clone()).await?;
+    let id = request
+        .uri()
+        .path()
+        .trim_matches('/')
+        .split('/')
+        .nth(3)
+        .and_then(|v| v.parse::<i64>().ok())
+        .filter(|v| (1..=i64::from(i32::MAX)).contains(v))
+        .ok_or_else(missing)?;
+    let session = scoped.borrow_task_sql_session(physical.clone()).await?;
+    let operation=async {
+        let mut source=match Source::read(id,session.clone(),scoped,physical).await.map_err(auth_error)? {
+            Read::Missing=>return Err(missing()),
+            Read::Other=>return Ok(StoreError::StatusBody(400,json!({"error":"This action is only available for Schedules Direct sources."})).into_response()),
+            Read::Source(source)=>*source,
+        };
+        let custom:bool=source.session.run(|c|Box::pin(async move {sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled <> 'D' AND tgrelid='epg_epgsource'::regclass)").fetch_one(c).await})).await??;
+        if custom {return Err(StoreError::Unsupported("SD action custom SQL triggers require separate Source authority"))}
+        // Source authenticates BEFORE touching DELETE request.data/lineup.
+        let token=match lineup_token(&mut source).await? {Ok(token)=>token,Err(response)=>return Ok(response)};
+        if method==Method::GET {return get_lineups(&mut source,token).await}
+        let media=request.headers().get("content-type").and_then(|v|v.to_str().ok()).map(|v|v.split(';').next().unwrap_or(v).trim().to_ascii_lowercase());
+        if media.as_deref().is_some_and(|v|v!="application/json"){return Err(StoreError::StatusBody(415,json!({"detail":format!("Unsupported media type \"{}\" in request.",media.unwrap_or_default())})))}
+        let bytes=to_bytes(request.into_body(),65536).await.map_err(|_|StoreError::StatusBody(413,json!({"detail":"Request body too large."})))?;
+        let value=if bytes.is_empty(){json!({})}else{serde_json::from_slice(&bytes).map_err(|e|StoreError::StatusBody(400,json!({"detail":format!("JSON parse error - {}",crate::source_json_error(&bytes,e))})))?};
+        delete_lineup(&mut source,token,&value).await
+    }.await;
+    let closed = session.close().await;
+    let response = operation?;
+    closed?;
+    Ok(response)
+}
+async fn lineup_token(source: &mut Source) -> Result<Result<String, Response>, StoreError> {
+    let result = source
+        .obtain_with_timeout(Duration::from_secs(15))
+        .await
+        .map_err(auth_error)?;
+    if let Some(token) = result.token {
+        return Ok(Ok(token));
+    }
+    let status = if result.debug_rejected || result.message == "Username and password are required."
+    {
+        400
+    } else if matches!(result.code, Some(4002 | 4003)) {
+        401
+    } else if result.lockout || result.soft || result.code.is_some() {
+        503
+    } else {
+        502
+    };
+    Ok(Err(StoreError::StatusBody(
+        status,
+        json!({"error":result.message}),
+    )
+    .into_response()))
+}
+async fn get_lineups(source: &mut Source, mut token: String) -> Result<Response, StoreError> {
+    // Countries has neither token nor Content-Type, exactly Source's public
+    // Requests GET. Its HTTP/network failure does not prevent lineup retrieval.
+    let countries = match http::countries(source.owner.clone()).await {
+        Ok(reply) if reply.request_error().is_none() => reply.value.unwrap_or(Value::Null),
+        Ok(_) | Err(http::Error::Transport) => Value::Null,
+        Err(error) => return Err(auth_error(auth::Error::Http(error))),
+    };
+    let reply = source
+        .authorized_api(
+            reqwest::Method::GET,
+            "/lineups",
+            &mut token,
+            None,
+            Duration::from_secs(15),
+        )
+        .await
+        .map_err(|error| match error {
+            auth::Error::Http(http::Error::Transport) => StoreError::StatusBody(
+                502,
+                json!({"error":"Failed to fetch lineups: Connection error"}),
+            ),
+            other => auth_error(other),
+        })?;
+    if reply.status == 400 && reply.payload_code == Some(4102) {
+        let count = remaining(source).await?;
+        return Ok(axum::Json(json!({"lineups":[],"max_lineups":4,"changes_remaining":count,"changes_reset_at":source.properties.get("sd_changes_reset_at").cloned().unwrap_or(Value::Null),"notice":"No lineups are currently configured on this Schedules Direct account. Use the search below to add one.","countries":countries})).into_response());
+    }
+    if let Some(error) = reply.request_error() {
+        return Ok(StoreError::StatusBody(
+            502,
+            json!({"error":format!("Failed to fetch lineups: {error}")}),
+        )
+        .into_response());
+    }
+    let data = reply
+        .value
+        .as_ref()
+        .and_then(Value::as_object)
+        .ok_or(StoreError::Unsupported(
+            "SD lineup JSON object response requires Source authority",
+        ))?;
+    let rows = data
+        .get("lineups")
+        .map_or(Some(&[][..]), |value| value.as_array().map(Vec::as_slice))
+        .ok_or(StoreError::Unsupported(
+            "SD lineup collection shape requires Source authority",
+        ))?;
+    let mut lineups = Vec::new();
+    for row in rows {
+        let value = row.as_object().ok_or(StoreError::Unsupported(
+            "SD lineup row shape requires Source authority",
+        ))?;
+        if !value
+            .get("isDeleted")
+            .is_some_and(crate::xc_live_provider::truthy)
+        {
+            lineups.push(row.clone())
+        }
+    }
+    let count = remaining(source).await?;
+    Ok(axum::Json(json!({"lineups":lineups,"max_lineups":4,"changes_remaining":count,"changes_reset_at":source.properties.get("sd_changes_reset_at").cloned().unwrap_or(Value::Null),"countries":countries})).into_response())
+}
+async fn delete_lineup(
+    source: &mut Source,
+    mut token: String,
+    value: &Value,
+) -> Result<Response, StoreError> {
+    let object = value.as_object().ok_or(StoreError::Unsupported(
+        "SD DELETE nonobject body unqualified",
+    ))?;
+    let id = object.get("lineup");
+    if id.is_none_or(|v| !crate::xc_live_provider::truthy(v)) {
+        return Ok(
+            StoreError::StatusBody(400, json!({"error":"lineup field is required."}))
+                .into_response(),
+        );
+    }
+    let id = id.and_then(Value::as_str).ok_or(StoreError::Unsupported(
+        "SD DELETE nontext lineup unqualified",
+    ))?;
+    if id.len() > 512
+        || id.is_empty()
+        || !id
+            .bytes()
+            .all(|v| v.is_ascii_alphanumeric() || matches!(v, b'-' | b'_'))
+    {
+        return Err(StoreError::Unsupported(
+            "SD DELETE lineup URL grammar outside qualified domain",
+        ));
+    }
+    if zero(&remaining(source).await?) {
+        return Ok(axum::Json(json!({"error":"daily_limit_reached","message":DAILY,"changes_remaining":0,"changes_reset_at":source.properties.get("sd_changes_reset_at").cloned().unwrap_or(Value::Null),"docs_url":DOCS})).into_response());
+    }
+    let reply = source
+        .authorized_api(
+            reqwest::Method::DELETE,
+            &format!("/lineups/{id}"),
+            &mut token,
+            None,
+            Duration::from_secs(15),
+        )
+        .await
+        .map_err(|error| match error {
+            auth::Error::Http(http::Error::Transport) => StoreError::StatusBody(
+                502,
+                json!({"error":"Failed to remove lineup: Connection error"}),
+            ),
+            other => auth_error(other),
+        })?;
+    // Four remaining Source cases include service-error DELETE. Preserve a
+    // refusal for that unrun branch rather than claiming its error fidelity.
+    if reply.status >= 500 {
+        return Err(StoreError::Unsupported(
+            "SD DELETE service-error response remains unqualified",
+        ));
+    }
+    let data = reply
+        .value
+        .as_ref()
+        .and_then(Value::as_object)
+        .ok_or(StoreError::Unsupported(
+            "SD DELETE JSON object response unqualified",
+        ))?;
+    if reply.status == 400 {
+        match reply.payload_code{
+            Some(2103)=>return Ok(axum::Json(json!({"response":"OK","code":0,"message":"Lineup not found on account — already removed.","changes_remaining":remaining(source).await?})).into_response()),
+            Some(4100)=>{save_remaining(source,json!(0)).await?;return Ok(axum::Json(json!({"error":"daily_limit_reached","message":DAILY,"changes_remaining":0,"docs_url":DOCS})).into_response())},
+            _=>return Err(StoreError::Unsupported("SD DELETE unmeasured provider400 code")),
+        }
+    }
+    if let Some(error) = reply.request_error() {
+        return Err(StoreError::Unsupported(if error.is_empty() {
+            "SD DELETE unmeasured response"
+        } else {
+            "SD DELETE unmeasured HTTP fault"
+        }));
+    }
+    let count = data.get("changesRemaining").cloned().unwrap_or(Value::Null);
+    if !count.is_null() {
+        save_remaining(source, count).await?
+    }
+    let mut result = data.clone();
+    result.insert("changes_remaining".into(), remaining(source).await?);
+    Ok(axum::Json(Value::Object(result)).into_response())
+}
+
+// Exact captured Source administrator metadata; no runtime field values.
+const LINEUP_OPTIONS: &str = r#"{"name":"Sd lineups","description":"GET    — list lineups currently on the SD account\nPOST   — add a lineup (body: {\"lineup\": \"USA-NJ29486-X\"})\nDELETE — remove a lineup (body: {\"lineup\": \"USA-NJ29486-X\"})","renders":["application/json","text/html"],"parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"],"actions":{"POST":{"id":{"type":"integer","required":false,"read_only":true,"label":"ID"},"name":{"type":"string","required":true,"read_only":false,"label":"Name","max_length":255},"source_type":{"type":"choice","required":true,"read_only":false,"label":"Source type","choices":[{"value":"xmltv","display_name":"XMLTV URL"},{"value":"schedules_direct","display_name":"Schedules Direct API"},{"value":"dummy","display_name":"Custom Dummy EPG"}]},"url":{"type":"string","required":false,"read_only":false,"label":"Url"},"username":{"type":"string","required":false,"read_only":false,"label":"Username","help_text":"Username for credential-based EPG sources (e.g. Schedules Direct)","max_length":255},"password":{"type":"string","required":false,"read_only":false,"label":"Password","help_text":"Password for credential-based EPG sources (e.g. Schedules Direct)","max_length":255},"is_active":{"type":"boolean","required":false,"read_only":false,"label":"Is active"},"file_path":{"type":"string","required":false,"read_only":false,"label":"File path","max_length":1024},"refresh_interval":{"type":"integer","required":false,"read_only":false,"label":"Refresh interval","min_value":-2147483648,"max_value":2147483647},"cron_expression":{"type":"string","required":false,"read_only":false,"label":"Cron expression"},"priority":{"type":"integer","required":false,"read_only":false,"label":"Priority","help_text":"Priority for EPG matching (higher numbers = higher priority). Used when multiple EPG sources have matching entries for a channel.","min_value":0,"max_value":2147483647},"status":{"type":"choice","required":false,"read_only":false,"label":"Status","choices":[{"value":"idle","display_name":"Idle"},{"value":"fetching","display_name":"Fetching"},{"value":"parsing","display_name":"Parsing"},{"value":"error","display_name":"Error"},{"value":"success","display_name":"Success"},{"value":"disabled","display_name":"Disabled"}]},"last_message":{"type":"string","required":false,"read_only":false,"label":"Last message","help_text":"Last status message, including success results or error information"},"created_at":{"type":"datetime","required":false,"read_only":true,"label":"Created at","help_text":"Time when this source was created"},"updated_at":{"type":"datetime","required":false,"read_only":false,"label":"Updated at","help_text":"Time when this source was last successfully refreshed"},"custom_properties":{"type":"field","required":false,"read_only":false,"label":"Custom properties","help_text":"Custom properties for source-specific configuration"},"epg_data_count":{"type":"field","required":false,"read_only":true,"label":"Epg data count"},"has_channels":{"type":"boolean","required":false,"read_only":true,"label":"Has channels"}}}}"#;
+
 fn unavailable(message: &str) -> StoreError {
     StoreError::StatusBody(503, json!({"error":message}))
 }

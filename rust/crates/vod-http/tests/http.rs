@@ -214,7 +214,9 @@ async fn fixture_with_user(
         ..Default::default()
     };
     let coordinator = Coordinator::connect(&url, config).await.unwrap();
-    let selected_path = if matches!(path, "fallback" | "preempt-full" | "redirect") {
+    let selected_path = if path == "recovery-idle" {
+        "bytes"
+    } else if matches!(path, "fallback" | "preempt-full" | "redirect") {
         "paced"
     } else {
         path
@@ -262,7 +264,11 @@ async fn fixture_with_user(
         coordinator,
         &url,
         VodConfig {
-            idle_grace: Duration::from_millis(20),
+            idle_grace: if path == "recovery-idle" {
+                Duration::from_secs(1)
+            } else {
+                Duration::from_millis(20)
+            },
             ..Default::default()
         },
     )
@@ -967,5 +973,63 @@ async fn shutdown_reports_failed_quota_cleanup_instead_of_false_success() {
         .del(format!("profile_connections:{profile}"))
         .await
         .unwrap();
+    origin.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires actual owned Redis and loopback Source2 changed-ID recovery bridge"]
+async fn recovery_idle_changed_requested_id_retains_one_metadata_identity() {
+    let (engine, mut redis, profile, origin) = fixture("recovery-idle").await;
+    let engine = engine
+        .with_redis_recovery(&format!("owned-alias-{}", uuid::Uuid::new_v4().simple()))
+        .unwrap();
+    let retained = format!("test-{}", uuid::Uuid::new_v4());
+    let first = engine.respond(request(&retained, None)).await;
+    assert_eq!(first.status(), 200);
+    let bytes = axum::body::to_bytes(first.into_body(), 1024).await.unwrap();
+    let metadata = format!("vod_persistent_connection:{retained}");
+    tokio::time::timeout(Duration::from_secs(1), async {
+        loop {
+            if redis
+                .hget::<_, _, i64>(&metadata, "active_streams")
+                .await
+                .unwrap_or(-1)
+                == 0
+                && redis
+                    .get::<_, i64>(format!("profile_connections:{profile}"))
+                    .await
+                    .unwrap_or(-1)
+                    == 0
+            {
+                break;
+            }
+            tokio::task::yield_now().await;
+        }
+    })
+    .await
+    .unwrap();
+    let before: std::collections::BTreeMap<String, String> =
+        redis.hgetall(&metadata).await.unwrap();
+    let requested = format!("test-{}", uuid::Uuid::new_v4());
+    let response = engine.respond(request(&requested, None)).await;
+    assert_eq!(response.status(), 200);
+    let after: std::collections::BTreeMap<String, String> = redis.hgetall(&metadata).await.unwrap();
+    assert_eq!(after["session_id"], retained);
+    assert_eq!(after["created_at"], before["created_at"]);
+    assert_eq!(
+        after["request_count"].parse::<u64>().unwrap(),
+        before["request_count"].parse::<u64>().unwrap() + 1
+    );
+    assert!(!redis
+        .exists::<_, bool>(format!("vod_persistent_connection:{requested}"))
+        .await
+        .unwrap());
+    assert_eq!(
+        axum::body::to_bytes(response.into_body(), 1024)
+            .await
+            .unwrap(),
+        bytes
+    );
+    clean(&mut redis, &retained, profile).await;
     origin.abort();
 }

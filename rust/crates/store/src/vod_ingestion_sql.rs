@@ -634,12 +634,9 @@ pub(super) async fn prepare_logos(
                         .is_some_and(|url| !ids.contains_key(url))
                 })
                 .collect();
-            // Source allocates fresh URL rows from an unordered set. Until a wider
-            // identity domain is qualified, refuse multiple new URLs before INSERT;
-            // multiple existing URLs remain supported without new ID allocation.
-            if missing.len() > 1 {
-                return Err(unsupported());
-            }
+            // Qualified Source lifecycle allocates multiple fresh URL rows from an
+            // unordered set. Preserve URL/name identity and every association;
+            // fresh row IDs may follow this runtime's representative order.
             if !missing.is_empty() {
                 // Source catches logo bulk-create/refetch failures and retains the
                 // initially fetched map. An SQL error outside BEGIN does not roll

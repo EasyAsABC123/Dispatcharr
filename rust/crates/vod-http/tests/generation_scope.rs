@@ -910,3 +910,76 @@ async fn local_scope_idle_unlimited_does_not_invent_provider_reservation() {
     scope.close(&body).await.unwrap();
     f.empty().await;
 }
+
+#[tokio::test]
+#[ignore = "actual owned Redis Source2 inactive-profile idle handoff"]
+async fn idle_profile_handoff_preserves_retained_public_generation_and_owned_counters() {
+    let (mut f, scope, closing) = idle_start().await;
+    let selected = f.profile + 1;
+    let old: std::collections::BTreeMap<String, String> =
+        f.redis.hgetall(f.metadata()).await.unwrap();
+    let body = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    let mut request = admission(&f);
+    request
+        .fields
+        .insert("m3u_profile_id".into(), selected.to_string());
+    scope
+        .enter_idle_profile_handoff(&body, request, selected, 1)
+        .await
+        .unwrap();
+    let after: std::collections::BTreeMap<String, String> =
+        f.redis.hgetall(f.metadata()).await.unwrap();
+    assert_eq!(after["created_at"], old["created_at"]);
+    assert_eq!(after["session_id"], old["session_id"]);
+    assert_eq!(after["rust_owner_token"], old["rust_owner_token"]);
+    assert_eq!(after["m3u_profile_id"], selected.to_string());
+    assert_eq!(after["active_streams"], "1");
+    assert_eq!(
+        after["request_count"].parse::<u64>().unwrap(),
+        old["request_count"].parse::<u64>().unwrap() + 1
+    );
+    assert_eq!(scope.profile_id(), selected);
+    assert_eq!(f.redis.get::<_, i64>(f.counter()).await.unwrap(), 0);
+    let selected_key = format!("profile_connections:{selected}");
+    assert_eq!(f.redis.get::<_, i64>(&selected_key).await.unwrap(), 1);
+    assert!(!closing.await.unwrap().unwrap().deleted);
+    scope.close(&body).await.unwrap();
+    assert_eq!(f.redis.get::<_, i64>(&selected_key).await.unwrap(), 0);
+    f.empty().await;
+    let _: () = f.redis.del(selected_key).await.unwrap();
+}
+#[tokio::test]
+#[ignore = "actual owned Redis idle handoff never steals a foreign profile reservation"]
+async fn idle_profile_handoff_full_target_preserves_foreign_reservation() {
+    let (mut f, scope, closing) = idle_start().await;
+    let selected = f.profile + 1;
+    let mut other = f.request();
+    other.channel_id = uuid::Uuid::new_v4().simple().to_string();
+    other.provider_profile_id = Some(selected);
+    let foreign = f.coordinator.acquire_vod(other).await.unwrap();
+    let selected_key = format!("profile_connections:{selected}");
+    let body = scope
+        .attach_entry_pending(Arc::new(()), None)
+        .await
+        .unwrap();
+    let mut request = admission(&f);
+    request
+        .fields
+        .insert("m3u_profile_id".into(), selected.to_string());
+    assert_eq!(
+        scope
+            .enter_idle_profile_handoff(&body, request, selected, 1)
+            .await,
+        Err(prototype::Error::ProfileFull)
+    );
+    assert_eq!(f.redis.get::<_, i64>(&selected_key).await.unwrap(), 1);
+    scope.close(&body).await.unwrap();
+    let _ = closing.await.unwrap();
+    assert_eq!(f.redis.get::<_, i64>(&selected_key).await.unwrap(), 1);
+    assert!(foreign.release().await.unwrap());
+    f.empty().await;
+    let _: () = f.redis.del(selected_key).await.unwrap();
+}

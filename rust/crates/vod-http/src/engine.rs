@@ -233,7 +233,11 @@ impl VodEngine {
             return Ok(provider_redirect(&location));
         }
         let id = request.session_id.as_deref().ok_or(StoreError::NotFound)?;
-        let ticket = self.inner.sessions.enter(id, source, request).await?;
+        let ticket = self
+            .inner
+            .sessions
+            .enter_with_resolver(id, source, request, self.inner.resolver.clone())
+            .await?;
         let mut upstream_request = self
             .inner
             .client
