@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "actual_Docker_build_exit": 0,
+  "required_actual_recompilations": {
+    "dispatcharr-store": true,
+    "dispatcharr-job-transport": true,
+    "dispatcharr-rs": true
+  },
+  "reason": "Candidate65 actual changed Rust sources are Store/JobTransport; Main must recompile/link their changed implementation. Unchanged-source dependent crate cache reuse is valid. Every Rust input binds the actual passing SDK with no exclusions, including vendored original manifests.",
+  "build_log_sha256": "d3b140c30a0571d3637b5553e761e3bcee76d2f693eb7180878e5fb74d894e51",
+  "application_performance_verified": false,
+  "changed_Rust_inputs_vs64": [
+    "rust/crates/job-transport/src/lib.rs",
+    "rust/crates/job-transport/src/version_application.rs",
+    "rust/crates/job-transport/src/version_compare.rs",
+    "rust/crates/job-transport/src/version_service.rs",
+    "rust/crates/job-transport/src/version_worker.rs",
+    "rust/crates/store/src/channels.rs",
+    "rust/crates/store/src/plugin_actions.rs",
+    "rust/crates/store/src/plugin_runtime.rs",
+    "rust/crates/store/tests/python_regex_physical.rs",
+    "rust/runtime/collect_regex_host.py",
+    "rust/runtime/plugin_bridge/dispatcharr_native/bootstrap.py",
+    "rust/runtime/plugin_bridge/dispatcharr_native/plugin_lifecycle.py",
+    "rust/runtime/regex_bridge/dispatcharr_native/regex_only.py",
+    "rust/runtime/regex_bridge/dispatcharr_native/version_compare.py"
+  ],
+  "unchanged_source_cached_crates_need_not_recompile": [
+    "dispatcharr-output-http",
+    "dispatcharr-vod-http",
+    "dispatcharr-output-store"
+  ]
+}

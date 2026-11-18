@@ -1,0 +1,116 @@
+{
+  "scope": "Ten actual Source channel-number-range GET captures; separate source behavior review. No Native/performance/full milestone acceptance.",
+  "actual_controller_exit": 0,
+  "new_captures": 10,
+  "prior_Source_HTTP_replayed": false,
+  "all61_SQL_tables59_literal_sequences": true,
+  "cases": [
+    {
+      "label": "anonymous",
+      "actual_HTTP_status": 401,
+      "actual_body_bytes": 58,
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "literal_request_path": "/api/channels/channels/numbers-in-range/?start=1&end=100",
+      "role": "anonymous",
+      "changed_SQL_tables": [],
+      "changed_sequences": []
+    },
+    {
+      "label": "viewer-denied",
+      "actual_HTTP_status": 403,
+      "actual_body_bytes": 63,
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "literal_request_path": "/api/channels/channels/numbers-in-range/?start=1&end=100",
+      "role": "viewer",
+      "changed_SQL_tables": [],
+      "changed_sequences": []
+    },
+    {
+      "label": "standard-ACL",
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 1466,
+      "body_sha256": "a511fe0bb6aa6732b314ac24a32456c5477e6eb1d0ab8380677981dc055b69fc",
+      "literal_request_path": "/api/channels/channels/numbers-in-range/?start=1&end=100",
+      "role": "standard",
+      "changed_SQL_tables": [],
+      "changed_sequences": []
+    },
+    {
+      "label": "admin-reversed-cap50",
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 10173,
+      "body_sha256": "9a2d2564aa089430cfd993f9e617882c84e9a4f079e6115222fcb12f9010b87f",
+      "literal_request_path": "/api/channels/channels/numbers-in-range/?start=100&end=1&search=ignored&page_size=1",
+      "role": "admin",
+      "changed_SQL_tables": [],
+      "changed_sequences": []
+    },
+    {
+      "label": "missing-start-ignores-bad-end",
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 16,
+      "body_sha256": "a6a87cdc220634cd533dd59f76fc619a2d8a7fbd5c23cd2fb3a2ae7e23f53f3e",
+      "literal_request_path": "/api/channels/channels/numbers-in-range/?end=bad",
+      "role": "admin",
+      "changed_SQL_tables": [],
+      "changed_sequences": []
+    },
+    {
+      "label": "empty-start-ignores-bad-end",
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 16,
+      "body_sha256": "a6a87cdc220634cd533dd59f76fc619a2d8a7fbd5c23cd2fb3a2ae7e23f53f3e",
+      "literal_request_path": "/api/channels/channels/numbers-in-range/?start=&end=bad",
+      "role": "admin",
+      "changed_SQL_tables": [],
+      "changed_sequences": []
+    },
+    {
+      "label": "invalid-start-before-invalid-end",
+      "actual_HTTP_status": 400,
+      "actual_body_bytes": 32,
+      "body_sha256": "12e04af3229052e70a230a2a8285fea95a139bd78e56e6226a64729560ede537",
+      "literal_request_path": "/api/channels/channels/numbers-in-range/?start=bad&end=bad",
+      "role": "admin",
+      "changed_SQL_tables": [],
+      "changed_sequences": []
+    },
+    {
+      "label": "invalid-end",
+      "actual_HTTP_status": 400,
+      "actual_body_bytes": 30,
+      "body_sha256": "beae85c3f32d7689be650b0f92e937097bb06238014c414202b238e953122e65",
+      "literal_request_path": "/api/channels/channels/numbers-in-range/?start=1&end=bad",
+      "role": "admin",
+      "changed_SQL_tables": [],
+      "changed_sequences": []
+    },
+    {
+      "label": "single-fraction-equal-duplicates",
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 459,
+      "body_sha256": "89bdf61e1421abab745fd2d67615cbc1d67abf0a0eae57c755051d08b8aae432",
+      "literal_request_path": "/api/channels/channels/numbers-in-range/?start=12.5",
+      "role": "admin",
+      "changed_SQL_tables": [],
+      "changed_sequences": []
+    },
+    {
+      "label": "repeated-last-value",
+      "actual_HTTP_status": 200,
+      "actual_body_bytes": 459,
+      "body_sha256": "89bdf61e1421abab745fd2d67615cbc1d67abf0a0eae57c755051d08b8aae432",
+      "literal_request_path": "/api/channels/channels/numbers-in-range/?start=bad&start=12.5&end=bad&end=12.5",
+      "role": "admin",
+      "changed_SQL_tables": [],
+      "changed_sequences": []
+    }
+  ],
+  "capture_qualification_sha256": "21dad852b4a18bbb18f4646d0fd99c3ceb9f513def59c3cece436da2e16dce01",
+  "behavior_review_sha256": "5158472743e1950019bf5c277f7aa9ef89573c52142e549459d4bc5f9109ce8b",
+  "behavior_review_method": "Pinned Source method AST with explicit captured SQL/ORM/ACL adapters and exact actual HTTP/JSON/header evidence; adapter controls do not replace original ORM execution.",
+  "cleanup": "Actual Source2 terminal consumed; all10703inputs unchanged;3exactCIDs and2originalhostgenerations absent.",
+  "prior_failure": "Source1 actual1 before0targetcalls; normal profile creation signal already created memberships, so duplicate membership insertion failed. Source2 saves existing memberships normally. Original failure retained.",
+  "known_candidate65_gap": "Source GET Allow and Vary headers missing in Rust route; successor patch required before expanded Native acceptance.",
+  "credit": "Original Dispatcharr, Django, DRF and all dependency authors retain all application and protocol credit."
+}

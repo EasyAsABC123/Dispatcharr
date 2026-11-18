@@ -1,0 +1,75 @@
+{
+  "git_revision": "e5c256667f671f606cf9f0b3fb777190c03a4fff",
+  "image_id": "sha256:90f50bd3d15aa8a8033032415e9f917aeb7d6565944e0ce2cb438f85fd23b5ce",
+  "source_tree_sha256": "bfe1c8dba8da0bf2bb02c56c9c090d85ac388fa67ccadfdd3dd3481df7191dae",
+  "complete_build_record_sha256": "4e5203b221fb26d88fc69a9c4787e6022ad322957eb19ee68c2df048a6d6ff2d",
+  "reports": [
+    {
+      "name": "archive-assets",
+      "source": "artifacts/rust/milestone-batch65-build-1/Root-build-review.json",
+      "sha256": "94824052d7b1e6ea8d65f1dfab7f21eaad62a9e3875d91a855d00833a2179605",
+      "published": "scripts/rust-integration/milestone-batch65/package/archive-assets.json",
+      "passed": true,
+      "actual_wait_authority": "original-executions.json"
+    },
+    {
+      "name": "crypto",
+      "source": "artifacts/rust/milestone-batch65-build-1/Root-crypto-runtime-probe.json",
+      "sha256": "1d046dd80cf020eabd76fd0c885379e5b33b6be430b645742e3bb60b73c2a385",
+      "published": "scripts/rust-integration/milestone-batch65/package/crypto.json",
+      "passed": true,
+      "actual_wait_authority": "original-executions.json"
+    },
+    {
+      "name": "postgres",
+      "source": "artifacts/rust/milestone-batch65-build-1/Root-postgres-runtime-probe.json",
+      "sha256": "dac656998f2a9d97e39fa0b6b643ee9d5d219ff1cea8aed49a7f04648f53948b",
+      "published": "scripts/rust-integration/milestone-batch65/package/postgres.json",
+      "passed": true,
+      "actual_wait_authority": "original-executions.json"
+    },
+    {
+      "name": "regex",
+      "source": "artifacts/rust/milestone-batch65-regex-probe-2/report.json",
+      "sha256": "0f20441f35ceef176ed2c30344d4466ea3e5861702728967af9381820aa5d64c",
+      "published": "scripts/rust-integration/milestone-batch65/package/regex.json",
+      "passed": true,
+      "actual_wait_authority": "regex-successor-terminal.json"
+    },
+    {
+      "name": "python-host",
+      "source": "artifacts/rust/milestone-batch65-python-host-probe-1/report.json",
+      "sha256": "cd75bd41d1b6a7f6362f4933a57893d724fe06fbf6ae9aaeccb3c3c3c5fd16a0",
+      "published": "scripts/rust-integration/milestone-batch65/package/python-host.json",
+      "passed": true,
+      "actual_wait_authority": "original-executions.json"
+    },
+    {
+      "name": "vlc",
+      "source": "artifacts/rust/milestone-batch65-vlc-probe-1/report.json",
+      "sha256": "77b79f4aa10488ccf3c752cc9c791ec089343934c002c65a3dc2490aab4fce6c",
+      "published": "scripts/rust-integration/milestone-batch65/package/vlc.json",
+      "passed": true,
+      "actual_wait_authority": "original-executions.json"
+    }
+  ],
+  "all_six_final_selected_family_proofs_passed": true,
+  "five_original_successful_family_waits_retained": true,
+  "original_actual_family_exits": {
+    "archive-assets": 0,
+    "crypto": 0,
+    "postgres": 0,
+    "regex": 1,
+    "python-host": 0,
+    "vlc": 0
+  },
+  "original_batch_actual_exit": 1,
+  "regex_successor_actual_exit": 0,
+  "original_failures_reclassified": false,
+  "independent_exact_CID_count": 65,
+  "independent_inventories_empty": true,
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "full_milestones_accepted": false,
+  "scope": "Git/archive/actualSDK111allRust source binding and6 package runtime families only. Failed original regex path observer retained; successful sameimage retry distinct. No Main workflow, enabled-plugin runtime, physical callback/drain, full milestone or performance acceptance."
+}

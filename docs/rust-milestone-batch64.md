@@ -74,9 +74,13 @@ qualifies all three actual captures without replaying application requests.
 Natural CUT completes recording and Comskip tasks successfully, but the observer
 crashes when constructing a diagnostic path containing an integer dictionary key.
 Correcting only that diagnostic formatting permits the retained business-state
-comparison to pass. The required own-EDL full audio/video content comparison was
-not reached by the original controller and remains pending. These offline findings
-do not change the original exit or establish full batch acceptance.
+comparison to pass. A separate bounded, read-only utility completes the required
+own-EDL content comparison: all 11,472 video records and 21,507 audio records,
+including timing, match the reference generated from the captured input and EDL.
+All nine codec commands settle and the exact utility container is absent.
+The [offline assessment](../scripts/rust-integration/milestone-batch64/native22/offline-functional-assessment.json)
+qualifies the scoped business evidence for all twenty-two contexts. These findings
+retain the original exit 1 and establish no full milestone or performance acceptance.
 
 **All complete M0–M9 milestones remain open**, including remaining compatibility,
 default recovery activation, representative performance, soak and rollback.
