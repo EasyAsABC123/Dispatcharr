@@ -71,6 +71,26 @@ controller's exit 1 intact. The combined evidence covers the ten selected
 contexts and supports a bounded 100-viewer pilot. Resource gains require a
 separate paired measurement under equivalent viewing work.
 
+The [paired 100-viewer pilot](../scripts/rust-integration/milestone-batch67/viewing-pilot100.json)
+exited 0 after 481.462 seconds including setup, both phases, media verification
+and teardown. Both phases passed the fixed viewing window, drain, and complete
+audio/video checks. Each used one upstream origin connection and one input
+profile process. Both fixture projects were confirmed absent after cleanup.
+Two earlier attempts exited 1 before viewer load due to Docker executable
+resolution and guest read permissions. The corrected launch changed no
+measurement payload bytes.
+
+| Whole fixture, 100 viewers | Python | Rust |
+| --- | ---: | ---: |
+| CPU during the sampled window, core-seconds | 21.73 | 5.78 |
+| Median charged memory, MiB | 2,135 | 1,896 |
+| Median estimated working set, MiB | 1,206 | 638 |
+
+The whole fixture includes backend, infrastructure, origin, and observer.
+These are observations from one pair with idle background workers. The
+repeated comparison at 1, 2, 10, and 100 viewers remains required for
+performance acceptance.
+
 The [development plan](rust-development-and-validation-plan.md) uses three active
 agent lanes plus integration, one coordinated Cargo target, one candidate image
 and dependency-selected reruns. Real fixture concurrency remains disabled until
