@@ -52,9 +52,24 @@ notification table to its older reference. The remaining three version tasks
 were not executed. A corrected observer passes the retained first-task capture
 and seven negative controls, including unrelated-row mutation and wrong events.
 
-The next batch contains only preview, dummy creation and the complete four-task
-version context. It reuses the existing image and Source authority. Its actual
-execution and qualification remain pending; no failed controller is relabeled.
+The [three-context retry](../scripts/rust-integration/milestone-batch67/native3-checkpoint.json)
+reused the image and the original backend captures. It exited 0 in 426.827
+seconds. All four version tasks passed. The retry recorded six preview GETs
+and four dummy-create POSTs, with six containers and five captured host
+generations independently confirmed absent after cleanup.
+
+The ten paired HTTP cases passed after individual review of all 42 literal
+differences. All six preview response bodies matched byte for byte. The three
+successful dummy responses matched after accounting for creation timestamps
+bound to each request and its database row. The review retained differences
+in wire headers and observer cache entries. It did not establish byte equality
+for cache dumps or HTTP connection teardown.
+
+The Schedules Direct and range observers qualified 23 retained calls against
+the original backend with the scope correction. This leaves the first
+controller's exit 1 intact. The combined evidence covers the ten selected
+contexts and supports a bounded 100-viewer pilot. Resource gains require a
+separate paired measurement under equivalent viewing work.
 
 The [development plan](rust-development-and-validation-plan.md) uses three active
 agent lanes plus integration, one coordinated Cargo target, one candidate image
@@ -63,6 +78,6 @@ its isolation smoke passes. Performance measurement requires an exclusive quiet
 window after functional acceptance.
 
 **All complete M0–M9 milestones remain open.** No current application CPU or
-memory gain is accepted. Remaining work includes affected Native acceptance,
+memory gain is accepted. Remaining work includes
 paired equal-work performance, unimplemented compatibility cells, soak and
 rollback validation.
