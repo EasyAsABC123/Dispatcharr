@@ -86,3 +86,7 @@ rows gain definitions; previous eight definitions and every unrelated row are
 unchanged. Fully_verified staysfalse. Contract tooling includes19 prepared
 portable corruption controls; their execution and shared SDK integration remain
 separate validation steps. Formal M0/M1 and complete backend parity remain open.
+
+## Retained management and guide Source assignments
+
+The [37 retained positive admin observations](../scripts/rust-contracts/retained-management/README.md) add seven partial Source definitions and supplement five existing definitions without replacing their setup, assertions or result. The register now has 146/798 HTTP operation assignments and 15/250 non-HTTP assignments. These are Source assignments, not verified endpoints or a migration completion percentage. The 322 unresolved declaration/method placeholders remain unchanged; observed XML GET requests do not resolve that route’s declared method set. All formal milestones remain open.

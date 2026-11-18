@@ -211,10 +211,15 @@ def apply(root, rows, bindings):
     assert manifest['format_version'] == 1
     index = {o['contract_id']: (r, o) for r in rows for o in r['operations']}
     seen = set()
+    primary_kinds = {}
+    supplemented = set()
     loaded = []
     for reference in manifest['inputs']:
         value = checked(root, reference)
-        if reference['kind'] == 'captured_HTTP_Source_contracts':
+        if reference['kind'] == 'retained_original_management12_channelguide25_HTTP':
+            import retained_management_contracts
+            retained_management_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'captured_HTTP_Source_contracts':
             validate_captured(root, value, bindings)
         elif reference['kind'] == 'pinned_original_framework_tests':
             import framework_auth_contracts
@@ -269,13 +274,32 @@ def apply(root, rows, bindings):
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
         for contract in value['contracts']:
             identifier = contract['contract_id']
-            assert identifier not in seen, 'conflicting Source contract inputs'
+            supplemental = (reference['kind'] == 'retained_original_management12_channelguide25_HTTP'
+                            and identifier in seen
+                            and primary_kinds[identifier] != reference['kind']
+                            and identifier not in supplemented)
+            assert identifier not in seen or supplemental, 'conflicting Source contract inputs'
             seen.add(identifier)
+            primary_kinds.setdefault(identifier, reference['kind'])
+            if supplemental:
+                supplemented.add(identifier)
             route, operation = index[identifier]
             assert contract['pattern_exact'] == route['pattern_exact']
             assert contract['source_handler'] == route['source_handler']
             assert all(contract[k] == operation[k] for k in ['method', 'source_action', 'owning_milestone']), 'stable operation schema/owner'
             assert operation['fully_verified'] is False
+            if supplemental:
+                # Keep the original Source setup/assertions/result byte-for-byte.
+                assert operation.get('executable_Source_contract') is not None
+                capture = {
+                    'definition': copy.deepcopy(contract),
+                    'setup_fixture': copy.deepcopy(value['fixtures'][contract['fixture_id']]),
+                    'input': copy.deepcopy(reference),
+                }
+                captures = operation.setdefault('supplemental_executable_Source_captures', [])
+                if capture not in captures:
+                    captures.append(capture)
+                continue
             operation['setup_fixture'] = copy.deepcopy(value['fixtures'][contract['fixture_id']])
             operation['assertions'] = copy.deepcopy(contract['assertions'])
             operation['result'] = copy.deepcopy(contract['result'])
@@ -288,7 +312,7 @@ def apply(root, rows, bindings):
             if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture', 'retained_original_notification_Source20_real_credentials_framework']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
-            if reference['kind'] in ['captured_original_Source51_matching_admin_HTTP', 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP']:
+            if reference['kind'] in ['captured_original_Source51_matching_admin_HTTP', 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP', 'retained_original_management12_channelguide25_HTTP']:
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'

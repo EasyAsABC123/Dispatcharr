@@ -80,6 +80,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(r['path'] for r in additional['authorities'])
         import retained_task_operator_contracts
         refs.update(retained_task_operator_contracts.dependencies())
+        import retained_management_contracts
+        refs.update(retained_management_contracts.dependencies())
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)

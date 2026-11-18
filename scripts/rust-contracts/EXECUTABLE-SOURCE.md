@@ -1,8 +1,8 @@
 # Partial executable Source contract assignments
 
 Original Dispatcharr authors retain all application/algorithm credit and licensing.
-The current register has 120 partial HTTP assignments and eight partial model,
-task or consumer assignments. These preserve the initial and subsequent cohorts
+The current register has 146 partial HTTP assignments and 15 partial model,
+task, command or consumer assignments. These preserve the initial and subsequent cohorts
 documented below. They do not resolve missing methods, complete endpoint role or
 grammar matrices, establish new Native behavior or accept M0/M1.
 
@@ -16,6 +16,15 @@ operations from eight retained correct-route framework observations and the clos
 29-input setup definition. Forced authentication, the original controller exit 1
 and recovered cleanup remain explicit. This capture has its own partial role state;
 it does not add a new Source run or Native/TCP/credential verification.
+
+The [retained management/channel-guide cohort](retained-management/README.md) maps
+37 already qualified admin HTTP observations to 12 exact operation roots. It adds
+seven previously unassigned roots and appends five supplemental captures while
+preserving their existing Source setup, assertions and results. Source1
+controller exit 1 and its four qualified leaves remain distinct from Source2
+exit 0/eight leaves and guide exit 0/25 leaves. No applications were run for
+this assignment. This brings the published prior 139 HTTP definitions to 146;
+652 operation assignments and 235 non-HTTP assignments remain absent.
 
 `register.py` consumes `executable-source-inputs.json`, verifies each input hash,
 validates the declared Source authority and applies exact operation-ID, handler,

@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "deadfd0fb47941f253d32246930ca137e6d8367e9c47abaf12551335053f0cd3",
+    "scripts/rust-contracts/executable-source-inputs.json": "6c05ee8b1dcb7c813099c1a93bd29e24b438dbb2611bb3378ec064f8adf471c8",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -27,11 +27,12 @@
     "scripts/rust-contracts/logo-source/bindings.json": "1e582a4f42601dafad57ddd9f6f6324ddb2ecded4dc2d2a793e9f50f1ad8ecd6",
     "scripts/rust-contracts/channel-matching-source51-bindings.json": "69d62de9764d29ad55abb8acf1208b17d0106ee11bacb4d2236957d79de449e9",
     "scripts/rust-contracts/station-aggregate-source53-55-bindings.json": "8aaae6d28def7057ae4735af1d6cfc9a0549cc376b80eaf2404ce3ed2286a54f",
-    "scripts/rust-contracts/retained-task-operator7/bindings.json": "4bdc5f11e96f570b04e1e3b1d7d2ba9346206974374c10ec53ee0590a3ed9ff5"
+    "scripts/rust-contracts/retained-task-operator7/bindings.json": "4bdc5f11e96f570b04e1e3b1d7d2ba9346206974374c10ec53ee0590a3ed9ff5",
+    "scripts/rust-contracts/retained-management/bindings.json": "13a0efd078bf4c8a7540101250ca11320453016ba6a64967e2dd597757a92215"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 139,
+    "operations": 146,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -122,6 +123,11 @@
         "path": "scripts/rust-contracts/retained-task-operator7/bindings.json",
         "sha256": "4bdc5f11e96f570b04e1e3b1d7d2ba9346206974374c10ec53ee0590a3ed9ff5",
         "kind": "retained_original_task_operator7_observations"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-management/bindings.json",
+        "sha256": "13a0efd078bf4c8a7540101250ca11320453016ba6a64967e2dd597757a92215",
+        "kind": "retained_original_management12_channelguide25_HTTP"
       }
     ],
     "fully_verified_added": 0
@@ -30677,15 +30683,304 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained:route-0a733e108828586bf291:POST",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "captured_contexts": {
+              "channel-guide25": {
+                "id": "channel-guide25",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                "qualification": {
+                  "path": "artifacts/rust/m5-m6-channel-guide-source-qualification-1/qualification.json",
+                  "sha256": "5f2e14d9309a6b38ff3822fe2f9ecb122283f663f4ad15116e3c1ff575369a08"
+                },
+                "report": {
+                  "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/report.json",
+                  "sha256": "8c6448a5de7008b6c376794b0314184578bf5b4c93086b33f6077c3e987d9adf"
+                },
+                "actual_controller_exit": 0,
+                "qualified_positive_HTTP_leaves": 25,
+                "observed_actor": {
+                  "role": "admin",
+                  "complete_role_matrix": false
+                },
+                "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                "remaining": [
+                  "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                  "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                  "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                ]
+              }
+            },
+            "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+            "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+          },
+          "assertions": [
+            "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+            "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+            "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+            "Source_cases_passed": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "performance_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-0a733e108828586bf291:POST",
+            "pattern_exact": "api/channels/^channels/$",
+            "source_handler": "apps.channels.api_views.ChannelViewSet",
+            "method": "POST",
+            "source_action": "create",
+            "owning_milestone": "M5",
+            "fixture_id": "retained:route-0a733e108828586bf291:POST",
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "observed_methods": [
+              "POST"
+            ],
+            "operation_method_discovery_resolved": true,
+            "cases": [
+              {
+                "fixture_id": "channel-guide25",
+                "label": "create-dummy-EPG-channel",
+                "contract_id": "route-0a733e108828586bf291:POST",
+                "path": "/api/channels/channels/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 201,
+                "response_body_bytes": 834,
+                "response_body_sha256": "eb59313a462f06288b7f1a0a65fad7e0e0410f13e71e2b56db66397b62cb8d75",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/create-dummy-EPG-channel/request.json",
+                  "sha256": "4d040edd70d2beafb2c9129e59df358592d8060d14c12faabd2d3a0c58c51d12"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/create-dummy-EPG-channel/wire.json",
+                  "sha256": "16b10d288df8aff985195cbe1c172ce805c3b4816d6b1029253553f5a004329c"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "create-dummy-EPG-channel",
+                  "HTTP_status": 201,
+                  "positive_leaf_checked": true,
+                  "changed_tables": [
+                    "dispatcharr_channels_channel",
+                    "dispatcharr_channels_channelgroup",
+                    "dispatcharr_channels_channelgroupm3uaccount"
+                  ],
+                  "changed_sequences": {
+                    "dispatcharr_channels_channel_id_seq": {
+                      "last_value": 14,
+                      "is_called": true
+                    },
+                    "dispatcharr_channels_channelgroup_id_seq": {
+                      "last_value": 4,
+                      "is_called": true
+                    },
+                    "dispatcharr_channels_channelgroupm3uaccount_id_seq": {
+                      "last_value": 5,
+                      "is_called": true
+                    }
+                  },
+                  "generation_before": null,
+                  "generation_after": "1",
+                  "programme_root_publications": 0,
+                  "programme_terminal_statuses": [],
+                  "WS_events": 0,
+                  "body_sha256": "eb59313a462f06288b7f1a0a65fad7e0e0410f13e71e2b56db66397b62cb8d75"
+                }
+              },
+              {
+                "fixture_id": "channel-guide25",
+                "label": "create-XML-EPG-channel",
+                "contract_id": "route-0a733e108828586bf291:POST",
+                "path": "/api/channels/channels/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 201,
+                "response_body_bytes": 830,
+                "response_body_sha256": "a36617f0de44aae48700f25f82adff5480f3c2ead5da9c28084df16ab42d15b4",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/create-XML-EPG-channel/request.json",
+                  "sha256": "77757f946f93c0dbee7af52dc83a9d298f3a6374cf490456f456a17d14b8955c"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/create-XML-EPG-channel/wire.json",
+                  "sha256": "277e26e5614af117d0a585ecb647883186c91218b7c152d26ebfdfe271943343"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "create-XML-EPG-channel",
+                  "HTTP_status": 201,
+                  "positive_leaf_checked": true,
+                  "changed_tables": [
+                    "dispatcharr_channels_channel",
+                    "epg_programdata"
+                  ],
+                  "changed_sequences": {
+                    "dispatcharr_channels_channel_id_seq": {
+                      "last_value": 15,
+                      "is_called": true
+                    },
+                    "epg_programdata_id_seq": {
+                      "last_value": 3,
+                      "is_called": true
+                    }
+                  },
+                  "generation_before": "1",
+                  "generation_after": "3",
+                  "programme_root_publications": 1,
+                  "programme_terminal_statuses": [
+                    "SUCCESS"
+                  ],
+                  "WS_events": 0,
+                  "body_sha256": "a36617f0de44aae48700f25f82adff5480f3c2ead5da9c28084df16ab42d15b4"
+                }
+              },
+              {
+                "fixture_id": "channel-guide25",
+                "label": "create-orphan-EPG-channel",
+                "contract_id": "route-0a733e108828586bf291:POST",
+                "path": "/api/channels/channels/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 201,
+                "response_body_bytes": 836,
+                "response_body_sha256": "fed17e9766f86e65323cbe0cfdd5f2056688b4507b6b23e9793c2f546635facc",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/create-orphan-EPG-channel/request.json",
+                  "sha256": "f89507bcbd0e6a7f7357f8bb5c1109af87928e80633eae8a106d3f3cdf25ef3e"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/create-orphan-EPG-channel/wire.json",
+                  "sha256": "a0347ac3aae2600bcf02b25f05a03099c16f99c70d253fea10335a3c72fe1631"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "create-orphan-EPG-channel",
+                  "HTTP_status": 201,
+                  "positive_leaf_checked": true,
+                  "changed_tables": [
+                    "dispatcharr_channels_channel"
+                  ],
+                  "changed_sequences": {
+                    "dispatcharr_channels_channel_id_seq": {
+                      "last_value": 16,
+                      "is_called": true
+                    }
+                  },
+                  "generation_before": "3",
+                  "generation_after": "4",
+                  "programme_root_publications": 1,
+                  "programme_terminal_statuses": [
+                    "SUCCESS"
+                  ],
+                  "WS_events": 0,
+                  "body_sha256": "fed17e9766f86e65323cbe0cfdd5f2056688b4507b6b23e9793c2f546635facc"
+                }
+              },
+              {
+                "fixture_id": "channel-guide25",
+                "label": "create-auto-base-dummy-override-XML",
+                "contract_id": "route-0a733e108828586bf291:POST",
+                "path": "/api/channels/channels/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 201,
+                "response_body_bytes": 1003,
+                "response_body_sha256": "a1d7e159bec246b9833517fbe096bbed543f52c00976c6c2d7d8b66927ad4c7f",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/create-auto-base-dummy-override-XML/request.json",
+                  "sha256": "76ca7bd7b73b67c983bfb690680d016990beebe0ee46be321021205756ae65c5"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/create-auto-base-dummy-override-XML/wire.json",
+                  "sha256": "10c74c9a4f15f588db4261c058fc099c4f72a4c453ec3ab33252f7f50fa1eb54"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "create-auto-base-dummy-override-XML",
+                  "HTTP_status": 201,
+                  "positive_leaf_checked": true,
+                  "changed_tables": [
+                    "dispatcharr_channels_channel",
+                    "dispatcharr_channels_channeloverride",
+                    "epg_programdata"
+                  ],
+                  "changed_sequences": {
+                    "dispatcharr_channels_channel_id_seq": {
+                      "last_value": 17,
+                      "is_called": true
+                    },
+                    "dispatcharr_channels_channeloverride_id_seq": {
+                      "last_value": 3,
+                      "is_called": true
+                    },
+                    "epg_programdata_id_seq": {
+                      "last_value": 7,
+                      "is_called": true
+                    }
+                  },
+                  "generation_before": "13",
+                  "generation_after": "16",
+                  "programme_root_publications": 1,
+                  "programme_terminal_statuses": [
+                    "SUCCESS"
+                  ],
+                  "WS_events": 0,
+                  "body_sha256": "a1d7e159bec246b9833517fbe096bbed543f52c00976c6c2d7d8b66927ad4c7f"
+                }
+              }
+            ],
+            "assertions": [
+              "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+              "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+              "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+            ],
+            "result": {
+              "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+              "Source_cases_passed": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "performance_verified": false
+            },
+            "fully_verified": false,
+            "remaining": [
+              "All unobserved roles/input/error/concurrency branches remain open",
+              "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+              "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+            ]
+          }
         }
       ]
     },
@@ -36141,7 +36436,402 @@
               "Static helper/request sites are not per-site live wire counts or method declarations",
               "Native/browser/performance and unobserved format aliases remain unverified"
             ]
-          }
+          },
+          "supplemental_executable_Source_captures": [
+            {
+              "definition": {
+                "contract_id": "route-19bdf8661c1cb2d36711:PATCH",
+                "pattern_exact": "api/channels/^channels/(?P<pk>[^/.]+)/$",
+                "source_handler": "apps.channels.api_views.ChannelViewSet",
+                "method": "PATCH",
+                "source_action": "partial_update",
+                "owning_milestone": "M5",
+                "fixture_id": "retained:route-19bdf8661c1cb2d36711:PATCH",
+                "observed_roles": [
+                  "admin"
+                ],
+                "source_role_specs": {
+                  "admin": {
+                    "kind": "actual_authenticated_owned_fixture_admin",
+                    "login_flow_qualified": false
+                  }
+                },
+                "observed_methods": [
+                  "PATCH"
+                ],
+                "operation_method_discovery_resolved": true,
+                "cases": [
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "override-first-dummy-assignment",
+                    "contract_id": "route-19bdf8661c1cb2d36711:PATCH",
+                    "path": "/api/channels/channels/13/",
+                    "method": "PATCH",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 988,
+                    "response_body_sha256": "e1b833e101c86113fd12181a3dd9736e732167c1188bec22066088f6188caac7",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-first-dummy-assignment/request.json",
+                      "sha256": "8c5ea344f62bce7c3ff1f6aae56ad9d95a0b9be0a4da2a1fe7309d745d660e37"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-first-dummy-assignment/wire.json",
+                      "sha256": "33049b752d0659958c75d30f741945289dd3c41800ffb50bcf40d3945b10f8b4"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "override-first-dummy-assignment",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "dispatcharr_channels_channeloverride"
+                      ],
+                      "changed_sequences": {
+                        "dispatcharr_channels_channeloverride_id_seq": {
+                          "last_value": 2,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "4",
+                      "generation_after": "5",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "e1b833e101c86113fd12181a3dd9736e732167c1188bec22066088f6188caac7"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "override-same-dummy-no-EPG-change",
+                    "contract_id": "route-19bdf8661c1cb2d36711:PATCH",
+                    "path": "/api/channels/channels/13/",
+                    "method": "PATCH",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 988,
+                    "response_body_sha256": "e1b833e101c86113fd12181a3dd9736e732167c1188bec22066088f6188caac7",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-same-dummy-no-EPG-change/request.json",
+                      "sha256": "8c5ea344f62bce7c3ff1f6aae56ad9d95a0b9be0a4da2a1fe7309d745d660e37"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-same-dummy-no-EPG-change/wire.json",
+                      "sha256": "7c9ed843d785dad3ac54226d3530bb29dcfdd653d3e1714765c2aaaded99beee"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "override-same-dummy-no-EPG-change",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "dispatcharr_channels_channeloverride"
+                      ],
+                      "changed_sequences": {},
+                      "generation_before": "5",
+                      "generation_after": "5",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "e1b833e101c86113fd12181a3dd9736e732167c1188bec22066088f6188caac7"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "override-changed-dummy-assignment",
+                    "contract_id": "route-19bdf8661c1cb2d36711:PATCH",
+                    "path": "/api/channels/channels/13/",
+                    "method": "PATCH",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 988,
+                    "response_body_sha256": "a6612624702f92d34fbd4b8111393f56fea2c03c638ff231a63a820e55085382",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-changed-dummy-assignment/request.json",
+                      "sha256": "900f1cf9bb7bee6302c7edd2ef00a9e280961f2dee5166712bd1d5522b311092"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-changed-dummy-assignment/wire.json",
+                      "sha256": "bf1453bf53b21a50d110c74e92b8725a9fd557869ca5e9545dbdbf85d54a4000"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "override-changed-dummy-assignment",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "dispatcharr_channels_channeloverride"
+                      ],
+                      "changed_sequences": {},
+                      "generation_before": "5",
+                      "generation_after": "6",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "a6612624702f92d34fbd4b8111393f56fea2c03c638ff231a63a820e55085382"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "override-changed-XML-A-assignment",
+                    "contract_id": "route-19bdf8661c1cb2d36711:PATCH",
+                    "path": "/api/channels/channels/13/",
+                    "method": "PATCH",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 988,
+                    "response_body_sha256": "f9ed463e181b0ccea23eb9a0daca657c998875881a46bf3406498273f5d28ac5",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-changed-XML-A-assignment/request.json",
+                      "sha256": "54b525c59156096558dc9c8b3276ce03506a7b52d9a51eb63583fc895b95e2ec"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-changed-XML-A-assignment/wire.json",
+                      "sha256": "3c4de8e20feb6f48ce7b66cb18ba0213b992f7f59968e726f22b6f5a752cd0ef"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "override-changed-XML-A-assignment",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "dispatcharr_channels_channeloverride",
+                        "epg_programdata"
+                      ],
+                      "changed_sequences": {
+                        "epg_programdata_id_seq": {
+                          "last_value": 4,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "6",
+                      "generation_after": "8",
+                      "programme_root_publications": 1,
+                      "programme_terminal_statuses": [
+                        "SUCCESS"
+                      ],
+                      "WS_events": 0,
+                      "body_sha256": "f9ed463e181b0ccea23eb9a0daca657c998875881a46bf3406498273f5d28ac5"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "override-changed-XML-B-assignment",
+                    "contract_id": "route-19bdf8661c1cb2d36711:PATCH",
+                    "path": "/api/channels/channels/13/",
+                    "method": "PATCH",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 988,
+                    "response_body_sha256": "137ab66335b19d1d1ef245c3eb4d13b9897bca7a742bebd8a9ee82ed0b3cc098",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-changed-XML-B-assignment/request.json",
+                      "sha256": "91972342e51aea99b3366e30c8ad7b6e07d2535181341cdae9ca648ca063eb77"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-changed-XML-B-assignment/wire.json",
+                      "sha256": "bdf765e2d50185e9b71b7b314ffe3e7bcc51b1ad58de1dc4efcb1b121582e751"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "override-changed-XML-B-assignment",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "dispatcharr_channels_channeloverride",
+                        "epg_programdata"
+                      ],
+                      "changed_sequences": {
+                        "epg_programdata_id_seq": {
+                          "last_value": 5,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "8",
+                      "generation_after": "10",
+                      "programme_root_publications": 1,
+                      "programme_terminal_statuses": [
+                        "SUCCESS"
+                      ],
+                      "WS_events": 0,
+                      "body_sha256": "137ab66335b19d1d1ef245c3eb4d13b9897bca7a742bebd8a9ee82ed0b3cc098"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "override-clear-EPG-preserve-name",
+                    "contract_id": "route-19bdf8661c1cb2d36711:PATCH",
+                    "path": "/api/channels/channels/13/",
+                    "method": "PATCH",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 1075,
+                    "response_body_sha256": "ed16d0bf32adf5dd606f6c6c5f28874f4da5f497be29f8bbecaaa2124f28e333",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-clear-EPG-preserve-name/request.json",
+                      "sha256": "484ae8d98cd7e397df5f330468e40a32f8afed0a71efccccedf2bfa188cdfc7e"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-clear-EPG-preserve-name/wire.json",
+                      "sha256": "eed361cf2be47e9208e7e585316799a53ccd7ebf38587b1c77e43ee52dc717ee"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "override-clear-EPG-preserve-name",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "dispatcharr_channels_channeloverride"
+                      ],
+                      "changed_sequences": {},
+                      "generation_before": "10",
+                      "generation_after": "11",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "ed16d0bf32adf5dd606f6c6c5f28874f4da5f497be29f8bbecaaa2124f28e333"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "override-reassign-XML-B",
+                    "contract_id": "route-19bdf8661c1cb2d36711:PATCH",
+                    "path": "/api/channels/channels/13/",
+                    "method": "PATCH",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 1069,
+                    "response_body_sha256": "208441ba773ba0d37544428ec76885b4f0dbd3731525279af25a9f608b31698d",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-reassign-XML-B/request.json",
+                      "sha256": "91972342e51aea99b3366e30c8ad7b6e07d2535181341cdae9ca648ca063eb77"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-reassign-XML-B/wire.json",
+                      "sha256": "ad8c1f4c1080788f7ed24414fae06881cc8e93219ca796c011176593639957e6"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "override-reassign-XML-B",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "dispatcharr_channels_channeloverride",
+                        "epg_programdata"
+                      ],
+                      "changed_sequences": {
+                        "epg_programdata_id_seq": {
+                          "last_value": 6,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "11",
+                      "generation_after": "13",
+                      "programme_root_publications": 1,
+                      "programme_terminal_statuses": [
+                        "SUCCESS"
+                      ],
+                      "WS_events": 0,
+                      "body_sha256": "208441ba773ba0d37544428ec76885b4f0dbd3731525279af25a9f608b31698d"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "override-delete-entire-row",
+                    "contract_id": "route-19bdf8661c1cb2d36711:PATCH",
+                    "path": "/api/channels/channels/13/",
+                    "method": "PATCH",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 823,
+                    "response_body_sha256": "9d899974e89563d2dc6c0a04fe43919ee8018ab7c9aa381baaabaff8b6915b3f",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-delete-entire-row/request.json",
+                      "sha256": "e462283fa2ca17e476fa6aaa9a7e9466df81bf8cf73baf70b40eabe8d115f44c"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/override-delete-entire-row/wire.json",
+                      "sha256": "7f13316fe7ff755864cc1a8d16371a0a6a0833cb6b47ed5e0a8b655c335f9172"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "override-delete-entire-row",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "dispatcharr_channels_channeloverride"
+                      ],
+                      "changed_sequences": {},
+                      "generation_before": "13",
+                      "generation_after": "13",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "9d899974e89563d2dc6c0a04fe43919ee8018ab7c9aa381baaabaff8b6915b3f"
+                    }
+                  }
+                ],
+                "assertions": [
+                  "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+                  "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+                  "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+                ],
+                "result": {
+                  "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+                  "Source_cases_passed": 8,
+                  "new_Source_cases_this_task": 0,
+                  "Native_coverage_increased": false,
+                  "complete_role_matrix": false,
+                  "fully_verified": false,
+                  "performance_verified": false
+                },
+                "fully_verified": false,
+                "remaining": [
+                  "All unobserved roles/input/error/concurrency branches remain open",
+                  "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+                  "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+                ]
+              },
+              "setup_fixture": {
+                "id": "retained:route-19bdf8661c1cb2d36711:PATCH",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "captured_contexts": {
+                  "channel-guide25": {
+                    "id": "channel-guide25",
+                    "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                    "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                    "qualification": {
+                      "path": "artifacts/rust/m5-m6-channel-guide-source-qualification-1/qualification.json",
+                      "sha256": "5f2e14d9309a6b38ff3822fe2f9ecb122283f663f4ad15116e3c1ff575369a08"
+                    },
+                    "report": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/report.json",
+                      "sha256": "8c6448a5de7008b6c376794b0314184578bf5b4c93086b33f6077c3e987d9adf"
+                    },
+                    "actual_controller_exit": 0,
+                    "qualified_positive_HTTP_leaves": 25,
+                    "observed_actor": {
+                      "role": "admin",
+                      "complete_role_matrix": false
+                    },
+                    "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                    "remaining": [
+                      "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                      "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                      "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                    ]
+                  }
+                },
+                "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+                "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+              },
+              "input": {
+                "path": "scripts/rust-contracts/retained-management/bindings.json",
+                "sha256": "13a0efd078bf4c8a7540101250ca11320453016ba6a64967e2dd597757a92215",
+                "kind": "retained_original_management12_channelguide25_HTTP"
+              }
+            }
+          ]
         },
         {
           "contract_id": "route-19bdf8661c1cb2d36711:PUT",
@@ -50574,15 +51264,171 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained:route-2bb81f30c5e580e289f8:DELETE",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "captured_contexts": {
+              "management-second8": {
+                "id": "management-second8",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                "qualification": {
+                  "path": "artifacts/rust/m0-management-source-second8-qualification-1/qualification.json",
+                  "sha256": "2dc82a98ae99de643131438eef6202d1781c1fcc8f14c393e3f6d9d2fb036414"
+                },
+                "report": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/report.json",
+                  "sha256": "5de670de7a57c0167dbdbf4aeb97de3d84e954434d668dac3b790d94dade68ce"
+                },
+                "actual_controller_exit": 0,
+                "qualified_positive_HTTP_leaves": 8,
+                "observed_actor": {
+                  "role": "admin",
+                  "complete_role_matrix": false
+                },
+                "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                "remaining": [
+                  "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                  "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                  "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                ]
+              }
+            },
+            "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+            "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+          },
+          "assertions": [
+            "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+            "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+            "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+            "Source_cases_passed": 2,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "performance_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-2bb81f30c5e580e289f8:DELETE",
+            "pattern_exact": "api/epg/^sources/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "owning_milestone": "M5",
+            "fixture_id": "retained:route-2bb81f30c5e580e289f8:DELETE",
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "observed_methods": [
+              "DELETE"
+            ],
+            "operation_method_discovery_resolved": true,
+            "cases": [
+              {
+                "fixture_id": "management-second8",
+                "label": "epg-delete-cache-cascade-and-periodic-task",
+                "contract_id": "route-2bb81f30c5e580e289f8:DELETE",
+                "path": "/api/epg/sources/4/",
+                "method": "DELETE",
+                "role": "admin",
+                "HTTP_status": 204,
+                "response_body_bytes": 0,
+                "response_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-delete-cache-cascade-and-periodic-task/request.json",
+                  "sha256": "4ab1261e2fc88f1902a16c9e7d9ad0ae90e0f9a5dce5964b7c8ab1af7ae23d33"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-delete-cache-cascade-and-periodic-task/wire.json",
+                  "sha256": "f22e8984536424dea6298df1d2c04a1cbef7100edf987c9f177483475379f82b"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "epg-delete-cache-cascade-and-periodic-task",
+                  "HTTP_status": 204,
+                  "whole_selected_SQL_unlisted_tables_unchanged": true,
+                  "literal_sequence_changes": [],
+                  "unfiltered_published_jobs": 0,
+                  "actual_WS_types": [],
+                  "cache_scope": "Actual key/type/absolute-expiry/DUMP hashes retained; fresh receiver/heartbeat ownership and payload absence are not normalized into whole-cache parity."
+                }
+              },
+              {
+                "fixture_id": "management-second8",
+                "label": "epg-delete-upload-protected-files-and-task",
+                "contract_id": "route-2bb81f30c5e580e289f8:DELETE",
+                "path": "/api/epg/sources/5/",
+                "method": "DELETE",
+                "role": "admin",
+                "HTTP_status": 204,
+                "response_body_bytes": 0,
+                "response_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-delete-upload-protected-files-and-task/request.json",
+                  "sha256": "6836e76e44cfafaf7cda66ba43e89a73f538472b0be44cd5f62406eabfc75777"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-delete-upload-protected-files-and-task/wire.json",
+                  "sha256": "23bd666c1eb97bcf8fa3a11d3fb48f51d76d81b7767b210061de33db6ece4106"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "epg-delete-upload-protected-files-and-task",
+                  "HTTP_status": 204,
+                  "whole_selected_SQL_unlisted_tables_unchanged": true,
+                  "literal_sequence_changes": [],
+                  "unfiltered_published_jobs": 0,
+                  "actual_WS_types": [],
+                  "cache_scope": "Actual key/type/absolute-expiry/DUMP hashes retained; fresh receiver/heartbeat ownership and payload absence are not normalized into whole-cache parity."
+                }
+              }
+            ],
+            "assertions": [
+              "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+              "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+              "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+            ],
+            "result": {
+              "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+              "Source_cases_passed": 2,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "performance_verified": false
+            },
+            "fully_verified": false,
+            "remaining": [
+              "All unobserved roles/input/error/concurrency branches remain open",
+              "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+              "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+            ]
+          }
         },
         {
           "contract_id": "route-2bb81f30c5e580e289f8:GET",
@@ -50608,15 +51454,202 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained:route-2bb81f30c5e580e289f8:PATCH",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "captured_contexts": {
+              "management-second8": {
+                "id": "management-second8",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                "qualification": {
+                  "path": "artifacts/rust/m0-management-source-second8-qualification-1/qualification.json",
+                  "sha256": "2dc82a98ae99de643131438eef6202d1781c1fcc8f14c393e3f6d9d2fb036414"
+                },
+                "report": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/report.json",
+                  "sha256": "5de670de7a57c0167dbdbf4aeb97de3d84e954434d668dac3b790d94dade68ce"
+                },
+                "actual_controller_exit": 0,
+                "qualified_positive_HTTP_leaves": 8,
+                "observed_actor": {
+                  "role": "admin",
+                  "complete_role_matrix": false
+                },
+                "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                "remaining": [
+                  "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                  "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                  "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                ]
+              }
+            },
+            "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+            "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+          },
+          "assertions": [
+            "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+            "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+            "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+            "Source_cases_passed": 3,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "performance_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-2bb81f30c5e580e289f8:PATCH",
+            "pattern_exact": "api/epg/^sources/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "owning_milestone": "M5",
+            "fixture_id": "retained:route-2bb81f30c5e580e289f8:PATCH",
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "observed_methods": [
+              "PATCH"
+            ],
+            "operation_method_discovery_resolved": true,
+            "cases": [
+              {
+                "fixture_id": "management-second8",
+                "label": "epg-xmltv-activate-switch-interval-to-cron",
+                "contract_id": "route-2bb81f30c5e580e289f8:PATCH",
+                "path": "/api/epg/sources/4/",
+                "method": "PATCH",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_body_bytes": 535,
+                "response_body_sha256": "4a31c817acd4cceaead34d5242aa4f7c18dac3e8c4304c3e9df2247f18aa5c05",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-xmltv-activate-switch-interval-to-cron/request.json",
+                  "sha256": "859fc915af2964c4d76976db91b630b16046a4110194da521820d9ffeb0134af"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-xmltv-activate-switch-interval-to-cron/wire.json",
+                  "sha256": "68afc010e039e042b5f24278010becfda807e241958ae879af3f9194a83efe6c"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "epg-xmltv-activate-switch-interval-to-cron",
+                  "HTTP_status": 200,
+                  "whole_selected_SQL_unlisted_tables_unchanged": true,
+                  "literal_sequence_changes": [
+                    "public.django_celery_beat_crontabschedule_id_seq"
+                  ],
+                  "unfiltered_published_jobs": 0,
+                  "actual_WS_types": [],
+                  "cache_scope": "Actual key/type/absolute-expiry/DUMP hashes retained; fresh receiver/heartbeat ownership and payload absence are not normalized into whole-cache parity."
+                }
+              },
+              {
+                "fixture_id": "management-second8",
+                "label": "epg-xmltv-patch-preserves-linked-cron",
+                "contract_id": "route-2bb81f30c5e580e289f8:PATCH",
+                "path": "/api/epg/sources/4/",
+                "method": "PATCH",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_body_bytes": 579,
+                "response_body_sha256": "c801791772666b32077a9f5cc26b174e39859f3b05d863f063464bfb0eeb892e",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-xmltv-patch-preserves-linked-cron/request.json",
+                  "sha256": "7d4e21eaf167ccd10f8312a626535c381d0353d3c2d36d3eeda69496e61b6f9a"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-xmltv-patch-preserves-linked-cron/wire.json",
+                  "sha256": "5830b921623f5ffc70d97a887b1a14849d21b492da02e56d009ad39297c699e2"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "epg-xmltv-patch-preserves-linked-cron",
+                  "HTTP_status": 200,
+                  "whole_selected_SQL_unlisted_tables_unchanged": true,
+                  "literal_sequence_changes": [],
+                  "unfiltered_published_jobs": 0,
+                  "actual_WS_types": [],
+                  "cache_scope": "Actual key/type/absolute-expiry/DUMP hashes retained; fresh receiver/heartbeat ownership and payload absence are not normalized into whole-cache parity."
+                }
+              },
+              {
+                "fixture_id": "management-second8",
+                "label": "epg-xmltv-deactivate-status-and-task",
+                "contract_id": "route-2bb81f30c5e580e289f8:PATCH",
+                "path": "/api/epg/sources/4/",
+                "method": "PATCH",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_body_bytes": 584,
+                "response_body_sha256": "d79dcc7075e83c29cc613b3b1353fcbcbedc9881c0cfa26fcb75eec44cd9598a",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-xmltv-deactivate-status-and-task/request.json",
+                  "sha256": "a3a4a721f54db16b93f327e51cc826fb7340a1b95d54f8b16caa9ceb45eb54d5"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-xmltv-deactivate-status-and-task/wire.json",
+                  "sha256": "8977ff63374bdde28dde68480dce25c70e35be909af2d3cb88bd1b66f2b4a622"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "epg-xmltv-deactivate-status-and-task",
+                  "HTTP_status": 200,
+                  "whole_selected_SQL_unlisted_tables_unchanged": true,
+                  "literal_sequence_changes": [],
+                  "unfiltered_published_jobs": 0,
+                  "actual_WS_types": [],
+                  "cache_scope": "Actual key/type/absolute-expiry/DUMP hashes retained; fresh receiver/heartbeat ownership and payload absence are not normalized into whole-cache parity."
+                }
+              }
+            ],
+            "assertions": [
+              "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+              "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+              "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+            ],
+            "result": {
+              "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+              "Source_cases_passed": 3,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "performance_verified": false
+            },
+            "fully_verified": false,
+            "remaining": [
+              "All unobserved roles/input/error/concurrency branches remain open",
+              "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+              "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+            ]
+          }
         },
         {
           "contract_id": "route-2bb81f30c5e580e289f8:PUT",
@@ -50625,15 +51658,146 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained:route-2bb81f30c5e580e289f8:PUT",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "captured_contexts": {
+              "management-second8": {
+                "id": "management-second8",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                "qualification": {
+                  "path": "artifacts/rust/m0-management-source-second8-qualification-1/qualification.json",
+                  "sha256": "2dc82a98ae99de643131438eef6202d1781c1fcc8f14c393e3f6d9d2fb036414"
+                },
+                "report": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/report.json",
+                  "sha256": "5de670de7a57c0167dbdbf4aeb97de3d84e954434d668dac3b790d94dade68ce"
+                },
+                "actual_controller_exit": 0,
+                "qualified_positive_HTTP_leaves": 8,
+                "observed_actor": {
+                  "role": "admin",
+                  "complete_role_matrix": false
+                },
+                "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                "remaining": [
+                  "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                  "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                  "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                ]
+              }
+            },
+            "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+            "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+          },
+          "assertions": [
+            "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+            "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+            "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+            "Source_cases_passed": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "performance_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-2bb81f30c5e580e289f8:PUT",
+            "pattern_exact": "api/epg/^sources/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+            "method": "PUT",
+            "source_action": "update",
+            "owning_milestone": "M5",
+            "fixture_id": "retained:route-2bb81f30c5e580e289f8:PUT",
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "observed_methods": [
+              "PUT"
+            ],
+            "operation_method_discovery_resolved": true,
+            "cases": [
+              {
+                "fixture_id": "management-second8",
+                "label": "epg-dummy-rename-new-data-and-WS",
+                "contract_id": "route-2bb81f30c5e580e289f8:PUT",
+                "path": "/api/epg/sources/3/",
+                "method": "PUT",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_body_bytes": 384,
+                "response_body_sha256": "071ffdea353eb413554cb7e2469c44f9450bfcfdd1fb80ef06c479da15220344",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-dummy-rename-new-data-and-WS/request.json",
+                  "sha256": "1df1c35fdd6fb8953f34051b2b352302cef0c73a12692c2983a9b819af407f50"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/epg-dummy-rename-new-data-and-WS/wire.json",
+                  "sha256": "7b6be6784a1709c000c006a1ad237f3e84489a1ea78338c38ea2a15ddca53870"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "epg-dummy-rename-new-data-and-WS",
+                  "HTTP_status": 200,
+                  "whole_selected_SQL_unlisted_tables_unchanged": true,
+                  "literal_sequence_changes": [
+                    "public.epg_epgdata_id_seq"
+                  ],
+                  "unfiltered_published_jobs": 0,
+                  "actual_WS_types": [
+                    "epg_data_created"
+                  ],
+                  "cache_scope": "Actual key/type/absolute-expiry/DUMP hashes retained; fresh receiver/heartbeat ownership and payload absence are not normalized into whole-cache parity."
+                }
+              }
+            ],
+            "assertions": [
+              "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+              "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+              "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+            ],
+            "result": {
+              "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+              "Source_cases_passed": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "performance_verified": false
+            },
+            "fully_verified": false,
+            "remaining": [
+              "All unobserved roles/input/error/concurrency branches remain open",
+              "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+              "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+            ]
+          }
         }
       ]
     },
@@ -54856,15 +56020,172 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained:route-ab83774ea9ffdfb35ed4:POST",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "captured_contexts": {
+              "management-first4": {
+                "id": "management-first4",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                "qualification": {
+                  "path": "artifacts/rust/m0-management-source-first4-peer-1/qualification.json",
+                  "sha256": "8fe81d620c38ac77bd1b774bd89176216fa4d0bc09c5a09454a08277946e7538"
+                },
+                "report": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/report.json",
+                  "sha256": "af0a962e66b1bacf534b69c42079d68b15aba5efad24b67279d14ef04c0b1f36"
+                },
+                "actual_controller_exit": 1,
+                "qualified_positive_HTTP_leaves": 4,
+                "observed_actor": {
+                  "role": "admin",
+                  "complete_role_matrix": false
+                },
+                "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                "remaining": [
+                  "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                  "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                  "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                ]
+              }
+            },
+            "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+            "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+          },
+          "assertions": [
+            "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+            "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+            "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+            "Source_cases_passed": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "performance_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-ab83774ea9ffdfb35ed4:POST",
+            "pattern_exact": "api/m3u/^accounts/$",
+            "source_handler": "apps.m3u.api_views.M3UAccountViewSet",
+            "method": "POST",
+            "source_action": "create",
+            "owning_milestone": "M5",
+            "fixture_id": "retained:route-ab83774ea9ffdfb35ed4:POST",
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "observed_methods": [
+              "POST"
+            ],
+            "operation_method_discovery_resolved": true,
+            "cases": [
+              {
+                "fixture_id": "management-first4",
+                "label": "account-create",
+                "contract_id": "route-ab83774ea9ffdfb35ed4:POST",
+                "path": "/api/m3u/accounts/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 201,
+                "response_body_bytes": 1242,
+                "response_body_sha256": "8e84a7e354b68edfe56aeb576cbee705c91a832035173cf5b6a84c28b7665031",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/private/account-create/request.json",
+                  "sha256": "61c536efa35c98ef2cb3255713a5eb108c072700a11289ac78bd81d3b0f8f6a3"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/private/account-create/wire.json",
+                  "sha256": "2c9c1e0af2b06331107c8a88c9ed7b7a157d36281429e45558e65d9d06265bf0"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "account-create",
+                  "actual_HTTP_status": 201,
+                  "business_leaf_qualified": true,
+                  "changed_tables": [
+                    "django_celery_beat_intervalschedule",
+                    "django_celery_beat_periodictask",
+                    "django_celery_beat_periodictasks",
+                    "m3u_m3uaccount",
+                    "m3u_m3uaccountprofile"
+                  ],
+                  "literal_sequence_changes": {
+                    "django_celery_beat_intervalschedule_id_seq": {
+                      "last_value": 9,
+                      "is_called": true
+                    },
+                    "django_celery_beat_periodictask_id_seq": {
+                      "last_value": 13,
+                      "is_called": true
+                    },
+                    "m3u_m3uaccount_id_seq": {
+                      "last_value": 5,
+                      "is_called": true
+                    },
+                    "m3u_m3uaccountprofile_id_seq": {
+                      "last_value": 6,
+                      "is_called": true
+                    }
+                  },
+                  "jobs": [
+                    "apps.m3u.tasks.refresh_m3u_groups"
+                  ],
+                  "WS_types": [
+                    "playlist_created"
+                  ],
+                  "captured_all_registered_SQL_tables": 61,
+                  "literal_public_sequences": 59,
+                  "all_unlisted_tables_and_sequences_unchanged": true
+                }
+              }
+            ],
+            "assertions": [
+              "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+              "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+              "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+            ],
+            "result": {
+              "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+              "Source_cases_passed": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "performance_verified": false
+            },
+            "fully_verified": false,
+            "remaining": [
+              "All unobserved roles/input/error/concurrency branches remain open",
+              "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+              "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+            ]
+          }
         }
       ]
     },
@@ -55332,7 +56653,122 @@
               "Named reverse association is not a literal URL/slash-alias or TCP transcript",
               "Unobserved roles/grammar/methods/aliases and Native/browser/performance/M0/M1 remain open"
             ]
-          }
+          },
+          "supplemental_executable_Source_captures": [
+            {
+              "definition": {
+                "contract_id": "route-811ae7e4cfcd7e6efc16:DELETE",
+                "pattern_exact": "api/m3u/^accounts/(?P<pk>[^/.]+)/$",
+                "source_handler": "apps.m3u.api_views.M3UAccountViewSet",
+                "method": "DELETE",
+                "source_action": "destroy",
+                "owning_milestone": "M5",
+                "fixture_id": "retained:route-811ae7e4cfcd7e6efc16:DELETE",
+                "observed_roles": [
+                  "admin"
+                ],
+                "source_role_specs": {
+                  "admin": {
+                    "kind": "actual_authenticated_owned_fixture_admin",
+                    "login_flow_qualified": false
+                  }
+                },
+                "observed_methods": [
+                  "DELETE"
+                ],
+                "operation_method_discovery_resolved": true,
+                "cases": [
+                  {
+                    "fixture_id": "management-second8",
+                    "label": "account-delete",
+                    "contract_id": "route-811ae7e4cfcd7e6efc16:DELETE",
+                    "path": "/api/m3u/accounts/5/",
+                    "method": "DELETE",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 22,
+                    "response_body_sha256": "28d26fbce158989dc9a5b833ba1f685acb70e052de6122956336eaeff322850e",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/account-delete/request.json",
+                      "sha256": "deb3d3e0658d40b8f712076e5e4786a376a83aacaca348047998b93a6a675a1a"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/account-delete/wire.json",
+                      "sha256": "cf63bfb5701c5bc4d2e8ac87f6deeeb26359ba101db2cbe9baec8695f2ddffdb"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "account-delete",
+                      "HTTP_status": 200,
+                      "whole_selected_SQL_unlisted_tables_unchanged": true,
+                      "literal_sequence_changes": [],
+                      "unfiltered_published_jobs": 0,
+                      "actual_WS_types": [],
+                      "cache_scope": "Actual key/type/absolute-expiry/DUMP hashes retained; fresh receiver/heartbeat ownership and payload absence are not normalized into whole-cache parity."
+                    }
+                  }
+                ],
+                "assertions": [
+                  "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+                  "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+                  "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+                ],
+                "result": {
+                  "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+                  "Source_cases_passed": 1,
+                  "new_Source_cases_this_task": 0,
+                  "Native_coverage_increased": false,
+                  "complete_role_matrix": false,
+                  "fully_verified": false,
+                  "performance_verified": false
+                },
+                "fully_verified": false,
+                "remaining": [
+                  "All unobserved roles/input/error/concurrency branches remain open",
+                  "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+                  "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+                ]
+              },
+              "setup_fixture": {
+                "id": "retained:route-811ae7e4cfcd7e6efc16:DELETE",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "captured_contexts": {
+                  "management-second8": {
+                    "id": "management-second8",
+                    "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                    "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                    "qualification": {
+                      "path": "artifacts/rust/m0-management-source-second8-qualification-1/qualification.json",
+                      "sha256": "2dc82a98ae99de643131438eef6202d1781c1fcc8f14c393e3f6d9d2fb036414"
+                    },
+                    "report": {
+                      "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/report.json",
+                      "sha256": "5de670de7a57c0167dbdbf4aeb97de3d84e954434d668dac3b790d94dade68ce"
+                    },
+                    "actual_controller_exit": 0,
+                    "qualified_positive_HTTP_leaves": 8,
+                    "observed_actor": {
+                      "role": "admin",
+                      "complete_role_matrix": false
+                    },
+                    "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                    "remaining": [
+                      "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                      "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                      "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                    ]
+                  }
+                },
+                "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+                "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+              },
+              "input": {
+                "path": "scripts/rust-contracts/retained-management/bindings.json",
+                "sha256": "13a0efd078bf4c8a7540101250ca11320453016ba6a64967e2dd597757a92215",
+                "kind": "retained_original_management12_channelguide25_HTTP"
+              }
+            }
+          ]
         },
         {
           "contract_id": "route-811ae7e4cfcd7e6efc16:GET",
@@ -55507,7 +56943,144 @@
               "Named reverse association is not a literal URL/slash-alias or TCP transcript",
               "Unobserved roles/grammar/methods/aliases and Native/browser/performance/M0/M1 remain open"
             ]
-          }
+          },
+          "supplemental_executable_Source_captures": [
+            {
+              "definition": {
+                "contract_id": "route-811ae7e4cfcd7e6efc16:PATCH",
+                "pattern_exact": "api/m3u/^accounts/(?P<pk>[^/.]+)/$",
+                "source_handler": "apps.m3u.api_views.M3UAccountViewSet",
+                "method": "PATCH",
+                "source_action": "partial_update",
+                "owning_milestone": "M5",
+                "fixture_id": "retained:route-811ae7e4cfcd7e6efc16:PATCH",
+                "observed_roles": [
+                  "admin"
+                ],
+                "source_role_specs": {
+                  "admin": {
+                    "kind": "actual_authenticated_owned_fixture_admin",
+                    "login_flow_qualified": false
+                  }
+                },
+                "observed_methods": [
+                  "PATCH"
+                ],
+                "operation_method_discovery_resolved": true,
+                "cases": [
+                  {
+                    "fixture_id": "management-first4",
+                    "label": "account-patch",
+                    "contract_id": "route-811ae7e4cfcd7e6efc16:PATCH",
+                    "path": "/api/m3u/accounts/5/",
+                    "method": "PATCH",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 1245,
+                    "response_body_sha256": "a4cffd24cdc6501686e869381502ba62c1b1347fc3fdceaa24603004e919dd4e",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/private/account-patch/request.json",
+                      "sha256": "18903e243c0a6c33e4ca53c6e4b6477ba1a393b4ac8585d6cf4808aac04ef116"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/private/account-patch/wire.json",
+                      "sha256": "bc0177c80202071b156f693e35396d969df6cc87f5730e16818c27ff138bd1dd"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "account-patch",
+                      "actual_HTTP_status": 200,
+                      "business_leaf_qualified": true,
+                      "changed_tables": [
+                        "core_systemnotification",
+                        "django_celery_beat_crontabschedule",
+                        "django_celery_beat_intervalschedule",
+                        "django_celery_beat_periodictask",
+                        "django_celery_beat_periodictasks",
+                        "m3u_m3uaccount"
+                      ],
+                      "literal_sequence_changes": {
+                        "django_celery_beat_intervalschedule_id_seq": {
+                          "last_value": 10,
+                          "is_called": true
+                        }
+                      },
+                      "jobs": [
+                        "core.tasks.rehash_streams"
+                      ],
+                      "WS_types": [
+                        "notification_dismissed",
+                        "notification_dismissed",
+                        "stream_rehash",
+                        "stream_rehash"
+                      ],
+                      "captured_all_registered_SQL_tables": 61,
+                      "literal_public_sequences": 59,
+                      "all_unlisted_tables_and_sequences_unchanged": true
+                    }
+                  }
+                ],
+                "assertions": [
+                  "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+                  "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+                  "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+                ],
+                "result": {
+                  "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+                  "Source_cases_passed": 1,
+                  "new_Source_cases_this_task": 0,
+                  "Native_coverage_increased": false,
+                  "complete_role_matrix": false,
+                  "fully_verified": false,
+                  "performance_verified": false
+                },
+                "fully_verified": false,
+                "remaining": [
+                  "All unobserved roles/input/error/concurrency branches remain open",
+                  "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+                  "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+                ]
+              },
+              "setup_fixture": {
+                "id": "retained:route-811ae7e4cfcd7e6efc16:PATCH",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "captured_contexts": {
+                  "management-first4": {
+                    "id": "management-first4",
+                    "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                    "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                    "qualification": {
+                      "path": "artifacts/rust/m0-management-source-first4-peer-1/qualification.json",
+                      "sha256": "8fe81d620c38ac77bd1b774bd89176216fa4d0bc09c5a09454a08277946e7538"
+                    },
+                    "report": {
+                      "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/report.json",
+                      "sha256": "af0a962e66b1bacf534b69c42079d68b15aba5efad24b67279d14ef04c0b1f36"
+                    },
+                    "actual_controller_exit": 1,
+                    "qualified_positive_HTTP_leaves": 4,
+                    "observed_actor": {
+                      "role": "admin",
+                      "complete_role_matrix": false
+                    },
+                    "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                    "remaining": [
+                      "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                      "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                      "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                    ]
+                  }
+                },
+                "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+                "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+              },
+              "input": {
+                "path": "scripts/rust-contracts/retained-management/bindings.json",
+                "sha256": "13a0efd078bf4c8a7540101250ca11320453016ba6a64967e2dd597757a92215",
+                "kind": "retained_original_management12_channelguide25_HTTP"
+              }
+            }
+          ]
         },
         {
           "contract_id": "route-811ae7e4cfcd7e6efc16:PUT",
@@ -55665,7 +57238,142 @@
               "Named reverse association is not a literal URL/slash-alias or TCP transcript",
               "Unobserved roles/grammar/methods/aliases and Native/browser/performance/M0/M1 remain open"
             ]
-          }
+          },
+          "supplemental_executable_Source_captures": [
+            {
+              "definition": {
+                "contract_id": "route-811ae7e4cfcd7e6efc16:PUT",
+                "pattern_exact": "api/m3u/^accounts/(?P<pk>[^/.]+)/$",
+                "source_handler": "apps.m3u.api_views.M3UAccountViewSet",
+                "method": "PUT",
+                "source_action": "update",
+                "owning_milestone": "M5",
+                "fixture_id": "retained:route-811ae7e4cfcd7e6efc16:PUT",
+                "observed_roles": [
+                  "admin"
+                ],
+                "source_role_specs": {
+                  "admin": {
+                    "kind": "actual_authenticated_owned_fixture_admin",
+                    "login_flow_qualified": false
+                  }
+                },
+                "observed_methods": [
+                  "PUT"
+                ],
+                "operation_method_discovery_resolved": true,
+                "cases": [
+                  {
+                    "fixture_id": "management-first4",
+                    "label": "account-put",
+                    "contract_id": "route-811ae7e4cfcd7e6efc16:PUT",
+                    "path": "/api/m3u/accounts/5/",
+                    "method": "PUT",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 1292,
+                    "response_body_sha256": "fb8a716f95d15d75fc50bfa53d6ca6f45bd22444fae77716cf1290039325ee81",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/private/account-put/request.json",
+                      "sha256": "4cf78133598b27bc1dee58dde323916f9a3b4df25a854aeea4991329c74dcb08"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/private/account-put/wire.json",
+                      "sha256": "f3e89d21ea4bf68f02678148d05a2fe69ab5229d1184382dd5067434e1c5e833"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "account-put",
+                      "actual_HTTP_status": 200,
+                      "business_leaf_qualified": true,
+                      "changed_tables": [
+                        "django_celery_beat_crontabschedule",
+                        "django_celery_beat_intervalschedule",
+                        "django_celery_beat_periodictask",
+                        "django_celery_beat_periodictasks",
+                        "m3u_m3uaccount",
+                        "m3u_m3uaccountprofile"
+                      ],
+                      "literal_sequence_changes": {
+                        "django_celery_beat_crontabschedule_id_seq": {
+                          "last_value": 4,
+                          "is_called": true
+                        }
+                      },
+                      "jobs": [
+                        "core.tasks.rehash_streams"
+                      ],
+                      "WS_types": [
+                        "stream_rehash",
+                        "stream_rehash"
+                      ],
+                      "captured_all_registered_SQL_tables": 61,
+                      "literal_public_sequences": 59,
+                      "all_unlisted_tables_and_sequences_unchanged": true
+                    }
+                  }
+                ],
+                "assertions": [
+                  "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+                  "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+                  "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+                ],
+                "result": {
+                  "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+                  "Source_cases_passed": 1,
+                  "new_Source_cases_this_task": 0,
+                  "Native_coverage_increased": false,
+                  "complete_role_matrix": false,
+                  "fully_verified": false,
+                  "performance_verified": false
+                },
+                "fully_verified": false,
+                "remaining": [
+                  "All unobserved roles/input/error/concurrency branches remain open",
+                  "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+                  "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+                ]
+              },
+              "setup_fixture": {
+                "id": "retained:route-811ae7e4cfcd7e6efc16:PUT",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "captured_contexts": {
+                  "management-first4": {
+                    "id": "management-first4",
+                    "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                    "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                    "qualification": {
+                      "path": "artifacts/rust/m0-management-source-first4-peer-1/qualification.json",
+                      "sha256": "8fe81d620c38ac77bd1b774bd89176216fa4d0bc09c5a09454a08277946e7538"
+                    },
+                    "report": {
+                      "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/report.json",
+                      "sha256": "af0a962e66b1bacf534b69c42079d68b15aba5efad24b67279d14ef04c0b1f36"
+                    },
+                    "actual_controller_exit": 1,
+                    "qualified_positive_HTTP_leaves": 4,
+                    "observed_actor": {
+                      "role": "admin",
+                      "complete_role_matrix": false
+                    },
+                    "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                    "remaining": [
+                      "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                      "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                      "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                    ]
+                  }
+                },
+                "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+                "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+              },
+              "input": {
+                "path": "scripts/rust-contracts/retained-management/bindings.json",
+                "sha256": "13a0efd078bf4c8a7540101250ca11320453016ba6a64967e2dd597757a92215",
+                "kind": "retained_original_management12_channelguide25_HTTP"
+              }
+            }
+          ]
         }
       ]
     },
@@ -57947,15 +59655,152 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained:route-7a0b9757899ed1a1e1e4:POST",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "captured_contexts": {
+              "management-first4": {
+                "id": "management-first4",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                "qualification": {
+                  "path": "artifacts/rust/m0-management-source-first4-peer-1/qualification.json",
+                  "sha256": "8fe81d620c38ac77bd1b774bd89176216fa4d0bc09c5a09454a08277946e7538"
+                },
+                "report": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/report.json",
+                  "sha256": "af0a962e66b1bacf534b69c42079d68b15aba5efad24b67279d14ef04c0b1f36"
+                },
+                "actual_controller_exit": 1,
+                "qualified_positive_HTTP_leaves": 4,
+                "observed_actor": {
+                  "role": "admin",
+                  "complete_role_matrix": false
+                },
+                "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                "remaining": [
+                  "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                  "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                  "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                ]
+              }
+            },
+            "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+            "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+          },
+          "assertions": [
+            "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+            "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+            "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+            "Source_cases_passed": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "performance_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-7a0b9757899ed1a1e1e4:POST",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/$",
+            "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "method": "POST",
+            "source_action": "create",
+            "owning_milestone": "M5",
+            "fixture_id": "retained:route-7a0b9757899ed1a1e1e4:POST",
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "observed_methods": [
+              "POST"
+            ],
+            "operation_method_discovery_resolved": true,
+            "cases": [
+              {
+                "fixture_id": "management-first4",
+                "label": "profile-create",
+                "contract_id": "route-7a0b9757899ed1a1e1e4:POST",
+                "path": "/api/m3u/accounts/5/profiles/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 201,
+                "response_body_bytes": 411,
+                "response_body_sha256": "eaea994a29730e6138e3995544a80b898be64247115b637464754533a9ac904e",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/private/profile-create/request.json",
+                  "sha256": "7f8e5f3616935ab9eaf18ad4a6bd8e6c9cf4a59a136a8349e104367e7762c56c"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-1/fixtures/Original-67f1c450/management-nine-lifecycle/private/profile-create/wire.json",
+                  "sha256": "0ad7ac96067d57b7ca957ce5745ac2088095c0c3d1f0b1df59154cda3cd33730"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "profile-create",
+                  "actual_HTTP_status": 201,
+                  "business_leaf_qualified": true,
+                  "changed_tables": [
+                    "m3u_m3uaccountprofile"
+                  ],
+                  "literal_sequence_changes": {
+                    "m3u_m3uaccountprofile_id_seq": {
+                      "last_value": 7,
+                      "is_called": true
+                    }
+                  },
+                  "jobs": [],
+                  "WS_types": [],
+                  "captured_all_registered_SQL_tables": 61,
+                  "literal_public_sequences": 59,
+                  "all_unlisted_tables_and_sequences_unchanged": true
+                }
+              }
+            ],
+            "assertions": [
+              "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+              "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+              "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+            ],
+            "result": {
+              "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+              "Source_cases_passed": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "performance_verified": false
+            },
+            "fully_verified": false,
+            "remaining": [
+              "All unobserved roles/input/error/concurrency branches remain open",
+              "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+              "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+            ]
+          }
         }
       ]
     },
@@ -58098,15 +59943,144 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained:route-e9c29781d27744d30bd4:DELETE",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "captured_contexts": {
+              "management-second8": {
+                "id": "management-second8",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                "qualification": {
+                  "path": "artifacts/rust/m0-management-source-second8-qualification-1/qualification.json",
+                  "sha256": "2dc82a98ae99de643131438eef6202d1781c1fcc8f14c393e3f6d9d2fb036414"
+                },
+                "report": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/report.json",
+                  "sha256": "5de670de7a57c0167dbdbf4aeb97de3d84e954434d668dac3b790d94dade68ce"
+                },
+                "actual_controller_exit": 0,
+                "qualified_positive_HTTP_leaves": 8,
+                "observed_actor": {
+                  "role": "admin",
+                  "complete_role_matrix": false
+                },
+                "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                "remaining": [
+                  "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                  "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                  "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                ]
+              }
+            },
+            "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+            "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+          },
+          "assertions": [
+            "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+            "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+            "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+            "Source_cases_passed": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "complete_role_matrix": false,
+            "fully_verified": false,
+            "performance_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-e9c29781d27744d30bd4:DELETE",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "owning_milestone": "M5",
+            "fixture_id": "retained:route-e9c29781d27744d30bd4:DELETE",
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "kind": "actual_authenticated_owned_fixture_admin",
+                "login_flow_qualified": false
+              }
+            },
+            "observed_methods": [
+              "DELETE"
+            ],
+            "operation_method_discovery_resolved": true,
+            "cases": [
+              {
+                "fixture_id": "management-second8",
+                "label": "profile-delete",
+                "contract_id": "route-e9c29781d27744d30bd4:DELETE",
+                "path": "/api/m3u/accounts/5/profiles/7/",
+                "method": "DELETE",
+                "role": "admin",
+                "HTTP_status": 204,
+                "response_body_bytes": 0,
+                "response_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "request_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/profile-delete/request.json",
+                  "sha256": "d162a0266fa00800f6e8b044a94113b17c8d2efeb372341748648a6bff5e5b7d"
+                },
+                "wire_custody": {
+                  "path": "artifacts/rust/normal-graph-m0-management-nine-source-2/fixtures/Original-1c44bc30/management-nine-lifecycle-continuation/private/profile-delete/wire.json",
+                  "sha256": "ad1a9cc605660ece27f0ed3ca9902bbbc9f09ac9ec4a3e417011d52edcd33bb8"
+                },
+                "Source_positive_leaf_qualified": true,
+                "qualified_effect_projection": {
+                  "label": "profile-delete",
+                  "HTTP_status": 204,
+                  "whole_selected_SQL_unlisted_tables_unchanged": true,
+                  "literal_sequence_changes": [],
+                  "unfiltered_published_jobs": 0,
+                  "actual_WS_types": [
+                    "notification_dismissed"
+                  ],
+                  "cache_scope": "Actual key/type/absolute-expiry/DUMP hashes retained; fresh receiver/heartbeat ownership and payload absence are not normalized into whole-cache parity."
+                }
+              }
+            ],
+            "assertions": [
+              "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+              "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+              "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+            ],
+            "result": {
+              "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+              "Source_cases_passed": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "complete_role_matrix": false,
+              "fully_verified": false,
+              "performance_verified": false
+            },
+            "fully_verified": false,
+            "remaining": [
+              "All unobserved roles/input/error/concurrency branches remain open",
+              "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+              "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+            ]
+          }
         },
         {
           "contract_id": "route-e9c29781d27744d30bd4:GET",
@@ -188043,7 +190017,599 @@
               "Named reverse association is not a literal URL/slash-alias or TCP transcript",
               "Unobserved roles/grammar/methods/aliases and Native/browser/performance/M0/M1 remain open"
             ]
-          }
+          },
+          "supplemental_executable_Source_captures": [
+            {
+              "definition": {
+                "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                "pattern_exact": "output/^epg(?:/(?P<profile_name>[^/]+))?/?$",
+                "source_handler": "apps.output.views.epg_endpoint",
+                "method": null,
+                "source_action": null,
+                "owning_milestone": "M7",
+                "fixture_id": "retained:route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                "observed_roles": [
+                  "admin"
+                ],
+                "source_role_specs": {
+                  "admin": {
+                    "kind": "actual_authenticated_owned_fixture_admin",
+                    "login_flow_qualified": false
+                  }
+                },
+                "observed_methods": [
+                  "GET"
+                ],
+                "operation_method_discovery_resolved": false,
+                "cases": [
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-warm-before-coupling",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 16709,
+                    "response_body_sha256": "b39191054672dffe7b4f8d5b2a0116cdd2f439167d84fbb2e98e75c9694c3b5b",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-warm-before-coupling/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-warm-before-coupling/wire.json",
+                      "sha256": "93920ed630695396fab85c3f9719e091d13253254b320fee479d0020904fd463"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-warm-before-coupling",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 5,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": null,
+                      "generation_after": null,
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "b39191054672dffe7b4f8d5b2a0116cdd2f439167d84fbb2e98e75c9694c3b5b"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-create-dummy-EPG-channel",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 18669,
+                    "response_body_sha256": "1ebc6c7209b083f252b231f6e9c4e2035422320a2484f607904c0f5c89b28525",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-create-dummy-EPG-channel/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-create-dummy-EPG-channel/wire.json",
+                      "sha256": "6aade4b32fdd4f6444b2d444c2cc6f630ec7914e9efa85b7f4836aafe988d940"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-create-dummy-EPG-channel",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 6,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "1",
+                      "generation_after": "1",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "1ebc6c7209b083f252b231f6e9c4e2035422320a2484f607904c0f5c89b28525"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-create-XML-EPG-channel",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 18963,
+                    "response_body_sha256": "14931d163cef6070f1c48c36f6d802a910d0db5601908148775ecfcfd20e4631",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-create-XML-EPG-channel/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-create-XML-EPG-channel/wire.json",
+                      "sha256": "40f749cea1450b23bd8502e3bdad9f7c70d983f336e5f0fd2eb6c24e707bd4c8"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-create-XML-EPG-channel",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 7,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "3",
+                      "generation_after": "3",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "14931d163cef6070f1c48c36f6d802a910d0db5601908148775ecfcfd20e4631"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-create-orphan-EPG-channel",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 19120,
+                    "response_body_sha256": "738f6d1e256221436a05ed174bd2754e4fc0b97c344c91e3d1dae9f31db62f8d",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-create-orphan-EPG-channel/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-create-orphan-EPG-channel/wire.json",
+                      "sha256": "0c105f42fa0a26827bcbda8726713fd4ce4b60b7a611baf971937c82a51ce1b6"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-create-orphan-EPG-channel",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 8,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "4",
+                      "generation_after": "4",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "738f6d1e256221436a05ed174bd2754e4fc0b97c344c91e3d1dae9f31db62f8d"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-override-first-dummy-assignment",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 19120,
+                    "response_body_sha256": "738f6d1e256221436a05ed174bd2754e4fc0b97c344c91e3d1dae9f31db62f8d",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-first-dummy-assignment/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-first-dummy-assignment/wire.json",
+                      "sha256": "7f540650aa28d3f7ae3119a093a8c75e9440f9539079bf44e489024a20e076da"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-override-first-dummy-assignment",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 9,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "5",
+                      "generation_after": "5",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "738f6d1e256221436a05ed174bd2754e4fc0b97c344c91e3d1dae9f31db62f8d"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-override-same-dummy-no-EPG-change",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 19120,
+                    "response_body_sha256": "738f6d1e256221436a05ed174bd2754e4fc0b97c344c91e3d1dae9f31db62f8d",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-same-dummy-no-EPG-change/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-same-dummy-no-EPG-change/wire.json",
+                      "sha256": "391916ee84cf2c515e249270f9505979e23c67a40635a9de74c2b36e457ad2ab"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-override-same-dummy-no-EPG-change",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [],
+                      "changed_sequences": {},
+                      "generation_before": "5",
+                      "generation_after": "5",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "738f6d1e256221436a05ed174bd2754e4fc0b97c344c91e3d1dae9f31db62f8d"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-override-changed-dummy-assignment",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 20244,
+                    "response_body_sha256": "899d6b71e807ee116a0884b33329808d8a792eac43efa402aead1fde37744ad9",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-changed-dummy-assignment/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-changed-dummy-assignment/wire.json",
+                      "sha256": "cea5d208ae70906290c299db32d14040dac83a0bf5eb677a12b2515457feb9a5"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-override-changed-dummy-assignment",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 10,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "6",
+                      "generation_after": "6",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "899d6b71e807ee116a0884b33329808d8a792eac43efa402aead1fde37744ad9"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-override-changed-XML-A-assignment",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 18550,
+                    "response_body_sha256": "af051bc42e05598c7ad50a31cb0b9a67c7b574f979ee2c95d4b1ee0bec3b0077",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-changed-XML-A-assignment/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-changed-XML-A-assignment/wire.json",
+                      "sha256": "e5d8ebf5d96fbb2c28f0a4d9d2b3baa046144ab8ff8ae035316f5554ed5a5436"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-override-changed-XML-A-assignment",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 11,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "8",
+                      "generation_after": "8",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "af051bc42e05598c7ad50a31cb0b9a67c7b574f979ee2c95d4b1ee0bec3b0077"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-override-changed-XML-B-assignment",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 18550,
+                    "response_body_sha256": "57e4ff04091e1dbaac5cde2dd72d68598b3529baedbf04ec1dde340c8fc7eb41",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-changed-XML-B-assignment/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-changed-XML-B-assignment/wire.json",
+                      "sha256": "0b35d63f049624e7f95ecb3452924623c862c84ebea9fa6318eed46802a78611"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-override-changed-XML-B-assignment",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 12,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "10",
+                      "generation_after": "10",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "57e4ff04091e1dbaac5cde2dd72d68598b3529baedbf04ec1dde340c8fc7eb41"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-override-clear-EPG-preserve-name",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 20413,
+                    "response_body_sha256": "bec5ead9e232da9a5977d39715003fa4598bcdb71c46a70d5f24bc5c4734df23",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-clear-EPG-preserve-name/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-clear-EPG-preserve-name/wire.json",
+                      "sha256": "98f01cef062093eb69a820c321c42a4cb13e791057c990b382c09785c1779986"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-override-clear-EPG-preserve-name",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 13,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "11",
+                      "generation_after": "11",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "bec5ead9e232da9a5977d39715003fa4598bcdb71c46a70d5f24bc5c4734df23"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-override-reassign-XML-B",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 18563,
+                    "response_body_sha256": "6929811623968f823baeb2d383d6fc93bab09ee312c75d60e60a4bcc20bc9d7c",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-reassign-XML-B/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-reassign-XML-B/wire.json",
+                      "sha256": "24d2722c1598cf236d86264a25d43a6edaf8c17f03c6bc8dbc97dc90658f569b"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-override-reassign-XML-B",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 14,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "13",
+                      "generation_after": "13",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "6929811623968f823baeb2d383d6fc93bab09ee312c75d60e60a4bcc20bc9d7c"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-override-delete-entire-row",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 18563,
+                    "response_body_sha256": "6929811623968f823baeb2d383d6fc93bab09ee312c75d60e60a4bcc20bc9d7c",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-delete-entire-row/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-override-delete-entire-row/wire.json",
+                      "sha256": "fc70f26459ed427ee7825d43b0185b7648266eb5cdd84fcd21e75f92ecc2e637"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-override-delete-entire-row",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [],
+                      "changed_sequences": {},
+                      "generation_before": "13",
+                      "generation_after": "13",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "6929811623968f823baeb2d383d6fc93bab09ee312c75d60e60a4bcc20bc9d7c"
+                    }
+                  },
+                  {
+                    "fixture_id": "channel-guide25",
+                    "label": "xmltv-after-create-auto-base-dummy-override-XML",
+                    "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                    "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+                    "method": "GET",
+                    "role": "admin",
+                    "HTTP_status": 200,
+                    "response_body_bytes": 20541,
+                    "response_body_sha256": "ddafdef87f962de55e1c1e1f53f3568c735d570bb856dac1004b4b3074e2956e",
+                    "request_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-create-auto-base-dummy-override-XML/request.json",
+                      "sha256": "62be22fd3f70f79fe8268d9deadfac729e7addc3b355b8c3d50e5969868b13f1"
+                    },
+                    "wire_custody": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/private/xmltv-after-create-auto-base-dummy-override-XML/wire.json",
+                      "sha256": "1c18d987ef0253de24b278223355f84bc75c1e4487bacc6fbe1cb7df71ff9f62"
+                    },
+                    "Source_positive_leaf_qualified": true,
+                    "qualified_effect_projection": {
+                      "label": "xmltv-after-create-auto-base-dummy-override-XML",
+                      "HTTP_status": 200,
+                      "positive_leaf_checked": true,
+                      "changed_tables": [
+                        "core_systemevent"
+                      ],
+                      "changed_sequences": {
+                        "core_systemevent_id_seq": {
+                          "last_value": 15,
+                          "is_called": true
+                        }
+                      },
+                      "generation_before": "16",
+                      "generation_after": "16",
+                      "programme_root_publications": 0,
+                      "programme_terminal_statuses": [],
+                      "WS_events": 0,
+                      "body_sha256": "ddafdef87f962de55e1c1e1f53f3568c735d570bb856dac1004b4b3074e2956e"
+                    }
+                  }
+                ],
+                "assertions": [
+                  "Exact retained Source request method/path/admin actor and response status/byte count/body SHA bind to one stable discovery operation; no format-alias propagation",
+                  "Named qualified Source SQL/table/sequence, queue/task, WS, cache, origin and cleanup authority stays attached to the actual controller and leaf",
+                  "No Source replay or Native coverage added; existing Source contract/setup/result remains unchanged when this is a supplemental capture"
+                ],
+                "result": {
+                  "state": "partial_retained_Original_positive_HTTP_leaf_assignment",
+                  "Source_cases_passed": 13,
+                  "new_Source_cases_this_task": 0,
+                  "Native_coverage_increased": false,
+                  "complete_role_matrix": false,
+                  "fully_verified": false,
+                  "performance_verified": false
+                },
+                "fully_verified": false,
+                "remaining": [
+                  "All unobserved roles/input/error/concurrency branches remain open",
+                  "Observed GET on a METHOD_UNRESOLVED route does not resolve its declared method set",
+                  "No whole-controller green claim across Source1/Source2; no Native acceptance or performance claim"
+                ]
+              },
+              "setup_fixture": {
+                "id": "retained:route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+                "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                "captured_contexts": {
+                  "channel-guide25": {
+                    "id": "channel-guide25",
+                    "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+                    "execution_kind": "retained_actual_Original_admin_HTTP_with_offline_qualified_SQL_queue_cache_WS_effects",
+                    "qualification": {
+                      "path": "artifacts/rust/m5-m6-channel-guide-source-qualification-1/qualification.json",
+                      "sha256": "5f2e14d9309a6b38ff3822fe2f9ecb122283f663f4ad15116e3c1ff575369a08"
+                    },
+                    "report": {
+                      "path": "artifacts/rust/normal-graph-m5-m6-channel-guide-source-1/fixtures/Original-4981f40a/channel-guide-coupling/report.json",
+                      "sha256": "8c6448a5de7008b6c376794b0314184578bf5b4c93086b33f6077c3e987d9adf"
+                    },
+                    "actual_controller_exit": 0,
+                    "qualified_positive_HTTP_leaves": 25,
+                    "observed_actor": {
+                      "role": "admin",
+                      "complete_role_matrix": false
+                    },
+                    "setup": "Existing isolated Compose Source database; owned fixture account/EPG/channel/Redis/Channels/origin resources; exact setup helpers, SQL snapshots and per-step effect assertions are retained in qualification evidence references. Source2 explicitly imports the qualified Source1 owned state and executes only eight previously unrun calls; no whole cross-controller cache continuity claim. Guide fixtures seed two Programme rows through normal models; they are not HTTP-produced.",
+                    "remaining": [
+                      "Positive admin cases only; roles, failure/race branches and format aliases remain unmeasured",
+                      "Raw credential-bearing requests and full SQL retained privately by hash; publication omits their payloads without comparison waiver",
+                      "Actual controller exits stay literal; four valid Source1 leaves do not turn its failed controller green"
+                    ]
+                  }
+                },
+                "ownership": "Actual prior isolated Source Compose fixtures, qualified cleanup; no application started or HTTP replayed for this mapping.",
+                "setup": "Use each named context qualification and exact hashed request/wire/SQL/queue/cache/WS setup and effect custody; contexts and controllers remain distinct."
+              },
+              "input": {
+                "path": "scripts/rust-contracts/retained-management/bindings.json",
+                "sha256": "13a0efd078bf4c8a7540101250ca11320453016ba6a64967e2dd597757a92215",
+                "kind": "retained_original_management12_channelguide25_HTTP"
+              }
+            }
+          ]
         }
       ]
     },
