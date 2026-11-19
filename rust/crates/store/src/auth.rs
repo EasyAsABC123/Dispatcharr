@@ -92,6 +92,8 @@ pub struct AuthService {
     retained_scope: Option<Arc<dyn Send + Sync>>,
     pub(crate) core_task_broker: Arc<std::sync::OnceLock<Arc<dyn crate::CoreTaskBroker>>>,
     pub(crate) normal_core_task_broker: bool,
+    pub(crate) tvg_programme_publisher:
+        Arc<std::sync::OnceLock<Arc<dyn crate::TvgProgrammePublisher>>>,
     pub(crate) images: crate::image_proxy::ImageRuntime,
     pub(crate) stream_files: crate::stream_files::Runtime,
     pub(crate) ip_lookup: crate::ip_lookup::IpLookup,
@@ -119,6 +121,7 @@ impl AuthService {
             core_task_broker: Arc::new(std::sync::OnceLock::new()),
             compact_coordinator: Arc::new(std::sync::OnceLock::new()),
             normal_core_task_broker: false,
+            tvg_programme_publisher: Arc::new(std::sync::OnceLock::new()),
             images: crate::image_proxy::ImageRuntime::new(),
             stream_files: crate::stream_files::Runtime::new(),
             ip_lookup: crate::ip_lookup::IpLookup::new(crate::IpLookupConfig::default()),

@@ -1,0 +1,46 @@
+{
+  "tested_rust_base": "a1e2231b176508355e4b1afd29a0b82a3e74fb57",
+  "tested_source_sha256": {
+    "rust/crates/app/src/database_config.rs": "63d409bbc65acc8c3697136c9fd5db3645e8ffbc9a30c0237a49dd1a43705440",
+    "rust/crates/app/src/main.rs": "b938538c1baed5866f4c90a081f6956d7aed714f2cc03a1b22d9bae491bcf788",
+    "rust/crates/job-transport/src/tvg_programme_application.rs": "c484fe2db041f5c364af1f3d2729bcc1c28cb6235a0d9e0fcd65db786bd576c3",
+    "rust/crates/job-transport/src/tvg_programme_transport.rs": "1cafeceebb243f0c5b215b72354e285163eb6dd14934acbb2739644d01439f2a",
+    "rust/crates/store/src/auth.rs": "d0d28d9e3b77e98e862e2dea4626202ae3154173233ab89419116933a047080d",
+    "rust/crates/store/src/channel_writes.rs": "313e9b5ef0148a692dbefd33eed012d2ff7513ac79a5efc28745f1c9d35973f5",
+    "rust/crates/store/src/core_settings_special_broker.rs": "da09d4c2730161e9ee23d4bcce1d488ffde628c38a448bca8083768a7b7d85ca",
+    "rust/crates/store/src/core_task_broker.rs": "52e73d82f8812c939bc2ad06a5c5f0fda6a00a734e705e6a6ce3fface27b41b3",
+    "rust/crates/store/src/lib.rs": "de3be546bc5a1bbe91360aa6945cf700518b524d7cb26e97ba2d48ce1ed852c1"
+  },
+  "checks": {
+    "fmt": 0,
+    "store": {
+      "exit": 0,
+      "passed": 530,
+      "ignored": 79
+    },
+    "job_transport_retry": {
+      "exit": 0,
+      "passed": 285,
+      "ignored": 113
+    },
+    "main_database_config": {
+      "exit": 0,
+      "passed": 8
+    },
+    "operator_database_config": {
+      "exit": 0,
+      "passed": 8
+    },
+    "clippy_initial_exit": 101,
+    "clippy_retry_exit": 0
+  },
+  "log_sha256": {
+    "fmt-retry.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "store-and-jobs.log": "39f48c39aa9e71a65e70938b7540c756c48c7fc7011499118410021bd781a5cf",
+    "job-retry.log": "2f18ed71e793e98fe61cb3c6efe164d9130c4aefaf11d86abd2431d18095e0e9",
+    "config.log": "6bd1ae960de1848643be158c72e656822ec3069e14d4d8f0293be3c8bf270bb9",
+    "clippy-initial.log": "2e74ed1b7a69b3b46c96f1af34669e8103632dabfb905b2f96afc6f4a0613e2e",
+    "clippy-retry.log": "b1d8116154191af3795bf3e7bcd31f072520cd603423fbf80a909f9e67214ead"
+  },
+  "runtime_pending": true
+}

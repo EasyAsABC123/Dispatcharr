@@ -183,6 +183,19 @@ impl Application {
         });
         Ok(())
     }
+    /// No new programme roots are admitted after Main begins termination.
+    pub fn stop_channel_publications(&self) {
+        if let Ok(mut lifecycle) = self.inner.lifecycle.lock() {
+            lifecycle.closed = true;
+        }
+    }
+
+    pub fn channel_publication_ready(&self) -> bool {
+        self.inner.lifecycle.lock().is_ok_and(|lifecycle| {
+            channel_publication_ready(&lifecycle, &self.inner.state.borrow())
+        })
+    }
+
     pub async fn shutdown(&self, timeout: Duration) -> bool {
         let deadline = tokio::time::Instant::now() + timeout;
         {
@@ -221,6 +234,39 @@ impl Application {
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
             .is_ok()
+    }
+}
+
+fn channel_publication_ready(lifecycle: &Lifecycle, state: &State) -> bool {
+    lifecycle.started && !lifecycle.closed && matches!(state, State::Observed(_))
+}
+
+impl dispatcharr_store::TvgProgrammePublisher for Application {
+    fn ready(&self) -> bool {
+        self.channel_publication_ready()
+    }
+
+    fn publish(
+        &self,
+        publication: dispatcharr_store::TvgProgrammePublication,
+        owner: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), dispatcharr_store::StoreError>> {
+        Box::pin(async move {
+            if !self.channel_publication_ready() {
+                return Err(dispatcharr_store::StoreError::Unsupported(
+                    "TVG programme publisher is not accepting requests",
+                ));
+            }
+            self.inner
+                .jobs
+                .publish_channel_root(publication, owner)
+                .await
+                .map_err(|_| {
+                    dispatcharr_store::StoreError::Unsupported(
+                        "TVG programme publication did not acknowledge",
+                    )
+                })
+        })
     }
 }
 
@@ -288,5 +334,24 @@ impl NormalHandler {
             Err(crate::tvg_programme_worker::Error::Capacity) => Ok(D::Capacity),
             Err(error) => Err(D::Operational(format!("normal TVG {error:?}"))),
         }
+    }
+}
+
+#[cfg(test)]
+mod publication_readiness_tests {
+    use super::*;
+
+    #[test]
+    fn empty_broker_observation_enables_legacy_programme_publication_until_close() {
+        let mut lifecycle = Lifecycle {
+            started: true,
+            closed: false,
+        };
+        assert!(!channel_publication_ready(&lifecycle, &State::Prepared));
+        assert!(!channel_publication_ready(&lifecycle, &State::Starting));
+        let empty = State::Observed(Arc::new(Run::Empty));
+        assert!(channel_publication_ready(&lifecycle, &empty));
+        lifecycle.closed = true;
+        assert!(!channel_publication_ready(&lifecycle, &empty));
     }
 }

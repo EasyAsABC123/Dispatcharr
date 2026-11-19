@@ -501,7 +501,10 @@ pub mod channel_maintenance;
 pub mod channel_maintenance_http;
 
 mod core_task_broker;
-pub use core_task_broker::{CoreProfilePublication, CoreTaskBroker, CoreTaskPublication};
+pub use core_task_broker::{
+    CoreProfilePublication, CoreTaskBroker, CoreTaskPublication, TvgProgrammePublication,
+    TvgProgrammePublisher,
+};
 pub mod xc_account_http;
 mod xc_account_provider;
 pub mod xc_account_tasks;

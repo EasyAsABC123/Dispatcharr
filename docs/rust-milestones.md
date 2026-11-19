@@ -22,6 +22,9 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The guide publisher and PostgreSQL defaults checkpoint](rust-milestone-batch87.md)
+documents the refresh-only programme publisher and blank operator settings.
+
 [The selected-worker readiness checkpoint](rust-milestone-batch86.md)
 covers Celery and DVR first progress and the pending packaged startup check.
 

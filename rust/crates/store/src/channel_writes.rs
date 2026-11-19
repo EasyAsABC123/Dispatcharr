@@ -348,6 +348,15 @@ enum GuideTarget {
 fn guide_unsupported() -> StoreError {
     StoreError::Unsupported("Channel guide coupling outside Source25 positive domain")
 }
+
+fn channel_guide_publisher_ready(auth: &AuthService, source_type: Option<&str>) -> bool {
+    auth.core_task_broker.get().is_some()
+        || (source_type.is_none_or(|kind| kind == "xmltv")
+            && auth
+                .tvg_programme_publisher
+                .get()
+                .is_some_and(|publisher| publisher.ready()))
+}
 async fn guide_target(
     auth: &AuthService,
     c: &mut PgConnection,
@@ -377,10 +386,7 @@ async fn guide_target(
     match kind {
         Some((Some(kind),)) if kind == "dummy" => Ok(GuideTarget::CacheOnly),
         Some((kind,)) if kind.as_deref().is_none_or(|v| v == "xmltv") => {
-            // Main binds this sealed broker on the shared cell before serving.
-            // normal_core_task_broker belongs to the private CoreSettings Auth
-            // clone; channel/router clones instead prove the actual port here.
-            if auth.core_task_broker.get().is_none() {
+            if !channel_guide_publisher_ready(auth, kind.as_deref()) {
                 return Err(guide_unsupported());
             }
             Ok(GuideTarget::Programme(epg))
@@ -405,14 +411,7 @@ async fn guide_after_save(
     // Physical command ownership remains retained even after a logical error.
     let _ = cache.command::<i64>(command).await;
     if let GuideTarget::Programme(epg) = target {
-        crate::core_settings_special_broker::publish(
-            auth,
-            &crate::core_settings_special_budget::Scratch::new(),
-            "apps.epg.tasks.parse_programs_for_tvg_id",
-            json!([epg]),
-            json!({}),
-        )
-        .await?;
+        crate::core_settings_special_broker::publish_tvg_programmes(auth, epg).await?;
     }
     Ok(())
 }
@@ -1045,7 +1044,7 @@ async fn set_epg_owned(
         };
         let target = match (&guide, guide_id) {
             (Some((_, source_type)), Some(epg)) if source_type.as_deref() != Some("dummy") => {
-                if auth.core_task_broker.get().is_none() {
+                if !channel_guide_publisher_ready(&auth, source_type.as_deref()) {
                     return Err(guide_unsupported());
                 }
                 GuideTarget::Programme(epg)

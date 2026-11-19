@@ -55,7 +55,37 @@ pub trait CoreTaskBroker: Send + Sync {
         })
     }
 }
+/// A root of the Channel guide programme task. Construction stays inside Store.
+pub struct TvgProgrammePublication(pub(crate) CoreTaskPublication);
+impl TvgProgrammePublication {
+    pub fn bytes(&self) -> &[u8] {
+        self.0.bytes()
+    }
+    pub fn task_id(&self) -> Uuid {
+        self.0.task_id()
+    }
+}
+
+/// Narrow publication authority for the refresh-only worker.
+pub trait TvgProgrammePublisher: Send + Sync {
+    fn ready(&self) -> bool;
+    fn publish(
+        &self,
+        publication: TvgProgrammePublication,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), StoreError>>;
+}
+
 impl AuthService {
+    pub fn bind_tvg_programme_publisher(
+        &self,
+        publisher: Arc<dyn TvgProgrammePublisher>,
+    ) -> Result<(), StoreError> {
+        self.tvg_programme_publisher
+            .set(publisher)
+            .map_err(|_| StoreError::Unsupported("TVG programme publisher already composed"))
+    }
+
     /// Early Core and later engine/selected Auth clones share THIS same cell.
     /// Bind once before HTTP serving; it owns no new SQL/Redis client or pool.
     pub fn bind_core_task_broker(&self, broker: Arc<dyn CoreTaskBroker>) -> Result<(), StoreError> {

@@ -172,6 +172,31 @@ pub(crate) async fn publish(
     Ok(id)
 }
 
+pub(crate) async fn publish_tvg_programmes(
+    auth: &AuthService,
+    epg_data_id: i64,
+) -> Result<(), StoreError> {
+    let scratch = Scratch::new();
+    let task = "apps.epg.tasks.parse_programs_for_tvg_id";
+    if auth.core_task_broker.get().is_some() {
+        // Selected Main keeps its existing shared broker and deferred worker.
+        return publish(auth, &scratch, task, json!([epg_data_id]), json!({}))
+            .await
+            .map(|_| ());
+    }
+    let publisher = auth
+        .tvg_programme_publisher
+        .get()
+        .ok_or(StoreError::Unsupported(
+            "TVG programme publisher unavailable",
+        ))?;
+    let (raw, id, charge) = build_frame(auth, &scratch, task, json!([epg_data_id]), json!({}))?;
+    let frame = crate::TvgProgrammePublication(CoreTaskPublication::new(raw, &id)?);
+    publisher
+        .publish(frame, auth.core_publication_owner(charge))
+        .await
+}
+
 pub(crate) async fn publish_profiles_root(
     auth: &AuthService,
     scratch: &Scratch,

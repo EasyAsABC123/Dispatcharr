@@ -22,6 +22,13 @@ fn from_environment(
         return Ok(value);
     }
     let value = |name, default: &str| read(name).unwrap_or_else(|| default.into());
+    // Original's packaged entrypoint defaults both unset and empty values
+    // for these connection fields before starting the application.
+    let connection_value = |name, default: &str| {
+        read(name)
+            .filter(|value| !value.is_empty())
+            .unwrap_or_else(|| default.into())
+    };
     let mut url = url::Url::parse("postgresql://localhost/dispatcharr").unwrap();
     let host = value("POSTGRES_HOST", "localhost");
     let socket = host.is_empty() || host.starts_with('/');
@@ -46,7 +53,7 @@ fn from_environment(
             .map_err(|_| "Invalid POSTGRES_HOST")?;
     }
     url.set_port(Some(
-        value("POSTGRES_PORT", "5432")
+        connection_value("POSTGRES_PORT", "5432")
             .parse()
             .map_err(|_| "Invalid POSTGRES_PORT")?,
     ))
@@ -54,7 +61,7 @@ fn from_environment(
     // Discrete settings are already literal. URL setters leave existing percent
     // sequences intact, while SQLx decodes them on connection.
     let escape = |text: String| text.replace('%', "%25");
-    url.set_username(&escape(value("POSTGRES_USER", "dispatch")))
+    url.set_username(&escape(connection_value("POSTGRES_USER", "dispatch")))
         .map_err(|_| "Invalid POSTGRES_USER")?;
     let ssl = value("POSTGRES_SSL", "false");
     let password = match read("POSTGRES_PASSWORD") {
@@ -68,7 +75,7 @@ fn from_environment(
     };
     url.set_password(Some(&escape(password)))
         .map_err(|_| "Invalid POSTGRES_PASSWORD")?;
-    url.set_path(&escape(value("POSTGRES_DB", "dispatcharr")));
+    url.set_path(&escape(connection_value("POSTGRES_DB", "dispatcharr")));
     if ssl.eq_ignore_ascii_case("true") {
         let paths = [
             ("POSTGRES_SSL_CA_CERT", "sslrootcert"),
@@ -214,6 +221,24 @@ mod tests {
             literal
         );
     }
+    #[test]
+    fn empty_postgresql_identity_and_port_match_packaged_defaults() {
+        let text = build(
+            &[
+                ("POSTGRES_DB", ""),
+                ("POSTGRES_USER", ""),
+                ("POSTGRES_PORT", ""),
+                ("POSTGRES_PASSWORD", "synthetic"),
+            ],
+            &[],
+        )
+        .unwrap();
+        let endpoint = url::Url::parse(&text).unwrap();
+        assert_eq!(endpoint.username(), "dispatch");
+        assert_eq!(endpoint.path(), "/dispatcharr");
+        assert_eq!(endpoint.port(), Some(5432));
+    }
+
     #[test]
     fn discrete_postgres_values_keep_literal_percent_sequences() {
         let encoded = build(

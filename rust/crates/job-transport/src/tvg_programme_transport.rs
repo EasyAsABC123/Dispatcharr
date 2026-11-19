@@ -43,6 +43,22 @@ impl TvgJobs {
             shared: Arc::new(std::sync::OnceLock::new()),
         })
     }
+    pub(crate) async fn publish_channel_root(
+        &self,
+        publication: dispatcharr_store::TvgProgrammePublication,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<(), Error> {
+        let message = tvg_programme_protocol::parse_initial(publication.bytes())
+            .map_err(|_| Error::Protocol)?;
+        if message.task_id != publication.task_id() {
+            return Err(Error::Protocol);
+        }
+        self.jobs
+            .publish_xml_tvg(publication.bytes(), owner)
+            .await?;
+        Ok(())
+    }
+
     fn active_jobs(&self) -> &Jobs {
         self.shared.get().map_or(&self.jobs, |s| &s.jobs)
     }

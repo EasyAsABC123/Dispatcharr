@@ -52,6 +52,7 @@ struct HealthState {
     stream_files: AuthService,
     store: Store,
     selected: Option<selected_jobs::SelectedJobs>,
+    refresh_tvg: Option<dispatcharr_job_transport::tvg_programme_application::Application>,
 }
 async fn health(State(state): State<HealthState>) -> (StatusCode, Json<serde_json::Value>) {
     if !state.stream_files.stream_files_ready() {
@@ -75,6 +76,22 @@ async fn health(State(state): State<HealthState>) -> (StatusCode, Json<serde_jso
                     Json(
                         serde_json::json!({"status":if ready{"ready"}else{"selected_workers_not_ready"},"backend":"rust","parity_complete":false,"selected_workers":details}),
                     ),
+                );
+            }
+            if let Some(tvg) = state.refresh_tvg {
+                let ready = tvg.channel_publication_ready();
+                return (
+                    if ready {
+                        StatusCode::OK
+                    } else {
+                        StatusCode::SERVICE_UNAVAILABLE
+                    },
+                    Json(serde_json::json!({
+                        "status": if ready {"ready"} else {"guide_worker_not_ready"},
+                        "backend": "rust",
+                        "parity_complete": false,
+                        "guide_programmes": {"ready": ready},
+                    })),
                 );
             }
             (
@@ -912,6 +929,10 @@ async fn run() -> Result<(), String> {
             let _ = index.shutdown(Duration::from_secs(4)).await;
             return Err("EPG index intake initialization failed".into());
         }
+        if !selected_jobs_enabled {
+            auth.bind_tvg_programme_publisher(Arc::new(tvg.clone()))
+                .map_err(|_| "TVG programme publisher already composed")?;
+        }
         epg_index = Some(index);
         epg_series = Some(series);
         epg_artwork = Some(artwork);
@@ -1039,6 +1060,7 @@ async fn run() -> Result<(), String> {
             stream_files: auth.clone(),
             store,
             selected: selected_jobs.clone(),
+            refresh_tvg: epg_tvg.clone().filter(|_| !selected_jobs_enabled),
         })
         .merge(auth_routes)
         .merge(combined_statistics.router())
@@ -1210,6 +1232,9 @@ async fn run() -> Result<(), String> {
         if let Some(selected) = &signal_services.selected_jobs {
             selected.stop_producers();
         } else {
+            if let Some(tvg) = &signal_services.epg_tvg {
+                tvg.stop_channel_publications();
+            }
             signal_services.engine.shutdown();
         }
         let cleanup = tokio::spawn(shutdown_components(signal_services));
@@ -1218,10 +1243,15 @@ async fn run() -> Result<(), String> {
     })
     .into_future();
     tokio::pin!(server);
+    let shutdown_mode = if refresh_enabled && !selected_jobs_enabled {
+        "Refresh worker"
+    } else {
+        "Selected"
+    };
     tokio::select! {
         result=&mut server=>{
-            let cleanup=tokio::time::timeout(shutdown_timeout,finish_shutdown_after_server(&mut shutdown_notice,shutdown_components(services))).await;
-            if selected_jobs_enabled || auth.stream_files_were_used() {match cleanup{Ok(result)=>result?,Err(_)=>return Err("Selected shutdown deadline expired; process termination may close outstanding resources".into())}}
+            let cleanup=tokio::time::timeout(shutdown_timeout,finish_shutdown_after_server(&mut shutdown_notice,shutdown_components(services),shutdown_mode)).await;
+            if refresh_enabled || auth.stream_files_were_used() {match cleanup{Ok(result)=>result?,Err(_)=>return Err(format!("{shutdown_mode} shutdown deadline expired; process termination may close outstanding resources"))}}
             result.map_err(|_|"HTTP server failed".to_string())
         },
         cleanup=&mut shutdown_notice=>{
@@ -1233,10 +1263,10 @@ async fn run() -> Result<(), String> {
             }).await;
             match drained{
                 Ok((result,cleaned))=>{
-                    if selected_jobs_enabled || auth.stream_files_were_used() {cleaned.map_err(|_|"Selected shutdown supervisor failed; process termination may close outstanding resources".to_string())??;}
+                    if refresh_enabled || auth.stream_files_were_used() {cleaned.map_err(|_|format!("{shutdown_mode} shutdown supervisor failed; process termination may close outstanding resources"))??;}
                     result.map_err(|_|"HTTP server failed".to_string())
                 },
-                Err(_)=>{cleanup.abort();if selected_jobs_enabled || auth.stream_files_were_used() {Err("Selected shutdown deadline expired; cleanup was cancelled and process termination may close outstanding resources".into())}else{eprintln!("Shutdown deadline reached; closing remaining HTTP connections");Ok(())}},
+                Err(_)=>{cleanup.abort();if refresh_enabled || auth.stream_files_were_used() {Err(format!("{shutdown_mode} shutdown deadline expired; cleanup was cancelled and process termination may close outstanding resources"))}else{eprintln!("Shutdown deadline reached; closing remaining HTTP connections");Ok(())}},
             }
         }
     }
@@ -1248,6 +1278,7 @@ async fn run() -> Result<(), String> {
 async fn finish_shutdown_after_server<F>(
     notice: &mut tokio::sync::oneshot::Receiver<tokio::task::JoinHandle<Result<(), String>>>,
     fallback: F,
+    shutdown_mode: &str,
 ) -> Result<(), String>
 where
     F: std::future::Future<Output = Result<(), String>>,
@@ -1255,7 +1286,7 @@ where
     match notice.try_recv() {
         Ok(cleanup) => cleanup
             .await
-            .map_err(|_| "Selected shutdown supervisor failed; process termination may close outstanding resources".to_string())?,
+            .map_err(|_| format!("{shutdown_mode} shutdown supervisor failed; process termination may close outstanding resources"))?,
         // A completed server can no longer poll the graceful callback. An empty
         // or closed notice therefore means no published cleanup owner exists.
         Err(tokio::sync::oneshot::error::TryRecvError::Empty)
@@ -1345,6 +1376,11 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         live_statistics,
         combined_statistics,
     } = services;
+    if selected_jobs.is_none() {
+        if let Some(tvg) = &epg_tvg {
+            tvg.stop_channel_publications();
+        }
+    }
     let stream_files_drained = stream_files
         .shutdown_stream_files(Duration::from_secs(8))
         .await;
@@ -1570,6 +1606,9 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
             "Service drain incomplete; process termination may close outstanding resources".into(),
         );
     }
+    if !tvg_drained {
+        return Err("Per-channel EPG worker and publisher remain physically unsettled".into());
+    }
     if !stream_files_drained {
         return Err("Stream upload storage/SQL remains physically unsettled".into());
     }
@@ -1620,7 +1659,7 @@ mod shutdown_owner_tests {
                     finish_shutdown_after_server(&mut notice, async {
                         calls.fetch_add(1, Ordering::SeqCst);
                         Err("duplicate cleanup must not execute".to_owned())
-                    }).await
+                    }, "Selected").await
                 },
                 _ = &mut notice => panic!("test must select the completed-server branch"),
             };
@@ -1646,9 +1685,11 @@ mod shutdown_owner_tests {
                 Ok(())
             }))
             .unwrap();
-        let finishing = finish_shutdown_after_server(&mut notice, async {
-            panic!("an existing cleanup owner cannot be replaced")
-        });
+        let finishing = finish_shutdown_after_server(
+            &mut notice,
+            async { panic!("an existing cleanup owner cannot be replaced") },
+            "Selected",
+        );
         tokio::pin!(finishing);
         tokio::select! {
             biased;
@@ -1670,10 +1711,14 @@ mod shutdown_owner_tests {
                 Some(started)
             };
             let calls = AtomicUsize::new(0);
-            let result = finish_shutdown_after_server(&mut notice, async {
-                calls.fetch_add(1, Ordering::SeqCst);
-                Err("actual fallback failure".to_owned())
-            })
+            let result = finish_shutdown_after_server(
+                &mut notice,
+                async {
+                    calls.fetch_add(1, Ordering::SeqCst);
+                    Err("actual fallback failure".to_owned())
+                },
+                "Selected",
+            )
             .await;
             assert_eq!(calls.load(Ordering::SeqCst), 1);
             assert_eq!(result, Err("actual fallback failure".to_owned()));
