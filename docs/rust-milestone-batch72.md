@@ -27,6 +27,16 @@ profile were preserved, the reservation dropped between requests, and the
 owned fixture was removed.
 [Original no-ID comparison](../scripts/rust-integration/milestone-batch72/source-no-sid-idle.json)
 
+## Packaged Main scheduler readiness
+
+With Beat enabled, an owned PostgreSQL lock blocked its real first scheduler
+query while both worker lanes were accepting. Main returned HTTP 503 and
+reported the scheduler running. It returned HTTP 200 with the scheduler
+observed after the lock was released and the tick settled. In a separate
+Beat-off control Main returned HTTP 200 with the scheduler prepared.
+The blocker and fixture resources were retired.
+[Readiness result](../scripts/rust-integration/milestone-batch72/main-beat-readiness.json)
+
 ## Retained serializer contracts
 
 Ninety-six retained Original HTTP observations now reference 23 additional

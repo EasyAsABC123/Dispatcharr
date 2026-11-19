@@ -8,7 +8,16 @@ claim rechecks the observed owner. The loopback HTTP and Redis control
 filled the primary provider, started the archive on the alternate provider,
 then freed the primary. Reopening kept the original alternate provider.
 The test and fourteen existing pool and cancellation controls passed.
-The paired packaged default-rotation check remains open.
+A pinned Original Compose run verified the same explicit session through
+two serving workers after the default profile changed. Its stored route
+and prefix were preserved, and the previous provider reservation dropped
+to zero before the peer opened. The packaged Native comparison matched both HTTP 200 responses and their
+8,192-byte prefixes. The second Rust worker kept profile A after B became
+the default. B reserved zero slots, and A returned to zero after the
+second body closed. Exact fixture cleanup passed.
+[Packaged build](../scripts/rust-integration/milestone-batch73/candidate-build.json)
+· [Native rotation result](../scripts/rust-integration/milestone-batch73/native-profile-rotation.json)
+[Original rotation receipt](../scripts/rust-integration/milestone-batch73/source-profile-rotation.json)
 [Focused check receipt](../scripts/rust-integration/milestone-batch73/stored-profile-focused.json)
 
 The M0 register now links 132 retained HTTP observations to fourteen
