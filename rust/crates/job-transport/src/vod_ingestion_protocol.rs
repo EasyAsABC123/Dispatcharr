@@ -77,6 +77,23 @@ pub(crate) fn encode(
     account: i64,
     identity: &dispatcharr_store::ProducerIdentity,
 ) -> Result<Vec<u8>, ()> {
+    encode_with_parent(account, identity, None)
+}
+
+pub(crate) fn encode_child(
+    account: i64,
+    identity: &dispatcharr_store::ProducerIdentity,
+    parent: Uuid,
+    root: Uuid,
+) -> Result<Vec<u8>, ()> {
+    encode_with_parent(account, identity, Some((parent, root)))
+}
+
+fn encode_with_parent(
+    account: i64,
+    identity: &dispatcharr_store::ProducerIdentity,
+    lineage: Option<(Uuid, Uuid)>,
+) -> Result<Vec<u8>, ()> {
     let id = Uuid::new_v4();
     let bytes = protocol::encode(
         &protocol::Task::CreateBackup,
@@ -88,6 +105,10 @@ pub(crate) fn encode(
     .map_err(|_| ())?;
     let mut frame: Value = serde_json::from_slice(&bytes).map_err(|_| ())?;
     frame["headers"]["task"] = json!(TASK);
+    if let Some((parent, root)) = lineage {
+        frame["headers"]["parent_id"] = json!(parent);
+        frame["headers"]["root_id"] = json!(root);
+    }
     frame["headers"]["argsrepr"] = json!(format!("({account},)"));
     frame["body"] = json!(STANDARD.encode(
         serde_json::to_vec(
@@ -103,6 +124,22 @@ pub(crate) fn encode(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn child_carries_the_publishing_task_and_its_root() {
+        let identity = dispatcharr_store::ProducerIdentity {
+            reply_to: Uuid::new_v4(),
+            origin: "owned-vod-producer".into(),
+        };
+        let parent = Uuid::new_v4();
+        let root = Uuid::new_v4();
+        let message = parse(&encode_child(5, &identity, parent, root).unwrap()).unwrap();
+        assert_eq!(message.account, 5);
+        assert_eq!(message.parent, Some(parent));
+        assert_eq!(message.root, root);
+        assert_ne!(message.id, parent);
+        assert!(encode_child(5, &identity, Uuid::nil(), root).is_err());
+    }
+
     #[test]
     fn natural_root_rejects_replacement_options_and_preserves_owned_account() {
         let identity = dispatcharr_store::ProducerIdentity {

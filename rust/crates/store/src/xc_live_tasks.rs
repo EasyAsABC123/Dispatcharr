@@ -48,6 +48,7 @@ pub struct Prepared {
 pub struct Completion {
     pub result: Value,
     pub invalidate: bool,
+    pub refresh_vod: bool,
 }
 /// Returns None only for an observed non-XC row. A caller can then delegate to
 /// the existing STD service, without claiming/changing the broker head.
@@ -57,6 +58,7 @@ pub async fn prepare(
     id: i64,
     owner: Owner,
     events: Arc<dyn UpdateEventSink>,
+    allow_vod: bool,
 ) -> Result<Option<Prepared>, StoreError> {
     prepare_for(
         store,
@@ -66,6 +68,7 @@ pub async fn prepare(
         events,
         PreparationMode {
             expected_type: "XC",
+            allow_vod,
             allow_auto: false,
             observe_only: false,
         },
@@ -90,6 +93,7 @@ pub async fn prepare_std_remote(
         events,
         PreparationMode {
             expected_type: "STD",
+            allow_vod: false,
             allow_auto: false,
             observe_only: false,
         },
@@ -103,6 +107,7 @@ pub async fn prepare_with_auto(
     id: i64,
     owner: Owner,
     events: Arc<dyn UpdateEventSink>,
+    allow_vod: bool,
 ) -> Result<Option<Prepared>, StoreError> {
     crate::auto_sync_language::Language::source()?;
     prepare_for(
@@ -113,6 +118,7 @@ pub async fn prepare_with_auto(
         events,
         PreparationMode {
             expected_type: "XC",
+            allow_vod,
             allow_auto: true,
             observe_only: false,
         },
@@ -136,6 +142,7 @@ pub async fn prepare_std_remote_with_auto(
         events,
         PreparationMode {
             expected_type: "STD",
+            allow_vod: false,
             allow_auto: true,
             observe_only: false,
         },
@@ -145,6 +152,7 @@ pub async fn prepare_std_remote_with_auto(
 }
 struct PreparationMode {
     expected_type: &'static str,
+    allow_vod: bool,
     allow_auto: bool,
     observe_only: bool,
 }
@@ -198,6 +206,7 @@ pub async fn admit_refresh_single(
             events.clone(),
             PreparationMode {
                 expected_type,
+                allow_vod: false,
                 allow_auto,
                 observe_only: true,
             },
@@ -236,6 +245,7 @@ async fn prepare_for(
 ) -> Result<Option<Prepared>, PreparationError> {
     let PreparationMode {
         expected_type,
+        allow_vod,
         allow_auto,
         observe_only,
     } = mode;
@@ -262,7 +272,18 @@ async fn prepare_for(
         if !row.try_get::<bool,_>("is_active")?{return Err(unsupported())}
         if !row.try_get::<bool,_>("fits")? {return Err(unsupported())}
         let properties=properties(row.try_get::<Option<Value>,_>("custom_properties")?.unwrap_or(Value::Null))?;
-        if expected_type=="XC"&&properties.get("enable_vod").is_some_and(truthy){return Err(unsupported())}
+        if expected_type == "XC" && properties.get("enable_vod").is_some_and(truthy) {
+            if !allow_vod {
+                return Err(unsupported());
+            }
+            use crate::vod_ingestion::{self, AdmissionError};
+            vod_ingestion::preflight(&auth, id, owner.clone())
+                .await
+                .map_err(|error| match error {
+                    AdmissionError::Unsupported => unsupported(),
+                    AdmissionError::Operational(error) => error,
+                })?;
+        }
         let forbidden=session.run(move|c|Box::pin(async move{sqlx::query_scalar::<_,bool>("SELECT (NOT $2 AND EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync)) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).bind(allow_auto).fetch_one(&mut*c).await})).await??;
         if forbidden{return Err(unsupported())}
         if allow_auto{crate::auto_sync::preflight(&session,id).await?;}
@@ -443,6 +464,15 @@ impl Prepared {
     pub async fn close(&self) -> Result<(), StoreError> {
         self.session.close().await
     }
+    pub fn vod_enabled(&self) -> bool {
+        self.account.kind == "XC"
+            && self
+                .account
+                .properties
+                .get("enable_vod")
+                .is_some_and(truthy)
+    }
+
     pub fn publishes_profiles(&self) -> bool {
         self.account.active
             && !self.account.base.is_empty()
@@ -481,6 +511,7 @@ impl Prepared {
         if !self.account.active {
             return Ok(Completion {
                 invalidate: false,
+                refresh_vod: false,
                 result: json!([
                     format!(
                         "M3UAccount with ID={} not found or inactive.",
@@ -596,6 +627,7 @@ impl Prepared {
             .collect();
         Ok(Completion {
             invalidate: false,
+            refresh_vod: false,
             result: json!([[], result]),
         })
     }
@@ -710,6 +742,7 @@ impl Prepared {
             .await?;
             return Ok(Completion {
                 invalidate: true,
+                refresh_vod: false,
                 result: json!(
                     "Failed to update m3u account, one or more batches failed to process"
                 ),
@@ -720,6 +753,7 @@ impl Prepared {
                 .await?;
             return Ok(Completion {
                 invalidate: false,
+                refresh_vod: false,
                 result: json!("Failed to update m3u account, no streams returned from provider"),
             });
         }
@@ -834,6 +868,7 @@ impl Prepared {
         self.event("parsing",100,"success",Some(&text),json!({"elapsed_time":duration,"time_remaining":0,"streams_processed":selected,"streams_created":total.created,"streams_updated":total.updated,"streams_stale":stale,"streams_deleted":deleted,"channels_created":auto_report.as_ref().map_or(0,|r|r.created),"channels_updated":auto_report.as_ref().map_or(0,|r|r.updated),"channels_deleted":auto_report.as_ref().map_or(0,|r|r.deleted),"channels_failed":auto_report.as_ref().map_or(0,|r|r.failed),"failed_stream_details":auto_report.as_ref().map(|r|r.failures.as_slice()).unwrap_or(&[])})).await?;
         Ok(Completion {
             invalidate: true,
+            refresh_vod: self.vod_enabled(),
             result: json!("Dispatched jobs complete."),
         })
     }
@@ -846,6 +881,7 @@ impl Prepared {
         crate::xc_live_rollup::account(&self.session, self.account.id).await?;
         Ok(Completion {
             invalidate: true,
+            refresh_vod: false,
             result: json!("Failed to update m3u account, one or more batches failed to process"),
         })
     }
@@ -854,6 +890,7 @@ impl Prepared {
             .await?;
         Ok(Completion {
             invalidate: false,
+            refresh_vod: false,
             result: json!("Failed to update m3u account, no streams found"),
         })
     }
@@ -1013,6 +1050,7 @@ impl Prepared {
         self.error_status(message, "processing_groups").await?;
         Ok(Completion {
             invalidate: false,
+            refresh_vod: false,
             result: json!([message, null]),
         })
     }

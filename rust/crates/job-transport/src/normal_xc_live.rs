@@ -503,6 +503,8 @@ impl Worker {
                             .map(Some);
                     }
                 }
+                let allow_vod =
+                    candidate.message.kind == Kind::Single && candidate.message.parent.is_none();
                 let prepared = if inner.auto_jobs.is_some() {
                     dispatcharr_store::xc_live_tasks::prepare_with_auto(
                         inner.store.clone(),
@@ -510,6 +512,7 @@ impl Worker {
                         candidate.message.account,
                         owner.clone(),
                         inner.events.clone(),
+                        allow_vod,
                     )
                     .await
                 } else {
@@ -519,6 +522,7 @@ impl Worker {
                         candidate.message.account,
                         owner.clone(),
                         inner.events.clone(),
+                        allow_vod,
                     )
                     .await
                 };
@@ -722,6 +726,26 @@ impl Worker {
                             D::Operational("XC cache invalidation unsettled".into())
                         })?;
                     }
+                    if completion.refresh_vod {
+                        match publish_vod(&inner, &message, owner.clone()).await {
+                            Ok(receipt) => {
+                                children.push(receipt.id);
+                                if let Some(flow) = &flow {
+                                    flow.append_child(&receipt).await.map_err(|_| {
+                                        D::Operational("XC VOD child metadata unsettled".into())
+                                    })?;
+                                }
+                            }
+                            Err(crate::transport::Error::Capacity) => {
+                                eprintln!("VOD refresh child queue capacity exceeded");
+                            }
+                            Err(_) => {
+                                return Err(D::Operational(
+                                    "XC VOD child publication unsettled".into(),
+                                ));
+                            }
+                        }
+                    }
                     Ok(completion.result)
                 }
                 .await;
@@ -779,12 +803,12 @@ impl Worker {
         result
     }
 }
-struct ProfilePublication {
+struct PublishedChild {
     id: Uuid,
     parent: Uuid,
     root: Uuid,
 }
-impl crate::full_metadata::ActualPublishedChildren for ProfilePublication {
+impl crate::full_metadata::ActualPublishedChildren for PublishedChild {
     fn parent_task_id(&self) -> Uuid {
         self.parent
     }
@@ -809,7 +833,7 @@ async fn publish_profile(
     inner: &Inner,
     message: &Message,
     owner: Owner,
-) -> Result<ProfilePublication, crate::transport::Error> {
+) -> Result<PublishedChild, crate::transport::Error> {
     let identity = inner
         .identity
         .current()
@@ -835,11 +859,44 @@ async fn publish_profile(
     if receipt.task_id != id {
         return Err(crate::transport::Error::Corrupt);
     }
-    Ok(ProfilePublication {
+    Ok(PublishedChild {
         id,
         parent: message.id,
         root: message.root,
     })
+}
+
+async fn publish_vod(
+    inner: &Arc<Inner>,
+    message: &Message,
+    owner: Owner,
+) -> Result<PublishedChild, crate::transport::Error> {
+    use crate::{transport::Error, vod_ingestion_protocol as vod};
+    let identity = inner.identity.current().map_err(|_| Error::Protocol)?;
+    let raw = vod::encode_child(message.account, &identity, message.id, message.root)
+        .map_err(|_| Error::Protocol)?;
+    let child = vod::parse(&raw).map_err(|_| Error::Protocol)?;
+    let retained: Owner = Arc::new((owner, raw.clone(), child.id));
+    match inner
+        .jobs
+        .publish_vod_child(&raw, message.id, message.root, retained.clone())
+        .await
+    {
+        Ok(receipt) if receipt.task_id == child.id => Ok(PublishedChild {
+            id: child.id,
+            parent: message.id,
+            root: message.root,
+        }),
+        Err(Error::Capacity) => Err(Error::Capacity),
+        unresolved => {
+            inner
+                .uncertain
+                .lock()
+                .unwrap_or_else(|error| error.into_inner())
+                .push(retained);
+            Err(unresolved.err().unwrap_or(Error::Corrupt))
+        }
+    }
 }
 
 /// Admission is deliberately limited to the actual create producer's default

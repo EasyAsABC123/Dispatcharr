@@ -1,4 +1,4 @@
-//! Actual default-queue VOD read/CAS/root publication/backend over SAME Jobs.
+//! Actual default-queue VOD read/CAS/publication/backend over shared Jobs.
 //! Original Dispatcharr/Celery/Kombu authors retain application credit.
 use super::*;
 use crate::vod_ingestion_protocol::{self as vod, Message};
@@ -74,8 +74,29 @@ impl Jobs {
         raw: &[u8],
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
+        self.publish_vod_checked(raw, None, owner).await
+    }
+
+    pub(crate) async fn publish_vod_child(
+        &self,
+        raw: &[u8],
+        parent: Uuid,
+        root: Uuid,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Published, Error> {
+        self.publish_vod_checked(raw, Some((parent, root)), owner)
+            .await
+    }
+
+    async fn publish_vod_checked(
+        &self,
+        raw: &[u8],
+        lineage: Option<(Uuid, Uuid)>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Published, Error> {
         let message = vod::parse(raw).map_err(|_| Error::Protocol)?;
-        if !self.allows_defaults() || message.parent.is_some() {
+        let actual_lineage = message.parent.map(|parent| (parent, message.root));
+        if !self.allows_defaults() || actual_lineage != lineage {
             return Err(Error::UnsupportedTask);
         }
         let maximum = self.inner.config.max_queued_jobs.to_string();
