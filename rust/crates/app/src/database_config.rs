@@ -51,13 +51,15 @@ fn from_environment(
             .map_err(|_| "Invalid POSTGRES_PORT")?,
     ))
     .map_err(|_| "Invalid POSTGRES_PORT")?;
-    url.set_username(&value("POSTGRES_USER", "dispatch"))
+    // Discrete settings are already literal. URL setters leave existing percent
+    // sequences intact, while SQLx decodes them on connection.
+    let escape = |text: String| text.replace('%', "%25");
+    url.set_username(&escape(value("POSTGRES_USER", "dispatch")))
         .map_err(|_| "Invalid POSTGRES_USER")?;
-    url.set_password(Some(
-        &read("POSTGRES_PASSWORD").ok_or("POSTGRES_PASSWORD is required")?,
-    ))
-    .map_err(|_| "Invalid POSTGRES_PASSWORD")?;
-    url.set_path(&value("POSTGRES_DB", "dispatcharr"));
+    let password = read("POSTGRES_PASSWORD").ok_or("POSTGRES_PASSWORD is required")?;
+    url.set_password(Some(&escape(password)))
+        .map_err(|_| "Invalid POSTGRES_PASSWORD")?;
+    url.set_path(&escape(value("POSTGRES_DB", "dispatcharr")));
     if value("POSTGRES_SSL", "false").eq_ignore_ascii_case("true") {
         let paths = [
             ("POSTGRES_SSL_CA_CERT", "sslrootcert"),
@@ -203,6 +205,23 @@ mod tests {
             literal
         );
     }
+    #[test]
+    fn discrete_postgres_values_keep_literal_percent_sequences() {
+        let encoded = build(
+            &[
+                ("POSTGRES_USER", "owned%2Fname"),
+                ("POSTGRES_PASSWORD", "owned %2F /@?#"),
+                ("POSTGRES_DB", "owned%2Fdb"),
+            ],
+            &[],
+        )
+        .unwrap();
+        let parsed = url::Url::parse(&encoded).unwrap();
+        assert_eq!(parsed.username(), "owned%252Fname");
+        assert!(parsed.password() == Some("owned%20%252F%20%2F%40%3F%23"));
+        assert_eq!(parsed.path(), "/owned%252Fdb");
+    }
+
     #[test]
     fn tls_paths_are_encoded_and_missing_files_fail_before_connection() {
         let values = [

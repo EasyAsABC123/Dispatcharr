@@ -228,14 +228,18 @@ fn missing() -> StoreError {
     )
 }
 
+fn detail_id(raw: &str) -> Result<i64, StoreError> {
+    dispatcharr_ingest_core::source_integer_literal(raw)
+        .and_then(|value| value.parse::<i64>().ok())
+        .ok_or_else(missing)
+}
+
 pub(super) async fn update(
     store: &Store,
     raw: String,
     request: Request,
 ) -> Result<String, StoreError> {
-    let id = dispatcharr_ingest_core::source_integer_literal(&raw)
-        .and_then(|value| value.parse::<i64>().ok())
-        .ok_or_else(missing)?;
+    let id = detail_id(&raw)?;
     let exists: bool = sqlx::query_scalar(
         "SELECT EXISTS(SELECT 1 FROM dispatcharr_connect_integration WHERE id=$1)",
     )
@@ -280,6 +284,52 @@ pub(super) async fn update(
             transaction.commit().await?;
             Ok(payload)
         }
+        Err(error) => {
+            transaction.rollback().await?;
+            Err(error)
+        }
+    }
+}
+
+pub(super) async fn delete(store: &Store, raw: &str) -> Result<(), StoreError> {
+    let id = detail_id(raw)?;
+    let mut transaction = store.pool().begin().await?;
+    let result = async {
+        sqlx::query_scalar::<_, i64>(
+            "SELECT id FROM dispatcharr_connect_integration WHERE id=$1 FOR UPDATE",
+        )
+        .bind(id)
+        .fetch_optional(&mut *transaction)
+        .await?
+        .ok_or_else(missing)?;
+
+        // Original Django deletion cascades in application code. Lock parent
+        // keys before each child deletion so an inserting transaction either
+        // commits before the next statement sees its row or fails the FK.
+        sqlx::query_scalar::<_, i64>(
+            "SELECT count(*) FROM (SELECT id FROM dispatcharr_connect_eventsubscription \
+             WHERE integration_id=$1 ORDER BY id FOR UPDATE) AS owned_subscriptions",
+        )
+        .bind(id)
+        .fetch_one(&mut *transaction)
+        .await?;
+        for statement in [
+            "DELETE FROM dispatcharr_connect_deliverylog AS log \
+             USING dispatcharr_connect_eventsubscription AS subscription \
+             WHERE log.subscription_id=subscription.id AND subscription.integration_id=$1",
+            "DELETE FROM dispatcharr_connect_eventsubscription WHERE integration_id=$1",
+            "DELETE FROM dispatcharr_connect_integration WHERE id=$1",
+        ] {
+            sqlx::query(statement)
+                .bind(id)
+                .execute(&mut *transaction)
+                .await?;
+        }
+        Ok(())
+    }
+    .await;
+    match result {
+        Ok(()) => Ok(transaction.commit().await?),
         Err(error) => {
             transaction.rollback().await?;
             Err(error)

@@ -22,6 +22,9 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The integration deletion and PostgreSQL credential checkpoint](rust-milestone-batch83.md)
+records the next Rust changes and their validation.
+
 [The integration-edit, XC daily schedule and Redis startup checkpoint](rust-milestone-batch82.md)
 records the next Rust fixes and retained failover media controls.
 

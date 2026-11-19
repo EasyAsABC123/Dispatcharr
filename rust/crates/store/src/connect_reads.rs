@@ -69,7 +69,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/connect/integrations/", get(list).post(create))
         .route("/api/connect/logs/", get(logs))
-        .route("/api/connect/integrations/{id}/", put(update))
+        .route(
+            "/api/connect/integrations/{id}/",
+            put(update).delete(delete),
+        )
         .route(
             "/api/connect/integrations/{id}/subscriptions/set/",
             put(replace_subscriptions),
@@ -99,6 +102,7 @@ enum ConnectRequest {
     Logs(Uri),
     Create(Request),
     Update(String, Request),
+    Delete(String),
     ReplaceSubscriptions(String, Request),
 }
 
@@ -146,6 +150,15 @@ async fn update(
     .await
 }
 
+async fn delete(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(id): Path<String>,
+    headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    execute(auth, peer, headers, ConnectRequest::Delete(id)).await
+}
+
 async fn execute(
     auth: AuthService,
     peer: SocketAddr,
@@ -186,6 +199,13 @@ async fn execute(
                 StatusCode::OK,
                 create_integration::update(&auth.store, id, request).await?,
             ),
+            ConnectRequest::Delete(id) => {
+                create_integration::delete(&auth.store, &id).await?;
+                return Response::builder()
+                    .status(StatusCode::NO_CONTENT)
+                    .body(Body::empty())
+                    .map_err(|_| StoreError::UnhandledRestFault);
+            }
             ConnectRequest::ReplaceSubscriptions(id, request) => (
                 StatusCode::OK,
                 subscriptions::replace(&auth.store, id, request).await?,
