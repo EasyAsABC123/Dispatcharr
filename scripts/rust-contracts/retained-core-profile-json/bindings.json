@@ -1,0 +1,2052 @@
+{
+  "binding_kind": "retained_original_Core_profile_literal_JSON_HTTP",
+  "operation_count": 13,
+  "new_Source_executions": 0,
+  "credit": "Original Dispatcharr authors and contributors retain full credit for their application and behavior.",
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "performance_verified": false,
+  "fixtures": {
+    "retained-Candidate105-core-profile-literal-json": {
+      "id": "retained-Candidate105-core-profile-literal-json",
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "paired_candidate_revision": "fc2c81c2d52bbc17299d6900534d9564432d8e89",
+      "paired_image": "sha256:5c047006711372ff1bc479f503ecedbd8a1df4b8892aa60d6138d8cdd27a5f25",
+      "actual_controller_exit": 1,
+      "Source_78_selected_cases_matched": true,
+      "Native_78_literal_404": true,
+      "exact_owned_namespace_cleanup": true,
+      "public_artifacts": [
+        {
+          "path": "scripts/rust-integration/retained-core-profile-json/receipt.json",
+          "sha256": "117e1fb0428056285d483b7adbbb25a48d415da7d21f98d0f0aa935d546d575a"
+        }
+      ]
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-e6dbe5a6a78106ace3c9:GET",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^useragents\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.UserAgentViewSet",
+      "resolver_ordinal": 221,
+      "resolver_name": "api:core:useragent-list",
+      "owning_milestone": "M5",
+      "method": "GET",
+      "source_action": "list",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Exact selected JSON fields and owned collection membership or detail, with no read or denial writes."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "GET",
+          "role": "admin_api_key",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "2b84fab9f83074fec565a85bdd6d32967914b3f065ce63e316692e25c766bcc8",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-get-list-admin_api_key"
+        },
+        {
+          "method": "GET",
+          "role": "admin_jwt",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "2b84fab9f83074fec565a85bdd6d32967914b3f065ce63e316692e25c766bcc8",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-get-list-admin_jwt"
+        },
+        {
+          "method": "GET",
+          "role": "anonymous",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "useragents-get-list-anonymous"
+        },
+        {
+          "method": "GET",
+          "role": "inactive_admin",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "useragents-get-list-inactive_admin"
+        },
+        {
+          "method": "GET",
+          "role": "standard",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "2b84fab9f83074fec565a85bdd6d32967914b3f065ce63e316692e25c766bcc8",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-get-list-standard"
+        },
+        {
+          "method": "GET",
+          "role": "viewer",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "useragents-get-list-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-e6dbe5a6a78106ace3c9:POST",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^useragents\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.UserAgentViewSet",
+      "resolver_ordinal": 221,
+      "resolver_name": "api:core:useragent-list",
+      "owning_milestone": "M5",
+      "method": "POST",
+      "source_action": "create",
+      "observed_methods": [
+        "POST"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Accepted Administrator JWT and API-key writes match the owned SQL row transition, with unrelated rows preserved.",
+        "Accepted UserAgent writes invalidate default value and advance the cache generation."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "POST",
+          "role": "admin_api_key",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 201,
+          "expected_status": 201,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "ef20de69c4648de032812d3db6108902aac1c23affc53614de8beb57fb595521",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-post-list-admin_api_key"
+        },
+        {
+          "method": "POST",
+          "role": "admin_jwt",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 201,
+          "expected_status": 201,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "359371203f13d226067d25b50fdee8134a2dd2e1d8e65a33434959ad73580960",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-post-list-admin_jwt"
+        },
+        {
+          "method": "POST",
+          "role": "anonymous",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "useragents-post-list-anonymous"
+        },
+        {
+          "method": "POST",
+          "role": "inactive_admin",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "useragents-post-list-inactive_admin"
+        },
+        {
+          "method": "POST",
+          "role": "standard",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "useragents-post-list-standard"
+        },
+        {
+          "method": "POST",
+          "role": "viewer",
+          "path_template": "/api/core/useragents.json",
+          "resolver_ordinal": 221,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "useragents-post-list-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-7add22f14d3acc810ff5:GET",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^useragents/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.UserAgentViewSet",
+      "resolver_ordinal": 223,
+      "resolver_name": "api:core:useragent-detail",
+      "owning_milestone": "M5",
+      "method": "GET",
+      "source_action": "retrieve",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Exact selected JSON fields and owned collection membership or detail, with no read or denial writes."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "GET",
+          "role": "admin_api_key",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "e7879e4e8b757cf17a1e1915b5f7d5769e5a2084cfa4274bceba1373e362210a",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-get-detail-admin_api_key"
+        },
+        {
+          "method": "GET",
+          "role": "admin_jwt",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "e7879e4e8b757cf17a1e1915b5f7d5769e5a2084cfa4274bceba1373e362210a",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-get-detail-admin_jwt"
+        },
+        {
+          "method": "GET",
+          "role": "anonymous",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "useragents-get-detail-anonymous"
+        },
+        {
+          "method": "GET",
+          "role": "inactive_admin",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "useragents-get-detail-inactive_admin"
+        },
+        {
+          "method": "GET",
+          "role": "standard",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "e7879e4e8b757cf17a1e1915b5f7d5769e5a2084cfa4274bceba1373e362210a",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-get-detail-standard"
+        },
+        {
+          "method": "GET",
+          "role": "viewer",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "useragents-get-detail-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-7add22f14d3acc810ff5:PATCH",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^useragents/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.UserAgentViewSet",
+      "resolver_ordinal": 223,
+      "resolver_name": "api:core:useragent-detail",
+      "owning_milestone": "M5",
+      "method": "PATCH",
+      "source_action": "partial_update",
+      "observed_methods": [
+        "PATCH"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Accepted Administrator JWT and API-key writes match the owned SQL row transition, with unrelated rows preserved.",
+        "Accepted UserAgent writes invalidate default value and advance the cache generation."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "PATCH",
+          "role": "admin_api_key",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "020882b509373efc37a44f963928f69e99a85384109af2763edc2b3aba406247",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-patch-detail-admin_api_key"
+        },
+        {
+          "method": "PATCH",
+          "role": "admin_jwt",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "81f9202d0eec9bb6fef8bef199087d33e113e9889fe2bc7be6721a32b4aa78ba",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-patch-detail-admin_jwt"
+        },
+        {
+          "method": "PATCH",
+          "role": "anonymous",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "useragents-patch-detail-anonymous"
+        },
+        {
+          "method": "PATCH",
+          "role": "inactive_admin",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "useragents-patch-detail-inactive_admin"
+        },
+        {
+          "method": "PATCH",
+          "role": "standard",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "useragents-patch-detail-standard"
+        },
+        {
+          "method": "PATCH",
+          "role": "viewer",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "useragents-patch-detail-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-7add22f14d3acc810ff5:PUT",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^useragents/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.UserAgentViewSet",
+      "resolver_ordinal": 223,
+      "resolver_name": "api:core:useragent-detail",
+      "owning_milestone": "M5",
+      "method": "PUT",
+      "source_action": "update",
+      "observed_methods": [
+        "PUT"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Accepted Administrator JWT and API-key writes match the owned SQL row transition, with unrelated rows preserved.",
+        "Accepted UserAgent writes invalidate default value and advance the cache generation."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "PUT",
+          "role": "admin_api_key",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "5220161111e1fbab62d222c68c05cd89c5a02a6dbbc886e904f36f16d1be2d0b",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-put-detail-admin_api_key"
+        },
+        {
+          "method": "PUT",
+          "role": "admin_jwt",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "be83dfe8e4688867616f6fa57ab0db7026eb0e10fd81925e31172e6088a65dab",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-put-detail-admin_jwt"
+        },
+        {
+          "method": "PUT",
+          "role": "anonymous",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "useragents-put-detail-anonymous"
+        },
+        {
+          "method": "PUT",
+          "role": "inactive_admin",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "useragents-put-detail-inactive_admin"
+        },
+        {
+          "method": "PUT",
+          "role": "standard",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "useragents-put-detail-standard"
+        },
+        {
+          "method": "PUT",
+          "role": "viewer",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "useragents-put-detail-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-7add22f14d3acc810ff5:DELETE",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^useragents/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.UserAgentViewSet",
+      "resolver_ordinal": 223,
+      "resolver_name": "api:core:useragent-detail",
+      "owning_milestone": "M5",
+      "method": "DELETE",
+      "source_action": "destroy",
+      "observed_methods": [
+        "DELETE"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Accepted Administrator JWT and API-key writes match the owned SQL row transition, with unrelated rows preserved.",
+        "Accepted UserAgent writes invalidate default value and advance the cache generation.",
+        "Deletion clears the deliberately linked StreamProfile foreign key."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "DELETE",
+          "role": "admin_api_key",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 204,
+          "expected_status": 204,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "mime": "",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-delete-detail-admin_api_key"
+        },
+        {
+          "method": "DELETE",
+          "role": "admin_jwt",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 204,
+          "expected_status": 204,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "mime": "",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "useragents-delete-detail-admin_jwt"
+        },
+        {
+          "method": "DELETE",
+          "role": "anonymous",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "useragents-delete-detail-anonymous"
+        },
+        {
+          "method": "DELETE",
+          "role": "inactive_admin",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "useragents-delete-detail-inactive_admin"
+        },
+        {
+          "method": "DELETE",
+          "role": "standard",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "useragents-delete-detail-standard"
+        },
+        {
+          "method": "DELETE",
+          "role": "viewer",
+          "path_template": "/api/core/useragents/{owned_pk}.json",
+          "resolver_ordinal": 223,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "useragents-delete-detail-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-b7cc0323a58bb50a231c:GET",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^streamprofiles\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.StreamProfileViewSet",
+      "resolver_ordinal": 225,
+      "resolver_name": "api:core:streamprofile-list",
+      "owning_milestone": "M5",
+      "method": "GET",
+      "source_action": "list",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Exact selected JSON fields and owned collection membership or detail, with no read or denial writes."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "GET",
+          "role": "admin_api_key",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "7b5aec7c946109944c1b3d608c54d9680812098029b42c7c0a2bcf655504dbb9",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "streamprofiles-get-list-admin_api_key"
+        },
+        {
+          "method": "GET",
+          "role": "admin_jwt",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "7b5aec7c946109944c1b3d608c54d9680812098029b42c7c0a2bcf655504dbb9",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "streamprofiles-get-list-admin_jwt"
+        },
+        {
+          "method": "GET",
+          "role": "anonymous",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "streamprofiles-get-list-anonymous"
+        },
+        {
+          "method": "GET",
+          "role": "inactive_admin",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "streamprofiles-get-list-inactive_admin"
+        },
+        {
+          "method": "GET",
+          "role": "standard",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "7b5aec7c946109944c1b3d608c54d9680812098029b42c7c0a2bcf655504dbb9",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "streamprofiles-get-list-standard"
+        },
+        {
+          "method": "GET",
+          "role": "viewer",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "streamprofiles-get-list-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-b7cc0323a58bb50a231c:POST",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^streamprofiles\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.StreamProfileViewSet",
+      "resolver_ordinal": 225,
+      "resolver_name": "api:core:streamprofile-list",
+      "owning_milestone": "M5",
+      "method": "POST",
+      "source_action": "create",
+      "observed_methods": [
+        "POST"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Accepted Administrator JWT and API-key writes match the owned SQL row transition, with unrelated rows preserved.",
+        "Writes preserve both UserAgent cache observations."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "POST",
+          "role": "admin_api_key",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 201,
+          "expected_status": 201,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "02da55ce32807c2069a58b5b2bd27d333c044d573e249c61061ec9f2768b21ba",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "streamprofiles-post-list-admin_api_key"
+        },
+        {
+          "method": "POST",
+          "role": "admin_jwt",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 201,
+          "expected_status": 201,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "49f49b05f9684fc10e00679f720965277bb2903b4e7a24799fd8fd4eed5a99e8",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "streamprofiles-post-list-admin_jwt"
+        },
+        {
+          "method": "POST",
+          "role": "anonymous",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "streamprofiles-post-list-anonymous"
+        },
+        {
+          "method": "POST",
+          "role": "inactive_admin",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "streamprofiles-post-list-inactive_admin"
+        },
+        {
+          "method": "POST",
+          "role": "standard",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "streamprofiles-post-list-standard"
+        },
+        {
+          "method": "POST",
+          "role": "viewer",
+          "path_template": "/api/core/streamprofiles.json",
+          "resolver_ordinal": 225,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "streamprofiles-post-list-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-b52dba7cfae97980e347:GET",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^streamprofiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.StreamProfileViewSet",
+      "resolver_ordinal": 227,
+      "resolver_name": "api:core:streamprofile-detail",
+      "owning_milestone": "M5",
+      "method": "GET",
+      "source_action": "retrieve",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Exact selected JSON fields and owned collection membership or detail, with no read or denial writes."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "GET",
+          "role": "admin_api_key",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "f9a1fbacae3d90ab6db26a8e0b6d7bf866fdbad2d0da0edf576606c4064f31f5",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "streamprofiles-get-detail-admin_api_key"
+        },
+        {
+          "method": "GET",
+          "role": "admin_jwt",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "f9a1fbacae3d90ab6db26a8e0b6d7bf866fdbad2d0da0edf576606c4064f31f5",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "streamprofiles-get-detail-admin_jwt"
+        },
+        {
+          "method": "GET",
+          "role": "anonymous",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "streamprofiles-get-detail-anonymous"
+        },
+        {
+          "method": "GET",
+          "role": "inactive_admin",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "streamprofiles-get-detail-inactive_admin"
+        },
+        {
+          "method": "GET",
+          "role": "standard",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "f9a1fbacae3d90ab6db26a8e0b6d7bf866fdbad2d0da0edf576606c4064f31f5",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "streamprofiles-get-detail-standard"
+        },
+        {
+          "method": "GET",
+          "role": "viewer",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "streamprofiles-get-detail-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-b52dba7cfae97980e347:PUT",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^streamprofiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.StreamProfileViewSet",
+      "resolver_ordinal": 227,
+      "resolver_name": "api:core:streamprofile-detail",
+      "owning_milestone": "M5",
+      "method": "PUT",
+      "source_action": "update",
+      "observed_methods": [
+        "PUT"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Accepted Administrator JWT and API-key writes match the owned SQL row transition, with unrelated rows preserved.",
+        "Writes preserve both UserAgent cache observations."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "PUT",
+          "role": "admin_api_key",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "4e36dbce4d649cae27fe05ef398e87602d3d3d8417f9495fda31780b2cc2d975",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "streamprofiles-put-detail-admin_api_key"
+        },
+        {
+          "method": "PUT",
+          "role": "admin_jwt",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "1e671d8ee617dc702b9a3df719e25e1473b750d0c287e8f8f26c273d2d2797d1",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "streamprofiles-put-detail-admin_jwt"
+        },
+        {
+          "method": "PUT",
+          "role": "anonymous",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "streamprofiles-put-detail-anonymous"
+        },
+        {
+          "method": "PUT",
+          "role": "inactive_admin",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "streamprofiles-put-detail-inactive_admin"
+        },
+        {
+          "method": "PUT",
+          "role": "standard",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "streamprofiles-put-detail-standard"
+        },
+        {
+          "method": "PUT",
+          "role": "viewer",
+          "path_template": "/api/core/streamprofiles/{owned_pk}.json",
+          "resolver_ordinal": 227,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "streamprofiles-put-detail-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-93a26264c9d8ad2a84ac:GET",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^outputprofiles\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.OutputProfileViewSet",
+      "resolver_ordinal": 229,
+      "resolver_name": "api:core:outputprofile-list",
+      "owning_milestone": "M5",
+      "method": "GET",
+      "source_action": "list",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Exact selected JSON fields and owned collection membership or detail, with no read or denial writes."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "GET",
+          "role": "admin_api_key",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "29393acfdc2413d903efe6e2ba8ec687a9c435f1d27f06d8598c54fcb5995a3a",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "outputprofiles-get-list-admin_api_key"
+        },
+        {
+          "method": "GET",
+          "role": "admin_jwt",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "29393acfdc2413d903efe6e2ba8ec687a9c435f1d27f06d8598c54fcb5995a3a",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "outputprofiles-get-list-admin_jwt"
+        },
+        {
+          "method": "GET",
+          "role": "anonymous",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "outputprofiles-get-list-anonymous"
+        },
+        {
+          "method": "GET",
+          "role": "inactive_admin",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "outputprofiles-get-list-inactive_admin"
+        },
+        {
+          "method": "GET",
+          "role": "standard",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "29393acfdc2413d903efe6e2ba8ec687a9c435f1d27f06d8598c54fcb5995a3a",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "outputprofiles-get-list-standard"
+        },
+        {
+          "method": "GET",
+          "role": "viewer",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "outputprofiles-get-list-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-93a26264c9d8ad2a84ac:POST",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^outputprofiles\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.OutputProfileViewSet",
+      "resolver_ordinal": 229,
+      "resolver_name": "api:core:outputprofile-list",
+      "owning_milestone": "M5",
+      "method": "POST",
+      "source_action": "create",
+      "observed_methods": [
+        "POST"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Accepted Administrator JWT and API-key writes match the owned SQL row transition, with unrelated rows preserved.",
+        "Writes preserve both UserAgent cache observations."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "POST",
+          "role": "admin_api_key",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 201,
+          "expected_status": 201,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "6b6d4612749f6e0d665ed5c42716e1960d6099dff6d2775507a2ed14c765c6ad",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "outputprofiles-post-list-admin_api_key"
+        },
+        {
+          "method": "POST",
+          "role": "admin_jwt",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 201,
+          "expected_status": 201,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "a35fe8cd3dfe43f9e53614208f64ebaaa72742cd0e570e135ed27c4b5e9444c6",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "outputprofiles-post-list-admin_jwt"
+        },
+        {
+          "method": "POST",
+          "role": "anonymous",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "outputprofiles-post-list-anonymous"
+        },
+        {
+          "method": "POST",
+          "role": "inactive_admin",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "outputprofiles-post-list-inactive_admin"
+        },
+        {
+          "method": "POST",
+          "role": "standard",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "outputprofiles-post-list-standard"
+        },
+        {
+          "method": "POST",
+          "role": "viewer",
+          "path_template": "/api/core/outputprofiles.json",
+          "resolver_ordinal": 229,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "outputprofiles-post-list-viewer"
+        }
+      ]
+    },
+    {
+      "contract_id": "route-40830229e08a3f7b3572:GET",
+      "fixture_id": "retained-Candidate105-core-profile-literal-json",
+      "pattern_exact": "api/core/^outputprofiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "core.api_views.OutputProfileViewSet",
+      "resolver_ordinal": 231,
+      "resolver_name": "api:core:outputprofile-detail",
+      "owning_milestone": "M5",
+      "method": "GET",
+      "source_action": "retrieve",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "admin_api_key",
+        "admin_jwt",
+        "anonymous",
+        "inactive_admin",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin_api_key": {
+          "fixture_role_or_supplied_credential": "admin_api_key",
+          "complete": false
+        },
+        "admin_jwt": {
+          "fixture_role_or_supplied_credential": "admin_jwt",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive_admin": {
+          "fixture_role_or_supplied_credential": "inactive_admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Exact selected JSON fields and owned collection membership or detail, with no read or denial writes."
+      ],
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "method": "GET",
+          "role": "admin_api_key",
+          "path_template": "/api/core/outputprofiles/{owned_pk}.json",
+          "resolver_ordinal": 231,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "88217f93e2380c3cab4c1c05363c92588c0be95e9548f6962b151cb6d7efffd4",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "outputprofiles-get-detail-admin_api_key"
+        },
+        {
+          "method": "GET",
+          "role": "admin_jwt",
+          "path_template": "/api/core/outputprofiles/{owned_pk}.json",
+          "resolver_ordinal": 231,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "88217f93e2380c3cab4c1c05363c92588c0be95e9548f6962b151cb6d7efffd4",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "outputprofiles-get-detail-admin_jwt"
+        },
+        {
+          "method": "GET",
+          "role": "anonymous",
+          "path_template": "/api/core/outputprofiles/{owned_pk}.json",
+          "resolver_ordinal": 231,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "transport_error": null,
+          "case": "outputprofiles-get-detail-anonymous"
+        },
+        {
+          "method": "GET",
+          "role": "inactive_admin",
+          "path_template": "/api/core/outputprofiles/{owned_pk}.json",
+          "resolver_ordinal": 231,
+          "status": 401,
+          "expected_status": 401,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "mime": "application/json",
+          "challenge_present": true,
+          "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "transport_error": null,
+          "case": "outputprofiles-get-detail-inactive_admin"
+        },
+        {
+          "method": "GET",
+          "role": "standard",
+          "path_template": "/api/core/outputprofiles/{owned_pk}.json",
+          "resolver_ordinal": 231,
+          "status": 200,
+          "expected_status": 200,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "88217f93e2380c3cab4c1c05363c92588c0be95e9548f6962b151cb6d7efffd4",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": null,
+          "transport_error": null,
+          "case": "outputprofiles-get-detail-standard"
+        },
+        {
+          "method": "GET",
+          "role": "viewer",
+          "path_template": "/api/core/outputprofiles/{owned_pk}.json",
+          "resolver_ordinal": 231,
+          "status": 403,
+          "expected_status": 403,
+          "selected_response_match": true,
+          "sql_and_cache_match": true,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "mime": "application/json",
+          "challenge_present": false,
+          "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "transport_error": null,
+          "case": "outputprofiles-get-detail-viewer"
+        }
+      ]
+    }
+  ]
+}

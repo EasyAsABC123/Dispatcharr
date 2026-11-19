@@ -29,6 +29,7 @@ import retained_image57_accounts_contracts
 import retained_image57_m3u_contracts
 import retained_provider_admin_contracts
 import retained_c98_hdhr_contracts
+import retained_core_profile_json_contracts
 import framework_suite_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -66,6 +67,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   retained_image57_m3u_contracts.restore_pre_image57_m3u(ROOT,r['runtime_routes'])
   retained_provider_admin_contracts.restore_pre_provider_admin(ROOT,r['runtime_routes'])
   retained_c98_hdhr_contracts.restore_pre_c98_hdhr(ROOT,r['runtime_routes'])
+  retained_core_profile_json_contracts.restore_pre_core_profiles(ROOT,r['runtime_routes'])
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,r['runtime_routes'])
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,r['runtime_routes'])
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,r['runtime_routes'])
@@ -107,7 +109,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   self.assertEqual(subject.digest(r['openapi_operations']),proof['OpenAPI_sha256'])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],517)
+  self.assertEqual(mapping['operations'],530)
   retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,rows)
   retained_paired_read_contracts.restore_pre_paired_reads(ROOT,rows)
   retained_live_stop_contracts.restore_pre_live_stop(ROOT,rows)
@@ -118,6 +120,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   retained_image57_m3u_contracts.restore_pre_image57_m3u(ROOT,rows)
   retained_provider_admin_contracts.restore_pre_provider_admin(ROOT,rows)
   retained_c98_hdhr_contracts.restore_pre_c98_hdhr(ROOT,rows)
+  retained_core_profile_json_contracts.restore_pre_core_profiles(ROOT,rows)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,rows)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,rows)
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)
@@ -149,6 +152,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   retained_image57_m3u_contracts.restore_pre_image57_m3u(ROOT,rows)
   retained_provider_admin_contracts.restore_pre_provider_admin(ROOT,rows)
   retained_c98_hdhr_contracts.restore_pre_c98_hdhr(ROOT,rows)
+  retained_core_profile_json_contracts.restore_pre_core_profiles(ROOT,rows)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,rows)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,rows)
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)

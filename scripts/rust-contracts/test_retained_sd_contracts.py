@@ -30,6 +30,7 @@ import retained_image57_accounts_contracts
 import retained_image57_m3u_contracts
 import retained_provider_admin_contracts
 import retained_c98_hdhr_contracts
+import retained_core_profile_json_contracts
 import shutil
 import tempfile
 import unittest
@@ -87,6 +88,7 @@ class RetainedSDControls(unittest.TestCase):
         retained_image57_m3u_contracts.restore_pre_image57_m3u(ROOT, register['runtime_routes'])
         retained_provider_admin_contracts.restore_pre_provider_admin(ROOT, register['runtime_routes'])
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(ROOT, register['runtime_routes'])
+        retained_core_profile_json_contracts.restore_pre_core_profiles(ROOT, register['runtime_routes'])
         retained_connect_test_contracts.restore_pre_connect_test(ROOT, register['runtime_routes'])
         retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT, register['runtime_routes'])
         retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, register['runtime_routes'])
@@ -138,6 +140,7 @@ class RetainedSDControls(unittest.TestCase):
         retained_image57_m3u_contracts.restore_pre_image57_m3u(ROOT, rows)
         retained_provider_admin_contracts.restore_pre_provider_admin(ROOT, rows)
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(ROOT, rows)
+        retained_core_profile_json_contracts.restore_pre_core_profiles(ROOT, rows)
         retained_connect_test_contracts.restore_pre_connect_test(ROOT, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, rows)
@@ -158,7 +161,7 @@ class RetainedSDControls(unittest.TestCase):
         retained_range_source10_contracts.restore_pre_range(rows)
         retained_source12_contracts.restore_pre_Source12(rows)
         framework_suite_contracts.restore_pre_framework(rows)
-        self.assertEqual(rows, current); self.assertEqual(mapping['operations'], 517)
+        self.assertEqual(rows, current); self.assertEqual(mapping['operations'], 530)
         self.assertEqual(len(mapping['unmapped_method_Source_observations']), 23)
         self.assertEqual(len([x for x in mapping['unmapped_method_Source_observations'] if x['route_id'] == 'route-7e6941c073eccaa2b6dd']), 6)
         source_contracts.apply(ROOT, rows, bindings)

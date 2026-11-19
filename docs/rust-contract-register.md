@@ -504,3 +504,17 @@ The observed methods for the redirect and catch-all are recorded without
 changing their method-unresolved declarations. The scope leaves operation
 role matrices incomplete. Dispatcharr's original authors and contributors
 retain full credit.
+
+## Retained Original Core profile JSON routes
+
+The [capture](../scripts/rust-integration/retained-core-profile-json/receipt.json)
+binds 78 Original HTTP observations to 13 literal JSON-suffix declarations for
+UserAgents, StreamProfiles and OutputProfiles. The six selected credential
+states include anonymous, inactive admin, viewer, standard, admin JWT and
+admin API key. All 78 Original checks match the selected wire and owned SQL or
+cache assertions. Native returned 404 in all 78 cells. The paired controller
+exited 1 with settled EOF and exact owned cleanup.
+
+The register now records 530 partial HTTP Source assignments and 268
+unassigned operations. Full role/operation and Native verification remain open.
+Dispatcharr's original authors and contributors retain full credit.
