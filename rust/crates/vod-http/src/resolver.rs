@@ -271,11 +271,6 @@ impl VodResolver for SqlVodResolver {
                 "utc_end",
                 "end",
                 "playlistend",
-                "offset",
-                "seek",
-                "t",
-                "timestamp",
-                "time",
             ] {
                 if request
                     .playback

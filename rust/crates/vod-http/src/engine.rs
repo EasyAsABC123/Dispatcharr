@@ -266,10 +266,11 @@ impl VodEngine {
             .sessions
             .enter_with_resolver(id, source, request, self.inner.resolver.clone())
             .await?;
+        let provider_url = ticket.session.provider_url();
         let mut upstream_request = self
             .inner
             .client
-            .get(&ticket.session.candidate.url)
+            .get(provider_url.as_ref())
             .header("user-agent", &ticket.session.candidate.user_agent)
             .header("accept-encoding", "identity");
         let original_range = request
@@ -357,7 +358,7 @@ impl VodEngine {
         let retry = RetryRequest {
             client: self.inner.client.clone(),
             final_url: upstream.url().as_str().into(),
-            original_url: ticket.session.candidate.url.clone(),
+            original_url: provider_url.into_owned(),
             user_agent: ticket.session.candidate.user_agent.clone(),
             range: original_range.map(str::to_owned),
             headers: ["accept", "referer", "origin"]

@@ -2,6 +2,7 @@
 //! Full original application credit: upstream Dispatcharr authors and contributors.
 mod engine;
 mod events;
+mod offset;
 mod resolver;
 // Private opt-in surface; component-only methods remain outside default routes.
 #[allow(dead_code)]

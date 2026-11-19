@@ -104,11 +104,17 @@ pub(crate) struct Session {
     last_request: AtomicU64,
     client_ip: String,
     user_agent: String,
+    offset: String,
     lease: Arc<Lease>,
     scope: std::sync::OnceLock<LocalScope>,
     metadata_token: String,
     state: Mutex<State>,
     _slot: Arc<OwnedSemaphorePermit>,
+}
+impl Session {
+    pub(crate) fn provider_url(&self) -> std::borrow::Cow<'_, str> {
+        crate::offset::provider_url(&self.candidate.url, &self.offset)
+    }
 }
 struct Inner {
     connection: ConnectionManager,
@@ -588,6 +594,7 @@ impl SessionPool {
                         &previous.candidate
                     },
                     &previous.metadata_token,
+                    &previous.offset,
                 )?;
                 let limit = source
                     .user
@@ -621,6 +628,7 @@ impl SessionPool {
                         last_request: AtomicU64::new(millis()),
                         client_ip: request.client_ip_text(),
                         user_agent: request.playback.header("user-agent").unwrap_or("").into(),
+                        offset: previous.offset.clone(),
                         lease,
                         metadata_token,
                         scope: std::sync::OnceLock::new(),
@@ -708,7 +716,8 @@ impl SessionPool {
             .attach_pending(request_permit.clone(), hook)
             .await
             .map_err(scope_error)?;
-        let fields = metadata_fields(id, &source, request, &candidate, "recovery-pending")?;
+        let offset = crate::offset::requested(&request.playback);
+        let fields = metadata_fields(id, &source, request, &candidate, "recovery-pending", offset)?;
         let limit = source
             .user
             .as_ref()
@@ -747,6 +756,7 @@ impl SessionPool {
             last_request: AtomicU64::new(millis()),
             client_ip: request.client_ip_text(),
             user_agent: request.playback.header("user-agent").unwrap_or("").into(),
+            offset: offset.into(),
             lease,
             metadata_token,
             scope: std::sync::OnceLock::new(),
@@ -1076,7 +1086,8 @@ impl SessionPool {
         }
         let initial = source.candidates.first().ok_or_else(unavailable)?;
         let metadata_token = format!("rust-vod-metadata:{}", uuid::Uuid::new_v4());
-        let fields = metadata_fields(id, &source, request, initial, &metadata_token)?;
+        let offset = crate::offset::requested(&request.playback);
+        let fields = metadata_fields(id, &source, request, initial, &metadata_token, offset)?;
         let mut pending = PendingCreate {
             connection: connection.clone(),
             id: id.into(),
@@ -1145,7 +1156,7 @@ impl SessionPool {
             .key(key(id))
             .arg(&metadata_token)
             .arg("stream_url")
-            .arg(&candidate.url)
+            .arg(crate::offset::provider_url(&candidate.url, offset).as_ref())
             .arg("m3u_profile_id")
             .arg(candidate.profile_id)
             .invoke_async(&mut connection)
@@ -1165,6 +1176,7 @@ impl SessionPool {
             last_request: AtomicU64::new(millis()),
             client_ip: request.client_ip_text(),
             user_agent: request.playback.header("user-agent").unwrap_or("").into(),
+            offset: offset.into(),
             lease: Arc::new(lease),
             scope: std::sync::OnceLock::new(),
             metadata_token,
@@ -1216,6 +1228,7 @@ fn metadata_fields(
     request: &VodRequest,
     initial: &VodCandidate,
     metadata_token: &str,
+    offset: &str,
 ) -> Result<BTreeMap<String, String>, dispatcharr_store::StoreError> {
     // Resolve identity before admission; conversion failure cannot invent a
     // different Redis owner label from the response identity.
@@ -1227,7 +1240,10 @@ fn metadata_fields(
         .map_or("unknown".into(), |user| user.id.to_string());
     let fields = vec![
         ("session_id", id.to_string()),
-        ("stream_url", initial.url.clone()),
+        (
+            "stream_url",
+            crate::offset::provider_url(&initial.url, offset).into_owned(),
+        ),
         ("headers", "{}".into()),
         ("content_length", "".into()),
         ("content_type", "".into()),
@@ -1246,7 +1262,7 @@ fn metadata_fields(
         ),
         ("utc_start", "".into()),
         ("utc_end", "".into()),
-        ("offset", "".into()),
+        ("offset", offset.into()),
         ("worker_id", worker_id),
         ("connection_type", "redis_backed".into()),
         ("created_at", timestamp),
@@ -1692,7 +1708,7 @@ fn admission_error(error: dispatcharr_clients::Error, limit: i32) -> dispatcharr
     }
 }
 
-// Source scores content=10, matching empty timeshift=7, IP=5, UA=3, and
+// Source scores content=10, matching timeshift=7, IP=5, UA=3, and
 // accepts scores>=13. VOD has no user-identity criterion in this idle matcher.
 fn idle_match(
     registry: &HashMap<String, Arc<Session>>,
@@ -1710,22 +1726,17 @@ fn idle_match(
                     .try_lock()
                     .is_ok_and(|state| state.active == 0 && !state.closed)
         })
-        .max_by_key(|session| {
-            let ip = if session.client_ip == request.client_ip_text() {
-                5
-            } else {
-                0
-            };
-            let ua = if !session.user_agent.is_empty()
-                && Some(session.user_agent.as_str()) == request.playback.header("user-agent")
-            {
-                3
-            } else {
-                0
-            };
-            (17 + ip + ua, session.last_request.load(Ordering::Relaxed))
+        .filter_map(|session| {
+            let score = crate::offset::idle_score(
+                session.offset == crate::offset::requested(&request.playback),
+                session.client_ip == request.client_ip_text(),
+                !session.user_agent.is_empty()
+                    && Some(session.user_agent.as_str()) == request.playback.header("user-agent"),
+            )?;
+            Some((score, session.last_request.load(Ordering::Relaxed), session))
         })
-        .cloned()
+        .max_by_key(|(score, last_request, _)| (*score, *last_request))
+        .map(|(_, _, session)| session.clone())
 }
 
 #[cfg(test)]
