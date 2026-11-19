@@ -74,11 +74,13 @@ records the exact Docker build, recurring DVR detail and VOD stats parity,
 and two-replica TS controls. Targeted client stop disconnected just the
 selected viewer while its peer continued through the shared upstream.
 
-The [network-disabled SDK](../scripts/rust-contracts/sdk-exact-vod-494.json)
-reproduced the committed contract register and passed all 12 tests, including
-the 19 corruption controls. That run verified the 494-assignment register.
-The retained Candidate98 HDHomeRun and React controls bring the current
-register to 517 partial HTTP assignments and 281 unassigned HTTP operations.
+The [network-disabled SDK](../scripts/rust-contracts/sdk-image57-ingress-517.json)
+reproduced the 517-assignment contract register and passed all 20 tests,
+including the separate 19 corruption controls. Container inspection
+confirmed network mode `none` and exact teardown. There are 281 unassigned
+HTTP operations and no fully verified HTTP assignments in this register.
+The [494-assignment run](../scripts/rust-contracts/sdk-exact-vod-494.json)
+retains the earlier evidence.
 
 [The programme mutation and admin redirect checkpoint](rust-milestone-batch99.md)
 records the configured admin Compose pass, paired gzip guide recovery, and
