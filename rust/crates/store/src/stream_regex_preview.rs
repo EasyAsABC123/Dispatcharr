@@ -252,12 +252,15 @@ impl Preview {
             .build_query_scalar()
             .fetch_one(auth.store.pool())
             .await?;
+        // Preserve the separate count and scan statements and the existing
+        // order. Packing the bounded scan avoids thousands of row frames.
         let names = self
-            .query("SELECT s.name")
+            .query("SELECT ARRAY(SELECT s.name::text")
             .push(" ORDER BY s.updated_at DESC LIMIT ")
             .push_bind(SCAN_LIMIT as i64)
+            .push(")")
             .build_query_scalar()
-            .fetch_all(auth.store.pool())
+            .fetch_one(auth.store.pool())
             .await?;
         Ok((count, names))
     }
