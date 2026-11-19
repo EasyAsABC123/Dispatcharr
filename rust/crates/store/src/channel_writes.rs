@@ -361,17 +361,21 @@ async fn guide_target(
     auth: &AuthService,
     c: &mut PgConnection,
     epg: Option<i64>,
+    stock_override: bool,
 ) -> Result<GuideTarget, StoreError> {
     if auth.notification_cache.is_none() {
         return Err(guide_unsupported());
     }
-    // The captured channel-profile table was empty; do not silently admit a
-    // different precommit membership/signal ordering in this first port.
-    let profiles: bool =
-        sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelprofile)")
-            .fetch_one(&mut *c)
-            .await?;
-    if profiles {
+    // The stock edit updates an existing Channel and its existing-channel override.
+    // Neither UpdateModelMixin nor their post-save signals modify membership.
+    // Keep the earlier Source25 profile bound for other guide write paths.
+    if !stock_override
+        && sqlx::query_scalar::<_, bool>(
+            "SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelprofile)",
+        )
+        .fetch_one(&mut *c)
+        .await?
+    {
         return Err(guide_unsupported());
     }
     let triggers: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled <> 'D' AND tgrelid IN ('dispatcharr_channels_channel'::regclass,'dispatcharr_channels_channeloverride'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass))")
@@ -422,6 +426,7 @@ async fn overrides(
     tx: &mut Transaction<'_, Postgres>,
     id: i64,
     value: &Value,
+    stock_override: bool,
 ) -> Result<(), StoreError> {
     if value.is_null() {
         sqlx::query("DELETE FROM dispatcharr_channels_channeloverride WHERE channel_id=$1")
@@ -450,7 +455,7 @@ async fn overrides(
     }
     merged.extend(changes.clone());
     let guide = if merged.get("epg_data_id") != Some(&previous) {
-        Some(guide_target(auth, tx, merged["epg_data_id"].as_i64()).await?)
+        Some(guide_target(auth, tx, merged["epg_data_id"].as_i64(), stock_override).await?)
     } else {
         None
     };
@@ -725,8 +730,8 @@ async fn create_owned(
     let work=async {
     use sqlx::Connection;
     let mut tx = connection.begin().await?;
-    let created_guide=if let Some(epg)=data["epg_data_id"].as_i64(){Some(guide_target(&auth,&mut tx,Some(epg)).await?)}else{None};
-    if let Some(epg)=validated.overrides.as_ref().and_then(|v|v.get("epg_data_id")).and_then(Value::as_i64){guide_target(&auth,&mut tx,Some(epg)).await?;}
+    let created_guide=if let Some(epg)=data["epg_data_id"].as_i64(){Some(guide_target(&auth,&mut tx,Some(epg),false).await?)}else{None};
+    if let Some(epg)=validated.overrides.as_ref().and_then(|v|v.get("epg_data_id")).and_then(Value::as_i64){guide_target(&auth,&mut tx,Some(epg),false).await?;}
     if !data.contains_key("channel_number") {
         data.insert("channel_number".into(), next_number(&mut tx).await?);
     }
@@ -750,7 +755,7 @@ async fn create_owned(
         streams(&mut tx, id, stream_ids).await?;
     }
     if let Some(value) = validated.overrides {
-        overrides(&auth, owner.clone(), &mut tx, id, &value).await?;
+        overrides(&auth, owner.clone(), &mut tx, id, &value, false).await?;
     }
     let profile_error = profile_memberships(&mut tx, id, body.get("channel_profile_ids")).await?;
     tx.commit().await?;
@@ -850,11 +855,20 @@ async fn update_owned(
     let old = object(&auth, &user, id, &params, &mut tx).await?;
     let body = body_object(body)?;
     let validated = validation(&auth, &body, partial).await?;
-    // Source25 measured override-only changes. A combined parent update can
-    // introduce additional signal ordering, so retain that explicit boundary.
+    // ChannelUtils.handleEpgUpdate always submits three ordinary Channel flags
+    // along with auto-channel override values. Source saves the Channel first,
+    // then applies the override and guide signal inside the same transaction.
+    let stock_override = partial
+        && old["auto_created"] == true
+        && validated.streams.is_none()
+        && validated.scalars.len() == 3
+        && ["hidden_from_output", "user_level", "is_adult"]
+            .into_iter()
+            .all(|field| validated.scalars.contains_key(field));
     if validated.overrides.as_ref().and_then(Value::as_object)
         .is_some_and(|v| v.contains_key("epg_data_id"))
-        && (!validated.scalars.is_empty() || validated.streams.is_some()) {
+        && (!validated.scalars.is_empty() || validated.streams.is_some())
+        && !stock_override {
         return Err(guide_unsupported());
     }
     if validated
@@ -888,7 +902,7 @@ async fn update_owned(
         }
     }
     if let Some(value) = validated.overrides {
-        overrides(&auth, owner.clone(), &mut tx, id, &value).await?;
+        overrides(&auth, owner.clone(), &mut tx, id, &value, stock_override).await?;
     }
     if let Some(value) = validated.streams {
         streams(&mut tx, id, value).await?;
