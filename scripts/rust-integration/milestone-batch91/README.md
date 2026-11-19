@@ -29,3 +29,7 @@ python3 -B scripts/rust-integration/run.py --contract-suites channel_batch_epg \
 The published receipts came from the frozen runners. They retain exact
 Original revision, package and verification-input hashes. The optional suites
 use the same business predicates inside the checkout's integration harness.
+
+The checkout-based batch guide rerun passed all 52 checks. An initial sparse
+checkout omitted the existing origin helper and stopped before the first
+check. Both projects were removed. [Portable Compose receipt](portable-compose.json)
