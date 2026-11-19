@@ -255,7 +255,7 @@ pub(super) async fn update(
 ) -> Result<String, StoreError> {
     let id = lookup(raw)?.ok_or_else(absent)?;
     let present: bool =
-        sqlx::query_scalar(&format("SELECT EXISTS(SELECT 1 FROM {TABLE} WHERE id=$1)"))
+        sqlx::query_scalar(&format!("SELECT EXISTS(SELECT 1 FROM {TABLE} WHERE id=$1)"))
             .bind(id)
             .fetch_one(store.pool())
             .await?;
