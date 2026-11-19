@@ -1,0 +1,106 @@
+{
+  "build_json": "artifacts/rust/milestone-batch68-build-2/build.json",
+  "executions": [
+    {
+      "name": "archive-assets",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch68-build-2/Root-probe.py"
+      ],
+      "executed_by_agent": "/root/perf_review",
+      "PID": 99894,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 1.2663211480000882,
+      "stdout_sha256": "3d7b479c8704898b7cf96cc153cbacf1af8b43e67ede4d867d961d3790f12b77",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "crypto",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch68-build-2/Root-crypto-probe.py"
+      ],
+      "executed_by_agent": "/root/perf_review",
+      "PID": 100239,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 0.6991798100000324,
+      "stdout_sha256": "29e4c726de4847e6368aff4f3d960c8e444ed052e68f47d1696b22f5f0658a04",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "postgres",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch68-build-2/Root-postgres-probe.py"
+      ],
+      "executed_by_agent": "/root/perf_review",
+      "PID": 100530,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 1.5874864439999783,
+      "stdout_sha256": "86550d84897dd94c5524c80f07549d28c990621a2ff17e0707e4b8c1f91e95c2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "regex",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch68-build-2/Root-regex-probe.py",
+        "--build",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch68-build-2/build.json",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch68-regex-probe-2",
+        "--dummy-fixture",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch67-tools-1/dummy-Source12-fixture.json"
+      ],
+      "executed_by_agent": "/root/perf_review",
+      "PID": 101356,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 3.0871063179999965,
+      "stdout_sha256": "d240191b9ec165dee3e41075c086220337f720d0a9204fca4a874fb5bb06fa6f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "python-host",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch68-build-2/Root-python-host-probe-2.py"
+      ],
+      "executed_by_agent": "/root/perf_review",
+      "PID": 102727,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 5.057676479000065,
+      "stdout_sha256": "f7afb25275c39c3605808ce81939de587114692144be75b7b08b0fa6b6c6cd20",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "vlc",
+      "argv": [
+        "python3",
+        "/home/justin/github/Dispatcharr/artifacts/rust/m3-vlc-packaged-probe-4/probe.py",
+        "--build",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch68-build-2/build.json",
+        "--output",
+        "/home/justin/github/Dispatcharr/artifacts/rust/milestone-batch68-vlc-probe-2"
+      ],
+      "executed_by_agent": "/root/perf_review",
+      "PID": 103405,
+      "actual_exit": 0,
+      "wait_completed": true,
+      "seconds": 8.951052662999928,
+      "stdout_sha256": "44f44af65bab4ee39d94591956dbe3e56c2648be5609292e28394dc0650af7d2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "executed_by_agent": "/root/perf_review",
+  "package_script_wait_owner": "Actual orchestrator child wait by named executing agent; not Root personally",
+  "all_six_actual_exits0": true,
+  "maximum_light_parallel": 1,
+  "VLC_solo_after_all_lights": true,
+  "Main_acceptance": false,
+  "performance_verified": false
+}

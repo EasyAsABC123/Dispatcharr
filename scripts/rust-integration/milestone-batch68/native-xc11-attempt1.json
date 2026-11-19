@@ -1,0 +1,44 @@
+{
+  "candidate_revision": "5d6b82cd18b1dffb637a34330f46f8c8a4c0b64e",
+  "candidate_image_id": "sha256:cfd551b315882c2030b7edaf5e612be9e160158b1c737b3592d2140e49d00da6",
+  "actual_controller_exit": 1,
+  "actual_terminal_consumed": true,
+  "actual_seconds": 312.43294971299997,
+  "input_integrity_passed": true,
+  "process_group_settled": true,
+  "exact_container_ids_absent": 4,
+  "captured_host_generations_absent": 3,
+  "attempted_target_HTTP": 4,
+  "completed_target_HTTP": 4,
+  "planned_target_HTTP_upper_bound": 12,
+  "observed_statuses": [
+    401,
+    403,
+    400,
+    201
+  ],
+  "literal_comparator_actual_exit": 1,
+  "first_active_create": {
+    "provider_completed_HTTP_200": 2,
+    "provider_TLS_unknown_CA": 4,
+    "published_profile_root": true,
+    "all_broker_lengths_after_zero": true,
+    "journal_profile_result_reads": 92,
+    "journal_profile_result_mutations": 0,
+    "post_call_fence_failed": true,
+    "remaining_target_requests_not_run": 8
+  },
+  "cause": "The account profile fetch used generic Attempt::new, which does not apply the Requests CA environment bundle. The ordinary inline XC client used Attempt::new_requests and authenticated to the same provider.",
+  "corrective_scope": "Use the Requests CA factory already used by inline XC; keep verification, retry limit, redirects, proxy, and timeouts.",
+  "Native_parity_accepted": false,
+  "Source_replayed": false,
+  "evidence_sha256": {
+    "terminal.json": "3d3f509af2761c276628c872dae785aaa009b08505fb599b949754cddee59063",
+    "independent-cleanup.json": "bb9819be10bb3fcaac5089fca7788a6cddb99183daa94f5415f0e55155f8260f",
+    "xc11-literal-comparison.json": "5ee58007c16e41425d3026ee96dd93e2cd2236ca52b633f438d54599f25594c1",
+    "report.json": "26196c427a1fc6584b8ccad94a59805b582745a05de5b52cee32f5634569817f",
+    "private-startup-monitor.jsonl": "653d50b8817b13c8b1df6c1105b9e10bcae769f87bb6fd636af9dc22f01b98ae",
+    "provider-after.json": "2e5df7b7295540d875f6bb800d7e16c233d5adf3a1c38930b7ce40eb05c5f5d9",
+    "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885"
+  }
+}

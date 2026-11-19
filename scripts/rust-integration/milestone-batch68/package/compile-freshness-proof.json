@@ -1,0 +1,35 @@
+{
+  "passed": true,
+  "actual_Docker_build_exit": 0,
+  "required_actual_recompilations": {
+    "dispatcharr-store": true,
+    "dispatcharr-job-transport": true,
+    "dispatcharr-rs": true
+  },
+  "reason": "Store and JobTransport changes require Store, JobTransport and Main release compilation. Every Rust input binds passing SDK117 without exclusions.",
+  "build_log_sha256": "957ff26606d025261507d6d79e7186487458866f771b52ce510f1745b4832e27",
+  "build_log_source": "artifacts/rust/milestone-batch68-build-2/build.log",
+  "changed_Rust_inputs_vs67": [
+    "rust/crates/job-transport/src/core_settings_broker.rs",
+    "rust/crates/job-transport/src/core_settings_broker_transport.rs",
+    "rust/crates/job-transport/src/normal_scanner.rs",
+    "rust/crates/job-transport/src/normal_xc_live.rs",
+    "rust/crates/store/src/auth.rs",
+    "rust/crates/store/src/core_settings_special_broker.rs",
+    "rust/crates/store/src/core_task_broker.rs",
+    "rust/crates/store/src/lib.rs",
+    "rust/crates/store/src/provider_account_writes.rs",
+    "rust/crates/store/src/provider_reads.rs",
+    "rust/crates/store/src/vod_ingestion.rs",
+    "rust/crates/store/src/xc_account_http.rs",
+    "rust/crates/store/src/xc_account_provider.rs",
+    "rust/crates/store/src/xc_create_groups.rs",
+    "rust/crates/store/src/xc_live_filters.rs",
+    "rust/crates/store/src/xc_live_tasks.rs"
+  ],
+  "authority_patch_sha256": {
+    "artifacts/rust/future68-xc-create-successor-1/candidate68-sdk116.patch": "4e8d1fa4c696a1209f1ccd9c27851ec6c284594c18fbe33512072d9390a9787d",
+    "artifacts/rust/future68-xc-create-successor-2/profile-trust.patch": "1b1b061fa4454a5117566f3393d95af70a2b922b517a25ef79f34d700998b70c"
+  },
+  "application_performance_verified": false
+}

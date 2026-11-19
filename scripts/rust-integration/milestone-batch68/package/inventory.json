@@ -1,0 +1,61 @@
+{
+  "git_revision": "2b3fba29dce264ad5930504e149418496d498618",
+  "image_id": "sha256:f628937f90d3b0444689dca863bb5e10ce3d6d2bc216847592f39d9de75ddabe",
+  "source_tree_sha256": "360a97f6f3b13e484aac443da77701cbd05c532d09428fb1fc300ea854d4dd58",
+  "executed_by_agent": "/root/perf_review",
+  "package_actual_waits_owner": "Named executing agent orchestrator; actual Root wait applies only direct build receipt",
+  "complete_build_record_sha256": "2c27179a74b238b0bb5b98541d64eabcef7116f9bfefe59e12f73e8e6178eeb0",
+  "complete_build_record_source": "artifacts/rust/milestone-batch68-build-2/build.json",
+  "reports": [
+    {
+      "name": "archive-assets",
+      "source": "artifacts/rust/milestone-batch68-build-2/Root-build-review.json",
+      "sha256": "3d7b479c8704898b7cf96cc153cbacf1af8b43e67ede4d867d961d3790f12b77",
+      "published": "scripts/rust-integration/milestone-batch68/package/archive-assets.json",
+      "passed": true
+    },
+    {
+      "name": "crypto",
+      "source": "artifacts/rust/milestone-batch68-build-2/Root-crypto-runtime-probe.json",
+      "sha256": "f1806c50531235184255fb696f04026d1ef1ff98eddd1899705ad387109686b8",
+      "published": "scripts/rust-integration/milestone-batch68/package/crypto.json",
+      "passed": true
+    },
+    {
+      "name": "postgres",
+      "source": "artifacts/rust/milestone-batch68-build-2/Root-postgres-runtime-probe.json",
+      "sha256": "0d0491aa26b05d3a966e5825946c1a189fece9a0c869abfeaee676a9e2f134ce",
+      "published": "scripts/rust-integration/milestone-batch68/package/postgres.json",
+      "passed": true
+    },
+    {
+      "name": "regex",
+      "source": "artifacts/rust/milestone-batch68-regex-probe-2/report.json",
+      "sha256": "252d143ce3b553f33335ef00df15059711ef0498aba3e41c51f13bd40ca2fabf",
+      "published": "scripts/rust-integration/milestone-batch68/package/regex.json",
+      "passed": true
+    },
+    {
+      "name": "python-host",
+      "source": "artifacts/rust/milestone-batch68-python-host-probe-2/report.json",
+      "sha256": "18005d9c3f51b216941dde0f50a1700c5836cd2fd0c9703a71c973b5ae992caa",
+      "published": "scripts/rust-integration/milestone-batch68/package/python-host.json",
+      "passed": true
+    },
+    {
+      "name": "vlc",
+      "source": "artifacts/rust/milestone-batch68-vlc-probe-2/report.json",
+      "sha256": "639a729cd5f9e641564c639e968353ab7b662efef5feb1d51961bb9b2254a02d",
+      "published": "scripts/rust-integration/milestone-batch68/package/vlc.json",
+      "passed": true
+    }
+  ],
+  "all_six_package_families_passed": true,
+  "all_six_actual_waits_consumed_exit0": true,
+  "independent_exact_CID_count": 55,
+  "independent_inventories_empty": true,
+  "Main_application_acceptance": false,
+  "performance_verified": false,
+  "full_milestones_accepted": false,
+  "scope": "Git-exact archive/explicitly bound passing SDK Rust/unchanged React and Original credits, crypto/PostgreSQL legal closure and execution, framed dependency regex, full Python compatibility closure, useful Source/candidate VLC package media. Not enabled-plugin execution, Main restore/shutdown/workflow or performance acceptance."
+}
