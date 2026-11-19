@@ -77,3 +77,33 @@ COPY scripts/rust-job-contracts/clocked-recording-source/evidence/source-clocked
 COPY scripts/rust-job-contracts/clocked-recording-source/evidence/independent-cleanup.json.gz ./scripts/rust-job-contracts/clocked-recording-source/evidence/independent-cleanup.json.gz
 COPY scripts/rust-job-contracts/clocked-recording-source/evidence/clocked-prerun.jsonl.gz ./scripts/rust-job-contracts/clocked-recording-source/evidence/clocked-prerun.jsonl.gz
 COPY scripts/rust-job-contracts/clocked-recording-source/evidence/clocked-postrun.jsonl.gz ./scripts/rust-job-contracts/clocked-recording-source/evidence/clocked-postrun.jsonl.gz
+
+# Public authorities read by the portable register verification.
+COPY scripts/rust-epg-contracts/verified-program-http-8.json ./scripts/rust-epg-contracts/verified-program-http-8.json
+COPY scripts/rust-hdhr-contracts/probe.py ./scripts/rust-hdhr-contracts/probe.py
+COPY scripts/rust-hdhr-contracts/verified-hdhr-image27-1.json ./scripts/rust-hdhr-contracts/verified-hdhr-image27-1.json
+COPY scripts/rust-integration/auth-route-session-source1/README.md ./scripts/rust-integration/auth-route-session-source1/README.md
+COPY scripts/rust-integration/auth-route-session-source1/Root-independent-cleanup.json ./scripts/rust-integration/auth-route-session-source1/Root-independent-cleanup.json
+COPY scripts/rust-integration/auth-route-session-source1/Root-terminal.json ./scripts/rust-integration/auth-route-session-source1/Root-terminal.json
+COPY scripts/rust-integration/auth-route-session-source1/captured-report.json ./scripts/rust-integration/auth-route-session-source1/captured-report.json
+COPY scripts/rust-integration/auth-route-session-source1/identity.json ./scripts/rust-integration/auth-route-session-source1/identity.json
+COPY scripts/rust-integration/auth-route-session-source1/index.json ./scripts/rust-integration/auth-route-session-source1/index.json
+COPY scripts/rust-integration/auth-route-session-source1/private-raw-hashes.json ./scripts/rust-integration/auth-route-session-source1/private-raw-hashes.json
+COPY scripts/rust-integration/auth-route-session-source1/qualification.json ./scripts/rust-integration/auth-route-session-source1/qualification.json
+COPY scripts/rust-integration/auth-route-session-source1/throttle-analysis.json ./scripts/rust-integration/auth-route-session-source1/throttle-analysis.json
+COPY scripts/rust-integration/auth-route-session-source2/README.md ./scripts/rust-integration/auth-route-session-source2/README.md
+COPY scripts/rust-integration/auth-route-session-source2/Root-independent-cleanup.json ./scripts/rust-integration/auth-route-session-source2/Root-independent-cleanup.json
+COPY scripts/rust-integration/auth-route-session-source2/Root-terminal.json ./scripts/rust-integration/auth-route-session-source2/Root-terminal.json
+COPY scripts/rust-integration/auth-route-session-source2/captured-report.json ./scripts/rust-integration/auth-route-session-source2/captured-report.json
+COPY scripts/rust-integration/auth-route-session-source2/identity.json ./scripts/rust-integration/auth-route-session-source2/identity.json
+COPY scripts/rust-integration/auth-route-session-source2/index.json ./scripts/rust-integration/auth-route-session-source2/index.json
+COPY scripts/rust-integration/auth-route-session-source2/login-budget-after.json ./scripts/rust-integration/auth-route-session-source2/login-budget-after.json
+COPY scripts/rust-integration/auth-route-session-source2/login-budget-before.json ./scripts/rust-integration/auth-route-session-source2/login-budget-before.json
+COPY scripts/rust-integration/auth-route-session-source2/private-raw-hashes.json ./scripts/rust-integration/auth-route-session-source2/private-raw-hashes.json
+COPY scripts/rust-integration/auth-route-session-source2/qualification.json ./scripts/rust-integration/auth-route-session-source2/qualification.json
+COPY scripts/rust-integration/verified-integration-m5-auth-image22-1.json ./scripts/rust-integration/verified-integration-m5-auth-image22-1.json
+COPY scripts/rust-milestone-batches/m6/channel-http-source-v1/actual/source-report.json ./scripts/rust-milestone-batches/m6/channel-http-source-v1/actual/source-report.json
+COPY scripts/rust-milestone-batches/m6/channel-http-source-v1/driver/tools/cases.py ./scripts/rust-milestone-batches/m6/channel-http-source-v1/driver/tools/cases.py
+COPY scripts/rust-milestone-batches/m6/channel-http-source-v1/driver/tools/guest.py ./scripts/rust-milestone-batches/m6/channel-http-source-v1/driver/tools/guest.py
+COPY scripts/rust-milestone-batches/m6/channel-http-source-v1/summary.json ./scripts/rust-milestone-batches/m6/channel-http-source-v1/summary.json
+COPY scripts/rust-vod-api-contracts/source-vod-http-wire-2.json ./scripts/rust-vod-api-contracts/source-vod-http-wire-2.json
