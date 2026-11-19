@@ -39,8 +39,14 @@ default-profile integer cases. The lineup-generated stream delivered
 1,165,788 media bytes without a TS synchronization error. FFmpeg decoded 74
 frames with audio and video, and the packaged process exited cleanly.
 
-The successful runs verified owned Compose teardown. Initial fMP4 and
-bulk-rename probes exited 1 in the test harness. The corrected bulk-rename
+The exact fMP4 test peer passed the slow-viewer resume check against an
+owned Redis service. It resumed retained fragments after the idle deadline,
+while the fast peer continued over Native HTTP. The run verified both
+resource identities were retired and test Redis was empty. Its initial
+launcher exit 1 occurred before starting the test.
+
+The successful runs verified owned Compose teardown. The initial bulk-rename
+probes exited 1 in the test harness. The corrected bulk-rename
 probe passed six Original and seven Native checks before it exposed a
 behavior difference. The Original returned 200 for the overlength result
 where Candidate100 returned 500. The Original SQL readback for that response
