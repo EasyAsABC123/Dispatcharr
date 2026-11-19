@@ -203,3 +203,14 @@ remain excluded. The Xtream paths describe fixture roles and omit credentials.
 The register has 257 partial Source assignments and 541 unassigned operations.
 All 791 unaffected operation dictionaries remain exact. Reproduce the evidence
 projection with the [receipt instructions](../scripts/rust-contracts/retained-playback/README.md).
+
+## Retained Image22 TS, stream and group assignments
+
+The [Image22 binding](../scripts/rust-contracts/retained-image22-controls/bindings.json)
+adds 22 Original responses from the retained integration capture. Seven previously
+unassigned operation IDs cover TS status and stream dispatch, stream retrieval
+and bulk delete, group retrieval and delete, and group cleanup. The three
+method-unresolved IDs retain their original declarations.
+
+The register now has 264 partial Source assignments and 534 unassigned operations.
+All 791 unaffected operation dictionaries and all 257 earlier assignments remain exact.

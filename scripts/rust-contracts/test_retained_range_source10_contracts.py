@@ -7,6 +7,7 @@ import retained_serializer_null_contracts
 import retained_provider_channel_vod_contracts
 import retained_hdhr_contracts
 import retained_playback_contracts
+import retained_image22_controls_contracts
 import retained_range_source10_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -30,6 +31,7 @@ class RangeSource10Controls(unittest.TestCase):
     p.write_bytes(raw)
  def test_all174_definitions_797_whole_rows_and_selected_primary_unchanged(self):
   register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,register['runtime_routes'])
   retained_playback_contracts.restore_pre_playback(ROOT,register['runtime_routes'])
   retained_hdhr_contracts.restore_pre_hdhr(ROOT,register['runtime_routes'])
   retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,register['runtime_routes'])
@@ -49,7 +51,8 @@ class RangeSource10Controls(unittest.TestCase):
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],257)
+  self.assertEqual(mapping['operations'],264)
+  retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,rows)
   retained_playback_contracts.restore_pre_playback(ROOT,rows)
   retained_hdhr_contracts.restore_pre_hdhr(ROOT,rows)
   retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,rows)
@@ -59,6 +62,7 @@ class RangeSource10Controls(unittest.TestCase):
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,rows)
   retained_playback_contracts.restore_pre_playback(ROOT,rows)
   retained_hdhr_contracts.restore_pre_hdhr(ROOT,rows)
   retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,rows)

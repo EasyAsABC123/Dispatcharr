@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "84c6643ce6ff4735cae5e099302fb002d8f9c0c24e11fd45e697b8087f79585a",
+    "scripts/rust-contracts/executable-source-inputs.json": "5249ce245236051fe1865daabcdd49d9b45a89605adab12788c5615f5623cb9e",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -41,11 +41,12 @@
     "scripts/rust-contracts/retained-serializer-null/bindings.json": "48462d0ec0a7404a1ab583bcfc9b2f68196fdecc0d4ed339b3ae909fb4fa30c2",
     "scripts/rust-contracts/retained-provider-channel-vod/bindings.json": "1fb9dae1ab5ec1b6a90226491f071947dad34119013c703fdfc9d44456bcbb9a",
     "scripts/rust-contracts/retained-hdhr/bindings.json": "9c77f36ed60e1ab57c33e27794223215cb956fe09196184acda1be7833806ac4",
-    "scripts/rust-contracts/retained-playback/bindings.json": "8f1609f176b00a6a41557e944fc690135bb644a35a975c905cd1f4fc213e2655"
+    "scripts/rust-contracts/retained-playback/bindings.json": "8f1609f176b00a6a41557e944fc690135bb644a35a975c905cd1f4fc213e2655",
+    "scripts/rust-contracts/retained-image22-controls/bindings.json": "3de11379faa601354aab3cf1faaa976724dfefdb54cb6eb58bb29926ee3a8c44"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 257,
+    "operations": 264,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -206,6 +207,11 @@
         "path": "scripts/rust-contracts/retained-playback/bindings.json",
         "sha256": "8f1609f176b00a6a41557e944fc690135bb644a35a975c905cd1f4fc213e2655",
         "kind": "retained_original_playback_VOD_XC_TCP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-image22-controls/bindings.json",
+        "sha256": "3de11379faa601354aab3cf1faaa976724dfefdb54cb6eb58bb29926ee3a8c44",
+        "kind": "retained_original_Image22_TS_stream_group_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -23699,15 +23705,143 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "private_capture": {
+              "path": "artifacts/rust/m5-auth-full-integration-image22-2/integration.json",
+              "sha256": "bc1b852bd233b03bff581d52349a9ee1d7e27e96664885f86e2be4b3c96c99ae"
+            },
+            "request_tools_sha256": {
+              "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+              "scripts/rust-account-contracts/group_probes.py": "ebad889036d05154bb35158c7b27571f9a636db13badd6a5a2ec71f4142617de",
+              "scripts/rust-account-contracts/stream_probes.py": "8747d8a217f645453c266bc4bc5285b1ad9b72198a4aa922deb21f5c59e5cb36",
+              "scripts/rust-account-contracts/group_cleanup_probes.py": "ef9f8609a2ebcddc7eeefa771d4c5f24fe19ecc82908d4ffabbdb625cc3e589b"
+            },
+            "cleanup": "project removed",
+            "scope": "Retained request paths and role labels. Generated IDs are excluded."
+          },
+          "assertions": [
+            "Match named retained Original controller requests to literal target and resolved operation",
+            "Match Original HTTP response status and controller projection hash"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-ff58759b7c3b1d8432cf:METHOD_UNRESOLVED",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M5",
+            "pattern_exact": "api/channels/streams/bulk-delete/",
+            "source_handler": "apps.channels.api_views.BulkDeleteStreamsAPIView",
+            "fixture_id": "retained-Image22-TS-stream-group",
+            "observed_methods": [
+              "DELETE"
+            ],
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Match named retained Original controller requests to literal target and resolved operation",
+              "Match Original HTTP response status and controller projection hash"
+            ],
+            "cases": [
+              {
+                "source_index": 605,
+                "label": "streams:bulk-empty",
+                "request_driver": "scripts/rust-account-contracts/stream_probes.py",
+                "method": "DELETE",
+                "path": "/api/channels/streams/bulk-delete/",
+                "role": "admin",
+                "HTTP_status": 204,
+                "response_projection_sha256": "20797e4c178039d4bdfb0243aaacaca086bcd4d41f279d797eade6d4584ec2aa",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 606,
+                "label": "streams:bulk-includes-inactive",
+                "request_driver": "scripts/rust-account-contracts/stream_probes.py",
+                "method": "DELETE",
+                "path": "/api/channels/streams/bulk-delete/",
+                "role": "admin",
+                "HTTP_status": 204,
+                "response_projection_sha256": "20797e4c178039d4bdfb0243aaacaca086bcd4d41f279d797eade6d4584ec2aa",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 618,
+                "label": "streams:denied-bulk-standard",
+                "request_driver": "scripts/rust-account-contracts/stream_probes.py",
+                "method": "DELETE",
+                "path": "/api/channels/streams/bulk-delete/",
+                "role": "standard",
+                "HTTP_status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 619,
+                "label": "streams:denied-bulk-viewer",
+                "request_driver": "scripts/rust-account-contracts/stream_probes.py",
+                "method": "DELETE",
+                "path": "/api/channels/streams/bulk-delete/",
+                "role": "viewer",
+                "HTTP_status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -31718,15 +31852,123 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "private_capture": {
+              "path": "artifacts/rust/m5-auth-full-integration-image22-2/integration.json",
+              "sha256": "bc1b852bd233b03bff581d52349a9ee1d7e27e96664885f86e2be4b3c96c99ae"
+            },
+            "request_tools_sha256": {
+              "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+              "scripts/rust-account-contracts/group_probes.py": "ebad889036d05154bb35158c7b27571f9a636db13badd6a5a2ec71f4142617de",
+              "scripts/rust-account-contracts/stream_probes.py": "8747d8a217f645453c266bc4bc5285b1ad9b72198a4aa922deb21f5c59e5cb36",
+              "scripts/rust-account-contracts/group_cleanup_probes.py": "ef9f8609a2ebcddc7eeefa771d4c5f24fe19ecc82908d4ffabbdb625cc3e589b"
+            },
+            "cleanup": "project removed",
+            "scope": "Retained request paths and role labels. Generated IDs are excluded."
+          },
+          "assertions": [
+            "Match named retained Original controller requests to literal target and resolved operation",
+            "Match Original HTTP response status and controller projection hash"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-2c78a0593b1b81930c61:GET",
+            "method": "GET",
+            "source_action": "retrieve",
+            "owning_milestone": "M5",
+            "pattern_exact": "api/channels/^streams/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.StreamViewSet",
+            "fixture_id": "retained-Image22-TS-stream-group",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Match named retained Original controller requests to literal target and resolved operation",
+              "Match Original HTTP response status and controller projection hash"
+            ],
+            "cases": [
+              {
+                "source_index": 585,
+                "label": "streams:detail-29",
+                "request_driver": "scripts/rust-account-contracts/stream_probes.py",
+                "method": "GET",
+                "path": "/api/channels/streams/29/",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "4894704771961cffa6fe0d5754c287b4677b6ef94486b2557fb0163dc326bda1",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 586,
+                "label": "streams:detail-32",
+                "request_driver": "scripts/rust-account-contracts/stream_probes.py",
+                "method": "GET",
+                "path": "/api/channels/streams/32/",
+                "role": "admin",
+                "HTTP_status": 404,
+                "response_projection_sha256": "d870486684062c79c0f177319e065555337713c314ea687952666e74a2c10186",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 587,
+                "label": "streams:detail-2147483647",
+                "request_driver": "scripts/rust-account-contracts/stream_probes.py",
+                "method": "GET",
+                "path": "/api/channels/streams/2147483647/",
+                "role": "admin",
+                "HTTP_status": 404,
+                "response_projection_sha256": "d870486684062c79c0f177319e065555337713c314ea687952666e74a2c10186",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 588,
+                "label": "streams:detail-not-a-number",
+                "request_driver": "scripts/rust-account-contracts/stream_probes.py",
+                "method": "GET",
+                "path": "/api/channels/streams/not-a-number/",
+                "role": "admin",
+                "HTTP_status": 404,
+                "response_projection_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         },
         {
           "contract_id": "route-2c78a0593b1b81930c61:PATCH",
@@ -33072,15 +33314,186 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "private_capture": {
+              "path": "artifacts/rust/m5-auth-full-integration-image22-2/integration.json",
+              "sha256": "bc1b852bd233b03bff581d52349a9ee1d7e27e96664885f86e2be4b3c96c99ae"
+            },
+            "request_tools_sha256": {
+              "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+              "scripts/rust-account-contracts/group_probes.py": "ebad889036d05154bb35158c7b27571f9a636db13badd6a5a2ec71f4142617de",
+              "scripts/rust-account-contracts/stream_probes.py": "8747d8a217f645453c266bc4bc5285b1ad9b72198a4aa922deb21f5c59e5cb36",
+              "scripts/rust-account-contracts/group_cleanup_probes.py": "ef9f8609a2ebcddc7eeefa771d4c5f24fe19ecc82908d4ffabbdb625cc3e589b"
+            },
+            "cleanup": "project removed",
+            "scope": "Retained request paths and role labels. Generated IDs are excluded."
+          },
+          "assertions": [
+            "Match named retained Original controller requests to literal target and resolved operation",
+            "Match Original HTTP response status and controller projection hash"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 7,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-73e3a2ec965d642de991:POST",
+            "method": "POST",
+            "source_action": "cleanup_unused_groups",
+            "owning_milestone": "M5",
+            "pattern_exact": "api/channels/^groups/cleanup/$",
+            "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+            "fixture_id": "retained-Image22-TS-stream-group",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Match named retained Original controller requests to literal target and resolved operation",
+              "Match Original HTTP response status and controller projection hash"
+            ],
+            "cases": [
+              {
+                "source_index": 518,
+                "label": "group-cleanup:already-clean-empty",
+                "request_driver": "scripts/rust-account-contracts/group_cleanup_probes.py",
+                "method": "POST",
+                "path": "/api/channels/groups/cleanup/",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "6a9413cc89e3e58f76e0478bb433a41bc44411df9ee3e305fb64091d338be3ff",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 519,
+                "label": "group-cleanup:anonymous-denied",
+                "request_driver": "scripts/rust-account-contracts/group_cleanup_probes.py",
+                "method": "POST",
+                "path": "/api/channels/groups/cleanup/",
+                "role": "anonymous",
+                "HTTP_status": 401,
+                "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 520,
+                "label": "group-cleanup:default-removes-only-loose",
+                "request_driver": "scripts/rust-account-contracts/group_cleanup_probes.py",
+                "method": "POST",
+                "path": "/api/channels/groups/cleanup/",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "802b6d8017fc4b02f601f1ef6476d1d8848b1fde400ac4ce67d73482b18f0d0a",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 521,
+                "label": "group-cleanup:denied-standard",
+                "request_driver": "scripts/rust-account-contracts/group_cleanup_probes.py",
+                "method": "POST",
+                "path": "/api/channels/groups/cleanup/",
+                "role": "standard",
+                "HTTP_status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 522,
+                "label": "group-cleanup:denied-viewer",
+                "request_driver": "scripts/rust-account-contracts/group_cleanup_probes.py",
+                "method": "POST",
+                "path": "/api/channels/groups/cleanup/",
+                "role": "viewer",
+                "HTTP_status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 523,
+                "label": "group-cleanup:include-custom",
+                "request_driver": "scripts/rust-account-contracts/group_cleanup_probes.py",
+                "method": "POST",
+                "path": "/api/channels/groups/cleanup/",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "e6fec5409c9f650867bda36923abbf8c1889f2ade5d28586e1e3ae2195ad2e8e",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 525,
+                "label": "group-cleanup:spaced-true-is-false",
+                "request_driver": "scripts/rust-account-contracts/group_cleanup_probes.py",
+                "method": "POST",
+                "path": "/api/channels/groups/cleanup/",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "6a9413cc89e3e58f76e0478bb433a41bc44411df9ee3e305fb64091d338be3ff",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 7,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -33238,15 +33651,90 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "private_capture": {
+              "path": "artifacts/rust/m5-auth-full-integration-image22-2/integration.json",
+              "sha256": "bc1b852bd233b03bff581d52349a9ee1d7e27e96664885f86e2be4b3c96c99ae"
+            },
+            "request_tools_sha256": {
+              "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+              "scripts/rust-account-contracts/group_probes.py": "ebad889036d05154bb35158c7b27571f9a636db13badd6a5a2ec71f4142617de",
+              "scripts/rust-account-contracts/stream_probes.py": "8747d8a217f645453c266bc4bc5285b1ad9b72198a4aa922deb21f5c59e5cb36",
+              "scripts/rust-account-contracts/group_cleanup_probes.py": "ef9f8609a2ebcddc7eeefa771d4c5f24fe19ecc82908d4ffabbdb625cc3e589b"
+            },
+            "cleanup": "project removed",
+            "scope": "Retained request paths and role labels. Generated IDs are excluded."
+          },
+          "assertions": [
+            "Match named retained Original controller requests to literal target and resolved operation",
+            "Match Original HTTP response status and controller projection hash"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-bcad6fcc7a44673cca5c:DELETE",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "owning_milestone": "M5",
+            "pattern_exact": "api/channels/^groups/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+            "fixture_id": "retained-Image22-TS-stream-group",
+            "observed_methods": [
+              "DELETE"
+            ],
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Match named retained Original controller requests to literal target and resolved operation",
+              "Match Original HTTP response status and controller projection hash"
+            ],
+            "cases": [
+              {
+                "source_index": 500,
+                "label": "channel-groups:provider-only-delete-denied",
+                "request_driver": "scripts/rust-account-contracts/group_probes.py",
+                "method": "DELETE",
+                "path": "/api/channels/groups/1/",
+                "role": "admin",
+                "HTTP_status": 400,
+                "response_projection_sha256": "d041a92b78b433b6e2e3ba85352c59c4bd220693a073ebaa12ff9b9d7535edf7",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         },
         {
           "contract_id": "route-bcad6fcc7a44673cca5c:GET",
@@ -33255,15 +33743,123 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "private_capture": {
+              "path": "artifacts/rust/m5-auth-full-integration-image22-2/integration.json",
+              "sha256": "bc1b852bd233b03bff581d52349a9ee1d7e27e96664885f86e2be4b3c96c99ae"
+            },
+            "request_tools_sha256": {
+              "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+              "scripts/rust-account-contracts/group_probes.py": "ebad889036d05154bb35158c7b27571f9a636db13badd6a5a2ec71f4142617de",
+              "scripts/rust-account-contracts/stream_probes.py": "8747d8a217f645453c266bc4bc5285b1ad9b72198a4aa922deb21f5c59e5cb36",
+              "scripts/rust-account-contracts/group_cleanup_probes.py": "ef9f8609a2ebcddc7eeefa771d4c5f24fe19ecc82908d4ffabbdb625cc3e589b"
+            },
+            "cleanup": "project removed",
+            "scope": "Retained request paths and role labels. Generated IDs are excluded."
+          },
+          "assertions": [
+            "Match named retained Original controller requests to literal target and resolved operation",
+            "Match Original HTTP response status and controller projection hash"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-bcad6fcc7a44673cca5c:GET",
+            "method": "GET",
+            "source_action": "retrieve",
+            "owning_milestone": "M5",
+            "pattern_exact": "api/channels/^groups/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+            "fixture_id": "retained-Image22-TS-stream-group",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Match named retained Original controller requests to literal target and resolved operation",
+              "Match Original HTTP response status and controller projection hash"
+            ],
+            "cases": [
+              {
+                "source_index": 476,
+                "label": "channel-groups:detail-1",
+                "request_driver": "scripts/rust-account-contracts/group_probes.py",
+                "method": "GET",
+                "path": "/api/channels/groups/1/",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "7afcc5c50c1e01f56e2576b7b174a048c35be830d73a70505c0bae2143b2e452",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 477,
+                "label": "channel-groups:detail-2",
+                "request_driver": "scripts/rust-account-contracts/group_probes.py",
+                "method": "GET",
+                "path": "/api/channels/groups/2/",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "520414d0b012dbd6fcce027b16f60096fa3fe2b23afac345c63c3d471262e353",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 478,
+                "label": "channel-groups:detail-2147483647",
+                "request_driver": "scripts/rust-account-contracts/group_probes.py",
+                "method": "GET",
+                "path": "/api/channels/groups/2147483647/",
+                "role": "admin",
+                "HTTP_status": 404,
+                "response_projection_sha256": "f891cf5c6530b422fe44f6a3090e0f1895a743837d37f1696bdbe7f36af97369",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              },
+              {
+                "source_index": 479,
+                "label": "channel-groups:detail-not-a-number",
+                "request_driver": "scripts/rust-account-contracts/group_probes.py",
+                "method": "GET",
+                "path": "/api/channels/groups/not-a-number/",
+                "role": "admin",
+                "HTTP_status": 404,
+                "response_projection_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         },
         {
           "contract_id": "route-bcad6fcc7a44673cca5c:PATCH",
@@ -217003,15 +217599,90 @@
           "owning_milestone": "M3",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role": "anonymous",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "private_capture": {
+              "path": "artifacts/rust/m5-auth-full-integration-image22-2/integration.json",
+              "sha256": "bc1b852bd233b03bff581d52349a9ee1d7e27e96664885f86e2be4b3c96c99ae"
+            },
+            "request_tools_sha256": {
+              "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+              "scripts/rust-account-contracts/group_probes.py": "ebad889036d05154bb35158c7b27571f9a636db13badd6a5a2ec71f4142617de",
+              "scripts/rust-account-contracts/stream_probes.py": "8747d8a217f645453c266bc4bc5285b1ad9b72198a4aa922deb21f5c59e5cb36",
+              "scripts/rust-account-contracts/group_cleanup_probes.py": "ef9f8609a2ebcddc7eeefa771d4c5f24fe19ecc82908d4ffabbdb625cc3e589b"
+            },
+            "cleanup": "project removed",
+            "scope": "Retained request paths and role labels. Generated IDs are excluded."
+          },
+          "assertions": [
+            "Match named retained Original controller requests to literal target and resolved operation",
+            "Match Original HTTP response status and controller projection hash"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M3",
+            "pattern_exact": "proxy/ts/stream/<str:channel_id>",
+            "source_handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+            "fixture_id": "retained-Image22-TS-stream-group",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role": "anonymous",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Match named retained Original controller requests to literal target and resolved operation",
+              "Match Original HTTP response status and controller projection hash"
+            ],
+            "cases": [
+              {
+                "source_index": 1,
+                "label": "status-parity:/proxy/ts/stream/not-a-channel",
+                "request_driver": "scripts/rust-integration/run.py",
+                "method": "GET",
+                "path": "/proxy/ts/stream/not-a-channel",
+                "role": "anonymous",
+                "HTTP_status": 404,
+                "response_projection_sha256": "d870486684062c79c0f177319e065555337713c314ea687952666e74a2c10186",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -217171,15 +217842,90 @@
           "owning_milestone": "M3",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role": "anonymous",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "private_capture": {
+              "path": "artifacts/rust/m5-auth-full-integration-image22-2/integration.json",
+              "sha256": "bc1b852bd233b03bff581d52349a9ee1d7e27e96664885f86e2be4b3c96c99ae"
+            },
+            "request_tools_sha256": {
+              "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+              "scripts/rust-account-contracts/group_probes.py": "ebad889036d05154bb35158c7b27571f9a636db13badd6a5a2ec71f4142617de",
+              "scripts/rust-account-contracts/stream_probes.py": "8747d8a217f645453c266bc4bc5285b1ad9b72198a4aa922deb21f5c59e5cb36",
+              "scripts/rust-account-contracts/group_cleanup_probes.py": "ef9f8609a2ebcddc7eeefa771d4c5f24fe19ecc82908d4ffabbdb625cc3e589b"
+            },
+            "cleanup": "project removed",
+            "scope": "Retained request paths and role labels. Generated IDs are excluded."
+          },
+          "assertions": [
+            "Match named retained Original controller requests to literal target and resolved operation",
+            "Match Original HTTP response status and controller projection hash"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-df815bdf71ef9a7e0991:METHOD_UNRESOLVED",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M3",
+            "pattern_exact": "proxy/ts/status",
+            "source_handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+            "fixture_id": "retained-Image22-TS-stream-group",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role": "anonymous",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Match named retained Original controller requests to literal target and resolved operation",
+              "Match Original HTTP response status and controller projection hash"
+            ],
+            "cases": [
+              {
+                "source_index": 0,
+                "label": "status-parity:/proxy/ts/status",
+                "request_driver": "scripts/rust-integration/run.py",
+                "method": "GET",
+                "path": "/proxy/ts/status",
+                "role": "anonymous",
+                "HTTP_status": 401,
+                "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "hash_scope": "retained controller response projection, including normalization when applicable"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },

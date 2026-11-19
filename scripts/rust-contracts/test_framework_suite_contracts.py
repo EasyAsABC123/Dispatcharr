@@ -9,6 +9,7 @@ import retained_serializer_null_contracts
 import retained_provider_channel_vod_contracts
 import retained_hdhr_contracts
 import retained_playback_contracts
+import retained_image22_controls_contracts
 import framework_suite_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -36,6 +37,7 @@ class FrameworkSuiteControls(unittest.TestCase):
     p.write_bytes(raw)
  def test_ten_additions_preserve_prior163_and788_whole_dictionaries(self):
   r=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,r['runtime_routes'])
   retained_playback_contracts.restore_pre_playback(ROOT,r['runtime_routes'])
   retained_hdhr_contracts.restore_pre_hdhr(ROOT,r['runtime_routes'])
   retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,r['runtime_routes'])
@@ -63,7 +65,8 @@ class FrameworkSuiteControls(unittest.TestCase):
   self.assertEqual(subject.digest(r['openapi_operations']),proof['OpenAPI_sha256'])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],257)
+  self.assertEqual(mapping['operations'],264)
+  retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,rows)
   retained_playback_contracts.restore_pre_playback(ROOT,rows)
   retained_hdhr_contracts.restore_pre_hdhr(ROOT,rows)
   retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,rows)
@@ -75,6 +78,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   retained_source12_contracts.restore_pre_Source12(rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,rows)
   retained_playback_contracts.restore_pre_playback(ROOT,rows)
   retained_hdhr_contracts.restore_pre_hdhr(ROOT,rows)
   retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,rows)
