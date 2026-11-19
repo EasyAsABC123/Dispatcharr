@@ -92,6 +92,8 @@ COPY scripts/rust-integration/exact-vod-original-c98/request-driver.py ./scripts
 COPY scripts/rust-integration/image57-checkpoint/selected-accounts-Original.json ./scripts/rust-integration/image57-checkpoint/selected-accounts-Original.json
 COPY scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json ./scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json
 COPY scripts/rust-integration/retained-provider-admin/receipt.json ./scripts/rust-integration/retained-provider-admin/receipt.json
+COPY scripts/rust-integration/retained-c98-hdhr/receipt.json ./scripts/rust-integration/retained-c98-hdhr/receipt.json
+COPY scripts/rust-integration/milestone-batch98/acceptance.json ./scripts/rust-integration/milestone-batch98/acceptance.json
 COPY scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/user-agent/0-integration.json.json ./scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/user-agent/0-integration.json.json
 COPY scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/user-agent/1-packaged-checks.json.json ./scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/user-agent/1-packaged-checks.json.json
 COPY scripts/rust-integration/image57-checkpoint/evidence/matrix/controllers/user-agent.json ./scripts/rust-integration/image57-checkpoint/evidence/matrix/controllers/user-agent.json

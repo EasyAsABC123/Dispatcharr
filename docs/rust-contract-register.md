@@ -487,3 +487,20 @@ saves and exact cleanup. The timezone and UserAgent controllers exited 0.
 The register has 512 partial HTTP assignments and 286 unassigned operations.
 The timezone declaration remains method-unresolved with a witnessed GET request.
 Dispatcharr's original authors and contributors retain full credit.
+
+## Retained Original Candidate98 HDHomeRun and React ingress controls
+
+The [HDHomeRun and ingress binding](../scripts/rust-contracts/retained-c98-hdhr/bindings.json)
+adds 11 Original controls from the actual paired Candidate98 capture. The
+cases cover canonical collection and detail reads, the literal JSON detail
+suffix, the explicit bare HDHomeRun redirect, and six exact slashless React
+fallback requests. The clean paired run matched the selected wire and owned
+SQL boundaries, including the missing device and HEAD observations.
+
+The [receipt](../scripts/rust-integration/retained-c98-hdhr/receipt.json)
+binds the paired outcomes and cleanup to the retained Candidate98 cohort.
+The register has 517 partial HTTP assignments and 281 unassigned operations.
+The observed methods for the redirect and catch-all are recorded without
+changing their method-unresolved declarations. The scope leaves operation
+role matrices incomplete. Dispatcharr's original authors and contributors
+retain full credit.

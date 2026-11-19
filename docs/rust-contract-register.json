@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "9c800c99d2597682aaeefaa647cc750440034e7629be096dc79cc9eb16756409",
+    "scripts/rust-contracts/executable-source-inputs.json": "6e460e2db51117e18d383b1ddcd2afeb65b0c4a22852f4e107b115589170ea61",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -63,11 +63,12 @@
     "scripts/rust-contracts/retained-exact-vod/bindings.json": "c6b4deaf8aa0e070265bf6bc91a4abd718433c8396d648682a15099ae26bfde3",
     "scripts/rust-contracts/retained-image57-accounts/bindings.json": "510a6d658af1a0be636be8e897d583661ad29074c0a522535cd3936505c835c8",
     "scripts/rust-contracts/retained-image57-m3u/bindings.json": "9f98e95b6af397845cfdc71412ca45419ae0d6a338fb5a517f653acb68a3d631",
-    "scripts/rust-contracts/retained-provider-admin/bindings.json": "e109934cd592947120aefc733ea6d3494554ba38baca45cd9740a4e2d0e067e1"
+    "scripts/rust-contracts/retained-provider-admin/bindings.json": "e109934cd592947120aefc733ea6d3494554ba38baca45cd9740a4e2d0e067e1",
+    "scripts/rust-contracts/retained-c98-hdhr/bindings.json": "fce9f713bc1d4176ca7b0329fbf2365483e694d93806aeff4f07b669f912698e"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 512,
+    "operations": 517,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -338,6 +339,11 @@
         "path": "scripts/rust-contracts/retained-provider-admin/bindings.json",
         "sha256": "e109934cd592947120aefc733ea6d3494554ba38baca45cd9740a4e2d0e067e1",
         "kind": "retained_original_provider_and_core_admin_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-c98-hdhr/bindings.json",
+        "sha256": "fce9f713bc1d4176ca7b0329fbf2365483e694d93806aeff4f07b669f912698e",
+        "kind": "retained_original_C98_HDHomeRun_ingress_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -83074,15 +83080,96 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Candidate98-paired-HDHR-and-React",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "paired_candidate_revision": "452a7130dce1b96733dfcb06f04b7b7088688bbd",
+            "paired_image": "sha256:71ce0095c47bf00194eb1fa9e13b3e3ae65530b754d1be120b9f6683616f6cd8",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-c98-hdhr/receipt.json",
+                "sha256": "cc27d4d608bcd4526e3d1f844d0d0b05086565690669e6f3553cd74797aa89c9"
+              }
+            ]
+          },
+          "assertions": [
+            "Standard credential returns the exact owned canonical device list"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "retained_paired_HTTP_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-904bf410afa61f6f31f3:GET",
+            "fixture_id": "retained-Candidate98-paired-HDHR-and-React",
+            "pattern_exact": "api/hdhr/^devices/$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "resolver_ordinal": 177,
+            "resolver_name": "api:hdhr:hdhr-device-list",
+            "owning_milestone": "M7",
+            "method": "GET",
+            "source_action": "list",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "standard"
+            ],
+            "source_role_specs": {
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Standard credential returns the exact owned canonical device list"
+            ],
+            "result": {
+              "Source_case_observations": 1,
+              "retained_paired_HTTP_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "GET",
+                "name": "canonical-collection",
+                "native": {
+                  "body_sha256": "799d72b107ae95da83d02af92d7fc457f57172b13517055f397b5317e59e9f8b",
+                  "status": 200
+                },
+                "path_template": "/api/hdhr/devices/",
+                "resolver_ordinal": 177,
+                "role": "standard",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "799d72b107ae95da83d02af92d7fc457f57172b13517055f397b5317e59e9f8b",
+                  "status": 200
+                }
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-904bf410afa61f6f31f3:POST",
@@ -83315,15 +83402,112 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Candidate98-paired-HDHR-and-React",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "paired_candidate_revision": "452a7130dce1b96733dfcb06f04b7b7088688bbd",
+            "paired_image": "sha256:71ce0095c47bf00194eb1fa9e13b3e3ae65530b754d1be120b9f6683616f6cd8",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-c98-hdhr/receipt.json",
+                "sha256": "cc27d4d608bcd4526e3d1f844d0d0b05086565690669e6f3553cd74797aa89c9"
+              }
+            ]
+          },
+          "assertions": [
+            "Standard credential receives the exact owned detail and missing-device 404"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 2,
+            "retained_paired_HTTP_case_observations": 2,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-f7e00cea4d0010ef9052:GET",
+            "fixture_id": "retained-Candidate98-paired-HDHR-and-React",
+            "pattern_exact": "api/hdhr/^devices/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "resolver_ordinal": 179,
+            "resolver_name": "api:hdhr:hdhr-device-detail",
+            "owning_milestone": "M7",
+            "method": "GET",
+            "source_action": "retrieve",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "standard"
+            ],
+            "source_role_specs": {
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Standard credential receives the exact owned detail and missing-device 404"
+            ],
+            "result": {
+              "Source_case_observations": 2,
+              "retained_paired_HTTP_case_observations": 2,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "GET",
+                "name": "canonical-detail",
+                "native": {
+                  "body_sha256": "c7a53d3f341aa89bf795bf302df0c4c35eac1f6d97a7024b67354d1c7b165c40",
+                  "status": 200
+                },
+                "path_template": "/api/hdhr/devices/{owned_pk}/",
+                "resolver_ordinal": 179,
+                "role": "standard",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "c7a53d3f341aa89bf795bf302df0c4c35eac1f6d97a7024b67354d1c7b165c40",
+                  "status": 200
+                }
+              },
+              {
+                "method": "GET",
+                "name": "canonical-missing-detail",
+                "native": {
+                  "body_sha256": "2573a6249157ea2d21f58fb6cd5ee10b3bb33055ecdbede9d4acb6828c0dd4a8",
+                  "status": 404
+                },
+                "path_template": "/api/hdhr/devices/999999/",
+                "resolver_ordinal": 179,
+                "role": "standard",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "2573a6249157ea2d21f58fb6cd5ee10b3bb33055ecdbede9d4acb6828c0dd4a8",
+                  "status": 404
+                }
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-f7e00cea4d0010ef9052:PATCH",
@@ -83404,15 +83588,96 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Candidate98-paired-HDHR-and-React",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "paired_candidate_revision": "452a7130dce1b96733dfcb06f04b7b7088688bbd",
+            "paired_image": "sha256:71ce0095c47bf00194eb1fa9e13b3e3ae65530b754d1be120b9f6683616f6cd8",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-c98-hdhr/receipt.json",
+                "sha256": "cc27d4d608bcd4526e3d1f844d0d0b05086565690669e6f3553cd74797aa89c9"
+              }
+            ]
+          },
+          "assertions": [
+            "Standard credential receives the exact literal JSON-suffix device detail"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "retained_paired_HTTP_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-4c0b549152c518526c4e:GET",
+            "fixture_id": "retained-Candidate98-paired-HDHR-and-React",
+            "pattern_exact": "api/hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "resolver_ordinal": 180,
+            "resolver_name": "api:hdhr:hdhr-device-detail",
+            "owning_milestone": "M7",
+            "method": "GET",
+            "source_action": "retrieve",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "standard"
+            ],
+            "source_role_specs": {
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Standard credential receives the exact literal JSON-suffix device detail"
+            ],
+            "result": {
+              "Source_case_observations": 1,
+              "retained_paired_HTTP_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "GET",
+                "name": "json-suffix-detail",
+                "native": {
+                  "body_sha256": "c7a53d3f341aa89bf795bf302df0c4c35eac1f6d97a7024b67354d1c7b165c40",
+                  "status": 200
+                },
+                "path_template": "/api/hdhr/devices/{owned_pk}.json",
+                "resolver_ordinal": 180,
+                "role": "standard",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "c7a53d3f341aa89bf795bf302df0c4c35eac1f6d97a7024b67354d1c7b165c40",
+                  "status": 200
+                }
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-4c0b549152c518526c4e:PATCH",
@@ -241744,15 +242009,96 @@
           "owning_milestone": "M8",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Candidate98-paired-HDHR-and-React",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "paired_candidate_revision": "452a7130dce1b96733dfcb06f04b7b7088688bbd",
+            "paired_image": "sha256:71ce0095c47bf00194eb1fa9e13b3e3ae65530b754d1be120b9f6683616f6cd8",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-c98-hdhr/receipt.json",
+                "sha256": "cc27d4d608bcd4526e3d1f844d0d0b05086565690669e6f3553cd74797aa89c9"
+              }
+            ]
+          },
+          "assertions": [
+            "Bare /hdhr GET redirects permanently to /hdhr/ and drops the fixture query"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "retained_paired_HTTP_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-2e08393b29d6155d4506:METHOD_UNRESOLVED",
+            "fixture_id": "retained-Candidate98-paired-HDHR-and-React",
+            "pattern_exact": "hdhr",
+            "source_handler": "django.views.generic.base.RedirectView",
+            "resolver_ordinal": 364,
+            "resolver_name": "",
+            "owning_milestone": "M8",
+            "method": null,
+            "source_action": null,
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "standard"
+            ],
+            "source_role_specs": {
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Bare /hdhr GET redirects permanently to /hdhr/ and drops the fixture query"
+            ],
+            "result": {
+              "Source_case_observations": 1,
+              "retained_paired_HTTP_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "GET",
+                "name": "explicit-public-root-redirect",
+                "native": {
+                  "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                  "status": 301
+                },
+                "path_template": "/hdhr?fixture=ignored",
+                "resolver_ordinal": 364,
+                "role": "standard",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                  "status": 301
+                }
+              }
+            ]
+          }
         }
       ]
     },
@@ -276343,15 +276689,177 @@
           "owning_milestone": "M8",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "presented_invalid_bearer": {
+                "fixture_role_or_supplied_credential": "presented_invalid_bearer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "presented_invalid_bearer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Candidate98-paired-HDHR-and-React",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "paired_candidate_revision": "452a7130dce1b96733dfcb06f04b7b7088688bbd",
+            "paired_image": "sha256:71ce0095c47bf00194eb1fa9e13b3e3ae65530b754d1be120b9f6683616f6cd8",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-c98-hdhr/receipt.json",
+                "sha256": "cc27d4d608bcd4526e3d1f844d0d0b05086565690669e6f3553cd74797aa89c9"
+              }
+            ]
+          },
+          "assertions": [
+            "Six exact slashless HTTP requests reach the unchanged SPA catch-all with the supplied invalid bearer"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 6,
+            "retained_paired_HTTP_case_observations": 6,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-d9112bd8c31ab7b27518:METHOD_UNRESOLVED",
+            "fixture_id": "retained-Candidate98-paired-HDHR-and-React",
+            "pattern_exact": "<path:unused_path>",
+            "source_handler": "django.views.generic.base.TemplateView",
+            "resolver_ordinal": 590,
+            "resolver_name": "",
+            "owning_milestone": "M8",
+            "method": null,
+            "source_action": null,
+            "observed_methods": [
+              "GET",
+              "HEAD"
+            ],
+            "observed_roles": [
+              "presented_invalid_bearer"
+            ],
+            "source_role_specs": {
+              "presented_invalid_bearer": {
+                "fixture_role_or_supplied_credential": "presented_invalid_bearer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Six exact slashless HTTP requests reach the unchanged SPA catch-all with the supplied invalid bearer"
+            ],
+            "result": {
+              "Source_case_observations": 6,
+              "retained_paired_HTTP_case_observations": 6,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "GET",
+                "name": "api-root-slashless",
+                "native": {
+                  "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                  "status": 200
+                },
+                "path_template": "/api/hdhr?format=unknown",
+                "resolver_ordinal": 590,
+                "role": "presented_invalid_bearer",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                  "status": 200
+                }
+              },
+              {
+                "method": "GET",
+                "name": "public-device-list-slashless",
+                "native": {
+                  "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                  "status": 200
+                },
+                "path_template": "/hdhr/devices",
+                "resolver_ordinal": 590,
+                "role": "presented_invalid_bearer",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                  "status": 200
+                }
+              },
+              {
+                "method": "GET",
+                "name": "api-device-slashless",
+                "native": {
+                  "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                  "status": 200
+                },
+                "path_template": "/api/hdhr/devices/{owned_pk}?format=json&fixture=owned",
+                "resolver_ordinal": 590,
+                "role": "presented_invalid_bearer",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                  "status": 200
+                }
+              },
+              {
+                "method": "GET",
+                "name": "api-missing-device-slashless",
+                "native": {
+                  "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                  "status": 200
+                },
+                "path_template": "/api/hdhr/devices/owned-missing",
+                "resolver_ordinal": 590,
+                "role": "presented_invalid_bearer",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                  "status": 200
+                }
+              },
+              {
+                "method": "HEAD",
+                "name": "api-device-slashless-head",
+                "native": {
+                  "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                  "status": 200
+                },
+                "path_template": "/api/hdhr/devices/{owned_pk}",
+                "resolver_ordinal": 590,
+                "role": "presented_invalid_bearer",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                  "status": 200
+                }
+              },
+              {
+                "method": "GET",
+                "name": "api-device-slashless-range",
+                "native": {
+                  "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                  "status": 200
+                },
+                "path_template": "/api/hdhr/devices/{owned_pk}",
+                "resolver_ordinal": 590,
+                "role": "presented_invalid_bearer",
+                "selected_wire_and_sql_unchanged": true,
+                "source": {
+                  "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                  "status": 200
+                }
+              }
+            ]
+          }
         }
       ]
     },

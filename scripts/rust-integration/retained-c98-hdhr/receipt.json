@@ -1,0 +1,213 @@
+{
+  "actual_child_exit": 0,
+  "actual_controller_exit": 0,
+  "actual_fixture_tool_sha256": {
+    "scripts/rust-account-contracts/hdhr_fallback_probes.py": "3ec291d75d26cb9f2ce29b8e23b2b407a62e44dea79c58b4bd78a87b38f1e5d0"
+  },
+  "candidate_image": "sha256:71ce0095c47bf00194eb1fa9e13b3e3ae65530b754d1be120b9f6683616f6cd8",
+  "candidate_revision": "452a7130dce1b96733dfcb06f04b7b7088688bbd",
+  "captured_report_sha256": {
+    "cleanup": "4df81ae7b4bcb98be50ac0e1ae5b260220c940e53e502bea88f351e8d5bd1cb1",
+    "execution": "87fbde678d52958beb5c5ed861e1806b36475c3dfe6f55794924ce7289023720",
+    "receipt": "83ee23759a2e704713fec437a467c07bff5940e88b68670bf555890e14605d6f",
+    "report": "ce3bf3653bde06cbb01738449bbe95c0dffbc33b10264f33d8f65035374edc19"
+  },
+  "credit": "Original Dispatcharr authors and contributors retain full application and behavior credit.",
+  "exact_owned_cleanup": true,
+  "fully_verified_operations": 0,
+  "new_Source_or_Native_executions": 0,
+  "original_urlconf_sha256": {
+    "apps/api/urls.py": "ee72fb6d564ac86a5a9fcea794a8039bdbc2b4d3d5cf7035dd084500e3d039c6",
+    "apps/hdhr/api_urls.py": "160bcf87257919aa207289d75848e040d74ea92adb181d43be85bf4e84791c2a",
+    "apps/hdhr/api_views.py": "3949f85fffdddc134a3dd5006a3216ce9f5de5bd14131b888a722c079c0d169e",
+    "apps/hdhr/urls.py": "8d62f625444e611baa99dac8d5e8092c653f7274b783c3a6dd2e8130fc1ef5af",
+    "dispatcharr/settings.py": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+    "dispatcharr/urls.py": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f"
+  },
+  "owned_container_generations": 4,
+  "public_cohort_authority": {
+    "path": "scripts/rust-integration/milestone-batch98/acceptance.json",
+    "sha256": "a2eca66a326446a511e5a4e31000695ab4815a05b875e8f41faa22573dd37e39"
+  },
+  "rows": [
+    {
+      "method": "GET",
+      "name": "canonical-collection",
+      "native": {
+        "body_sha256": "799d72b107ae95da83d02af92d7fc457f57172b13517055f397b5317e59e9f8b",
+        "status": 200
+      },
+      "path_template": "/api/hdhr/devices/",
+      "resolver_ordinal": 177,
+      "role": "standard",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "799d72b107ae95da83d02af92d7fc457f57172b13517055f397b5317e59e9f8b",
+        "status": 200
+      }
+    },
+    {
+      "method": "GET",
+      "name": "canonical-detail",
+      "native": {
+        "body_sha256": "c7a53d3f341aa89bf795bf302df0c4c35eac1f6d97a7024b67354d1c7b165c40",
+        "status": 200
+      },
+      "path_template": "/api/hdhr/devices/{owned_pk}/",
+      "resolver_ordinal": 179,
+      "role": "standard",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "c7a53d3f341aa89bf795bf302df0c4c35eac1f6d97a7024b67354d1c7b165c40",
+        "status": 200
+      }
+    },
+    {
+      "method": "GET",
+      "name": "canonical-missing-detail",
+      "native": {
+        "body_sha256": "2573a6249157ea2d21f58fb6cd5ee10b3bb33055ecdbede9d4acb6828c0dd4a8",
+        "status": 404
+      },
+      "path_template": "/api/hdhr/devices/999999/",
+      "resolver_ordinal": 179,
+      "role": "standard",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "2573a6249157ea2d21f58fb6cd5ee10b3bb33055ecdbede9d4acb6828c0dd4a8",
+        "status": 404
+      }
+    },
+    {
+      "method": "GET",
+      "name": "json-suffix-detail",
+      "native": {
+        "body_sha256": "c7a53d3f341aa89bf795bf302df0c4c35eac1f6d97a7024b67354d1c7b165c40",
+        "status": 200
+      },
+      "path_template": "/api/hdhr/devices/{owned_pk}.json",
+      "resolver_ordinal": 180,
+      "role": "standard",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "c7a53d3f341aa89bf795bf302df0c4c35eac1f6d97a7024b67354d1c7b165c40",
+        "status": 200
+      }
+    },
+    {
+      "method": "GET",
+      "name": "explicit-public-root-redirect",
+      "native": {
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": 301
+      },
+      "path_template": "/hdhr?fixture=ignored",
+      "resolver_ordinal": 364,
+      "role": "standard",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": 301
+      }
+    },
+    {
+      "method": "GET",
+      "name": "api-root-slashless",
+      "native": {
+        "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      },
+      "path_template": "/api/hdhr?format=unknown",
+      "resolver_ordinal": 590,
+      "role": "presented_invalid_bearer",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      }
+    },
+    {
+      "method": "GET",
+      "name": "public-device-list-slashless",
+      "native": {
+        "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      },
+      "path_template": "/hdhr/devices",
+      "resolver_ordinal": 590,
+      "role": "presented_invalid_bearer",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      }
+    },
+    {
+      "method": "GET",
+      "name": "api-device-slashless",
+      "native": {
+        "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      },
+      "path_template": "/api/hdhr/devices/{owned_pk}?format=json&fixture=owned",
+      "resolver_ordinal": 590,
+      "role": "presented_invalid_bearer",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      }
+    },
+    {
+      "method": "GET",
+      "name": "api-missing-device-slashless",
+      "native": {
+        "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      },
+      "path_template": "/api/hdhr/devices/owned-missing",
+      "resolver_ordinal": 590,
+      "role": "presented_invalid_bearer",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      }
+    },
+    {
+      "method": "HEAD",
+      "name": "api-device-slashless-head",
+      "native": {
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": 200
+      },
+      "path_template": "/api/hdhr/devices/{owned_pk}",
+      "resolver_ordinal": 590,
+      "role": "presented_invalid_bearer",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": 200
+      }
+    },
+    {
+      "method": "GET",
+      "name": "api-device-slashless-range",
+      "native": {
+        "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      },
+      "path_template": "/api/hdhr/devices/{owned_pk}",
+      "resolver_ordinal": 590,
+      "role": "presented_invalid_bearer",
+      "selected_wire_and_sql_unchanged": true,
+      "source": {
+        "body_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      }
+    }
+  ],
+  "settled_process_group_and_EOF": true,
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "strictly_scoped_native_observations_retained": true
+}
