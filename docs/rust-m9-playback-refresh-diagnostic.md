@@ -45,3 +45,15 @@ container generations retired.
 The trial qualified the longer origin and the two-job sequence. The
 two-hour workload and its resource and retention budgets remain open.
 [Candidate94 qualification receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/candidate94.json)
+
+## Resource and shared-slot qualification
+
+The first short resource trial recorded eleven complete cgroup and process
+censuses for the four measured roles. The private relay closed all ten
+viewer connections before an HTTP status arrived. The relay had a five-second
+idle timeout, and the preceding successful trial recorded first media bytes
+between 6.28 and 6.31 seconds. The controller exited 1 and removed all owned
+resources. The corrected fixture keeps the existing 15-second client deadline
+and allows 16 seconds of relay inactivity. A local delayed-response test passed.
+A full resource window and the two-hour soak remain open.
+[First resource trial receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/resource-short-attempt1.json)

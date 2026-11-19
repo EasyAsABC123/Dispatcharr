@@ -1,0 +1,110 @@
+{
+  "actual_controller_exit": 0,
+  "actual_packaged_build_exit": 0,
+  "actual_scheduled_rows_per_backend": 1,
+  "artifact_sha256": {
+    "batch_launch_binding": "6aea2da9c476e693676f18298e25eed404e7fad14a3713107881b1751bad84a6",
+    "controller": "d601a0256d6053794d599e75fecc223449a4d173f9a75bf2ca311efd71c4fbde",
+    "package_manifest": "544d08d2b32eb742048330a25910ad6f5782d7baeb5c14d5df6ca78e3254df6b",
+    "pair_gate": "1c55a4aac0f0846deb8fcbb883d1efdfaabef8cfe695e3d037d838685a6d63e6",
+    "pair_projection": "1019101ffa724df3fe31464d8af427cab8c98321e38ec2e95553e119ef1a4e17"
+  },
+  "exact_two_project_cleanup": true,
+  "full_M6_accepted": false,
+  "lanes": {
+    "native": {
+      "actual_VOD_child_status": "SUCCESS",
+      "actual_child_task_order": [
+        "apps.m3u.tasks.refresh_account_profiles",
+        "apps.vod.tasks.refresh_vod_content"
+      ],
+      "actual_exit": 0,
+      "actual_parent_status": "SUCCESS",
+      "actual_root_task": "apps.m3u.tasks.refresh_single_m3u_account",
+      "actual_root_time_limits": [
+        3600,
+        3500
+      ],
+      "durable_run_count_change": 1,
+      "image_id": "sha256:c07435659c99850622303f6c92837a275e050f4459cbe600575fa9674eb635fc",
+      "media_performance_verified": false,
+      "owned_provider_action_counts": {
+        "get_series": 1,
+        "get_series_categories": 1,
+        "get_vod_categories": 1,
+        "get_vod_streams": 1,
+        "live_streams": 1
+      },
+      "owned_sql": {
+        "movie_count": 1,
+        "movie_relation_count": 1,
+        "series_count": 0,
+        "stream_count": 1
+      },
+      "pair_scope": "beat-enabled",
+      "retired_container_generations": 3,
+      "scope_artifact_sha256": {
+        "broker_journal": "d026bb836345d7ce3c914b144b5577e2f18784241771cacd810258f3c511f862",
+        "broker_snapshot": "7b62efd8d230a158e69bdbaf3da6d7ad00a955d88a3fce08ac45d381b5e87e3f",
+        "cleanup": "45e7174dc3cb557640ee445aae9cc78cb9ab482d972f5e379542da01244e8e3a",
+        "execution": "eb5811f611f278b54c466b71c25682f3d3fbdf945bb1d04b99add9425a5b4a12",
+        "lane": "f2dc564a6dcfa5dfb088f41e6455c6b28be8bcb96edf48ea1f9dd4e1a324c185",
+        "observer_terminal": "72b7ffa2f83755b390b60719cb4a9ea54dbc0a13aef43ecebb15ae907b3195d9",
+        "row": "7b55f60579fe5830523ed20cf8792fb0ca34535671cd1010331d7f788998ad43"
+      }
+    },
+    "source": {
+      "actual_VOD_child_status": "SUCCESS",
+      "actual_child_task_order": [
+        "apps.m3u.tasks.refresh_account_profiles",
+        "apps.vod.tasks.refresh_vod_content"
+      ],
+      "actual_exit": 0,
+      "actual_parent_status": "SUCCESS",
+      "actual_root_task": "apps.m3u.tasks.refresh_single_m3u_account",
+      "actual_root_time_limits": [
+        3600,
+        3500
+      ],
+      "durable_run_count_change": 1,
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "media_performance_verified": false,
+      "owned_provider_action_counts": {
+        "get_series": 1,
+        "get_series_categories": 1,
+        "get_vod_categories": 1,
+        "get_vod_streams": 1,
+        "live_streams": 1
+      },
+      "owned_sql": {
+        "movie_count": 1,
+        "movie_relation_count": 1,
+        "series_count": 0,
+        "stream_count": 1
+      },
+      "pair_scope": "beat-enabled",
+      "retired_container_generations": 2,
+      "scope_artifact_sha256": {
+        "broker_journal": "c2c4f8c5104fa60645acf770b1a4d584bda651c2a3e88b1e8a794433cad874e7",
+        "broker_snapshot": "76d3ce47eb3d7bf02ab2c0ee50067972e1d657fd397f6a9ee6a2c6665ccc5b19",
+        "cleanup": "75b1e8e6ae25227bce962ffae071b945e86d636e13bf1cd33f6905a22ffba243",
+        "execution": "49c1ed6287cb6a3a92b7e72aa68d63db720be7118e8c7a47690e3508e69ca27c",
+        "lane": "1de1bdd93711df03fdf82b0684a7976a66791ae76043354b3ee2449cb39487e3",
+        "observer_terminal": "bf89d64af26f492a10f7fcdc5b14b0b0ae60614bd57089874d8b3053ceb34f1e",
+        "row": "5a519c06e2121fac3165a71053e422dc6b5a192bc198c7f90360c8c81b38c341"
+      }
+    }
+  },
+  "native_revision": "68cd75283d4aea6ee19b963d1dbb20be5ce3614c",
+  "outer_eof_and_group_observation": "both EOFs and process-group settlement are verified for each tracked lane",
+  "outer_exit_source": "scoped queue recorded the pair process actual return code",
+  "performance_accepted": false,
+  "retained_C95_failure": {
+    "actual_exit": 1,
+    "exact_cleanup": true,
+    "published_path": "scripts/rust-integration/milestone-batch95/xc-vod-candidate95.json",
+    "sha256": "5db788974d76bd9c76b0a94c88e71b6cd8cf2d754a1a506d0bb4c6b9bf3eb08d"
+  },
+  "scope": "paired owned scheduled XC refresh and automatic VOD ingestion child",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}

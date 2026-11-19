@@ -48,8 +48,10 @@ deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
 [The XC live-to-VOD checkpoint](rust-milestone-batch95.md)
-verifies three direct pairs and records the timed-out Native scheduled case.
-The following scheduler correction passed its focused Rust tests.
+verifies three direct pairs and records the timed-out Candidate95 scheduled
+case. Candidate96 passed its focused tests and the exact scheduled Compose
+replay. Both backends completed the live refresh and its VOD child with
+matching task lineage and owned records.
 
 [The batch guide and Auto Sync checkpoint](rust-milestone-batch94.md)
 passes selected XMLTV and source-less programme publication, the default
@@ -57,6 +59,9 @@ atomic guard, and the exact packaged React regex preview contract. The paired
 Auto Sync benchmark measured 16.72% lower CPU and 56.36% lower peak working set,
 with two full-scan p95 failures.
 [Paired Auto Sync benchmark](../scripts/rust-perf/candidate94-regex-preview/README.md)
+The follow-up batching correction passed its three focused Rust tests,
+workspace formatting and strict Store Clippy. The exact Compose comparison
+and performance replay are pending.
 
 [The persisted System Logs checkpoint](rust-milestone-batch92.md)
 verifies metadata, cursor tail and attachments against the same read-only
