@@ -1,0 +1,3765 @@
+{
+  "all_phases_exact_sql_and_sequences": true,
+  "build_manifest_sha256": "600ef2153fe473e7f91922a8b8b893ef9334ff4d1505f696a9ef98f3d47c69bf",
+  "candidate_revision": "d58a400ad8bbec4fa7fc7546dca8525430afa47c",
+  "credit": "Original Dispatcharr authors and contributors retain full application, UI and behavior credit.",
+  "exact_owned_cleanup": true,
+  "fixture_sha256": "f9a3549115c54101ae0905eaa549a2fd78f748f8b34a7773915915f8a0c13ea1",
+  "historical_actual_exit": 1,
+  "historical_projection_sha256": "37c4bb0fcb526d7f7d89e145005ca30c42a2a6215a004ecff949387c4c802700",
+  "inner_actual_exit": 0,
+  "matched_pairs": 120,
+  "matrix_plan_sha256": "d62d1628cc6f6360e4acfb554bf1055516c6c029145f96b717e0fa3801122cbb",
+  "milestone_accepted": false,
+  "native_image": "sha256:3d200c0a1334fa5fec7927d7978441ec475d3e8a9254ffc7479f82608ea6a895",
+  "operations": [
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:GET",
+      "key": "integration-get",
+      "method": "GET",
+      "name": "api:connect:integration-detail",
+      "path_template": "/api/connect/integrations/{integration}/",
+      "pattern_exact": "api/connect/^integrations/(?P<pk>[^/.]+)/$",
+      "resolver_ordinal": 334,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "b33d8c1fca01a6ff0483b8f8f764b8cc5514a6dc4e8aa3ff4b6ce0baeeecd28b",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "2c305ec396584d9df686f99b52fc9bd8a92e3635ebb9618586b62735e90d8929",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "b33d8c1fca01a6ff0483b8f8f764b8cc5514a6dc4e8aa3ff4b6ce0baeeecd28b",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "2c305ec396584d9df686f99b52fc9bd8a92e3635ebb9618586b62735e90d8929",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "bare"
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:GET",
+      "key": "integration-get",
+      "method": "GET",
+      "name": "api:connect:integration-detail",
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "pattern_exact": "api/connect/^integrations/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 335,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "8d884ea3a5b57bc13808db92279acbe1dd3a3272f60e82d3045273ce34685680",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "af3f38f5ac7259b5065e630715973123ddffdfac82ae4868cfa438942e53a92a",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "8d884ea3a5b57bc13808db92279acbe1dd3a3272f60e82d3045273ce34685680",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "af3f38f5ac7259b5065e630715973123ddffdfac82ae4868cfa438942e53a92a",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "json"
+    },
+    {
+      "contract_id": "route-1f1b8080760206f84e4a:GET",
+      "key": "nested-subscriptions",
+      "method": "GET",
+      "name": "api:connect:integration-list-subscriptions",
+      "path_template": "/api/connect/integrations/{integration}/subscriptions/",
+      "pattern_exact": "api/connect/^integrations/(?P<pk>[^/.]+)/subscriptions/$",
+      "resolver_ordinal": 336,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "8d925036c2631e1134e6c33a93177e175799ca052ca7f9bc4a56762d11abd6fc",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "f8f286057d2b07ceb222c3000fe0df766afe5f5c516cd73bdf958a47b1db52b1",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "8d925036c2631e1134e6c33a93177e175799ca052ca7f9bc4a56762d11abd6fc",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "f8f286057d2b07ceb222c3000fe0df766afe5f5c516cd73bdf958a47b1db52b1",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "bare"
+    },
+    {
+      "contract_id": "route-9bf8d00e12fb7e429743:GET",
+      "key": "nested-subscriptions",
+      "method": "GET",
+      "name": "api:connect:integration-list-subscriptions",
+      "path_template": "/api/connect/integrations/{integration}/subscriptions.json",
+      "pattern_exact": "api/connect/^integrations/(?P<pk>[^/.]+)/subscriptions\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 337,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 500,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": true,
+            "expected_scoped_status": 500,
+            "expected_stock_status": 200,
+            "mime": "text/html",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 500,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": true,
+            "expected_scoped_status": 500,
+            "expected_stock_status": 200,
+            "mime": "text/html",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 500,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": true,
+            "expected_scoped_status": 500,
+            "expected_stock_status": 200,
+            "mime": "text/html",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 500,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": true,
+            "expected_scoped_status": 500,
+            "expected_stock_status": 200,
+            "mime": "text/html",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "json"
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:GET",
+      "key": "subscriptions-list",
+      "method": "GET",
+      "name": "api:connect:subscription-list",
+      "path_template": "/api/connect/subscriptions/",
+      "pattern_exact": "api/connect/^subscriptions/$",
+      "resolver_ordinal": 342,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "2d79a07de5d0a37b99fd835ba5159870da8abef001c79858930b8259eac5e05a",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "6815dffa65df644e17dd76810419e3afbec8d556634bcb16d67b52cf90774cbd",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "2d79a07de5d0a37b99fd835ba5159870da8abef001c79858930b8259eac5e05a",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "6815dffa65df644e17dd76810419e3afbec8d556634bcb16d67b52cf90774cbd",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "bare"
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:GET",
+      "key": "subscriptions-list",
+      "method": "GET",
+      "name": "api:connect:subscription-list",
+      "path_template": "/api/connect/subscriptions.json",
+      "pattern_exact": "api/connect/^subscriptions\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 343,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "4db31931ab5751f76c87fde99a1a1c39137d997f2d0fa87426d6cdc3b4a95847",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "6f91f625b2ab6008bda46325b88d31e136a5450f33d4a29cc1a8610f1eeb2ae9",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "4db31931ab5751f76c87fde99a1a1c39137d997f2d0fa87426d6cdc3b4a95847",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "6f91f625b2ab6008bda46325b88d31e136a5450f33d4a29cc1a8610f1eeb2ae9",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "json"
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:GET",
+      "key": "subscription-detail",
+      "method": "GET",
+      "name": "api:connect:subscription-detail",
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "pattern_exact": "api/connect/^subscriptions/(?P<pk>[^/.]+)/$",
+      "resolver_ordinal": 344,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "e54fea586e3f65420909da0636c133078cbbacb6f87a88e43f45181e60589d84",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "20c781101cfc82bdba1620791a4d2bf42991296a544a07873dcd0841dbfc8606",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "e54fea586e3f65420909da0636c133078cbbacb6f87a88e43f45181e60589d84",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "20c781101cfc82bdba1620791a4d2bf42991296a544a07873dcd0841dbfc8606",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "bare"
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:GET",
+      "key": "subscription-detail",
+      "method": "GET",
+      "name": "api:connect:subscription-detail",
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "pattern_exact": "api/connect/^subscriptions/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 345,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "45aa719429d4ffc138a08813df8864ce1f0d4df3d0d1e91b6a326c0b95efaf69",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "13efbcc3e0860731751edae85e87416e04255b9744f8f75e1ecfbbf99b263dea",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "45aa719429d4ffc138a08813df8864ce1f0d4df3d0d1e91b6a326c0b95efaf69",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "13efbcc3e0860731751edae85e87416e04255b9744f8f75e1ecfbbf99b263dea",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "json"
+    },
+    {
+      "contract_id": "route-abd3ffea3e4cff39ddeb:GET",
+      "key": "log-detail",
+      "method": "GET",
+      "name": "api:connect:delivery-log-detail",
+      "path_template": "/api/connect/logs/{log}/",
+      "pattern_exact": "api/connect/^logs/(?P<pk>[^/.]+)/$",
+      "resolver_ordinal": 348,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "baaab6f09016b5f0a0a9547042aac8acdb48cf1a95f0e9c3a8639219a1ed550a",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "ae6748a70c93edc933f621b2df663809b11e3718fcdf7d26234845425c4d3173",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "baaab6f09016b5f0a0a9547042aac8acdb48cf1a95f0e9c3a8639219a1ed550a",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "ae6748a70c93edc933f621b2df663809b11e3718fcdf7d26234845425c4d3173",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "bare"
+    },
+    {
+      "contract_id": "route-76a1ff925981b7100a3f:GET",
+      "key": "log-detail",
+      "method": "GET",
+      "name": "api:connect:delivery-log-detail",
+      "path_template": "/api/connect/logs/{log}.json",
+      "pattern_exact": "api/connect/^logs/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 349,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "7c1a6fc9c77b68781dc0e2b76a9dc45974971f7216ea6218c2e5356ef1d2bf43",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dc73dadacfa0f8a2d5efe456395083ba6c8f89ba5b369714c8a53ea5381f3e65",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "7c1a6fc9c77b68781dc0e2b76a9dc45974971f7216ea6218c2e5356ef1d2bf43",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dc73dadacfa0f8a2d5efe456395083ba6c8f89ba5b369714c8a53ea5381f3e65",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "json"
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:PATCH",
+      "key": "integration-patch",
+      "method": "PATCH",
+      "name": "api:connect:integration-detail",
+      "path_template": "/api/connect/integrations/{integration}/",
+      "pattern_exact": "api/connect/^integrations/(?P<pk>[^/.]+)/$",
+      "resolver_ordinal": 334,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "b2ffd78e2e5ee4891c68b2c91f7b5591e07b263fdb54b12427ef8cd2aac8fbed",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "97f5a20cce91963515127bc5b325212c9a53b90ce2ef0c35871eb20164040cef",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "83e429d1543ae24f4eb0074af1ed10478990489f40a923bf033690805f9533e3",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "a13feef480e5d7e9ee8e5f808902048e29012c1d86d7cdade78454caf431eedf",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "bare"
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:PATCH",
+      "key": "integration-patch",
+      "method": "PATCH",
+      "name": "api:connect:integration-detail",
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "pattern_exact": "api/connect/^integrations/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 335,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "a324f299bef5ba3283edec03fb0faf1870bbb5994bdcf3d5b7be79553e77450b",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "830a9dfe6b7e286bfab907017848ee9618a538a14af08243f9a50d04283e0a7d",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "1d9f0587c1368994d4eaf939a8237494ae8031e7c7239083061e0a972222333d",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "22b12f1ab850dffb533f528f58d89c2a2c42be1908cfad05df3bc587f504490d",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "json"
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:POST",
+      "key": "subscription-create",
+      "method": "POST",
+      "name": "api:connect:subscription-list",
+      "path_template": "/api/connect/subscriptions/",
+      "pattern_exact": "api/connect/^subscriptions/$",
+      "resolver_ordinal": 342,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 201,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 201,
+            "expected_stock_status": 201,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "c148682c5bf744186f33e79004fd8166bfb27b464e622ae9adfc66af5b0d254b",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 201,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 201,
+            "expected_stock_status": 201,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "d21ec994a4a45439474811bee5c24179771b9867b64300adbf9d46f4032d1261",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 201,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 201,
+            "expected_stock_status": 201,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "47ac77a75967cc006b1081b5d5b4670e77431d3a25468f212b8af1d1029dcbce",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 201,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 201,
+            "expected_stock_status": 201,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "d6e50149bd0ae395406f64eb178b72287faa585c42e5fd6429a9af58e64d0df2",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "bare"
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:POST",
+      "key": "subscription-create",
+      "method": "POST",
+      "name": "api:connect:subscription-list",
+      "path_template": "/api/connect/subscriptions.json",
+      "pattern_exact": "api/connect/^subscriptions\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 343,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 201,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 201,
+            "expected_stock_status": 201,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "0f3d3bbcd45cc0365599f4e6537a1b7bf612bff5b5083254f87ace9f4ec68b1b",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 201,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 201,
+            "expected_stock_status": 201,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "85ba50c6beca699b768067fff62a345adcf7792015cf8d0537722b7cc05054d6",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 201,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 201,
+            "expected_stock_status": 201,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "a1738e70ef147587afb2d3d5ef1aa37050c466d677371a4867e4971c3323f320",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 201,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 201,
+            "expected_stock_status": 201,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "09a95230aeca0b9315c2e71245d21ec94260197abf3fd8b76c9ad0f0e32a4681",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "json"
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PUT",
+      "key": "subscription-put",
+      "method": "PUT",
+      "name": "api:connect:subscription-detail",
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "pattern_exact": "api/connect/^subscriptions/(?P<pk>[^/.]+)/$",
+      "resolver_ordinal": 344,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "ad61fff0d1a5705e0f484052d78a2911a2cd174bac66f792c2f0513e27d5c3ba",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "1ff9c9438a4516eb166f8ff111994b3d54af13131aa5a96d56afd3dfbdb31a8a",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "86804918a4682126af3351cea9a9f40a78faeba1d13bb9356676b5c8f444892e",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "f1a712ffc441bee5f8d37ba5132ef1f4f7c555eec08ddf64033b807bf8728a9c",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "bare"
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PUT",
+      "key": "subscription-put",
+      "method": "PUT",
+      "name": "api:connect:subscription-detail",
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "pattern_exact": "api/connect/^subscriptions/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 345,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "143a9fa393b2cbf9095cc4ea0db3d1a3414b3a15536c1432a83a89d2833536d6",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "1448196e026a2d724324ce0a3d593768510cf907d1b4634d92a2a00f67e9f2f6",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "4429e9944fb07c892c97af5eeca6505e61583529a82ac856827e674ae91dc521",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "7934f98a468ee9ec18ccd4aec65c1f6f1aa51bec403f88234bb870e4e11fec6d",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "json"
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PATCH",
+      "key": "subscription-patch",
+      "method": "PATCH",
+      "name": "api:connect:subscription-detail",
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "pattern_exact": "api/connect/^subscriptions/(?P<pk>[^/.]+)/$",
+      "resolver_ordinal": 344,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "42d56a199235b954701a97330eed540baed03297b1eb69c1c8d6ba02a3f80e36",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "0085432b2687984a0be3e11f2b503aee247fe505dcb63486f83a787e891f772c",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "528dd4977949e1d880f822bc3622bb91281f547e00417d1fdaa47525803bf895",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "4c0f6581fab970a8a99fbc4b0c372852de1e9650fcaea2df8b47fb18a8d4351b",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "bare"
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PATCH",
+      "key": "subscription-patch",
+      "method": "PATCH",
+      "name": "api:connect:subscription-detail",
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "pattern_exact": "api/connect/^subscriptions/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 345,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "453d240b1dcebd98d86bd5b979261397c56293a7c58fc29f92bf81da55b50c8a",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "618e724aab793c44225d14a81b955b8c5d61c346046b2adef08e377516472cc7",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9fc5f5d019b59bac3f7c4a01cbbe06d900aff4f2095afaae35e4b027e6efba6c",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 200,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 200,
+            "expected_stock_status": 200,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "23336be47bfd59dfae863f1f4228905fadd8e586c3c115c409d6985839cc6a55",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "json"
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:DELETE",
+      "key": "subscription-delete",
+      "method": "DELETE",
+      "name": "api:connect:subscription-detail",
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "pattern_exact": "api/connect/^subscriptions/(?P<pk>[^/.]+)/$",
+      "resolver_ordinal": 344,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 204,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 204,
+            "expected_stock_status": 204,
+            "mime": "",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 204,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 204,
+            "expected_stock_status": 204,
+            "mime": "",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 204,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 204,
+            "expected_stock_status": 204,
+            "mime": "",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 204,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 204,
+            "expected_stock_status": 204,
+            "mime": "",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "bare"
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:DELETE",
+      "key": "subscription-delete",
+      "method": "DELETE",
+      "name": "api:connect:subscription-detail",
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "pattern_exact": "api/connect/^subscriptions/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 345,
+      "role_cases": [
+        {
+          "Native": {
+            "actual_status": 204,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 204,
+            "expected_stock_status": 204,
+            "mime": "",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 204,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 204,
+            "expected_stock_status": 204,
+            "mime": "",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "role": "admin_api_key",
+            "scope_response_match": true
+          },
+          "role": "admin_api_key"
+        },
+        {
+          "Native": {
+            "actual_status": 204,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 204,
+            "expected_stock_status": 204,
+            "mime": "",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 204,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": null,
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 204,
+            "expected_stock_status": 204,
+            "mime": "",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "role": "admin_jwt",
+            "scope_response_match": true
+          },
+          "role": "admin_jwt"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "role": "anonymous",
+            "scope_response_match": true
+          },
+          "role": "anonymous"
+        },
+        {
+          "Native": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 401,
+            "authentication_challenge_present": true,
+            "denial_json_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 401,
+            "expected_stock_status": 401,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+            "role": "inactive_admin",
+            "scope_response_match": true
+          },
+          "role": "inactive_admin"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "standard",
+            "scope_response_match": true
+          },
+          "role": "standard"
+        },
+        {
+          "Native": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "Source": {
+            "actual_status": 403,
+            "authentication_challenge_present": false,
+            "denial_json_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "exact_observed_legacy_error_match": false,
+            "expected_scoped_status": 403,
+            "expected_stock_status": 403,
+            "mime": "application/json",
+            "owned_sql_rows_match": true,
+            "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "role": "viewer",
+            "scope_response_match": true
+          },
+          "role": "viewer"
+        }
+      ],
+      "variant": "json"
+    }
+  ],
+  "outer_actual_exit": 0,
+  "owned_roles_retired": [
+    "baseline",
+    "candidate",
+    "data-init",
+    "origin"
+  ],
+  "performance_verified": false,
+  "physical_http_cells": 240,
+  "raw_fingerprints": {
+    "binding.json": "74ddd276e2e1e4d2d7ed77af9978f17ca016c917af723cc3fcdfcad223d79255",
+    "evidence/integration.json": "259d9a7cfaf77efa14960009f656d975d2bd88adb7d6987764e396bca1feae91",
+    "evidence/owned-before-compose-down.json": "877791ff7eaf18073e6cc0250393d4daf05a5ff36eacda202fb33325faba89b5",
+    "execution.json": "bdd72228e2deace0bb3f33fe53f2f78edb02dd1ed7fe6b17f80a79d2fd421947",
+    "execution.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "execution.stdout": "b168b8a551f7a998d95c0db57a393f7f110bc5ef8eb26f76fb146495f0245b59",
+    "independent-cleanup.json": "03e6c506eef18de4bb1a20a90f7b49c0a2b202f531d6425e658059aa78142a89",
+    "outer-replay.log": "3cc4d4b75664db43f77c119abe4c08742158d44db39ce7608bd9237727e76e60",
+    "outer-state.json": "1990d1dd8805b4f130ffd42db2f365ef987dd062b045b3d51470155efcc80466",
+    "receipt.json": "860871a7543315a31c315d78c239c76c29ca1b1bf26efb15cf28ea531ebd6407"
+  },
+  "scope": "retained_C106_exact_Connect_JSON_and_canonical_replay",
+  "scoped_legacy_error_pairs": 2,
+  "settled_output_and_process_group": true,
+  "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "whole_operation_verified": false,
+  "zero_owned_delivery": true
+}

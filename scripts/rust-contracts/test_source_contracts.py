@@ -25,6 +25,7 @@ import retained_provider_admin_contracts
 import retained_c98_hdhr_contracts
 import retained_core_profile_json_contracts
 import retained_hdhr_literal_contracts
+import retained_c106_connect_replay_contracts
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -255,7 +256,7 @@ class SourceContracts(unittest.TestCase):
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
-        for name in retained_set_epg_selected_contracts.dependencies() | retained_paired_read_contracts.dependencies() | retained_live_stop_contracts.dependencies() | retained_ts_controls_contracts.dependencies() | retained_canonical_management_contracts.dependencies() | retained_exact_vod_contracts.dependencies() | retained_image57_accounts_contracts.dependencies() | retained_image57_m3u_contracts.dependencies() | retained_provider_admin_contracts.dependencies() | retained_c98_hdhr_contracts.dependencies() | retained_core_profile_json_contracts.dependencies() | retained_hdhr_literal_contracts.dependencies():
+        for name in retained_set_epg_selected_contracts.dependencies() | retained_paired_read_contracts.dependencies() | retained_live_stop_contracts.dependencies() | retained_ts_controls_contracts.dependencies() | retained_canonical_management_contracts.dependencies() | retained_exact_vod_contracts.dependencies() | retained_image57_accounts_contracts.dependencies() | retained_image57_m3u_contracts.dependencies() | retained_provider_admin_contracts.dependencies() | retained_c98_hdhr_contracts.dependencies() | retained_core_profile_json_contracts.dependencies() | retained_hdhr_literal_contracts.dependencies() | retained_c106_connect_replay_contracts.dependencies():
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
@@ -275,9 +276,9 @@ class SourceContracts(unittest.TestCase):
 
     def test_exact_partial_assignments(self):
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         assigned = [o for r in rows for o in r['operations'] if 'executable_Source_contract' in o]
-        self.assertEqual(len(assigned), 545)
+        self.assertEqual(len(assigned), 565)
         self.assertEqual(sum(o['method'] is None for o in assigned), 216)
         self.assertEqual(sum(o['result']['new_Source_cases_this_task'] for o in assigned), 78)
         self.assertTrue(all(not o['fully_verified'] for r in rows for o in r['operations']))
@@ -299,13 +300,13 @@ class SourceContracts(unittest.TestCase):
         self.assertEqual((case["method"], case["literal_path"], case["role"], case["status"]),
                          ("POST", "/api/m3u/refresh/6/", "admin", 202))
         self.assertTrue(case["profile_parent_is_refresh_root"])
-        self.assertEqual(result["operations"], 545)
+        self.assertEqual(result["operations"], 565)
         xc.restore_pre_xc(self.root, rows)
         self.assertEqual(operation, xc.reference(self.root)["prior_operation"])
-        self.assertEqual(sum("executable_Source_contract" in op for row in rows for op in row["operations"]), 544)
+        self.assertEqual(sum("executable_Source_contract" in op for row in rows for op in row["operations"]), 564)
         audit = m0_source_assignments.generate(self.root)
-        self.assertEqual(audit["counts"]["executable_Source_partial_operations"], 545)
-        self.assertEqual(audit["counts"]["operations_without_executable_Source_assignment"], 253)
+        self.assertEqual(audit["counts"]["executable_Source_partial_operations"], 565)
+        self.assertEqual(audit["counts"]["operations_without_executable_Source_assignment"], 233)
         self.assertEqual(audit["counts"]["method_unresolved_with_Source_fixture"], 216)
         self.assertEqual(audit["counts"]["fully_verified_operations"], 0)
 
@@ -315,7 +316,7 @@ class SourceContracts(unittest.TestCase):
         subject.validate(self.root, packet)
         self.assertEqual(packet['capture_boundary']['observed_HTTP_status_counts']['500'], 75)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -328,6 +329,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         subject.restore_pre_alias_remainder(self.root, rows)
         self.assertEqual(sum('executable_Source_contract' in op for route in rows
@@ -343,7 +345,7 @@ class SourceContracts(unittest.TestCase):
         binding = subject.load(self.root)
         subject.validate(self.root, binding)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         operations = {op['contract_id']: op for route in rows for op in route['operations']}
         self.assertFalse(operations[subject.CONTRACT]['role_matrix']['complete'])
         self.assertNotIn('executable_Source_contract', operations['route-247b2930daac158ddf19:POST'])
@@ -359,6 +361,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         subject.restore_pre_connect_test(self.root, rows)
         self.assertNotIn('executable_Source_contract', operations[subject.CONTRACT])
 
@@ -367,7 +370,7 @@ class SourceContracts(unittest.TestCase):
         binding = subject.load(self.root)
         subject.validate(self.root, binding)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         records = {op['contract_id']: op for route in rows for op in route['operations']}
         assigned = records[subject.CONTRACT]
         self.assertEqual([case['status'] for case in assigned['executable_Source_contract']['cases']], [200, 400])
@@ -382,7 +385,7 @@ class SourceContracts(unittest.TestCase):
         packet = subject.load_batch(self.root)
         subject.validate_batch(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         operations = {op['contract_id']: op for route in rows for op in route['operations']}
         operation = operations[subject.BATCH_CONTRACT]
         self.assertIn('executable_Source_contract', operation)
@@ -418,7 +421,7 @@ class SourceContracts(unittest.TestCase):
         packet = retained_connect_detail_contracts.load(self.root)
         retained_connect_detail_contracts.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -431,6 +434,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -445,7 +449,7 @@ class SourceContracts(unittest.TestCase):
         packet = retained_alias19_contracts.load(self.root)
         retained_alias19_contracts.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -458,6 +462,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -472,7 +477,7 @@ class SourceContracts(unittest.TestCase):
         packet = retained_connect_actions_contracts.load(self.root)
         retained_connect_actions_contracts.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -485,6 +490,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -500,7 +506,7 @@ class SourceContracts(unittest.TestCase):
         packet = retained_connect_contracts.load(self.root)
         retained_connect_contracts.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -513,6 +519,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -531,7 +538,7 @@ class SourceContracts(unittest.TestCase):
         packet = dvr.load(self.root)
         dvr.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -544,6 +551,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -564,7 +572,7 @@ class SourceContracts(unittest.TestCase):
         value = admin.load(self.root)
         admin.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         import retained_dvr_xc_contracts
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
@@ -578,6 +586,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -598,7 +607,7 @@ class SourceContracts(unittest.TestCase):
         value = packet.load(self.root)
         packet.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         import retained_admin_model_contracts
         import retained_dvr_xc_contracts
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
@@ -613,6 +622,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -634,7 +644,7 @@ class SourceContracts(unittest.TestCase):
         packet = image22.load(self.root)
         image22.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         import retained_repository_socket_switch_contracts
         import retained_admin_model_contracts
         import retained_dvr_xc_contracts
@@ -650,6 +660,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -672,7 +683,7 @@ class SourceContracts(unittest.TestCase):
         value = playback.load(self.root)
         playback.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         self.assertEqual(sum(o['method'] is None for route in rows for o in route['operations']), 322)
         import retained_image22_controls_contracts
         import retained_repository_socket_switch_contracts
@@ -690,6 +701,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -712,7 +724,7 @@ class SourceContracts(unittest.TestCase):
         value = json.loads((self.root / hdhr.INPUT).read_bytes())
         hdhr.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 120)
         self.assertEqual(sum(o['method'] is None for route in rows for o in route['operations']), 322)
         declared = {o['contract_id']: o for route in rows for o in route['operations']}
@@ -736,6 +748,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -758,7 +771,7 @@ class SourceContracts(unittest.TestCase):
         value = json.loads((self.root / packet.INPUT).read_bytes())
         packet.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 132)
         import retained_hdhr_contracts
         import retained_playback_contracts
@@ -778,6 +791,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -801,7 +815,7 @@ class SourceContracts(unittest.TestCase):
         value = json.loads((self.root / core.INPUT).read_bytes())
         core.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 96)
         import retained_provider_channel_vod_contracts
         import retained_hdhr_contracts
@@ -822,6 +836,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)
@@ -846,7 +861,7 @@ class SourceContracts(unittest.TestCase):
         value = json.loads((self.root / core.INPUT).read_bytes())
         core.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 545)
+        self.assertEqual(result['operations'], 565)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 29)
         import retained_serializer_null_contracts
         import retained_provider_channel_vod_contracts
@@ -868,6 +883,7 @@ class SourceContracts(unittest.TestCase):
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(self.root, rows)
         retained_core_profile_json_contracts.restore_pre_core_profiles(self.root, rows)
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(self.root, rows)
+        retained_c106_connect_replay_contracts.restore_pre_c106_replay(self.root, rows)
         retained_connect_test_contracts.restore_pre_connect_test(self.root, rows)
         retained_alias_remainder_contracts.restore_pre_alias_remainder(self.root, rows)
         retained_connect_detail_contracts.restore_pre_connect_detail(self.root, rows)

@@ -98,7 +98,8 @@ class NotificationMutationControls(unittest.TestCase):
    'scripts/rust-contracts/retained-c98-hdhr/bindings.json',
    'scripts/rust-contracts/retained-core-profile-json/bindings.json',
    'scripts/rust-contracts/retained-c105-guide-startup/bindings.json',
-   'scripts/rust-contracts/retained-hdhr-literal/bindings.json'])
+   'scripts/rust-contracts/retained-hdhr-literal/bindings.json',
+   'scripts/rust-contracts/retained-c106-connect-replay/bindings.json'])
   later_ids=[];supplemental_ids=[]
   import retained_management_contracts
   import retained_auth_plugin_contracts
@@ -117,6 +118,7 @@ class NotificationMutationControls(unittest.TestCase):
   import retained_c98_hdhr_contracts
   import retained_core_profile_json_contracts
   import retained_hdhr_literal_contracts
+  import retained_c106_connect_replay_contracts
   import retained_c105_guide_startup_contracts
   for ref in later:
    value=source_contracts.checked(ROOT,ref)
@@ -178,6 +180,8 @@ class NotificationMutationControls(unittest.TestCase):
     retained_c105_guide_startup_contracts.validate(ROOT,value)
    elif ref['kind']==retained_hdhr_literal_contracts.KIND:
     retained_hdhr_literal_contracts.validate(ROOT,value)
+   elif ref['kind']==retained_c106_connect_replay_contracts.KIND:
+    retained_c106_connect_replay_contracts.validate(ROOT,value)
    else:later_ids.extend(c['contract_id']for c in value['contracts'])
   self.assertEqual(len(later_ids),282);self.assertEqual(len(set(later_ids)),282)
   self.assertEqual(len(supplemental_ids),11)
@@ -195,6 +199,7 @@ class NotificationMutationControls(unittest.TestCase):
   retained_c98_hdhr_contracts.restore_pre_c98_hdhr(ROOT,historical)
   retained_core_profile_json_contracts.restore_pre_core_profiles(ROOT,historical)
   retained_hdhr_literal_contracts.restore_pre_literal_hdhr(ROOT,historical)
+  retained_c106_connect_replay_contracts.restore_pre_c106_replay(ROOT,historical)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,historical)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,historical)
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,historical)
@@ -269,6 +274,7 @@ class NotificationMutationControls(unittest.TestCase):
   expected += retained_c98_hdhr_contracts.load(ROOT)['operation_count']
   expected += retained_core_profile_json_contracts.load(ROOT)['operation_count']
   expected += retained_hdhr_literal_contracts.load(ROOT)['operation_count']
+  expected += retained_c106_connect_replay_contracts.load(ROOT)['operation_count']
   self.assertEqual(mapping['operations'],expected)
   self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)
   self.assertEqual({key for key,o in ops.items()if 'executable_Source_contract'in o and o['executable_Source_contract'].get('fixture_id')=='retained-Original-notification-mutations-Source2-48'},selected)
