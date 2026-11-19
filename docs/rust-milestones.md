@@ -38,8 +38,12 @@ binds 54 observed HTTP responses to seven additional route-operation entries.
 The [retained Image22 controls](../scripts/rust-contracts/retained-image22-controls/README.md)
 add 22 responses across seven channel and transport operations. The
 [repository, socket and switch packet](../scripts/rust-contracts/retained-repository-socket-switch/README.md)
-adds 57 retained observations across six unresolved declarations. M0 now
-has 270 partial Source assignments and 528 unassigned entries.
+adds 57 retained observations across six unresolved declarations. The
+[Original admin capture](../scripts/rust-contracts/retained-admin-models/README.md)
+adds 283 model responses across 103 previously unmapped operations. Its
+controller exited 1 and exact cleanup passed. Failed expectations and
+blocked cases remain visible in the receipt. M0 now has 373 partial Source
+assignments and 425 unassigned entries.
 The conservative method inventory and full acceptance requirements remain
 in the [contract register](rust-contract-register.md).
 

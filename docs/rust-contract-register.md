@@ -226,3 +226,17 @@ opening GET handshake. Frames and post-upgrade behavior stay outside this scope.
 
 The register has 270 partial Source assignments and 528 unassigned operations.
 All prior 264 assignments and the other 792 operation dictionaries remain exact.
+
+## Retained Django admin model callbacks
+
+The [admin model binding](../scripts/rust-contracts/retained-admin-models/bindings.json)
+adds 283 returned Original responses across 103 existing method-unresolved
+operation IDs. The records cover list, add, change and delete callbacks through
+the owned superuser session and the same actor with model permissions removed.
+The terminal controller exited 1 after partial observed cases and verified
+cleanup. Failed semantic expectations remain explicit, including two returned
+500 list responses and five 200 form submissions. The fixture's returned
+statuses do not establish full admin or Native parity.
+
+The register has 373 partial Source assignments and 425 unassigned operations.
+All prior 270 assignments and the other 695 operation dictionaries remain exact.
