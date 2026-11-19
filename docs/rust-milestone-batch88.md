@@ -13,8 +13,13 @@ and scheduling remain on the selected worker path.
 Live HLS readers accept older descriptors with no timestamp and derive a
 missing advertised target from the playlist window and target. Publisher
 takeover still requires a timestamp. Eight offline Original-to-Rust playlist
-comparisons matched after the change, compared with three before it. The
-packaged comparison and viewing performance remain open.
+comparisons matched after the change, compared with three before it.
+The exact packaged HLS pair matched all four HTTP results on both backends,
+with eight descriptor and absolute expiration restorations. The warm and
+recovery samples decoded identically and matched byte-for-byte across
+backends. The fixture sustained one upstream connection and one profiled
+client in each backend, verified normal stop and capability retirement, and
+passed exact resource cleanup. Full M3 and viewing performance remain open.
 
 Formatting, strict all-target Clippy, three HLS HTTP tests, 530 Store tests,
 35 Main tests and 14 operator tests passed. The scoped test commands left
@@ -29,4 +34,5 @@ results remain pending.
 
 [Focused results](../scripts/rust-integration/milestone-batch88/focused.json)
 · [Docker build and workspace checks](../scripts/rust-integration/milestone-batch88/packaging-and-workspace.json)
+· [Packaged HLS comparison](../scripts/rust-integration/milestone-batch88/legacy-hls-compose.json)
 · [Milestone ledger](rust-milestones.md)

@@ -5,11 +5,27 @@ services:
       - sh
       - -ec
       - |
+        # Named volumes can inherit the package's UID before this job starts.
+        chown 0:0 /data
+        umask 022
         mkdir -p /data/logos /data/recordings/owned-active
         cp /recording-fixtures/owned-completed.mkv /data/recordings/owned-completed.mkv
         cp /recording-fixtures/000000.ts /data/recordings/owned-active/000000.ts
         cp /recording-fixtures/owned-index.m3u8 /data/recordings/owned-active/index.m3u8
-        chown -R 65532:65532 /data/recordings
-        chown 65532:65532 /data /data/logos
+        chown 65532:65532 /data/recordings/owned-completed.mkv \
+          /data/recordings/owned-active/000000.ts /data/recordings/owned-active/index.m3u8
+        chown 65532:65532 /data/recordings/owned-active /data/recordings /data/logos /data
     volumes:
+      - type: volume
+        source: rust-data
+        target: /data
+        volume:
+          nocopy: true
       - ../scripts/rust-integration/recording_read_assets:/recording-fixtures:ro
+  candidate:
+    volumes:
+      - type: volume
+        source: rust-data
+        target: /data
+        volume:
+          nocopy: true

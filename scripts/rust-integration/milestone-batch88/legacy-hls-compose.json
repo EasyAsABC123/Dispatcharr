@@ -1,0 +1,75 @@
+{
+  "status": "passed",
+  "scope": "one profiled HLS viewer per backend",
+  "candidate_revision": "3c5063347ca6be710894e8d753110bc344dd4df2",
+  "candidate_source_tree_sha256": "495a2fca271ad8484a0ad745cf34d3b839c75ad1bfe6885768aa2772199f964a",
+  "actual_exit": 0,
+  "terminal_sha256": "7910d574533eb66052a1dfe4e8ad176b545a09ae700fad261e5d3b71deb92f4b",
+  "binding_sha256": "498c8d3ce9ad35f737e1a8cdd594f142f42185c9e2915eeb081a398535d686d6",
+  "report_sha256": "1ab98279de8f4fecfb69fdaf0dea02086fe7dde3792d3c5d602147ae2bf0e72d",
+  "backends": [
+    {
+      "backend": "Original",
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "http": [
+        200,
+        200,
+        200,
+        404
+      ],
+      "restored_descriptor_and_expiration_count": 4,
+      "warm": {
+        "sha256": "862ca83ce5b7f78b5113e2713cf633e1fcc40237a85902105cddb8c81b07db10",
+        "frames": {
+          "video": 50,
+          "audio": 96
+        },
+        "sequence": 2
+      },
+      "recovery": {
+        "sha256": "1000449dfc5a79b43fbf5fa36f143ec50a18ae00ca26bce9dbc17164a8687454",
+        "frames": {
+          "video": 50,
+          "audio": 96
+        },
+        "sequence": 3
+      },
+      "exact_retired_container_count": 2,
+      "application_report_sha256": "d0784efbf240a54f1f3dbbd8f625f0aea04cdc4052722532c59d3d49ef5c3f98",
+      "cleanup_sha256": "42920cb02c098f3606ba52e8df8a07bbdc72a779902c756d22ea27341988b341"
+    },
+    {
+      "backend": "Native",
+      "image_id": "sha256:3ee795ee96c2cb4c50b9851cd30e4057a7d6cddccb81fe137d0a115b4a58c034",
+      "http": [
+        200,
+        200,
+        200,
+        404
+      ],
+      "restored_descriptor_and_expiration_count": 4,
+      "warm": {
+        "sha256": "862ca83ce5b7f78b5113e2713cf633e1fcc40237a85902105cddb8c81b07db10",
+        "frames": {
+          "video": 50,
+          "audio": 96
+        },
+        "sequence": 2
+      },
+      "recovery": {
+        "sha256": "1000449dfc5a79b43fbf5fa36f143ec50a18ae00ca26bce9dbc17164a8687454",
+        "frames": {
+          "video": 50,
+          "audio": 96
+        },
+        "sequence": 3
+      },
+      "exact_retired_container_count": 3,
+      "application_report_sha256": "4230fe20c8e927b18e6aaa550e4226d358a8b3a3c78cfdb2817420828d7b4a70",
+      "cleanup_sha256": "3117993f4ad5afe62fd5ebc442d27dc4eee44758af8d45747589fad36e748399"
+    }
+  ],
+  "full_M3_passed": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr and dependency authors retain all application and algorithm credit."
+}
