@@ -17,37 +17,73 @@ const FILTERED: &str = r#"
         WHERE s.id=l.subscription_id AND ($1 IS NULL OR i.id=$1) AND ($2 IS NULL OR i.type=$2)
     ))
 "#;
-const PAGE_PROJECTION: &str = r#"
-    , page_rows AS MATERIALIZED (
-        SELECT p.id,p.status,p.created_at,p.request_payload,p.response_payload,p.error_message,
-               s.id AS subscription_id,s.event,s.enabled,s.payload_template,s.integration_id
-        FROM page p JOIN dispatcharr_connect_eventsubscription s ON s.id=p.subscription_id
-    ), size_bound AS (
-        SELECT COALESCE(SUM(octet_length(request_payload::text)::bigint
-                          + octet_length(response_payload::text)
-                          + COALESCE(octet_length(to_json(error_message)::text),4)
-                          + COALESCE(octet_length(to_json(payload_template)::text),4)
-                          + octet_length(to_json(event)::text)
-                          + octet_length(to_json(status)::text) + 384),0)
-             + COALESCE(octet_length(to_json($7::text)::text),4)
-             + COALESCE(octet_length(to_json($8::text)::text),4) + 80 AS bytes
-        FROM page_rows
-    )
-    SELECT CASE WHEN bytes <= $9::bigint THEN json_build_object(
-        'count',$6::bigint,'next',$7::text,'previous',$8::text,'results',COALESCE((
-            SELECT json_agg(json_build_object(
-                'id',id,'subscription',json_build_object(
-                    'id',subscription_id,'event',event,'enabled',enabled,
-                    'payload_template',payload_template,'integration',integration_id),
-                'status',status,'request_payload',request_payload,'response_payload',response_payload,
-                'error_message',error_message,
-                'created_at',to_char(created_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS')
-                    || CASE WHEN MOD(EXTRACT(MICROSECONDS FROM created_at)::bigint,1000000)=0
-                            THEN '' ELSE to_char(created_at AT TIME ZONE 'UTC','.US') END || 'Z'
-            ) ORDER BY created_at DESC) FROM page_rows
-        ),'[]'::json)
-    )::text END FROM size_bound
+const ROWS: &str = r#"
+    SELECT p.id,p.status,p.created_at,p.request_payload,p.response_payload,p.error_message,
+           s.id AS subscription_id,s.event,s.enabled,s.payload_template,s.integration_id
+    FROM page p JOIN dispatcharr_connect_eventsubscription s ON s.id=p.subscription_id
 "#;
+const BYTES: &str = r#"
+    octet_length(request_payload::text)::bigint + octet_length(response_payload::text)
+    + COALESCE(octet_length(to_json(error_message)::text),4)
+    + COALESCE(octet_length(to_json(payload_template)::text),4)
+    + octet_length(to_json(event)::text) + octet_length(to_json(status)::text) + 384
+"#;
+const PROJECTION: &str = r#"
+    json_build_object(
+        'id',id,'subscription',json_build_object(
+            'id',subscription_id,'event',event,'enabled',enabled,
+            'payload_template',payload_template,'integration',integration_id),
+        'status',status,'request_payload',request_payload,'response_payload',response_payload,
+        'error_message',error_message,
+        'created_at',to_char(created_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS')
+            || CASE WHEN MOD(EXTRACT(MICROSECONDS FROM created_at)::bigint,1000000)=0
+                    THEN '' ELSE to_char(created_at AT TIME ZONE 'UTC','.US') END || 'Z'
+    )
+"#;
+
+fn filters(query: &[(String, String)]) -> Result<(Option<i64>, Option<&str>, bool), StoreError> {
+    let integration = last_query(query, "integration")
+        .filter(|value| !value.is_empty())
+        .map(|value| {
+            dispatcharr_ingest_core::source_integer_literal(value)
+                .ok_or(StoreError::UnhandledRestFault)
+        })
+        .transpose()?;
+    let id = integration.as_deref().and_then(|id| id.parse::<i64>().ok());
+    let kind = last_query(query, "type").filter(|value| !value.is_empty());
+    Ok((id, kind, integration.is_some() && id.is_none()))
+}
+
+pub(super) async fn retrieve(store: &Store, raw: &str, uri: &Uri) -> Result<String, StoreError> {
+    let missing = || {
+        StoreError::StatusBody(
+            404,
+            json!({"detail":"No DeliveryLog matches the given query."}),
+        )
+    };
+    let query = url::form_urlencoded::parse(uri.query().unwrap_or_default().as_bytes())
+        .into_owned()
+        .collect::<Vec<_>>();
+    let (integration, kind, outside) = filters(&query)?;
+    let id = super::lookup(raw)?.ok_or_else(missing)?;
+    let sql = format!(
+        r#"
+        WITH page AS MATERIALIZED (SELECT l.* {FILTERED} AND l.id=$4),
+            page_rows AS ({ROWS})
+        SELECT CASE WHEN {BYTES}<=$5::bigint THEN {PROJECTION}::text END FROM page_rows
+        "#
+    );
+    sqlx::query_scalar::<_, Option<String>>(&sql)
+        .bind(integration)
+        .bind(kind)
+        .bind(outside)
+        .bind(id)
+        .bind(RESPONSE_LIMIT)
+        .fetch_optional(store.pool())
+        .await?
+        .ok_or_else(missing)?
+        .ok_or_else(capacity)
+}
 
 fn request_origin(headers: &HeaderMap) -> Result<String, StoreError> {
     let host = headers
@@ -74,16 +110,7 @@ pub(super) async fn list(
     let query = url::form_urlencoded::parse(uri.query().unwrap_or_default().as_bytes())
         .into_owned()
         .collect::<Vec<_>>();
-    let integration = last_query(&query, "integration")
-        .filter(|value| !value.is_empty())
-        .map(|value| {
-            dispatcharr_ingest_core::source_integer_literal(value)
-                .ok_or(StoreError::UnhandledRestFault)
-        })
-        .transpose()?;
-    let integration_id = integration.as_deref().and_then(|id| id.parse::<i64>().ok());
-    let outside_integer_range = integration.is_some() && integration_id.is_none();
-    let kind = last_query(&query, "type").filter(|value| !value.is_empty());
+    let (integration_id, kind, outside_integer_range) = filters(&query)?;
 
     // Count and returned rows must describe the same snapshot even during
     // concurrent delivery writes or integration deletion.
@@ -114,8 +141,19 @@ pub(super) async fn list(
             )
         });
         let page_sql = format!(
-            "WITH page AS MATERIALIZED (SELECT l.* {FILTERED} ORDER BY l.created_at DESC \n\
-             LIMIT $5::bigint OFFSET $4::bigint) {PAGE_PROJECTION}"
+            r#"
+            WITH page AS MATERIALIZED (
+                SELECT l.* {FILTERED} ORDER BY l.created_at DESC LIMIT $5::bigint OFFSET $4::bigint
+            ), page_rows AS MATERIALIZED ({ROWS}), size_bound AS (
+                SELECT COALESCE(SUM({BYTES}),0)
+                     + COALESCE(octet_length(to_json($7::text)::text),4)
+                     + COALESCE(octet_length(to_json($8::text)::text),4) + 80 AS bytes FROM page_rows
+            )
+            SELECT CASE WHEN bytes <= $9::bigint THEN json_build_object(
+                'count',$6::bigint,'next',$7::text,'previous',$8::text,'results',COALESCE(
+                    (SELECT json_agg({PROJECTION} ORDER BY created_at DESC) FROM page_rows),'[]'::json)
+            )::text END FROM size_bound
+            "#
         );
         sqlx::query_scalar::<_, Option<String>>(&page_sql)
             .bind(integration_id)

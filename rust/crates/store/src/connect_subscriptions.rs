@@ -7,7 +7,7 @@ use serde::Serialize;
 use serde_json::{json, Value};
 use sqlx::{Postgres, Transaction};
 
-const EVENTS: &[&str] = &[
+pub(super) const EVENTS: &[&str] = &[
     "channel_start",
     "channel_stop",
     "channel_reconnect",
@@ -109,7 +109,7 @@ fn validated(data: Option<Value>, webhook: bool) -> Result<Vec<Incoming>, StoreE
     Ok(incoming)
 }
 
-async fn settle<T>(
+pub(super) async fn settle<T>(
     transaction: Transaction<'_, Postgres>,
     result: Result<T, StoreError>,
 ) -> Result<T, StoreError> {

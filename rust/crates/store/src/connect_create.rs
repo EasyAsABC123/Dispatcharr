@@ -49,11 +49,14 @@ SELECT json_build_object(
 )::text FROM updated
 "#;
 
-fn invalid(field: &str, message: &str) -> StoreError {
+pub(super) fn invalid(field: &str, message: &str) -> StoreError {
     StoreError::InvalidInput(json!({field:[message]}))
 }
 
-fn required<'a>(fields: &'a Map<String, Value>, field: &str) -> Result<&'a Value, StoreError> {
+pub(super) fn required<'a>(
+    fields: &'a Map<String, Value>,
+    field: &str,
+) -> Result<&'a Value, StoreError> {
     fields
         .get(field)
         .ok_or_else(|| invalid(field, "This field is required."))
@@ -75,7 +78,7 @@ fn integration_type(value: &Value) -> Result<&str, StoreError> {
     }
 }
 
-fn collect<T>(
+pub(super) fn collect<T>(
     errors: &mut Map<String, Value>,
     field: Result<T, StoreError>,
 ) -> Result<Option<T>, StoreError> {
@@ -117,7 +120,7 @@ pub(super) async fn json_payload(request: Request) -> Result<Option<Value>, Stor
     })
 }
 
-async fn fields(request: Request) -> Result<Map<String, Value>, StoreError> {
+pub(super) async fn fields(request: Request) -> Result<Map<String, Value>, StoreError> {
     match json_payload(request).await? {
         None => Ok(Map::new()),
         Some(Value::Object(fields)) => Ok(fields),
@@ -143,18 +146,28 @@ async fn validate(
     mut fields: Map<String, Value>,
     stored_config: Option<Value>,
     stored_enabled: bool,
+    patch_defaults: Option<(String, String)>,
 ) -> Result<IntegrationInput, StoreError> {
     let mut errors = Map::new();
+    let (default_name, default_kind) = patch_defaults
+        .map(|(name, kind)| (Some(name), Some(kind)))
+        .unwrap_or_default();
     let name = collect(
         &mut errors,
-        required(&fields, "name")
-            .and_then(|value| admin_writes::character("name", value, Some(255), false)),
+        match default_name.filter(|_| !fields.contains_key("name")) {
+            Some(name) => Ok(name),
+            None => required(&fields, "name")
+                .and_then(|value| admin_writes::character("name", value, Some(255), false)),
+        },
     )?;
     let kind = collect(
         &mut errors,
-        required(&fields, "type")
-            .and_then(integration_type)
-            .map(str::to_owned),
+        match default_kind.filter(|_| !fields.contains_key("type")) {
+            Some(kind) => Ok(kind),
+            None => required(&fields, "type")
+                .and_then(integration_type)
+                .map(str::to_owned),
+        },
     )?;
     let config = fields.remove("config").or(stored_config);
     if config.as_ref().is_some_and(Value::is_null) {
@@ -207,7 +220,7 @@ pub(super) async fn create(store: &Store, request: Request) -> Result<String, St
         kind,
         config,
         enabled,
-    } = validate(fields(request).await?, Some(json!({})), true).await?;
+    } = validate(fields(request).await?, Some(json!({})), true, None).await?;
     // A matched INSERT and its response execute as one statement. The size
     // check precedes insertion, and this path has no delivery or write hooks.
     sqlx::query_scalar::<_, String>(INSERT)
@@ -234,12 +247,45 @@ fn detail_id(raw: &str) -> Result<i64, StoreError> {
         .ok_or_else(missing)
 }
 
+pub(super) async fn retrieve(store: &Store, raw: &str) -> Result<String, StoreError> {
+    let id = super::lookup(raw)?.ok_or_else(missing)?;
+    const DETAIL: &str = r#"
+SELECT CASE WHEN octet_length(to_json(i.name)::text)::bigint + octet_length(i.config::text) + 512
+    + (SELECT COALESCE(SUM(octet_length(to_json(s.event)::text)::bigint
+                 + COALESCE(octet_length(to_json(s.payload_template)::text),4) + 192),0)
+       FROM dispatcharr_connect_eventsubscription s WHERE s.integration_id=i.id) <= $2::bigint
+THEN json_build_object(
+    'id',i.id,'name',i.name,'type',i.type,'config',i.config,'enabled',i.enabled,
+    'created_at',to_char(i.created_at AT TIME ZONE 'UTC','YYYY-MM-DD"T"HH24:MI:SS')
+        || CASE WHEN MOD(EXTRACT(MICROSECONDS FROM i.created_at)::bigint,1000000)=0
+                THEN '' ELSE to_char(i.created_at AT TIME ZONE 'UTC','.US') END || 'Z',
+    'subscriptions',COALESCE((SELECT json_agg(json_build_object(
+        'id',s.id,'event',s.event,'enabled',s.enabled,
+        'payload_template',s.payload_template,'integration',s.integration_id))
+        FROM dispatcharr_connect_eventsubscription s WHERE s.integration_id=i.id),'[]'::json)
+)::text END
+FROM dispatcharr_connect_integration i WHERE i.id=$1
+"#;
+    sqlx::query_scalar::<_, Option<String>>(DETAIL)
+        .bind(id)
+        .bind(RESPONSE_LIMIT)
+        .fetch_optional(store.pool())
+        .await?
+        .ok_or_else(missing)?
+        .ok_or_else(capacity)
+}
+
 pub(super) async fn update(
     store: &Store,
-    raw: String,
+    raw: &str,
     request: Request,
+    partial: bool,
 ) -> Result<String, StoreError> {
-    let id = detail_id(&raw)?;
+    let id = if partial {
+        super::lookup(raw)?.ok_or_else(missing)?
+    } else {
+        detail_id(raw)?
+    };
     let exists: bool = sqlx::query_scalar(
         "SELECT EXISTS(SELECT 1 FROM dispatcharr_connect_integration WHERE id=$1)",
     )
@@ -255,8 +301,8 @@ pub(super) async fn update(
     let result = async {
         // Do not hold a database lock while the request body is arriving. The
         // second lookup locks the row while applying defaults from current SQL.
-        let (stored_config, stored_enabled): (Option<String>, bool) = sqlx::query_as(
-            "SELECT CASE WHEN $2 AND octet_length(config::text)<=$3 THEN config::text END,enabled FROM dispatcharr_connect_integration WHERE id=$1 FOR UPDATE",
+        let (stored_name, stored_kind, stored_config, stored_enabled): (String, String, Option<String>, bool) = sqlx::query_as(
+            "SELECT name,type,CASE WHEN $2 AND octet_length(config::text)<=$3 THEN config::text END,enabled FROM dispatcharr_connect_integration WHERE id=$1 FOR UPDATE",
         ).bind(id)
         .bind(needs_config)
         .bind(RESPONSE_LIMIT)
@@ -267,7 +313,8 @@ pub(super) async fn update(
             .map(serde_json::from_str::<Value>)
             .transpose()
             .map_err(|_| StoreError::UnhandledRestFault)?;
-        let IntegrationInput {name,kind,config,enabled} = validate(fields, stored_config, stored_enabled).await?;
+        let defaults = partial.then_some((stored_name, stored_kind));
+        let IntegrationInput {name,kind,config,enabled} = validate(fields, stored_config, stored_enabled, defaults).await?;
         sqlx::query_scalar::<_, String>(UPDATE)
             .bind(id)
             .bind(name)

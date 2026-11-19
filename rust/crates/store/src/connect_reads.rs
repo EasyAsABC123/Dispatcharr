@@ -4,7 +4,7 @@ use crate::{AuthService, RestReadLimits, StoreError};
 use axum::{
     body::Body,
     extract::{ConnectInfo, Path, Request, State},
-    http::{header, HeaderMap, StatusCode, Uri},
+    http::{header, HeaderMap, Method, StatusCode, Uri},
     response::Response,
     routing::{get, post, put},
     Router,
@@ -18,6 +18,8 @@ use tokio::sync::OwnedSemaphorePermit;
 mod create_integration;
 #[path = "connect_delivery_logs.rs"]
 mod delivery_logs;
+#[path = "connect_subscription_manage.rs"]
+mod subscription_manage;
 #[path = "connect_subscriptions.rs"]
 mod subscriptions;
 #[path = "connect_test.rs"]
@@ -68,19 +70,207 @@ fn capacity() -> StoreError {
 }
 
 pub(crate) fn router(auth: AuthService) -> Router {
+    let subscription_collection = get(list_subscriptions).post(create_subscription);
+    let subscription_detail = get(retrieve_subscription)
+        .put(write_subscription)
+        .patch(write_subscription)
+        .delete(delete_subscription);
     Router::new()
         .route("/api/connect/integrations/", get(list).post(create))
         .route("/api/connect/logs/", get(logs))
+        .route("/api/connect/logs/{id}/", get(retrieve_log))
+        .route("/api/connect/logs/{id}", get(retrieve_log))
         .route(
             "/api/connect/integrations/{id}/",
-            put(update).delete(delete),
+            get(retrieve_integration)
+                .put(update)
+                .patch(patch_integration)
+                .delete(delete),
+        )
+        .route(
+            "/api/connect/integrations/{id}",
+            get(retrieve_integration).patch(patch_integration),
+        )
+        .route(
+            "/api/connect/integrations/{id}/subscriptions/",
+            get(integration_subscriptions),
+        )
+        .route(
+            "/api/connect/integrations/{id}/subscriptions.json",
+            get(integration_subscriptions),
+        )
+        .route(
+            "/api/connect/integrations/{id}/subscriptions.json/",
+            get(integration_subscriptions),
         )
         .route(
             "/api/connect/integrations/{id}/subscriptions/set/",
             put(replace_subscriptions),
         )
         .route("/api/connect/integrations/{id}/test/", post(test_saved))
+        .route(
+            "/api/connect/subscriptions/",
+            subscription_collection.clone(),
+        )
+        .route(
+            "/api/connect/subscriptions.json",
+            subscription_collection.clone(),
+        )
+        .route("/api/connect/subscriptions.json/", subscription_collection)
+        .route(
+            "/api/connect/subscriptions/{id}/",
+            subscription_detail.clone(),
+        )
+        .route("/api/connect/subscriptions/{id}", subscription_detail)
         .with_state(auth)
+}
+
+fn detail_path(raw: &str, uri: &Uri) -> Result<String, StoreError> {
+    // Matchit's dynamic capture occupies the whole path segment. DefaultRouter
+    // uses the same lookup for canonical slash and JSON (+ optional slash).
+    if let Some(id) = raw
+        .strip_suffix(".json")
+        .filter(|id| !id.is_empty() && !id.contains('.'))
+    {
+        Ok(id.into())
+    } else if uri.path().ends_with('/') && !raw.contains('.') {
+        Ok(raw.into())
+    } else {
+        Err(StoreError::NotFound)
+    }
+}
+
+fn lookup(raw: &str) -> Result<Option<i64>, StoreError> {
+    dispatcharr_ingest_core::source_integer_literal(raw)
+        .map(|id| id.parse().ok())
+        .ok_or(StoreError::NotFound)
+}
+
+async fn retrieve_integration(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(raw): Path<String>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Result<Response, StoreError> {
+    let id = detail_path(&raw, &uri)?;
+    execute(auth, peer, headers, ConnectRequest::Integration(id)).await
+}
+
+async fn patch_integration(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(raw): Path<String>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    let id = detail_path(&raw, request.uri())?;
+    execute(
+        auth,
+        peer,
+        request.headers().clone(),
+        ConnectRequest::Update(id, request, true),
+    )
+    .await
+}
+
+async fn integration_subscriptions(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(id): Path<String>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Result<Response, StoreError> {
+    // Source's custom list_subscriptions action has no format argument.
+    let json_suffix = uri
+        .path()
+        .trim_end_matches('/')
+        .ends_with("/subscriptions.json");
+    execute(
+        auth,
+        peer,
+        headers,
+        ConnectRequest::IntegrationSubscriptions(id, json_suffix),
+    )
+    .await
+}
+
+async fn list_subscriptions(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    execute(auth, peer, headers, ConnectRequest::Subscriptions).await
+}
+
+async fn create_subscription(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    execute(
+        auth,
+        peer,
+        request.headers().clone(),
+        ConnectRequest::CreateSubscription(request),
+    )
+    .await
+}
+
+async fn retrieve_subscription(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(raw): Path<String>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Result<Response, StoreError> {
+    let id = detail_path(&raw, &uri)?;
+    execute(auth, peer, headers, ConnectRequest::Subscription(id)).await
+}
+
+async fn write_subscription(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(raw): Path<String>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    let id = detail_path(&raw, request.uri())?;
+    let partial = request.method() == Method::PATCH;
+    execute(
+        auth,
+        peer,
+        request.headers().clone(),
+        ConnectRequest::WriteSubscription(id, request, partial),
+    )
+    .await
+}
+
+async fn delete_subscription(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(raw): Path<String>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Result<Response, StoreError> {
+    let id = detail_path(&raw, &uri)?;
+    execute(auth, peer, headers, ConnectRequest::DeleteSubscription(id)).await
+}
+
+async fn retrieve_log(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(raw): Path<String>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Result<Response, StoreError> {
+    let id = detail_path(&raw, &uri)?;
+    execute(auth, peer, headers, ConnectRequest::Log(id, uri)).await
+}
+
+fn no_content() -> Result<Response, StoreError> {
+    Response::builder()
+        .status(StatusCode::NO_CONTENT)
+        .body(Body::empty())
+        .map_err(|_| StoreError::UnhandledRestFault)
 }
 
 async fn list(
@@ -102,9 +292,17 @@ async fn logs(
 
 enum ConnectRequest {
     Integrations,
+    Integration(String),
+    IntegrationSubscriptions(String, bool),
+    Subscriptions,
+    Subscription(String),
+    CreateSubscription(Request),
+    WriteSubscription(String, Request, bool),
+    DeleteSubscription(String),
     Logs(Uri),
+    Log(String, Uri),
     Create(Request),
-    Update(String, Request),
+    Update(String, Request, bool),
     Delete(String),
     Test(String),
     ReplaceSubscriptions(String, Request),
@@ -149,7 +347,7 @@ async fn update(
         auth,
         peer,
         request.headers().clone(),
-        ConnectRequest::Update(id, request),
+        ConnectRequest::Update(id, request, false),
     )
     .await
 }
@@ -200,24 +398,56 @@ async fn execute(
                     .await?
                     .ok_or_else(capacity)?,
             ),
+            ConnectRequest::Integration(id) => (
+                StatusCode::OK,
+                create_integration::retrieve(&auth.store, &id).await?,
+            ),
+            ConnectRequest::IntegrationSubscriptions(_, true) => {
+                return Err(StoreError::UnhandledRestFault);
+            }
+            ConnectRequest::IntegrationSubscriptions(id, false) => (
+                StatusCode::OK,
+                subscription_manage::list(&auth.store, Some(&id)).await?,
+            ),
+            ConnectRequest::Subscriptions => (
+                StatusCode::OK,
+                subscription_manage::list(&auth.store, None).await?,
+            ),
+            ConnectRequest::Subscription(id) => (
+                StatusCode::OK,
+                subscription_manage::retrieve(&auth.store, &id).await?,
+            ),
+            ConnectRequest::CreateSubscription(request) => (
+                StatusCode::CREATED,
+                subscription_manage::create(&auth.store, request).await?,
+            ),
+            ConnectRequest::WriteSubscription(id, request, partial) => (
+                StatusCode::OK,
+                subscription_manage::update(&auth.store, &id, request, partial).await?,
+            ),
+            ConnectRequest::DeleteSubscription(id) => {
+                subscription_manage::delete(&auth.store, &id).await?;
+                return no_content();
+            }
             ConnectRequest::Logs(uri) => (
                 StatusCode::OK,
                 delivery_logs::list(&auth.store, &headers, &uri).await?,
+            ),
+            ConnectRequest::Log(id, uri) => (
+                StatusCode::OK,
+                delivery_logs::retrieve(&auth.store, &id, &uri).await?,
             ),
             ConnectRequest::Create(request) => (
                 StatusCode::CREATED,
                 create_integration::create(&auth.store, request).await?,
             ),
-            ConnectRequest::Update(id, request) => (
+            ConnectRequest::Update(id, request, partial) => (
                 StatusCode::OK,
-                create_integration::update(&auth.store, id, request).await?,
+                create_integration::update(&auth.store, &id, request, partial).await?,
             ),
             ConnectRequest::Delete(id) => {
                 create_integration::delete(&auth.store, &id).await?;
-                return Response::builder()
-                    .status(StatusCode::NO_CONTENT)
-                    .body(Body::empty())
-                    .map_err(|_| StoreError::UnhandledRestFault);
+                return no_content();
             }
             ConnectRequest::Test(id) => test_integration::test_saved(&auth.store, &id).await?,
             ConnectRequest::ReplaceSubscriptions(id, request) => (
@@ -245,4 +475,29 @@ async fn execute(
     })
     .await
     .map_err(|_| capacity())?
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn connect_detail_suffix_preserves_the_same_lookup() {
+        for uri in [
+            "/api/connect/subscriptions/17/",
+            "/api/connect/subscriptions/17.json",
+            "/api/connect/subscriptions/17.json/",
+        ] {
+            let raw = uri.trim_end_matches('/').rsplit('/').next().unwrap();
+            assert_eq!(detail_path(raw, &uri.parse().unwrap()).unwrap(), "17");
+        }
+        for uri in [
+            "/api/connect/subscriptions/17",
+            "/api/connect/subscriptions/17.xml/",
+            "/api/connect/subscriptions/17.xml.json",
+        ] {
+            let raw = uri.trim_end_matches('/').rsplit('/').next().unwrap();
+            assert!(detail_path(raw, &uri.parse().unwrap()).is_err());
+        }
+    }
 }
