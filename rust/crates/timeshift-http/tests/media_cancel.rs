@@ -6,7 +6,7 @@ use redis::AsyncCommands;
 use std::{
     collections::BTreeMap,
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicUsize, Ordering},
         Arc,
     },
     time::Duration,
@@ -21,7 +21,7 @@ struct Proxy {
     url: String,
     hold: watch::Sender<bool>,
     task: JoinHandle<()>,
-    pause_after_reply: Arc<AtomicBool>,
+    pause_after_replies: Arc<AtomicUsize>,
 }
 impl Drop for Proxy {
     fn drop(&mut self) {
@@ -41,8 +41,8 @@ async fn proxy() -> Proxy {
     rewritten.set_host(Some("127.0.0.1")).unwrap();
     rewritten.set_port(Some(address.port())).unwrap();
     let (hold, receiver) = watch::channel(false);
-    let pause_after_reply = Arc::new(AtomicBool::new(false));
-    let gate = pause_after_reply.clone();
+    let pause_after_replies = Arc::new(AtomicUsize::new(0));
+    let gate = pause_after_replies.clone();
     let reply_hold = hold.clone();
     let task = tokio::spawn(async move {
         let mut connections = JoinSet::new();
@@ -51,7 +51,7 @@ async fn proxy() -> Proxy {
                             accepted=listener.accept()=>{let(client,_)=accepted.unwrap();let upstream=upstream.clone();let mut hold=receiver.clone();let gate=gate.clone();let reply_hold=reply_hold.clone();connections.spawn(async move{
                                 use tokio::io::AsyncReadExt;let server=TcpStream::connect(upstream).await.unwrap();let(mut client_read,mut client_write)=client.into_split();let(mut server_read,mut server_write)=server.into_split();
                                 let send=tokio::io::copy(&mut client_read,&mut server_write);let receive=async move{let mut buffer=[0u8;16384];loop{let count=server_read.read(&mut buffer).await?;if count==0{return Ok::<(),std::io::Error>(());}
-            if hold.wait_for(|value|!*value).await.is_err(){return Ok(());}client_write.write_all(&buffer[..count]).await?;if gate.swap(false,Ordering::SeqCst){reply_hold.send_replace(true);}}};let _=tokio::try_join!(async{send.await.map(|_|())},receive);
+            if hold.wait_for(|value|!*value).await.is_err(){return Ok(());}client_write.write_all(&buffer[..count]).await?;if gate.fetch_update(Ordering::SeqCst,Ordering::SeqCst,|pending|pending.checked_sub(1))==Ok(1){reply_hold.send_replace(true);}}};let _=tokio::try_join!(async{send.await.map(|_|())},receive);
                             });},_=connections.join_next(),if !connections.is_empty()=>{}
                         }
         }
@@ -60,7 +60,7 @@ async fn proxy() -> Proxy {
         url: rewritten.to_string(),
         hold,
         task,
-        pause_after_reply,
+        pause_after_replies,
     }
 }
 fn fixture_user(sid: &str) -> i64 {
@@ -149,8 +149,8 @@ async fn idle_reopen_cancelled_during_provider_reply_retains_cleanup_until_owned
             == Some("0")
     })
     .await;
-    // Warm RESERVE_PROVIDER before holding replies; otherwise a held NOSCRIPT
-    // response would prevent the actual remote reservation from executing.
+    // Settle a complete ordinary idle reopen before holding the actual
+    // successor acquisition reply.
     let warm = pool.open(request(&sid, profile)).await.unwrap();
     warm.start("http://fixture.invalid/archive.ts", None, None)
         .await
@@ -228,7 +228,8 @@ async fn delayed_mutations_hold_reservation_and_heartbeat_cancellation_cannot_do
     warm.abort().await.unwrap();
     let admitted_sid = uuid::Uuid::new_v4().to_string();
     let admitted_key = format!("timeshift:channel:123_{admitted_sid}:clients:{admitted_sid}");
-    proxy.hold.send_replace(true);
+    // Let the empty idle-claim reply through before holding admission.
+    proxy.pause_after_replies.store(1, Ordering::SeqCst);
     let cloned = pool.clone();
     let req = request(&admitted_sid, profile);
     let call = tokio::spawn(async move { cloned.open(req).await });
@@ -244,7 +245,8 @@ async fn delayed_mutations_hold_reservation_and_heartbeat_cancellation_cannot_do
     assert!(!redis.exists::<_, bool>(&admitted_key).await.unwrap());
     let sid = uuid::Uuid::new_v4().to_string();
     let key = format!("timeshift:pool:{sid}");
-    proxy.pause_after_reply.store(true, Ordering::SeqCst);
+    // Let the empty idle claim and admission finish before holding CREATE.
+    proxy.pause_after_replies.store(2, Ordering::SeqCst);
     let cloned = pool.clone();
     let req = request(&sid, profile);
     let call = tokio::spawn(async move { cloned.open(req).await });

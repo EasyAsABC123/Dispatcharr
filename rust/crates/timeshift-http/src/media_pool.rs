@@ -77,7 +77,31 @@ struct Entry {
     setup_refresh: Mutex<Option<tokio::task::JoinHandle<()>>>,
     operations_done: Notify,
     stop: watch::Sender<bool>,
-    _permit: OwnedSemaphorePermit,
+    permit: Arc<OwnedSemaphorePermit>,
+}
+impl Entry {
+    fn new(request: ArchivePoolRequest, permit: Arc<OwnedSemaphorePermit>) -> Arc<Self> {
+        let (stop, _) = watch::channel(false);
+        Arc::new(Self {
+            request,
+            token: uuid::Uuid::new_v4().to_string(),
+            lease: Mutex::new(None),
+            lifecycle: AtomicU64::new(0),
+            handoff_pending: AtomicBool::new(false),
+            retained_provider: AtomicBool::new(false),
+            reopened: Notify::new(),
+            active: AtomicBool::new(true),
+            streaming: AtomicBool::new(false),
+            generation: AtomicU64::new(0),
+            bytes: AtomicU64::new(0),
+            started: Mutex::new(Instant::now()),
+            operations: AtomicUsize::new(0),
+            setup_refresh: Mutex::new(None),
+            operations_done: Notify::new(),
+            stop,
+            permit,
+        })
+    }
 }
 struct Inner {
     transport: RedisTransport,
@@ -99,6 +123,7 @@ pub struct ArchivePool {
 /// cleanup. An unpolled body must retain this ticket in a supervised task.
 pub struct ArchiveTicket {
     refreshed: Option<ArchivePoolRequest>,
+    adopted_idle: bool,
     rollback: Option<Rollback>,
 }
 /// A cached tail probe does not own or release the active stream's provider.
@@ -494,47 +519,33 @@ impl ArchivePool {
         {
             return Err(StoreError::Unsupported("invalid archive descriptor"));
         }
-        let existing = self.inner.entries.lock().unwrap().get(sid).cloned();
-        if let Some(existing) = existing {
-            return self.reopen(existing, request).await;
-        }
-        let permit = self
-            .inner
-            .slots
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| unavailable())?;
-        let (stop, _) = watch::channel(false);
-        let entry = Arc::new(Entry {
-            request,
-            token: uuid::Uuid::new_v4().to_string(),
-            lease: Mutex::new(None),
-            lifecycle: AtomicU64::new(0),
-            handoff_pending: AtomicBool::new(false),
-            retained_provider: AtomicBool::new(false),
-            reopened: Notify::new(),
-            active: AtomicBool::new(true),
-            streaming: AtomicBool::new(false),
-            generation: AtomicU64::new(0),
-            bytes: AtomicU64::new(0),
-            started: Mutex::new(Instant::now()),
-            operations: AtomicUsize::new(0),
-            setup_refresh: Mutex::new(None),
-            operations_done: Notify::new(),
-            stop,
-            _permit: permit,
-        });
-        {
+        let (entry, reopen) = {
             let mut entries = self.inner.entries.lock().unwrap();
-            if let Some(existing) = entries.get(&entry.request.session_id) {
-                return Err(if existing.active.load(Ordering::SeqCst) {
-                    StoreError::StatusBody(503, json!("Stream slot busy"))
-                } else {
-                    StoreError::Unsupported("archive idle adoption is not yet implemented")
-                });
+            if let Some(existing) = entries.get(sid) {
+                (existing.clone(), Some(request))
+            } else {
+                let permit = self
+                    .inner
+                    .slots
+                    .clone()
+                    .try_acquire_owned()
+                    .map_err(|_| unavailable())?;
+                let entry = Entry::new(request, Arc::new(permit));
+                entries.insert(entry.request.session_id.clone(), entry.clone());
+                (entry, None)
             }
-            entries.insert(entry.request.session_id.clone(), entry.clone());
+        };
+        match reopen {
+            Some(request) => self.reopen(entry, request).await,
+            None => self.open_entry(entry, None).await,
         }
+    }
+
+    async fn open_entry(
+        &self,
+        entry: Arc<Entry>,
+        prior_local_token: Option<&str>,
+    ) -> Result<ArchiveTicket, StoreError> {
         let rollback = Rollback {
             inner: self.inner.clone(),
             entry: entry.clone(),
@@ -542,6 +553,55 @@ impl ArchivePool {
         if *self.inner.stopped.borrow() {
             entry.stop.send_replace(true);
             return Err(unavailable());
+        }
+        // A shared idle pool may be claimed only before creating an admission
+        // or reserving a provider. The rollback guard outlives a delayed reply.
+        let mut claim_keys = keys(&entry);
+        claim_keys.push(
+            self.inner
+                .coordinator
+                .timeshift_owner_key(&entry.request.session_id),
+        );
+        let fields = serde_json::to_vec(&entry.request.pool_fields).map_err(|_| unavailable())?;
+        let (claimed, rollback): (i64, Rollback) = self
+            .inner
+            .transport
+            .command(
+                CLAIM_IDLE,
+                &claim_keys,
+                &[
+                    entry.token.as_bytes(),
+                    prior_local_token.unwrap_or("").as_bytes(),
+                    &fields,
+                    entry.request.virtual_channel_id.as_bytes(),
+                    entry.request.session_id.as_bytes(),
+                    timestamp().as_bytes(),
+                ],
+                rollback,
+            )
+            .await
+            .map_err(|_| unavailable())?;
+        match claimed {
+            1 => {
+                check_existing(&self.inner, &entry, &entry.request, ()).await?;
+                start_setup_refresh(&self.inner, &entry);
+                self.acquire_provider(&entry).await?;
+                if *self.inner.stopped.borrow() || *entry.stop.borrow() {
+                    return Err(unavailable());
+                }
+                return Ok(ArchiveTicket {
+                    refreshed: None,
+                    adopted_idle: true,
+                    rollback: Some(rollback),
+                });
+            }
+            0 if prior_local_token.is_none() => {}
+            2 => return Err(StoreError::StatusBody(503, json!("Stream slot busy"))),
+            _ => {
+                return Err(StoreError::Unsupported(
+                    "archive pool does not match a transferable Native idle generation",
+                ))
+            }
         }
         let admitted = timeshift::prepare(Admission {
             mode: timeshift::AdmissionMode::Create,
@@ -591,31 +651,11 @@ impl ArchivePool {
             return Err(error);
         }
         start_setup_refresh(&self.inner, &entry);
-        let lease = match self
-            .inner
-            .coordinator
-            .acquire_timeshift(AcquireRequest {
-                channel_id: entry.request.session_id.clone(),
-                provider_profile_id: Some(entry.request.provider_profile_id),
-                provider_max_streams: entry.request.provider_max_streams,
-                credential_pool: None,
-            })
-            .await
-        {
-            Ok(lease) => lease,
-            Err(error) => {
-                drop(rollback);
-                wait_removed(&self.inner, &entry).await?;
-                return Err(match error {
-                    dispatcharr_coordination::Error::ProfileFull => {
-                        StoreError::StatusBody(503, json!("No available stream"))
-                    }
-                    _ => unavailable(),
-                });
-            }
-        };
-        *entry.lease.lock().unwrap() = Some(Arc::new(lease));
-        let fields = serde_json::to_vec(&entry.request.pool_fields).map_err(|_| unavailable())?;
+        if let Err(error) = self.acquire_provider(&entry).await {
+            drop(rollback);
+            wait_removed(&self.inner, &entry).await?;
+            return Err(error);
+        }
         // Transfer rollback through the actual remote reply. Caller cancellation
         // cannot delete before a delayed CREATE later creates an orphan hash.
         let (result, rollback): (i64, Rollback) = self
@@ -631,7 +671,7 @@ impl ArchivePool {
             .map_err(|_| unavailable())?;
         if result != 1 {
             return Err(StoreError::Unsupported(
-                "legacy or cross-worker archive adoption is not yet implemented",
+                "archive pool changed before the new generation was created",
             ));
         }
         if *self.inner.stopped.borrow() {
@@ -640,9 +680,37 @@ impl ArchivePool {
         }
         Ok(ArchiveTicket {
             refreshed: None,
+            adopted_idle: false,
             rollback: Some(rollback),
         })
     }
+    async fn acquire_provider(&self, entry: &Arc<Entry>) -> Result<(), StoreError> {
+        let lease = self
+            .inner
+            .coordinator
+            .acquire_timeshift_retained(
+                AcquireRequest {
+                    channel_id: entry.request.session_id.clone(),
+                    provider_profile_id: Some(entry.request.provider_profile_id),
+                    provider_max_streams: entry.request.provider_max_streams,
+                    credential_pool: None,
+                },
+                Arc::new(Operation::new(entry)),
+            )
+            .await
+            .map_err(|error| match error {
+                dispatcharr_coordination::Error::ProfileFull => {
+                    StoreError::StatusBody(503, json!("No available stream"))
+                }
+                dispatcharr_coordination::Error::OwnerHeld => {
+                    StoreError::StatusBody(503, json!("Stream slot busy"))
+                }
+                _ => unavailable(),
+            })?;
+        *entry.lease.lock().unwrap() = Some(Arc::new(lease));
+        Ok(())
+    }
+
     async fn reopen(
         &self,
         entry: Arc<Entry>,
@@ -689,6 +757,16 @@ impl ArchivePool {
         entry.reopened.notify_waiters();
         let was_handoff = entry.handoff_pending.swap(false, Ordering::SeqCst);
         let retained = entry.retained_provider.swap(false, Ordering::SeqCst);
+        if !was_handoff && !retained {
+            // Keep the admission slot while giving the successor an immutable
+            // token. The old finalizer cannot clear a remote or local winner.
+            let successor = Entry::new(request, entry.permit.clone());
+            {
+                let mut entries = self.inner.entries.lock().unwrap();
+                entries.insert(successor.request.session_id.clone(), successor.clone());
+            }
+            return self.open_entry(successor, Some(&entry.token)).await;
+        }
         if was_handoff && !*self.inner.stopped.borrow() {
             entry.stop.send_replace(false);
         }
@@ -739,6 +817,7 @@ impl ArchivePool {
         }
         Ok(ArchiveTicket {
             refreshed: Some(request),
+            adopted_idle: false,
             rollback: Some(rollback),
         })
     }
@@ -937,7 +1016,7 @@ impl ArchiveTicket {
                     serving_range.as_bytes(),
                     base.as_bytes(),
                     if near_eof { b"1" } else { b"0" },
-                    if entry.generation.load(Ordering::SeqCst) == 0 {
+                    if !self.adopted_idle && entry.generation.load(Ordering::SeqCst) == 0 {
                         b"1"
                     } else {
                         b"0"
@@ -1116,11 +1195,19 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
     let handoff =
         entry.handoff_pending.load(Ordering::SeqCst) && entry.streaming.load(Ordering::SeqCst);
     entry.retained_provider.store(handoff, Ordering::SeqCst);
-    let lease = entry.lease.lock().unwrap().clone();
-    if let Some(lease) = lease.as_ref().filter(|_| !handoff) {
-        if lease.release_provider().await.is_err() {
-            inner.cleanup_failed.store(true, Ordering::SeqCst);
-        }
+    let lease = entry.lease.lock().unwrap().take();
+    let released = match lease.as_ref() {
+        Some(lease) if !handoff => match lease.release_retained_result().await {
+            Ok(true) => true,
+            _ => {
+                inner.cleanup_failed.store(true, Ordering::SeqCst);
+                false
+            }
+        },
+        _ => false,
+    };
+    if handoff {
+        *entry.lease.lock().unwrap() = lease.clone();
     }
     entry.active.store(false, Ordering::SeqCst);
     let streaming = entry.streaming.load(Ordering::SeqCst);
@@ -1152,6 +1239,7 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
                         + inner.config.disconnect_grace.as_secs_f64())
                     .to_string()
                     .as_bytes(),
+                    if released { b"1" } else { b"0" },
                 ],
                 (),
             )
@@ -1212,8 +1300,8 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
     if result < 0 {
         inner.cleanup_failed.store(true, Ordering::SeqCst);
     }
-    if let Some(lease) = &lease {
-        if lease.release().await.is_err() {
+    if let Some(lease) = lease.as_ref().filter(|_| handoff) {
+        if lease.release_retained_result().await.is_err() {
             inner.cleanup_failed.store(true, Ordering::SeqCst);
         }
     }
@@ -1230,6 +1318,35 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
         entries.remove(&entry.request.session_id);
     }
 }
+const CLAIM_IDLE: &str = r#"
+local function kind(key)
+ local result=redis.call('TYPE',key);if type(result)=='table' then return result.ok end return result
+end
+if kind(KEYS[1])=='none' then return 0 end
+if kind(KEYS[1])~='hash' then return 3 end
+local owner=redis.call('HGET',KEYS[1],'rust_owner_token')
+if not owner or owner=='' or (ARGV[2]~='' and owner~=ARGV[2]) then return 3 end
+if redis.call('HGET',KEYS[1],'busy')~='0' or redis.call('EXISTS',KEYS[7],KEYS[9])~=0 then return 2 end
+if redis.call('HGET',KEYS[1],'rust_idle_ready')~='1' then return 3 end
+if kind(KEYS[2])~='hash' or kind(KEYS[3])~='set' or kind(KEYS[4])~='hash' then return 3 end
+if redis.call('HGET',KEYS[2],'rust_owner_token')~=owner or redis.call('HGET',KEYS[4],'rust_owner_token')~=owner
+ or redis.call('HGET',KEYS[2],'rust_preempted')=='1' or redis.call('SISMEMBER',KEYS[3],ARGV[5])~=1 then return 3 end
+local fields=cjson.decode(ARGV[3])
+for _,field in ipairs({'user_id','media_id','profile_id','account_id','stream_id','dispatcharr_stream_id','provider_timestamp','rust_duration_secs'}) do
+ if (redis.call('HGET',KEYS[1],field) or '')~=(fields[field] or '') then return 3 end
+end
+if redis.call('HGET',KEYS[2],'user_id')~=fields.user_id then return 3 end
+local programme=redis.call('HGET',KEYS[2],'programme_vid')
+if programme and programme~=ARGV[4] then return 3 end
+redis.call('HSET',KEYS[1],'rust_owner_token',ARGV[1],'busy','1','last_activity',ARGV[6])
+redis.call('HDEL',KEYS[1],'rust_idle_ready')
+for _,index in ipairs({2,4}) do redis.call('HSET',KEYS[index],'rust_owner_token',ARGV[1]) end
+redis.call('HDEL',KEYS[2],'stats_grace_deadline','stats_grace_disconnected_at')
+redis.call('DEL',KEYS[8])
+redis.call('EXPIRE',KEYS[1],600)
+return 1
+"#;
+
 const CREATE: &str = r#"
 if redis.call('EXISTS',KEYS[1])~=0 then return 0 end
 local fields=cjson.decode(ARGV[2])
@@ -1296,6 +1413,8 @@ if ARGV[6]=='1' then
  redis.call('SET',KEYS[8],ARGV[7],'EX',math.max(1,math.floor(tonumber(ARGV[8])-tonumber(ARGV[2])+2)))
  redis.call('HSET',KEYS[2],'stats_grace_deadline',ARGV[8],'stats_grace_disconnected_at',ARGV[2])
 end
+if ARGV[9]=='1' then redis.call('HSET',KEYS[1],'rust_idle_ready','1')
+else redis.call('HDEL',KEYS[1],'rust_idle_ready') end
 redis.call('HSET',KEYS[1],'busy',ARGV[4]=='1' and '1' or '0','last_activity',ARGV[2]);redis.call('EXPIRE',KEYS[1],ARGV[4]=='1' and 600 or 60)
 return 1
 "#;

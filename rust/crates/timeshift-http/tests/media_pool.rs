@@ -91,6 +91,159 @@ fn metadata_key(sid: &str) -> String {
 }
 #[tokio::test]
 #[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn cross_worker_idle_reopen_fences_the_old_finalizer_and_reuses_one_provider_slot() {
+    let url = std::env::var("REDIS_TEST_URL").expect("explicit disposable Redis required");
+    let mut redis = redis::Client::open(url.as_str())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let namespace = format!("test:archive-cross-worker:{}", uuid::Uuid::new_v4());
+    let mut pools = Vec::new();
+    for _ in 0..3 {
+        let coordinator = Coordinator::connect(
+            &url,
+            LeaseConfig {
+                namespace: namespace.clone(),
+                ..Default::default()
+            },
+        )
+        .await
+        .unwrap();
+        pools.push(
+            ArchivePool::connect(
+                &url,
+                coordinator,
+                ArchivePoolConfig {
+                    max_sessions: 1,
+                    startup_idle: Duration::from_secs(20),
+                    ..Default::default()
+                },
+            )
+            .await
+            .unwrap(),
+        );
+    }
+    let [first_pool, second_pool, contender]: [ArchivePool; 3] = pools.try_into().ok().unwrap();
+    let sid = uuid::Uuid::new_v4().to_string();
+    let profile = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000_000) as i64 + 1000;
+    let new_request = || {
+        let mut request = request(&sid, profile);
+        request
+            .client_fields
+            .insert("programme_vid".into(), request.virtual_channel_id.clone());
+        request
+    };
+    let pool = pool_key(&sid);
+    let provider = profile_key(profile);
+    let owner = format!("{namespace}:timeshift:session:{sid}:owner");
+    let client = client_key(&sid);
+    let metadata = metadata_key(&sid);
+    let first = first_pool.open(new_request()).await.unwrap();
+    first
+        .start("http://fixture.invalid/archive.ts", Some(15_001_836), None)
+        .await
+        .unwrap();
+    let old_token: String = redis.hget(&pool, "rust_owner_token").await.unwrap();
+    let connected: String = redis.hget(&client, "connected_at").await.unwrap();
+    let initialized: String = redis.hget(&metadata, "init_time").await.unwrap();
+    assert_eq!(redis.get::<_, u64>(&provider).await.unwrap(), 1);
+    assert!(contender.open(new_request()).await.is_err());
+    wait(async || contender.is_idle()).await;
+    first.forwarded(8192);
+    drop(first);
+    wait(async || {
+        redis
+            .hget::<_, _, String>(&pool, "rust_idle_ready")
+            .await
+            .ok()
+            .as_deref()
+            == Some("1")
+    })
+    .await;
+    assert!(!redis.exists::<_, bool>(&owner).await.unwrap());
+    assert_eq!(redis.get::<_, u64>(&provider).await.unwrap(), 0);
+    let mut wrong_profile = new_request();
+    wrong_profile.provider_profile_id += 1;
+    wrong_profile.pool_fields.insert(
+        "profile_id".into(),
+        wrong_profile.provider_profile_id.to_string(),
+    );
+    assert!(contender.open(wrong_profile).await.is_err());
+    wait(async || contender.is_idle()).await;
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(&pool, "rust_owner_token")
+            .await
+            .unwrap(),
+        old_token
+    );
+
+    let (second, competing) = tokio::join!(
+        second_pool.open(new_request()),
+        contender.open(new_request())
+    );
+    let second = match (second, competing) {
+        (Ok(ticket), Err(_)) | (Err(_), Ok(ticket)) => ticket,
+        _ => panic!("exactly one cross-worker claimant may acquire the idle archive"),
+    };
+    let new_token: String = redis.hget(&pool, "rust_owner_token").await.unwrap();
+    assert_ne!(new_token, old_token);
+    assert_eq!(redis.get::<_, u64>(&provider).await.unwrap(), 1);
+    assert_eq!(
+        second.cached_final_url().await.unwrap().as_deref(),
+        Some("http://fixture.invalid/archive.ts"),
+    );
+    second
+        .start("http://fixture.invalid/archive.ts", Some(15_001_836), None)
+        .await
+        .unwrap();
+    // Shutting down the first worker forces its old finalizer during playback.
+    assert!(first_pool.shutdown().await);
+    assert!(second.alive().await.unwrap());
+    assert_eq!(redis.get::<_, u64>(&provider).await.unwrap(), 1);
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(&pool, "rust_owner_token")
+            .await
+            .unwrap(),
+        new_token
+    );
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(&client, "connected_at")
+            .await
+            .unwrap(),
+        connected
+    );
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(&metadata, "init_time")
+            .await
+            .unwrap(),
+        initialized
+    );
+
+    second.forwarded(8192);
+    assert!(second.heartbeat().await.unwrap());
+    assert_eq!(
+        redis
+            .hget::<_, _, u64>(&metadata, "total_bytes")
+            .await
+            .unwrap(),
+        16384
+    );
+    drop(second);
+    wait(async || redis.get::<_, u64>(&provider).await.unwrap_or(1) == 0).await;
+    assert!(second_pool.shutdown().await);
+    assert!(contender.shutdown().await);
+    assert!(!redis.exists::<_, bool>(&owner).await.unwrap());
+    assert!(!redis.exists::<_, bool>(&pool).await.unwrap());
+    let _: () = redis.del(provider).await.unwrap();
+}
+
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
 async fn idle_reopen_preserves_connection_times_cumulative_bytes_and_cancels_old_cleanup() {
     let (pool, mut redis, profile) = setup().await;
     let sid = uuid::Uuid::new_v4().to_string();

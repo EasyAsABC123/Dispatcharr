@@ -49,8 +49,12 @@ def main():
     ports=out/'ports.yml';report['ports']=write_port_overlay(ports,{'baseline':[5656],'origin':[8080],'candidate':[9192],'candidate-small':[9192]});control=None;connections=[]
     with fixture_source(report,out,'xc-epg-image.json')as temporary:
         source=Path(temporary)/'source';source.mkdir();archive=Path(temporary)/'source.tar'
-        with archive.open('wb')as file:subprocess.run(['git','archive',BASELINE],cwd=ROOT,stdout=file,check=True,timeout=30)
+        git_root=subprocess.check_output(['git','rev-parse','--show-toplevel'],cwd=ROOT,text=True,timeout=10).strip()
+        with archive.open('wb')as file:
+            subprocess.run(['git','archive',BASELINE],cwd=git_root,stdout=file,check=True,timeout=30)
         report['baseline_archive_sha256']=hashlib.sha256(archive.read_bytes()).hexdigest();subprocess.run(['tar','-xf',str(archive),'-C',str(source),'--no-same-owner'],check=True);(source/'media').mkdir(exist_ok=True)
+        if not (source/'pyproject.toml').is_file():
+            raise RuntimeError('Pinned Original archive is missing pyproject.toml')
         env=dict(os.environ,BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(out),FIXTURE_SECONDS='180')
         compose=[docker,'compose','-p',project,*[value for path in [copies/'docker/compose.rust-playback.yml',copies/'docker/compose.rust-candidate.yml',overlay,ports]for value in ['-f',str(path)]]]
         def command(values,timeout=120):report['commands'].append(values);return subprocess.run(values,cwd=ROOT,env=env,text=True,capture_output=True,check=True,timeout=timeout).stdout

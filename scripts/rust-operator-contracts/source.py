@@ -39,6 +39,10 @@ condition='dev_notif_condition_owned_operator'
 unrelated='operator_owned_unrelated'
 
 
+case_set = os.environ.get('OPERATOR_CASE_SET', 'legacy')
+if case_set not in ('legacy', 'repeated-user'):
+    raise ValueError('Unsupported operator case set')
+
 out = Path('/evidence/operator-cli-raw')
 out.mkdir(exist_ok=False)
 prefix = 'rust-operator-owned-'
@@ -88,6 +92,66 @@ def run(name, arguments, code=0):
     assert result.returncode == code, (name, result.returncode, result.stderr[-2000:])
     return row
 
+def finish():
+    report = {
+        'passed': True,
+        'scope': 'Original actual manage.py subprocesses on owned copied PostgreSQL',
+        'native_verified': False,
+        'performance_verified': False,
+        'cases': cases,
+        'commands': ['reset_network_access', 'reset_user_network'],
+        'destructive_commands_executed': False,
+    }
+    if case_set != 'legacy':
+        report['case_set'] = case_set
+    Path('/evidence/operator-cli-source.json').write_text(
+        json.dumps(report, indent=2, ensure_ascii=False, default=str)+'\n')
+    print(json.dumps({'passed': True, 'cases': len(cases)}))
+
+def run_repeated_user_cases():
+    def seed():
+        for name in ('a', 'b'):
+            User.objects.filter(pk=users[name].pk).update(custom_properties={
+                'allowed_networks': ['192.0.2.0/24' if name == 'a' else '198.51.100.0/24'],
+                'keep': {'name': name, 'typed': [1, True, None]},
+            })
+        cache.set(CoreSettings.group_cache_key(NETWORK_ACCESS_KEY), {'stale': 'owned'}, timeout=300)
+        cache.set(CoreSettings.group_cache_ver_key(NETWORK_ACCESS_KEY), 501, timeout=None)
+        cache.set(condition, {'condition': 'owned'}, timeout=300)
+        cache.set(unrelated, {'preserve': True}, timeout=300)
+
+    def check(name, options, targets, exit_code=0):
+        seed()
+        row = run(name, ['reset_user_network', *options], exit_code)
+        before, after = row['before'], row['after']
+        expected = [dict(item) for item in before['users']]
+        for item in expected:
+            if item['username'] in targets:
+                item['custom_properties'] = {key: value for key, value in
+                                             item['custom_properties'].items()
+                                             if key != 'allowed_networks'}
+        assert json.dumps(after['users'], sort_keys=True) == json.dumps(expected, sort_keys=True), name
+        for field in ('network', 'network_identity', 'user_timestamps', 'notification_sequence', 'cache'):
+            assert after[field] == before[field], (name, field)
+        original_ttls = before['cache_ttls']
+        actual_ttls = after['cache_ttls']
+        assert actual_ttls.keys() == original_ttls.keys()
+        for key, ttl in original_ttls.items():
+            assert 0 < actual_ttls[key] <= ttl if ttl > 0 else actual_ttls[key] == ttl
+        assert row['events'] == [{'type': 'update', 'data': {'type': 'notifications_cleared'}}]
+        stdout = f'Reset allowed_networks for {len(targets)} user(s).\n' if exit_code == 0 else ''
+        assert row['stdout'] == stdout, name
+
+    check('repeat-user-target-last', ['--user='+prefix+'a', '--user', prefix+'b'], {prefix+'b'})
+    check('repeat-user-empty-last', ['--user', prefix+'a', '--user='], {prefix+'a', prefix+'b'})
+    check('repeat-user-malformed-last', ['--user='+prefix+'a', '--user'], set(), 2)
+
+
+if case_set == 'repeated-user':
+    run_repeated_user_cases()
+    finish()
+    raise SystemExit(0)
+
 for command in ('reset_network_access','reset_user_network'):
     row=run(command+'-help',[command,'--help'])
     assert all(row['before'][key]==row['after'][key] for key in ['network','users'])
@@ -128,9 +192,4 @@ assert all(row['before'][key]==row['after'][key] for key in ['network','users'])
 User.objects.filter(pk=users['a'].pk).update(custom_properties=['allowed_networks'])
 row=run('user-array-match',['reset_user_network','--user',prefix+'a'],1)
 assert all(row['before'][key]==row['after'][key] for key in ['network','users']) and 'TypeError' in row['stderr']
-report={'passed':True,'scope':'Original actual manage.py subprocesses on owned copied PostgreSQL',
-        'native_verified':False,'performance_verified':False,'cases':cases,
-        'commands':['reset_network_access','reset_user_network'],
-        'destructive_commands_executed':False}
-Path('/evidence/operator-cli-source.json').write_text(json.dumps(report,indent=2,ensure_ascii=False,default=str)+'\n')
-print(json.dumps({'passed':True,'cases':len(cases)}))
+finish()

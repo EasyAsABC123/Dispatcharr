@@ -26,7 +26,7 @@ The actual restore task subsequently runs Django migrate. Caught errors produce 
 The deployment and direct CLI results establish different behaviors:
 
 - The default Dockerfile entrypoint provisions or waits for PostgreSQL and launches migrate/web through `su -`. Its explicit environment whitelist omits `DB_ENGINE`. In the isolated all-in-one run below, PID 1 received `DB_ENGINE=sqlite`, while login-shell settings and all six observed uWSGI process generations lacked it. Django selected PostgreSQL.
-- Several migrations provide non-PostgreSQL fallbacks. Actual fresh migration first fails at Channels0038 with `django.db.utils.OperationalError: near "~": syntax error`. VOD0003's PostgreSQL `DO`/catalog SQL was not reached and remains a static concern.
+- Several migrations provide non-PostgreSQL fallbacks. Actual fresh migration first fails at Channels0038 with `django.db.utils.OperationalError: near "~": syntax error`. The full VOD0003 migration was not reached. Isolated SQLite dialect checks on its exact SQL are recorded below.
 
 ## Actual Original all-in-one entrypoint
 
@@ -62,6 +62,21 @@ The real command exited **1** after **4.506 seconds**, first failing in `apps/ch
 Both output streams reached EOF, the CLI process group settled, output was not discarded, the container exited 1 without OOM, and both owned CLI/preflight containers were removed with final labelled-container absence. Attempt 1 is retained separately as a pre-Django file-permission failure; its migration never ran. Attempt 2's unchanged controller report contains an unset `migration_run:false` field; the derived result records actual execution from migration output, traceback and applied-prefix observations, preserving that raw report rather than rewriting it.
 
 The [actual CLI packet](../scripts/rust-integration/sqlite-source-cli-1/result.json) contains the result, raw command output, read-only schema/prefix, failure provenance and cleanup receipts. Original Source application behavior and Native parity remain unqualified beyond this CLI observation.
+
+
+## Historical migration provenance
+
+All six retained Git versions of Channels0038, including its introduction,
+contain a PostgreSQL `::jsonb` cast without a backend guard. The exact pinned
+Original and published migration worktree contain no tracked SQLite database
+fixture or backup archive. The retained owned file passes `quick_check` and
+ends at Channels0037 after 158 recorded migrations.
+
+A separate in-memory SQLite 3.54.0 check ran the exact VOD0003 SQL statements
+against minimal tables. Its initial INSERT parsed. Its forward UPDATE failed
+near `m`, and its PostgreSQL `DO` statement failed near `DO`. The full Original
+migration still requires its own application fixture.
+[Provenance receipt](../scripts/rust-integration/sqlite-source-scope/provenance-9a017508.json)
 
 ## Required characterization gates
 

@@ -325,6 +325,25 @@ impl Coordinator {
         self.acquire_scoped(request, OwnerScope::Timeshift).await
     }
 
+    /// Keep an archive's admitted transition alive through a definitive
+    /// acquisition result or the fenced physical cleanup of an ambiguous reply.
+    pub async fn acquire_timeshift_retained(
+        &self,
+        request: AcquireRequest,
+        retained: Arc<dyn Send + Sync>,
+    ) -> Result<Lease, Error> {
+        self.acquire_scoped_retained(request, OwnerScope::Timeshift, Some(retained))
+            .await
+    }
+
+    /// Exact key used by the lease scripts for a Timeshift session.
+    pub fn timeshift_owner_key(&self, session_id: &str) -> String {
+        format!(
+            "{}:timeshift:session:{session_id}:owner",
+            self.inner.config.namespace
+        )
+    }
+
     /// Keep a caller-owned physical scope through acquisition and any ambiguous
     /// result cleanup. This changes no ownership/provider script semantics.
     pub async fn acquire_vod_retained(
@@ -394,16 +413,11 @@ impl Coordinator {
         let keys = Keys {
             owner: match scope {
                 OwnerScope::Live => format!("live:channel:{}:owner", request.channel_id),
-                OwnerScope::Vod | OwnerScope::Timeshift => {
-                    let name = match scope {
-                        OwnerScope::Vod => "vod",
-                        _ => "timeshift",
-                    };
-                    format!(
-                        "{}:{name}:session:{}:owner",
-                        self.inner.config.namespace, request.channel_id
-                    )
-                }
+                OwnerScope::Vod => format!(
+                    "{}:vod:session:{}:owner",
+                    self.inner.config.namespace, request.channel_id
+                ),
+                OwnerScope::Timeshift => self.timeshift_owner_key(&request.channel_id),
             },
             ledger: format!("{}:lease:{}", self.inner.config.namespace, token),
             index: format!("{}:leases", self.inner.config.namespace),
@@ -618,12 +632,22 @@ impl Lease {
         result
     }
     pub async fn release(&self) -> Result<bool, Error> {
+        self.release_observed(false).await
+    }
+
+    /// An owned archive finalizer may publish idle only after the actual fenced
+    /// release result. Admission is still bounded by the normal command limit.
+    pub async fn release_retained_result(&self) -> Result<bool, Error> {
+        self.release_observed(true).await
+    }
+
+    async fn release_observed(&self, retain_result: bool) -> Result<bool, Error> {
         if self.inner.release_started.swap(true, Ordering::AcqRel) {
             return Ok(false);
         }
         self.inner.stop.send_replace(true);
         self.inner.lost.send_replace(true);
-        release_inner(&self.inner).await
+        Ok(lease_mutation_observed(&self.inner, LeaseMutation::Release, retain_result).await? == 1)
     }
 }
 

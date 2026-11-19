@@ -341,12 +341,14 @@ fn validate(
         && input.len() == 2
         && input.get("auto_enable_new_groups_vod") == Some(&Value::Bool(false))
         && input.get("auto_enable_new_groups_series") == Some(&Value::Bool(false));
+    // The Original serializer updates live memberships even on inactive
+    // accounts and with VOD enabled. This shape leaves activation, settings
+    // and the existing provider state alone.
     let xc_group_selection = !create
         && partial
         && old["account_type"] == "XC"
         && saved["account_type"] == "XC"
-        && old["is_active"] == true
-        && old["custom_properties"]["enable_vod"] == false
+        && (old["custom_properties"].is_object() || old["custom_properties"].is_null())
         && input.len() == 1
         && input.contains_key("channel_groups");
     let mut group_selection = Vec::new();
@@ -1079,6 +1081,64 @@ mod tests {
             v.saved["custom_properties"]["auto_enable_new_groups_vod"],
             true
         );
+    }
+    #[test]
+    fn xc_group_selection_preserves_activity_and_vod_preferences() {
+        let groups = json!({"channel_groups":[
+            {"channel_group":11,"enabled":false},
+            {"channel_group":29,"enabled":true}
+        ]});
+        let groups = groups.as_object().unwrap();
+        for active in [true, false] {
+            for properties in [
+                json!({"enable_vod":true,"marker":"keep"}),
+                json!({"enable_vod":false}),
+                json!({}),
+                Value::Null,
+            ] {
+                let mut old = defaults();
+                old["account_type"] = json!("XC");
+                old["is_active"] = json!(active);
+                old["custom_properties"] = properties;
+                let actual = validate(groups.clone(), &old, "", true, false).unwrap();
+                let mut expected = old;
+                if expected["custom_properties"].is_null() {
+                    expected["custom_properties"] = json!({});
+                }
+                assert_eq!(actual.saved, expected);
+                assert_eq!(actual.group_selection, [(11, false), (29, true)]);
+                assert!(!actual.hash_changed);
+                assert_eq!(actual.expiration, None);
+            }
+        }
+    }
+    #[test]
+    fn xc_group_selection_keeps_other_mutations_and_duplicate_rows_outside_its_scope() {
+        let mut old = defaults();
+        old["account_type"] = json!("XC");
+        old["is_active"] = json!(false);
+        old["custom_properties"] = json!({"enable_vod":true});
+        for input in [
+            json!({"channel_groups":[],"enable_vod":false}),
+            json!({"channel_groups":[{"channel_group":11,"enabled":false,"auto_channel_sync":true}]}),
+            json!({"channel_groups":[{"channel_group":11,"enabled":false},{"channel_group":11,"enabled":true}]}),
+        ] {
+            assert!(matches!(
+                validate(input.as_object().unwrap().clone(), &old, "", true, false),
+                Err(StoreError::Unsupported(_))
+            ));
+        }
+        old["custom_properties"] = json!("non-mapping preference state");
+        assert!(matches!(
+            validate(
+                Map::from_iter([("channel_groups".into(), json!([]))]),
+                &old,
+                "",
+                true,
+                false
+            ),
+            Err(StoreError::Unsupported(_))
+        ));
     }
     #[test]
     fn captured_existing_xc_preferences_do_not_admit_general_xc_mutations() {

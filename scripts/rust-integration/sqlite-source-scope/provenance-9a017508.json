@@ -1,0 +1,106 @@
+{
+  "published_commit": "9a017508bd09bb092870f6a585f9276bb41547ac",
+  "Original_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_author_credit": "Dispatcharr authors retain full application and algorithm credit.",
+  "tracked_candidate_suffix_scan": {
+    "Original_candidates": [],
+    "published_SQLite_named_candidates": [],
+    "published_other_archive_or_database_candidates": [
+      "rust/crates/xmltv-parser/vendor/libxml2-2.14.6.tar.xz",
+      "rust/runtime/plugin_compat_source/source.tar.gz",
+      "scripts/rust-auth-contracts/retained-rest-read-component/raw/case1.tar.gz",
+      "scripts/rust-auth-contracts/retained-rest-read-component/raw/case2.tar.gz",
+      "scripts/rust-contracts/backup-callback-physical4/lifecycle.tar.gz",
+      "scripts/rust-contracts/backup-job-physical2/lifecycle.tar.gz",
+      "scripts/rust-contracts/backup-native16/lifecycle-projection.tar.gz",
+      "scripts/rust-contracts/backup-source16/lifecycle-projection.tar.gz",
+      "scripts/rust-contracts/display-timezone-callback/actual/case0/lifecycle.tar.gz",
+      "scripts/rust-contracts/display-timezone-callback/actual/case1/lifecycle.tar.gz",
+      "scripts/rust-contracts/display-timezone-callback/actual/case2/lifecycle.tar.gz",
+      "scripts/rust-contracts/display-timezone-callback/actual/case3/lifecycle.tar.gz",
+      "scripts/rust-contracts/display-timezone-callback/actual/case4/lifecycle.tar.gz",
+      "scripts/rust-contracts/display-timezone-callback/actual/case5/lifecycle.tar.gz",
+      "scripts/rust-contracts/display-timezone-callback/actual/case6/lifecycle.tar.gz",
+      "scripts/rust-contracts/notification-credentials-source20-native20/native-lifecycle.tar.gz",
+      "scripts/rust-contracts/notification-credentials-source20-native20/source-lifecycle.tar.gz",
+      "scripts/rust-contracts/notification-forms-native19/lifecycle.tar.gz",
+      "scripts/rust-contracts/notification-forms-source12/lifecycle.tar.gz",
+      "scripts/rust-contracts/sqlx-close-dependency-experiment/baseline-raw.tar.gz",
+      "scripts/rust-contracts/sqlx-close-dependency-experiment/candidate-raw.tar.gz"
+    ]
+  },
+  "retained_SQLite": {
+    "path": "artifacts/rust/m8-sqlite-fresh-source-actual-2/data/dispatcharr.db",
+    "sha256": "0143ecbd14334f8691a6a6554a68f6d989ef7fed8f03291035509ba6a19bf298",
+    "quick_check": "ok",
+    "tables": 44,
+    "applied_migrations": 158,
+    "final_migration": [
+      "dispatcharr_channels",
+      "0037_auto_sync_overhaul"
+    ],
+    "bytes_unchanged": true,
+    "complete_Runtime_baseline": false
+  },
+  "Channels0038": {
+    "Git_history": [
+      {
+        "revision": "e596a508c71cb5dc750562889890c1d4970286b8",
+        "file_sha256": "8192a5c31725ecc2b8f6fe26532abee300acae95b427fb383a6b37525857cf82",
+        "contains_PostgreSQL_jsonb_cast": true,
+        "contains_PostgreSQL_regex_operator": true,
+        "vendor_guard_observed": false
+      },
+      {
+        "revision": "1703d6a70371f1cab202276766c4ff068ac3f3f3",
+        "file_sha256": "fae48413a8b42828918cbe77cd8cb9fb4fcc56d1e22ef365b855b044212cefcd",
+        "contains_PostgreSQL_jsonb_cast": true,
+        "contains_PostgreSQL_regex_operator": true,
+        "vendor_guard_observed": false
+      },
+      {
+        "revision": "2909c9b339b6b41dfec1b296055b1dff161fb42b",
+        "file_sha256": "52ebad0fbe384ac668e7e0cea8f091b0f625aa97810eff6a38f191669fe89257",
+        "contains_PostgreSQL_jsonb_cast": true,
+        "contains_PostgreSQL_regex_operator": true,
+        "vendor_guard_observed": false
+      },
+      {
+        "revision": "09f4ec91f1b6aa093660b7ed24d9c9ab0fe0a556",
+        "file_sha256": "bbbf83021915b6e59b4a9847a95aee64f2583bd208425483ecf7f2954ef544e8",
+        "contains_PostgreSQL_jsonb_cast": true,
+        "contains_PostgreSQL_regex_operator": true,
+        "vendor_guard_observed": false
+      },
+      {
+        "revision": "3b8717c4ce78f466547d4c3296ad89be567a0ea7",
+        "file_sha256": "5a0a96e5afca27ce31ab81dcdfa0f78d5670b881e3a3ed3186af749645ab8783",
+        "contains_PostgreSQL_jsonb_cast": true,
+        "contains_PostgreSQL_regex_operator": true,
+        "vendor_guard_observed": false
+      },
+      {
+        "revision": "2781b21a8902ab0e9d12e15e1ec189ac0e0dab23",
+        "file_sha256": "b17d9f8c110d30fd4fdf6c80f548eb6ea1426fe2381c01c886fb6bccb3f0cf24",
+        "contains_PostgreSQL_jsonb_cast": true,
+        "contains_PostgreSQL_regex_operator": false,
+        "vendor_guard_observed": false
+      }
+    ],
+    "actual_pinned_CLI_status": 1,
+    "actual_CLI_error": "near \"~\": syntax error",
+    "runtime_receipt": "scripts/rust-integration/sqlite-source-cli-1/result.json"
+  },
+  "VOD0003": {
+    "introduction": "da628705dfc34bddcbddd24e344ba3795cda5204",
+    "file_sha256": "0359e1558e86d70858f174bd99e0d45edc58959a0fa356928a5bcd93feb06c8e",
+    "SQLite_version": "3.54.0",
+    "scope": "Exact Source statements with minimal in-memory SQL structure. The unchanged application migration remains unexecuted.",
+    "first_forward_insert_parsed": true,
+    "exact_forward_update_error": "near \"m\": syntax error",
+    "exact_DO_statement_error": "near \"DO\": syntax error",
+    "contains_pg_regclass_cast": true
+  },
+  "datastore_gate_passed": false,
+  "new_Source_application_executions": 0
+}

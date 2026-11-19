@@ -1,0 +1,111 @@
+{
+  "base_git_revision": "9a017508bd09bb092870f6a585f9276bb41547ac",
+  "workspace_formatting_passed": true,
+  "strict_all_target_clippy": [
+    "dispatcharr-coordination",
+    "dispatcharr-timeshift-http",
+    "dispatcharr-store",
+    "dispatcharr-output-http"
+  ],
+  "tests": {
+    "guide-timezone": {
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "raw_stdout_sha256": "b3b615ceaeeff6afd4b82f8a1c1a0065514ab9312b44794d7b765138e95a3b20"
+    },
+    "xc-group": {
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "raw_stdout_sha256": "15465876e0c5d7076fa3a1e3f990aef363fa5187c6f118de56862df759cc1c93"
+    },
+    "operator-repeat": {
+      "passed": 4,
+      "failed": 0,
+      "ignored": 0,
+      "raw_stdout_sha256": "73cfc9595249c1609ec163b7b26683459b2423681d3bc644cf4f12461b069623"
+    },
+    "archive-pool": {
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "raw_stdout_sha256": "fa41e0b21f16ecd257b7f18aad3562d20c949a3fd8d332d5e244a8b1410bae8a"
+    },
+    "archive-cancel": {
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "raw_stdout_sha256": "00788298f290445fc67357537d00f982f12eaf81097f49c431dcbba7299b0716"
+    },
+    "xc-profile-continuation": {
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "raw_stdout_sha256": "59fcd25e35ce85c276b2f067d7699e272a45ab9d5928af7d9b74a9aa3999e552",
+      "actual_tool_chunk": "ba1c4a"
+    }
+  },
+  "timeshift_disposable_Redis": {
+    "actual_exit": 0,
+    "raw_tool_chunk": "e1dc66",
+    "loopback_verified": true,
+    "exact_container_absent": true,
+    "prior_transport_control_exit": 1,
+    "prior_reply_observer_control_exit": 1
+  },
+  "pinned_original_custom_guide": {
+    "python_version": "3.13.18",
+    "original_sha256": "6e2be91c5d441a4a1528ced8f097962173b5a40e336e3951abb6b408df6770ac",
+    "source_cases": [
+      {
+        "timezone": "america/new_york",
+        "start": "2026-01-02T04:30:00+00:00",
+        "date": "2026-01-01",
+        "grid_preserved": true
+      },
+      {
+        "timezone": "US/Eastern",
+        "start": "2026-07-02T04:30:00+00:00",
+        "date": "2026-07-02",
+        "grid_preserved": true
+      },
+      {
+        "timezone": "Asia/Kathmandu",
+        "start": "2026-01-02T18:30:00+00:00",
+        "date": "2026-01-03",
+        "grid_preserved": true
+      },
+      {
+        "timezone": "unknown/owned",
+        "start": "2026-01-02T04:30:00+00:00",
+        "date": "2026-01-02",
+        "grid_preserved": true
+      },
+      {
+        "timezone": null,
+        "start": "2026-01-02T04:30:00+00:00",
+        "date": "2026-01-02",
+        "grid_preserved": true
+      }
+    ]
+  },
+  "source_oracle_sha256": "1ac70620ab4c23ece0cb96419ff8845e559688a6ad659e0f4556195ee5f1e633",
+  "verified_rust_paths": {
+    "rust/Cargo.lock": "925a65a04595f12b21fd5f7b34115746c0b5b563eeed684713742e150ca1a576",
+    "rust/crates/coordination/src/lib.rs": "1e3f16e55503012cccdbaf31fb7222ca80667e05ec85548c00cb6efaa116802f",
+    "rust/crates/output-http/Cargo.toml": "0f224672811090b000685e936162dd927ef2253b7d255f517a5c88ae97da3d59",
+    "rust/crates/output-http/src/epg_custom.rs": "96347f7fab2435f7fd18d9d0f0054588ff90e857a335375d98d28b387881bdd0",
+    "rust/crates/store/src/operator_commands.rs": "cf55b84e70917a4644b2527188165ad03952f2497bb32ca6d9833086f60e8bde",
+    "rust/crates/store/src/provider_account_writes.rs": "33421345ecb3ad427a4ce1ff1487004d02ad0217d5e296cb3d1f44de8f7ced25",
+    "rust/crates/store/src/xc_account_provider.rs": "73407f1ac078230cec26307e2c31d6a05c41b1d08c1867d2a1f18ba74e6e15fb",
+    "rust/crates/store/src/xc_account_tasks.rs": "8e2a4457bf3b89c3afb87f08184a37be6c085cb0dc91eda6a926a8015a2f9c7d",
+    "rust/crates/timeshift-http/src/media_pool.rs": "e1b8b13c825844da588c890a1aa945a4089b4af429e15ed7572d96b2e4f3c255",
+    "rust/crates/timeshift-http/tests/media_cancel.rs": "34cc8e7d95584a69900a08fcc19def6c625f5c66e2ac08d7f03b76e581bfae74",
+    "rust/crates/timeshift-http/tests/media_pool.rs": "5fd794fde4909a016de4bd51bbfc6eecbc69250862592cac18d7cb473f9c963a"
+  },
+  "packaged_candidate71_verified": false,
+  "performance_verified": false,
+  "full_milestone_accepted": false,
+  "XC_profile_original_oracle_sha256": "1a1d6608604c310a507fa316f6ed9c42805b1a1b0661e4fab84187b660e3c8b0"
+}

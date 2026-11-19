@@ -22,7 +22,11 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
-The [latest parallel checkpoint](rust-milestone-batch70.md) covers typed HLS
+The [latest Rust checkpoint](rust-milestone-batch71.md) covers fenced archive
+reopening, XC membership and refresh behavior, custom-guide timezone dates,
+operator arguments and the packaged fixed-seed EPG comparison.
+
+The [previous parallel checkpoint](rust-milestone-batch70.md) covers typed HLS
 startup, guide multipart handling, fixed-seed XC EPG, operator arguments and
 signed backup filenames. The pinned Original all-in-one entrypoint selected
 PostgreSQL. SQLite compatibility still needs a legitimate Source fixture. M0 now

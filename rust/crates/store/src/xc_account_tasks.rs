@@ -302,9 +302,11 @@ impl Prepared {
                     }
                     // Source counts completed provider failures per profile.
                     // Store and budget failures still need worker settlement.
-                    Ok(Err(_)) | Err(provider::FetchFailure::ConnectionAttemptsExhausted) => {
-                        failed += 1
-                    }
+                    Ok(Err(_))
+                    | Err(
+                        provider::FetchFailure::ConnectionAttemptsExhausted
+                        | provider::FetchFailure::InvalidAccountInfo,
+                    ) => failed += 1,
                     Err(provider::FetchFailure::Operational(error)) => return Err(error),
                 }
             }

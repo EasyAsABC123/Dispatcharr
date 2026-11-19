@@ -1,0 +1,79 @@
+{
+  "scope": "Packaged fixed-seed XC EPG on Candidate70. Original/Native clients shared the disposable PostgreSQL/Redis fixture.",
+  "candidate_git_revision": "7d6f811cf92fcff8d0f51750e691bb5a41087b14",
+  "candidate_image_id": "sha256:ffc6bc1740726a188da7a5398fe8fe551f34f8ebd50bb1bfbb13c3614a64d615",
+  "candidate_source_tree_sha256": "89693fae08e40b4fbf8f8285cad42af9cffa91010a398c6f342f7d66d188b6c2",
+  "source_git_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "startup_failure_cause": "Git archive from a nested independent tools snapshot returned an empty tree. The retry archived from the Git repository root and required the extracted pyproject.toml.",
+  "trials": [
+    {
+      "actual_exit": 1,
+      "actual_tool_chunk": "83de0f",
+      "passed": false,
+      "failure": "TimeoutError",
+      "inventory_after_cleanup": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      },
+      "full_report_sha256": "47852a13759aaec822b1a9b42a7dc3ffe2eba690889fd0bce61fc1ce6465fc18"
+    },
+    {
+      "actual_exit": 130,
+      "actual_tool_chunk": "4ec2f5",
+      "passed": false,
+      "failure": "KeyboardInterrupt",
+      "inventory_after_cleanup": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      },
+      "full_report_sha256": "29e2615e78d4f03f58de2a8bc08056091b56ba9fc94052380f1d6afcf9778201"
+    },
+    {
+      "actual_exit": 0,
+      "actual_tool_chunk": "a18226",
+      "passed": true,
+      "failure": null,
+      "inventory_after_cleanup": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      },
+      "full_report_sha256": "08c52808217ad690f31ac504c5ad3f7723a9a1bf6e4ee3f56a18855343e196f9"
+    }
+  ],
+  "http_cases_compared": 88,
+  "literal_http_differences": 0,
+  "helper_cases_compared": 750,
+  "fixed_hash_seed": {
+    "configured_seed": 42,
+    "exact_helper_cases_with_generated_ids": 130,
+    "exact_http_cases_with_generated_ids": 16
+  },
+  "admission": {
+    "status": 503,
+    "configured_requests": 2,
+    "physical_waiters_after_cancel": 2
+  },
+  "response_cap": {
+    "configured_bytes": 64,
+    "status": 503
+  },
+  "shutdown_states": [
+    {
+      "service": "candidate",
+      "ExitCode": 0,
+      "OOMKilled": false
+    },
+    {
+      "service": "candidate-small",
+      "ExitCode": 0,
+      "OOMKilled": false
+    }
+  ],
+  "performance_verified": false,
+  "full_milestone_accepted": false
+}

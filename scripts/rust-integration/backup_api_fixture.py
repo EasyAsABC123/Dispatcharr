@@ -40,7 +40,12 @@ def files():
    result[path.name]={'size':path.stat().st_size,'sha256':digest.hexdigest()}
  return result
 def token(name):return hmac.new(b'playback-fixture-only',name.encode(),hashlib.sha256).hexdigest()[:32]
+case_set=os.environ.get('BACKUP_FILE_CASE_SET','all')
+if case_set not in ('all','signed-names'):
+ raise ValueError('Unsupported backup-file case set')
 def case(name,path,method='GET',role='admin',data=None,files_input=None,headers=None,query=None):
+ if case_set=='signed-names' and not name.startswith('signed-name-'):
+  return
  reset();pre=files();request_headers={'Host':'localhost'}
  if role is not None:request_headers['Authorization']='Bearer '+('invalid-token'if role=='invalid'else roles[role])
  request_headers.update(headers or{});prepared=requests.Request(method,'http://127.0.0.1:5656/api/backups/'+path,headers=request_headers,data=data,files=files_input,params=query).prepare();raw=prepared.body or b''
@@ -95,7 +100,8 @@ for size in [1021,1022,1023,1024,1025,2048]:
 large=[]
 def segment(raw):return {'body_hex':raw.hex()}
 def multipart_part(name,filename):return ('--'+boundary+'\r\nContent-Disposition: form-data; name="'+name+'"; filename="'+filename+'"\r\nContent-Type: application/octet-stream\r\n\r\n').encode()
-for name,size,other in [('above-eight-mib',(8<<20)+1,False),('thirty-two-mib',32<<20,False),('ignored-large-other-file',32<<20,True)]:
+large_cases=[('above-eight-mib',(8<<20)+1,False),('thirty-two-mib',32<<20,False),('ignored-large-other-file',32<<20,True)]
+for name,size,other in (large_cases if case_set=='all' else []):
  reset();pre=files();filename='large-fixture.bin';segments=[segment(multipart_part('other'if other else'file','ignored.bin'if other else filename)),{'repeat_hex':bytes(range(256)).hex(),'length':size}]
  if other:segments.extend([segment(b'\r\n'),segment(multipart_part('file',filename)),segment(b'small final file')])
  segments.append(segment(('\r\n--'+boundary+'--\r\n').encode()))

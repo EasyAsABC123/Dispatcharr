@@ -5,6 +5,7 @@ use crate::{
     epg_dummy,
 };
 use chrono::{DateTime, Datelike, Duration, Utc};
+use chrono_tz::Tz;
 use dispatcharr_store::{RegexNamedGroupRow, StoreError};
 use serde_json::{json, Value};
 use std::{collections::HashMap, sync::Arc};
@@ -119,24 +120,34 @@ fn duration(properties: &Value) -> Result<i64, StoreError> {
     }
     Ok(value)
 }
-/// Only the actual reachable UTC/no-time branch is admitted. Other valid
+fn source_timezone(properties: &Value) -> Result<Tz, StoreError> {
+    let Some(value) = properties.get("timezone").filter(|value| !value.is_null()) else {
+        return Ok(chrono_tz::UTC);
+    };
+    let requested = value.as_str().ok_or_else(unsupported)?;
+    // pytz resolves names regardless of ASCII case. Source catches unknown
+    // zones and substitutes UTC.
+    Ok(requested.parse().unwrap_or_else(|_| {
+        chrono_tz::TZ_VARIANTS
+            .iter()
+            .copied()
+            .find(|zone| zone.name().eq_ignore_ascii_case(requested))
+            .unwrap_or(chrono_tz::UTC)
+    }))
+}
+/// Only the actual reachable no-time branch is admitted. Other valid
 /// source shapes remain explicit, never converted into a successful no-match.
 pub fn supported(properties: &Value) -> bool {
     validate(properties).is_ok()
 }
-fn validate(properties: &Value) -> Result<(), StoreError> {
+fn validate(properties: &Value) -> Result<Tz, StoreError> {
     if !properties.is_object() || string(properties, "title_pattern")?.is_empty() {
         return Err(unsupported());
     }
     if truthy(properties.get("time_pattern")) || truthy(properties.get("date_pattern")) {
         return Err(unsupported());
     }
-    if properties
-        .get("timezone")
-        .is_some_and(|v| v.as_str() != Some("UTC"))
-    {
-        return Err(unsupported());
-    }
+    let timezone = source_timezone(properties)?;
     string(properties, "output_timezone")?;
     duration(properties)?;
     for key in [
@@ -149,7 +160,7 @@ fn validate(properties: &Value) -> Result<(), StoreError> {
     ] {
         string(properties, key)?;
     }
-    Ok(())
+    Ok(timezone)
 }
 fn bounded_replace(
     input: &str,
@@ -298,7 +309,7 @@ pub async fn prepare(
         });
     }
     let properties = properties.ok_or_else(unsupported)?;
-    validate(properties)?;
+    let source_timezone = validate(properties)?;
     let scope = scope.ok_or_else(unsupported)?;
     let result = scope
         .groups(
@@ -315,7 +326,7 @@ pub async fn prepare(
             RegexNamedGroupRow::SearchError(_) => {
                 return Err(StoreError::Unsupported(
                     "Actual custom-guide regex search failed",
-                ))
+                ));
             }
         }
     };
@@ -425,6 +436,7 @@ pub async fn prepare(
             props,
             poster,
             include_date,
+            source_timezone,
             window,
             duration,
             per_day: ((24.0 / (duration as f64 / 60.0)).trunc() as u32).max(1),
@@ -441,6 +453,7 @@ pub struct NoTime {
     props: serde_json::Map<String, Value>,
     poster: Option<String>,
     include_date: bool,
+    source_timezone: Tz,
     window: Window,
     duration: i64,
     per_day: u32,
@@ -496,7 +509,8 @@ impl Iterator for NoTime {
                 }
                 let mut props = self.props.clone();
                 if self.include_date {
-                    props.insert("date".into(), json!(start.format("%Y-%m-%d").to_string()));
+                    let local = start.with_timezone(&self.source_timezone);
+                    props.insert("date".into(), json!(local.format("%Y-%m-%d").to_string()));
                 }
                 if let Some(poster) = &self.poster {
                     props.insert("icon".into(), json!(poster));
@@ -557,6 +571,7 @@ mod tests {
             props: serde_json::Map::new(),
             poster: None,
             include_date: true,
+            source_timezone: chrono_tz::UTC,
             window: Window {
                 start,
                 days: 1,
@@ -575,6 +590,55 @@ mod tests {
         assert_eq!(rows[2].end_time, lookback + Duration::minutes(543));
         assert_eq!(rows[0].sub_title.as_deref(), Some(""));
         assert_eq!(rows[0].properties["date"], json!("2026-01-02"));
+    }
+    #[test]
+    fn source_no_time_dates_use_source_timezone_without_shifting_grid() {
+        for (timezone, start, expected) in [
+            (
+                json!("america/new_york"),
+                "2026-01-02T04:30:00Z",
+                "2026-01-01",
+            ),
+            (json!("US/Eastern"), "2026-07-02T04:30:00Z", "2026-07-02"),
+            (
+                json!("Asia/Kathmandu"),
+                "2026-01-02T18:30:00Z",
+                "2026-01-03",
+            ),
+            (json!("unknown/owned"), "2026-01-02T04:30:00Z", "2026-01-02"),
+            (Value::Null, "2026-01-02T04:30:00Z", "2026-01-02"),
+        ] {
+            let props = json!({"title_pattern":"(?P<title>Owned)","timezone":timezone,
+                "output_timezone":"Pacific/Auckland"});
+            assert!(supported(&props));
+            let start: DateTime<Utc> = start.parse().unwrap();
+            let row = NoTime {
+                channel: "owned".into(),
+                title: "Owned".into(),
+                description: "Source local calendar date".into(),
+                subtitle: None,
+                props: serde_json::Map::new(),
+                poster: None,
+                include_date: true,
+                source_timezone: source_timezone(&props).unwrap(),
+                window: Window {
+                    start,
+                    days: 1,
+                    lookback: None,
+                    cutoff: None,
+                },
+                duration: 180,
+                per_day: 8,
+                day: 0,
+                index: 0,
+            }
+            .next()
+            .unwrap()
+            .unwrap();
+            assert_eq!(row.properties["date"], expected);
+            assert_eq!(row.start_time, start);
+            assert_eq!(row.end_time, start + Duration::hours(3));
+        }
     }
     #[test]
     fn source_template_order_and_url_quote_are_literal_sequential_replacements() {

@@ -23,6 +23,7 @@ from tool_snapshot import snapshot_sources
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--case-set', choices=('legacy', 'repeated-user'), default='legacy')
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
@@ -45,7 +46,10 @@ def main():
     with fixture_source(report, False, output) as directory:
         source = Path(directory)/'source'
         source.mkdir(mode=0o755)
-        original_archive = subprocess.check_output(['git', 'archive', BASELINE], cwd=ROOT)
+        git_root = subprocess.check_output(
+            ['git', 'rev-parse', '--show-toplevel'], cwd=ROOT, text=True, timeout=10,
+        ).strip()
+        original_archive = subprocess.check_output(['git', 'archive', BASELINE], cwd=git_root, timeout=30)
         report['original_archive_sha256'] = hashlib.sha256(original_archive).hexdigest()
         assert report['original_archive_sha256'] == 'f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff'
         subprocess.run(['tar', '-x', '--same-permissions', '--no-same-owner', '-C', str(source)],
@@ -94,6 +98,7 @@ def main():
             report['copied_nonempty_tables'] = sum(row['count'] > 0 for row in seed['manifest']['tables'].values())
             command(compose+['exec', '-T', '-e', 'POSTGRES_DB='+database,
                 '-e', 'OPERATOR_DISPOSABLE_FIXTURE=playback-fixture-only',
+                '-e', 'OPERATOR_CASE_SET='+args.case_set,
                 '-e', 'CELERY_BROKER_URL=redis://:playback-fixture-only@localhost:6379/8',
                 '-e', 'CELERY_RESULT_BACKEND=redis://:playback-fixture-only@localhost:6379/9',
                 'baseline', '/dispatcharrpy/bin/python', '/operator-tools/source.py'], timeout=180)

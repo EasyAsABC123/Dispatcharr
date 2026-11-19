@@ -3,6 +3,7 @@ Original authors retain full application credit. Raw fixture JWTs remain ignored
 """
 import hashlib,json,os
 from pathlib import Path
+from urllib.parse import urlencode
 if os.environ.get('POSTGRES_PASSWORD')!='playback-fixture-only'or os.environ.get('BACKUP_API_DISPOSABLE_FIXTURE')!='playback-fixture-only':raise RuntimeError('Explicit disposable backup file fixture required')
 import requests
 ROOT=Path('/data/backups');fixture=json.loads(Path('/evidence/backup-api-fixture.json').read_text())
@@ -34,6 +35,8 @@ def declared_204_delta(name,actual,expected,failures):
  if actual['body_sha256']!=empty or expected['body_sha256']!=empty or'content-length'in actual['headers']or expected['headers'].get('content-length')!='40':return False
  normalized=json.loads(json.dumps(expected));normalized['headers'].pop('content-length');return digest(actual)==digest(normalized)
 checks=[]
+minted_tokens={}
+roundtrips={}
 for case in fixture['cases']+fixture['large_uploads']:
  reset();assert snapshot()==case['pre_files'];segments=case.get('segments')
  def generate():
@@ -42,13 +45,29 @@ for case in fixture['cases']+fixture['large_uploads']:
    else:
     pattern=bytes.fromhex(item['repeat_hex']);block=pattern*(65536//len(pattern));remaining=item['length']
     while remaining:count=min(remaining,len(block));yield block[:count];remaining-=count
- data=generate()if segments else bytes.fromhex(case['request_body_hex']);request=requests.Request(case['method'],'http://candidate:9192'+case['path'],headers=case['headers'],data=data).prepare();request.headers.pop('Transfer-Encoding',None)
+ path=case['path']
+ label=case['name'].removeprefix('signed-name-download-')
+ signed_download=case['name'].startswith('signed-name-download-')
+ if signed_download:
+  # Use the value returned by this candidate, observed in the immediately
+  # preceding token case. Missing issuance must produce a failed handoff.
+  path=path.partition('?')[0]+'?'+urlencode({'token':minted_tokens.get(label,'')})
+ data=generate()if segments else bytes.fromhex(case['request_body_hex']);request=requests.Request(case['method'],'http://candidate:9192'+path,headers=case['headers'],data=data).prepare();request.headers.pop('Transfer-Encoding',None)
  response=requests.Session().send(request,timeout=90,allow_redirects=False);selected={key:response.headers[key]for key in ['content-type','content-length','content-disposition','www-authenticate','x-accel-redirect','x-content-type-options']if key in response.headers};actual={'status':response.status_code,'headers':selected}
  if case['method']!='HEAD'and response.content and'json'in selected.get('content-type',''):actual['json']=response.json()
  else:actual.update(body_length=len(response.content),body_sha256=hashlib.sha256(response.content).hexdigest())
  response.close();failures=[]
+ if case['name'].startswith('signed-name-token-'):
+  label=case['name'].removeprefix('signed-name-token-')
+  token=actual.get('json',{}).get('token') if actual['status']==200 else None
+  if isinstance(token,str) and token:
+   minted_tokens[label]=token
+ if signed_download:
+  roundtrips[label]=bool(minted_tokens.pop(label,None)) and actual['status']==200
+  if not roundtrips[label]:
+   failures.append('candidate_token_handoff')
  if digest(actual)!=digest(case['expected']):failures.append('response')
  if snapshot()!=case['post_files']:failures.append('filesystem')
  declared=declared_204_delta(case['name'],actual,case['expected'],failures)
  checks.append({'name':case['name'],'passed':not failures,'secondary_passed':not failures or declared,'declared_source_invalid_204_length_delta':declared,'mismatches':failures,'native_status':actual['status'],'source_status':case['expected']['status']})
-print(json.dumps({'passed':all(v['passed']for v in checks),'secondary_passed':all(v['secondary_passed']for v in checks),'declared_source_invalid_204_length_deltas':sum(v['declared_source_invalid_204_length_delta']for v in checks),'source_cases':len(checks),'checks':checks},separators=(',',':')))
+print(json.dumps({'passed':all(v['passed']for v in checks),'secondary_passed':all(v['secondary_passed']for v in checks),'declared_source_invalid_204_length_deltas':sum(v['declared_source_invalid_204_length_delta']for v in checks),'source_cases':len(checks),'signed_filename_roundtrips':roundtrips,'checks':checks},separators=(',',':')))

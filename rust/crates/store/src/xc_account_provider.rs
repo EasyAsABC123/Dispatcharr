@@ -191,6 +191,8 @@ fn truthy(v: &Value) -> bool {
 pub(crate) enum FetchFailure {
     /// The awaited provider requests all ended without a response.
     ConnectionAttemptsExhausted,
+    /// The bounded response settled, but the account-info fields cannot be read.
+    InvalidAccountInfo,
     Operational(StoreError),
 }
 
@@ -203,7 +205,9 @@ impl From<StoreError> for FetchFailure {
 impl From<FetchFailure> for StoreError {
     fn from(error: FetchFailure) -> Self {
         match error {
-            FetchFailure::ConnectionAttemptsExhausted => unsupported(),
+            FetchFailure::ConnectionAttemptsExhausted | FetchFailure::InvalidAccountInfo => {
+                unsupported()
+            }
             FetchFailure::Operational(error) => error,
         }
     }
@@ -297,6 +301,10 @@ pub(crate) async fn fetch(
             )));
         }
     };
+    account_info(value, Utc::now())
+}
+
+fn account_info(value: Value, now: DateTime<Utc>) -> Result<Result<Value, String>, FetchFailure> {
     if value.is_object()
         && value.get("user_info").is_none_or(Value::is_null)
         && value.get("error").is_some()
@@ -307,16 +315,17 @@ pub(crate) async fn fetch(
             .unwrap_or("Unknown error");
         return Ok(Err(format!("XC API Error: {error}")));
     }
-    // Do not manufacture Source-success exception strings for Python shape
-    // errors whose causal descriptor has not been qualified.
+    // Source's field access raises after a complete response. Batch refresh
+    // counts this profile as failed. The single-profile route still needs
+    // the Original exception descriptor before exposing it as application data.
     if value
         .get("user_info")
         .is_some_and(|v| truthy(v) && !v.is_object())
         || value.get("server_info").is_some_and(|v| !v.is_object())
     {
-        return Err(unsupported().into());
+        return Err(FetchFailure::InvalidAccountInfo);
     }
-    Ok(normalize(value, Utc::now()))
+    Ok(normalize(value, now))
 }
 fn normalize(value: Value, now: DateTime<Utc>) -> Result<Value, String> {
     if value.get("user_info").is_none_or(|v| !truthy(v)) {
@@ -491,6 +500,26 @@ mod source_controls {
             .await
             .unwrap()
             .unwrap();
+    }
+    #[test]
+    fn completed_account_info_shape_error_is_distinct_from_an_operational_error() {
+        let now = DateTime::from_timestamp(1, 0).unwrap();
+        for response in [
+            json!({"user_info":["unexpected"],"server_info":{}}),
+            json!({"user_info":{"auth":1},"server_info":null}),
+        ] {
+            let outcome = account_info(response, now);
+            assert!(matches!(outcome, Err(FetchFailure::InvalidAccountInfo)));
+            assert!(matches!(
+                StoreError::from(outcome.err().unwrap()),
+                StoreError::Unsupported(_)
+            ));
+        }
+        let recovered = account_info(
+            json!({"user_info":{"auth":1},"server_info":{"timezone":"UTC"}}),
+            now,
+        );
+        assert!(matches!(recovered, Ok(Ok(info)) if info["server_info"]["timezone"]=="UTC"));
     }
     #[test]
     fn vod_profile_transform_and_pool_use_the_same_changed_credentials() {

@@ -90,6 +90,26 @@ impl OperatorCommand {
             {
                 Ok(Self::ResetUser(Some(user.clone())))
             }
+            [name, options @ ..] if name == "reset_user_network" => {
+                let mut options = options.iter();
+                let mut selected = None;
+                while let Some(option) = options.next() {
+                    let value = if option == "--user" {
+                        options
+                            .next()
+                            .map(String::as_str)
+                            .filter(|value| !value.starts_with('-'))
+                    } else {
+                        option.strip_prefix("--user=")
+                    };
+                    selected = Some(
+                        value
+                            .filter(|value| value.len() <= 1024)
+                            .ok_or(OperatorError::Arguments)?,
+                    );
+                }
+                Ok(Self::ResetUser(selected.map(str::to_owned)))
+            }
             _ => Err(OperatorError::Arguments),
         }
     }
@@ -447,6 +467,42 @@ mod tests {
             parse("--help".into()).unwrap(),
             OperatorCommand::Help("reset_user_network")
         );
+    }
+
+    #[test]
+    fn repeated_explicit_user_argument_uses_last_value() {
+        let parse = |options: &[&str]| {
+            let args = std::iter::once("reset_user_network")
+                .chain(options.iter().copied())
+                .map(str::to_owned)
+                .collect::<Vec<_>>();
+            OperatorCommand::parse(&args)
+        };
+        for (options, selected) in [
+            (&["--user=earlier", "--user=later"][..], "later"),
+            (&["--user", "earlier", "--user=later"][..], "later"),
+            (&["--user=earlier", "--user", "later"][..], "later"),
+            (&["--user=earlier", "--user="][..], ""),
+            (&["--user=", "--user=--help"][..], "--help"),
+            (&["--user=first", "--user=東京", "--user=last"][..], "last"),
+        ] {
+            assert_eq!(
+                parse(options).unwrap(),
+                OperatorCommand::ResetUser(Some(selected.into()))
+            );
+        }
+        for options in [
+            &["--user=first", "--user"][..],
+            &["--user=first", "--other=second"][..],
+            &["--user=first", "--user", "--user=last"][..],
+        ] {
+            assert!(matches!(parse(options), Err(OperatorError::Arguments)));
+        }
+        let oversized = format!("--user={}", "é".repeat(513));
+        assert!(matches!(
+            parse(&[&oversized, "--user=bounded"]),
+            Err(OperatorError::Arguments)
+        ));
     }
 
     #[test]
