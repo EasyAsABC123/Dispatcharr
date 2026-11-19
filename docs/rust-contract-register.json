@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "3ad1c27af579600cbbe21bf75431e9e921293c260a55fa98b211a2ff2e90ac4b",
+    "scripts/rust-contracts/executable-source-inputs.json": "629a975fed299ae99c6f83ae811ea42e9295b0ea2b12439f0000bd04547753bd",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -58,11 +58,12 @@
     "scripts/rust-contracts/retained-set-epg-batch/bindings.json": "eeb42868ab4b8c0d28461c21d2ddee560692a095051bb609e3270d809c39dca0",
     "scripts/rust-contracts/retained-paired-reads/bindings.json": "17304fa362b0b3a3cfb1728c66da71795441e6ac9526f7d6b71ac52c5721943d",
     "scripts/rust-contracts/retained-live-stop/bindings.json": "019fadce530a36b430982ab8c6ab133fde2a42f6b6030a39320bdf4906c2ef2f",
-    "scripts/rust-contracts/retained-ts-controls/bindings.json": "385a31ad93a053d81934b6dfd62b17dbcbf05042a70074795596f5bc5184a73e"
+    "scripts/rust-contracts/retained-ts-controls/bindings.json": "385a31ad93a053d81934b6dfd62b17dbcbf05042a70074795596f5bc5184a73e",
+    "scripts/rust-contracts/retained-canonical-management/bindings.json": "a3d92e61c9a74e1ec76e31c48ab82c3b125dc2d991c5ab61edfa8006bb050ef5"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 474,
+    "operations": 490,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -308,6 +309,11 @@
         "path": "scripts/rust-contracts/retained-ts-controls/bindings.json",
         "sha256": "385a31ad93a053d81934b6dfd62b17dbcbf05042a70074795596f5bc5184a73e",
         "kind": "retained_original_Live_TS_detail_and_targeted_stop_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-canonical-management/bindings.json",
+        "sha256": "a3d92e61c9a74e1ec76e31c48ab82c3b125dc2d991c5ab61edfa8006bb050ef5",
+        "kind": "retained_original_canonical_management_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -35021,15 +35027,159 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 204,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-2c78a0593b1b81930c61:DELETE",
+            "batch_case": "stream_delete",
+            "pattern_exact": "api/channels/^streams/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.StreamViewSet",
+            "resolver_ordinal": 57,
+            "resolver_name": "api:channels:stream-detail",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "DELETE"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 204,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "adacc42570a79ec014956ff3ff602d9c7f75e49a32f97c5b28fcbdb1b93931b8",
+              "after_sha256": "0d17deeb8f7b9625f9475481b33e28b2766d05e9de4a7f9fc190e73f3219c74c",
+              "changed_sections": [
+                "streams",
+                "links"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "DELETE",
+                "role": "anonymous",
+                "literal_path": "/api/channels/streams/21/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "DELETE",
+                "role": "admin",
+                "literal_path": "/api/channels/streams/21/",
+                "status": 204,
+                "content_type": "",
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "case": "role_denial",
+                "method": "DELETE",
+                "role": "standard",
+                "literal_path": "/api/channels/streams/21/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-2c78a0593b1b81930c61:GET",
@@ -42728,15 +42878,158 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 200,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-fea4e07648f86a38ed69:POST",
+            "batch_case": "channel_regex",
+            "pattern_exact": "api/channels/^channels/edit/bulk-regex/$",
+            "source_handler": "apps.channels.api_views.ChannelViewSet",
+            "resolver_ordinal": 75,
+            "resolver_name": "api:channels:channel-bulk-regex-rename",
+            "method": "POST",
+            "source_action": "bulk_regex_rename",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "POST"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 200,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "0d17deeb8f7b9625f9475481b33e28b2766d05e9de4a7f9fc190e73f3219c74c",
+              "after_sha256": "81d3e6e81c97bd38f870cb58a10e817218f3ca621b3d78e33cdd421dfd354204",
+              "changed_sections": [
+                "channels"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "POST",
+                "role": "anonymous",
+                "literal_path": "/api/channels/channels/edit/bulk-regex/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "POST",
+                "role": "admin",
+                "literal_path": "/api/channels/channels/edit/bulk-regex/",
+                "status": 200,
+                "content_type": "application/json",
+                "actual_body_bytes": 34,
+                "actual_body_sha256": "7eef36ad51abc3e536b313137639044f718c3a9acfce5746eacad6798d5bf666"
+              },
+              {
+                "case": "role_denial",
+                "method": "POST",
+                "role": "standard",
+                "literal_path": "/api/channels/channels/edit/bulk-regex/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         }
       ]
     },
@@ -54263,15 +54556,156 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 200,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-2d9b525e474caa7ca58a:GET",
+            "batch_case": "logo_list",
+            "pattern_exact": "api/channels/^logos/$",
+            "source_handler": "apps.channels.api_views.LogoViewSet",
+            "resolver_ordinal": 107,
+            "resolver_name": "api:channels:logo-list",
+            "method": "GET",
+            "source_action": "list",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard"
+            ],
+            "observed_methods": [
+              "GET"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 200,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "81d3e6e81c97bd38f870cb58a10e817218f3ca621b3d78e33cdd421dfd354204",
+              "after_sha256": "81d3e6e81c97bd38f870cb58a10e817218f3ca621b3d78e33cdd421dfd354204",
+              "changed_sections": [],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "GET",
+                "role": "anonymous",
+                "literal_path": "/api/channels/logos/?name=owned-m0m5+seeded+logo",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "GET",
+                "role": "standard",
+                "literal_path": "/api/channels/logos/?name=owned-m0m5+seeded+logo",
+                "status": 200,
+                "content_type": "application/json",
+                "actual_body_bytes": 292,
+                "actual_body_sha256": "e67ac27639134556a29dee1a736a3439d095d8febd7fb7f656dbdfd49612ce47"
+              },
+              {
+                "case": "role_denial",
+                "method": "GET",
+                "role": "viewer",
+                "literal_path": "/api/channels/logos/?name=owned-m0m5+seeded+logo",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-2d9b525e474caa7ca58a:POST",
@@ -54736,15 +55170,159 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 201,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-392d441ef7d0c20a513f:POST",
+            "batch_case": "logo_upload",
+            "pattern_exact": "api/channels/^logos/upload/$",
+            "source_handler": "apps.channels.api_views.LogoViewSet",
+            "resolver_ordinal": 109,
+            "resolver_name": "api:channels:logo-upload",
+            "method": "POST",
+            "source_action": "upload",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "POST"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 201,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "81d3e6e81c97bd38f870cb58a10e817218f3ca621b3d78e33cdd421dfd354204",
+              "after_sha256": "05acb90ee03780c0f84b6a67a2c4ae7c6e5c4b940a82d05dfeb487e9916d45eb",
+              "changed_sections": [
+                "uploaded_logo",
+                "uploaded_file"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "POST",
+                "role": "anonymous",
+                "literal_path": "/api/channels/logos/upload/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "POST",
+                "role": "admin",
+                "literal_path": "/api/channels/logos/upload/",
+                "status": 201,
+                "content_type": "application/json",
+                "actual_body_bytes": 205,
+                "actual_body_sha256": "f972ad487fdc34eba100df8d1f361aff9bfca4a3b255bb24b0603836b01c88f5"
+              },
+              {
+                "case": "role_denial",
+                "method": "POST",
+                "role": "standard",
+                "literal_path": "/api/channels/logos/upload/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         }
       ]
     },
@@ -54902,15 +55480,159 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 204,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-a71786620f7727bad11a:DELETE",
+            "batch_case": "logo_delete",
+            "pattern_exact": "api/channels/^logos/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.LogoViewSet",
+            "resolver_ordinal": 111,
+            "resolver_name": "api:channels:logo-detail",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "DELETE"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 204,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "05acb90ee03780c0f84b6a67a2c4ae7c6e5c4b940a82d05dfeb487e9916d45eb",
+              "after_sha256": "81d3e6e81c97bd38f870cb58a10e817218f3ca621b3d78e33cdd421dfd354204",
+              "changed_sections": [
+                "uploaded_logo",
+                "uploaded_file"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "DELETE",
+                "role": "anonymous",
+                "literal_path": "/api/channels/logos/3/?delete_file=true",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "DELETE",
+                "role": "admin",
+                "literal_path": "/api/channels/logos/3/?delete_file=true",
+                "status": 204,
+                "content_type": "",
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "case": "role_denial",
+                "method": "DELETE",
+                "role": "standard",
+                "literal_path": "/api/channels/logos/3/?delete_file=true",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-a71786620f7727bad11a:GET",
@@ -56503,15 +57225,156 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 200,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-f140a95f4ea400cc74f0:GET",
+            "batch_case": "profile_list",
+            "pattern_exact": "api/channels/^profiles/$",
+            "source_handler": "apps.channels.api_views.ChannelProfileViewSet",
+            "resolver_ordinal": 115,
+            "resolver_name": "api:channels:profile-list",
+            "method": "GET",
+            "source_action": "list",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard"
+            ],
+            "observed_methods": [
+              "GET"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 200,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "81d3e6e81c97bd38f870cb58a10e817218f3ca621b3d78e33cdd421dfd354204",
+              "after_sha256": "81d3e6e81c97bd38f870cb58a10e817218f3ca621b3d78e33cdd421dfd354204",
+              "changed_sections": [],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "GET",
+                "role": "anonymous",
+                "literal_path": "/api/channels/profiles/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "GET",
+                "role": "standard",
+                "literal_path": "/api/channels/profiles/",
+                "status": 200,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "af141263d12df7d5ff03c951ca0657d5d6502e187b9304d0689b19cf0312663e"
+              },
+              {
+                "case": "role_denial",
+                "method": "GET",
+                "role": "viewer",
+                "literal_path": "/api/channels/profiles/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-f140a95f4ea400cc74f0:POST",
@@ -57167,15 +58030,160 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 204,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-bc28dbffca264c415359:DELETE",
+            "batch_case": "profile_delete",
+            "pattern_exact": "api/channels/^profiles/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.ChannelProfileViewSet",
+            "resolver_ordinal": 117,
+            "resolver_name": "api:channels:profile-detail",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "DELETE"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 204,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "81d3e6e81c97bd38f870cb58a10e817218f3ca621b3d78e33cdd421dfd354204",
+              "after_sha256": "d92d9218f5bbf2fcadbb247ed6128bed1c94b0a8d012fe2410f881c8fa9df06e",
+              "changed_sections": [
+                "profiles",
+                "memberships",
+                "user_profiles"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "DELETE",
+                "role": "anonymous",
+                "literal_path": "/api/channels/profiles/1/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "DELETE",
+                "role": "admin",
+                "literal_path": "/api/channels/profiles/1/",
+                "status": 204,
+                "content_type": "",
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "case": "role_denial",
+                "method": "DELETE",
+                "role": "standard",
+                "literal_path": "/api/channels/profiles/1/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-bc28dbffca264c415359:GET",
@@ -57184,15 +58192,166 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 200,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-bc28dbffca264c415359:GET",
+            "batch_case": "profile_detail",
+            "pattern_exact": "api/channels/^profiles/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.ChannelProfileViewSet",
+            "resolver_ordinal": 117,
+            "resolver_name": "api:channels:profile-detail",
+            "method": "GET",
+            "source_action": "retrieve",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard"
+            ],
+            "observed_methods": [
+              "GET"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 200,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "81d3e6e81c97bd38f870cb58a10e817218f3ca621b3d78e33cdd421dfd354204",
+              "after_sha256": "81d3e6e81c97bd38f870cb58a10e817218f3ca621b3d78e33cdd421dfd354204",
+              "changed_sections": [],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "GET",
+                "role": "anonymous",
+                "literal_path": "/api/channels/profiles/1/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "GET",
+                "role": "standard",
+                "literal_path": "/api/channels/profiles/1/",
+                "status": 200,
+                "content_type": "application/json",
+                "actual_body_bytes": 61,
+                "actual_body_sha256": "3e3a02c4acf85618e90228d3a04981006740655f2c3ef6be9786820001e538a2"
+              },
+              {
+                "case": "role_denial",
+                "method": "GET",
+                "role": "viewer",
+                "literal_path": "/api/channels/profiles/1/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              },
+              {
+                "case": "unassigned_profile",
+                "method": "GET",
+                "role": "standard",
+                "literal_path": "/api/channels/profiles/2/",
+                "status": 404,
+                "content_type": "application/json",
+                "actual_body_bytes": 55,
+                "actual_body_sha256": "95582532af7a8a3e24be1393bdfe8e90a5512f084b75193c07f5e62627369b0d"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-bc28dbffca264c415359:PATCH",
@@ -66915,15 +68074,158 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "dvr_manager": {
+                "fixture_role_or_supplied_credential": "dvr_manager",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "dvr_manager"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 204,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-146f339bc7288e206400:DELETE",
+            "batch_case": "recurring_delete",
+            "pattern_exact": "api/channels/^recurring-rules/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.RecurringRecordingRuleViewSet",
+            "resolver_ordinal": 141,
+            "resolver_name": "api:channels:recurring-rule-detail",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "dvr_manager"
+            ],
+            "observed_methods": [
+              "DELETE"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "dvr_manager": {
+                "fixture_role_or_supplied_credential": "dvr_manager",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 204,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "8a0d17a51155750cc2923e121172036d6fdcecc36343a085620b767363861475",
+              "after_sha256": "2e00f5fbcbece30c392706e9ca4bab99fbad954a78941072131e3a4d8ce7c3f5",
+              "changed_sections": [
+                "rules"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "DELETE",
+                "role": "anonymous",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "DELETE",
+                "role": "dvr_manager",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 204,
+                "content_type": "",
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "case": "role_denial",
+                "method": "DELETE",
+                "role": "standard",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-146f339bc7288e206400:GET",
@@ -66932,15 +68234,156 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "dvr_manager": {
+                "fixture_role_or_supplied_credential": "dvr_manager",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "dvr_manager"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 200,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-146f339bc7288e206400:GET",
+            "batch_case": "recurring_detail",
+            "pattern_exact": "api/channels/^recurring-rules/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.RecurringRecordingRuleViewSet",
+            "resolver_ordinal": 141,
+            "resolver_name": "api:channels:recurring-rule-detail",
+            "method": "GET",
+            "source_action": "retrieve",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "dvr_manager"
+            ],
+            "observed_methods": [
+              "GET"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "dvr_manager": {
+                "fixture_role_or_supplied_credential": "dvr_manager",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 200,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "d92d9218f5bbf2fcadbb247ed6128bed1c94b0a8d012fe2410f881c8fa9df06e",
+              "after_sha256": "d92d9218f5bbf2fcadbb247ed6128bed1c94b0a8d012fe2410f881c8fa9df06e",
+              "changed_sections": [],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "GET",
+                "role": "anonymous",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "GET",
+                "role": "dvr_manager",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 200,
+                "content_type": "application/json",
+                "actual_body_bytes": 274,
+                "actual_body_sha256": "e6143a59acb0fca8611021c6a6601700d43ec8dc953b546674a2a29590f00da1"
+              },
+              {
+                "case": "role_denial",
+                "method": "GET",
+                "role": "standard",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-146f339bc7288e206400:PATCH",
@@ -66949,15 +68392,158 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "dvr_manager": {
+                "fixture_role_or_supplied_credential": "dvr_manager",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "dvr_manager"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 200,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-146f339bc7288e206400:PATCH",
+            "batch_case": "recurring_patch",
+            "pattern_exact": "api/channels/^recurring-rules/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.RecurringRecordingRuleViewSet",
+            "resolver_ordinal": 141,
+            "resolver_name": "api:channels:recurring-rule-detail",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "dvr_manager"
+            ],
+            "observed_methods": [
+              "PATCH"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "dvr_manager": {
+                "fixture_role_or_supplied_credential": "dvr_manager",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 200,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "d92d9218f5bbf2fcadbb247ed6128bed1c94b0a8d012fe2410f881c8fa9df06e",
+              "after_sha256": "d2c480ad9dd43e2b895f60aeef5937763606e3db5f31f005de9a2cff153431ac",
+              "changed_sections": [
+                "rules"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "PATCH",
+                "role": "anonymous",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "PATCH",
+                "role": "dvr_manager",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 200,
+                "content_type": "application/json",
+                "actual_body_bytes": 273,
+                "actual_body_sha256": "daf69f4461a3376a595e2e8ab9eb776b0e43507793a79f61167fdf940a12c701"
+              },
+              {
+                "case": "role_denial",
+                "method": "PATCH",
+                "role": "standard",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-146f339bc7288e206400:PUT",
@@ -66966,15 +68552,158 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "dvr_manager": {
+                "fixture_role_or_supplied_credential": "dvr_manager",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "dvr_manager"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 200,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-146f339bc7288e206400:PUT",
+            "batch_case": "recurring_put",
+            "pattern_exact": "api/channels/^recurring-rules/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.channels.api_views.RecurringRecordingRuleViewSet",
+            "resolver_ordinal": 141,
+            "resolver_name": "api:channels:recurring-rule-detail",
+            "method": "PUT",
+            "source_action": "update",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "dvr_manager"
+            ],
+            "observed_methods": [
+              "PUT"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "dvr_manager": {
+                "fixture_role_or_supplied_credential": "dvr_manager",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 200,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "d2c480ad9dd43e2b895f60aeef5937763606e3db5f31f005de9a2cff153431ac",
+              "after_sha256": "8a0d17a51155750cc2923e121172036d6fdcecc36343a085620b767363861475",
+              "changed_sections": [
+                "rules"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "PUT",
+                "role": "anonymous",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "PUT",
+                "role": "dvr_manager",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 200,
+                "content_type": "application/json",
+                "actual_body_bytes": 274,
+                "actual_body_sha256": "1a94ad93fa731995b17b3084dc7802507712d01f2f586aa03337ad645b924d73"
+              },
+              {
+                "case": "role_denial",
+                "method": "PUT",
+                "role": "standard",
+                "literal_path": "/api/channels/recurring-rules/1/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         }
       ]
     },
@@ -75162,15 +76891,167 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original Program creation returned HTTP 500 and committed no owned Programme; the separate serializer validation call returned 400"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 500,
+            "Source_business_success": false,
+            "known_Source_failure": true,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-55aadc5558ca3b8248b1:POST",
+            "batch_case": "program_create_defect",
+            "pattern_exact": "api/epg/^programs/$",
+            "source_handler": "apps.epg.api_views.ProgramViewSet",
+            "resolver_ordinal": 159,
+            "resolver_name": "api:epg:program-list",
+            "method": "POST",
+            "source_action": "create",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "POST"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original Program creation returned HTTP 500 and committed no owned Programme; the separate serializer validation call returned 400"
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 500,
+              "Source_business_success": false,
+              "known_Source_failure": true,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "2e00f5fbcbece30c392706e9ca4bab99fbad954a78941072131e3a4d8ce7c3f5",
+              "after_sha256": "2e00f5fbcbece30c392706e9ca4bab99fbad954a78941072131e3a4d8ce7c3f5",
+              "changed_sections": [],
+              "role_denials_preserved_state": true,
+              "committed_create_row": false
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "POST",
+                "role": "anonymous",
+                "literal_path": "/api/epg/programs/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "POST",
+                "role": "admin",
+                "literal_path": "/api/epg/programs/",
+                "status": 500,
+                "content_type": "text/html",
+                "actual_body_bytes": 145,
+                "actual_body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+              },
+              {
+                "case": "role_denial",
+                "method": "POST",
+                "role": "standard",
+                "literal_path": "/api/epg/programs/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              },
+              {
+                "case": "serializer_required_fields",
+                "method": "POST",
+                "role": "admin",
+                "literal_path": "/api/epg/programs/",
+                "status": 400,
+                "content_type": "application/json",
+                "actual_body_bytes": 117,
+                "actual_body_sha256": "76773c94fb0f31bfa7343907c7e33493aac729b476f036d5cc7a59e7e0858fd8"
+              }
+            ]
+          }
         }
       ]
     },
@@ -77335,15 +79216,158 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 204,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-82723694fa5ab6ee5f1e:DELETE",
+            "batch_case": "program_delete",
+            "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.epg.api_views.ProgramViewSet",
+            "resolver_ordinal": 163,
+            "resolver_name": "api:epg:program-detail",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "DELETE"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 204,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "ba3349c4e7bf93ea69755ed8ea6f70a6acb5a8dbe1df923ab6f78c25ebb4d306",
+              "after_sha256": "abe390ae5d5d3c3a3a9f17c08081bf07df0ac32cfa787cb1d4a20b6cdce8610f",
+              "changed_sections": [
+                "programs"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "DELETE",
+                "role": "anonymous",
+                "literal_path": "/api/epg/programs/1/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "DELETE",
+                "role": "admin",
+                "literal_path": "/api/epg/programs/1/",
+                "status": 204,
+                "content_type": "",
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              {
+                "case": "role_denial",
+                "method": "DELETE",
+                "role": "standard",
+                "literal_path": "/api/epg/programs/1/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-82723694fa5ab6ee5f1e:GET",
@@ -77734,15 +79758,158 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 200,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-82723694fa5ab6ee5f1e:PATCH",
+            "batch_case": "program_patch",
+            "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.epg.api_views.ProgramViewSet",
+            "resolver_ordinal": 163,
+            "resolver_name": "api:epg:program-detail",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "PATCH"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 200,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "2e00f5fbcbece30c392706e9ca4bab99fbad954a78941072131e3a4d8ce7c3f5",
+              "after_sha256": "a3eaabde844271855131e0cec43a779468dd02d2bedaded4f2809266060f9bc8",
+              "changed_sections": [
+                "programs"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "PATCH",
+                "role": "anonymous",
+                "literal_path": "/api/epg/programs/1/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "PATCH",
+                "role": "admin",
+                "literal_path": "/api/epg/programs/1/",
+                "status": 200,
+                "content_type": "application/json",
+                "actual_body_bytes": 292,
+                "actual_body_sha256": "1357c0f7b8f84fd90e27b4910a485c07f1d1c6dd0cb6a88ad73a500a7b2ec0da"
+              },
+              {
+                "case": "role_denial",
+                "method": "PATCH",
+                "role": "standard",
+                "literal_path": "/api/epg/programs/1/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-82723694fa5ab6ee5f1e:PUT",
@@ -77751,15 +79918,158 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-owned-canonical-management-sixteen",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_launcher_exit": 0,
+            "stdout_EOF": true,
+            "stderr_EOF": true,
+            "process_groups_settled": true,
+            "exact_cleanup": true,
+            "exact_host_generation_cleanup": true,
+            "raw_fingerprints": {
+              "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+              "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+              "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+              "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+              "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+            },
+            "guest_stdout_sha256": "9efb340a2ddf33e9c5101df948ab3aab2f9390dc1542982dbd8ea7a56037d961",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/canonical-management-original/receipt.json",
+                "sha256": "d32795ab9485bf1bdb67fc8b907faf415f82255f0b9372c8e17e714ebc479835"
+              }
+            ],
+            "scope_known_failure": "Original Program POST returned HTTP 500 with no committed row"
+          },
+          "assertions": [
+            "exact anonymous and wrong-role denials preserved the scoped fixture",
+            "Original authorized business path returned its observed status and passed the recorded owned state projection"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "actual_business_status": 200,
+            "Source_business_success": true,
+            "known_Source_failure": false,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-82723694fa5ab6ee5f1e:PUT",
+            "batch_case": "program_put",
+            "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.epg.api_views.ProgramViewSet",
+            "resolver_ordinal": 163,
+            "resolver_name": "api:epg:program-detail",
+            "method": "PUT",
+            "source_action": "update",
+            "owning_milestone": "M5",
+            "fixture_id": "Original-owned-canonical-management-sixteen",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "PUT"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous and wrong-role denials preserved the scoped fixture",
+              "Original authorized business path returned its observed status and passed the recorded owned state projection"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "actual_business_status": 200,
+              "Source_business_success": true,
+              "known_Source_failure": false,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "owned_state": {
+              "before_sha256": "a3eaabde844271855131e0cec43a779468dd02d2bedaded4f2809266060f9bc8",
+              "after_sha256": "ba3349c4e7bf93ea69755ed8ea6f70a6acb5a8dbe1df923ab6f78c25ebb4d306",
+              "changed_sections": [
+                "programs"
+              ],
+              "role_denials_preserved_state": true
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "method": "PUT",
+                "role": "anonymous",
+                "literal_path": "/api/epg/programs/1/",
+                "status": 401,
+                "content_type": "application/json",
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+              },
+              {
+                "case": "owned_business_case",
+                "method": "PUT",
+                "role": "admin",
+                "literal_path": "/api/epg/programs/1/",
+                "status": 200,
+                "content_type": "application/json",
+                "actual_body_bytes": 289,
+                "actual_body_sha256": "29cd327e71997ab4c204f097e56d13cbdb9a1bd92176c33e5036e59f9bd732c3"
+              },
+              {
+                "case": "role_denial",
+                "method": "PUT",
+                "role": "standard",
+                "literal_path": "/api/epg/programs/1/",
+                "status": 403,
+                "content_type": "application/json",
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+              }
+            ]
+          }
         }
       ]
     },

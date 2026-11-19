@@ -408,3 +408,16 @@ successful three-role generation cleanup remain in the
 [Original receipt](../scripts/rust-milestone-batches/m235/ts-controls/Original.json).
 These additions bring the register to 474 partial executable HTTP
 assignments and 324 unassigned operations.
+
+## Retained Original canonical management
+
+The [canonical management binding](../scripts/rust-contracts/retained-canonical-management/bindings.json)
+assigns sixteen exact Channel, recurring DVR rule and EPG Program operations.
+The [Original receipt](../scripts/rust-integration/canonical-management-original/receipt.json)
+records 50 role and business observations. Fifteen business cases returned
+successful responses. The EPG Program collection POST returned HTTP 500 with
+no committed row, and a separate serializer-required-fields request returned
+400. The Original behavior is retained as a scoped failure. The exact role
+observations remain partial, including the DVR-manager role on recurring rules.
+The register now records 490 partial HTTP assignments and 308 unassigned
+operations.

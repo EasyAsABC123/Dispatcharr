@@ -143,8 +143,10 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(retained_paired_read_contracts.dependencies())
         import retained_live_stop_contracts
         import retained_ts_controls_contracts
+        import retained_canonical_management_contracts
         refs.update(retained_live_stop_contracts.dependencies())
         refs.update(retained_ts_controls_contracts.dependencies())
+        refs.update(retained_canonical_management_contracts.dependencies())
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
