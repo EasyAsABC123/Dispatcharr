@@ -1,0 +1,40 @@
+{
+  "scope": "network-disabled SDK public register authority",
+  "exact_revision": "959dba03392905f8f58cdb2d7f529e4ea463fdd2",
+  "image_id": "sha256:bac92f30bf35f209d55676afe8a2112037dd783b988690eaf0a8ee1c5aea0039",
+  "python": "3.11.2",
+  "compose_actual_exit": 0,
+  "actual_container_exit": 0,
+  "network_mode": "none",
+  "exact_container_absence": true,
+  "labelled_resource_absence": true,
+  "three_preceding_attempts": [
+    {
+      "actual_exit": 124,
+      "condition": "broad discovery hit the outer timeout",
+      "fixture_log_sha256": "bca291a1b1410f502dbbce5f64c7404fa6cdf6ef3d71b6130ec1074148ee820f",
+      "labelled_resource_absence": true
+    },
+    {
+      "actual_exit": 1,
+      "condition": "the SDK lacked a retained public authority",
+      "fixture_log_sha256": "e7cf44f18ee769042df7ade83618d2233a497d484932f7d370d4369512f7df79",
+      "labelled_resource_absence": true
+    },
+    {
+      "actual_exit": 1,
+      "condition": "the SDK AST dump differed across Python versions",
+      "fixture_log_sha256": "1b4a7873f203c1759702f6cb796377e8242b14b0a7b75588b74cb09e9f5d044b",
+      "labelled_resource_absence": true
+    }
+  ],
+  "tests_passed": 5,
+  "register_corruption_controls": 19,
+  "new_exact_public_inputs": 28,
+  "host_python_3_14_ast_nodes_equal": 25941,
+  "log_sha256": {
+    "build.log": "b456c1be99961db6837feb480ff975ca434e638f3f01730d4201a3782aae7ce0",
+    "fixture.log": "e90dcf3e15f4ba92312156db05d8e301c3122544d6077ee7b96d8f155391de4e",
+    "cleanup.log": "52aef6983658932589c03b3c896d31a7a7b22c0221defceabf0a4185a1cba003"
+  }
+}

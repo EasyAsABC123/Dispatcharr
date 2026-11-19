@@ -309,3 +309,18 @@ adds two typed non-HTTP assignments from the successful Source3 capture.
 The actual artwork and recording workers retain distinct task roots, queues
 and backend outcomes. The register has 18 partial non-HTTP assignments
 and 232 unassigned candidates.
+
+
+## Portable SDK register check
+
+The exact SDK Compose image at `959dba033` passed the five selected public
+register, Comskip, and clocked-recording tests, including 19 register
+corruption controls. The container ran Python 3.11.2 with Docker networking
+disabled. Its actual exit was 0 and the owned project and container were removed.
+
+The SDK includes 28 additional public files needed for those tests.
+The framework evidence printer retains the same AST bytes across SDK and host
+Python. A host comparison matched 25,941 AST nodes from eight pinned Original
+source modules. Earlier Compose attempts retain the broad timeout and the two
+targeted failures that exposed the portability gaps. Full M0 remains open.
+[Compose receipt](../scripts/rust-contracts/sdk-portable-register.json)
