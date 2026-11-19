@@ -95,7 +95,8 @@ impl XcGateway {
                 .map_err(|_| reader::capacity())?;
                 Arc::new((permit, memory))
             };
-            let head = request.method() == Method::HEAD;
+            let method = request.method().clone();
+            let head = method == Method::HEAD;
             let auth = gateway.inner.auth.clone().with_retained_scope(owner.clone());
             let input = identity(&request);
             let path = request.uri().path().to_owned();
@@ -109,14 +110,14 @@ impl XcGateway {
                 // The outer DRF AllowAny wrapper still authenticates before
                 // its method check or the credentials in the XC route.
                 auth.authenticate(&input).await?;
-                if request.method() == Method::OPTIONS {
+                if method == Method::OPTIONS {
                     let name = if entry.episode { "Stream Xc Episode" } else { "Stream Xc Movie" };
                     return Ok(Err(drf(200, json!({"name":name,"description":"",
                         "renders":["application/json","text/html"],
                         "parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]}))));
                 }
-                if request.method() != Method::GET {
-                    return Ok(Err(drf(405, json!({"detail":format!("Method \"{}\" not allowed.", request.method())}))));
+                if method != Method::GET {
+                    return Ok(Err(drf(405, json!({"detail":format!("Method \"{}\" not allowed.", method)}))));
                 }
                 let user = auth.authorize_xc_bounded(
                     &input,
