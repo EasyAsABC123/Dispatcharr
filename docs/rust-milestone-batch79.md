@@ -15,8 +15,18 @@ workflow and algorithm credit.
 
 All 522 default Store tests passed, with 79 fixture-bound cases ignored.
 All four focused Redis configuration tests and strict all-target Clippy
-for Store and the application passed. The paired collection and Delivery
-Logs run will also exercise the TS response through the packaged image.
+for Store and the application passed. The exact Docker image then
+matched all 22 Integrations and Delivery Logs cases and the TS 404
+response. The controller exited 0 and the Compose project was independently
+removed.
+
+The pinned Original integration-create capture passed 16 scoped cases,
+including zero subscriptions, delivery log writes and webhook calls. Its
+controller preserved exit 1 for the separate TS body mismatch on Candidate78.
+
+[Exact-image Compose evidence](../scripts/rust-integration/milestone-batch79/packaged.json)
+· [Original create capture](../scripts/rust-integration/milestone-batch79/connect-create-source.json)
+· [Coordinator host checks](../scripts/rust-integration/milestone-batch79/coordinator.json)
 
 [Focused checks](../scripts/rust-integration/milestone-batch79/focused.json)
 · [Candidate78 packaged results](rust-milestone-batch78.md)

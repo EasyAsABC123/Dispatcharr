@@ -25,12 +25,15 @@ The same controller retained an independent TS 404 body mismatch and
 exited 1. The older-image control reproduced eight missing-route responses.
 Both Compose projects were independently removed.
 
-The packaged operator passed all 17 cases with discrete Redis configuration.
-The combined run could not seed the separate Main authorization fixture.
-It exited 1 and verified cleanup. Main and the explicit URL precedence
-comparison require separate completion evidence.
+The packaged operator passed 17 cases in each Redis configuration mode.
+The continuation reused the successful discrete-configuration operator
+result. Authenticated Main used the selected Redis cache in both modes,
+including explicit URL precedence over conflicting discrete settings.
+Both projects passed cleanup. The earlier fixture setup failures remain
+in the evidence.
 
-[Packaged scope evidence](../scripts/rust-integration/milestone-batch78/packaged-scopes.json)
+[Connect scope and initial Redis evidence](../scripts/rust-integration/milestone-batch78/packaged-scopes.json)
+· [Completed Redis comparisons](../scripts/rust-integration/milestone-batch78/redis-packaged.json)
 
 [Focused checks](../scripts/rust-integration/milestone-batch78/focused.json)
 · [Milestone ledger](rust-milestones.md)
