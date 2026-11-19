@@ -67,8 +67,14 @@ fn form(value: &Value) -> Result<Input, StoreError> {
     {
         return Err(unsupported());
     }
+    // The update validator compares against an existing row. A new Source
+    // row starts idle even when its initial is_active value is false.
+    let initial_active = input
+        .get("is_active")
+        .and_then(|value| super::boolean("is_active", value).ok())
+        .unwrap_or(true);
     let defaults = json!({"name":"","source_type":"xmltv","url":url,
-        "username":username,"password":password,"is_active":true,"file_path":null,
+        "username":username,"password":password,"is_active":initial_active,"file_path":null,
         "refresh_interval":0,"priority":0,"status":"idle","last_message":null,
         "custom_properties":{},"updated_at":null});
     let checked = validate(input, &defaults, "", false)?;
