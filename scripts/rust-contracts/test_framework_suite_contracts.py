@@ -3,6 +3,7 @@ Original Dispatcharr authors retain all application and algorithm credit.
 """
 import copy,json,shutil,tempfile,unittest
 from pathlib import Path
+import retained_epg_reads_contracts
 import framework_suite_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -30,6 +31,7 @@ class FrameworkSuiteControls(unittest.TestCase):
     p.write_bytes(raw)
  def test_ten_additions_preserve_prior163_and788_whole_dictionaries(self):
   r=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_epg_reads_contracts.restore_pre_epg(ROOT,r['runtime_routes'])
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,r['runtime_routes'])
   import retained_range_source10_contracts
   retained_range_source10_contracts.restore_pre_range(r['runtime_routes'])
@@ -51,12 +53,14 @@ class FrameworkSuiteControls(unittest.TestCase):
   self.assertEqual(subject.digest(r['openapi_operations']),proof['OpenAPI_sha256'])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],175)
+  self.assertEqual(mapping['operations'],181)
+  retained_epg_reads_contracts.restore_pre_epg(ROOT,rows)
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
   retained_range_source10_contracts.restore_pre_range(rows)
   retained_source12_contracts.restore_pre_Source12(rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_epg_reads_contracts.restore_pre_epg(ROOT,rows)
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
   retained_range_source10_contracts.restore_pre_range(rows)
   retained_source12_contracts.restore_pre_Source12(rows)

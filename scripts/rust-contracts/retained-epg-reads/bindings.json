@@ -1,0 +1,1406 @@
+{
+  "binding_kind": "retained_original_stored_epg_104_framework",
+  "actor_credential_values_projected_out": true,
+  "operation_count": 6,
+  "unique_Source_cases": 104,
+  "mapped_GET_observations": 101,
+  "fully_verified_operations": 0,
+  "new_Source_executions": 0,
+  "Native_coverage_increased": false,
+  "Original_author_credit": "Original Dispatcharr authors retain all application and algorithm credit and licensing.",
+  "fixtures": {
+    "retained-Original-stored-EPG-reads-104": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "execution_transport": "Django resolve(path) followed by resolved view callback with DRF APIRequestFactory, then response.render()",
+      "ownership": "Disposably composed Original and fixture-owned users, EPG sources, data, channel, programmes and schedule rows.",
+      "setup": [
+        "Load pinned Original over the disposable PostgreSQL/Redis application fixture.",
+        "Seed owned PostgreSQL EPG and actor rows; mint real JWTs for the four fixture actors.",
+        "Resolve the concrete unformatted path and render the actual ViewSet response on an APIRequestFactory request."
+      ],
+      "roles": {
+        "admin": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "standard": {
+          "credential": "real fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        },
+        "basic": {
+          "credential": "real fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        },
+        "inactive": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        }
+      },
+      "public_historical_receipt": {
+        "path": "scripts/rust-epg-contracts/verified-program-http-8.json",
+        "sha256": "a07cc5dc1b8137f061bfa55e07583960fa59c130e6d4574594cb61a589b8b58e"
+      },
+      "private_authority": {
+        "root": "artifacts/rust/m5-epg-program-http-8",
+        "capture_sha256": "09969484794184a2b8754b27935e75e7c60af3529bd569dee5cb941a99aefedc",
+        "historical_result_sha256": "cedc2df95ddd9b6ca382b5fa1aafa1fc6fe12b987cb91f6de9226549ad5b2e1f",
+        "frozen_tool_sha256": {
+          "scripts/rust-epg-contracts/control_reads.py": "965b1ac802e673eb146dc0b77f9b9dbfb8b7c5bb7209c8c03a7692e638e9a805",
+          "scripts/rust-epg-contracts/source_reads.py": "7ad37c3da64efd765581b48c83e35f2e7a7c0c07b086131127597f27efe6c5f0",
+          "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+          "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9"
+        }
+      },
+      "historical_controller_passed": true,
+      "historical_cleanup": "project removed",
+      "Source_TCP_verified": false
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-e8763dfe777286fc6b57:GET",
+      "pattern_exact": "api/epg/^sources/$",
+      "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "source_action": "list",
+      "method": "GET",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-stored-EPG-reads-104",
+      "observed_methods": [
+        "GET"
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Capture the resolved unformatted GET action and actual role.",
+        "Retain the observed Original status and canonical hash of the captured response projection."
+      ],
+      "remaining": [
+        "Complete query/role/renderer matrix, format suffixes, Source TCP, Native and full endpoint acceptance."
+      ],
+      "cases": [
+        {
+          "source_index": 0,
+          "record_json_pointer": "/cases/0",
+          "path": "/api/epg/sources/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7"
+        },
+        {
+          "source_index": 1,
+          "record_json_pointer": "/cases/1",
+          "path": "/api/epg/sources/?page=2&page_size=1",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7"
+        },
+        {
+          "source_index": 2,
+          "record_json_pointer": "/cases/2",
+          "path": "/api/epg/sources/?search=missing",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7"
+        },
+        {
+          "source_index": 3,
+          "record_json_pointer": "/cases/3",
+          "path": "/api/epg/sources/?ordering=-id",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7"
+        },
+        {
+          "source_index": 4,
+          "record_json_pointer": "/cases/4",
+          "path": "/api/epg/sources/?name=missing",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7"
+        },
+        {
+          "source_index": 5,
+          "record_json_pointer": "/cases/5",
+          "path": "/api/epg/sources/?epg_source=999999",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7"
+        },
+        {
+          "source_index": 6,
+          "record_json_pointer": "/cases/6",
+          "path": "/api/epg/sources/?tvg_id=missing",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7"
+        },
+        {
+          "source_index": 7,
+          "record_json_pointer": "/cases/7",
+          "path": "/api/epg/sources/?format=json",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7"
+        },
+        {
+          "source_index": 16,
+          "record_json_pointer": "/cases/16",
+          "path": "/api/epg/sources/",
+          "role": "standard",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7"
+        },
+        {
+          "source_index": 19,
+          "record_json_pointer": "/cases/19",
+          "path": "/api/epg/sources/",
+          "role": "basic",
+          "method": "GET",
+          "HTTP_status": 403,
+          "expected_projection_sha256": "07487030efb59cd29ed32dc7e8e082de53294b5ddff8d9c5f897a9ebd1657ca8"
+        },
+        {
+          "source_index": 22,
+          "record_json_pointer": "/cases/22",
+          "path": "/api/epg/sources/",
+          "role": "inactive",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "f21e14078395fc1fa61128bc4fcb626ccafa13951861865ae4378d9203e57e78"
+        },
+        {
+          "source_index": 25,
+          "record_json_pointer": "/cases/25",
+          "path": "/api/epg/sources/",
+          "role": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "4ec75454912a4d7255134324957e7c3e1fd8b5a857dc25e3d66de537a23f6e41"
+        },
+        {
+          "source_index": 28,
+          "record_json_pointer": "/cases/28",
+          "path": "/api/epg/sources/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "a63eb46aa6522d4f1509e86ec545dc8c7c00484203d052ba5a21d62be8b9f5d5"
+        },
+        {
+          "source_index": 29,
+          "record_json_pointer": "/cases/29",
+          "path": "/api/epg/sources/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 406,
+          "expected_projection_sha256": "ffb3b2c5025179ae3afb7f6ca58d2d3256ac46b06bc20bab145514dd81818d50"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "basic",
+        "inactive",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        },
+        "basic": {
+          "credential": "real fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        },
+        "inactive": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "standard": {
+          "credential": "real fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_framework_response_observations",
+        "Source_case_observations": 14,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "Source_TCP_verified": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-2bb81f30c5e580e289f8:GET",
+      "pattern_exact": "api/epg/^sources/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "source_action": "retrieve",
+      "method": "GET",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-stored-EPG-reads-104",
+      "observed_methods": [
+        "GET"
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Capture the resolved unformatted GET action and actual role.",
+        "Retain the observed Original status and canonical hash of the captured response projection."
+      ],
+      "remaining": [
+        "Complete query/role/renderer matrix, format suffixes, Source TCP, Native and full endpoint acceptance."
+      ],
+      "cases": [
+        {
+          "source_index": 8,
+          "record_json_pointer": "/cases/8",
+          "path": "/api/epg/sources/1/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "0cd58b0d52cb36df71f337d2928bf0dd2e1437e328020ef16ade7281e7e1ffe4"
+        },
+        {
+          "source_index": 9,
+          "record_json_pointer": "/cases/9",
+          "path": "/api/epg/sources/2/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "cc90f3c6727eb5352911e72cba02b499523fc714324bd84c322c3cad463ef4a1"
+        },
+        {
+          "source_index": 10,
+          "record_json_pointer": "/cases/10",
+          "path": "/api/epg/sources/3/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "457dc87b3eccea702b995f658ecc139312c887a0a0bdc9073e5d83fd6146bc41"
+        },
+        {
+          "source_index": 11,
+          "record_json_pointer": "/cases/11",
+          "path": "/api/epg/sources/999999/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "65a5a671e1c825a20ae1783e351ca27a4b348a15f3063d637b64e12ef589260c"
+        },
+        {
+          "source_index": 12,
+          "record_json_pointer": "/cases/12",
+          "path": "/api/epg/sources/bad/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "60ae387dd13ccdfa366fbcb3e0d5e8026e34699bb8b84d93447b9168522e492a"
+        },
+        {
+          "source_index": 13,
+          "record_json_pointer": "/cases/13",
+          "path": "/api/epg/sources/0/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "65a5a671e1c825a20ae1783e351ca27a4b348a15f3063d637b64e12ef589260c"
+        },
+        {
+          "source_index": 14,
+          "record_json_pointer": "/cases/14",
+          "path": "/api/epg/sources/-1/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "65a5a671e1c825a20ae1783e351ca27a4b348a15f3063d637b64e12ef589260c"
+        },
+        {
+          "source_index": 15,
+          "record_json_pointer": "/cases/15",
+          "path": "/api/epg/sources/0001/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "0cd58b0d52cb36df71f337d2928bf0dd2e1437e328020ef16ade7281e7e1ffe4"
+        },
+        {
+          "source_index": 17,
+          "record_json_pointer": "/cases/17",
+          "path": "/api/epg/sources/1/",
+          "role": "standard",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "0cd58b0d52cb36df71f337d2928bf0dd2e1437e328020ef16ade7281e7e1ffe4"
+        },
+        {
+          "source_index": 18,
+          "record_json_pointer": "/cases/18",
+          "path": "/api/epg/sources/bad/",
+          "role": "standard",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "60ae387dd13ccdfa366fbcb3e0d5e8026e34699bb8b84d93447b9168522e492a"
+        },
+        {
+          "source_index": 20,
+          "record_json_pointer": "/cases/20",
+          "path": "/api/epg/sources/1/",
+          "role": "basic",
+          "method": "GET",
+          "HTTP_status": 403,
+          "expected_projection_sha256": "07487030efb59cd29ed32dc7e8e082de53294b5ddff8d9c5f897a9ebd1657ca8"
+        },
+        {
+          "source_index": 21,
+          "record_json_pointer": "/cases/21",
+          "path": "/api/epg/sources/bad/",
+          "role": "basic",
+          "method": "GET",
+          "HTTP_status": 403,
+          "expected_projection_sha256": "07487030efb59cd29ed32dc7e8e082de53294b5ddff8d9c5f897a9ebd1657ca8"
+        },
+        {
+          "source_index": 23,
+          "record_json_pointer": "/cases/23",
+          "path": "/api/epg/sources/1/",
+          "role": "inactive",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "f21e14078395fc1fa61128bc4fcb626ccafa13951861865ae4378d9203e57e78"
+        },
+        {
+          "source_index": 24,
+          "record_json_pointer": "/cases/24",
+          "path": "/api/epg/sources/bad/",
+          "role": "inactive",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "f21e14078395fc1fa61128bc4fcb626ccafa13951861865ae4378d9203e57e78"
+        },
+        {
+          "source_index": 26,
+          "record_json_pointer": "/cases/26",
+          "path": "/api/epg/sources/1/",
+          "role": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "4ec75454912a4d7255134324957e7c3e1fd8b5a857dc25e3d66de537a23f6e41"
+        },
+        {
+          "source_index": 27,
+          "record_json_pointer": "/cases/27",
+          "path": "/api/epg/sources/bad/",
+          "role": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "4ec75454912a4d7255134324957e7c3e1fd8b5a857dc25e3d66de537a23f6e41"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "basic",
+        "inactive",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        },
+        "basic": {
+          "credential": "real fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        },
+        "inactive": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "standard": {
+          "credential": "real fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_framework_response_observations",
+        "Source_case_observations": 16,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "Source_TCP_verified": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-dfd94c84789ce0429d99:GET",
+      "pattern_exact": "api/epg/^epgdata/$",
+      "source_handler": "apps.epg.api_views.EPGDataViewSet",
+      "source_action": "list",
+      "method": "GET",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-stored-EPG-reads-104",
+      "observed_methods": [
+        "GET"
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Capture the resolved unformatted GET action and actual role.",
+        "Retain the observed Original status and canonical hash of the captured response projection."
+      ],
+      "remaining": [
+        "Complete query/role/renderer matrix, format suffixes, Source TCP, Native and full endpoint acceptance."
+      ],
+      "cases": [
+        {
+          "source_index": 31,
+          "record_json_pointer": "/cases/31",
+          "path": "/api/epg/epgdata/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b"
+        },
+        {
+          "source_index": 32,
+          "record_json_pointer": "/cases/32",
+          "path": "/api/epg/epgdata/?page=2&page_size=1",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b"
+        },
+        {
+          "source_index": 33,
+          "record_json_pointer": "/cases/33",
+          "path": "/api/epg/epgdata/?search=missing",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b"
+        },
+        {
+          "source_index": 34,
+          "record_json_pointer": "/cases/34",
+          "path": "/api/epg/epgdata/?ordering=-id",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b"
+        },
+        {
+          "source_index": 35,
+          "record_json_pointer": "/cases/35",
+          "path": "/api/epg/epgdata/?name=missing",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b"
+        },
+        {
+          "source_index": 36,
+          "record_json_pointer": "/cases/36",
+          "path": "/api/epg/epgdata/?epg_source=999999",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b"
+        },
+        {
+          "source_index": 37,
+          "record_json_pointer": "/cases/37",
+          "path": "/api/epg/epgdata/?tvg_id=missing",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b"
+        },
+        {
+          "source_index": 38,
+          "record_json_pointer": "/cases/38",
+          "path": "/api/epg/epgdata/?format=json",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b"
+        },
+        {
+          "source_index": 51,
+          "record_json_pointer": "/cases/51",
+          "path": "/api/epg/epgdata/",
+          "role": "standard",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b"
+        },
+        {
+          "source_index": 54,
+          "record_json_pointer": "/cases/54",
+          "path": "/api/epg/epgdata/",
+          "role": "basic",
+          "method": "GET",
+          "HTTP_status": 403,
+          "expected_projection_sha256": "07487030efb59cd29ed32dc7e8e082de53294b5ddff8d9c5f897a9ebd1657ca8"
+        },
+        {
+          "source_index": 57,
+          "record_json_pointer": "/cases/57",
+          "path": "/api/epg/epgdata/",
+          "role": "inactive",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "f21e14078395fc1fa61128bc4fcb626ccafa13951861865ae4378d9203e57e78"
+        },
+        {
+          "source_index": 60,
+          "record_json_pointer": "/cases/60",
+          "path": "/api/epg/epgdata/",
+          "role": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "4ec75454912a4d7255134324957e7c3e1fd8b5a857dc25e3d66de537a23f6e41"
+        },
+        {
+          "source_index": 63,
+          "record_json_pointer": "/cases/63",
+          "path": "/api/epg/epgdata/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "2a6cbd5a21b516e1a19e6aaa3eb8c2ded26dbbf937bd3bffe1484e32f195fdb8"
+        },
+        {
+          "source_index": 64,
+          "record_json_pointer": "/cases/64",
+          "path": "/api/epg/epgdata/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 406,
+          "expected_projection_sha256": "ffb3b2c5025179ae3afb7f6ca58d2d3256ac46b06bc20bab145514dd81818d50"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "basic",
+        "inactive",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        },
+        "basic": {
+          "credential": "real fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        },
+        "inactive": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "standard": {
+          "credential": "real fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_framework_response_observations",
+        "Source_case_observations": 14,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "Source_TCP_verified": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-d64394eade0a18a43d8b:GET",
+      "pattern_exact": "api/epg/^epgdata/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.epg.api_views.EPGDataViewSet",
+      "source_action": "retrieve",
+      "method": "GET",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-stored-EPG-reads-104",
+      "observed_methods": [
+        "GET"
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Capture the resolved unformatted GET action and actual role.",
+        "Retain the observed Original status and canonical hash of the captured response projection."
+      ],
+      "remaining": [
+        "Complete query/role/renderer matrix, format suffixes, Source TCP, Native and full endpoint acceptance."
+      ],
+      "cases": [
+        {
+          "source_index": 39,
+          "record_json_pointer": "/cases/39",
+          "path": "/api/epg/epgdata/1/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "1e822d7d4c9dcc2d2c73f3b229f514d4d2be971f4f4ebacb1b6c03933ca80ee5"
+        },
+        {
+          "source_index": 40,
+          "record_json_pointer": "/cases/40",
+          "path": "/api/epg/epgdata/2/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "82ae7e1f4c65bd3be83a351d0b9df9e78c94fae46bfe7a9cb1c6d9c5d1dce630"
+        },
+        {
+          "source_index": 41,
+          "record_json_pointer": "/cases/41",
+          "path": "/api/epg/epgdata/3/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "c036a674daa0ea4c2ac3a7ae12f23a72b4ec6d7cebbb26823c6d925a19a71da0"
+        },
+        {
+          "source_index": 42,
+          "record_json_pointer": "/cases/42",
+          "path": "/api/epg/epgdata/4/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "bc899f555b17d5e7a35b02761ae7f4c50b629d820fefb83c5f83461aca1db114"
+        },
+        {
+          "source_index": 43,
+          "record_json_pointer": "/cases/43",
+          "path": "/api/epg/epgdata/5/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "1bbc16fce31cd7d38b67a8361bd02b934b6c10cd9715e662d30cf2e38f708677"
+        },
+        {
+          "source_index": 44,
+          "record_json_pointer": "/cases/44",
+          "path": "/api/epg/epgdata/6/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "7be4f228992f975d01c24992152507476c2df3103a1061fc9b92e2be689ff5d5"
+        },
+        {
+          "source_index": 45,
+          "record_json_pointer": "/cases/45",
+          "path": "/api/epg/epgdata/7/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "67b7f01fd390dca2e2fd13411e479a17bd846de5d87fc522153922b388e920c1"
+        },
+        {
+          "source_index": 46,
+          "record_json_pointer": "/cases/46",
+          "path": "/api/epg/epgdata/999999/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "44569a980076bc8999c07b41f01e176b4491d141599f99fa10d30562f211a012"
+        },
+        {
+          "source_index": 47,
+          "record_json_pointer": "/cases/47",
+          "path": "/api/epg/epgdata/bad/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "60ae387dd13ccdfa366fbcb3e0d5e8026e34699bb8b84d93447b9168522e492a"
+        },
+        {
+          "source_index": 48,
+          "record_json_pointer": "/cases/48",
+          "path": "/api/epg/epgdata/0/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "44569a980076bc8999c07b41f01e176b4491d141599f99fa10d30562f211a012"
+        },
+        {
+          "source_index": 49,
+          "record_json_pointer": "/cases/49",
+          "path": "/api/epg/epgdata/-1/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "44569a980076bc8999c07b41f01e176b4491d141599f99fa10d30562f211a012"
+        },
+        {
+          "source_index": 50,
+          "record_json_pointer": "/cases/50",
+          "path": "/api/epg/epgdata/0001/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "1e822d7d4c9dcc2d2c73f3b229f514d4d2be971f4f4ebacb1b6c03933ca80ee5"
+        },
+        {
+          "source_index": 52,
+          "record_json_pointer": "/cases/52",
+          "path": "/api/epg/epgdata/1/",
+          "role": "standard",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "1e822d7d4c9dcc2d2c73f3b229f514d4d2be971f4f4ebacb1b6c03933ca80ee5"
+        },
+        {
+          "source_index": 53,
+          "record_json_pointer": "/cases/53",
+          "path": "/api/epg/epgdata/bad/",
+          "role": "standard",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "60ae387dd13ccdfa366fbcb3e0d5e8026e34699bb8b84d93447b9168522e492a"
+        },
+        {
+          "source_index": 55,
+          "record_json_pointer": "/cases/55",
+          "path": "/api/epg/epgdata/1/",
+          "role": "basic",
+          "method": "GET",
+          "HTTP_status": 403,
+          "expected_projection_sha256": "07487030efb59cd29ed32dc7e8e082de53294b5ddff8d9c5f897a9ebd1657ca8"
+        },
+        {
+          "source_index": 56,
+          "record_json_pointer": "/cases/56",
+          "path": "/api/epg/epgdata/bad/",
+          "role": "basic",
+          "method": "GET",
+          "HTTP_status": 403,
+          "expected_projection_sha256": "07487030efb59cd29ed32dc7e8e082de53294b5ddff8d9c5f897a9ebd1657ca8"
+        },
+        {
+          "source_index": 58,
+          "record_json_pointer": "/cases/58",
+          "path": "/api/epg/epgdata/1/",
+          "role": "inactive",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "f21e14078395fc1fa61128bc4fcb626ccafa13951861865ae4378d9203e57e78"
+        },
+        {
+          "source_index": 59,
+          "record_json_pointer": "/cases/59",
+          "path": "/api/epg/epgdata/bad/",
+          "role": "inactive",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "f21e14078395fc1fa61128bc4fcb626ccafa13951861865ae4378d9203e57e78"
+        },
+        {
+          "source_index": 61,
+          "record_json_pointer": "/cases/61",
+          "path": "/api/epg/epgdata/1/",
+          "role": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "4ec75454912a4d7255134324957e7c3e1fd8b5a857dc25e3d66de537a23f6e41"
+        },
+        {
+          "source_index": 62,
+          "record_json_pointer": "/cases/62",
+          "path": "/api/epg/epgdata/bad/",
+          "role": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "4ec75454912a4d7255134324957e7c3e1fd8b5a857dc25e3d66de537a23f6e41"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "basic",
+        "inactive",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        },
+        "basic": {
+          "credential": "real fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        },
+        "inactive": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "standard": {
+          "credential": "real fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_framework_response_observations",
+        "Source_case_observations": 20,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "Source_TCP_verified": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-55aadc5558ca3b8248b1:GET",
+      "pattern_exact": "api/epg/^programs/$",
+      "source_handler": "apps.epg.api_views.ProgramViewSet",
+      "source_action": "list",
+      "method": "GET",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-stored-EPG-reads-104",
+      "observed_methods": [
+        "GET"
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Capture the resolved unformatted GET action and actual role.",
+        "Retain the observed Original status and canonical hash of the captured response projection."
+      ],
+      "remaining": [
+        "Complete query/role/renderer matrix, format suffixes, Source TCP, Native and full endpoint acceptance."
+      ],
+      "cases": [
+        {
+          "source_index": 66,
+          "record_json_pointer": "/cases/66",
+          "path": "/api/epg/programs/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e54a5c54a634ffab7fe9d028bf35ad79f506df6279f8c4917b396a37ef61d4a4"
+        },
+        {
+          "source_index": 67,
+          "record_json_pointer": "/cases/67",
+          "path": "/api/epg/programs/?page=2&page_size=1",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e54a5c54a634ffab7fe9d028bf35ad79f506df6279f8c4917b396a37ef61d4a4"
+        },
+        {
+          "source_index": 68,
+          "record_json_pointer": "/cases/68",
+          "path": "/api/epg/programs/?search=missing",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e54a5c54a634ffab7fe9d028bf35ad79f506df6279f8c4917b396a37ef61d4a4"
+        },
+        {
+          "source_index": 69,
+          "record_json_pointer": "/cases/69",
+          "path": "/api/epg/programs/?ordering=-id",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e54a5c54a634ffab7fe9d028bf35ad79f506df6279f8c4917b396a37ef61d4a4"
+        },
+        {
+          "source_index": 70,
+          "record_json_pointer": "/cases/70",
+          "path": "/api/epg/programs/?name=missing",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e54a5c54a634ffab7fe9d028bf35ad79f506df6279f8c4917b396a37ef61d4a4"
+        },
+        {
+          "source_index": 71,
+          "record_json_pointer": "/cases/71",
+          "path": "/api/epg/programs/?epg_source=999999",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e54a5c54a634ffab7fe9d028bf35ad79f506df6279f8c4917b396a37ef61d4a4"
+        },
+        {
+          "source_index": 72,
+          "record_json_pointer": "/cases/72",
+          "path": "/api/epg/programs/?tvg_id=missing",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e54a5c54a634ffab7fe9d028bf35ad79f506df6279f8c4917b396a37ef61d4a4"
+        },
+        {
+          "source_index": 73,
+          "record_json_pointer": "/cases/73",
+          "path": "/api/epg/programs/?format=json",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e54a5c54a634ffab7fe9d028bf35ad79f506df6279f8c4917b396a37ef61d4a4"
+        },
+        {
+          "source_index": 84,
+          "record_json_pointer": "/cases/84",
+          "path": "/api/epg/programs/",
+          "role": "standard",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e54a5c54a634ffab7fe9d028bf35ad79f506df6279f8c4917b396a37ef61d4a4"
+        },
+        {
+          "source_index": 87,
+          "record_json_pointer": "/cases/87",
+          "path": "/api/epg/programs/",
+          "role": "basic",
+          "method": "GET",
+          "HTTP_status": 403,
+          "expected_projection_sha256": "07487030efb59cd29ed32dc7e8e082de53294b5ddff8d9c5f897a9ebd1657ca8"
+        },
+        {
+          "source_index": 90,
+          "record_json_pointer": "/cases/90",
+          "path": "/api/epg/programs/",
+          "role": "inactive",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "f21e14078395fc1fa61128bc4fcb626ccafa13951861865ae4378d9203e57e78"
+        },
+        {
+          "source_index": 93,
+          "record_json_pointer": "/cases/93",
+          "path": "/api/epg/programs/",
+          "role": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "4ec75454912a4d7255134324957e7c3e1fd8b5a857dc25e3d66de537a23f6e41"
+        },
+        {
+          "source_index": 96,
+          "record_json_pointer": "/cases/96",
+          "path": "/api/epg/programs/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "7074c8b0d24cacf2724a095d28d66db261e7fbde5af347fb4efd3bfe83a8ad47"
+        },
+        {
+          "source_index": 97,
+          "record_json_pointer": "/cases/97",
+          "path": "/api/epg/programs/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 406,
+          "expected_projection_sha256": "ffb3b2c5025179ae3afb7f6ca58d2d3256ac46b06bc20bab145514dd81818d50"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "basic",
+        "inactive",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        },
+        "basic": {
+          "credential": "real fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        },
+        "inactive": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "standard": {
+          "credential": "real fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_framework_response_observations",
+        "Source_case_observations": 14,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "Source_TCP_verified": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-82723694fa5ab6ee5f1e:GET",
+      "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.epg.api_views.ProgramViewSet",
+      "source_action": "retrieve",
+      "method": "GET",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-stored-EPG-reads-104",
+      "observed_methods": [
+        "GET"
+      ],
+      "fully_verified": false,
+      "assertions": [
+        "Capture the resolved unformatted GET action and actual role.",
+        "Retain the observed Original status and canonical hash of the captured response projection."
+      ],
+      "remaining": [
+        "Complete query/role/renderer matrix, format suffixes, Source TCP, Native and full endpoint acceptance."
+      ],
+      "cases": [
+        {
+          "source_index": 74,
+          "record_json_pointer": "/cases/74",
+          "path": "/api/epg/programs/1/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "ce564fe9971ea601c23aaea279097a00583381bc362e307ee4da43c12bed04c0"
+        },
+        {
+          "source_index": 75,
+          "record_json_pointer": "/cases/75",
+          "path": "/api/epg/programs/2/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "3a11de4c51ebdd62f5568b220b84af6e602f55ac6bb08cb7f697d6e0f78053f3"
+        },
+        {
+          "source_index": 76,
+          "record_json_pointer": "/cases/76",
+          "path": "/api/epg/programs/3/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e1a14a56c06fd798ca901b2eb6474cef9a024ef0e45c8494dceb8fb29851f1b7"
+        },
+        {
+          "source_index": 77,
+          "record_json_pointer": "/cases/77",
+          "path": "/api/epg/programs/4/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "71cba6b759dc263d6b947346e903ab3b60ec1a569cf8faaade2e839ef289d397"
+        },
+        {
+          "source_index": 78,
+          "record_json_pointer": "/cases/78",
+          "path": "/api/epg/programs/5/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "3bcd7286c89d363f9419e960711c8b22fdf296abec2607f9bc8bd7344f490dc1"
+        },
+        {
+          "source_index": 79,
+          "record_json_pointer": "/cases/79",
+          "path": "/api/epg/programs/999999/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "3d1cd8a9f26e827477553fe104b3228cb01251f9411e74191738ca58a71c5460"
+        },
+        {
+          "source_index": 80,
+          "record_json_pointer": "/cases/80",
+          "path": "/api/epg/programs/bad/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "60ae387dd13ccdfa366fbcb3e0d5e8026e34699bb8b84d93447b9168522e492a"
+        },
+        {
+          "source_index": 81,
+          "record_json_pointer": "/cases/81",
+          "path": "/api/epg/programs/0/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "3d1cd8a9f26e827477553fe104b3228cb01251f9411e74191738ca58a71c5460"
+        },
+        {
+          "source_index": 82,
+          "record_json_pointer": "/cases/82",
+          "path": "/api/epg/programs/-1/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "3d1cd8a9f26e827477553fe104b3228cb01251f9411e74191738ca58a71c5460"
+        },
+        {
+          "source_index": 83,
+          "record_json_pointer": "/cases/83",
+          "path": "/api/epg/programs/0001/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "ce564fe9971ea601c23aaea279097a00583381bc362e307ee4da43c12bed04c0"
+        },
+        {
+          "source_index": 85,
+          "record_json_pointer": "/cases/85",
+          "path": "/api/epg/programs/1/",
+          "role": "standard",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "ce564fe9971ea601c23aaea279097a00583381bc362e307ee4da43c12bed04c0"
+        },
+        {
+          "source_index": 86,
+          "record_json_pointer": "/cases/86",
+          "path": "/api/epg/programs/bad/",
+          "role": "standard",
+          "method": "GET",
+          "HTTP_status": 404,
+          "expected_projection_sha256": "60ae387dd13ccdfa366fbcb3e0d5e8026e34699bb8b84d93447b9168522e492a"
+        },
+        {
+          "source_index": 88,
+          "record_json_pointer": "/cases/88",
+          "path": "/api/epg/programs/1/",
+          "role": "basic",
+          "method": "GET",
+          "HTTP_status": 403,
+          "expected_projection_sha256": "07487030efb59cd29ed32dc7e8e082de53294b5ddff8d9c5f897a9ebd1657ca8"
+        },
+        {
+          "source_index": 89,
+          "record_json_pointer": "/cases/89",
+          "path": "/api/epg/programs/bad/",
+          "role": "basic",
+          "method": "GET",
+          "HTTP_status": 403,
+          "expected_projection_sha256": "07487030efb59cd29ed32dc7e8e082de53294b5ddff8d9c5f897a9ebd1657ca8"
+        },
+        {
+          "source_index": 91,
+          "record_json_pointer": "/cases/91",
+          "path": "/api/epg/programs/1/",
+          "role": "inactive",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "f21e14078395fc1fa61128bc4fcb626ccafa13951861865ae4378d9203e57e78"
+        },
+        {
+          "source_index": 92,
+          "record_json_pointer": "/cases/92",
+          "path": "/api/epg/programs/bad/",
+          "role": "inactive",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "f21e14078395fc1fa61128bc4fcb626ccafa13951861865ae4378d9203e57e78"
+        },
+        {
+          "source_index": 94,
+          "record_json_pointer": "/cases/94",
+          "path": "/api/epg/programs/1/",
+          "role": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "4ec75454912a4d7255134324957e7c3e1fd8b5a857dc25e3d66de537a23f6e41"
+        },
+        {
+          "source_index": 95,
+          "record_json_pointer": "/cases/95",
+          "path": "/api/epg/programs/bad/",
+          "role": "anonymous",
+          "method": "GET",
+          "HTTP_status": 401,
+          "expected_projection_sha256": "4ec75454912a4d7255134324957e7c3e1fd8b5a857dc25e3d66de537a23f6e41"
+        },
+        {
+          "source_index": 99,
+          "record_json_pointer": "/cases/99",
+          "path": "/api/epg/programs/1/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "ce564fe9971ea601c23aaea279097a00583381bc362e307ee4da43c12bed04c0"
+        },
+        {
+          "source_index": 100,
+          "record_json_pointer": "/cases/100",
+          "path": "/api/epg/programs/2/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "3a11de4c51ebdd62f5568b220b84af6e602f55ac6bb08cb7f697d6e0f78053f3"
+        },
+        {
+          "source_index": 101,
+          "record_json_pointer": "/cases/101",
+          "path": "/api/epg/programs/3/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "e1a14a56c06fd798ca901b2eb6474cef9a024ef0e45c8494dceb8fb29851f1b7"
+        },
+        {
+          "source_index": 102,
+          "record_json_pointer": "/cases/102",
+          "path": "/api/epg/programs/4/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "629f9a5d7d56dbe6aa9a5d898109cc7c40718b63f9d14ef488828c0eae5622f8"
+        },
+        {
+          "source_index": 103,
+          "record_json_pointer": "/cases/103",
+          "path": "/api/epg/programs/5/",
+          "role": "admin",
+          "method": "GET",
+          "HTTP_status": 200,
+          "expected_projection_sha256": "3bcd7286c89d363f9419e960711c8b22fdf296abec2607f9bc8bd7344f490dc1"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "basic",
+        "inactive",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        },
+        "basic": {
+          "credential": "real fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        },
+        "inactive": {
+          "credential": "real fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "standard": {
+          "credential": "real fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_framework_response_observations",
+        "Source_case_observations": 23,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "Source_TCP_verified": false,
+        "complete_role_matrix": false
+      }
+    }
+  ],
+  "unmapped_method_Source_observations": [
+    {
+      "source_index": 30,
+      "record_json_pointer": "/cases/30",
+      "path": "/api/epg/sources/",
+      "role": "admin",
+      "method": "HEAD",
+      "HTTP_status": 200,
+      "expected_projection_sha256": "d2ded5b11e28ffc144bbabdca3cf2492a37c50f68b7166e8804c2b1156ae8ea4",
+      "observed_method": "HEAD",
+      "route_id": "route-e8763dfe777286fc6b57",
+      "pattern_exact": "api/epg/^sources/$",
+      "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+      "contract_id": null,
+      "fully_verified": false,
+      "fixture_id": "retained-Original-stored-EPG-reads-104",
+      "rendered_representation_bytes": 1182,
+      "Source_TCP_verified": false
+    },
+    {
+      "source_index": 65,
+      "record_json_pointer": "/cases/65",
+      "path": "/api/epg/epgdata/",
+      "role": "admin",
+      "method": "HEAD",
+      "HTTP_status": 200,
+      "expected_projection_sha256": "5394a7466bad13075ea1fafcd2ee83be218eb04a086c2eccfe82de14edad2e06",
+      "observed_method": "HEAD",
+      "route_id": "route-dfd94c84789ce0429d99",
+      "pattern_exact": "api/epg/^epgdata/$",
+      "source_handler": "apps.epg.api_views.EPGDataViewSet",
+      "contract_id": null,
+      "fully_verified": false,
+      "fixture_id": "retained-Original-stored-EPG-reads-104",
+      "rendered_representation_bytes": 637,
+      "Source_TCP_verified": false
+    },
+    {
+      "source_index": 98,
+      "record_json_pointer": "/cases/98",
+      "path": "/api/epg/programs/",
+      "role": "admin",
+      "method": "HEAD",
+      "HTTP_status": 200,
+      "expected_projection_sha256": "99c9313310bfada62118f153fdae41405e537d6e6b8a2278f7bdbb5a3bebaf86",
+      "observed_method": "HEAD",
+      "route_id": "route-55aadc5558ca3b8248b1",
+      "pattern_exact": "api/epg/^programs/$",
+      "source_handler": "apps.epg.api_views.ProgramViewSet",
+      "contract_id": null,
+      "fully_verified": false,
+      "fixture_id": "retained-Original-stored-EPG-reads-104",
+      "rendered_representation_bytes": 1382,
+      "Source_TCP_verified": false
+    }
+  ]
+}

@@ -1,0 +1,175 @@
+{
+  "strict_comparison_sha256": "3dc090c7aae10e67edaa9460485dc4e20bcc0b23626f807bc615590e59f242e5",
+  "scope": "Candidate69 comparison of HTTP status, case-insensitive header multiset, and ordered JSON shape. Literal evidence remains independent.",
+  "omitted_transport_headers": [
+    "connection",
+    "date"
+  ],
+  "timestamp_path_allowlist": [
+    "channel_groups.*.last_seen",
+    "created_at",
+    "profiles.*.custom_properties.auth_timestamp",
+    "profiles.*.custom_properties.last_refresh"
+  ],
+  "results": [
+    {
+      "cell": "auth-absent",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "38d56600ecdd67eb09689705d19ca50de6e14bfab05093703b535873c64ea494",
+        "Native": "f1098f2ceb18f212de0c05259cc2e521e6bd86a7678c5ae8b98fbd15a45a8c79"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": true,
+      "differing_clock_paths": []
+    },
+    {
+      "cell": "auth-standard",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "ccc4253c1400e4fa5bbbb02c90b9a7fedb3a7cf8c8f60bb70c925183483a2a9a",
+        "Native": "729b8d130bbe6e4d3c60ebd648ff1b925acb99940860c5e60dcd09357678ea46"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": true,
+      "differing_clock_paths": []
+    },
+    {
+      "cell": "validation",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "e2b12473f09ea2fe23a7f863afb0e9a7dcd6e90d04f00df7f0d7bdf340415118",
+        "Native": "15cbeea190fcdcd6f02da3dce1750297ad6ff3ea005b75e221545d56c5e3df74"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": true,
+      "differing_clock_paths": []
+    },
+    {
+      "cell": "XC-active-VODoff",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "0f28dc1a9afd22cadb11973469f57a6d4a5d9cb501c730455e596aeaa09fdad6",
+        "Native": "9e7eb3711e478286c6d0ad6b30c60317f72abae4ac128f585cd94009f38aa589"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": false,
+      "differing_clock_paths": [
+        "created_at"
+      ]
+    },
+    {
+      "cell": "XC-inactive-VODoff",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "3d5e5be7f0aa4912bfa7e537744f420fc63cada6b99aa13a4f8ce06ce7f51eb4",
+        "Native": "1951d55a6fb9a3e412dce30d6fdc4fb8a756641c6d7ed0fff33eae0b9cda917b"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": false,
+      "differing_clock_paths": [
+        "created_at"
+      ]
+    },
+    {
+      "cell": "XC-active-VODon",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "825c204cd31067a85b4540ffc4afac9c4d24f5b3ff9abc1312e47d6f16145962",
+        "Native": "180f82f50a95b9b6b6fcabfa84d73034ef72555a9626ca33ed45374930dfa214"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": false,
+      "differing_clock_paths": [
+        "created_at"
+      ]
+    },
+    {
+      "cell": "XC-missingcredentials",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "bb6b341304283d29392f5aa77dc9d21d74ce5c4b6a22ff6fc09711074eb28ab7",
+        "Native": "c3e350c29546358f02ae7009ae2fe31f7ecfa5b8aac2d35e8e1d6ed87ed64060"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": false,
+      "differing_clock_paths": [
+        "created_at"
+      ]
+    },
+    {
+      "cell": "XC-provider-failure",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "c5a740075d8ac2f12d2fac26dc4a575269ac1895de4c9db8cbdb40f13a8096d4",
+        "Native": "cfadc64c07885ee8d4019ff7f33aeea704b04247c368f380a657a504fbfb95fb"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": false,
+      "differing_clock_paths": [
+        "created_at"
+      ]
+    },
+    {
+      "cell": "first-full-refresh",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "f4209c674db58980ed06c846da30c85379cae7729ae5cb4887ca658fe2635fe3",
+        "Native": "7b8814dfd84acdac2b13c42027d8cc62b78bdf072c1b2c1ed72fce923a96c631"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": false,
+      "differing_clock_paths": [
+        "channel_groups.*.last_seen",
+        "created_at",
+        "profiles.*.custom_properties.auth_timestamp",
+        "profiles.*.custom_properties.last_refresh"
+      ]
+    },
+    {
+      "cell": "first-full-refresh",
+      "subcall": 2,
+      "wire_sha256": {
+        "Original": "53297552a4a12027ee30278410b6de0f8495df5a307e16815000c9d039c5a2a1",
+        "Native": "6906ce502b665c224badc19fb12dc593de11571b10e65ec22305c4ebe5eb4eac"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": true,
+      "differing_clock_paths": []
+    },
+    {
+      "cell": "delete-live-only",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "6c48fa73c53d96e81d9fd17fd6f8974dea12167d156e456e0d6366cac815eb99",
+        "Native": "ec02a5a4e501e02d8938bab6a4abd9dfdd285b7749ba38f04f5e821e44bad568"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": true,
+      "differing_clock_paths": []
+    },
+    {
+      "cell": "delete-category-only",
+      "subcall": 1,
+      "wire_sha256": {
+        "Original": "884e6fa6df05430fdfe1a3d9548c07ade4afcc5ba8443fcf2f5d76ee1619bdda",
+        "Native": "aeae5cfb1ac3438fc9fa182fe5638df2a70bd755aeada68e6287ad0a03da4c4a"
+      },
+      "status_equal": true,
+      "application_header_multisets_equal": true,
+      "raw_body_equal": true,
+      "differing_clock_paths": []
+    }
+  ]
+}

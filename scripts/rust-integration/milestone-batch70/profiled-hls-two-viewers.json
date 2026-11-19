@@ -1,0 +1,83 @@
+{
+  "scope": "Candidate70 Rust Main same-channel and same-output-profile HLS playback.",
+  "git_revision": "7d6f811cf92fcff8d0f51750e691bb5a41087b14",
+  "image_id": "sha256:ffc6bc1740726a188da7a5398fe8fe551f34f8ebd50bb1bfbb13c3614a64d615",
+  "source_tree_sha256": "89693fae08e40b4fbf8f8285cad42af9cffa91010a398c6f342f7d66d188b6c2",
+  "first_attempt": {
+    "actual_exit": 1,
+    "target_playback_requests": 0,
+    "failure": "Non-root startup observer could not read the mode-0700 bind-mounted fixture directory.",
+    "exact_cleanup_passed": true
+  },
+  "successful_retry": {
+    "actual_exit": 0,
+    "directory_permissions_corrected_to": "0755",
+    "application_cells_passed": true,
+    "same_content_inputs_verified": true,
+    "actual_tool_chunk": "b77a14",
+    "exact_cleanup_passed": true
+  },
+  "observations": {
+    "simultaneous_viewers": 2,
+    "distinct_capabilities": true,
+    "upstream_connections": 1,
+    "ffmpeg_processes": 1,
+    "matching_consecutive_segment_count": 2,
+    "matching_segments": [
+      {
+        "sequence": 1,
+        "bytes": 297416,
+        "sha256": "ddf44acade3b12ff997ce846c9bf94ff003b704ba271f97a9099c47dc36d3bfc"
+      },
+      {
+        "sequence": 2,
+        "bytes": 320164,
+        "sha256": "862ca83ce5b7f78b5113e2713cf633e1fcc40237a85902105cddb8c81b07db10"
+      }
+    ],
+    "surviving_viewers_after_first_stop": 1,
+    "same_owner_origin_and_transform_after_first_stop": true,
+    "later_segment_sequence": 3,
+    "decode_video_frames": {
+      "one": 74,
+      "two": 74
+    },
+    "both_captures_decoded_audio_and_video": true
+  },
+  "cleanup_independent_container_absence": [
+    {
+      "attempt": "1",
+      "inspect_exit": 1,
+      "container_id_sha256": "536866af479333b7cef4d98490a1d870133df0a5cb81c56fee93837f06880227"
+    },
+    {
+      "attempt": "1",
+      "inspect_exit": 1,
+      "container_id_sha256": "1e8e6274cd9b3cff562915856a1567ecb37b7d8a7be32c51efe17b63b3dba9c3"
+    },
+    {
+      "attempt": "2",
+      "inspect_exit": 1,
+      "container_id_sha256": "d6a77b9c643db908d5e812961452f500f1bef8f1a7e39ddefb81bc07efdb98c0"
+    },
+    {
+      "attempt": "2",
+      "inspect_exit": 1,
+      "container_id_sha256": "f1d25468bc31e8024e6ce89042d3052b948f1c263a0bf2aa3088699228ffc9d5"
+    },
+    {
+      "attempt": "2",
+      "inspect_exit": 1,
+      "container_id_sha256": "11f06adc2ff0b92f8ccc17d08bf8221c65aad0a64630909782c67f01a56b9ab3"
+    }
+  ],
+  "raw_sha256": {
+    "first_dispatch_terminal": "a9a98095c51d1c8d75d5de364a6598ba8d052f0f1b0848ec51a0bbefc8447d57",
+    "retry_dispatch_terminal": "cbc5581be23e601836cf6b8986ce8dfb4400b60b2462430bb3b61fa67a5b0907",
+    "retry_fixture_report": "cb5bec1ea2b95552b3a138817d79dcaa40f87d0c4b5531837fff75fbabb84fb0",
+    "retry_controller_report": "771846ecd203afed131afd83cfd50b046f3ca1662f127b47a4158673027425c4",
+    "immutable_build_receipt": "e46c1c341d2d44f274fa142e8ceb847cb95d089fd055d11369674965fb9de63d"
+  },
+  "full_milestone_accepted": false,
+  "performance_verified": false
+}

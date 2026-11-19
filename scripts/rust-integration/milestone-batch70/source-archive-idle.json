@@ -1,0 +1,120 @@
+{
+  "case": "cross-worker-idle-same-id",
+  "scope": "Pinned Source only, same user/channel/programme/explicit session and unchanged stored profile; no Native parity or performance claim.",
+  "source_capture_qualified": true,
+  "source_contexts": 1,
+  "native_contexts": 0,
+  "requests": [
+    {
+      "phase": "initial",
+      "endpoint": "A",
+      "status": 200,
+      "prefix_bytes": 8192,
+      "worker_generation": {
+        "pid": 336,
+        "start_ticks": 649961
+      },
+      "master_generation": {
+        "pid": 333,
+        "start_ticks": 649937
+      }
+    },
+    {
+      "phase": "adoption",
+      "endpoint": "B",
+      "status": 200,
+      "prefix_bytes": 8192,
+      "worker_generation": {
+        "pid": 892,
+        "start_ticks": 653265
+      },
+      "master_generation": {
+        "pid": 883,
+        "start_ticks": 653241
+      }
+    }
+  ],
+  "same_session_and_archive_prefix": true,
+  "same_stored_profile": true,
+  "counter_transitions": [
+    {
+      "phase": "before-media",
+      "pool_present": false,
+      "pool_busy": null,
+      "profile_A_reservations": null,
+      "profile_B_reservations": null
+    },
+    {
+      "phase": "after-first-body-prefix",
+      "pool_present": true,
+      "pool_busy": 1,
+      "profile_A_reservations": 1,
+      "profile_B_reservations": null
+    },
+    {
+      "phase": "between_requests_after_first_body_close",
+      "pool_present": true,
+      "pool_busy": 0,
+      "profile_A_reservations": 0,
+      "profile_B_reservations": null,
+      "profile_B_reservations_observed": false
+    },
+    {
+      "phase": "after-target-body-prefix",
+      "pool_present": true,
+      "pool_busy": 1,
+      "profile_A_reservations": 1,
+      "profile_B_reservations": null
+    },
+    {
+      "phase": "after-bodies-close-1s",
+      "pool_present": true,
+      "pool_busy": 0,
+      "profile_A_reservations": 0,
+      "profile_B_reservations": null
+    },
+    {
+      "phase": "after-bodies-close-5s",
+      "pool_present": true,
+      "pool_busy": 0,
+      "profile_A_reservations": 0,
+      "profile_B_reservations": null
+    }
+  ],
+  "after_web_retirement": {
+    "profile_A_reservations": 0,
+    "profile_B_counter_present": false,
+    "origin_connections": 2,
+    "origin_handlers_ended": 2,
+    "origin_handlers_active": 0,
+    "origin_maximum_simultaneous_handlers": 2
+  },
+  "cleanup": {
+    "outer_exit": 0,
+    "stdout_eof": true,
+    "stderr_eof": true,
+    "outer_process_group_settled": true,
+    "remaining_outer_process_members": 0,
+    "retired_uwsgi_process_groups": 2,
+    "retired_uwsgi_generations_by_group": [
+      3,
+      3
+    ],
+    "exact_container_ids_absent": 2,
+    "container_host_generations_absent": 2,
+    "remaining_owned_containers": 0,
+    "remaining_owned_networks": 0,
+    "remaining_owned_volumes": 0
+  },
+  "raw_receipt_sha256": {
+    "owned_http": "9b2d8a470d6769397c1e5b5e85737f2ccc80c18ee69f7037d9e9180bd85e92fd",
+    "controller_leaf": "6aa76d97512b86f067ca3b41a8b4abc28cc319a397e70aa3646653975bf686bc",
+    "cohort": "10cdf716cf4c5d8d7686fab084d309695eaa9cc17ecb2e2fd7c4dbe20ee036fb",
+    "execution": "e2080b6e0be3b66d4036ac991b8aa6af27127d489a53759e83eae0522a071a11",
+    "post_web_retirement": "214d68e39ff3e7e9f2ac59912d1cf24ee58104daf38a6e967d41509f70b0755f",
+    "independent_cleanup": "2ab50636e39abb606127a26e8c6a15bc44537bcf6ba3a89ac90f3b966ac9c25c"
+  },
+  "full_milestone_accepted": false,
+  "performance_verified": false,
+  "credit": "All application and algorithm credit belongs to the original Dispatcharr authors and contributors."
+}

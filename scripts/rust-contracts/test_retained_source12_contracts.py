@@ -1,6 +1,7 @@
 """Source12 retained authority and exact additive preservation; Original authors retain credit."""
 import copy,json,shutil,tempfile,unittest
 from pathlib import Path
+import retained_epg_reads_contracts
 import retained_source12_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -24,6 +25,7 @@ class RetainedSource12Controls(unittest.TestCase):
     p.write_bytes(raw)
  def test_previous173_and796_whole_rows_and_M3U_primary_preserved(self):
   register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_epg_reads_contracts.restore_pre_epg(ROOT,register['runtime_routes'])
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,register['runtime_routes'])
   import retained_range_source10_contracts
   retained_range_source10_contracts.restore_pre_range(register['runtime_routes'])
@@ -38,11 +40,13 @@ class RetainedSource12Controls(unittest.TestCase):
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],175)
+  self.assertEqual(mapping['operations'],181)
+  retained_epg_reads_contracts.restore_pre_epg(ROOT,rows)
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
   retained_range_source10_contracts.restore_pre_range(rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_epg_reads_contracts.restore_pre_epg(ROOT,rows)
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
   retained_range_source10_contracts.restore_pre_range(rows)
   self.assertEqual(rows,current)

@@ -232,6 +232,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_SD25_resolver_scoped_HTTP':
             import retained_sd_contracts
             retained_sd_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_stored_epg_104_framework':
+            import retained_epg_reads_contracts
+            retained_epg_reads_contracts.validate(root, value)
         elif reference['kind'] == 'retained_original_auth51_plugin35_resolver_scoped_HTTP':
             import retained_auth_plugin_contracts
             retained_auth_plugin_contracts.validate(root, value, bindings)
@@ -294,7 +297,7 @@ def apply(root, rows, bindings):
             validate_station_aggregate_source53_55(root, value)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
-        if reference['kind'] in ['retained_original_auth51_plugin35_resolver_scoped_HTTP', 'retained_original_SD25_resolver_scoped_HTTP']:
+        if reference['kind'] in ['retained_original_auth51_plugin35_resolver_scoped_HTTP', 'retained_original_SD25_resolver_scoped_HTTP', 'retained_original_stored_epg_104_framework']:
             route_index = {route['route_id']: route for route in rows}
             for observation in value['unmapped_method_Source_observations']:
                 route = route_index[observation['route_id']]
@@ -339,7 +342,7 @@ def apply(root, rows, bindings):
             if reference['kind'] in ['retained_original_full_suite_asserted_framework', 'pinned_original_framework_tests', 'pinned_original_account_settings_tests', 'pinned_original_channel_guide_tests', 'pinned_original_dvr_import_tests', 'pinned_original_provider_output_consumer_tests', 'pinned_original_admin_rest_tests', 'pinned_original_proxy_plugin_tests', 'pinned_original_schema_cache_tests', 'pinned_original_vod_access_tests', 'pinned_original_logo_path_tests']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_test_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
-            if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture', 'retained_original_notification_Source20_real_credentials_framework', 'retained_original_core_settings_Source32_framework']:
+            if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture', 'retained_original_notification_Source20_real_credentials_framework', 'retained_original_core_settings_Source32_framework', 'retained_original_stored_epg_104_framework']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             if reference['kind'] in ['retained_original_xc_Source11_single_refresh_HTTP', 'retained_original_Source12_search_M3U_resolver_HTTP', 'captured_original_Source51_matching_admin_HTTP', 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP', 'retained_original_management12_channelguide25_HTTP', 'retained_original_auth51_plugin35_resolver_scoped_HTTP', 'retained_original_SD25_resolver_scoped_HTTP']:

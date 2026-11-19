@@ -125,3 +125,17 @@ unchanged, and all 174 earlier primary definitions keep their exact evidence.
 
 
 The portable gate passes 358 tests with zero failures and one optional skip. A separate three-path pure resolver control binds the actual search and get.php handlers without query credentials or HTTP replay. Its first stale-cardinality failure remains recorded; the minimal corrected control exits0 with exact cleanup. Source captures and handler custody do not establish full Native endpoints, roles, milestones or performance.
+
+## Retained stored EPG Source assignments
+
+The [stored EPG binding input](../scripts/rust-contracts/retained-epg-reads/bindings.json)
+assigns 101 Original GET observations to six existing EPG source, EPG data and
+programme list and retrieve operations. It preserves three HEAD observations
+without declaring new operation IDs. The retained fixture uses Django’s actual
+resolver and DRF’s request factory with seeded PostgreSQL rows and fixture JWTs.
+Recorded cases preserve their path, method, actor, response status and response
+projection hash. It leaves Source TCP and Native behavior unqualified.
+
+The generator now reports 181 partial executable Source assignments and 617
+operation rows still awaiting a Source assignment. No application ran for
+this mapping, and all 792 unrelated operation dictionaries remain exact.

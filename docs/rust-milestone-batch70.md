@@ -15,8 +15,8 @@ The [focused verification receipt](../scripts/rust-integration/milestone-batch70
 
 The existing output-profile fixture now has a focused two-viewer HLS mode.
 It checks matching segments, one upstream connection, one FFmpeg transform,
-and continued playback after one viewer leaves. Local observer controls
-passed. The packaged run remains pending.
+and continued playback after one viewer leaves. Local observer controls and
+the scoped packaged run passed.
 
 The work above preserves the release datastore gate. SQLite requires a
 legitimate complete Source fixture or a supported scope decision. This batch
@@ -44,3 +44,52 @@ single Redis write.
 The whole-fixture comparison retains differences in headers, response bodies,
 SQL, cache inventory and event data. Through-Main fallback user-agent and
 multi-profile recovery are pending. [XC execution and comparison receipt](../scripts/rust-integration/milestone-batch70/xc-candidate69.json)
+
+The follow-up HTTP review matched all twelve header-value multisets after
+case normalization and excluding transport `Connection` and `Date`. Six
+bodies matched byte for byte. The other six differed only on the listed
+timestamps. The review preserves the whole-fixture comparison and does not
+qualify its SQL, cache or event differences.
+[HTTP-only review](../scripts/rust-integration/milestone-batch70/xc-candidate69-http-review.json)
+
+## Cross-worker archive Source behavior
+
+Two separate workers returned HTTP 200 and 8,192 usable bytes for the same
+idle archive session. The pool busy value and provider reservation each
+followed 1, 0, 1, 0 and remained at zero after retirement. The origin reported
+up to two overlapping physical handlers and zero after cleanup. That defines
+the Source behavior for this case. Rust cross-worker adoption needs a fenced
+lease handoff to preserve the stored profile and prevent stale cleanup from
+affecting the new owner.
+[Source archive receipt](../scripts/rust-integration/milestone-batch70/source-archive-idle.json)
+
+## Candidate70 build
+
+Docker built the published Rust checkpoint from its exact Git revision. The
+React, license and attribution inputs matched Candidate69 byte for byte.
+[Build receipt](../scripts/rust-integration/milestone-batch70/candidate-build.json)
+
+## Packaged HLS sharing
+
+Two simultaneous viewers through Rust Main received distinct capabilities
+for the same channel and output profile. They fetched two identical
+consecutive segments while the origin saw one connection and the application
+ran one FFmpeg process. After stopping the first viewer, the second fetched
+a later segment from the same owner, connection and process. The two
+captures each decoded 74 video frames with audio present.
+
+The first attempt exited before playback because the startup observer could
+not read its mounted directory. The retry corrected the directory permissions
+and used the same image and test files. It exited 0. All five owned
+containers across the two attempts were independently confirmed absent.
+This covers one same-channel, same-profile workload.
+[Compose result](../scripts/rust-integration/milestone-batch70/profiled-hls-two-viewers.json)
+
+## M0 retained guide coverage
+
+Six guide GET operations now reference 101 existing Python framework
+observations. Three HEAD observations retain their separate method context.
+The register has 181 partial assignments and 617 unassigned references.
+Two generations matched byte for byte. The portable suite passed 363 checks,
+with one skipped, and the retained artifact custody check passed separately.
+[Offline receipt](../scripts/rust-integration/milestone-batch70/m0-offline-controls.json)

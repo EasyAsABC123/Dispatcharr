@@ -25,7 +25,9 @@ remains in progress.
 The [latest parallel checkpoint](rust-milestone-batch70.md) covers typed HLS
 startup, guide multipart handling, fixed-seed XC EPG, operator arguments and
 signed backup filenames. The pinned Original all-in-one entrypoint selected
-PostgreSQL. SQLite compatibility still needs a legitimate Source fixture.
+PostgreSQL. SQLite compatibility still needs a legitimate Source fixture. M0 now
+assigns six additional guide GET routes from the retained stored-EPG run, for
+181 partial assignments and 617 unassigned HTTP references.
 
 The [parallel development checkpoint](rust-milestone-batch69.md) groups playback
 TLS, channel-range and M3U behavior, XC cache and WebSocket behavior, backup

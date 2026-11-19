@@ -6,6 +6,7 @@ import hashlib
 import json
 import unittest
 from pathlib import Path
+import retained_epg_reads_contracts
 import core_settings_source_contracts as subject
 import source_contracts
 
@@ -52,6 +53,7 @@ class CoreSettingsSourceControls(unittest.TestCase):
         auth_proof = json.loads((ROOT / 'scripts/rust-contracts/retained-auth-plugin/preservation.json').read_text())
         original_rows = copy.deepcopy(register['runtime_routes'])
         import retained_xc_refresh_contracts
+        retained_epg_reads_contracts.restore_pre_epg(ROOT, register['runtime_routes'])
         retained_xc_refresh_contracts.restore_pre_xc(ROOT, register['runtime_routes'])
         import retained_range_source10_contracts
         retained_range_source10_contracts.restore_pre_range(register['runtime_routes'])
