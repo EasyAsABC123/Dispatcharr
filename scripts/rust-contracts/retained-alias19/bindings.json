@@ -1,0 +1,1306 @@
+{
+  "binding_kind": "retained_original_alias19_anonymous_HTTP",
+  "operation_count": 19,
+  "retained_Source_responses": 19,
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "new_Source_executions": 0,
+  "fixtures": {
+    "Original-alias-fourth": {
+      "actual_runner_exit": 1,
+      "exact_cleanup_passed": true,
+      "outer_passed": false,
+      "Source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "planned_business_calls": 332,
+      "actual_returned": 20,
+      "unstarted_business_calls": 312,
+      "partial_with_incomplete_observers": {
+        "contract_id": "route-7ee0ca809afa3556dbda:GET",
+        "role": "anonymous",
+        "state": "incomplete-observers",
+        "method_attempted": "GET",
+        "missing": [
+          "SQL-after.json",
+          "broker-after.json",
+          "cache-after.json",
+          "provider-after.json",
+          "journal.json",
+          "actual-task-backends.json",
+          "WS.json",
+          "receiver-end.json"
+        ],
+        "plan_index": 19,
+        "actual_status": 401,
+        "actual_path": "/api/channels/channels/numbers-in-range.json?start=7666&end=7667",
+        "wire_sha256": "b374dc5a4687ae2e8e3ce5ca1bbda7a7c830ecf499d72b51b4cca9b93f1b4e8b",
+        "assigned_in_register": false
+      },
+      "stopping_condition": "StoppedRoleLogRecordBudget after the retired process stop",
+      "raw_failure_sha256": "c0c30cde3c71591b893278313501164327cfda89f7f58c7fb01f11a3129a1339",
+      "input_sha256": {
+        "artifacts/rust/m0-alias-source-path-successor-a2a-4/alias-route-crosswalk.json": "f503b565441720c60b93fbe96466b2802efd376d557114c8cf0b70b1acecc8a4",
+        "artifacts/rust/m0-alias-source-path-successor-a2a-4/alias-source-projection.json": "9ef74828ecb83c8b67372a9a31f7be7e12d58480697a42261ae8330b0933d30b",
+        "artifacts/rust/m0-alias-source-path-successor-a2a-4/actual-source/dispatch/execution.json": "bb2aa7b45e427fdf7d0eaea7a7917e19ea3bee8127cdb37aedeacf7366c77ed6",
+        "artifacts/rust/m0-alias-source-path-successor-a2a-4/actual-source/results/report.json": "6a2d13a2f23a87b42eaf3dfe1e32390ff3e8f1873f7969d81ec4cbc23d119914",
+        "artifacts/rust/m0-alias-source-path-successor-a2a-4/actual-source/fixtures/Original-6fdd0ce4/m0-format-and-alias-dispatch/report.json": "8f545c980033ccf6607fc4564c7d7b9cd5e8c90f1f4abcdc703b1c80438e16fb"
+      }
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-3f8026e079f8741d5c4f:GET",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/accounts/^users\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.accounts.api_views.UserViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/accounts/users.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 12,
+          "plan_index": 0,
+          "method": "GET",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "828a12a38ccc12a12c277f240ddeb87c3250f189cef9c7c244ebb1880a479d1f",
+            "wire.json": "c481c79ac5b939d486a0a132efdd5019e7293d6cb5e3365d58b90a77c9b35e68",
+            "SQL-before.json": "c612c982098782fef9e7bc0e5a8d0ed0810cd39bafa2964b8e6e5280bfeb022c",
+            "SQL-after.json": "6ffa5560c08fa93c4636d7411825848152bc49268c393626fbdbf8dcb07f3059",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "f13be32944ba5f7273981a37ed4b94507b48d45bfbc134ef6483ff0cf95e6fd1",
+            "cache-after.json": "17c78c45de9f523ce66f0d509745ba984f0323d6e0556b3c84a7ae61364beb70",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "c239ba53e32820690507bc952fac70fada8632237b9adac2c3bda422635ef76c",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "dba5d1b20305f8988a58af237434f570792580a3ebf84da2a56813c09c38340d",
+            "receiver-end.json": "24cfd4382b6e18324cf8a2c21822c2fe675ac454629a32319ee0c41579c6943d"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-1bef3a79cf91a6339bae:GET",
+      "method": "GET",
+      "source_action": "me",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/accounts/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.accounts.api_views.UserViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/accounts/users/me.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 14,
+          "plan_index": 1,
+          "method": "GET",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "357312f4c07793168cca41533b8eb208a1f8163939acfce48dbaf340ae0b924a",
+            "wire.json": "c4833202a54b3f32e4f28acd799822992e82f742702fe879e600dbfe4b88a366",
+            "SQL-before.json": "76ab237c7905a2ef6e712ce6dd9f821cb3d551b60099df16188890454bb86ce4",
+            "SQL-after.json": "96b07ddbdcc56892b681b371ea3141ff6f36f29b3c227542481949a4ce92a81e",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "8fdfe88976b8a07d57b5ef999b86524ade3ed31c08f3c967486bc3dd694fd985",
+            "cache-after.json": "2f63c1e9f8e1ac0a0e7a965ecc9734ee9f7207b5ae6effb30149c13ecc3d04d7",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "3a3b514d5f91cdf1e699065072fb3b1b49acc261640c428a20b7602619d6a105",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "155436a61cf7be5ed2ead5e0fb80ffce99eb6c917f9a468ab95acb1faf884f7c",
+            "receiver-end.json": "d88ece8440100b57d82b6a67fb27c7cd8271364d6e66578d36292da55f3e4c47"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-1bef3a79cf91a6339bae:PATCH",
+      "method": "PATCH",
+      "source_action": "me",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/accounts/^users/me\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.accounts.api_views.UserViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "PATCH"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/accounts/users/me.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 14,
+          "plan_index": 2,
+          "method": "PATCH",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "e9145597a805dcf2a98e3b3c5d99263d1985a5eb99dc07eeadf4f6de0b635f55",
+            "wire.json": "75bebaa0576aff9ae122693c0a28466a3e4fe3fbd1aa7227d1a7921fb3d44d9a",
+            "SQL-before.json": "cc88572592e37a3963e1ee141c606b210833a217a6b7daf781891d828c8c23b9",
+            "SQL-after.json": "571c112bba3830eceeac35678eb976ddfbd24123c980d220fa8924b002c0c4fa",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "124fd364594f9b8e0488a8f93891b3fb23c7a50dd80b66e42f9a8536cbe4ef20",
+            "cache-after.json": "9baabff22958eb24a48c9471b04a7abd293f38bb718542ddbe14b178de3908a9",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "6e7c047b7ceb6cac8b238f8f380768bfd6850be4003a75479b6413187e9c5f8f",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "af6d0aaf6e72f5dc9485901d84b7cb8beedea08e44ffc584af18dbb1fcaa7eb0",
+            "receiver-end.json": "e1f51bad294fbda1ce8c732c41675236045ab25ea3e6bbc23211165ee303890d"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-74f27b8277e2e8b99fa5:PATCH",
+      "method": "PATCH",
+      "source_action": "partial_update",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/accounts/^users/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.accounts.api_views.UserViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "PATCH"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/accounts/users/9.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 16,
+          "plan_index": 3,
+          "method": "PATCH",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "a848e433d7b7923937f10b43147a2a2b0c53896cb66491e208c3c55641dc8cfb",
+            "wire.json": "9e8fa911aa68d3b225bbf0c6a027ca0ba8f796ae0769dd12a3ee040ab2a01e8d",
+            "SQL-before.json": "14cb60257714f28b85bd68ecb7d2d80ffacb95c727259d8b58e948db7c566256",
+            "SQL-after.json": "39535dfa11400eeaad2ed625dfdf7aeef5b5510634b464d21b97d69ee745b8c8",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "58ffad135c40035dc6f1ced52127df7e1a72959d70b78910a8425c4b8be486e2",
+            "cache-after.json": "df9e38b71bd286da3b54626eac6ac72161eb498c89b8ddfe1ff6a848567382f0",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "0e824cd6405bb0b0aadb9e26c05f251dc2333064b0e90f979d8da4e0be7c88f2",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "2cfd97d5288d5eac8975b6f8d98bb9a16dc9a985cfea862416678e69ddf5d0e3",
+            "receiver-end.json": "04df737b6241e8bf0b0cecbaa61dd538d30570156b52d4ae0c20eb1565cbf6a4"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-9f30fb716672e1b1de20:GET",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/accounts/^groups\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.accounts.api_views.GroupViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/accounts/groups.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 18,
+          "plan_index": 4,
+          "method": "GET",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "adbb5585412dc99091f080d74844f7d0fb72c1593f7345b9cfe3cca73326717b",
+            "wire.json": "04d9404044084d0e8af8a754088b9c0e6e3d77728e833c67fc397a090f4e4b6a",
+            "SQL-before.json": "24481e1d4253792712576d1ad77408cd8dcdbe78def4623724a4206c020dcdf5",
+            "SQL-after.json": "4789620dc07b5666e2cf9e80726803c717216ee04ab34d33ea93493fdf018993",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "86aa92a991c5c3c813ecbd475cf8170904b78c828f7980069587ce746cf71713",
+            "cache-after.json": "d268c1dc81902bf1648d54a1e197ae024726213c1752c3881802ee7c659da434",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "9cfa8fb664ad1a1dbc9f0b0c6dc4fdba771661d6910c96978050e225f64fc1ce",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "692e6912eb86ef67051de88fe62e6b6b892500a498672df8456e90e7e1fc8abf",
+            "receiver-end.json": "f78d503f02d40a4f40eb97bd58413a85586e2b99840c7162d72f80175d35ce11"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-db1f6d1d03756e546068:POST",
+      "method": "POST",
+      "source_action": "get_by_ids",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^streams/by-ids\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.StreamViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "POST"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/streams/by-ids.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 48,
+          "plan_index": 5,
+          "method": "POST",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "d08b07c00a73135240f303bc373802fe0ddd95f2e01337eee3f4ba80dbcce701",
+            "wire.json": "9820d19f909a08e67b3c7ba976dc89843c519beb38ee16afae7bf67b14f16b4d",
+            "SQL-before.json": "792de487169bcd1be8579fa40feb13b735f0c32894f0a2581b7b4e1144ee7980",
+            "SQL-after.json": "4c5a84ae4a663231a20f0f5ffd68cbb55b9d089158b50a0f10c4b443be64c771",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "d30b8695f926d5244bb603af842f91838495cdccd84a18e94e3cc46f19f0f605",
+            "cache-after.json": "8459d0b9a47ce0484b23b367b1728d324b10f7e1b726597cfed36fbc5a414449",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "319eec3484311d52bc87538af509e442bd39b16aacfd2e8cc2b2ad74b4abc3e7",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "2f7c32e5e13a291e0b209e972260192bb5a89cdb04c78038de4ada98fbd8fa23",
+            "receiver-end.json": "39db109b85654d7ccaa7b4d3f94c2139637c90be3bca7e15728144486be22caa"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-defae693a03bb490819c:GET",
+      "method": "GET",
+      "source_action": "get_filter_options",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^streams/filter-options\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.StreamViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/streams/filter-options.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 50,
+          "plan_index": 6,
+          "method": "GET",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "ea2aecf008f9dded712b5badf6736c636daaa2be336c5cc4e8a11e545a3b67a3",
+            "wire.json": "1061298bdab0e42fccb06292ea631379c1845a0dcbffbb6762dc4d8523c751e9",
+            "SQL-before.json": "f61211f8c09f008a7ac63f5279f859a6b15722344bb16d8bcfcc28529598a963",
+            "SQL-after.json": "fe1fb84989f287d5bb646436aae9f2bb9a0459b515504970ec3080311f3140be",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "404efa29cbf8dfabc233bd4d3053d98aab9ad2298de4d25e30148c11d6d3f946",
+            "cache-after.json": "ae0ea1c2639e7efa2f8be0488a0b68be264a7c7dfcc3bd12da9897b4b165e5ce",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "ea8d6950dd9dd6fee941aa4018d4d7635688db47272ff61e7babcaa149c3b038",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "7dbeada7fd5cc77475f64ebded2b5c827d50c635fcb80bd8fe91943482852cc2",
+            "receiver-end.json": "aa2dcf9cee051f70bede5a430a1249de31e503849cea0225884532e4a9af5e6c"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-35a757d35441106ccc9f:GET",
+      "method": "GET",
+      "source_action": "get_groups",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^streams/groups\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.StreamViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/streams/groups.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 52,
+          "plan_index": 7,
+          "method": "GET",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "b388c46d259316489d4e8728f33077519f3cdf4dde5d7b3a65d7b336b5244010",
+            "wire.json": "c281015d736f4e2b86c718954050beaf42c76eea3debb3c7bf9d6b287688787c",
+            "SQL-before.json": "e522f3ed378a4113ea9dbc883c440574aa878de293986a6af1ccda59c25cdb96",
+            "SQL-after.json": "75d9b4adc8f94cdc0960aedf37fadfa7491383f81200bc562fcd3e5f40914ed2",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "441a3c2d7c5fa99a38e0855f649f94d849c6d7f7cbf9c34bdac4b7b5f983e3f8",
+            "cache-after.json": "45edbec908f36006fcf78bae7e2826077f1e16cf222989773013bc9471fc5c52",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "f78c3f5ed2640c8a44e2260550b2db14656eb8a4fc5675379a1311ca5ca8c13d",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "f9fee39b0d98c6ae3396a321cdda43037fc8094ee78fb7550b78f341c10efb14",
+            "receiver-end.json": "6410be3c1f833377f32af812902606a2df14998dcba9430ff609a3bbda3efdd3"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-a5d0bc87945dc4175522:GET",
+      "method": "GET",
+      "source_action": "get_ids",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^streams/ids\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.StreamViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/streams/ids.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 54,
+          "plan_index": 8,
+          "method": "GET",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "68f3000511cf614a980144c990925e714bc913aab5fbd517ef30129fe08f2d8f",
+            "wire.json": "c3e0aaa3c366b2be38333b322517e4f76e9347694c68780fadfab3ad35776cea",
+            "SQL-before.json": "b1a52cded275d39028090f74bffa1e518ad7416a867a4a81542fc1aea0aacda1",
+            "SQL-after.json": "7d77c6fe568cb4f580539b3ac1e0dc8911dd8ed79c869741e5cfb79e5a55c80e",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "c439f442594723d34b47f67dce80e6f30001e972b46e327eb8a9ba8a05bff35d",
+            "cache-after.json": "e2bb67931dea48c8bc70f89214c2e8ccb34435110b30a47dee4d70711926aa0d",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "741b6fcf4726f2a8cc458d48ed607903f72b32a1b098b7c065d7b4076bc46f7f",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "50f26b6085225953b4da3834a2d3a830995d4a38fa3c9eb76189ae85d32ca274",
+            "receiver-end.json": "145d350171f6a88ecea980cd26f047cfd6c06e3e474068d56f29bd0f4f4480f8"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-6f85b4b24e42b5ad6ea3:GET",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^groups\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/groups.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 60,
+          "plan_index": 9,
+          "method": "GET",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "2fa5c986253ef3f32c9cb8d5f5f12d396d80ed188350c507e448d31f26188d3c",
+            "wire.json": "8167eeeb9c38375d991eb03cdfc352f068b43f5839b0e492315e5baa104e9c45",
+            "SQL-before.json": "0a5cef41eba818d7a2a9d248036eccab2e59431d820d312181a49a9182c54656",
+            "SQL-after.json": "fdd1debb968d2e088303b6100b5165303f8bbc56318d6141c40d56817224cb21",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "32c76929745598755286da96ba1f98660d590b387c75067ddba074b3e7c3785b",
+            "cache-after.json": "9bd05f4503141e604981cdce3bf87290c589f788fb06faea7c70827bd19c6810",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "7c9627b49e0c9dd77f1bcef09aba376eda13f54b64d5727eaec9b289e020749d",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "3846a14e8bed296008433a8cbc2a8865eb9fe4a9eb843dccda0a34d7b2c5c458",
+            "receiver-end.json": "f592daadf68d7dfe9b502331ead9b03a71b87fe5e402e9a008125e2d0df265d6"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-71387f5f2ad036a2e05a:POST",
+      "method": "POST",
+      "source_action": "claim_custom",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^groups/(?P<pk>[^/.]+)/claim-custom\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "POST"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/groups/5/claim-custom.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 66,
+          "plan_index": 10,
+          "method": "POST",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "b1012eb1b98a105831d6600672263c7db386869b1269c2c5864a26f0a56a6eee",
+            "wire.json": "5f59a5095ed38fdfff395c3cb985a6e8ac5a5be3b7c713dea5cd6e68a624ba7a",
+            "SQL-before.json": "775d8f2278eebe4031fcb61667c9d00288a65903532eb908740710cc69d63c38",
+            "SQL-after.json": "0ebf89b427b32ed9abf7c522bc507fb6c7f5994d010ce3013c0d2ee2033edd02",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "e4ee5f47600c056307151b75024ad694b97ed82e44993ce282ea88fe962353da",
+            "cache-after.json": "fb476887641f175215cfd9d23071d90d60c3ae5538721e738afcc22251e86aea",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "ab8e958b107dadb8e4446c931e4a9a3e7fd78acbf705cdcbf39a648eddcdcc7f",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "c8243cf37fe63ff4f82aed9884ced6f258392ced4a542e4d1273c4eae90ee4ce",
+            "receiver-end.json": "0f4ba2b3f5124e3c8f55d504cf079b8aec9c707482153e2fe6f05505d0340f5c"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-286a19e48c59e0eb348d:POST",
+      "method": "POST",
+      "source_action": "unclaim_custom",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^groups/(?P<pk>[^/.]+)/unclaim-custom\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "POST"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/groups/6/unclaim-custom.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 68,
+          "plan_index": 11,
+          "method": "POST",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "92d14be3f01a38d9cac95b8f032e1629708648cac880b69ab1d76cf6a72a7afb",
+            "wire.json": "b1414c95d4eb1d2f133c21f40ee69151fe1973b42cc9f27880f11685c81a92d7",
+            "SQL-before.json": "14b6d7e83fc6260beff829f67d0277d864f4baa417f6b1393b43525760d8c914",
+            "SQL-after.json": "a9997460817eaf14dc8e214a88136d11cabaadba5a522eadf11992166e9584ea",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "dd1e5e7aef9534db623f583b27b1949f099fec6572ca5fa05bdb97d485d1d810",
+            "cache-after.json": "37da286b0eafcc2ef92ff30c50e26f1836017c9c60e8c38050225e6e813288c2",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "bca209a7adb3eac8620883202fa9c48bf5d23d40089633d1a54494b6aa24e4c6",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "b5fb2dc9b29582d9dbeacb7819a0a9bd0ceaf1648a7c28db6970ac8ff12f69bc",
+            "receiver-end.json": "844fbc26b077e61c2dbccda50a1b91568c135397df3a4d92f6aa53109df299fa"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-9e9de3f44a1beb2fa280:GET",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^channels\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/channels.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 70,
+          "plan_index": 12,
+          "method": "GET",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "2822d3d7f843c8375ff5c69eade5ff5b46383a6fd806c2e963e9fb8782049289",
+            "wire.json": "5cf1d7d11413d7f655ea4119855025cf11fb232341d550a2e37cc87ea5e7b174",
+            "SQL-before.json": "53d78489b4160e12ed3205267aef1ee14d6ac739ef83b08681da840c1591533f",
+            "SQL-after.json": "96d2ce323da2ed3765bd9b9ffa96598680c85731b5a538447526241f62eda85f",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "21a114c889be6ed9c7b496ab609d5decc9fe5c449db1bf665598c2b38bba846f",
+            "cache-after.json": "336a82522d957366d96e6bb50ceb717b531986f02a07a342e3858e5e6973b45a",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "4673c2a3d35e3f9b3f28a4f3fa4ba2a4653ad81c8105b8ee8b34378e04d680be",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "67b6c2eaf422017d7807a7e6cd92f9e192ecdbd26717f6437ac3345a8316f47e",
+            "receiver-end.json": "f57bf97cfbf246797661dcdfbebb9c6a4301518684769b1d18749c0857d67a83"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-baee0256e814e14652f9:POST",
+      "method": "POST",
+      "source_action": "assign",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^channels/assign\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "POST"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/channels/assign.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 72,
+          "plan_index": 13,
+          "method": "POST",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "5fd34ae2aea16f5cd2803ac7305cc7e3a44311f9ac6c6d14890040b12732fb8d",
+            "wire.json": "97bf605f0efe20602da6030419c2329e1156ed44757fa62a9bad8221276120cd",
+            "SQL-before.json": "7168cb860119bd174caf7fe6e4bcc0307e464ffd8bf90a3991cdf606f3b86242",
+            "SQL-after.json": "80a3dbfda7d916ec2b9158dbdd7bc991f9a85bdca824ae4883fc2ead5bfea652",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "062fc5fe07e8cf61c6b93de48c20fef4b192e63e5f1db0cabce87b0302661b9a",
+            "cache-after.json": "bec6578dedaa5e2c5cfdf66ee3262e9dc706117aa8c3188b84e2123d51faf1e2",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "3d1e2b78a5b6317986ca2130004e4c1f3f3de354b3e8213cad484c826d55a1cb",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "ec74a33055438b9f75b350495eb29d532b53082aa27f27e7f09937999b24704b",
+            "receiver-end.json": "2f3b0a3aac364826e1dfe9fb1d67a5e33b2d13daba551a6bffd7e8ba430cb6f2"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-2217a957b6ac4e715eff:PATCH",
+      "method": "PATCH",
+      "source_action": "edit_bulk",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^channels/edit/bulk\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "PATCH"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/channels/edit/bulk.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 78,
+          "plan_index": 14,
+          "method": "PATCH",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "fb5e8b3fdbd88ad61373bc5e21a0fe6ee4711d18d66ca5cec7eda94299e881ee",
+            "wire.json": "8899f10ad1e14ce13caaff15dc7f5e0c49e711ac0c0f4f811d6d07539f12ebfb",
+            "SQL-before.json": "825404d69376ebb4ed1e589a61c45a19701ef7fce3a94b4764cdcde93391e0c4",
+            "SQL-after.json": "846f364a1ac512ffc2df56ff7ad83d3e2919a460726fdf164a9df18657841181",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "25feaa1ecaf84d8b51b414d4c2cd3a4c40071c6c46abe53dbcf0324f83e2ff91",
+            "cache-after.json": "ed7e6f0618ab84a07aa6011934510d9d53b91e808f4ea590a372aaaf96674dba",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "062c121f361ace7b5be0167a0d8839caf67107a62c7205c3e98c727795189434",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "9fbf586c8b9c38e4f9deae50bc32d11e1c89471ba9a56098c340d56191c8bbd4",
+            "receiver-end.json": "f4baacaa2ba908000716a4d0fb7b8a1d8eb10939a2fe239e21edff38f615de21"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-0354dd7efafb1a509ded:POST",
+      "method": "POST",
+      "source_action": "from_stream",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^channels/from-stream\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "POST"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/channels/from-stream.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 80,
+          "plan_index": 15,
+          "method": "POST",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "39b30d0dd21620790fb38f9ab158d885c9be10db09b4724c248f772c3fe77a48",
+            "wire.json": "5c5ab7f14bc7a9ef0f74b7e0883a4017643af2bd9a5c2cd29491b2381d078d63",
+            "SQL-before.json": "564e1e636bcbc706548cb9baf7e151b0ce59d304e6992b514e3686883238dd56",
+            "SQL-after.json": "fe1af3405955882631895580a72536394390c10a28fb3c90ee54b22e746bcd1a",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "2ac864a712e8653c49e0194a0de9cb8da9972fca9e9daa84aa9eac5d70c1b959",
+            "cache-after.json": "f5697d0aca5f48febb2d4041f7de9006f442a1e8111b578c15f4f6655c5c9a8d",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "6de0c65c3404da41ccaad322437a0d9f706c51de92bd9cf1f7e0a6ae62185f5c",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "50129413888c97271a7758425557eef1e28a678cc287cd4ace34dd6891ea8d63",
+            "receiver-end.json": "5d5f52f610020d434f1186f944a0f39689fed9c94699ba3a958e157ef3ae1bd4"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-f10afea04e0d260cb9ac:POST",
+      "method": "POST",
+      "source_action": "get_by_uuids",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^channels/by-uuids\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "POST"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/channels/by-uuids.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 84,
+          "plan_index": 16,
+          "method": "POST",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "ff815c34688ec3ac05d2917f84d9dfb5bb7260568a80701c45dafb30c0df8213",
+            "wire.json": "2a4ee85bb8ce9fdaf945c3139b46edb2220974c5c95b9f092105e21d66a41b1b",
+            "SQL-before.json": "1e17f653054a084abd278aace07f8b4c5748ac5f5be7d508c2ab6efde7552d0e",
+            "SQL-after.json": "e0262adebba43b077f8d29a42d379ccb3e9e71b5b0937555f070481c6af7f435",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "75d70a6c76c5dd9db0fc2d686781e624025e9b9170024f7d27ec9574bf98cba3",
+            "cache-after.json": "699509540131c6717e2f7488f64f18f9467ee54d65976c8ec10c3c47f5b86576",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "68f62bc02d55c44adaeae61898d6f37e1246781f8a87766eb28b33c875515678",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "9b9fc8afed71884c462860a57b388daa7eb36c4bc2b7587b827e7ba77797d573",
+            "receiver-end.json": "d9902be87fb7ab5f05bbf27f15cf8d6ae7eafe763a62eaf57b7cf11f345288a4"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-ee8512a12a5e8551f59f:GET",
+      "method": "GET",
+      "source_action": "get_ids",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^channels/ids\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/channels/ids.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 86,
+          "plan_index": 17,
+          "method": "GET",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "df0032b817c92c03ff8db5678a8dc5a0352169bd11fa0aa3ff47e8ea83612dbe",
+            "wire.json": "f7b7485b7afbfa74f20118caf572a1bfcce428f861bd208aa0166daf70c5ee6d",
+            "SQL-before.json": "40047874f45d7bee8ed0f06be30999e47cdefa4667721ffb4e6b321808992354",
+            "SQL-after.json": "7e7145f151beb9416d37e9ba6442310deb292631a89062432fe2ee3223958d55",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "a21f36626dd420b0fedc177d4668cc8734d7b5aa77b441eb8a6b115e5be7348b",
+            "cache-after.json": "c46db80e59735b6ddff7c6cfdfdb14f7c77ba96c53e57d2ea25fe6b29686c6d4",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "186b912a423d8369ec1d551a30458ae10183e56fc27ee1b7f48a9b63fe511052",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "a5bd99e82a6bfd5adfe5ff6094c341541e40336acabacd123ee181cc23e810fa",
+            "receiver-end.json": "7a9873ed5a70522f3293881cda2ffc8f7d409776722ae743e8a1d993381db739"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-066c9eb9b6882ce7e242:POST",
+      "method": "POST",
+      "source_action": "match_epg",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^channels/match-epg\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "fixture_id": "Original-alias-fourth",
+      "observed_roles": [
+        "anonymous"
+      ],
+      "observed_methods": [
+        "POST"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous without credentials",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match actual Original resolver, declared method and anonymous literal path",
+        "Preserve actual denial and scoped SQL, receiver and task comparisons"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "path": "/api/channels/channels/match-epg.json",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_bytes": 58,
+          "resolver_ordinal": 88,
+          "plan_index": 18,
+          "method": "POST",
+          "captured_artifact_sha256": {
+            "resolver-witness.json": "20a9e5a759b828bea59147e9e53265667aa31ebae603c7ecfa18af9f2783b95e",
+            "wire.json": "d510a5bb235367fdc07e6129abf0d1f3ed2eee2c68b48be1399b70fa93ad0738",
+            "SQL-before.json": "a8dbce692049420936eaacf975976301d1110fd8128ff8b027de38a9015e3200",
+            "SQL-after.json": "5594b63c9149c2cb52ea2c49105b79d8fb702e0ecfe3e66a83f01fd00f175d42",
+            "broker-before.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "broker-after.json": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885",
+            "cache-before.json": "fd7a0b0db432e13ffd06fb369f2e921d4e4c89f845fe621baa16bf3b2591d447",
+            "cache-after.json": "6d19bfef83a9ddf5ef19e6206dbb7eb63c798e68d9f710f51ce78aad6a5ea2a1",
+            "provider-before.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "provider-after.json": "c1e7694bc75bc49be500814009cbd93e9dc64c46336151948a57858c65807c24",
+            "journal.json": "db26c394dcc352eaf9f4e37190faf6c68002d3cab6cafda27a30710154991eee",
+            "actual-task-backends.json": "da34366695cddc069a1709c5a7f3392eb753cbca65d2f193c1989ea45b5d3615",
+            "WS.json": "1a05eae94cc9633707e3798805752acc7c0245a29099754f7b1a4637f3f210c1",
+            "receiver-end.json": "1954ed97686ee463fc10cb340f8fa3245eeae52b703632e4326050cc627c1afd"
+          },
+          "scoped_observations": {
+            "actual_SQL_tables_and_sequences_unchanged": true,
+            "broker_and_owned_provider_unchanged": true,
+            "actual_task_publications": 0,
+            "actual_WebSocket_events": 0,
+            "only_observed_cache_key_delta": "Original live worker heartbeat"
+          }
+        }
+      ],
+      "fully_verified": false
+    }
+  ],
+  "credit": "Original Dispatcharr and dependency authors retain all application and algorithm credit."
+}

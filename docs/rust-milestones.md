@@ -63,8 +63,12 @@ adds 24 Original responses across the separate GET and POST operations.
 The [retained Connect actions](../scripts/rust-contracts/retained-connect-actions/README.md)
 add 14 delivery-log GET observations and 13 literal subscription replacement
 PUT observations. Four additional successful PUT responses are preserved
-using their fixture symbols. M0 now has 382 partial assignments and
-416 unassigned entries.
+using their fixture symbols. The [retained alias capture](../scripts/rust-contracts/retained-alias19/README.md)
+adds 19 anonymous Original responses with verified resolver and observer
+evidence. Its controller exited 1 after reaching the fixture log limit.
+The twentieth response remains outside the assignments because its
+post-response evidence is incomplete. M0 now has 401 partial assignments
+and 397 unassigned entries.
 The conservative method inventory and full acceptance requirements remain
 in the [contract register](rust-contract-register.md).
 

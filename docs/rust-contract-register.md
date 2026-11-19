@@ -271,3 +271,13 @@ retain their SQL results and symbolic fixture IDs. Both controllers exited 0
 and passed independent exact cleanup.
 
 The register has 382 partial Source assignments and 416 unassigned operations.
+
+## Retained anonymous format alias observations
+
+The [format alias binding](../scripts/rust-contracts/retained-alias19/bindings.json)
+adds nineteen Original anonymous HTTP 401 responses with validated resolver,
+SQL, broker, provider and WebSocket custody. A twentieth HTTP result had partial
+observer custody after the stopped-role log cap was reached. The outer controller
+exited 1 and passed exact cleanup.
+
+The register has 401 partial Source assignments and 397 unassigned operations.

@@ -1,7 +1,7 @@
 # Partial executable Source contract assignments
 
 Original Dispatcharr authors retain all application/algorithm credit and licensing.
-The current register has 382 partial HTTP assignments and 15 partial model,
+The current register has 401 partial HTTP assignments and 15 partial model,
 task, command or consumer assignments. These preserve the initial and subsequent cohorts
 documented below. They do not resolve missing methods, complete endpoint role or
 grammar matrices, establish new Native behavior or accept M0/M1.
@@ -105,6 +105,11 @@ The [Connect delivery log and subscription binding](retained-connect-actions/bin
 adds 27 Original results across two declared operations. Four additional Source
 successes preserve their symbolic fixture paths and SQL observations.
 The register has 382 partial assignments and 416 unassigned operations.
+
+The [anonymous format alias binding](retained-alias19/bindings.json) adds 19
+Original responses with checked resolver and after-request observations. It also
+preserves the incomplete twentieth capture and the controller's exit 1.
+The register has 401 partial assignments and 397 unassigned operations.
 
 `register.py` consumes `executable-source-inputs.json`, verifies each input hash,
 validates the declared Source authority and applies exact operation-ID, handler,
