@@ -19,7 +19,11 @@ and preservation of other account settings.
 
 All 526 default Store tests and strict all-target Store Clippy passed.
 Seventy-nine tests requiring external fixtures were ignored in the default
-run. The new paths still need their exact-image Compose comparisons.
+run. The exact Docker image then passed all 17 paired subscription cases
+and the active and inactive XC interval comparisons. Both fixture paths
+verified cleanup. The separate Original integration-edit capture passed
+18 scoped requests and preserved IDs, timestamps, subscriptions and logs.
 
-[Focused checks](../scripts/rust-integration/milestone-batch81/focused.json)
+[Packaged evidence](../scripts/rust-integration/milestone-batch81/packaged.json)
+· [Focused checks](../scripts/rust-integration/milestone-batch81/focused.json)
 · [Milestone ledger](rust-milestones.md)
