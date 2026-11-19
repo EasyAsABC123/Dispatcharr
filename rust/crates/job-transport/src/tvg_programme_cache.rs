@@ -13,6 +13,10 @@ pub enum Error {
 pub struct Cache {
     transport: RedisTransport,
 }
+enum CacheOperation {
+    SourceRefreshHeld,
+    Mutation(&'static str),
+}
 struct Receipt {
     owner: Option<Arc<dyn Send + Sync>>,
     done: Option<oneshot::Sender<()>>,
@@ -45,7 +49,7 @@ impl Cache {
     }
     async fn call(
         &self,
-        script: &str,
+        operation: CacheOperation,
         key: String,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<i64, Error> {
@@ -54,10 +58,19 @@ impl Cache {
             owner: Some(owner),
             done: Some(tx),
         };
-        let result = self
-            .transport
-            .command_classified::<i64, _>(script, &[key], &[], guard)
-            .await;
+        let keys = [key];
+        let result = match operation {
+            CacheOperation::SourceRefreshHeld => {
+                self.transport
+                    .command_read_classified::<i64, _>(HELD, &keys, &[], guard)
+                    .await
+            }
+            CacheOperation::Mutation(script) => {
+                self.transport
+                    .command_classified::<i64, _>(script, &keys, &[], guard)
+                    .await
+            }
+        };
         let result = match result {
             Ok((value, guard)) => {
                 drop(guard);
@@ -76,7 +89,11 @@ impl Cache {
         owner: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
         match self
-            .call(HELD, format!("task_lock_refresh_epg_data_{source}"), owner)
+            .call(
+                CacheOperation::SourceRefreshHeld,
+                format!("task_lock_refresh_epg_data_{source}"),
+                owner,
+            )
             .await?
         {
             0 => Ok(false),
@@ -85,24 +102,35 @@ impl Cache {
         }
     }
     pub async fn enter(&self, source: i64, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
-        self.call(INCR, format!("epg_source_tvg_parse_{source}"), owner)
-            .await
-            .map(|_| ())
+        self.call(
+            CacheOperation::Mutation(INCR),
+            format!("epg_source_tvg_parse_{source}"),
+            owner,
+        )
+        .await
+        .map(|_| ())
     }
     pub async fn leave(&self, source: i64, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
         let key = format!("epg_source_tvg_parse_{source}");
-        let value = self.call(DECR, key.clone(), owner.clone()).await?;
+        let value = self
+            .call(CacheOperation::Mutation(DECR), key.clone(), owner.clone())
+            .await?;
         // Keep Source's TWO separate commands; no invented atomic DECR+DEL race policy.
         if value <= 0 {
-            self.call(DELETE, key, owner).await?;
+            self.call(CacheOperation::Mutation(DELETE), key, owner)
+                .await?;
         };
         Ok(())
     }
     /// Source logs and catches this helper's errors. Expose the literal failure
     /// to the caller for raw diagnostics, after its real physical owner settles.
     pub async fn invalidate_output(&self, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
-        self.call(INCR, "epg_content_generation".into(), owner)
-            .await
-            .map(|_| ())
+        self.call(
+            CacheOperation::Mutation(INCR),
+            "epg_content_generation".into(),
+            owner,
+        )
+        .await
+        .map(|_| ())
     }
 }

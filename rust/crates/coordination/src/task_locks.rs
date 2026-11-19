@@ -236,6 +236,24 @@ impl TaskLocks {
     ) -> Result<TaskLease, TaskLockDetailedError> {
         self.acquire_impl(task, id, Some(caller), true).await
     }
+    /// Prepare the same lock manager before the ordinary XMLTV programme SET.
+    /// Redis may close this otherwise idle connection while playback continues.
+    pub async fn acquire_epg_programmes_retained(
+        &self,
+        id: i64,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
+        self.acquire_suffix_impl(
+            "parse_epg_programs",
+            &id.to_string(),
+            Some(caller),
+            true,
+            true,
+            true,
+        )
+        .await
+    }
+
     /// Source SeriesRules uses the fixed literal `all` suffix and has no
     /// renewer. Keep that authority typed; callers cannot supply arbitrary keys.
     /// SET/cleanup/release retain the caller through actual physical replies.
@@ -243,8 +261,15 @@ impl TaskLocks {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<TaskLease, TaskLockDetailedError> {
-        self.acquire_suffix_impl("evaluate_series_rules", "all", Some(caller), true, false)
-            .await
+        self.acquire_suffix_impl(
+            "evaluate_series_rules",
+            "all",
+            Some(caller),
+            true,
+            false,
+            false,
+        )
+        .await
     }
     async fn acquire_impl(
         &self,
@@ -254,7 +279,7 @@ impl TaskLocks {
         settle_failure: bool,
     ) -> Result<TaskLease, TaskLockDetailedError> {
         let id = id.to_string();
-        self.acquire_suffix_impl(task, &id, caller, settle_failure, true)
+        self.acquire_suffix_impl(task, &id, caller, settle_failure, true, false)
             .await
     }
     async fn acquire_suffix_impl(
@@ -264,6 +289,7 @@ impl TaskLocks {
         caller: Option<Arc<dyn Send + Sync>>,
         settle_failure: bool,
         renewing: bool,
+        prepare_connection: bool,
     ) -> Result<TaskLease, TaskLockDetailedError> {
         if task.is_empty()
             || task.len() > 128
@@ -299,6 +325,17 @@ impl TaskLocks {
         tokio::spawn(async move {
             let _command = command;
             let mut connection = held.locks.connection.clone();
+            let prepared = if prepare_connection {
+                acquisition_preflight(&mut connection).await
+            } else {
+                Ok(())
+            };
+            if let Err(error) = prepared {
+                let cause = TaskLockRedisCause::capture(&error);
+                drop((held, _command));
+                let _ = sender.send(Err(TaskLockDetailedError::Redis(cause)));
+                return;
+            }
             let result: Result<Option<String>, _> = redis::cmd("SET")
                 .arg(&held.key)
                 .arg(&held.token)
@@ -354,6 +391,25 @@ impl TaskLocks {
             .map_err(|_| TaskLockDetailedError::Operational(TaskLockError::RedisUnavailable))?
     }
 }
+// redis-rs replaces its shared manager future after a dropped connection.
+// Wait for the same manager on one repeat of the read-only PING. No SET has run.
+async fn acquisition_preflight(connection: &mut ConnectionManager) -> redis::RedisResult<()> {
+    async fn ping(connection: &mut ConnectionManager) -> redis::RedisResult<()> {
+        let reply: String = redis::cmd("PING").query_async(connection).await?;
+        if reply != "PONG" {
+            return Err(redis::RedisError::from((
+                redis::ErrorKind::TypeError,
+                "Unexpected task-lock health response",
+            )));
+        }
+        Ok(())
+    }
+    match ping(connection).await {
+        Err(error) if error.is_connection_dropped() => ping(connection).await,
+        outcome => outcome,
+    }
+}
+
 async fn release(held: Arc<Held>) -> Result<bool, TaskLockError> {
     release_detailed(held)
         .await

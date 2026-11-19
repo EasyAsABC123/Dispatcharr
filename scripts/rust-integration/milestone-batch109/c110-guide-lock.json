@@ -1,0 +1,102 @@
+{
+  "actual_exit": 0,
+  "candidate": {
+    "archive_sha256": "17d5a78e4f53554392db727f39880abe65d1233ad325b2e4911d66b69dbcd818",
+    "image": "sha256:871ef32edb0cbaae81d905f8821f76cdeeb3422d93cea28a1965fff1ba914fd2",
+    "manifest_sha256": "d7e799045652e3aa905913ee0d5ffebab0e86d10262893dc9e3befa9d2d684a4",
+    "product_patch_sha256": "98416d78f12aab5fc9c988ced616adb1d6482b502c3636a05f8bba9163b55014",
+    "revision": "aa25a625492c7277672ac15c3663f8fa9e2181a7",
+    "source_tree_sha256": "1130486393d87caf3f8a8bad0657cc01c55efa78e0685de4ad332ad1376c9336",
+    "unchanged_react_and_credit_files": 497,
+    "verified_postimages": {
+      "rust/crates/coordination/src/task_locks.rs": "55fbecc82be5fdd2f72702d2c74eeb326cc0592a778792be72a36005f7222b0d",
+      "rust/crates/job-transport/src/tvg_programme_cache.rs": "d752dda6d089116e5a8db5437fc6b4c4646bd689d1e7ea28710152bce8170c19",
+      "rust/crates/job-transport/src/tvg_programme_worker.rs": "5c9cf92e0ccda0edc872bac2c40665b7ff0f7314f806b6ba57c21277edcda86d"
+    }
+  },
+  "default_worker_activation_claimed": false,
+  "directed": {
+    "C109_effective_redis_idle_seconds": 300,
+    "C109_passive_guide_lock_SETs_observed": 0,
+    "C109_prior_evidence_sha256": "e15ee7c0124c87a4a4d3abdf3d92a35acb8cb35a0d95be076b0ad909906c7943",
+    "C109_prior_scope_failed_exit": 1,
+    "held_read": {
+      "baseline_first_read": "backend_error",
+      "qualified_first_read": "held",
+      "receipts": {
+        "baseline": "b93e4ed49765b773297f12ac3813fe6da80fc2822da298ee1bcb4cb3ae0f4800",
+        "fence": "9b780822c7e7d9fd244f48d01236ecb375aa67e3331b88204e899ffa91f72c94",
+        "proposal": "2261dc0be4a167750c061bb17e7b897a83a63d15202a1cac2ba848e3f90b8eae"
+      },
+      "value_and_expiry_preserved": true
+    },
+    "lock_acquisition": {
+      "baseline_first_acquisition": "dropped_acquisition",
+      "foreign_NX_owner_preserved": true,
+      "lost_reply_exactly_one_SET_and_owner_cleanup_on_both_revisions": true,
+      "owned_lock_finite_ttl": true,
+      "qualified_first_acquisition": "single_acquisition",
+      "receipts": {
+        "baseline": "3b543ff29b78cf30876fc7448b79beccff7e563a4d31e42ffed5f6cd25678d5c",
+        "fence": "11513648a0b7937ac4035ba1021cdbb27f88eeb88f4143e545030d15fedab3dc",
+        "proposal": "478ba8bae35d6a9497b7b74bae2f719081e6eccdd2d8c38845a698c63b94d239"
+      }
+    }
+  },
+  "full_M9_passed": false,
+  "passed": true,
+  "performance_comparison_claimed": false,
+  "phase_exits_zero": [
+    "directed-baseline",
+    "directed-fence",
+    "directed-proposal",
+    "exact-package",
+    "runtime-prefix",
+    "runtime-short",
+    "rust-bins",
+    "rust-clippy",
+    "rust-directed-baseline",
+    "rust-directed-proposal",
+    "rust-locks",
+    "rust-tvg",
+    "rustfmt"
+  ],
+  "runtime": {
+    "prefix": {
+      "active_seconds": 360,
+      "actual_exit": 0,
+      "decoded_av_clips": 20,
+      "exact_clean_service_generations": 5,
+      "exact_refresh_terminals": 1,
+      "independent_cleanup_sha256": "cc51ca86d6cd8f16b3a832a2473476988e72dab075f7b8e65e9edbe08322eb2b",
+      "receipt_sha256": "7ff0f9b53a1077707dbbad5e31d1ef4ba7e1a920997502416ef2c3eac867d2d2",
+      "refresh_offsets_seconds": [
+        300
+      ],
+      "runtime_evidence_sha256": "627a9cdf05ed4e6e4686cae47c08e5d96567c659dac7b60e1e2315ff1b77d8c7",
+      "simultaneous_viewers": 10,
+      "single_upstream": true,
+      "viewer_and_provider_state_retired": true
+    },
+    "short": {
+      "active_seconds": 120,
+      "actual_exit": 0,
+      "decoded_av_clips": 20,
+      "exact_clean_service_generations": 5,
+      "exact_refresh_terminals": 2,
+      "independent_cleanup_sha256": "2f77f7105d04081ebea584b3e7c9226bb3d1e80dcac3abb70e1bdce19e917d24",
+      "receipt_sha256": "74596cbe69cdad6a3ba7d0b567bf2ec5765d5bf20555edf5248e54445442de34",
+      "refresh_offsets_seconds": [
+        5,
+        60
+      ],
+      "runtime_evidence_sha256": "b03ab0ad3358f0d97ad378bc26aab40184278855019fe9ae233764e4c6afb0a6",
+      "simultaneous_viewers": 10,
+      "single_upstream": true,
+      "viewer_and_provider_state_retired": true
+    }
+  },
+  "scope": "Redis guide held read and lock acquisition after idle disconnect",
+  "scoped_state_sha256": "eddfafd8c4c07136db9b7614d27e4496a063934bed6b029d68e3c7cedbcb316d",
+  "two_hour_qualification_claimed": false
+}
