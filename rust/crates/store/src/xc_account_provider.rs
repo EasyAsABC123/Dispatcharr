@@ -195,9 +195,11 @@ pub(crate) async fn fetch(
     c: Credentials,
     agent: &str,
 ) -> Result<Result<Value, String>, StoreError> {
-    let attempt =
-        dispatcharr_upstream_http::Attempt::new(Duration::from_secs(60), Duration::from_secs(60))
-            .map_err(|_| unsupported())?;
+    let attempt = dispatcharr_upstream_http::Attempt::new_requests(
+        Duration::from_secs(60),
+        Duration::from_secs(60),
+    )
+    .map_err(|_| unsupported())?;
     let mut url = Url::parse(&format!("{}/player_api.php", c.url)).map_err(|_| unsupported())?;
     url.query_pairs_mut()
         .append_pair("username", &c.username)
