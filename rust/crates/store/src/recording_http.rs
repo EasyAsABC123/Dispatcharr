@@ -144,7 +144,7 @@ struct Owner {
 }
 struct Frame {
     bytes: Vec<u8>,
-    _owner: Arc<Owner>,
+    _owner: Arc<dyn Send + Sync>,
 }
 impl AsRef<[u8]> for Frame {
     fn as_ref(&self) -> &[u8] {
@@ -211,7 +211,11 @@ fn effect(error: RecordingEffectError) -> StoreError {
         ),
     }
 }
-fn reply(status: u16, value: Value, owner: Arc<Owner>) -> Result<Response, StoreError> {
+pub(super) fn reply(
+    status: u16,
+    value: Value,
+    owner: Arc<dyn Send + Sync>,
+) -> Result<Response, StoreError> {
     let bytes = serde_json::to_vec(&value).map_err(|_| StoreError::UnhandledRestFault)?;
     if bytes.len() > RESPONSE {
         return Err(StoreError::Unsupported("Recording response budget"));
@@ -390,7 +394,7 @@ async fn handle(
         Err(_) => StoreError::UnhandledRestFault.into_response(),
     }
 }
-fn access(user: &User, manage: bool) -> Result<(), StoreError> {
+pub(super) fn access(user: &User, manage: bool) -> Result<(), StoreError> {
     if user.user_level >= 10 {
         return Ok(());
     }
@@ -447,12 +451,7 @@ async fn execute(
     }
     if parts.is_empty() {
         if method == Method::GET || method == Method::HEAD {
-            let values = list(&auth, &user, None).await?;
-            return reply(
-                200,
-                Value::Array(values.iter().map(Recording::value).collect()),
-                owner,
-            );
+            return reply(200, list_value(&auth, &user).await?, owner);
         }
         if method == Method::POST {
             return save(owner, auth, user, None, body, false).await;
@@ -501,6 +500,11 @@ async fn settle<T>(
     }
     result
 }
+pub(super) async fn list_value(auth: &AuthService, user: &User) -> Result<Value, StoreError> {
+    let values = list(auth, user, None).await?;
+    Ok(Value::Array(values.iter().map(Recording::value).collect()))
+}
+
 async fn list(
     auth: &AuthService,
     user: &User,

@@ -1,0 +1,38 @@
+{
+  "tested_rust_base": "d983ed141bc46822d0eeafe3d16553ed17e77901",
+  "tested_source_sha256": {
+    "rust/crates/app/src/main.rs": "904c8d6bad4416cf7984987e977c46fd7dfcaf6c7c026a5c6ef10b1a8a5eb502",
+    "rust/crates/hls-http/src/shared.rs": "57fe46fec2ab7d097699123e1c23d0949687913ab1739527839b5a0e7ad3b055",
+    "rust/crates/store/src/recording_http.rs": "7602522a3efee8af952de5b27d013dc7c102968444b71e407bfab6de52447764",
+    "rust/crates/store/src/recording_playback.rs": "c3d7ff2df99be0e67a04dbba86dff4cdc643b5b2eb7103e3cae942e85deb5939"
+  },
+  "checks": {
+    "fmt": 0,
+    "hls_http": {
+      "exit": 0,
+      "passed": 3
+    },
+    "store": {
+      "exit": 0,
+      "passed": 530,
+      "ignored": 79
+    },
+    "main": {
+      "exit": 0,
+      "passed": 35,
+      "ignored": 1
+    },
+    "operator": {
+      "exit": 0,
+      "passed": 14
+    },
+    "clippy_store_app_hls_all_targets": 0
+  },
+  "log_sha256": {
+    "fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stream-and-store.log": "5e76f90916b77b2896f2698d6dc30a2848deca58d02c7f22b880b82a032b48c5",
+    "app.log": "fd38e978450425fc62d24d9bc2cdb50916258cdad8be1aa176f5f624382281ad",
+    "clippy.log": "bd76be176aafac349b52e47d75df719d21503966049a7fecccc4fda7f0ece6b7"
+  },
+  "runtime_pending": true
+}

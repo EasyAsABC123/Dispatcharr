@@ -22,6 +22,9 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The recording playback and legacy HLS checkpoint](rust-milestone-batch88.md)
+documents ordinary DVR reads, old playlist descriptors and their focused checks.
+
 [The guide publisher and PostgreSQL defaults checkpoint](rust-milestone-batch87.md)
 documents the refresh-only programme publisher and blank operator settings.
 

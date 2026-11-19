@@ -41,10 +41,10 @@ impl AsRef<[u8]> for RemoteMedia {
         self.data.as_ref()
     }
 }
-pub(crate) fn descriptor(
+fn playlist_fields(
     value: &serde_json::Value,
     limit: usize,
-) -> Result<(Vec<SegmentDescriptor>, u64, f64, f64), PlaybackError> {
+) -> Result<(Vec<SegmentDescriptor>, u64, f64), PlaybackError> {
     let unavailable = || failure(500, "Playlist unavailable");
     let items = value
         .get("window")
@@ -87,31 +87,48 @@ pub(crate) fn descriptor(
         .and_then(|value| value.as_f64())
         .filter(|value| value.is_finite() && *value >= 0.0)
         .unwrap_or(0.0);
-    let ts = value
-        .get("ts")
-        .and_then(|value| value.as_f64())
-        .filter(|value| value.is_finite())
-        .ok_or_else(unavailable)?;
-    Ok((window, disc_seq, behind, ts))
+    Ok((window, disc_seq, behind))
 }
+
+fn playlist_timestamp(value: &serde_json::Value) -> Result<Option<f64>, PlaybackError> {
+    let Some(timestamp) = value.get("ts").filter(|timestamp| !timestamp.is_null()) else {
+        return Ok(None);
+    };
+    timestamp
+        .as_f64()
+        .filter(|value| value.is_finite())
+        .map(Some)
+        .ok_or_else(|| failure(500, "Playlist unavailable"))
+}
+
+pub(crate) fn descriptor(
+    value: &serde_json::Value,
+    limit: usize,
+) -> Result<(Vec<SegmentDescriptor>, u64, f64, f64), PlaybackError> {
+    let (window, disc_seq, behind) = playlist_fields(value, limit)?;
+    let timestamp =
+        playlist_timestamp(value)?.ok_or_else(|| failure(500, "Playlist unavailable"))?;
+    Ok((window, disc_seq, behind, timestamp))
+}
+
 fn render(value: &serde_json::Value, limit: usize) -> Result<Vec<u8>, PlaybackError> {
-    let (window, disc, behind, ts) = descriptor(value, limit)?;
-    let advertised = value
-        .get("adv_target")
-        .and_then(|value| value.as_u64())
-        .unwrap_or(6);
-    if wall_time() - ts > advertised.saturating_mul(3).max(45) as f64 {
+    let (window, disc, behind) = playlist_fields(value, limit)?;
+    let advertised = value.get("adv_target").and_then(|value| value.as_u64());
+    let stale_after = advertised.unwrap_or_default().saturating_mul(3).max(45) as f64;
+    if playlist_timestamp(value)?
+        .is_some_and(|timestamp| timestamp != 0.0 && wall_time() - timestamp > stale_after)
+    {
         return Err(failure(404, "Playlist stale"));
     }
-    Ok(render_media_playlist(
-        &window,
-        4.0,
-        "{seq}.ts",
-        Some(advertised),
-        disc,
-        Some(behind),
+    let target = value
+        .get("target")
+        .and_then(|value| value.as_f64())
+        .filter(|value| value.is_finite())
+        .unwrap_or(4.0);
+    Ok(
+        render_media_playlist(&window, target, "{seq}.ts", advertised, disc, Some(behind))
+            .into_bytes(),
     )
-    .into_bytes())
 }
 fn admit(
     inner: &Inner,
@@ -415,5 +432,37 @@ impl Drop for RemoteCold {
                 }
             });
         }
+    }
+}
+
+#[cfg(test)]
+mod playlist_compatibility_tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn legacy_playlist_reads_preserve_source_target_fallbacks() {
+        let populated = json!({"window": [{"seq": 7, "dur": 3.25}], "target": 9});
+        let playlist = String::from_utf8(render(&populated, 5).unwrap()).unwrap();
+        assert!(playlist.contains("#EXT-X-TARGETDURATION:4\n"));
+        assert!(playlist.contains("#EXT-X-MEDIA-SEQUENCE:7\n#EXTINF:3.250,\n7.ts\n"));
+
+        let empty = json!({"window": [], "target": 7.5, "ts": 0});
+        let playlist = String::from_utf8(render(&empty, 5).unwrap()).unwrap();
+        assert!(playlist.contains("#EXT-X-TARGETDURATION:8\n#EXT-X-MEDIA-SEQUENCE:0\n"));
+        assert!(descriptor(&populated, 5).is_err());
+    }
+
+    #[test]
+    fn announced_target_and_stale_window_still_match_source() {
+        let mut value =
+            json!({"window": [{"seq": 7, "dur": 3.25}], "adv_target": 8, "ts": wall_time()});
+        let playlist = String::from_utf8(render(&value, 5).unwrap()).unwrap();
+        assert!(playlist.contains("#EXT-X-TARGETDURATION:8\n"));
+
+        value["ts"] = json!(wall_time() - 120.0);
+        let error = render(&value, 5).unwrap_err();
+        assert_eq!(error.status, 404);
+        assert_eq!(error.body, json!({"error": "Playlist stale"}));
     }
 }

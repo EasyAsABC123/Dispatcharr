@@ -1054,6 +1054,12 @@ async fn run() -> Result<(), String> {
         .as_ref()
         .map(|selected| selected.backup_files())
         .unwrap_or(backup_files);
+    let ordinary_recording_playback = selected_jobs.is_none().then(|| {
+        dispatcharr_store::RecordingPlayback::prepare(
+            auth.clone(),
+            dispatcharr_output_http::source_output_origin,
+        )
+    });
     let mut app = Router::new()
         .route("/health/ready", get(health))
         .with_state(HealthState {
@@ -1092,6 +1098,8 @@ async fn run() -> Result<(), String> {
         app = app.merge(selected.recordings_router());
         // Supply the actual prepared SD producer to existing provider routes.
         app = app.layer(axum::Extension(selected.sd_source_http()));
+    } else if let Some(playback) = &ordinary_recording_playback {
+        app = app.merge(playback.clone().router());
     }
     if let Some(gateway) = &realtime {
         app = app.merge(gateway.router());
@@ -1194,6 +1202,7 @@ async fn run() -> Result<(), String> {
         plugin_actions,
         core_settings,
         selected_jobs,
+        ordinary_recording_playback: ordinary_recording_playback.clone(),
         engine,
         clients,
         hls,
@@ -1229,6 +1238,9 @@ async fn run() -> Result<(), String> {
         shutdown_signal().await;
         signal_services.stream_files.stop_stream_file_admission();
         signal_services.plugin_actions.stop_admission();
+        if let Some(playback) = &signal_services.ordinary_recording_playback {
+            playback.close_admission();
+        }
         if let Some(selected) = &signal_services.selected_jobs {
             selected.stop_producers();
         } else {
@@ -1248,10 +1260,17 @@ async fn run() -> Result<(), String> {
     } else {
         "Selected"
     };
+    let shutdown_requires_drain = || {
+        refresh_enabled
+            || auth.stream_files_were_used()
+            || ordinary_recording_playback
+                .as_ref()
+                .is_some_and(dispatcharr_store::RecordingPlayback::was_used)
+    };
     tokio::select! {
         result=&mut server=>{
             let cleanup=tokio::time::timeout(shutdown_timeout,finish_shutdown_after_server(&mut shutdown_notice,shutdown_components(services),shutdown_mode)).await;
-            if refresh_enabled || auth.stream_files_were_used() {match cleanup{Ok(result)=>result?,Err(_)=>return Err(format!("{shutdown_mode} shutdown deadline expired; process termination may close outstanding resources"))}}
+            if shutdown_requires_drain() {match cleanup{Ok(result)=>result?,Err(_)=>return Err(format!("{shutdown_mode} shutdown deadline expired; process termination may close outstanding resources"))}}
             result.map_err(|_|"HTTP server failed".to_string())
         },
         cleanup=&mut shutdown_notice=>{
@@ -1263,10 +1282,10 @@ async fn run() -> Result<(), String> {
             }).await;
             match drained{
                 Ok((result,cleaned))=>{
-                    if refresh_enabled || auth.stream_files_were_used() {cleaned.map_err(|_|format!("{shutdown_mode} shutdown supervisor failed; process termination may close outstanding resources"))??;}
+                    if shutdown_requires_drain() {cleaned.map_err(|_|format!("{shutdown_mode} shutdown supervisor failed; process termination may close outstanding resources"))??;}
                     result.map_err(|_|"HTTP server failed".to_string())
                 },
-                Err(_)=>{cleanup.abort();if refresh_enabled || auth.stream_files_were_used() {Err(format!("{shutdown_mode} shutdown deadline expired; cleanup was cancelled and process termination may close outstanding resources"))}else{eprintln!("Shutdown deadline reached; closing remaining HTTP connections");Ok(())}},
+                Err(_)=>{cleanup.abort();if shutdown_requires_drain() {Err(format!("{shutdown_mode} shutdown deadline expired; cleanup was cancelled and process termination may close outstanding resources"))}else{eprintln!("Shutdown deadline reached; closing remaining HTTP connections");Ok(())}},
             }
         }
     }
@@ -1317,6 +1336,7 @@ struct ShutdownServices {
     plugin_actions: dispatcharr_store::PluginActions,
     core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
     selected_jobs: Option<selected_jobs::SelectedJobs>,
+    ordinary_recording_playback: Option<dispatcharr_store::RecordingPlayback>,
     engine: StreamEngine,
     clients: Option<ClientStore>,
     hls: Option<dispatcharr_hls_http::HlsGateway>,
@@ -1350,6 +1370,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         plugin_actions,
         core_settings,
         selected_jobs,
+        ordinary_recording_playback,
         engine,
         clients,
         hls,
@@ -1380,6 +1401,9 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         if let Some(tvg) = &epg_tvg {
             tvg.stop_channel_publications();
         }
+    }
+    if let Some(playback) = &ordinary_recording_playback {
+        playback.close_admission();
     }
     let stream_files_drained = stream_files
         .shutdown_stream_files(Duration::from_secs(8))
@@ -1555,6 +1579,10 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         vod_reads.shutdown(Duration::from_secs(8)),
         combined_statistics.shutdown(Duration::from_secs(8)),
     );
+    let ordinary_recording_playback_drained = match ordinary_recording_playback {
+        Some(playback) => playback.shutdown(Duration::from_secs(8)).await,
+        None => true,
+    };
     let core_settings_drained = match core_settings {
         Some(core) => core.shutdown().await,
         None => true,
@@ -1608,6 +1636,11 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     }
     if !tvg_drained {
         return Err("Per-channel EPG worker and publisher remain physically unsettled".into());
+    }
+    if !ordinary_recording_playback_drained {
+        return Err(
+            "Recording playback files or response bodies remain physically unsettled".into(),
+        );
     }
     if !stream_files_drained {
         return Err("Stream upload storage/SQL remains physically unsettled".into());

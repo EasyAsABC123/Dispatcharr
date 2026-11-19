@@ -4,7 +4,7 @@
 use crate::{channels, AuthService, RestReadLimits, StoreError, User};
 use axum::{
     extract::{ConnectInfo, Request, State},
-    http::Method,
+    http::{HeaderMap, Method},
     response::{IntoResponse, Response},
     routing::get,
     Router,
@@ -32,6 +32,7 @@ struct Inner {
     origin: RecordingPlaybackOrigin,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
+    used: AtomicBool,
 }
 pub(super) struct Owner {
     _slot: OwnedSemaphorePermit,
@@ -46,11 +47,13 @@ impl RecordingPlayback {
                 origin,
                 slots: Arc::new(Semaphore::new(SLOTS)),
                 closed: AtomicBool::new(false),
+                used: AtomicBool::new(false),
             }),
         }
     }
     pub fn router(self) -> Router {
         Router::new()
+            .route("/api/channels/recordings/", get(list_recordings))
             .route("/api/channels/recordings/{id}/file/", get(handle))
             .route("/api/channels/recordings/{id}/hls/{*segment}", get(handle))
             .with_state(self)
@@ -60,6 +63,30 @@ impl RecordingPlayback {
     pub(crate) async fn dispatch(&self, peer: SocketAddr, request: Request) -> Response {
         handle(State(self.clone()), ConnectInfo(peer), request).await
     }
+    fn admit(&self) -> Result<Arc<Owner>, StoreError> {
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(capacity());
+        }
+        let slot = self
+            .inner
+            .slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| capacity())?;
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(capacity());
+        }
+        self.inner.used.store(true, Ordering::Release);
+        Ok(Arc::new(Owner {
+            _slot: slot,
+            _inner: self.inner.clone(),
+        }))
+    }
+
+    pub fn was_used(&self) -> bool {
+        self.inner.used.load(Ordering::Acquire)
+    }
+
     pub fn close_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);
     }
@@ -81,24 +108,34 @@ fn capacity() -> StoreError {
         json!({"detail":"Recording playback capacity unavailable."}),
     )
 }
+async fn list_recordings(
+    State(api): State<RecordingPlayback>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    let owner = api.admit()?;
+    tokio::spawn(async move {
+        // The DVR collection uses UI and DVR-view permission. File/HLS requests
+        // keep the separate Source Auth4 and STREAMS path below.
+        let auth = api.inner.auth.clone().with_retained_scope(owner.clone());
+        let user = auth.account_user(peer, headers, false).await?;
+        super::recording_http::access(&user, false)?;
+        let value = super::recording_http::list_value(&auth, &user).await?;
+        super::recording_http::reply(200, value, owner)
+    })
+    .await
+    .map_err(|_| StoreError::UnhandledRestFault)?
+}
+
 async fn handle(
     State(api): State<RecordingPlayback>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Response {
-    if api.inner.closed.load(Ordering::Acquire) {
-        return capacity().into_response();
-    }
-    let Ok(slot) = api.inner.slots.clone().try_acquire_owned() else {
-        return capacity().into_response();
+    let owner = match api.admit() {
+        Ok(owner) => owner,
+        Err(error) => return error.into_response(),
     };
-    if api.inner.closed.load(Ordering::Acquire) {
-        return capacity().into_response();
-    }
-    let owner = Arc::new(Owner {
-        _slot: slot,
-        _inner: api.inner.clone(),
-    });
     let identity = PlaybackRequest {
         channel_id: String::new(),
         query: url::form_urlencoded::parse(request.uri().query().unwrap_or("").as_bytes())
