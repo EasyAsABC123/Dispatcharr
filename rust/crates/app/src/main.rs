@@ -19,9 +19,9 @@ mod static_assets;
 mod statistics;
 mod vod_react_fallback;
 use axum::{
-    extract::{Request, State},
+    extract::State,
     http::{header, Method, StatusCode},
-    middleware::{self, Next},
+    middleware,
     response::{IntoResponse, Response},
     routing::{any, get},
     Json, Router,
