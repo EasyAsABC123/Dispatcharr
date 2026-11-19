@@ -1,4 +1,4 @@
-//! Native no-time custom guide algorithm; regex is a pinned dependency only.
+//! Native custom guide timeline without a time pattern; regex is a pinned dependency only.
 //! Original Dispatcharr authors retain all application/formatting credit.
 use crate::{
     epg_custom_scope::{capacity, unsupported, Scope},
@@ -135,8 +135,8 @@ fn source_timezone(properties: &Value) -> Result<Tz, StoreError> {
             .unwrap_or(chrono_tz::UTC)
     }))
 }
-/// Only the actual reachable no-time branch is admitted. Other valid
-/// source shapes remain explicit, never converted into a successful no-match.
+/// Title and optional date captures use the existing no-time timeline.
+/// The timed timelines require their own implementation and acceptance.
 pub fn supported(properties: &Value) -> bool {
     validate(properties).is_ok()
 }
@@ -144,9 +144,10 @@ fn validate(properties: &Value) -> Result<Tz, StoreError> {
     if !properties.is_object() || string(properties, "title_pattern")?.is_empty() {
         return Err(unsupported());
     }
-    if truthy(properties.get("time_pattern")) || truthy(properties.get("date_pattern")) {
+    if truthy(properties.get("time_pattern")) {
         return Err(unsupported());
     }
+    string(properties, "date_pattern")?;
     let timezone = source_timezone(properties)?;
     string(properties, "output_timezone")?;
     duration(properties)?;
@@ -265,6 +266,39 @@ fn group<'a>(groups: &'a [(String, Option<String>)], name: &str) -> Option<&'a s
         .and_then(|(_, v)| v.as_deref())
         .filter(|v| !v.is_empty())
 }
+type Groups = Vec<(String, Option<String>)>;
+
+async fn captures(scope: &Scope, pattern: &str, name: &str) -> Result<Option<Groups>, StoreError> {
+    let result = scope
+        .groups(pattern.to_owned(), vec![name.to_owned()])
+        .await?;
+    if result.compile_error.is_some() {
+        return Ok(None);
+    }
+    match result.rows.into_iter().next().ok_or_else(unsupported)? {
+        RegexNamedGroupRow::Matched(groups) => Ok(Some(groups)),
+        RegexNamedGroupRow::NotMatched => Ok(None),
+        RegexNamedGroupRow::SearchError(_) => Err(StoreError::Unsupported(
+            "Actual custom-guide regex search failed",
+        )),
+    }
+}
+
+fn merge_groups(title: &mut Groups, date: Groups) {
+    let positions: HashMap<_, _> = title
+        .iter()
+        .enumerate()
+        .map(|(index, (key, _))| (key.clone(), index))
+        .collect();
+    for (key, value) in date {
+        if let Some(index) = positions.get(&key) {
+            title[*index].1 = value;
+        } else {
+            title.push((key, value));
+        }
+    }
+}
+
 fn default_title(name: &str, groups: &[(String, Option<String>)]) -> String {
     let mut pieces = Vec::new();
     if let Some(league) = group(groups, "league") {
@@ -311,26 +345,8 @@ pub async fn prepare(
     let properties = properties.ok_or_else(unsupported)?;
     let source_timezone = validate(properties)?;
     let scope = scope.ok_or_else(unsupported)?;
-    let result = scope
-        .groups(
-            string(properties, "title_pattern")?.to_owned(),
-            vec![name.to_owned()],
-        )
-        .await?;
-    let mut groups = if result.compile_error.is_some() {
-        None
-    } else {
-        match result.rows.into_iter().next().ok_or_else(unsupported)? {
-            RegexNamedGroupRow::Matched(groups) => Some(groups),
-            RegexNamedGroupRow::NotMatched => None,
-            RegexNamedGroupRow::SearchError(_) => {
-                return Err(StoreError::Unsupported(
-                    "Actual custom-guide regex search failed",
-                ));
-            }
-        }
-    };
-    let Some(groups) = groups.as_mut() else {
+    let Some(mut groups) = captures(scope, string(properties, "title_pattern")?, name).await?
+    else {
         return Ok(Plan {
             logo: None,
             programmes: Programmes::Legacy(
@@ -348,31 +364,56 @@ pub async fn prepare(
             bytes: channel.len() + name.len() + properties.to_string().len() + 512,
         });
     };
-    aliases(scope, groups).await?;
+    // Source's channel element gets a separate title-only logo projection.
+    // Programme templates merge the raw date groups before adding aliases.
+    let date_pattern = string(properties, "date_pattern")?;
+    let date = if date_pattern.is_empty() {
+        None
+    } else {
+        captures(scope, date_pattern, name).await?
+    };
+    let logo_template = string(properties, "channel_logo_url")?;
+    let logo = if date.is_some() && !logo_template.is_empty() && !groups.is_empty() {
+        let mut logo_groups = groups.clone();
+        aliases(scope, &mut logo_groups).await?;
+        Some(template(logo_template, &logo_groups, true, limit)?)
+    } else {
+        None
+    };
+
+    let date_matches = date.is_some();
+    if let Some(date) = date {
+        merge_groups(&mut groups, date);
+    }
+    aliases(scope, &mut groups).await?;
+
+    let logo = if date_matches {
+        logo
+    } else {
+        (!logo_template.is_empty() && !groups.is_empty())
+            .then(|| template(logo_template, &groups, true, limit))
+            .transpose()?
+    }
+    .filter(|value| !value.is_empty());
     let title_text = string(properties, "title_template")?;
     let title = if title_text.is_empty() {
-        default_title(name, groups)
+        default_title(name, &groups)
     } else {
-        template(title_text, groups, false, limit)?
+        template(title_text, &groups, false, limit)?
     };
     let text = string(properties, "description_template")?;
     let description = if text.is_empty() {
         title.clone()
     } else {
-        template(text, groups, false, limit)?
+        template(text, &groups, false, limit)?
     };
     let text = string(properties, "subtitle_template")?;
     let subtitle = (!text.is_empty())
-        .then(|| template(text, groups, false, limit))
+        .then(|| template(text, &groups, false, limit))
         .transpose()?;
-    let text = string(properties, "channel_logo_url")?;
-    let logo = (!text.is_empty() && !groups.is_empty())
-        .then(|| template(text, groups, true, limit))
-        .transpose()?
-        .filter(|v| !v.is_empty());
     let text = string(properties, "program_poster_url")?;
     let poster = (!text.is_empty())
-        .then(|| template(text, groups, true, limit))
+        .then(|| template(text, &groups, true, limit))
         .transpose()?
         .filter(|v| !v.is_empty());
     let category = string(properties, "category")?;
@@ -639,6 +680,40 @@ mod tests {
             assert_eq!(row.start_time, start);
             assert_eq!(row.end_time, start + Duration::hours(3));
         }
+    }
+    #[test]
+    fn source_date_only_merges_raw_groups_in_python_dict_order() {
+        assert!(supported(&json!({
+            "title_pattern": "(?<title>Owned)",
+            "date_pattern": "(?<month>[A-Za-z]+) (?<day>[0-9]+)"
+        })));
+        assert!(!supported(&json!({
+            "title_pattern": "(?<title>Owned)",
+            "date_pattern": "(?<day>[0-9]+)",
+            "time_pattern": "(?<hour>[0-9]+):[0-9]+"
+        })));
+        let mut title = vec![
+            ("month".into(), Some("Title month".into())),
+            ("title".into(), Some("Owned title".into())),
+            ("year".into(), Some("2026".into())),
+        ];
+        merge_groups(
+            &mut title,
+            vec![
+                ("day".into(), Some("15".into())),
+                ("month".into(), Some("October".into())),
+                ("year".into(), None),
+            ],
+        );
+        assert_eq!(
+            title,
+            vec![
+                ("month".into(), Some("October".into())),
+                ("title".into(), Some("Owned title".into())),
+                ("year".into(), None),
+                ("day".into(), Some("15".into())),
+            ]
+        );
     }
     #[test]
     fn source_template_order_and_url_quote_are_literal_sequential_replacements() {

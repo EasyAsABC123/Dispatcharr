@@ -7,14 +7,144 @@ from pathlib import Path
 CASE='schedules-direct';HELD_CASE='custom-guide-held';ORIGIN='http://127.0.0.1:18097'
 _STANDARD=['Late Night with {channel} - Where insomniacs unite!', "The 'Why Am I Still Awake?' Show on {channel}", 'Counting Sheep - A {channel} production for the sleepless', 'Dawn Patrol - Rise and shine with {channel}!', 'Early Bird Special - Coffee not included', 'Morning Zombies - Before coffee viewing on {channel}', "Mid-Morning Meetings - Pretend you're paying attention while watching {channel}", "The 'I Should Be Working' Hour on {channel}", "Productivity Killer - {channel}'s daytime programming", 'Lunchtime Laziness with {channel}', 'The Afternoon Slump - Brought to you by {channel}', 'Post-Lunch Food Coma Theater on {channel}', "Rush Hour - {channel}'s alternative to traffic", "The 'What's For Dinner?' Debate on {channel}", "Evening Escapism - {channel}'s remedy for reality", "Prime Time Placeholder - {channel}'s finest not-programming", "The 'Netflix Was Too Complicated' Show on {channel}", 'Family Argument Avoider - Courtesy of {channel}']
 def save(path,value):path.write_text(json.dumps(value,indent=2,sort_keys=True)+'\n')
+def date_specs():
+    shared = {
+        "title_pattern": r"^(?<month>[A-Za-z]+) (?<title>.+?) @",
+        "date_pattern": r"@ (?<month>[A-Za-z]+) (?<day>\d+)",
+        "program_duration": 180,
+        "timezone": "UTC",
+        "title_template": "{title} [{month}/{day}/{month_normalize}]",
+        "subtitle_template": "day {day}",
+        "description_template": "captured {month} date {day}",
+        "channel_logo_url": ORIGIN + "/date-logo/{month}/{day}.png",
+        "program_poster_url": ORIGIN + "/date-poster/{month}/{day}.png",
+    }
+    return [
+        ("January Owned Bowl @ Oct 17", shared,
+         ("Owned Bowl [Oct/17/oct]", "day 17", "captured Oct date 17"),
+         "January/{day}", "Oct/17", 8, 180),
+        ("January Unsupplied @ soon", shared,
+         ("Unsupplied [January/{day}/january]", "day {day}", "captured January date {day}"),
+         "January/{day}", "January/{day}", 8, 180),
+        ("January Broken @ Oct 21", {**shared, "date_pattern": "(?<bad"},
+         ("Broken [January/{day}/january]", "day {day}", "captured January date {day}"),
+         "January/{day}", "January/{day}", 8, 180),
+        ("Owned-fallback no-title @ Oct 17",
+         {**shared, "fallback_title_template": "Owned date profile fallback",
+          "fallback_description_template": "Title did not match"},
+         ("Owned date profile fallback", None, "Title did not match"), None, None, 6, 240),
+    ]
+
+
+def prepare_date_context(fixture, account):
+    seeds = [(item[0], item[1]) for item in date_specs()]
+    script = """
+from apps.accounts.models import User
+from apps.channels.models import Channel, ChannelProfile, ChannelProfileMembership
+from apps.epg.models import EPGSource, EPGData
+profile = ChannelProfile.objects.create(name='Owned date-only custom guide')
+ChannelProfileMembership.objects.filter(channel_profile=profile).update(enabled=False)
+channels = []
+for index, (name, custom) in enumerate(SEEDS):
+    tvg_id = 'owned-date-guide-' + str(index)
+    source = EPGSource.objects.bulk_create([EPGSource(
+        name=tvg_id, source_type='dummy', is_active=False, custom_properties=custom,
+    )])[0]
+    epg = EPGData.objects.bulk_create([EPGData(epg_source=source, tvg_id=tvg_id, name=name)])[0]
+    channel = Channel.objects.bulk_create([Channel(
+        name=name, channel_number=91850+index, epg_data=epg, tvg_id=tvg_id,
+    )])[0]
+    ChannelProfileMembership.objects.update_or_create(
+        channel_profile=profile, channel=channel, defaults={'enabled': True},
+    )
+    channels.append({'id': channel.pk, 'uuid': str(channel.uuid), 'tvg_id': tvg_id})
+actual = ChannelProfileMembership.objects.filter(channel_profile=profile, enabled=True)
+assert set(actual.values_list('channel_id', flat=True)) == {row['id'] for row in channels}
+User.objects.get(username=ACCOUNT).channel_profiles.add(profile)
+print(json.dumps({'profile': {'id': profile.pk, 'name': profile.name}, 'channels': channels}))
+"""
+    script = "SEEDS = " + repr(seeds) + "\nACCOUNT = " + repr(account) + "\n" + script
+    return fixture.sql(script, secret=True)
+
+
+def check_date_guides(fixture, setup, private):
+    cases = date_specs()
+    case = setup["date"]
+    query = "?days=1&prev_days=0&tvg_id_source=tvg_id"
+    profile = urllib.parse.quote(case["profile"]["name"], safe="")
+    root = ET.fromstring(request(fixture, "/output/epg/" + profile + "/" + query, "date-XML", private))
+    channels = root.findall("channel")
+    assert [row.findtext("display-name") for row in channels] == [row[0] for row in cases]
+
+    def observe(index, row):
+        _, _, expected, _, _, _, period = cases[index]
+        assert (row["title"], row["subtitle"], row["description"]) == expected
+        assert (row["stop"] - row["start"]).total_seconds() == 60 * period
+
+    counts = []
+    for index, (channel, identity) in enumerate(zip(channels, case["channels"])):
+        _, _, _, logo, poster, count, _ = cases[index]
+        expected_logo = "" if logo is None else ORIGIN + "/date-logo/" + logo + ".png"
+        assert channel.find("icon").attrib["src"] == expected_logo
+        rows = [row for row in root.findall("programme") if row.attrib["channel"] == identity["tvg_id"]]
+        assert len(rows) == count
+        counts.append(count)
+        previous_stop = None
+        for row in rows:
+            start = datetime.datetime.strptime(row.attrib["start"], "%Y%m%d%H%M%S %z")
+            stop = datetime.datetime.strptime(row.attrib["stop"], "%Y%m%d%H%M%S %z")
+            observe(index, {"title": row.findtext("title"), "subtitle": row.findtext("sub-title"),
+                            "description": row.findtext("desc"), "start": start, "stop": stop})
+            assert previous_stop is None or start == previous_stop
+            previous_stop = stop
+            if poster is None:
+                assert row.find("icon") is None and row.find("date") is None
+            else:
+                assert row.find("icon").attrib["src"] == ORIGIN + "/date-poster/" + poster + ".png"
+                assert row.findtext("date") == start.date().isoformat()
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    query = urllib.parse.urlencode({"channel_profile_id": case["profile"]["id"], "start": now.isoformat(),
+                                    "end": (now + datetime.timedelta(hours=7)).isoformat()})
+    grid = json.loads(request(fixture, "/api/epg/grid/?" + query, "date-grid", private))
+    grid_counts = []
+    xc_counts = []
+    for index, identity in enumerate(case["channels"]):
+        rows = [row for row in grid["data"] if row["tvg_id"] == identity["uuid"]]
+        assert rows
+        for row in rows:
+            start = datetime.datetime.fromisoformat(row["start_time"])
+            stop = datetime.datetime.fromisoformat(row["end_time"])
+            observe(index, {"title": row["title"], "subtitle": row["sub_title"],
+                            "description": row["description"], "start": start, "stop": stop})
+        grid_counts.append(len(rows))
+        params = urllib.parse.urlencode({"username": setup["xc_username"], "password": setup["xc_password"],
+                                        "action": "get_short_epg", "stream_id": identity["id"],
+                                        "limit": 2, "days": 1, "prev_days": 0})
+        xc = json.loads(request(fixture, "/player_api.php?" + params, "date-XC-" + str(index),
+                                private, False))["epg_listings"]
+        assert len(xc) == 2
+        for row in xc:
+            title = base64.b64decode(row["title"], validate=True).decode()
+            desc = base64.b64decode(row["description"], validate=True).decode()
+            assert (title, desc) == (cases[index][2][0], cases[index][2][2])
+        xc_counts.append(len(xc))
+    return {"xml_counts": counts, "grid_counts": grid_counts, "xc_counts": xc_counts,
+            "fixed_durations_minutes": [row[-1] for row in cases],
+            "title_channel_logo_and_date_programme_poster": True,
+            "date_nomatch_invalid_and_title_fallback": True}
+
+
 def prepare_context(fixture):
  if fixture.case!=CASE:return
  props=[{'title_pattern':r'^(?<league>Owned) (?P<team1>.+) vs (?P<team2>[^!]+)(?:!(?P<empty>x))?$','program_duration':181,'timezone':'UTC','title_template':'{league}: {team1} vs {team2} [{team1_normalize}/{team2_normalize}]','subtitle_template':'{empty}','description_template':'Literal {empty}|{unknown}','channel_logo_url':ORIGIN+'/unrequested-logo/{team1}/{team2}/{league_normalize}.png','program_poster_url':ORIGIN+'/unrequested-poster/{team1_normalize}.jpg','category':' Sport , Live ,, Sport ','include_live':True,'include_new':True}, {'title_pattern':'^(?<title>No such name)$','timezone':'UTC','fallback_title_template':' Owned unmatched fallback ','fallback_description_template':' Preserved four-hour blocks ','program_poster_url':ORIGIN+'/should-not-appear.jpg'}, {'title_pattern':'(?<broken','timezone':'UTC'}, {'title_pattern':'^Owned no groups$','timezone':'UTC','channel_logo_url':ORIGIN+'/no-groups-logo-must-not-appear.png','program_poster_url':ORIGIN+'/unrequested-poster/no-groups.jpg'}]
  names=['Owned Älpha &/B vs Beta+Team','Owned mismatch','Owned invalid pattern','Owned no groups']
  script="from apps.epg.models import EPGSource,EPGData;from apps.channels.models import Channel,ChannelProfile,ChannelProfileMembership;from apps.accounts.models import User;specs="+repr(props)+";names="+repr(names)+";p=ChannelProfile.objects.create(name='Owned custom no-time guide');ChannelProfileMembership.objects.filter(channel_profile=p).update(enabled=False);rows=[];\nfor i,(props,name)in enumerate(zip(specs,names)):\n s=EPGSource.objects.bulk_create([EPGSource(name='Owned custom guide '+str(i),source_type='dummy',is_active=False,custom_properties=props)])[0];e=EPGData.objects.bulk_create([EPGData(epg_source=s,tvg_id='owned-custom-'+str(i),name=name)])[0];c=Channel.objects.bulk_create([Channel(name=name,channel_number=91800+i,epg_data=e,tvg_id='owned-custom-'+str(i))])[0];ChannelProfileMembership.objects.bulk_create([ChannelProfileMembership(channel_profile=p,channel=c,enabled=True)]);rows.append({'id':c.pk,'uuid':str(c.uuid),'name':c.name,'tvg_id':c.tvg_id})\nu=User.objects.get(username='owned-dummy-fallback-viewer');u.channel_profiles.add(p);held=EPGSource.objects.bulk_create([EPGSource(name='Owned custom held search',source_type='dummy',is_active=False,custom_properties={'title_pattern':'(?:a|aa)+$','timezone':'UTC'})])[0];e=EPGData.objects.bulk_create([EPGData(epg_source=held,tvg_id='owned-custom-held',name='Owned held')])[0];c=Channel.objects.bulk_create([Channel(name='a'*511+'!',channel_number=91890,epg_data=e,tvg_id='owned-custom-held')])[0];hp=ChannelProfile.objects.create(name='Owned custom held guide');ChannelProfileMembership.objects.filter(channel_profile=hp).exclude(channel_id=c.pk).update(enabled=False);ChannelProfileMembership.objects.update_or_create(channel_profile=hp,channel=c,defaults={'enabled':True});assert set(ChannelProfileMembership.objects.filter(channel_profile=p,enabled=True).values_list('channel_id',flat=True))=={r['id']for r in rows};assert list(ChannelProfileMembership.objects.filter(channel_profile=hp,enabled=True).values_list('channel_id',flat=True))==[c.pk];print(json.dumps({'profile':{'id':p.pk,'name':p.name},'channels':rows,'xc_username':u.username,'held_profile':hp.name}))"
  setup=fixture.sql(script,secret=True);setup['xc_password']=fixture._dummy_fallback['xc_password'];fixture._custom_guide=setup
+ if fixture.binding.get('custom_guide_date_acceptance'):
+  setup['date']=prepare_date_context(fixture,setup['xc_username'])
  fixture._plugin_environment={**getattr(fixture,'_plugin_environment',{}),'RUST_EPG_REGEX_DIAGNOSTICS':'1'}
- save(Path(fixture.output)/'declared-custom-guide-inputs.json',{'profile':setup['profile'],'channels':setup['channels'],'new_Source_and_Native_required':True,'regex_engine':'actual pinned dependency; no per-search timeout','timezone_scope':'UTC only','timelines':'positive integral no-time duration;181minute non-divisor plus default180','new_Origin_or_workers':False,'diagnostic_bound':'64 retirement records per view registry; metadata only','held_gate':'optional Native-only final controlledMain stop, physically held search; no Source shutdown-equivalence claim','unqualified':['time/date patterns','non-UTC/fractional durations','EPG-download Connect/plugin sideeffects','large expansion/guide stress','Source held HTTP cold-stop counterpart']})
+ save(Path(fixture.output)/'declared-custom-guide-inputs.json',{'profile':setup['profile'],'channels':setup['channels'],'new_Source_and_Native_required':True,'regex_engine':'actual pinned dependency; no per-search timeout','timezone_scope':'UTC only','timelines':'positive integral no-time duration;181minute non-divisor plus default180','new_Origin_or_workers':False,'diagnostic_bound':'64 retirement records per view registry; metadata only','held_gate':'optional Native-only final controlledMain stop, physically held search; no Source shutdown-equivalence claim','unqualified':['time patterns','non-UTC/fractional durations','EPG-download Connect/plugin sideeffects','large expansion/guide stress','Source held HTTP cold-stop counterpart']})
 def request(fixture,path,label,out,auth=True):
  headers={'Authorization':'Bearer '+fixture.admin}if auth else{}
  r=urllib.request.Request(fixture.base_url+path,headers=headers);opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
@@ -102,7 +232,26 @@ def run(fixture):
    rows=fixture.wait(done,15,'actual-custom-guide-regex-retirement-receipts');save(private/'actual-retirements.json',rows);assert len(rows)==6 and all(r['actual_exit']==0 and r['wait_observed']and r['stdout_eof']and r['stderr_eof']and r['group_absent']and r['callbacks_settled']and not r['forced']and not r['operation_fault']for r in rows);owned={(r['pid'],r['generation'])for r in rows};after=process_snapshot(fixture,owned);save(private/'actual-after-processes.json',after);assert not [p for p in after if(p['pid'],p['generation'])in owned];row.update(status='passed',actual={'actual_exit0_wait_EOF_group_absence_receipts':6,'actual_remaining_owned_regex_children':0,'other_regex_children':len(after)})
   except Exception as error:
    row.update(status='failed',error_type=type(error).__name__);p=private/'retirement-failure.txt';p.write_text(traceback.format_exc()[-8192:]);p.chmod(0o600)
- report={'status':'passed'if all(c['status']=='passed'for c in cells)else'failed','cases':cells,'full_M7_or_resource_gain':False,'unqualified':['time/date/non-UTC/fractional duration custom guides','metadata/template beyond explicit budget','malformed Source rendering','EPG-download integration sideeffects','Source held HTTP cold termination counterpart','held Native shutdown unless separately invoked LAST']};save(out/'report.json',report);return report
+ if 'date' in setup:
+  row={'name':'actual-date-only-XMLTV-grid-XC','status':'running'};cells.append(row)
+  try:
+   date_prior={(r['pid'],r['generation'])for r in retirements(fixture)}
+   actual=check_date_guides(fixture,setup,private)
+   if fixture.backend=='Native':
+    def date_retired():
+     rows=[r for r in retirements(fixture)if(r['pid'],r['generation'])not in date_prior]
+     return rows if len(rows)>=6 else False
+    rows=fixture.wait(date_retired,15,'actual-date-guide-regex-retirement-receipts')
+    save(private/'actual-date-retirements.json',rows)
+    assert len(rows)==6 and all(r['actual_exit']==0 and r['wait_observed']and r['stdout_eof']and r['stderr_eof']and r['group_absent']and r['callbacks_settled']and not r['forced']and not r['operation_fault']for r in rows)
+    owned={(r['pid'],r['generation'])for r in rows}
+    assert not process_snapshot(fixture,owned)
+    actual['actual_exit0_wait_EOF_group_absence_receipts']=len(rows)
+   row.update(status='passed',actual=actual)
+  except Exception as error:
+   row.update(status='failed',error_type=type(error).__name__)
+   file=private/'date-guide-failure.txt';file.write_text(traceback.format_exc()[-8192:]);file.chmod(0o600)
+ report={'status':'passed'if all(c['status']=='passed'for c in cells)else'failed','cases':cells,'full_M7_or_resource_gain':False,'unqualified':['time patterns, timed date schedules and non-UTC/fractional durations','metadata/template beyond explicit budget','malformed Source rendering','EPG-download integration sideeffects','Source held HTTP cold termination counterpart','held Native shutdown unless separately invoked LAST']};save(out/'report.json',report);return report
 
 def prepare_held_context(fixture):
  if fixture.case!=HELD_CASE or fixture.backend!='Native':raise ValueError('DedicatedFinalNativeGuideContextRequired')
