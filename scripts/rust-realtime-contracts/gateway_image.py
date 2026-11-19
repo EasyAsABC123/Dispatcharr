@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """Frozen packaged app WebSocket proof against actual original Django controls.
 
-Full original Dispatcharr authors retain application credit. No full React,
-regex preview, all-producer or resource-performance claim follows this probe.
+Full original Dispatcharr authors retain application credit.
 """
 import argparse
 import hashlib
@@ -23,6 +22,7 @@ from shared_ts import BASELINE,IMAGE,fixture_source,http,wait
 from fixture_ports import write_port_overlay
 from interop import Peer
 from gateway_cases import exercise,INITIAL
+from profile_cases import exercise as exercise_profiles
 from ws_client import Client
 
 
@@ -30,6 +30,7 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--docker',default='docker');parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--live-stats',action='store_true');parser.add_argument('--candidate-image',required=True);parser.add_argument('--candidate-build-manifest',type=Path,required=True)
+    parser.add_argument('--profile-preview',action='store_true',help='qualify the grouped Original and Native profile-editor WebSocket cases')
     args=parser.parse_args();docker=shutil.which(args.docker)
     if not docker:parser.error('Docker not found')
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._:/@-]{0,255}',args.candidate_image):parser.error('invalid image reference')
@@ -42,18 +43,26 @@ def main():
             'application_performance_verified':False,'milestone_complete':False,'baseline_commit':BASELINE,'baseline_image':IMAGE,
             'candidate_image':args.candidate_image,'candidate_source_tree_sha256':manifest['source_tree_sha256'],
             'candidate_build_manifest_sha256':hashlib.sha256(manifest_bytes).hexdigest(),'commands':[]}
+    if args.profile_preview:
+        report['scope']='grouped M3U profile editor preview on pinned Original ASGI and packaged Native'
     (out/'candidate-build.json').write_bytes(manifest_bytes)
     component=json.loads((ROOT/'scripts/rust-realtime-contracts/verified-native-gateway-fanout-1.json').read_text())
     matching={name:value==hashes.get(name) for name,value in component['tool_sha256'].items() if name.startswith('rust/crates/realtime/')}
     report['separate_component_source_match']=matching
     paths=[Path(__file__).resolve(),*[Path(__file__).with_name(name) for name in ['gateway_cases.py','gateway_control.py','ws_client.py','interop.py','browser_peer.js']],ROOT/'docker/compose.rust-playback.yml',ROOT/'docker/compose.rust-candidate.yml',ROOT/'docker/compose.rust-replicas.yml',ROOT/'scripts/rust-integration/fixture_ports.py',*[ROOT/'scripts/rust-playback-baseline'/name for name in ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']],ROOT/'scripts/rust-baseline/dependencies.py']
+    if args.profile_preview:
+        paths += [Path(__file__).with_name(name) for name in ['profile_cases.py','profile_source_inside.py','datasets/source-preview.json']]
     copies=out/'tools'
     for path in paths:
         target=copies/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
     report['tool_sha256']={str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in paths}
     project='dispatcharr-realtime-image-'+uuid.uuid4().hex[:12];report['project']=project
     overlay=out/'overlay.json';overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[str(copies/'scripts/rust-realtime-contracts')+':/realtime:ro']},**{service:{'image':args.candidate_image} for service in ['candidate','candidate-replica']}}}))
-    ports=out/'ports.yml';report['ports']=write_port_overlay(ports,{'baseline':[5656],'origin':[8080],'candidate':[9192],'candidate-replica':[9192],'python-replica':[5656]})
+    native_services=['candidate'] if args.profile_preview else ['candidate','candidate-replica']
+    port_services={'baseline':[5656],'origin':[8080],**{name:[9192] for name in native_services}}
+    if not args.profile_preview:
+        port_services['python-replica']=[5656]
+    ports=out/'ports.yml';report['ports']=write_port_overlay(ports,port_services)
     peers=[];held=[]
     with fixture_source(report,out,'gateway-image.json') as temporary:
         source=Path(temporary)/'source';source.mkdir();archive=Path(temporary)/'source.tar'
@@ -74,25 +83,44 @@ def main():
             command(compose+['up','-d','--no-build','baseline','origin'],180)
             host,port=endpoint('baseline',5656);base='http://'+host+':'+str(port)
             wait(lambda:(out/'seed.json').exists() and http(base+'/proxy/ts/stream/missing')[0]==404,300,'Source fixture ready')
-            command(compose+['up','-d','--no-build','candidate','candidate-replica'],120)
-            targets=[endpoint(service,9192) for service in ['candidate','candidate-replica']]
+            command(compose+['up','-d','--no-build',*native_services],120)
+            targets=[endpoint(service,9192) for service in native_services]
             for host,port in targets:wait(lambda:http('http://'+host+':'+str(port)+'/health/ready')[0]==200,60,'native app ready')
             control=Peer(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/realtime/gateway_control.py'],environment,out/'control.log');peers.append(control)
-            browser=Peer(['/home/justin/.local/share/paseo-runtime/node-v22.23.2-linux-x64/bin/node',str(copies/'scripts/rust-realtime-contracts/browser_peer.js')],environment,out/'browser.log');peers.append(browser)
-            report['browser_runtime']=browser.ready;report['original']=control.call({'op':'source_info'})
-            report['wire']=exercise(*targets[0],control.call,browser=browser,second_port=targets[1][1],slow_value_bytes=3*1024*1024,source_live_stats=args.live_stats,live_stats_target='http://candidate:9192' if args.live_stats else None,live_stats_peer='http://candidate-replica:9192' if args.live_stats else None)
-            browser.close()
+            report['original']=control.call({'op':'source_info'})
+            if args.profile_preview:
+                accounts=control.call({'op':'seed'})['accounts']
+                values=compose+['exec','-T','baseline','/dispatcharrpy/bin/python','/realtime/profile_source_inside.py']
+                report['commands'].append(values)
+                # Pass only access tokens over the owned subprocess stdin.
+                access={role:{'access':account['access']} for role,account in accounts.items() if role!='inactive'}
+                source_result=subprocess.run(values,cwd=ROOT,env=environment,input=json.dumps(access),text=True,capture_output=True,timeout=120)
+                report['source_profile_exit']=source_result.returncode
+                if source_result.returncode:
+                    raise RuntimeError('Source profile preview failed')
+                source_profile=json.loads(source_result.stdout)
+                report['source_profile']=source_profile
+                report['wire']=exercise_profiles(*targets[0],access)
+                assert all(source_profile[key]==value for key,value in report['wire'].items())
+                assert report['wire']['case_count']==267
+                native_exit_check=command(compose+['ps','-q','candidate']).strip()
+                assert json.loads(command([docker,'inspect',native_exit_check]))[0]['Image']==manifest['image_id']
+            else:
+                browser=Peer(['/home/justin/.local/share/paseo-runtime/node-v22.23.2-linux-x64/bin/node',str(copies/'scripts/rust-realtime-contracts/browser_peer.js')],environment,out/'browser.log');peers.append(browser)
+                report['browser_runtime']=browser.ready
+                report['wire']=exercise(*targets[0],control.call,browser=browser,second_port=targets[1][1],slow_value_bytes=3*1024*1024,source_live_stats=args.live_stats,live_stats_target='http://candidate:9192' if args.live_stats else None,live_stats_peer='http://candidate-replica:9192' if args.live_stats else None)
+                browser.close()
             token=control.call({'op':'token','role':'admin'})['access']
             for host,port in targets:
                 client=Client(host,port,'/ws/?'+urlencode([('token',token)]));held.append(client)
                 assert client.status==101 and client.receive()=={'message':INITIAL}
-            started=time.monotonic();command(compose+['stop','--timeout','15','candidate','candidate-replica'],40)
+            started=time.monotonic();command(compose+['stop','--timeout','15',*native_services],40)
             report['shutdown_seconds']=time.monotonic()-started
             report['held_socket_shutdown']=[client.receive() for client in held]
-            assert report['held_socket_shutdown']==[{'closed':1001},{'closed':1001}]
+            assert report['held_socket_shutdown']==[{'closed':1001}]*len(native_services)
             report['group_after_shutdown']=control.call({'op':'groups'});assert report['group_after_shutdown']['members']==0
             exits=[]
-            for service in ['candidate','candidate-replica']:
+            for service in native_services:
                 container=command(compose+['ps','-a','-q',service]).strip();state=json.loads(command([docker,'inspect',container]))[0]['State']
                 exits.append({'service':service,'exit_code':state['ExitCode'],'oom_killed':state['OOMKilled']})
                 assert state['ExitCode']==0 and not state['OOMKilled']
@@ -105,13 +133,21 @@ def main():
             if 'control' in locals():
                 try:report['failure_group_state']=control.call({'op':'groups'})
                 except Exception:pass
-            for service in ['candidate','candidate-replica']:
+            for service in native_services:
                 try:(out/(service+'-failure-logs.txt')).write_text(command(compose+['logs','--no-color',service]))
                 except Exception:pass
         finally:
             for client in held:client.close()
             for peer in reversed(peers):peer.close()
-            try:command(compose+['down','--volumes','--remove-orphans','--timeout','5'],60);report['cleanup']='isolated Compose project removed'
+            try:
+                command(compose+['down','--volumes','--remove-orphans','--timeout','5'],60)
+                if args.profile_preview:
+                    owner='label=com.docker.compose.project='+project
+                    absent={kind:not command([docker,*action,'--filter',owner,'-q']).strip()
+                            for kind,action in [('containers',['ps','-a']),('networks',['network','ls']),('volumes',['volume','ls'])]}
+                    report['cleanup_absent']=absent
+                    assert all(absent.values())
+                report['cleanup']='isolated Compose project removed'
             except Exception:report['cleanup_error']=True;report['passed']=False
     print(json.dumps({'passed':report['passed'],'output':str(out),'cases':report.get('wire',{}).get('case_count')}))
     return 0 if report['passed'] else 1

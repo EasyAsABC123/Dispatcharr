@@ -433,7 +433,8 @@ async fn run() -> Result<(), String> {
     }
     let live_statistics = statistics::start(&engine, clients.as_ref(), realtime_bus.as_ref())?;
     let auth = auth.with_channel_control(Arc::new(control::EngineControl(engine.clone())));
-    let realtime = realtime::gateway(auth.clone(), realtime_bus.clone())?;
+    let stream_regex = dispatcharr_store::StreamRegexPreview::prepare(auth.clone());
+    let realtime = realtime::gateway(auth.clone(), realtime_bus.clone(), stream_regex.clone())?;
     let resolver: Arc<dyn dispatcharr_contracts::PlaybackResolver> = Arc::new(auth.clone());
     let hls = clients
         .clone()
@@ -994,7 +995,6 @@ async fn run() -> Result<(), String> {
     if plugin_actions.startup_discover(Arc::new(())).await.is_err() {
         eprintln!("Plugin discovery requires compatible runtime or unavailable startup resources");
     }
-    let stream_regex = dispatcharr_store::StreamRegexPreview::prepare(auth.clone());
     let auth_routes = match &core_settings {
         Some(core) => auth
             .clone()

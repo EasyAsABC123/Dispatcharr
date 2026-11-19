@@ -87,6 +87,29 @@ impl StreamRegexPreview {
             .with_state(self.clone())
     }
 
+    /// The realtime gateway owns authorization and the private response envelope.
+    /// Keep the shared actor and the admitted permit through physical completion.
+    pub async fn m3u_profile_test(
+        &self,
+        request: String,
+    ) -> Result<
+        (serde_json::Value, Arc<OwnedSemaphorePermit>),
+        dispatcharr_contracts::UpdateEventError,
+    > {
+        use dispatcharr_contracts::UpdateEventError;
+        let owner = self.admit().map_err(|_| UpdateEventError::Capacity)?;
+        let fields = self
+            .inner
+            .regex
+            .execute(
+                json!({"kind":"m3u_profile_test", "request":request}),
+                owner.clone(),
+            )
+            .await
+            .map_err(|_| UpdateEventError::Unavailable)?;
+        Ok((fields, owner))
+    }
+
     pub fn close_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);
     }

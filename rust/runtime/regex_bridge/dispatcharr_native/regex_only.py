@@ -30,6 +30,9 @@ def evaluate(value):
  if value.get('kind')=='stream_preview':
   from dispatcharr_native.stream_preview import evaluate as stream_preview
   return stream_preview(value.get('names'),value.get('config'))
+ if value.get('kind')=='m3u_profile_test':
+  from dispatcharr_native.m3u_profile_test import evaluate as m3u_profile_test
+  return m3u_profile_test(value.get('request'))
  if value.get('kind')=='profile_urls':
   from dispatcharr_native.profile_urls import evaluate as profile_urls
   try:return profile_urls(value.get('rows'))

@@ -1,7 +1,7 @@
 # Admin regex preview and URL transformation
 
 Original Dispatcharr authors retain full application credit; see
-[ATTRIBUTION.md](../../ATTRIBUTION.md). Native preview remains incomplete.
+[ATTRIBUTION.md](../../ATTRIBUTION.md).
 
 The pinned original runtime uses Python 3.13.18 and third-party
 `regex` **2026.9.29**, default version **V0**, with native extension hash
@@ -35,17 +35,29 @@ Observed behavior includes:
 - User searches have a 100ms timeout in each of the two regex operations.
   Timing is recorded as an observation, not a deterministic golden.
 
-The existing builtin-Python-`re` ingestion oracle does not establish equivalence
-for this runtime. No separate native library has passed this corpus, and no
-backend is selected. Two possible engineering paths are to extend a native
-interpreter with an explicitly separate third-party-regex mode, or to evaluate
-another native engine with an adapter. Either path must pass the corpus before
-being enabled and must reproduce replacement parsing, Unicode/code-point
-behavior, match ordering and bounded execution. A shared parser name or a
-successful simple URL replacement is insufficient evidence.
+The packaged Native gateway registers the account profile handler on the normal
+`/ws/` route. The existing authenticated role check remains in Rust. Native
+retains the private reply envelope, shared bounded actor admission and physical
+child drain. The dependency operation uses the pinned Python `regex` package
+for preview and transformation. ASCII-escaped JSON scalars preserve the
+original wire behavior for lone surrogate code points. The actor caps the
+encoded transformed scalar at 2 MiB and the gateway applies its existing
+private frame limit. Those capacity limits can close an exceptionally large
+preview with 1011.
 
-Current packaged behavior remains explicitly incomplete: an admin preview
-request reaches the unimplemented handler and closes with 1011. Do not describe
-that as original preview parity or complete React workflow support. Keeping
-this gate open avoids shipping an unproved replacement under an equivalence
-claim.
+The predecessor package closed valid admin preview requests with 1011 due to
+its unregistered handler. Use the grouped fixture to qualify a successor
+package against the pinned Original Django/Daphne app. It checks all 267
+cases, prevents replies from reaching other roles and verifies that the
+sockets remain usable. The receipt also records actual Native shutdown,
+Original Daphne process exit and Compose project cleanup.
+
+```bash
+python3 scripts/rust-realtime-contracts/gateway_image.py \
+  --profile-preview --output "$preview_evidence_dir" \
+  --candidate-image "$native_image" \
+  --candidate-build-manifest "$native_build_manifest"
+```
+
+This command covers the WebSocket profile editor. Full browser workflows,
+other update producers and M7 performance have separate acceptance gates.

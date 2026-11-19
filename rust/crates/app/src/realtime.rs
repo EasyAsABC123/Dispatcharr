@@ -1,6 +1,35 @@
 //! Native live events. Original Dispatcharr authors retain full credit.
-use dispatcharr_realtime::{BusConfig, GatewayConfig, RealtimeBus, RealtimeGateway};
-use dispatcharr_store::AuthService;
+use dispatcharr_contracts::{BoxFuture, UpdateEventError};
+use dispatcharr_realtime::{
+    BusConfig, GatewayConfig, PreviewHandler, PreviewResponse, RealtimeBus, RealtimeGateway,
+};
+use dispatcharr_store::{AuthService, StreamRegexPreview};
+use std::sync::Arc;
+
+struct ProfilePreview(StreamRegexPreview);
+
+impl PreviewHandler for ProfilePreview {
+    fn render(&self, request: String) -> BoxFuture<'_, Result<PreviewResponse, UpdateEventError>> {
+        Box::pin(async move {
+            let (fields, owner) = self.0.m3u_profile_test(request).await?;
+            let preview = fields["search_preview"]
+                .as_str()
+                .ok_or(UpdateEventError::InvalidMessage)?;
+            let result = fields["result"]
+                .as_str()
+                .ok_or(UpdateEventError::InvalidMessage)?;
+            // The dependency returns JSON-escaped scalar fragments. Appending
+            // them directly preserves lone UTF-16 surrogates on the JSON wire.
+            let wire = format!(
+                r#"{{"data":{{"type":"m3u_profile_test","search_preview":{preview},"result":{result}}}}}"#
+            );
+            Ok(PreviewResponse {
+                bytes: wire.into_bytes().into_boxed_slice(),
+                owner,
+            })
+        })
+    }
+}
 
 pub async fn bus(url: Option<&str>) -> Result<Option<RealtimeBus>, String> {
     let Some(url) = url else {
@@ -22,6 +51,7 @@ pub async fn bus(url: Option<&str>) -> Result<Option<RealtimeBus>, String> {
 pub fn gateway(
     auth: AuthService,
     bus: Option<RealtimeBus>,
+    stream_regex: StreamRegexPreview,
 ) -> Result<Option<RealtimeGateway>, String> {
     let Some(bus) = bus else { return Ok(None) };
     let mut config = GatewayConfig::default();
@@ -38,6 +68,6 @@ pub fn gateway(
         config.max_socket_output_bytes,
     )?;
     RealtimeGateway::new(auth, bus, config)
-        .map(Some)
+        .map(|gateway| Some(gateway.with_preview_handler(Arc::new(ProfilePreview(stream_regex)))))
         .map_err(|_| "Invalid realtime configuration".into())
 }

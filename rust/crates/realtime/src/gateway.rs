@@ -1,5 +1,5 @@
 //! Source-shaped WebSocket consumer with shared serialization and bounded frames.
-//! Original Dispatcharr authors retain full credit; preview parity remains gated.
+//! Original Dispatcharr authors retain full credit.
 use crate::{
     hub::{self, Delivery, Hub, HubConfig},
     policy::Visibility,
@@ -19,8 +19,9 @@ use futures_util::{stream::SplitSink, SinkExt, StreamExt};
 use hyper::upgrade::Upgraded;
 use hyper_util::rt::TokioIo;
 use rand::RngCore;
-use serde_json::{json, Value};
+use serde_json::{json, value::RawValue, Value};
 use std::{
+    collections::HashMap,
     sync::{
         atomic::{AtomicUsize, Ordering},
         Arc, Mutex, Weak,
@@ -52,8 +53,15 @@ type Socket = WebSocketStream<TokioIo<Upgraded>>;
 type Writer = SplitSink<Socket, Message>;
 
 pub trait PreviewHandler: Send + Sync {
-    fn render(&self, request: Value) -> BoxFuture<'_, Result<Value, UpdateEventError>>;
+    fn render(&self, request: String) -> BoxFuture<'_, Result<PreviewResponse, UpdateEventError>>;
 }
+
+pub struct PreviewResponse {
+    pub bytes: Box<[u8]>,
+    /// Keep aggregate production admission alive until private wire credit is acquired.
+    pub owner: Arc<dyn Send + Sync>,
+}
+
 #[derive(Clone, Debug)]
 pub struct GatewayConfig {
     pub max_buffered_events: usize,
@@ -299,6 +307,13 @@ async fn receiver(weak: Weak<Inner>, mut shutdown: watch::Receiver<bool>) {
 }
 
 async fn private_wire(inner: &Inner, message: &Value) -> Result<Bytes, End> {
+    private_encoded(inner, |maximum| hub::serialize(message, maximum)).await
+}
+
+async fn private_encoded(
+    inner: &Inner,
+    encode: impl FnOnce(usize) -> Result<Box<[u8]>, UpdateEventError>,
+) -> Result<Bytes, End> {
     let mut shutdown = inner.shutdown.subscribe();
     if *shutdown.borrow() {
         return Err(End::Close(1001));
@@ -315,7 +330,7 @@ async fn private_wire(inner: &Inner, message: &Value) -> Result<Bytes, End> {
         .config
         .max_wire_message_bytes
         .min(inner.config.max_private_wire_bytes.saturating_sub(128));
-    let wire = hub::serialize(message, maximum).map_err(|_| End::Close(1011))?;
+    let wire = encode(maximum).map_err(|_| End::Close(1011))?;
     let weight = wire.len() + 128;
     let budget = time::timeout(
         inner.config.send_timeout,
@@ -503,17 +518,29 @@ async fn serve(
                 },
                 command=commands.recv()=>{
                     let Some(command)=command else{return Err(End::TransportEnded)};
-                    let request:Value=serde_json::from_str(&command).map_err(|_|End::Close(1011))?;
-                    let kind=request.as_object().and_then(|object|object.get("type")).ok_or(End::Close(1011))?;
-                    if kind=="m3u_profile_test"&&role>=10 {
+                    // The request fields can contain escaped lone surrogates.
+                    // Decode the dispatch field only; the pinned dependency sees
+                    // the original request JSON with its code points intact.
+                    let fields:HashMap<String,&RawValue>=serde_json::from_str(&command).map_err(|_|End::Close(1011))?;
+                    let kind=fields.get("type").ok_or(End::Close(1011))?;
+                    if role>=10 && serde_json::from_str::<String>(kind.get()).is_ok_and(|kind|kind=="m3u_profile_test") {
+                        drop(fields);
                         let preview=inner.preview.lock().unwrap().clone().ok_or(End::Close(1011))?;
                         let response=tokio::select! {
                             biased;
                             _=shutdown.changed()=>return Err(End::Close(1001)),
                             _=control.changed()=>return Err(control.borrow().clone().unwrap_or(End::TransportEnded)),
-                            result=time::timeout(inner.config.send_timeout,preview.render(request))=>result.map_err(|_|End::Close(1011))?.map_err(|_|End::Close(1011))?,
+                            result=time::timeout(inner.config.send_timeout,preview.render(command.to_string()))=>result.map_err(|_|End::Close(1011))?.map_err(|_|End::Close(1011))?,
                         };
-                        let wire=private_wire(&inner,&response).await?;
+                        let PreviewResponse { bytes, owner } = response;
+                        let wire=private_encoded(&inner, |maximum| {
+                            if bytes.len() > maximum {
+                                Err(UpdateEventError::Capacity)
+                            } else {
+                                Ok(bytes)
+                            }
+                        }).await?;
+                        drop(owner);
                         transmit(&mut writer,wire,&mut control,&mut shutdown,inner.config.send_timeout).await?;
                     }
                 },

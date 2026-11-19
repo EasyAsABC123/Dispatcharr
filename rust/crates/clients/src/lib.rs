@@ -335,14 +335,16 @@ return 1
             {
                 info["output_profile_id"] = json!(profile);
             }
-            for name in [
-                "connected_at",
-                "last_active",
-                "avg_rate_KBps",
-                "current_rate_KBps",
+            let average_rate = row
+                .get("avg_rate_KBps")
+                .or_else(|| row.get("transfer_rate_KBps"));
+            for (name, raw) in [
+                ("connected_at", row.get("connected_at")),
+                ("last_active", row.get("last_active")),
+                ("avg_rate_KBps", average_rate),
+                ("current_rate_KBps", row.get("current_rate_KBps")),
             ] {
-                if let Some(value) = row
-                    .get(name)
+                if let Some(value) = raw
                     .and_then(|value| value.parse::<f64>().ok())
                     .filter(|value| value.is_finite())
                 {
