@@ -139,3 +139,24 @@ the launcher exited 1 with verified cleanup. The same assembled image
 is queued for a clean repeat under the unchanged request plan.
 
 [Concurrency experiment receipt](concurrency-experiment-first.json)
+
+## Quiet repeat of the dedicated worker experiment
+
+The same assembled image repeated the unchanged workload in a reserved
+window. All 216 responses matched, with 360,360 scanned rows and equal
+throughput. Median paired CPU was 24.68% lower and simultaneous peak
+working set was 54.95% lower than Original.
+
+| Pair | Original full-scan p95 | Rust full-scan p95 | 1.10 latency gate |
+| --- | ---: | ---: | --- |
+| 1 | 67.72 ms | 46.38 ms | Passed |
+| 2 | 56.46 ms | 65.27 ms | Failed |
+| 3 | 55.58 ms | 60.27 ms | Passed |
+
+The largest Rust requests in pairs 2 and 3 again occurred in zero-based
+waves 7 and 6. The second pair exceeded the total-latency limit by 5.61
+percentage points. The first-byte ratio also exceeded the limit in that
+pair. The launcher exited 1 and exact cleanup passed. M7 resource
+acceptance remains open.
+
+[Independent quiet repeat receipt](concurrency-experiment-repeat.json)
