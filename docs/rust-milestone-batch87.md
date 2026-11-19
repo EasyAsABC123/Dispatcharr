@@ -22,5 +22,12 @@ tests each for Main and the operator. The first lint invocation reported the
 readiness test module’s position. Moving it below the implementations cleared
 lint and preserved the passing readiness regression.
 
+The exact Docker image at `7aef18c76` built successfully. Its runtime
+packages are frozen, with all 497 React, license and attribution inputs
+matching Candidate86. The refresh fixture passed exact-image preflight.
+A separate owned PostgreSQL cutover and rollback rehearsal is bound to the
+same image. Compose runtime and performance results remain pending.
+
 [Focused results](../scripts/rust-integration/milestone-batch87/focused.json)
+· [Docker build and fixture bindings](../scripts/rust-integration/milestone-batch87/packaging.json)
 · [Milestone ledger](rust-milestones.md)
