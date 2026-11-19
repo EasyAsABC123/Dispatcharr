@@ -2,8 +2,7 @@
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
 use crate::{AuthService, StoreError};
 use axum::{
-    body::Body,
-    extract::{ConnectInfo, FromRequestParts, Path, Request, State},
+    extract::{rejection::JsonRejection, ConnectInfo, FromRequestParts, Path, Request, State},
     http::{request::Parts, HeaderMap},
     response::Response,
     routing::get,
@@ -228,7 +227,7 @@ async fn put_streamprofile_json(
     JsonProfileId(id): JsonProfileId,
     peer: ConnectInfo<SocketAddr>,
     headers: HeaderMap,
-    body: Body,
+    body: Result<Json<Value>, JsonRejection>,
 ) -> Result<Json<Value>, StoreError> {
     crate::core_stream_writes::put(auth, Path(id), peer, headers, body).await
 }
@@ -355,7 +354,7 @@ mod special_source16_order_tests {
 #[cfg(test)]
 mod json_profile_tests {
     use super::*;
-    use axum::http::StatusCode;
+    use axum::{body::Body, http::StatusCode};
     use tower::ServiceExt;
 
     #[test]
