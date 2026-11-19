@@ -1,0 +1,66 @@
+{
+  "bulk_rename": {
+    "actual_exit": 0,
+    "both_owned_projects_removed": true,
+    "cases": [
+      {
+        "sql_verified": true,
+        "status": 401,
+        "test": "anonymous"
+      },
+      {
+        "sql_verified": true,
+        "status": 403,
+        "test": "standard"
+      },
+      {
+        "sql_verified": true,
+        "status": 200,
+        "test": "rename"
+      },
+      {
+        "sql_verified": true,
+        "status": 200,
+        "test": "unchanged"
+      },
+      {
+        "sql_verified": true,
+        "status": 400,
+        "test": "invalid-pattern"
+      },
+      {
+        "sql_verified": true,
+        "status": 404,
+        "test": "missing"
+      },
+      {
+        "sql_verified": true,
+        "status": 200,
+        "test": "overflow"
+      }
+    ],
+    "raw_report_sha256": "05c868c711dbb4ce7fdc7751a0a004cc9ebeb26b67fb08c4d8fad2c19c3ef852"
+  },
+  "candidate": {
+    "git_revision": "7b23e5fa27ba618e476c1b6cde465234cf30b639",
+    "image_id": "sha256:cc2906dca5043fd524d8eb403af98aff1bf781d60c16476f3d6d52938616c5ec",
+    "source_tree_sha256": "3f51c0a0c6372888d34d3747591eaabf3a76eafca14db669e597aefe4b9e0c79"
+  },
+  "package_actual_exit": 0,
+  "react_license_and_attribution_paths_equal": 497,
+  "regex_preview": {
+    "ordinary": {
+      "actual_exit": 0,
+      "owned_resources_removed": true,
+      "paired_cases": 48,
+      "report_sha256": "5bd237813c2722b15d2bd12436069de87be772aa45bcb74b9e04cc6f9b1843f0"
+    },
+    "postgresql_order_and_bound_cases": 20,
+    "unicode": {
+      "actual_exit": 0,
+      "owned_resources_removed": true,
+      "paired_cases": 50,
+      "report_sha256": "5a6b3dd61cc70e3012ee44a8df3bf37831e0ab29db0ecdb45c9cbca432584508"
+    }
+  }
+}
