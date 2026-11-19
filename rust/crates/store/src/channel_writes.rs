@@ -6,8 +6,9 @@ use crate::{
     channels, AuthService, StoreError,
 };
 use axum::{
-    extract::{rejection::JsonRejection, ConnectInfo, OriginalUri, Path, Query, State},
-    http::{HeaderMap, StatusCode, Uri},
+    body::to_bytes,
+    extract::{rejection::JsonRejection, ConnectInfo, OriginalUri, Path, Query, Request, State},
+    http::{header, HeaderMap, StatusCode, Uri},
     response::{IntoResponse, Response},
     Json,
 };
@@ -766,6 +767,22 @@ async fn create_owned(
         .into_response())
 }
 
+fn missing_channel() -> StoreError {
+    StoreError::StatusBody(404, json!({"detail":"No Channel matches the given query."}))
+}
+
+async fn channel_object_query(
+    auth: &AuthService,
+    user: &crate::User,
+    id: i64,
+    params: &HashMap<String, String>,
+) -> Result<QueryBuilder<'static, Postgres>, StoreError> {
+    let mut query = QueryBuilder::new(channels::SELECT);
+    channels::filters(&mut query, params, user, auth, true).await?;
+    query.push(" AND c.id=").push_bind(id);
+    Ok(query)
+}
+
 async fn object(
     auth: &AuthService,
     user: &crate::User,
@@ -773,19 +790,13 @@ async fn object(
     params: &HashMap<String, String>,
     tx: &mut Transaction<'_, Postgres>,
 ) -> Result<Value, StoreError> {
-    let mut query = QueryBuilder::new(channels::SELECT);
-    channels::filters(&mut query, params, user, auth, true).await?;
-    query
-        .push(" AND c.id=")
-        .push_bind(id)
-        .push(" FOR UPDATE OF c");
+    let mut query = channel_object_query(auth, user, id, params).await?;
     let row = query
+        .push(" FOR UPDATE OF c")
         .build()
         .fetch_optional(&mut **tx)
         .await?
-        .ok_or_else(|| {
-            StoreError::StatusBody(404, json!({"detail":"No Channel matches the given query."}))
-        })?;
+        .ok_or_else(missing_channel)?;
     Ok(row.try_get("raw")?)
 }
 struct ChannelRequest {
@@ -895,6 +906,224 @@ async fn update_owned(
         response(auth, user, params, base, id, &data, false).await?,
     ))
 }
+fn set_epg_id(value: &Value) -> Result<Option<i64>, StoreError> {
+    if value.is_null()
+        || matches!(value.as_str(), Some("" | "0"))
+        || crate::json_compat::python_equal(value, &json!(0))
+    {
+        return Ok(None);
+    }
+    let parsed = match value {
+        Value::Bool(true) => Some(1),
+        Value::String(value) => {
+            let normalized = dispatcharr_ingest_core::source_integer_literal(value)
+                .ok_or_else(|| invalid_epg_id(&json!(value)))?;
+            normalized.parse().ok()
+        }
+        _ => primary_key(value).map_err(|_| invalid_epg_id(value))?,
+    };
+    parsed.map(Some).ok_or_else(missing_epg_data)
+}
+
+fn invalid_epg_id(value: &Value) -> StoreError {
+    StoreError::StatusBody(
+        400,
+        json!({"error": format!("Field 'id' expected a number but got {}.", python_repr(value))}),
+    )
+}
+
+fn missing_epg_data() -> StoreError {
+    StoreError::StatusBody(
+        400,
+        json!({"error": "EPGData matching query does not exist."}),
+    )
+}
+
+async fn set_epg_body(request: Request) -> Result<Option<i64>, StoreError> {
+    let media = request
+        .headers()
+        .get(header::CONTENT_TYPE)
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default()
+        .to_owned();
+    let raw = to_bytes(request.into_body(), 64 * 1024)
+        .await
+        .map_err(|_| StoreError::StatusBody(413, json!({"detail": "Request body too large."})))?;
+    if raw.is_empty() {
+        return Ok(None);
+    }
+    match media.split(';').next().map(str::trim) {
+        Some("application/json") => {
+            let value = serde_json::from_slice::<Value>(&raw).map_err(|error| {
+                StoreError::InvalidInput(json!({"detail": format!(
+                    "JSON parse error - {}", crate::startup_bootstrap::json_error(&raw, error))}))
+            })?;
+            let fields = value.as_object().ok_or(StoreError::UnhandledRestFault)?;
+            set_epg_id(fields.get("epg_data_id").unwrap_or(&Value::Null))
+        }
+        Some("application/x-www-form-urlencoded") => {
+            let value = url::form_urlencoded::parse(&raw)
+                .filter(|(key, _)| key == "epg_data_id")
+                .map(|(_, value)| value.into_owned())
+                .last();
+            set_epg_id(&value.map_or(Value::Null, Value::String))
+        }
+        _ => Err(StoreError::StatusBody(
+            415,
+            json!({"detail": format!("Unsupported media type \"{media}\" in request.")}),
+        )),
+    }
+}
+
+pub(crate) async fn set_epg(
+    State(auth): State<AuthService>,
+    Path(raw): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+    Query(params): Query<HashMap<String, String>>,
+    request: Request,
+) -> Result<Json<Value>, StoreError> {
+    let writer = auth.task_sql_writer()?;
+    let auth = auth.with_request_writer_permit(writer.clone())?;
+    let owner = auth.core_publication_owner(writer);
+    let context = ChannelRequest {
+        peer,
+        headers,
+        uri,
+        params,
+    };
+    tokio::spawn(set_epg_owned(auth, raw, context, request, owner))
+        .await
+        .map_err(|_| StoreError::UnhandledRestFault)?
+}
+
+async fn set_epg_owned(
+    auth: AuthService,
+    raw: String,
+    context: ChannelRequest,
+    request: Request,
+    owner: crate::compact_numbering::Owner,
+) -> Result<Json<Value>, StoreError> {
+    let ChannelRequest {
+        peer,
+        headers,
+        uri,
+        params,
+    } = context;
+    let user = auth.account_user(peer, headers.clone(), true).await?;
+    let raw = dispatcharr_ingest_core::source_integer_literal(&raw)
+        .ok_or_else(|| StoreError::StatusBody(404, json!({"detail": "Not found."})))?;
+    let id = raw.parse().map_err(|_| missing_channel())?;
+
+    // Source performs the scoped detail lookup before it accesses request.data.
+    // No SQL transaction is held while waiting for the request body.
+    let mut query = channel_object_query(&auth, &user, id, &params).await?;
+    let old: Value = query
+        .build()
+        .fetch_optional(auth.store.pool())
+        .await?
+        .ok_or_else(missing_channel)?
+        .try_get("raw")?;
+    let guide_id = set_epg_body(request).await?;
+
+    let mut tx = auth.store.pool().begin().await?;
+    let saved = async {
+        let guide: Option<(Option<String>, Option<String>)> = if let Some(guide_id) = guide_id {
+            Some(
+                sqlx::query_as(
+                    "SELECT e.tvg_id, s.source_type FROM epg_epgdata e \
+                 LEFT JOIN epg_epgsource s ON s.id=e.epg_source_id WHERE e.id=$1",
+                )
+                .bind(guide_id)
+                .fetch_optional(&mut *tx)
+                .await?
+                .ok_or_else(missing_epg_data)?,
+            )
+        } else {
+            None
+        };
+        let target = match (&guide, guide_id) {
+            (Some((_, source_type)), Some(epg)) if source_type.as_deref() != Some("dummy") => {
+                if auth.core_task_broker.get().is_none() {
+                    return Err(guide_unsupported());
+                }
+                GuideTarget::Programme(epg)
+            }
+            _ => GuideTarget::CacheOnly,
+        };
+        if auth.notification_cache.is_none() {
+            return Err(guide_unsupported());
+        }
+
+        // Original save(update_fields=["epg_data"]) does not touch updated_at
+        // or invoke compact numbering. Its field write precedes post_save.
+        let updated =
+            sqlx::query("UPDATE dispatcharr_channels_channel SET epg_data_id=$1 WHERE id=$2")
+                .bind(guide_id)
+                .bind(id)
+                .execute(&mut *tx)
+                .await?;
+        if updated.rows_affected() == 0 {
+            return Err(missing_channel());
+        }
+        Ok::<_, StoreError>((guide, target))
+    }
+    .await;
+    let (guide, target) = match saved {
+        Ok(saved) => {
+            tx.commit().await?;
+            saved
+        }
+        Err(error) => {
+            tx.rollback().await?;
+            return Err(error);
+        }
+    };
+
+    // Source uses autocommit for the channel update. A failure in post_save
+    // cannot roll the field back. The group signal follows the guide signal.
+    guide_after_save(&auth, target, owner.clone()).await?;
+    if old["auto_created"] != true && old["channel_group_id"].is_i64() {
+        let mut tx = auth.store.pool().begin().await?;
+        match mark_group(&mut tx, &old["channel_group_id"]).await {
+            Ok(()) => tx.commit().await?,
+            Err(error) => {
+                tx.rollback().await?;
+                return Err(error);
+            }
+        }
+    }
+
+    let name = old["name"].as_str().ok_or(StoreError::UnhandledRestFault)?;
+    let Some((tvg_id, source_type)) = guide else {
+        return Ok(Json(
+            json!({"message": format!("EPG data removed from channel {name}")}),
+        ));
+    };
+    let Some(source_type) = source_type else {
+        // Source has already saved and queued a source-less EPGData row when
+        // it accesses epg_data.epg_source.source_type for the response.
+        return Err(StoreError::StatusBody(
+            400,
+            json!({"error": "'NoneType' object has no attribute 'source_type'"}),
+        ));
+    };
+    let task_status = (source_type != "dummy").then_some("EPG refresh queued");
+    let tvg_id = tvg_id.as_deref().unwrap_or("None");
+    let mut message = format!("EPG data set to {tvg_id} for channel {name}");
+    if let Some(task_status) = task_status {
+        message.push_str(". ");
+        message.push_str(task_status);
+    }
+    let old = old.as_object().ok_or(StoreError::UnhandledRestFault)?;
+    let base = channels::base_url(&headers, &uri)?;
+    let channel = response(auth, user, params, base, id, old, false).await?;
+    Ok(Json(
+        json!({"message": message, "channel": channel, "task_status": task_status}),
+    ))
+}
+
 pub(crate) async fn patch(
     State(auth): State<AuthService>,
     Path(raw): Path<String>,

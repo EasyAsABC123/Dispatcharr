@@ -910,6 +910,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route("/api/channels/channels/ids/", get(ids))
         .route("/api/channels/channels/summary/", get(summary))
         .route(
+            "/api/channels/channels/{id}/set-epg/",
+            post(crate::channel_writes::set_epg),
+        )
+        .route(
             "/api/channels/channels/{id}/streams/",
             get(crate::channel_relations::streams),
         )

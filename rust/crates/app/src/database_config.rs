@@ -56,11 +56,20 @@ fn from_environment(
     let escape = |text: String| text.replace('%', "%25");
     url.set_username(&escape(value("POSTGRES_USER", "dispatch")))
         .map_err(|_| "Invalid POSTGRES_USER")?;
-    let password = read("POSTGRES_PASSWORD").ok_or("POSTGRES_PASSWORD is required")?;
+    let ssl = value("POSTGRES_SSL", "false");
+    let password = match read("POSTGRES_PASSWORD") {
+        Some(password) => password,
+        // Original's modular TLS entrypoint supplies an empty password for
+        // certificate-only PostgreSQL authentication.
+        None if ssl == "true" && read("DISPATCHARR_ENV").as_deref() == Some("modular") => {
+            String::new()
+        }
+        None => return Err("POSTGRES_PASSWORD is required".into()),
+    };
     url.set_password(Some(&escape(password)))
         .map_err(|_| "Invalid POSTGRES_PASSWORD")?;
     url.set_path(&escape(value("POSTGRES_DB", "dispatcharr")));
-    if value("POSTGRES_SSL", "false").eq_ignore_ascii_case("true") {
+    if ssl.eq_ignore_ascii_case("true") {
         let paths = [
             ("POSTGRES_SSL_CA_CERT", "sslrootcert"),
             ("POSTGRES_SSL_CERT", "sslcert"),
@@ -220,6 +229,51 @@ mod tests {
         assert_eq!(parsed.username(), "owned%252Fname");
         assert!(parsed.password() == Some("owned%20%252F%20%2F%40%3F%23"));
         assert_eq!(parsed.path(), "/owned%252Fdb");
+    }
+
+    #[test]
+    fn modular_tls_keeps_certificate_only_database_configuration() {
+        let mut values = vec![
+            ("DISPATCHARR_ENV", "modular"),
+            ("POSTGRES_SSL", "true"),
+            ("POSTGRES_SSL_MODE", "verify-ca"),
+            ("POSTGRES_SSL_CA_CERT", "/owned/ca.pem"),
+            ("POSTGRES_SSL_CERT", "/owned/client.pem"),
+            ("POSTGRES_SSL_KEY", "/owned/client.key"),
+        ];
+        let files = ["/owned/ca.pem", "/owned/client.pem", "/owned/client.key"];
+        let text = build(&values, &files).unwrap();
+        let url = url::Url::parse(&text).unwrap();
+        assert!(url.password().unwrap_or_default().is_empty());
+        let pairs = url
+            .query_pairs()
+            .collect::<std::collections::BTreeMap<_, _>>();
+        assert_eq!(pairs["sslmode"], "verify-ca");
+        assert_eq!(pairs["sslrootcert"], "/owned/ca.pem");
+        assert_eq!(pairs["sslcert"], "/owned/client.pem");
+        assert_eq!(pairs["sslkey"], "/owned/client.key");
+        assert!(build(&values, &files[..2])
+            .unwrap_err()
+            .contains("POSTGRES_SSL_KEY"));
+
+        values.push(("POSTGRES_PASSWORD", "fixture%2F"));
+        let explicit = url::Url::parse(&build(&values, &files).unwrap()).unwrap();
+        assert!(explicit.password() == Some("fixture%252F"));
+    }
+
+    #[test]
+    fn missing_password_outside_original_modular_tls_still_requires_configuration() {
+        for values in [
+            &[("DISPATCHARR_ENV", "modular"), ("POSTGRES_SSL", "false")][..],
+            &[("DISPATCHARR_ENV", "modular"), ("POSTGRES_SSL", "TRUE")],
+            &[("DISPATCHARR_ENV", "aio"), ("POSTGRES_SSL", "true")],
+            &[("POSTGRES_SSL", "true")],
+        ] {
+            assert_eq!(
+                build(values, &[]).unwrap_err(),
+                "POSTGRES_PASSWORD is required"
+            );
+        }
     }
 
     #[test]
