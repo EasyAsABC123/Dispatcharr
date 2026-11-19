@@ -198,6 +198,10 @@ def bind(output, manifest_path, revision, mode):
         require(b"let xc_daily_schedule_transition = !create" in packaged_source
                 and b"&& !xc_daily_schedule_transition" in packaged_source,
                 "candidate package lacks playlist editor XC daily cron transition")
+    if mode == "limits":
+        require(b"let limits = [\"max_streams\", \"priority\"];" in packaged_source
+                and b"&& !xc_limits" in packaged_source,
+                "candidate package lacks playlist editor XC capacity and priority")
     package = [ref(manifest_path), ref(source_archive, manifest["source_archive_sha256"])]
     verify(metadata["inputs"])
     for backend in DRIVERS:
@@ -218,6 +222,7 @@ def bind(output, manifest_path, revision, mode):
             xc_group_patch_label_edit=mode == "rename",
             xc_group_patch_interval_edit=mode == "interval",
             xc_group_patch_daily_cron_edit=mode == "daily-cron",
+            xc_group_patch_limits_edit=mode == "limits",
             whole_cohort_seconds=WINDOW, cleanup_seconds=CLEANUP, performance=False,
             inputs=metadata["inputs"] + package,
         )
@@ -326,6 +331,7 @@ def run(output):
                     "label_edit_status": probe.get("label_edit", {}).get("status"),
                     "interval_edit_status": [step["status"] for step in probe.get("interval_edit", [])],
                     "daily_cron_edit_status": [step["status"] for step in probe.get("daily_cron_edit", [])],
+                    "limits_edit_status": [step["status"] for step in probe.get("limits_edit", [])],
                     "passed": probe["passed"] and report["combined_selected_workflow_passed"]
                     and receipt["actual_exit"] == 0 and receipt["failure"] is None,
                     "sanitized_probe_sha256": digest(results / backend / f"{CASE}.json"),
@@ -347,7 +353,7 @@ def main():
             command.add_argument("--docker", default="docker")
         if action == "bind":
             command.add_argument("--manifest", required=True, type=Path)
-            command.add_argument("--mode", required=True, choices=("references", "duplicates", "orphans", "activity", "rename", "interval", "daily-cron"))
+            command.add_argument("--mode", required=True, choices=("references", "duplicates", "orphans", "activity", "rename", "interval", "daily-cron", "limits"))
             command.add_argument("--candidate-revision", required=True)
     args = parser.parse_args()
     output = args.output.resolve()

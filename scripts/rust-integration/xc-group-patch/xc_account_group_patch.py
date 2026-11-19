@@ -782,6 +782,112 @@ def verify_daily_cron(fixture, path, ids, record):
             })
 
 
+def limit_profiles(fixture, ids):
+    script = """
+from apps.m3u.models import M3UAccountProfile
+
+profiles = list(M3UAccountProfile.objects.filter(m3u_account_id__in=[ids["account"], ids["foreign_account"]])
+    .order_by("id").values("id", "m3u_account_id", "name", "is_default", "is_active", "max_streams",
+                           "search_pattern", "replace_pattern", "current_viewers", "custom_properties", "exp_date"))
+print(json.dumps(profiles, default=str))
+"""
+    return fixture.sql(f"ids = {ids!r}\n" + script, secret=True)
+
+
+def setup_limit_profiles(fixture, ids, active):
+    script = """
+from datetime import datetime
+from apps.m3u.models import M3UAccount, M3UAccountProfile
+
+account = M3UAccount.objects.get(pk=ids["account"])
+account.is_active = active
+account.refresh_interval = 0
+account.max_streams = 2
+account.priority = 4
+account._cron_expression = cron
+account.save()
+M3UAccount.objects.filter(pk=account.pk).update(status="success" if active else "disabled")
+extra, _ = M3UAccountProfile.objects.get_or_create(
+    m3u_account=account, name="Owned capacity second default",
+    defaults={"is_default": True, "is_active": False, "search_pattern": "^(.*)$", "replace_pattern": "$1"},
+)
+defaults = M3UAccountProfile.objects.filter(m3u_account=account, is_default=True)
+assert defaults.count() == 2
+# Keep a profile JSON expiry distinct from the real stored expiry. A model
+# save would overwrite the stored expiry; Source performs a field-only SQL update.
+defaults.update(exp_date=datetime.fromisoformat("2032-02-03T04:05:06+00:00"),
+                custom_properties={"user_info": {"exp_date": "2034-02-03T04:05:06+00:00"}, "scope": "capacity"},
+                current_viewers=1)
+defaults.filter(pk=extra.pk).update(max_streams=8)
+print(json.dumps({"desynchronized_default": extra.pk}))
+"""
+    return fixture.sql(f"ids = {ids!r}\nactive = {active!r}\ncron = {ACTIVITY_CRON!r}\n" + script, secret=True)
+
+
+def observe_limits(payload, ids, related, defaults, active, limit, priority):
+    state = observe(payload, ids)
+    if not isinstance(payload, dict) or not isinstance(payload.get("profiles"), list):
+        return state
+    actual = {profile["id"]: profile for profile in payload["profiles"] if profile.get("is_default")}
+    fields = ("name", "is_active", "max_streams", "search_pattern", "replace_pattern", "custom_properties")
+    state.update(
+        account_limits_match=payload.get("max_streams") == limit and payload.get("priority") == priority,
+        account_preserved=payload.get("name") == "Owned PATCH target" and payload.get("account_type") == "XC"
+        and payload.get("is_active") is active and payload.get("status") == ("success" if active else "disabled")
+        and payload.get("enable_vod") is True and payload.get("custom_properties") == RENAME_PROPERTIES,
+        provider_preserved=payload.get("user_agent") == related["user_agent"]
+        and payload.get("server_group") == related["server_group"] and payload.get("server_url") == RENAME_URL
+        and payload.get("username") == RENAME_USERNAME,
+        schedule_preserved=payload.get("refresh_interval") == 0 and payload.get("cron_expression") == ACTIVITY_CRON,
+        default_profiles_match=set(actual) == set(defaults)
+        and all(all(actual[key].get(field) == row[field] for field in fields) for key, row in defaults.items()),
+    )
+    return state
+
+
+def verify_limits(fixture, path, ids, record):
+    account_id = ids["account"]
+    related = fixture.sql(
+        f"account_id = {account_id!r}\nexpected_url = {RENAME_URL!r}\nexpected_username = {RENAME_USERNAME!r}\n"
+        f"properties = {RENAME_PROPERTIES!r}\ncron = {ACTIVITY_CRON!r}\n" + RENAME_SEED,
+        secret=True,
+    )
+    relationships = snapshot(fixture, ids)
+    for active in (True, False):
+        seeded = setup_limit_profiles(fixture, ids, active)
+        account = preferences_snapshot(fixture, account_id)
+        prior = rename_sql(fixture, account_id)
+        schedule = schedule_and_notifications(fixture, account_id, {})
+        profiles = limit_profiles(fixture, ids)
+        assert account["max_streams"] == 2 and prior["priority"] == 4 and account["is_active"] is active
+        assert all(prior[key] for key in ("server_url_matches", "username_matches", "password_matches"))
+        assert schedule["cron"] == ACTIVITY_CRON and schedule["enabled"] is active and schedule["provider_task"]
+        assert next(row for row in profiles if row["id"] == seeded["desynchronized_default"])["max_streams"] == 8
+        for name, limit, priority in (("priority", 2, 9), ("max_streams", 6, 9), ("both", 0, 4)):
+            body = {**stock_schedule_draft(account, related, 0, ACTIVITY_CRON), "max_streams": limit, "priority": priority}
+            expected = [
+                {**row, "max_streams": limit} if row["m3u_account_id"] == account_id and row["is_default"] else row
+                for row in profiles
+            ]
+            defaults = {row["id"]: row for row in expected if row["m3u_account_id"] == account_id and row["is_default"]}
+            status, payload = request(fixture, "PATCH", path, body)
+            follow_status, follow = request(fixture, "GET", path)
+            actual = rename_sql(fixture, account_id)
+            record.append({
+                "edit": name, "active": active, "status": status, "followup_status": follow_status,
+                "checks": observe_limits(payload, ids, related, defaults, active, limit, priority) if status == 200 else {},
+                "followup": observe_limits(follow, ids, related, defaults, active, limit, priority)
+                if follow_status == 200 else {},
+                "sql_account_matches": preferences_snapshot(fixture, account_id) == {**account, "max_streams": limit}
+                and actual == {**prior, "priority": priority, "default_profiles": [
+                    {**row, "max_streams": limit} for row in prior["default_profiles"]
+                ]},
+                "sql_only_default_capacity_changed": limit_profiles(fixture, ids) == expected,
+                "sql_relationships_and_schedule_preserved": snapshot(fixture, ids) == relationships
+                and schedule_and_notifications(fixture, account_id, {}) == schedule,
+            })
+
+
 def run(fixture, record):
     assert fixture.case == CASE and fixture.backend in {"Original", "Native"}
     evidence = {"case": CASE, "backend": fixture.backend, "passed": False, "steps": []}
@@ -827,6 +933,19 @@ def run(fixture, record):
             evidence["missing_group_references"] = missing
             assert missing["status"] == 400 and missing["exact_sparse_error"] and missing["sql_unchanged"]
             assert missing["followup_status"] == 200 and missing["followup"] and all(missing["followup"].values())
+            if fixture.binding.get("xc_group_patch_limits_edit"):
+                stage = "playlist editor capacity and priority"
+                evidence["limits_edit"] = edits = []
+                verify_limits(fixture, path, ids, edits)
+                assert len(edits) == 6
+                for edit in edits:
+                    assert edit["status"] == edit["followup_status"] == 200
+                    assert edit["checks"] and all(edit["checks"].values())
+                    assert edit["followup"] and all(edit["followup"].values())
+                    assert all(edit[key] for key in (
+                        "sql_account_matches", "sql_only_default_capacity_changed",
+                        "sql_relationships_and_schedule_preserved",
+                    ))
             if fixture.binding.get("xc_group_patch_daily_cron_edit"):
                 stage = "playlist editor daily cron"
                 evidence["daily_cron_edit"] = schedules = []

@@ -115,7 +115,12 @@ fn hash_keys(value: &Value) -> Result<Vec<String>, StoreError> {
     }
     Ok(keys)
 }
-fn xc_editor_update(input: &Map<String, Value>, old: &Value, saved: &Value, edited: &str) -> bool {
+fn xc_editor_update(
+    input: &Map<String, Value>,
+    old: &Value,
+    saved: &Value,
+    edited: &[&str],
+) -> bool {
     if input.get("name").is_some_and(|value| !value.is_string())
         || input
             .get("enable_vod")
@@ -164,7 +169,9 @@ fn xc_editor_update(input: &Map<String, Value>, old: &Value, saved: &Value, edit
     saved["custom_properties"] == Value::Object(expected_properties)
         && saved.as_object().is_some_and(|account| {
             account.iter().all(|(key, value)| {
-                key == edited || key == "custom_properties" || old.get(key) == Some(value)
+                edited.contains(&key.as_str())
+                    || key == "custom_properties"
+                    || old.get(key) == Some(value)
             })
         })
 }
@@ -483,7 +490,18 @@ fn validate(
         && xc_editor
         && cron == previous_cron
         && input.get("name").is_some_and(Value::is_string)
-        && xc_editor_update(&input, old, &saved, "name");
+        && xc_editor_update(&input, old, &saved, &["name"]);
+    // The stock XC editor can save capacity and VOD priority together. The
+    // existing account receiver propagates capacity to the default profiles.
+    let limits = ["max_streams", "priority"];
+    let xc_limits = !create
+        && xc_editor
+        && cron == previous_cron
+        && limits.iter().any(|key| input.contains_key(*key))
+        && limits
+            .iter()
+            .all(|key| input.get(*key).is_none_or(Value::is_i64))
+        && xc_editor_update(&input, old, &saved, &limits);
     let interval_hours = input
         .get("refresh_interval")
         .and_then(Value::as_i64)
@@ -493,13 +511,13 @@ fn validate(
         && cron.is_empty()
         && previous_cron.is_empty()
         && interval_hours.is_some()
-        && xc_editor_update(&input, old, &saved, "refresh_interval");
+        && xc_editor_update(&input, old, &saved, &["refresh_interval"]);
     // The editor clears the interval when switching to a daily cron.
     // Switching back explicitly clears the cron and supplies the new interval.
     let xc_daily_schedule_transition = !create
         && xc_editor
         && input.get("cron_expression").is_some_and(Value::is_string)
-        && xc_editor_update(&input, old, &saved, "refresh_interval")
+        && xc_editor_update(&input, old, &saved, &["refresh_interval"])
         && match (previous_cron.is_empty(), cron.is_empty()) {
             (true, false) => interval_hours == Some(0) && xc_daily_cron(&cron),
             (false, true) => interval_hours.is_some() && xc_daily_cron(previous_cron),
@@ -529,6 +547,7 @@ fn validate(
     }
     if !xc_preferences
         && !xc_label
+        && !xc_limits
         && !xc_interval
         && !xc_daily_schedule_transition
         && !xc_active_toggle
@@ -1668,6 +1687,75 @@ mod tests {
             assert!(matches!(
                 validate(request.as_object().unwrap().clone(), &old, "", true, false),
                 Err(StoreError::Unsupported(_))
+            ));
+        }
+    }
+
+    #[test]
+    fn xc_playlist_editor_saves_capacity_and_priority_with_the_existing_cron() {
+        let mut old = defaults();
+        old["name"] = json!("Owned playlist");
+        old["account_type"] = json!("XC");
+        old["server_url"] = json!("http://owned-provider:8080/api");
+        old["username"] = json!("fixture-user");
+        old["priority"] = json!(4);
+        old["max_streams"] = json!(2);
+        old["custom_properties"] = json!({"enable_vod":true,"hash_key":"name,url","marker":"keep"});
+        let cron = "30 5 * * *";
+        for (active, limit, priority) in [(true, 6, 4), (false, 2, 3), (true, 0, 9)] {
+            old["is_active"] = json!(active);
+            old["status"] = json!(if active { "idle" } else { "disabled" });
+            let request = json!({
+                "name": old["name"], "account_type": "XC", "is_active": active,
+                "server_url": old["server_url"], "username": old["username"],
+                "user_agent": null, "server_group": null, "enable_vod": true,
+                "refresh_interval": 0, "cron_expression": cron, "stale_stream_days": 7,
+                "hash_key": "name,url", "max_streams": limit, "priority": priority,
+            });
+            let prepared = validate(
+                request.as_object().unwrap().clone(),
+                &old,
+                cron,
+                true,
+                false,
+            )
+            .unwrap();
+            let mut expected = old.clone();
+            expected["max_streams"] = json!(limit);
+            expected["priority"] = json!(priority);
+            assert_eq!(prepared.saved, expected);
+            assert_eq!(prepared.cron, cron);
+            assert!(
+                prepared.expiration.is_none()
+                    && !prepared.hash_changed
+                    && prepared.group_selection.is_empty()
+            );
+        }
+    }
+
+    #[test]
+    fn xc_playlist_editor_capacity_and_priority_keep_other_changes_guarded() {
+        let mut old = defaults();
+        old["name"] = json!("Owned playlist");
+        old["account_type"] = json!("XC");
+        for request in [
+            json!({"name":"another name","max_streams":2}),
+            json!({"is_active":false,"priority":7}),
+            json!({"refresh_interval":2,"max_streams":3,"priority":4}),
+            json!({"cron_expression":"30 5 * * *","priority":7}),
+            json!({"password":"fixture-only","max_streams":2}),
+            json!({"priority":"9","max_streams":2}),
+        ] {
+            assert!(matches!(
+                validate(request.as_object().unwrap().clone(), &old, "", true, false),
+                Err(StoreError::Unsupported(_))
+            ));
+        }
+        for key in ["max_streams", "priority"] {
+            let request = Map::from_iter([(key.into(), json!(-1))]);
+            assert!(matches!(
+                validate(request, &old, "", true, false),
+                Err(StoreError::InvalidInput(ref error)) if error[key] == json!(["Ensure this value is greater than or equal to 0."])
             ));
         }
     }
