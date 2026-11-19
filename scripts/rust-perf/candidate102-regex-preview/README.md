@@ -74,3 +74,19 @@ teardown. The release launcher exited 1 and M7 resource acceptance
 remains open. The timing image did not isolate the cause.
 
 [Independent repeat receipt](attempt2.json)
+
+## Shifted request timing
+
+The exact uninstrumented image completed all 216 requests under a
+diagnostic schedule. The two affected Native phases started their request
+waves ten seconds later while keeping five-second request cadence and the
+two-second observer grid. The largest Native latencies in those phases
+were 54.28 ms and 48.38 ms. They were 8.17 ms and 2.17 ms above their local
+medians, below the diagnostic's 10 ms excess criterion. Both original
+spikes were absent and the clock comparison is inconclusive.
+
+The controller exited 0 for diagnostic capture and teardown. This run
+used a different schedule from the release protocol. The two failed
+release attempts remain the governing evidence.
+
+[Shifted timing receipt](shifted-clock-diagnostic.json)

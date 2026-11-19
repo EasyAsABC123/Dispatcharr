@@ -1,0 +1,3520 @@
+{
+  "all_selected_observed_pairs_match_with_legacy_scope": true,
+  "build_sha256": "600ef2153fe473e7f91922a8b8b893ef9334ff4d1505f696a9ef98f3d47c69bf",
+  "candidate_image": "sha256:3d200c0a1334fa5fec7927d7978441ec475d3e8a9254ffc7479f82608ea6a895",
+  "candidate_revision": "d58a400ad8bbec4fa7fc7546dca8525430afa47c",
+  "exact_observed_legacy_error_pairs": 2,
+  "fully_verified_register_operations_added": 0,
+  "historical_fixture_passed": false,
+  "historical_integration_actual_exit": 1,
+  "historical_outer_actual_exit": 1,
+  "historical_pair_assertions_failed": 2,
+  "historical_pair_assertions_passed": 118,
+  "historical_paired_launcher_actual_exit": 1,
+  "independent_exact_cleanup": true,
+  "milestone_accepted": false,
+  "ordinary_representative_operations_verified": 19,
+  "paired_cells_reviewed": 120,
+  "pairs": [
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "0e9e32af34c5acc8a1debec1d7f39653c08b1147106fe7f87e37f295e66e84dc",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "bf834b9ffa7e3a37108cd5c55c7bfe18ecc1521a5816ee90f79227e8e58f88ad",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "0e9e32af34c5acc8a1debec1d7f39653c08b1147106fe7f87e37f295e66e84dc",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "bf834b9ffa7e3a37108cd5c55c7bfe18ecc1521a5816ee90f79227e8e58f88ad",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "701447dfa2c4857307fd07f102fb9199a079f6cb111de4c48065922cc26c8efd",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "a6880f005318cb62b1479aab4b720e8b4db5d7589eb8fd81ea9069e90918e666",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "701447dfa2c4857307fd07f102fb9199a079f6cb111de4c48065922cc26c8efd",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "a6880f005318cb62b1479aab4b720e8b4db5d7589eb8fd81ea9069e90918e666",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f1b8080760206f84e4a:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "8d925036c2631e1134e6c33a93177e175799ca052ca7f9bc4a56762d11abd6fc",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions/",
+      "resolver_ordinal": 336,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "f8f286057d2b07ceb222c3000fe0df766afe5f5c516cd73bdf958a47b1db52b1",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f1b8080760206f84e4a:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "8d925036c2631e1134e6c33a93177e175799ca052ca7f9bc4a56762d11abd6fc",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions/",
+      "resolver_ordinal": 336,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "f8f286057d2b07ceb222c3000fe0df766afe5f5c516cd73bdf958a47b1db52b1",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f1b8080760206f84e4a:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions/",
+      "resolver_ordinal": 336,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f1b8080760206f84e4a:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions/",
+      "resolver_ordinal": 336,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f1b8080760206f84e4a:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions/",
+      "resolver_ordinal": 336,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f1b8080760206f84e4a:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions/",
+      "resolver_ordinal": 336,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-9bf8d00e12fb7e429743:GET",
+      "exact_observed_legacy_error_match": true,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": false,
+      "method": "GET",
+      "native": {
+        "actual_status": 500,
+        "authentication_challenge_present": false,
+        "mime": "text/html",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        "scope_response_match": false,
+        "selected_scope_passed": false
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions.json",
+      "resolver_ordinal": 337,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 500,
+        "authentication_challenge_present": false,
+        "mime": "text/html",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        "scope_response_match": false,
+        "selected_scope_passed": false
+      }
+    },
+    {
+      "contract_id": "route-9bf8d00e12fb7e429743:GET",
+      "exact_observed_legacy_error_match": true,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": false,
+      "method": "GET",
+      "native": {
+        "actual_status": 500,
+        "authentication_challenge_present": false,
+        "mime": "text/html",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        "scope_response_match": false,
+        "selected_scope_passed": false
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions.json",
+      "resolver_ordinal": 337,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 500,
+        "authentication_challenge_present": false,
+        "mime": "text/html",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        "scope_response_match": false,
+        "selected_scope_passed": false
+      }
+    },
+    {
+      "contract_id": "route-9bf8d00e12fb7e429743:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions.json",
+      "resolver_ordinal": 337,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-9bf8d00e12fb7e429743:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions.json",
+      "resolver_ordinal": 337,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-9bf8d00e12fb7e429743:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions.json",
+      "resolver_ordinal": 337,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-9bf8d00e12fb7e429743:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/subscriptions.json",
+      "resolver_ordinal": 337,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "2d79a07de5d0a37b99fd835ba5159870da8abef001c79858930b8259eac5e05a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "6815dffa65df644e17dd76810419e3afbec8d556634bcb16d67b52cf90774cbd",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "2d79a07de5d0a37b99fd835ba5159870da8abef001c79858930b8259eac5e05a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "6815dffa65df644e17dd76810419e3afbec8d556634bcb16d67b52cf90774cbd",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "4db31931ab5751f76c87fde99a1a1c39137d997f2d0fa87426d6cdc3b4a95847",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "6f91f625b2ab6008bda46325b88d31e136a5450f33d4a29cc1a8610f1eeb2ae9",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "4db31931ab5751f76c87fde99a1a1c39137d997f2d0fa87426d6cdc3b4a95847",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "6f91f625b2ab6008bda46325b88d31e136a5450f33d4a29cc1a8610f1eeb2ae9",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "e54fea586e3f65420909da0636c133078cbbacb6f87a88e43f45181e60589d84",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "20c781101cfc82bdba1620791a4d2bf42991296a544a07873dcd0841dbfc8606",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "e54fea586e3f65420909da0636c133078cbbacb6f87a88e43f45181e60589d84",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "20c781101cfc82bdba1620791a4d2bf42991296a544a07873dcd0841dbfc8606",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "45aa719429d4ffc138a08813df8864ce1f0d4df3d0d1e91b6a326c0b95efaf69",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "13efbcc3e0860731751edae85e87416e04255b9744f8f75e1ecfbbf99b263dea",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "45aa719429d4ffc138a08813df8864ce1f0d4df3d0d1e91b6a326c0b95efaf69",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "13efbcc3e0860731751edae85e87416e04255b9744f8f75e1ecfbbf99b263dea",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-abd3ffea3e4cff39ddeb:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "2b1facb0e167fbc5730f4ff31905dc7d2b8e70d7cd32b69216d298a5c2f32ec4",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}/",
+      "resolver_ordinal": 348,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "1447a44c196635a6e30018880fb521be16a6998a0a6cb56b6fd8818e82a67943",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-abd3ffea3e4cff39ddeb:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "2b1facb0e167fbc5730f4ff31905dc7d2b8e70d7cd32b69216d298a5c2f32ec4",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}/",
+      "resolver_ordinal": 348,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "1447a44c196635a6e30018880fb521be16a6998a0a6cb56b6fd8818e82a67943",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-abd3ffea3e4cff39ddeb:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}/",
+      "resolver_ordinal": 348,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-abd3ffea3e4cff39ddeb:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}/",
+      "resolver_ordinal": 348,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-abd3ffea3e4cff39ddeb:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}/",
+      "resolver_ordinal": 348,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-abd3ffea3e4cff39ddeb:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}/",
+      "resolver_ordinal": 348,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-76a1ff925981b7100a3f:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "d5ef1acb1c83c85a0741335161979820388429bf554e5415d2c625d877c4070a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}.json",
+      "resolver_ordinal": 349,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "1b38f05d52317266ce474c0d94f59cb48fd7330b49837eac1a2e6601406fdd61",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-76a1ff925981b7100a3f:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "d5ef1acb1c83c85a0741335161979820388429bf554e5415d2c625d877c4070a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}.json",
+      "resolver_ordinal": 349,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "1b38f05d52317266ce474c0d94f59cb48fd7330b49837eac1a2e6601406fdd61",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-76a1ff925981b7100a3f:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}.json",
+      "resolver_ordinal": 349,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-76a1ff925981b7100a3f:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}.json",
+      "resolver_ordinal": 349,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-76a1ff925981b7100a3f:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}.json",
+      "resolver_ordinal": 349,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-76a1ff925981b7100a3f:GET",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "GET",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/logs/{log}.json",
+      "resolver_ordinal": 349,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "8a1abf05b0a558218b9d3dd680357732e2d289af12d25b38921846c1b4773843",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "50531dfc1dad4844eca7140fb123c421a7770b697cbe559fd71620d007920f66",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "f14829f98aceb6d192faa208f8638f54e729e5d8c3079e765bcd31f8a1aaef72",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "654e424a26dc0ed587ba5bdc3ca7b6aff5f8bb249bd645f2ba40032b67433601",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}/",
+      "resolver_ordinal": 334,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "850c86b1cdb614561c266bf1ec83098204de9a2388963735d98c2160839a8cb6",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "a552e32827cc23c0eb41e3604d0a63626062a6d9aead3d3171351ccd0c79a943",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "59e6cb01bf6002bcc56ee708fdfa91521adc708efcea865b0abea6ff81120cf2",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "163e8dfda4741a20dbce780cc8865cdea0bb6a6a40c5d61aa639063ca3545378",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-1f85ebfe05327ab895fc:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/integrations/{integration}.json",
+      "resolver_ordinal": 335,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 201,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 201,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "c148682c5bf744186f33e79004fd8166bfb27b464e622ae9adfc66af5b0d254b",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 201,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "d21ec994a4a45439474811bee5c24179771b9867b64300adbf9d46f4032d1261",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 201,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 201,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "47ac77a75967cc006b1081b5d5b4670e77431d3a25468f212b8af1d1029dcbce",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 201,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "d6e50149bd0ae395406f64eb178b72287faa585c42e5fd6429a9af58e64d0df2",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-c0d7da746580d4b3d8f4:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/",
+      "resolver_ordinal": 342,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 201,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 201,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "0f3d3bbcd45cc0365599f4e6537a1b7bf612bff5b5083254f87ace9f4ec68b1b",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 201,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "85ba50c6beca699b768067fff62a345adcf7792015cf8d0537722b7cc05054d6",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 201,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 201,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "a1738e70ef147587afb2d3d5ef1aa37050c466d677371a4867e4971c3323f320",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 201,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "09a95230aeca0b9315c2e71245d21ec94260197abf3fd8b76c9ad0f0e32a4681",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-00c56a0c311f822cd405:POST",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "POST",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions.json",
+      "resolver_ordinal": 343,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "ad61fff0d1a5705e0f484052d78a2911a2cd174bac66f792c2f0513e27d5c3ba",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "1ff9c9438a4516eb166f8ff111994b3d54af13131aa5a96d56afd3dfbdb31a8a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "86804918a4682126af3351cea9a9f40a78faeba1d13bb9356676b5c8f444892e",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "f1a712ffc441bee5f8d37ba5132ef1f4f7c555eec08ddf64033b807bf8728a9c",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "143a9fa393b2cbf9095cc4ea0db3d1a3414b3a15536c1432a83a89d2833536d6",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "1448196e026a2d724324ce0a3d593768510cf907d1b4634d92a2a00f67e9f2f6",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "4429e9944fb07c892c97af5eeca6505e61583529a82ac856827e674ae91dc521",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "7934f98a468ee9ec18ccd4aec65c1f6f1aa51bec403f88234bb870e4e11fec6d",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PUT",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PUT",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "42d56a199235b954701a97330eed540baed03297b1eb69c1c8d6ba02a3f80e36",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "0085432b2687984a0be3e11f2b503aee247fe505dcb63486f83a787e891f772c",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "528dd4977949e1d880f822bc3622bb91281f547e00417d1fdaa47525803bf895",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "4c0f6581fab970a8a99fbc4b0c372852de1e9650fcaea2df8b47fb18a8d4351b",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "453d240b1dcebd98d86bd5b979261397c56293a7c58fc29f92bf81da55b50c8a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "618e724aab793c44225d14a81b955b8c5d61c346046b2adef08e377516472cc7",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 200,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9fc5f5d019b59bac3f7c4a01cbbe06d900aff4f2095afaae35e4b027e6efba6c",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 200,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "23336be47bfd59dfae863f1f4228905fadd8e586c3c115c409d6985839cc6a55",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:PATCH",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "PATCH",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 204,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 204,
+        "authentication_challenge_present": false,
+        "mime": "",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 204,
+        "authentication_challenge_present": false,
+        "mime": "",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 204,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 204,
+        "authentication_challenge_present": false,
+        "mime": "",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 204,
+        "authentication_challenge_present": false,
+        "mime": "",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-0ba843d20e21e8141235:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}/",
+      "resolver_ordinal": 344,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 204,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 204,
+        "authentication_challenge_present": false,
+        "mime": "",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "admin_api_key",
+      "source": {
+        "actual_status": 204,
+        "authentication_challenge_present": false,
+        "mime": "",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 204,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 204,
+        "authentication_challenge_present": false,
+        "mime": "",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "admin_jwt",
+      "source": {
+        "actual_status": 204,
+        "authentication_challenge_present": false,
+        "mime": "",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "anonymous",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 401,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "inactive_admin",
+      "source": {
+        "actual_status": 401,
+        "authentication_challenge_present": true,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "standard",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    },
+    {
+      "contract_id": "route-518a9d8b96ea2b918ce6:DELETE",
+      "exact_observed_legacy_error_match": false,
+      "historical_expected_status": 403,
+      "historical_fixture_pair_passed": true,
+      "method": "DELETE",
+      "native": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      },
+      "observed_http_and_sql_pair_matched": true,
+      "path_template": "/api/connect/subscriptions/{subscription}.json",
+      "resolver_ordinal": 345,
+      "role": "viewer",
+      "source": {
+        "actual_status": 403,
+        "authentication_challenge_present": false,
+        "mime": "application/json",
+        "owned_sql_rows_match": true,
+        "raw_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "scope_response_match": true,
+        "selected_scope_passed": true
+      }
+    }
+  ],
+  "performance_verified": false,
+  "physical_http_cells_attempted": 240,
+  "raw_fingerprints": {
+    "binding.json": "9d29210f600d8ce511b6a7b88c01b2a1cc860607e63ab49bc2211e2b57e3813d",
+    "evidence/integration.json": "5ebc384d65383a03880c5ff85c734523747e52bc33cfcc098ad4d78b1559d6ff",
+    "evidence/owned-before-compose-down.json": "9cc09d7e08c526c57c866c183c4df372a246a92bab45a80c5c2f3e1b8badacb2",
+    "execution.json": "3d685fa3ab5263f4c1e0e9bb55ee736adfed5757c7c5c73dea991e8da1276fa4",
+    "execution.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "execution.stdout": "b6de19aae8c347a56b406398f0b3fdfd479a504a813215d902336d1868e4b33d",
+    "expanded-custody.json": "04b4696d31775a821996d1489ddea3cdf283728a085ad16a4d9968f9ed1ee1f8",
+    "independent-cleanup.json": "489766dab40dfffe63091fa7be5199448b3b2740a91219aeb09b56f860ac5ac9",
+    "outer-actual-exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "outer-phase-execution.json": "99cc9cee2624fd48e6fed80e1edbf9efd2142de0b2935726a281cfb1352ed4d1",
+    "outer-proof.json": "58f5257e91de9d2fd6a8d2e12cbe96c6948e7ad2fefe334697ee3aba65b25714",
+    "receipt.json": "459c6553baf403159ff5d58300176a87f628f85aca543da8d44ae184351878dc"
+  },
+  "scope": "retrospective_exact_C106_Connect_method_role_and_legacy_error_observations",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "unchanged_register": true,
+  "whole_operation_policy_approved": false
+}
