@@ -139,3 +139,18 @@ history or extending its expiry. The full two-hour soak remains pending.
 [Directed disconnect evidence](../scripts/rust-integration/m9-playback-refresh-diagnostic/password-fast-recovery.json)
 
 [Successor natural-auth evidence](../scripts/rust-integration/m9-playback-refresh-diagnostic/password-cache-successor.json)
+
+## Candidate103 short resource qualification
+
+The exact Candidate103 package exited 0 after 120 seconds with ten
+viewers sharing one upstream and one provider slot. Two XMLTV refreshes
+produced distinct durable results and all 20 media clips decoded. The
+independent verifier confirmed 25 active resource samples, three active
+process censuses, eleven censuses in each idle window, and complete
+owned cleanup. The observed first-media p95 was 6.477 seconds and the
+post-idle working set was 475,136 bytes below the pre-idle working set.
+
+This qualifies the same image to run the two-hour fixture. It does
+not establish a comparative performance gain or full M9 acceptance.
+
+[Candidate103 short resource receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/resource-short-candidate103.json)

@@ -35,3 +35,20 @@ The verifier binds the exact Candidate102 build and uses the existing fixed
 reducer. It accepts a local capture with `--driver`, `--functional-runner`,
 `--preflight`, `--build`, `--functional-receipt`, `--attempt`, `--actual-exit`,
 `--actual-log`, and `--quiet-authorization`.
+
+## Request timing diagnostic
+
+An instrumented image repeated the six phases with the same workload and
+phase order. All 48 functional checks passed before measurement. The run
+matched all 216 measured responses and verified cleanup. Diagnostic
+full-scan p95 ratios were 0.774, 0.898, and 0.621 against the paired
+Original phases.
+
+The previously slow request in pair 2, wave 7 took 45.46 ms total with
+timing enabled. Pair 3, wave 6 took 45.30 ms. The instrumented run did
+not reproduce either spike, so the stage breakdown cannot establish its
+cause. The original release result remains the governing result. The
+same uninstrumented image is queued for a repeat using the existing
+request manifest and budgets.
+
+[Diagnostic receipt](timing-diagnostic.json)

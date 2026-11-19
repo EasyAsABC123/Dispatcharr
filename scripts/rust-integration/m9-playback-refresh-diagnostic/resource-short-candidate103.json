@@ -1,0 +1,110 @@
+{
+  "candidate_revision": "e4317c4bbcfc427943c1eaf19e0c6f7d43d05a0c",
+  "format_version": 1,
+  "full_m9_accepted": false,
+  "performance_comparison": false,
+  "release_eligibility": false,
+  "runs": {
+    "short": {
+      "active_census_ticks": 3,
+      "active_counter_ticks": 25,
+      "active_seconds": 120,
+      "authority_sha256": {
+        "binding.json": "0d08b53c21339f4f2147c03d49ead1751a392cba70a36b2a21dcfea206379f64",
+        "evidence/integration.json": "4aaa39f1de5adc386f106f7b0352458b527a694a53507918dacc5012e7e359ad",
+        "evidence/owned-before-compose-down.json": "a80ad42544f5394e38b330b8a9610df140e705542c5745f32010fa92ec0cfaf5",
+        "evidence/owned-role-counters.jsonl": "2066e5b704d15db38373998f40f6f47aa08d71852174e8104c5e3fa4b53cbbb5",
+        "evidence/owned-role-custody.json": "1f0aa3c23e9d7527fafb0acaac908121d3f41f59e181f95e0850e9ad57bf9441",
+        "evidence/owned-role-summary.json": "12d646f70c8cb2cde35c18bf269b1bc38ad649e25caaa445cc49afdd5f6f9ede",
+        "execution.json": "9f0ed59dc1a94ba9187bc5f3119dbfcc5e374ebf58a95c26f3610d8e32f10c13",
+        "independent-cleanup.json": "c8cad38163c96400af65d5bef71991d50f0a3ad686ff28cc7ed2e8713bb6c03e",
+        "receipt.json": "10bd97ba79f50d2ae7b2f366e5523e02fa6454c11fea1416802fe724beb80a42"
+      },
+      "decoder_clips": 20,
+      "exact_owned_teardown": true,
+      "idle_censuses": [
+        11,
+        11
+      ],
+      "idle_working_memory_growth_bytes": -475136,
+      "image_id": "sha256:5e87b9ef01cb1280ed8bfe1b3b563735e248776287dee6bba52d6f1944b93808",
+      "media_journal_sha256": {
+        "decoders.json": "7f54d2591ab24f5a5e340a47cedbb1e1a288db42bccbe99dece06b777c7bdd32",
+        "readers.json": "d2ca6ea569a2e78a5cd3138b5866cff557b986612b0c22ec98153ab2dd6b31bc"
+      },
+      "physical_decoder_reports_sha256": "236e652f972b1dce22e685a15eab4ffeb2f0568764fa3d4a90956df490abf6b7",
+      "qualified": true,
+      "resource_blocks": [
+        {
+          "aggregate_working_memory_delta_bytes": -11345920,
+          "aggregate_working_memory_slope_bytes_per_minute": -5672960.0,
+          "census_maxima": {
+            "file_descriptors": 801,
+            "processes": 21,
+            "socket_descriptors": 135,
+            "tcp_time_wait": 40,
+            "threads": 85
+          },
+          "end_second": 120,
+          "roles": {
+            "baseline": {
+              "cpu_delta": {
+                "cpu_percent_mean": 1.990956726953084,
+                "cpu_usage_usec": 2389172,
+                "elapsed_seconds": 120.00120181699458,
+                "throttled_period_fraction": 0.0,
+                "throttled_usec": 0
+              },
+              "peak_observed_pids": 24,
+              "peak_observed_swap_bytes": 0,
+              "peak_observed_working_memory_bytes": 247042048
+            },
+            "candidate": {
+              "cpu_delta": {
+                "cpu_percent_mean": 0.9304396744917299,
+                "cpu_usage_usec": 1116539,
+                "elapsed_seconds": 120.0012242179946,
+                "throttled_period_fraction": 0.0,
+                "throttled_usec": 0
+              },
+              "peak_observed_pids": 9,
+              "peak_observed_swap_bytes": 0,
+              "peak_observed_working_memory_bytes": 46555136
+            },
+            "origin": {
+              "cpu_delta": {
+                "cpu_percent_mean": 2.120522155858635,
+                "cpu_usage_usec": 2544653,
+                "elapsed_seconds": 120.00124558800599,
+                "throttled_period_fraction": 0.0,
+                "throttled_usec": 0
+              },
+              "peak_observed_pids": 42,
+              "peak_observed_swap_bytes": 0,
+              "peak_observed_working_memory_bytes": 74240000
+            },
+            "relay": {
+              "cpu_delta": {
+                "cpu_percent_mean": 0.19168049582387758,
+                "cpu_usage_usec": 230019,
+                "elapsed_seconds": 120.00125469799968,
+                "throttled_period_fraction": 0.0,
+                "throttled_usec": 0
+              },
+              "peak_observed_pids": 14,
+              "peak_observed_swap_bytes": 0,
+              "peak_observed_working_memory_bytes": 14950400
+            }
+          },
+          "start_second": 0
+        }
+      ],
+      "sealed_protocol_sha256": "f9b8165e96569bfb36e0f82bf5d35e0a7107e2741001646db3bc2e4831fba9e7",
+      "stream_provider_slots": 1,
+      "successful_distinct_refreshes": 2,
+      "upstream_generations": 1,
+      "viewer_start_p95_ms": 6477.114,
+      "viewers": 10
+    }
+  }
+}
