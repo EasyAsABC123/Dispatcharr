@@ -36,6 +36,7 @@ import retained_core_profile_json_contracts
 import retained_hdhr_literal_contracts
 import retained_c106_connect_replay_contracts
 import retained_logo_m3u_contracts
+import retained_epg_vod_logo_contracts
 import retained_comskip_task_contracts
 import retained_clocked_recording_contracts
 import core_settings_source_contracts as subject
@@ -98,6 +99,7 @@ class CoreSettingsSourceControls(unittest.TestCase):
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(ROOT, register['runtime_routes'])
         retained_c106_connect_replay_contracts.restore_pre_c106_replay(ROOT, register['runtime_routes'])
         retained_logo_m3u_contracts.restore_pre_logo_m3u(ROOT, register['runtime_routes'])
+        retained_epg_vod_logo_contracts.restore_pre_epg_vod_logo(ROOT, register['runtime_routes'])
         retained_connect_test_contracts.restore_pre_connect_test(ROOT, register['runtime_routes'])
         retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT, register['runtime_routes'])
         retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, register['runtime_routes'])

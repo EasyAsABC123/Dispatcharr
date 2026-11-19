@@ -12,10 +12,10 @@ alone does not establish application parity or an application performance gain.
 The [complete parity plan](rust-complete-parity-plan.md) assigns parallel work
 across M0–M9 and proposes M10/M11 as separate rollout stages.
 
-The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-logo-m3u-592.json)
-passed all 28 tests and independently verified cleanup. The register has
-592 partial Original assignments and 206 unassigned HTTP operations. The
-new Original logo and M3U captures qualified 108 role checks across 27 routes.
+The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-epg-vod-logo-619.json)
+passed all 30 tests with verified cleanup. The register has 619 partial Original
+assignments and 179 unassigned HTTP operations. The Original EPG and VOD-logo
+captures qualified another 108 role checks across 27 operations.
 
 The [Redis write retry and shared playback checks](rust-migration-shared-playback-checks.md)
 verified the same-writer retry after a rejected write, the joined transport
@@ -790,7 +790,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 
 | ID | Deliverable | Depends on | Current status | Evidence required to pass |
 | --- | --- | --- | --- | --- |
-| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 592 partial HTTP Source assignments, 206 HTTP assignments absent, and 21 typed non-HTTP assignments across 250 candidates; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
+| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 619 partial HTTP Source assignments, 179 HTTP assignments absent, and 21 typed non-HTTP assignments across 250 candidates; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
 | M1 | Shared bounded streaming core | M0 | In progress (technical core gates passed; M0 executable-contract prerequisite open) | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
 | M2 | Authenticated live TS vertical slice | M1 | In progress | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
 | M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
