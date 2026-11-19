@@ -205,6 +205,126 @@ fn float_integer(value: f64) -> Option<BigInt> {
     Some(if bits >> 63 == 1 { -value } else { value })
 }
 
+/// CPython int() uses %.200R: precision truncates the COMPLETE repr by
+/// Unicode codepoints, even inside an escape or before its closing quote.
+/// Quote selection must inspect the entire input before emitting a prefix.
+fn integer_error_repr(raw: &str) -> String {
+    let quote = if raw.contains('\'') && !raw.contains('"') {
+        '"'
+    } else {
+        '\''
+    };
+    let mut result = String::with_capacity(800);
+    result.push(quote);
+    let mut used = 1;
+    for c in raw.chars() {
+        let fragment = match c {
+            '\\' => "\\\\".into(),
+            '\t' => "\\t".into(),
+            '\n' => "\\n".into(),
+            '\r' => "\\r".into(),
+            c if c == quote => format!("\\{c}"),
+            c if !crate::python_action::printable(c) => {
+                let n = c as u32;
+                if n <= 0xff {
+                    format!("\\x{n:02x}")
+                } else if n <= 0xffff {
+                    format!("\\u{n:04x}")
+                } else {
+                    format!("\\U{n:08x}")
+                }
+            }
+            c => c.to_string(),
+        };
+        for part in fragment.chars() {
+            if used == 200 {
+                return result;
+            }
+            result.push(part);
+            used += 1;
+        }
+    }
+    if used < 200 {
+        result.push(quote);
+    }
+    result
+}
+/// Existing Core parser intentionally exposes Option only. Distinguish its
+/// captured valid-decimal >4300 failure without changing any Core callers.
+/// Unicode digits reuse the pinned Source15.1 Core decoder, not Rust's newer
+/// Unicode numeric predicate. ASCII fastpath avoids allocation perASCII digit.
+fn oversized_decimal_digits(raw: &str) -> Option<usize> {
+    let raw = raw
+        .split('\0')
+        .next()
+        .unwrap_or(raw)
+        .trim_matches(char::is_whitespace);
+    let raw = raw.strip_prefix(['+', '-']).unwrap_or(raw);
+    let mut digits = 0usize;
+    let mut previous_digit = false;
+    for c in raw.chars() {
+        if c == '_' {
+            if !previous_digit {
+                return None;
+            }
+            previous_digit = false;
+            continue;
+        }
+        let digit = c.is_ascii_digit()
+            || (!c.is_ascii() && {
+                let mut bytes = [0; 4];
+                dispatcharr_ingest_core::source_integer_literal(c.encode_utf8(&mut bytes)).is_some()
+            });
+        if !digit {
+            return None;
+        }
+        digits += 1;
+        previous_digit = true;
+    }
+    (previous_digit && digits > 4300).then_some(digits)
+}
+pub(crate) fn python_int_string(raw: &str) -> Result<BigInt, String> {
+    if let Some(value) =
+        dispatcharr_ingest_core::source_integer_literal(raw).and_then(|v| v.parse().ok())
+    {
+        return Ok(value);
+    }
+    if let Some(digits) = oversized_decimal_digits(raw) {
+        return Err(format!("Exceeds the limit (4300 digits) for integer string conversion: value has {digits} digits; use sys.set_int_max_str_digits() to increase the limit"));
+    }
+    Err(format!(
+        "invalid literal for int() with base 10: {}",
+        integer_error_repr(raw)
+    ))
+}
+/// Source int() over JSON scalar values. Container/null type errors retain
+/// their Python type names, and floats truncate using their binary value.
+pub(crate) fn python_json_int(value: &Value) -> Result<Value, String> {
+    let wrong_type = |kind| {
+        format!(
+            "int() argument must be a string, a bytes-like object or a real number, not '{kind}'"
+        )
+    };
+    let integer = match value {
+        Value::Bool(value) => return Ok(Value::Number(Number::from(u8::from(*value)))),
+        Value::Number(value) if is_float(value) => {
+            let finite = value
+                .as_f64()
+                .filter(|v| v.is_finite())
+                .ok_or_else(|| "cannot convert float infinity to integer".to_owned())?;
+            float_integer(finite.trunc()).expect("truncated finite float is integral")
+        }
+        Value::Number(_) => return Ok(value.clone()),
+        Value::String(value) => python_int_string(value)?,
+        Value::Null => return Err(wrong_type("NoneType")),
+        Value::Array(_) => return Err(wrong_type("list")),
+        Value::Object(_) => return Err(wrong_type("dict")),
+    };
+    Ok(Value::Number(
+        Number::from_str(&integer.to_string()).expect("exact JSON integer"),
+    ))
+}
+
 pub(crate) fn python_equal(left: &Value, right: &Value) -> bool {
     match (numeric(left), numeric(right)) {
         (Some(Numeric::Integer(left)), Some(Numeric::Integer(right))) => return left == right,
