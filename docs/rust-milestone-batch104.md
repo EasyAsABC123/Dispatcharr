@@ -25,3 +25,14 @@ A fresh replay is necessary to qualify the product's numeric seek path.
 These functional checks add no performance measurements.
 
 [Exact Compose and Rust evidence](../scripts/rust-integration/milestone-batch104/functional.json)
+
+## Numeric VOD seek replay
+
+The corrected fixture exercised five actual HTTP requests on each backend
+and observed the in-flight session in Redis. All returned HTTP 206 with
+the same 65,536-byte media prefix and Content-Range. The provider received
+one request per case. Both backends matched offset precedence, seek
+precedence, empty-timestamp shadowing, the time fallback and invalid input.
+The fixture verified the exact stored offset and complete teardown.
+
+[Numeric seek receipt](../scripts/rust-integration/milestone-batch104/numeric-vod-seek.json)

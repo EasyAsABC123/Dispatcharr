@@ -42,3 +42,14 @@ one provider slot. The surviving viewer continued after its peer closed,
 the media decoded, and all five owned process generations retired.
 
 [Functional receipts](../scripts/rust-integration/milestone-batch105/functional.json)
+
+## Original remote XMLTV creation
+
+The Original returned HTTP 201 for both active and inactive creation,
+400 for a duplicate, 403 for a standard user, and 401 for an anonymous
+request. The fixture confirmed both saved rows and the one owned provider
+read. Only active creation emitted the immediate refresh root, followed
+by the expected Index and Series work. Exact process and Compose cleanup
+passed. The Rust comparison uses this Original capture.
+
+[Original XMLTV creation receipt](../scripts/rust-integration/milestone-batch105/xmltv-create-original.json)

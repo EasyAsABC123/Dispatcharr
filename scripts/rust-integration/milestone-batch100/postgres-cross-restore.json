@@ -1,0 +1,53 @@
+{
+  "candidate_image": "sha256:778210bb926b98ba12e7e5a1a7a866eb7dacc0fd272856f3436973f9a409c619",
+  "candidate_restore": {
+    "api": 202,
+    "control_match": true,
+    "exact_restored_SQL": true,
+    "fingerprint": "ca380f5206aeaaba29af5bc1234bc441a7ab2167c337cb323827d3b46998bc60",
+    "name": "Candidate100 Native restore",
+    "worker": "SUCCESS"
+  },
+  "candidate_revision": "6a015a0bc753b3688e099e57ec5b9cf2b64936ad",
+  "candidate_same_process_reads": {
+    "channel": 200,
+    "login": 200,
+    "name": "same Native Main restored business reads",
+    "replaced_password": 401,
+    "same_main_generation": true,
+    "settings": 200
+  },
+  "dispatcher_actual_exit": 0,
+  "full_M8_accepted": false,
+  "native_attempted": true,
+  "original_create_and_download": {
+    "api": 202,
+    "archive": {
+      "bytes": 39390,
+      "database_type": "postgresql",
+      "format_version": 2,
+      "members": [
+        "database.dump",
+        "metadata.json"
+      ],
+      "sha256": "60bd11ee8655e648bc3993f39ad8d9a7aa586fb3c994acd46e28f2f8c299cfe4"
+    },
+    "download": 200,
+    "name": "Original create and download",
+    "unchanged_SQL": true,
+    "worker": "SUCCESS"
+  },
+  "original_physical_capture_and_cleanup_passed": true,
+  "owned_cleanup": {
+    "Native": true,
+    "Original": true
+  },
+  "passed": true,
+  "performance_verified": false,
+  "raw_receipts_sha256": {
+    "Native/receipt.json": "2623cbf3d984de235c83945a2e887401efacd8cdd5298a2309dc9476fe638d6f",
+    "Original/receipt.json": "9e7d48693d7f9aa1a147d897df952e883891289f28356a03871af4ca5cd1a594"
+  },
+  "scope": "Original archive through Candidate100 native restore",
+  "source_authority": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}

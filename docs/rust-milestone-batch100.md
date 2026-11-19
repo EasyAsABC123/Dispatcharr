@@ -60,3 +60,18 @@ remain open. These scoped runs establish no new performance gains.
 
 [Original and Candidate98 VOD evidence](../scripts/rust-integration/exact-vod-original-c98/receipt.json)
 · [Milestone ledger](rust-milestones.md)
+
+## Original PostgreSQL archive restored through Native Main
+
+The Original's authenticated API admitted the backup job with HTTP 202.
+Its Celery worker completed successfully, and the download returned HTTP
+200 with the format-2 PostgreSQL archive. Native accepted the same archive
+and completed the restore. Its restored SQL fingerprint matched the
+Original control.
+
+The same Native Main process then confirmed login with the restored
+credential, returned HTTP 401 for the replaced credential, and served
+the restored settings and channel. Both projects and their owned process
+generations retired. This covers the selected PostgreSQL archive workflow.
+
+[Cross-backend restore receipt](../scripts/rust-integration/milestone-batch100/postgres-cross-restore.json)
