@@ -154,6 +154,7 @@ class CapturedEvidenceRegister(unittest.TestCase):
         import retained_core_profile_json_contracts
         import retained_hdhr_literal_contracts
         import retained_c106_connect_replay_contracts
+        import retained_logo_m3u_contracts
         refs.update(retained_live_stop_contracts.dependencies())
         refs.update(retained_ts_controls_contracts.dependencies())
         refs.update(retained_canonical_management_contracts.dependencies())
@@ -165,6 +166,7 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(retained_core_profile_json_contracts.dependencies())
         refs.update(retained_hdhr_literal_contracts.dependencies())
         refs.update(retained_c106_connect_replay_contracts.dependencies())
+        refs.update(retained_logo_m3u_contracts.dependencies())
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
