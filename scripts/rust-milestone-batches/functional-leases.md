@@ -1,6 +1,6 @@
 # Functional leases
 
-Original Dispatcharr and dependency authors retain application and algorithm
+Original Dispatcharr and dependency authors retain full application and algorithm
 credit. `functional_lease.py` provides one public lock helper for existing batch
 owners. It starts no work, creates no worker pool and grants no performance
 acceptance. The global coordinator continues to use an exclusive lease; its
@@ -14,8 +14,7 @@ exactly one nonempty `source_contexts` or `native_contexts` list and
 The coordinator CLI does not opt into this mode, even if its binding document
 contains that field. No existing owner is switched by this change.
 
-After actual two-fixture namespace/resource qualification, a future owner may
-call the public helpers exposed by the coordinator:
+An owner of a qualified fixture can use the coordinator’s public helpers.
 
 ```python
 backend = coordinator.functional_backend(plan)
@@ -82,7 +81,33 @@ or unrelated heavy work may overlap that functional pair. Performance/quiet
 phases stay exclusive, after both owners and their cleanup have actually settled;
 functional overlap supplies no CPU/memory/latency/throughput comparison.
 
-Run the pure tests without applications:
+## Qualified readiness pair
+
+The pinned Original playback fixture and Candidate85 Native clean-install
+fixture reached real readiness while holding opposite lanes. The host observer
+found separate project and bridge identities, nonoverlapping subnets, distinct
+network and mount namespaces, disjoint writable storage, and distinct loopback
+ports. Each fixture identified its own PostgreSQL database and retrieved only
+its own Redis and media sentinels. Five running service cgroups enforced the
+declared caps, and the exited Native initializer retained its configured caps.
+The observations included the Docker daemon, controller, and their common
+ancestors. The joint CPU allocation was 7 cores with 32 effective CPUs, and
+all 13 checked cgroups satisfied their applicable CPU, memory, and PID limits.
+The [qualification receipt](../../docs/rust-functional-overlap-candidate85.json)
+retains the scope, limits, actual exits, and evidence digests.
+
+This readiness smoke test applies to the measured fixture layouts and host.
+For another plan, inspect the actual limits in the Docker host’s PID namespace
+and use one reading for a finite cgroup’s current use and remaining
+reservation. Keep both owners under their leases through physical settlement
+and confirm exclusive admission before the next quiet phase.
+
+Both owners in this run exited 0. Cleanup removed six exact containers, two
+bridges and one volume, closed three ports, and verified retirement of 22
+observed container process generations. Exclusive admission then succeeded.
+The first attempt and its recovery are retained in the [earlier receipt](../../docs/rust-functional-overlap-first-attempt.json).
+
+Run the pure tests without applications.
 
 ```sh
 python3 -B -m unittest discover -s scripts/rust-milestone-batches -p test_functional_lease.py

@@ -1,0 +1,135 @@
+{
+  "credit": "Original Dispatcharr and dependency authors retain full application and algorithm credit.",
+  "scope": "One real Original playback and Native clean-install readiness pair on the owned Docker host.",
+  "qualified": true,
+  "workflow_default_changed": false,
+  "performance_verified": false,
+  "milestone_accepted": false,
+  "original": {
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff"
+  },
+  "native": {
+    "revision": "85d7db9b316bb2ad5de79014a9e5321f77579c96",
+    "image": "sha256:5ff38d1002aa58ee18ca7dad36aeaa42dd17bdec36af5fc77e0c6fe4fc5c885f"
+  },
+  "outer_terminal": {
+    "source": "Observed terminal from systemd-run --user --wait --collect",
+    "service_result": "success",
+    "main_process_code": "exited",
+    "actual_exit": 0,
+    "service_runtime_seconds": 30.987
+  },
+  "both_owners_observed_live_seconds": 0.594246371,
+  "front_door_status": {
+    "original_missing_channel": 404,
+    "original_origin": 200,
+    "native_readiness": 200
+  },
+  "isolated_projects_subnets_loopback_ports_network_and_mount_namespaces": true,
+  "isolated_writable_storage_and_volumes": true,
+  "separate_postgresql_databases": true,
+  "isolated_redis_and_media_sentinels": true,
+  "other_exclusive_and_same_lane_admissions_refused": {
+    "exclusive": true,
+    "Original": true,
+    "Native": true
+  },
+  "service_caps": {
+    "Original": {
+      "baseline": {
+        "cpu_cores": 2.0,
+        "memory_bytes": 3221225472,
+        "pids": 256,
+        "cgroup_sampled": true,
+        "oom_events": 0,
+        "oom_kills": 0
+      },
+      "origin": {
+        "cpu_cores": 0.5,
+        "memory_bytes": 536870912,
+        "pids": 64,
+        "cgroup_sampled": true,
+        "oom_events": 0,
+        "oom_kills": 0
+      }
+    },
+    "Native": {
+      "candidate": {
+        "cpu_cores": 2.0,
+        "memory_bytes": 2147483648,
+        "pids": 192,
+        "cgroup_sampled": true,
+        "oom_events": 0,
+        "oom_kills": 0
+      },
+      "database": {
+        "cpu_cores": 1.0,
+        "memory_bytes": 805306368,
+        "pids": 96,
+        "cgroup_sampled": true,
+        "oom_events": 0,
+        "oom_kills": 0
+      },
+      "cache": {
+        "cpu_cores": 0.5,
+        "memory_bytes": 268435456,
+        "pids": 48,
+        "cgroup_sampled": true,
+        "oom_events": 0,
+        "oom_kills": 0
+      },
+      "data-init": {
+        "cpu_cores": 0.25,
+        "memory_bytes": 100663296,
+        "pids": 16,
+        "cgroup_sampled": false,
+        "actual_exit": 0
+      }
+    }
+  },
+  "ancestor_cgroups_checked": 13,
+  "joint_cpu_allocated_cores": 7,
+  "joint_effective_cpus": 32,
+  "all_applicable_cpu_memory_pid_limits_verified": true,
+  "successful_physically_settled_docker_commands": 178,
+  "cleanup": {
+    "Original": {
+      "actual_exit": 0,
+      "down_exit": 0,
+      "wait_EOF_and_process_group_settled": true,
+      "container_generations_absent": 13,
+      "exact_containers_removed": 2,
+      "exact_bridges_removed": 1,
+      "exact_volumes_removed": 0,
+      "loopback_ports_released": 2,
+      "project_inventory_empty": true,
+      "lane_record_retired": true
+    },
+    "Native": {
+      "actual_exit": 0,
+      "down_exit": 0,
+      "wait_EOF_and_process_group_settled": true,
+      "container_generations_absent": 9,
+      "exact_containers_removed": 4,
+      "exact_bridges_removed": 1,
+      "exact_volumes_removed": 1,
+      "loopback_ports_released": 1,
+      "project_inventory_empty": true,
+      "lane_record_retired": true
+    }
+  },
+  "exclusive_admission_recovered": true,
+  "sources_sha256": {
+    "result": "617100cb65460d9309c1c481d95935716b8111f3ad56cef36e44af3129f2bbb9",
+    "binding": "e4de689fd8d358d452d80602b107f53b76142ae49a5de1aedc37076d3b45b9d0",
+    "tracked_lease_helper": "78f65eaa7f1a3624f24e5d9a098698ea7393c4472dbb4a61153879bc1d380a89",
+    "phase_runner": "61b2d0b0983e1d44c5d7f61ce2701161867356f815440b8fbebd756ea75f1e34",
+    "isolation_observer": "7e8219c47f8b85476a6f5c5e15b3ff58aea063b058b4062655b2d75809bcb0ed",
+    "original_ready": "5d8776a6e5f0c4a99a445cf79730cf4fc48dcb2fcc3ebf93701afb04d3e4bf85",
+    "original_terminal": "6da708bcb73031226ad9a2c82b324465183af2ababba10baa2536da6ed7593c9",
+    "native_ready": "82e1ed8c392fe4b49b92a280d239b10ab9caa1245d3b1196c66073b69e783e93",
+    "native_terminal": "00b181b38e2a94329aa96ada161a51a450b5e2db3bee2bc82f7a3b9a930da966"
+  }
+}

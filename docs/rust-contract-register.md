@@ -342,3 +342,10 @@ adds eight Original HTTP observations and their matching Rust controls to the
 unformatted POST Test operation. Each backend recorded two owned receiver
 requests and passed exact cleanup. The format alias remains unassigned. The
 register now has 468 partial HTTP assignments and 330 unassigned operations.
+
+
+The exact SDK image at `a744c636b` reproduced the updated register and passed
+the new unformatted Connect Test assignment check. All 19 register corruption
+controls passed in the same network-disabled Compose run, with actual exit 0
+and exact project cleanup.
+[Connect Test SDK receipt](../scripts/rust-contracts/sdk-connect-test-latest.json)
