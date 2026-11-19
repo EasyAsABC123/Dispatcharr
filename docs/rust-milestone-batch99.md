@@ -26,8 +26,8 @@ Original redirect responses matched their Native counterparts. An untrusted
 Host or forwarded host could not change the configured destination. Both
 backends still served MPEG-TS on the literal `admin` XC alias and retired
 the owned upstream connection. All 497 React, license and attribution
-inputs matched the earlier package. Packaged EPG mutation and new
-performance measurements remain pending.
+inputs matched the earlier package. New performance measurements remain
+pending.
 [Configured admin receipt](../scripts/rust-integration/milestone-batch99/configured-admin.json)
 
 A separate Candidate98 fixture passed on both backends. Each rejected
@@ -42,3 +42,10 @@ SQL and files. Original's EPG Programme collection POST returned HTTP 500
 with the owned database state preserved. That observation remains separate
 from the detail mutations. Both owned Source fixture resources retired.
 [Original management receipt](../scripts/rust-integration/canonical-management-original/receipt.json)
+
+The separate paired Programme detail fixture passed all twelve requests per
+backend. It compared PATCH, PUT, and DELETE across the anonymous, viewer,
+standard and administrator roles. The SQL observer verified the requested
+changes, and the guide relationship and other stored metadata remained
+intact. Both Compose projects passed exact cleanup.
+[Programme detail receipt](../scripts/rust-integration/milestone-batch99/epg-programme-detail.json)

@@ -89,3 +89,11 @@ before the observer could open at 297 seconds. The controller retained a
 and exact Compose teardown passed. The diagnostic retry captures the stage,
 status and allowed response-shape flags without including credentials.
 [First two-hour attempt receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/long-attempt1.json)
+
+The second two-hour attempt used the same playback and refresh schedule.
+The first scheduled Native password request returned HTTP 500 without an
+access and refresh token pair. The XMLTV POST was never issued. The actual
+controller exited 1 and exact Compose teardown passed. Separate owned
+reproductions compare the elapsed-time boundary with and without active
+viewers.
+[Second two-hour attempt receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/long-attempt2.json)

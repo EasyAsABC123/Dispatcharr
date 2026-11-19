@@ -438,3 +438,9 @@ movie profile range matched. The [split receipt](../scripts/rust-integration/exa
 retains both real exits, the per-role observations and scoped cleanup as
 separate facts. The register now has 494 partial HTTP assignments and 304
 unassigned operations.
+
+The merged TS and management register was reproduced by the exact SDK with
+networking disabled. All ten tests passed, including the 19 shared rejection
+controls. That receipt verifies 490 partial Original assignments. The later
+VOD capture adds four assignments, and its expanded SDK run remains pending.
+[Merged 490-assignment SDK receipt](../scripts/rust-contracts/sdk-ts-management-latest.json)

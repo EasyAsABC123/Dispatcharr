@@ -1,0 +1,92 @@
+{
+  "actual_comparisons_per_backend": 12,
+  "actual_pair_exit": 0,
+  "candidate_image_id": "sha256:b4cc7c9b9f534ab62b71388053c2178ec68c1855b6da23fd21db9f0ed4092f56",
+  "candidate_revision": "19284a9cc1c04234c0aa3b339e606e43933a280a",
+  "exact_SQL_mutation_and_untouched_guide_confirmed": true,
+  "exact_cleanup": true,
+  "four_tested_roles": [
+    "anonymous",
+    "viewer",
+    "standard",
+    "admin"
+  ],
+  "full_M5_accepted": false,
+  "pair_sha256": "78fb95845baa1b64a0878c2cc0adacd2f4b70d7ba5df595ae38d2371d3379169",
+  "performance_verified": false,
+  "scope": "canonical packaged EPG Programme PATCH, PUT and DELETE",
+  "wire_statuses_per_backend": [
+    [
+      "program_patch",
+      "anonymous",
+      "PATCH",
+      401
+    ],
+    [
+      "program_patch",
+      "viewer",
+      "PATCH",
+      403
+    ],
+    [
+      "program_patch",
+      "standard",
+      "PATCH",
+      403
+    ],
+    [
+      "program_patch",
+      "admin",
+      "PATCH",
+      200
+    ],
+    [
+      "program_put",
+      "anonymous",
+      "PUT",
+      401
+    ],
+    [
+      "program_put",
+      "viewer",
+      "PUT",
+      403
+    ],
+    [
+      "program_put",
+      "standard",
+      "PUT",
+      403
+    ],
+    [
+      "program_put",
+      "admin",
+      "PUT",
+      200
+    ],
+    [
+      "program_delete",
+      "anonymous",
+      "DELETE",
+      401
+    ],
+    [
+      "program_delete",
+      "viewer",
+      "DELETE",
+      403
+    ],
+    [
+      "program_delete",
+      "standard",
+      "DELETE",
+      403
+    ],
+    [
+      "program_delete",
+      "admin",
+      "DELETE",
+      204
+    ]
+  ]
+}

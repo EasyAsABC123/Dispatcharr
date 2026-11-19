@@ -1,0 +1,35 @@
+{
+  "actual_exit": 1,
+  "application_xmltv_post_reached": false,
+  "artifact_sha256": {
+    "binding.json": "39f286d315ab59ef6dc41fc68703e185900e30b27ceb77f63cf663ba3d3064c3",
+    "evidence/integration.json": "81905802f65276de98c3552139be42a161541dd1b60e4d05cb196bdcd96a2d26",
+    "execution.json": "adf2f3a9f63c77bf66a64d8ecb34e71187d7c9b90ba01c6eee91333163b191da",
+    "independent-cleanup.json": "d8e7d07f6fb643585f994cbe64fcfe36c1fb40ef0818f30fabd9e32824adadca",
+    "receipt.json": "1b3d5c812538fb245d3874d62d929a3dfcdb639a2f158b40b1d40d362a0bbe3d"
+  },
+  "candidate_revision": "fc5562a37d91ed6673e6ee9a740be4e0dd6c7c5f",
+  "exact_cleanup": true,
+  "full_M9_accepted": false,
+  "image_id": "sha256:b309daadc687ed0bb8f627373e4c34c202f995bb91ab782ae65ee2d32b712c74",
+  "last_planned_refresh_fault": {
+    "auth": {
+      "auth_access_has_bounded_string_shape": false,
+      "auth_http_attempted": true,
+      "auth_http_status": 500,
+      "auth_refresh_has_bounded_string_shape": false,
+      "auth_result_has_exact_pair_fields": false,
+      "auth_result_is_object": true,
+      "nonempty_password_shape": true,
+      "owned_admin_username_shape": true
+    },
+    "clock_offsets_ms": {
+      "auth_entered": -8000
+    },
+    "condition": "fresh Main admin login",
+    "error_type": "RefreshGuardError",
+    "stage": "auth_request_or_result"
+  },
+  "scope": "unchanged Candidate94 scheduled refresh diagnostic with safe authentication classification",
+  "two_hour_soak_verified": false
+}
