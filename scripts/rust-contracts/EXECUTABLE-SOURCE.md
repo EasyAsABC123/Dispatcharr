@@ -1,7 +1,7 @@
 # Partial executable Source contract assignments
 
 Original Dispatcharr authors retain all application/algorithm credit and licensing.
-The current register has 467 partial HTTP assignments and 18 partial model,
+The current register has 468 partial HTTP assignments and 18 partial model,
 task, command or consumer assignments. These preserve the initial and subsequent cohorts
 documented below. They do not resolve missing methods, complete endpoint role or
 grammar matrices, establish new Native behavior or accept M0/M1.
@@ -122,6 +122,11 @@ assignments and appends observations to the 19 existing anonymous primaries.
 All 75 observed HTTP 500 responses retain their status. Three operation method
 declarations remain unresolved. The register now has 467 partial HTTP
 assignments and 331 unassigned operations.
+
+The [saved Connect Test binding](retained-connect-test/README.md) adds one
+partial Source assignment for the unformatted webhook action. Both backends
+matched eight HTTP controls and the owned receiver total. The register now
+has 468 partial HTTP assignments and 330 unassigned operations.
 
 `register.py` consumes `executable-source-inputs.json`, verifies each input hash,
 validates the declared Source authority and applies exact operation-ID, handler,

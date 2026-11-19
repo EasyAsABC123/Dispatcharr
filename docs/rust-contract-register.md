@@ -334,3 +334,11 @@ anonymous primaries. The controller exited 0 and passed exact cleanup.
 The captures include 75 HTTP 500 responses and preserve three unresolved
 method declarations. Role completeness and resource-effect semantics remain
 open. The register has 467 partial HTTP assignments and 331 unassigned operations.
+
+## Retained Connect saved webhook Test
+
+The [saved webhook Test binding](../scripts/rust-contracts/retained-connect-test/README.md)
+adds eight Original HTTP observations and their matching Rust controls to the
+unformatted POST Test operation. Each backend recorded two owned receiver
+requests and passed exact cleanup. The format alias remains unassigned. The
+register now has 468 partial HTTP assignments and 330 unassigned operations.

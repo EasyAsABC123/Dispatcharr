@@ -232,6 +232,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_SD25_resolver_scoped_HTTP':
             import retained_sd_contracts
             retained_sd_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_Connect_saved_webhook_test_HTTP':
+            import retained_connect_test_contracts
+            retained_connect_test_contracts.validate(root, value)
         elif reference['kind'] == 'retained_original_Connect_detail_PUT_DELETE_HTTP':
             import retained_connect_detail_contracts
             retained_connect_detail_contracts.validate(root, value)
@@ -373,6 +376,9 @@ def apply(root, rows, bindings):
             if supplemental:
                 supplemented.add(identifier)
             route, operation = index[identifier]
+            if reference['kind'] == 'retained_original_Connect_saved_webhook_test_HTTP':
+                endpoint = value['fixtures'][contract['fixture_id']]['endpoint_authority']
+                assert route['resolver_ordinal'] == endpoint['resolver_ordinal'] and route['name'] == endpoint['resolver_name']
             assert contract['pattern_exact'] == route['pattern_exact']
             assert contract['source_handler'] == route['source_handler']
             assert all(contract[k] == operation[k] for k in ['method', 'source_action', 'owning_milestone']), 'stable operation schema/owner'
@@ -412,7 +418,8 @@ def apply(root, rows, bindings):
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             if reference['kind'] in ('retained_original_DVR_XC_playback_HTTP', 'retained_original_Connect_collection_HTTP',
                                      'retained_original_Connect_log_read_and_subscription_set_HTTP', 'retained_original_alias19_anonymous_HTTP',
-                                     'retained_original_Connect_detail_PUT_DELETE_HTTP', 'retained_original_alias_remainder_HTTP'):
+                                     'retained_original_Connect_detail_PUT_DELETE_HTTP', 'retained_original_alias_remainder_HTTP',
+                                     'retained_original_Connect_saved_webhook_test_HTTP'):
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'

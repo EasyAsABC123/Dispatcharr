@@ -1,0 +1,255 @@
+{
+  "binding_kind": "retained_original_Connect_saved_webhook_test_HTTP",
+  "operation_count": 1,
+  "retained_scoped_checks_per_backend": 9,
+  "retained_HTTP_observations_per_backend": 8,
+  "new_Source_executions": 0,
+  "new_Native_executions": 0,
+  "Native_coverage_increased": false,
+  "fully_verified_operations": 0,
+  "performance_verified": false,
+  "public_authorities": [
+    {
+      "path": "scripts/rust-integration/milestone-batch84/packaged.json",
+      "sha256": "1ce754c9a1e22be7661a467941da806c7283fc223e9253c04d55b568277a2c2b"
+    },
+    {
+      "path": "scripts/rust-integration/milestone-batch89/packaged.json",
+      "sha256": "d2a9ebd602889ca66172511d64ff59dc1ac1bf03a866a7fe98867f8da0eea5ee"
+    }
+  ],
+  "fixtures": {
+    "Original-Native-Connect-Test": {
+      "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "Original_terminal": {
+        "receipt_sha256": "48f2bde2923022ae4573a5134001df1b95dc063d9f9908a805e67cb6257f0f36",
+        "cleanup_sha256": "228f8178f24c0191a23c45aa19af03cd2ae1e922fe5d80dfb776c9fbfdd9ce08",
+        "isolation_sha256": "8ab1d354aa244d471e469e689d435e76729f04ceaf7668ec11683743e8c5892b",
+        "actual_probe_exit": 0,
+        "actual_compose_down_exit": 0,
+        "exact_cleanup_verified": true,
+        "internal_network_verified": true,
+        "owned_CID_and_generation_absence_count": 2
+      },
+      "Native_revision": "f8005791410e883b7c10c9768f6bd49f51580190",
+      "Native_image": "sha256:9c55c7a6f0a93e63494ded3f7fd730fa515a22a0ae5aa704c929defa2ee69b73",
+      "Native_terminal": {
+        "receipt_sha256": "b2b8580fa326e9940b98dd9b59248c8a07cc9e7dec786840aa850a499aef868e",
+        "cleanup_sha256": "f3b15cc9e82840d4217fa2f71d36e8ce6f10640b43aa4c294140cebec92a3681",
+        "isolation_sha256": "3733f366e58b4b2de0d5246ff5a57075d08c14925b878b50d9bc52dfe23aed71",
+        "actual_probe_exit": 0,
+        "actual_compose_down_exit": 0,
+        "exact_cleanup_verified": true,
+        "internal_network_verified": true,
+        "owned_CID_and_generation_absence_count": 4
+      },
+      "Native_original_web_stopped_verified": true,
+      "Original_replayed": false,
+      "retained_scoped_checks": 9,
+      "aggregate_owned_receiver_requests_per_backend": 2,
+      "endpoint_authority": {
+        "canonical_path_template": "/api/connect/integrations/{fixture_integration_id}/test/",
+        "method": "POST",
+        "resolver_ordinal": 340,
+        "resolver_name": "api:connect:integration-test",
+        "original_seal_sha256": "7adabb634808ed3880a2f592e02177b2aaef2c3f5107585da4e8bf6abbd17d3d",
+        "native_seal_sha256": "3c400ae5024f644276ac1d218cb5c9b18d99a7776d65db091d5d9f72514d8e35",
+        "original_probe_sha256": "95b5f51f35979cdf6d85655e161a6db6501bcce579905bce3c9b5aca425f2bea",
+        "native_probe_sha256": "bc5a78952507216b33a745ebef3348e4f8067d2dc5b5b65d8dfe8273a13805e4",
+        "probe_only_backend_base_URL_changed": true
+      }
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-dc9e8fb9408ad091d048:POST",
+      "method": "POST",
+      "source_action": "test",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-Native-Connect-Test",
+      "pattern_exact": "api/connect/^integrations/(?P<pk>[^/.]+)/test/$",
+      "source_handler": "apps.connect.api_views.IntegrationViewSet",
+      "observed_methods": [
+        "POST"
+      ],
+      "observed_roles": [
+        "anonymous",
+        "streamer",
+        "standard",
+        "admin"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "streamer": {
+          "fixture_role_or_supplied_credential": "streamer",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Preserve the exact unformatted Test action and paired anonymous, viewer, standard and admin observations",
+        "Preserve denial and lookup order, unchanged SQL and sequences, and scoped owned webhook delivery results"
+      ],
+      "cases": [
+        {
+          "case": "anonymous",
+          "role": "anonymous",
+          "method": "POST",
+          "status": 401,
+          "path_template": "/api/connect/integrations/{fixture_owned_accepted_webhook_id}/test/",
+          "literal_numeric_path_recorded": false,
+          "sanitized_original_receipt_pointer": "/checks/0/details",
+          "sanitized_native_receipt_pointer": "/checks/0/details",
+          "scoped_observations": {
+            "sql_and_sequences_unchanged": true,
+            "owned_receiver_empty": true
+          },
+          "Original_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "Native_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+        },
+        {
+          "case": "standard",
+          "role": "standard",
+          "method": "POST",
+          "status": 403,
+          "path_template": "/api/connect/integrations/{fixture_owned_accepted_webhook_id}/test/",
+          "literal_numeric_path_recorded": false,
+          "sanitized_original_receipt_pointer": "/checks/1/details",
+          "sanitized_native_receipt_pointer": "/checks/1/details",
+          "scoped_observations": {
+            "sql_and_sequences_unchanged": true,
+            "owned_receiver_empty": true
+          },
+          "Original_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "Native_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+        },
+        {
+          "case": "viewer",
+          "role": "streamer",
+          "method": "POST",
+          "status": 403,
+          "path_template": "/api/connect/integrations/{fixture_owned_accepted_webhook_id}/test/",
+          "literal_numeric_path_recorded": false,
+          "sanitized_original_receipt_pointer": "/checks/2/details",
+          "sanitized_native_receipt_pointer": "/checks/2/details",
+          "scoped_observations": {
+            "sql_and_sequences_unchanged": true,
+            "owned_receiver_empty": true
+          },
+          "Original_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "Native_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+        },
+        {
+          "case": "inactive-admin",
+          "role": "admin",
+          "method": "POST",
+          "status": 401,
+          "path_template": "/api/connect/integrations/{fixture_owned_accepted_webhook_id}/test/",
+          "literal_numeric_path_recorded": false,
+          "sanitized_original_receipt_pointer": "/checks/3/details",
+          "sanitized_native_receipt_pointer": "/checks/3/details",
+          "scoped_observations": {
+            "sql_and_sequences_unchanged": true,
+            "owned_receiver_empty": true
+          },
+          "Original_body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "Native_body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a"
+        },
+        {
+          "case": "role-before-lookup",
+          "role": "standard",
+          "method": "POST",
+          "status": 403,
+          "path_template": "/api/connect/integrations/{fixture_missing_integration_id}/test/",
+          "literal_numeric_path_recorded": false,
+          "sanitized_original_receipt_pointer": "/checks/4/details",
+          "sanitized_native_receipt_pointer": "/checks/4/details",
+          "scoped_observations": {
+            "sql_and_sequences_unchanged": true,
+            "owned_receiver_empty": true
+          },
+          "Original_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "Native_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+        },
+        {
+          "case": "missing",
+          "role": "admin",
+          "method": "POST",
+          "status": 404,
+          "path_template": "/api/connect/integrations/{fixture_missing_integration_id}/test/",
+          "literal_numeric_path_recorded": false,
+          "sanitized_original_receipt_pointer": "/checks/5/details",
+          "sanitized_native_receipt_pointer": "/checks/5/details",
+          "scoped_observations": {
+            "sql_and_sequences_unchanged": true,
+            "owned_receiver_empty": true
+          },
+          "Original_body_sha256": "674e9a8b4621be9db79f896d7e642362a7c6e205a9f9115a1b5fe3209bb026e2",
+          "Native_body_sha256": "674e9a8b4621be9db79f896d7e642362a7c6e205a9f9115a1b5fe3209bb026e2"
+        },
+        {
+          "case": "accepted",
+          "role": "admin",
+          "method": "POST",
+          "status": 200,
+          "path_template": "/api/connect/integrations/{fixture_owned_accepted_webhook_id}/test/",
+          "literal_numeric_path_recorded": false,
+          "sanitized_original_receipt_pointer": "/checks/6/details",
+          "sanitized_native_receipt_pointer": "/checks/6/details",
+          "scoped_observations": {
+            "dummy_payload_exact_in_request_window": true,
+            "one_form_encoded_dispatch_with_expected_headers": true,
+            "receiver_content_type": "application/x-www-form-urlencoded",
+            "receiver_increment": 1,
+            "returned_exact_receiver_status_body_and_boolean": true,
+            "sql_and_sequences_unchanged": true
+          },
+          "Original_body_sha256": "663ec8a9c43c6a3fbd4fa8568597eed219d16ad1efc7a6c663028263c25b51b0",
+          "Native_body_sha256": "2877de797ceb5f3fab7e7e98b0a4e758bb667b60e43efe99a30d0cfba41fad20",
+          "Original_receiver_body_sha256": "8a581f1cb0a091eecf5c9d23da3a0d87c60644c74dbbc324b26e13086b207847",
+          "Native_receiver_body_sha256": "6c9131a37156b0b29c200003adaefd36d396b1f963edfe68bd389786cfc5d6d7"
+        },
+        {
+          "case": "rejected",
+          "role": "admin",
+          "method": "POST",
+          "status": 200,
+          "path_template": "/api/connect/integrations/{fixture_owned_rejected_webhook_id}/test/",
+          "literal_numeric_path_recorded": false,
+          "sanitized_original_receipt_pointer": "/checks/7/details",
+          "sanitized_native_receipt_pointer": "/checks/7/details",
+          "scoped_observations": {
+            "dummy_payload_exact_in_request_window": true,
+            "one_form_encoded_dispatch_with_expected_headers": true,
+            "receiver_content_type": "application/json",
+            "receiver_increment": 1,
+            "returned_exact_receiver_status_body_and_boolean": true,
+            "sql_and_sequences_unchanged": true
+          },
+          "Original_body_sha256": "6914e4c4eb81f82f15f525d52c24458558aba31bf17f938a17056027d9307bad",
+          "Native_body_sha256": "10ec53810bdaa9935e19b300175fa88107bb94f499be3d22c40436a4648bba6e",
+          "Original_receiver_body_sha256": "e92458565b7416057064c5ffdcb063a1fe6b0f9beaf6f9f11ff8d647b739930a",
+          "Native_receiver_body_sha256": "b717ccab8ab3de9fd7189db682d7b50d3044e49693c3cd70efd546b6e7e5391c"
+        }
+      ],
+      "result": {
+        "Source_case_observations": 8,
+        "Native_scoped_controls_matched": 9,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "credit": "Original Dispatcharr and dependency authors retain all application and algorithm credit."
+}

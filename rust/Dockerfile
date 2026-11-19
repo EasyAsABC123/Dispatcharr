@@ -67,6 +67,10 @@ COPY scripts/rust-integration/channel-stations-source53/partial-backend.json ./s
 COPY scripts/rust-integration/channel-stations-source53/empty4102-actual-frame.json ./scripts/rust-integration/channel-stations-source53/empty4102-actual-frame.json
 COPY scripts/rust-integration/channel-stations-source53/empty4102-backend.json ./scripts/rust-integration/channel-stations-source53/empty4102-backend.json
 
+# Exact public authorities used by the saved Connect webhook Test register check.
+COPY scripts/rust-integration/milestone-batch84/packaged.json ./scripts/rust-integration/milestone-batch84/packaged.json
+COPY scripts/rust-integration/milestone-batch89/packaged.json ./scripts/rust-integration/milestone-batch89/packaged.json
+
 # Public Original Comskip task authorities for offline register verification.
 COPY scripts/rust-integration/comskip-positive-lifecycle-source1/ ./scripts/rust-integration/comskip-positive-lifecycle-source1/
 COPY scripts/rust-integration/comskip-positive-journal-fences1/ ./scripts/rust-integration/comskip-positive-journal-fences1/
