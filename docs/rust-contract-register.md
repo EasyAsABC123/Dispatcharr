@@ -386,4 +386,11 @@ next context. The separate owner-crash result remains outside this binding.
 The register now has 472 partial executable HTTP assignments and 326
 unassigned operations.
 
+The network-disabled SDK regenerated the exact register and passed six tests,
+including 19 rejection controls. The outer summary exited 1 while the real
+container exited 0. The summary checked stdout, and unittest wrote its
+results to stderr. Both raw streams and empty project inventories were
+independently reconciled. The original exits are preserved.
+[Exact live-stop SDK receipt](../scripts/rust-contracts/sdk-live-stop-latest.json)
+
 [Original two-replica media receipt](../scripts/rust-milestone-batches/m235/profile-source-media/publication-summary.json).
