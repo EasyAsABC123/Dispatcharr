@@ -1,0 +1,234 @@
+{
+  "format_version": 1,
+  "kind": "retained_original_C105_guide_startup_tasks",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "credit": "Original Dispatcharr, Celery and dependency authors retain full application and behavior credit.",
+  "fixtures": {
+    "retained-Original-C105-guide-startup-epoch": {
+      "id": "retained-Original-C105-guide-startup-epoch",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "actual_controller_exit": 0,
+      "settled_exit_and_EOF": true,
+      "exact_cleanup_passed": true,
+      "worker_master_generation_settled_with_EOF": true,
+      "per_task_worker_prerun_postrun_witness": false,
+      "scope": "quiet owned schedules-direct startup before selected work; plugin and network paths fenced",
+      "receipt_path": "scripts/rust-integration/retained-c105-guide-startup/receipt.json",
+      "receipt_sha256": "11b9a0a4b330027b9ba425b1525ce0b0b7e8222be9a8d49548240b47b293efba"
+    }
+  },
+  "contracts": [],
+  "non_HTTP_contracts": [
+    {
+      "candidate_id": "candidate-3b52cc39641faa6dda72",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/plugins/tasks.py",
+        "line": 9,
+        "name": "refresh_plugin_repos",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M6",
+      "task_name": "apps.plugins.tasks.refresh_plugin_repos",
+      "fixture_ids": [
+        "retained-Original-C105-guide-startup-epoch"
+      ],
+      "observed_actor": {
+        "producer": "pinned Original application or worker startup callback",
+        "executor": "Original normal-default@owned Celery prefork worker for celery queue",
+        "complete_role_matrix": false
+      },
+      "definition": {
+        "path": "scripts/rust-pluginrepo-contracts/metadata-component/authority/Original/apps/plugins/tasks.py",
+        "original_file_sha256": "19bf9f0d06491280b331615cd17c76b0ce56c0e5ee67f91f10a512823d1284ab",
+        "start_line": 9,
+        "end_line": 33,
+        "ast_sha256": "cde3b1856aa93edd8e47b55c195cd8c80124101b823a593f080b75fff3f24c28"
+      },
+      "producer_definition": {
+        "path": "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/apps/plugins/apps.py",
+        "original_file_sha256": "27b3b52fad5c8ca2aaf1912ac4165b1b5c58ac438cb489ce1d6182c55ef32679",
+        "line": 83,
+        "call": "refresh_plugin_repos.apply_async(countdown=10)"
+      },
+      "observations": [
+        {
+          "args": [],
+          "backend_children": 0,
+          "backend_result": null,
+          "backend_status": "SUCCESS",
+          "broker_database": 1,
+          "canonical_frame_sha256": "e77a8633b5bc17452452c24a296cb38e794f97790028dda449289e845c7ce4e8",
+          "canonical_result_metadata_sha256": "b5174a6c0419034ca7aa61cd071465bdf9661d843b543513adb2b58182e4e2db",
+          "countdown_seconds_observed": 9.988317012786865,
+          "hard_soft_time_limits": [
+            null,
+            null
+          ],
+          "kwargs": {},
+          "own_root_no_parent": true,
+          "result_database": 2,
+          "routing_key": "celery",
+          "task_id_sha256": "a98e0c6fb6e8c4099223eefba40763b481e696f2ec7b68b6f6488f62725ebdf2",
+          "task_name": "apps.plugins.tasks.refresh_plugin_repos"
+        }
+      ],
+      "assertions": [
+        "Natural own-root zero-argument publication on the exact queue and matched actual Original backend result.",
+        "Owned worker master and broker observer settle with EOF and exact namespace cleanup.",
+        "Repositories disabled with periodic interval zero; the startup delayed call still settles."
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-20cb0ac54bf6fbde0fd0",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/channels/tasks.py",
+        "line": 3107,
+        "name": "recover_recordings_on_startup",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M6",
+      "task_name": "apps.channels.tasks.recover_recordings_on_startup",
+      "fixture_ids": [
+        "retained-Original-C105-guide-startup-epoch"
+      ],
+      "observed_actor": {
+        "producer": "pinned Original application or worker startup callback",
+        "executor": "Original normal-default@owned Celery prefork worker for celery queue",
+        "complete_role_matrix": false
+      },
+      "definition": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py",
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "start_line": 3107,
+        "end_line": 3356,
+        "ast_sha256": "b46018bbb56e1fe13f27207a1beac20d7471367fbc32809e85b65844fccdea2b"
+      },
+      "producer_definition": {
+        "path": "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/dispatcharr/celery.py",
+        "original_file_sha256": "e478611b17bb46583e6104f0bef3cae04b16b67d0c8e6ada0babef9fc814eeb6",
+        "line": 242,
+        "call": "recover_recordings_on_startup.delay()"
+      },
+      "observations": [
+        {
+          "args": [],
+          "backend_children": 0,
+          "backend_result": "Recovery complete",
+          "backend_status": "SUCCESS",
+          "broker_database": 1,
+          "canonical_frame_sha256": "23713560e191d7b9c821e634176d6d0a40d7eddedfe9fb545842ce5d5c00d9d5",
+          "canonical_result_metadata_sha256": "6c07acc882bae3f89875cf58f22307ae138820b8fe9027d441ffe443a7f3b53e",
+          "countdown_seconds_observed": null,
+          "hard_soft_time_limits": [
+            null,
+            null
+          ],
+          "kwargs": {},
+          "own_root_no_parent": true,
+          "result_database": 2,
+          "routing_key": "celery",
+          "task_id_sha256": "bdb67a6190973f900fc82be01acf976e7e4178bceb23bf9fc38aef662d821e5c",
+          "task_name": "apps.channels.tasks.recover_recordings_on_startup"
+        }
+      ],
+      "assertions": [
+        "Natural own-root zero-argument publication on the exact queue and matched actual Original backend result.",
+        "Owned worker master and broker observer settle with EOF and exact namespace cleanup.",
+        "Literal Recovery complete without children; no nonempty recording recovery phenotype is inferred."
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-3d0b2d3fb3f98d68738d",
+      "source": {
+        "kind": "task_candidate",
+        "path": "core/tasks.py",
+        "line": 1030,
+        "name": "check_for_version_update",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M6",
+      "task_name": "core.tasks.check_for_version_update",
+      "fixture_ids": [
+        "retained-Original-C105-guide-startup-epoch"
+      ],
+      "observed_actor": {
+        "producer": "pinned Original application or worker startup callback",
+        "executor": "Original normal-default@owned Celery prefork worker for celery queue",
+        "complete_role_matrix": false
+      },
+      "definition": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/core/tasks.py",
+        "original_file_sha256": "5e20b3a7395c9d78cc45f3b07abc1becc7d744a3f37e09735eac512ae537dcbc",
+        "start_line": 1030,
+        "end_line": 1234,
+        "ast_sha256": "16d7599f8de37e814febc9fd5167206490203fdd22e681ec8a32fb32aecbf003"
+      },
+      "producer_definition": {
+        "path": "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/dispatcharr/celery.py",
+        "original_file_sha256": "e478611b17bb46583e6104f0bef3cae04b16b67d0c8e6ada0babef9fc814eeb6",
+        "line": 246,
+        "call": "check_for_version_update.delay()"
+      },
+      "observations": [
+        {
+          "args": [],
+          "backend_children": 0,
+          "backend_result": null,
+          "backend_status": "SUCCESS",
+          "broker_database": 1,
+          "canonical_frame_sha256": "b5655f44b33afbaba014681b48af1f9dd07a4bf9b6a0b4f4ce2c0bc9892474c6",
+          "canonical_result_metadata_sha256": "88665ca75ac2c1a2c5f3e59f0a3bbd11139828ac308be02664925e39b98a3596",
+          "countdown_seconds_observed": null,
+          "hard_soft_time_limits": [
+            null,
+            null
+          ],
+          "kwargs": {},
+          "own_root_no_parent": true,
+          "result_database": 2,
+          "routing_key": "celery",
+          "task_id_sha256": "18276e6c185df098a5f280ddd9db1a3333f25db6481bb9f16fd47e14be6ee6e7",
+          "task_name": "core.tasks.check_for_version_update"
+        }
+      ],
+      "assertions": [
+        "Natural own-root zero-argument publication on the exact queue and matched actual Original backend result.",
+        "Owned worker master and broker observer settle with EOF and exact namespace cleanup.",
+        "The owned external HTTP proxy is closed; no successful upstream version query or notification is claimed."
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "actual_Original_worker_observations": 3,
+  "new_Source_executions": 0,
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "performance_verified": false
+}

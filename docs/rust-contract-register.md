@@ -13,7 +13,7 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | Executable Original HTTP assignments | 403 | Scoped Source definitions across 798 operation work items. 395 work items await assignment. |
 | Unresolved methods with an executable Original fixture | 200 | Observed under 322 unresolved method/action declarations |
 | Non-HTTP candidate identities | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
-| Typed executable Original non-HTTP assignments | 18 | Fourteen tasks, two commands, one model and one synthetic consumer. 232 candidates await assignment. |
+| Typed executable Original non-HTTP assignments | 21 | Seventeen tasks, two commands, one model and one synthetic consumer. 229 candidates await assignment. |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
 | Operations with partial case bindings | 11 | 403 scoped packaged observations; remaining role/input coverage stays open |
 | Fully audited register operation rows | 0 | Register-to-case mapping has not been completed; existing reports retain their actual passes |
@@ -518,3 +518,14 @@ exited 1 with settled EOF and exact owned cleanup.
 The register now records 530 partial HTTP Source assignments and 268
 unassigned operations. Full role/operation and Native verification remain open.
 Dispatcharr's original authors and contributors retain full credit.
+
+## Retained Original startup tasks in the Candidate105 date-guide run
+
+The [startup receipt](../scripts/rust-integration/retained-c105-guide-startup/receipt.json)
+records three naturally published and settled Original worker tasks before the
+owned guide workload. Empty argument frames and the exact result metadata match
+each published task. The scoped plugin refresh uses the retained countdown with
+repositories disabled, recording recovery returns its exact completion value,
+and the version check is fenced by the closed proxy. The worker and observer
+settled and the owned project was removed. The date-only output observations
+remain a separate scope. Dispatcharr's original authors retain full credit.

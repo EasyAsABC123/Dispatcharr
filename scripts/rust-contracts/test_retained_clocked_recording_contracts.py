@@ -20,7 +20,7 @@ class RetainedClockedRecordingControls(unittest.TestCase):
         subject.restore_pre_clocked_recording(ROOT, prior)
         self.assertEqual({old['candidate_id'] for old, new in zip(prior, expected, strict=True) if old != new},
                          {row[0] for row in subject.IDENTITIES})
-        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, prior)['candidates'], 18)
+        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, prior)['candidates'], 21)
         self.assertEqual(prior, expected)
 
     def test_rejects_promoting_unconsumed_tasks_or_rewriting_backend(self):

@@ -88,7 +88,9 @@ class CapturedEvidenceRegister(unittest.TestCase):
         import retained_comskip_task_contracts
         refs.update(retained_comskip_task_contracts.dependencies())
         import retained_clocked_recording_contracts
+        import retained_c105_guide_startup_contracts
         refs.update(retained_clocked_recording_contracts.dependencies())
+        refs.update(retained_c105_guide_startup_contracts.dependencies())
         import retained_management_contracts
         refs.update(retained_management_contracts.dependencies())
         import core_settings_source_contracts

@@ -1,0 +1,100 @@
+{
+  "actual_original_exit": 0,
+  "broker_ready_and_reserved_counts": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "candidate_revision": "fc2c81c2d52bbc17299d6900534d9564432d8e89",
+  "enabled_plugin_repositories": 0,
+  "exact_original_cleanup": true,
+  "full_milestone_accepted": false,
+  "monitor_UID": 65532,
+  "monitor_settled_and_flushed": true,
+  "native_coverage_increased": false,
+  "owned_closed_https_proxy_confirmed": true,
+  "owned_containers_retired": 2,
+  "per_task_worker_prerun_postrun_witness": false,
+  "performance_verified": false,
+  "plugin_periodic_interval": 0,
+  "raw_fingerprints": {
+    "cohort": "418fe8a00dcd5aa14f49319ebeaa4cf38ae977fedb0619c9ef0a46ac4f9241c8",
+    "date_scope": "b4291a4817b3b0c774ac3f2ade4c076116a20c2b3f587883f276822626ef767a",
+    "original_binding": "2290fb0088f5853a17a15738b48d52e37855c5badc33fbea9143a6a0cf9b7f3d",
+    "original_cleanup": "a487691574fae087445ca925a6a648be0c21fbd0423db04e69afed90613e58a3",
+    "original_execution": "b67d8b793c1eee70dfdbba1a02db44aa282b67c35e23d4a35d0bf25d28aa4c54",
+    "startup": "209b25c13384d3b7b462e7c3e8e3fa386b591c45ca42c37b27ecf10b348ec72b",
+    "worker_ready": "e0137dacd8f5bac9c7ef0e946a60145691dc7540c77e255895851dbe39adde30",
+    "worker_start": "0dda3507cb7cbc1541267e1f38ff229ea54615afdedcf0c9af8ea4af620e1652",
+    "worker_stop": "f6cda5e1711ef9e4c12a9d88f697c9c33ddcc1258500b40fd9150d46c74497f2"
+  },
+  "retained_date_only_output_passed": true,
+  "rows": [
+    {
+      "args": [],
+      "backend_children": 0,
+      "backend_result": null,
+      "backend_status": "SUCCESS",
+      "broker_database": 1,
+      "canonical_frame_sha256": "e77a8633b5bc17452452c24a296cb38e794f97790028dda449289e845c7ce4e8",
+      "canonical_result_metadata_sha256": "b5174a6c0419034ca7aa61cd071465bdf9661d843b543513adb2b58182e4e2db",
+      "countdown_seconds_observed": 9.988317012786865,
+      "hard_soft_time_limits": [
+        null,
+        null
+      ],
+      "kwargs": {},
+      "own_root_no_parent": true,
+      "result_database": 2,
+      "routing_key": "celery",
+      "task_id_sha256": "a98e0c6fb6e8c4099223eefba40763b481e696f2ec7b68b6f6488f62725ebdf2",
+      "task_name": "apps.plugins.tasks.refresh_plugin_repos"
+    },
+    {
+      "args": [],
+      "backend_children": 0,
+      "backend_result": "Recovery complete",
+      "backend_status": "SUCCESS",
+      "broker_database": 1,
+      "canonical_frame_sha256": "23713560e191d7b9c821e634176d6d0a40d7eddedfe9fb545842ce5d5c00d9d5",
+      "canonical_result_metadata_sha256": "6c07acc882bae3f89875cf58f22307ae138820b8fe9027d441ffe443a7f3b53e",
+      "countdown_seconds_observed": null,
+      "hard_soft_time_limits": [
+        null,
+        null
+      ],
+      "kwargs": {},
+      "own_root_no_parent": true,
+      "result_database": 2,
+      "routing_key": "celery",
+      "task_id_sha256": "bdb67a6190973f900fc82be01acf976e7e4178bceb23bf9fc38aef662d821e5c",
+      "task_name": "apps.channels.tasks.recover_recordings_on_startup"
+    },
+    {
+      "args": [],
+      "backend_children": 0,
+      "backend_result": null,
+      "backend_status": "SUCCESS",
+      "broker_database": 1,
+      "canonical_frame_sha256": "b5655f44b33afbaba014681b48af1f9dd07a4bf9b6a0b4f4ce2c0bc9892474c6",
+      "canonical_result_metadata_sha256": "88665ca75ac2c1a2c5f3e59f0a3bbd11139828ac308be02664925e39b98a3596",
+      "countdown_seconds_observed": null,
+      "hard_soft_time_limits": [
+        null,
+        null
+      ],
+      "kwargs": {},
+      "own_root_no_parent": true,
+      "result_database": 2,
+      "routing_key": "celery",
+      "task_id_sha256": "18276e6c185df098a5f280ddd9db1a3333f25db6481bb9f16fd47e14be6ee6e7",
+      "task_name": "core.tasks.check_for_version_update"
+    }
+  ],
+  "settled_exit_and_EOF": true,
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "worker": "Original normal-default@owned Celery prefork worker for celery queue",
+  "worker_master_generation_settled_with_EOF": true
+}

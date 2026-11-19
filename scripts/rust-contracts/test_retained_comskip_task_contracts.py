@@ -26,7 +26,7 @@ class RetainedComskipControls(unittest.TestCase):
         subject.restore_pre_comskip_task(ROOT, earlier)
         changed = [old['candidate_id'] for old, new in zip(earlier, expected, strict=True) if old != new]
         self.assertEqual(changed, [subject.IDENTIFIER])
-        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, earlier)['candidates'], 18)
+        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, earlier)['candidates'], 21)
         self.assertEqual(earlier, expected)
 
     def test_rejects_reclassifying_failed_controller_or_repeat_effect(self):

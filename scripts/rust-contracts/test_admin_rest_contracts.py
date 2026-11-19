@@ -148,5 +148,5 @@ class AdminRestControls(unittest.TestCase):
     def test_nonHTTP_all250_unchanged_idempotent(self):
         before = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
         after = copy.deepcopy(before)
-        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, after)['candidates'], 18)
+        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, after)['candidates'], 21)
         self.assertEqual(before, after)
