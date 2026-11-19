@@ -54,8 +54,9 @@ deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
 [The programme mutation and admin redirect checkpoint](rust-milestone-batch99.md)
-records the focused Rust tests and the separate 16-operation Original
-management capture. Packaged Native comparison remains open.
+records the configured admin Compose pass, paired gzip guide recovery, and
+separate 16-operation Original management capture. The native programme
+mutation package checks remain open.
 
 [The guide clear, HDHomeRun and XC alias checkpoint](rust-milestone-batch98.md)
 records three passed Compose scopes on one image. The Original public admin

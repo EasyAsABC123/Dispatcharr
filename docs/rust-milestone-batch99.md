@@ -19,8 +19,22 @@ The exact lint-corrected revision is
 40 Main tests and strict all-target lint passed. Store and Main reported 79
 and one external-fixture tests ignored, respectively. The first strict lint
 run identified two imports left behind by the routing change. The exact
-retry removed those imports and reran all four commands. The paired package
-checks and any new performance comparison are pending.
+retry removed those imports and reran all four commands.
+
+The exact image passed 23 configured admin checks in paired Compose. Nine
+Original redirect responses matched their Native counterparts. An untrusted
+Host or forwarded host could not change the configured destination. Both
+backends still served MPEG-TS on the literal `admin` XC alias and retired
+the owned upstream connection. All 497 React, license and attribution
+inputs matched the earlier package. Packaged EPG mutation and new
+performance measurements remain pending.
+[Configured admin receipt](../scripts/rust-integration/milestone-batch99/configured-admin.json)
+
+A separate Candidate98 fixture passed on both backends. Each rejected
+incomplete XML in a valid gzip archive and preserved its guide, then
+accepted a fresh import from the same URL and rebuilt the programme index.
+The launcher and both lanes exited zero with verified teardown.
+[XMLTV gzip recovery receipt](../scripts/rust-integration/milestone-batch99/xmltv-gzip-retry.json)
 
 A separate exact Original management capture completed 16 canonical
 operations in Compose. It verified the roles, route resolution and scoped

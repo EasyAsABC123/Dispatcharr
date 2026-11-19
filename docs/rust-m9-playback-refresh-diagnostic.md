@@ -78,3 +78,14 @@ within the original bound. Post-idle resource limits passed, and all five
 owned container generations retired. This result qualifies the scoped
 resource and provider setup for the two-hour diagnostic.
 [Passing short resource receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/resource-short-attempt3.json)
+
+## First two-hour attempt
+
+The exact Candidate94 run reached the first scheduled XMLTV refresh. All
+ten viewers shared one upstream through the last complete playback tick at
+290 seconds. The 295-second resource sample completed. The refresh failed
+before the observer could open at 297 seconds. The controller retained a
+`ValueError` without the HTTP status or failed validation step. It exited 1,
+and exact Compose teardown passed. The diagnostic retry captures the stage,
+status and allowed response-shape flags without including credentials.
+[First two-hour attempt receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/long-attempt1.json)
