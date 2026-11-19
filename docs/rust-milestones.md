@@ -22,6 +22,9 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The account activity, HLS profile and local-playlist checkpoint](rust-milestone-batch77.md)
+records the next focused Rust fixes and upcoming packaged comparisons.
+
 [The XC orphan cleanup and archive fault checkpoint](rust-milestone-batch76.md)
 records eleven Store tests and eight real-Redis media tests. The earlier
 [guide, XC, archive and operator checkpoint](rust-milestone-batch75.md)

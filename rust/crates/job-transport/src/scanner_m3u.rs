@@ -609,7 +609,28 @@ impl Service {
         stage: &mut &'static str,
     ) -> Result<Prepared, Error> {
         *stage = "account_sql";
-        let row=sqlx::query("SELECT id::bigint,name,file_path,is_active,status,CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,locked,stale_stream_days::bigint, (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL AND custom_properties='{}'::jsonb AND octet_length(name)<=512 AND octet_length(file_path)<=4096 AND COALESCE(octet_length(last_message),0)<=8192) AS known FROM m3u_m3uaccount WHERE id=$1").bind(id).fetch_optional(self.executor()).await.map_err(|_|Error::Operational)?.ok_or(Error::Unsupported)?;
+        // The Original serializer stores all four default preferences on new
+        // local accounts. They use the same groups and stream paths as {}.
+        let row = sqlx::query(
+            r#"SELECT id::bigint,name,file_path,is_active,status,
+               CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,
+               locked,stale_stream_days::bigint,
+               (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL
+                 AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL
+                 AND custom_properties IN (
+                   '{}'::jsonb,
+                   '{"enable_vod":false,"auto_enable_new_groups_live":true,
+                     "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true}'::jsonb
+                 )
+                 AND octet_length(name)<=512 AND octet_length(file_path)<=4096
+                 AND COALESCE(octet_length(last_message),0)<=8192) AS known
+               FROM m3u_m3uaccount WHERE id=$1"#,
+        )
+        .bind(id)
+        .fetch_optional(self.executor())
+        .await
+        .map_err(|_| Error::Operational)?
+        .ok_or(Error::Unsupported)?;
         *stage = "account_shape";
         if !row
             .try_get::<bool, _>("known")

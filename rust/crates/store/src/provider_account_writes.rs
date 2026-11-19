@@ -129,6 +129,13 @@ fn validate(
     partial: bool,
     create: bool,
 ) -> Result<Validated, StoreError> {
+    // The playlist table toggles an existing XC account with one Boolean.
+    let xc_active_toggle = !create
+        && partial
+        && old["account_type"] == "XC"
+        && (old["custom_properties"].is_object() || old["custom_properties"].is_null())
+        && input.len() == 1
+        && input.get("is_active").is_some_and(Value::is_boolean);
     // Source PATCH view mutates status using raw request truth before serializer.
     if partial {
         if let Some(raw) = input.get("is_active") {
@@ -424,6 +431,7 @@ fn validate(
         }
     }
     if !xc_preferences
+        && !xc_active_toggle
         && !xc_create
         && !xc_group_selection
         && !xc_orphan_cleanup
@@ -1320,6 +1328,73 @@ mod tests {
         .is_err());
         old["custom_properties"] = json!("non-mapping preference state");
         assert!(validate(request.as_object().unwrap().clone(), &old, "", true, false).is_err());
+    }
+
+    #[test]
+    fn xc_playlist_table_toggle_preserves_account_settings() {
+        let mut old = defaults();
+        old["name"] = json!("Owned XC");
+        old["account_type"] = json!("XC");
+        old["refresh_interval"] = json!(12);
+        let properties = json!({"enable_vod":true,"marker":"keep","hash_key":"name,url"});
+
+        for properties in [properties, Value::Null] {
+            old["custom_properties"] = properties.clone();
+            for (previous, status, active, expected_status) in [
+                (true, "success", false, "disabled"),
+                (false, "disabled", true, "idle"),
+                (true, "success", true, "success"),
+                (false, "error", false, "error"),
+            ] {
+                old["is_active"] = json!(previous);
+                old["status"] = json!(status);
+                let actual = validate(
+                    Map::from_iter([("is_active".into(), json!(active))]),
+                    &old,
+                    "30 5 * * *",
+                    true,
+                    false,
+                )
+                .unwrap();
+                let mut expected = old.clone();
+                expected["is_active"] = json!(active);
+                expected["status"] = json!(expected_status);
+                expected["custom_properties"] = Value::Object(super::properties(&properties));
+                assert_eq!(actual.saved, expected);
+                assert_eq!(actual.cron, "30 5 * * *");
+                assert_eq!(actual.expiration, None);
+                assert!(!actual.hash_changed);
+                assert!(actual.group_selection.is_empty());
+            }
+        }
+    }
+
+    #[test]
+    fn xc_activity_toggle_does_not_admit_wider_account_edits() {
+        let mut old = defaults();
+        old["name"] = json!("Owned XC");
+        old["account_type"] = json!("XC");
+
+        for input in [
+            json!({"is_active":false,"status":"success"}),
+            json!({"is_active":false,"enable_vod":true}),
+            json!({"is_active":false,"name":"Other"}),
+            json!({"is_active":false,"hash_key":"name"}),
+            json!({"is_active":"false"}),
+        ] {
+            assert!(matches!(
+                validate(input.as_object().unwrap().clone(), &old, "", true, false),
+                Err(StoreError::Unsupported(_))
+            ));
+        }
+        assert!(validate(
+            Map::from_iter([("is_active".into(), json!(false))]),
+            &old,
+            "",
+            false,
+            false
+        )
+        .is_err());
     }
 
     #[test]

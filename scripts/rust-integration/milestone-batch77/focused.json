@@ -1,0 +1,44 @@
+{
+  "base_revision": "e812ff92b56a596236d5acf04147bd428a5ee830",
+  "changed_source_sha256": {
+    "rust/crates/job-transport/src/scanner_m3u.rs": "c05c7dd2263846395f9257941fc386ecd6023a843adefd8e1de4e07a0190cba8",
+    "rust/crates/store/src/playback.rs": "f8e0899c27c6fcf7b73d847e4bea6e31d305442ebba6276002d2e32ec1dc5f6c",
+    "rust/crates/store/src/provider_account_writes.rs": "f7471a88fc823f5a58d08ae20b1554d8d87b287b8f7201a9b197313604029bae"
+  },
+  "checked_cases": {
+    "xc_account": {
+      "passed": 13,
+      "failed": 0,
+      "ignored": 0,
+      "log_sha256": "28a6bbcce70814208815fb64ea168219b25fbee5ede437aab8c91401fd5c38e1"
+    },
+    "output_profile": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "log_sha256": "c2ec8e54b8755f3de847af0cf3502e304389cd6af770ba838bd102338f547305"
+    },
+    "local_scanner": {
+      "passed": 11,
+      "failed": 0,
+      "ignored": 1,
+      "log_sha256": "4c59d8e75ed51b91f5dc12c08472ac508fb34595f909664d8f11f0667de6adc9"
+    }
+  },
+  "strict_clippy_sha256": {
+    "store": "e069f7467793de16e3aaed2a3c561f9afbc91df7efaaf7f07a109336f0a21396",
+    "job_transport": "617c69b3adfc29cc88e0242a43716e03d72697e74dbacb6c72a731a739c41043"
+  },
+  "rust_format_passed": true,
+  "portable_xc_offline_passed": 9,
+  "actual_rust_exits": [
+    0,
+    0
+  ],
+  "actual_tool_chunks": [
+    "fc96b9",
+    "63d129"
+  ],
+  "full_milestone_accepted": false,
+  "performance_verified": false
+}

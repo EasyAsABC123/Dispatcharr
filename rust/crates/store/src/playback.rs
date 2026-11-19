@@ -1004,17 +1004,22 @@ fn resolve_output_format(
         .to_owned()
 }
 fn resolve_output_profile_id(request: &PlaybackRequest, user: Option<&User>) -> Option<i64> {
+    let parse_id = |value: &str| {
+        dispatcharr_ingest_core::source_integer_literal(value)?
+            .parse()
+            .ok()
+    };
     // Invalid truthy query parameters explicitly disable a user preference;
     // they do not fall back to it, matching _resolve_output_profile.
     if let Some(value) = request
         .parameter("output_profile")
         .filter(|value| !value.is_empty())
     {
-        return value.trim().parse().ok();
+        return parse_id(value);
     }
     match user.and_then(|user| user.custom_properties.get("output_profile"))? {
         serde_json::Value::Bool(value) => Some(i64::from(*value)),
-        serde_json::Value::String(value) => value.trim().parse().ok(),
+        serde_json::Value::String(value) => parse_id(value),
         serde_json::Value::Number(value) => value.as_i64().or_else(|| {
             value
                 .as_f64()
@@ -1216,6 +1221,32 @@ mod output_tests {
             "hls"
         );
     }
+    #[test]
+    fn output_profile_id_accepts_source_integer_spelling() {
+        let saved = user(json!({"output_profile":"７_"}));
+        assert_eq!(
+            resolve_output_profile_id(&request(vec![]), Some(&saved)),
+            None
+        );
+        let saved = user(json!({"output_profile":" +٠_٧ "}));
+        assert_eq!(
+            resolve_output_profile_id(&request(vec![]), Some(&saved)),
+            Some(7)
+        );
+        for value in ["1_2", "١٢", "\u{a0}+１２\u{3000}"] {
+            assert_eq!(
+                resolve_output_profile_id(&request(vec![("output_profile", value)]), Some(&saved)),
+                Some(12)
+            );
+        }
+        for value in ["1__2", "¹²", "9223372036854775808"] {
+            assert_eq!(
+                resolve_output_profile_id(&request(vec![("output_profile", value)]), Some(&saved)),
+                None
+            );
+        }
+    }
+
     #[test]
     fn invalid_output_profile_query_suppresses_user_preference() {
         let user = user(json!({"output_profile":7}));
