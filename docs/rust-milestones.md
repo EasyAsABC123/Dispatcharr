@@ -9,6 +9,9 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [complete parity plan](rust-complete-parity-plan.md) assigns parallel work
+across M0–M9 and proposes M10/M11 as separate rollout stages.
+
 The [development and validation plan](rust-development-and-validation-plan.md) defines parallel implementation/acceptance/tooling lanes, affected-workflow batches and default-off fixture concurrency. Performance measurement remains exclusive.
 
 The [XC account lifecycle Source capture](../scripts/rust-integration/milestone-batch67/xc-source11-checkpoint.json)
