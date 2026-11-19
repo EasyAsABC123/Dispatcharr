@@ -54,6 +54,12 @@ pub enum State {
     Fault(Disposition),
     Stopped,
 }
+impl State {
+    fn ready(&self) -> bool {
+        matches!(self, Self::Working(_) | Self::Observed(_))
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct Readiness {
     pub scope: &'static str,
@@ -368,15 +374,9 @@ impl Application {
     pub fn readiness(&self) -> Readiness {
         let celery = self.inner.celery.state.borrow().clone();
         let dvr = self.inner.dvr.state.borrow().clone();
-        let active = |state: &State| {
-            matches!(
-                state,
-                State::Starting | State::Working(_) | State::Observed(_)
-            )
-        };
         Readiness {
             scope: "selected16-migration-families; not all Source tasks",
-            ready: active(&celery) && active(&dvr),
+            ready: celery.ready() && dvr.ready(),
             celery,
             dvr,
             required_families: milestone_dispatch::REQUIRED.len()
@@ -786,6 +786,14 @@ async fn celery_lane(
                 Ok(None) => {
                     if tasks.is_empty() {
                         lane.state.send_replace(State::Observed(Disposition::Empty));
+                    } else {
+                        // A due task may have started before the first broker
+                        // peek. The empty observation and held task together
+                        // establish that this lane is active.
+                        let starting = matches!(*lane.state.borrow(), State::Starting);
+                        if starting {
+                            lane.state.send_replace(State::Working(tasks.len()));
+                        }
                     }
                 }
                 Err(error @ Disposition::UnsupportedHead)
@@ -819,6 +827,22 @@ async fn celery_lane(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn lane_is_ready_after_a_successful_poll() {
+        for state in [
+            State::Prepared,
+            State::Starting,
+            State::Stopped,
+            State::Blocked(Disposition::UnsupportedHead),
+            State::Fault(Disposition::Operational("Redis unavailable".into())),
+        ] {
+            assert!(!state.ready(), "{state:?}");
+        }
+        assert!(State::Working(1).ready());
+        assert!(State::Observed(Disposition::Empty).ready());
+    }
+
     #[test]
     fn actual_auto_family_admission_matches_existing_celery_lane_budget() {
         // Exercise the SAME guard called by Application::prepare, using the
@@ -992,6 +1016,109 @@ mod tests {
         assert_eq!(probe.duplicates.load(Ordering::SeqCst), 0);
         assert_eq!(probe.active.load(Ordering::SeqCst), 0);
         assert_eq!(probe.queue.lock().unwrap().len(), 1);
+        assert!(*lane.done.borrow());
+        assert!(matches!(*lane.state.borrow(), State::Stopped));
+    }
+
+    #[derive(Default)]
+    struct EmptyCeleryHead(AtomicUsize);
+
+    impl Head for EmptyCeleryHead {
+        fn queue(&self) -> Queue {
+            Queue::Celery
+        }
+        fn peek(
+            &self,
+            _owner: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Option<Vec<u8>>, Disposition>> {
+            Box::pin(async move {
+                self.0.fetch_add(1, Ordering::SeqCst);
+                Ok(None)
+            })
+        }
+    }
+
+    struct HeldDueTask {
+        started: AtomicBool,
+        finish: Semaphore,
+    }
+
+    impl Lifecycle for HeldDueTask {
+        fn shutdown(&self, _timeout: Duration) -> BoxFuture<'_, Result<(), Disposition>> {
+            Box::pin(async { Ok(()) })
+        }
+    }
+
+    impl Handler for HeldDueTask {
+        fn due_head(&self) -> Option<Arc<[u8]>> {
+            (!self.started.load(Ordering::Acquire)).then(|| Arc::from(&b"owned due task"[..]))
+        }
+        fn run_due(
+            &self,
+            expected: Arc<[u8]>,
+            owner: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
+            Box::pin(async move {
+                let _owner = owner;
+                assert_eq!(expected.as_ref(), b"owned due task");
+                assert!(!self.started.swap(true, Ordering::AcqRel));
+                self.finish
+                    .acquire()
+                    .await
+                    .expect("release held task")
+                    .forget();
+                Ok(Disposition::CompletedWithoutId)
+            })
+        }
+        fn run_once(
+            &self,
+            _owner: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
+            Box::pin(async { panic!("the empty broker head cannot start ordinary work") })
+        }
+    }
+
+    #[tokio::test]
+    async fn celery_first_empty_broker_peek_reports_working_during_held_due_task() {
+        let head = Arc::new(EmptyCeleryHead::default());
+        let due = Arc::new(HeldDueTask {
+            started: AtomicBool::new(false),
+            finish: Semaphore::new(0),
+        });
+        let handler = FamilyAdapter(Arc::new(OwnedFamily {
+            inner: due.clone(),
+            slot: Arc::new(Semaphore::new(1)),
+            closed: AtomicBool::new(false),
+        }));
+        let entries = milestone_dispatch::REQUIRED
+            .into_iter()
+            .chain([Family::BackupCreate, Family::BackupScheduled])
+            .map(|family| (family, Arc::new(handler.clone()) as Arc<dyn Handler>))
+            .collect();
+        let lane = Arc::new(Lane {
+            prepared: Prepared::new(head.clone(), entries).expect("complete family fixture"),
+            state: watch::channel(State::Starting).0,
+            done: watch::channel(false).0,
+        });
+        let (stop, rx) = watch::channel(false);
+        let running = tokio::spawn(celery_lane(
+            lane.clone(),
+            head.clone(),
+            BTreeMap::from([(Family::Artwork, handler)]),
+            Arc::new(()),
+            rx,
+            Duration::from_millis(10),
+        ));
+        until(|| due.started.load(Ordering::Acquire) && head.0.load(Ordering::SeqCst) > 0).await;
+        assert!(matches!(*lane.state.borrow(), State::Working(1)));
+        assert!(!running.is_finished());
+
+        stop.send_replace(true);
+        due.finish.add_permits(1);
+        tokio::time::timeout(Duration::from_secs(3), running)
+            .await
+            .expect("bounded Celery lane retirement")
+            .expect("actual Celery lane task");
         assert!(*lane.done.borrow());
         assert!(matches!(*lane.state.borrow(), State::Stopped));
     }

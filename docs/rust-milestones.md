@@ -22,6 +22,9 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The selected-worker readiness checkpoint](rust-milestone-batch86.md)
+covers Celery and DVR first progress and the pending packaged startup check.
+
 [The channel guide and modular PostgreSQL TLS checkpoint](rust-milestone-batch85.md)
 records Set EPG for the existing React channel editor and the certificate-only
 connection settings for Main and its database operator.
