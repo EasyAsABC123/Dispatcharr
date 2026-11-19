@@ -1,0 +1,439 @@
+{
+  "actual_launch_log": {
+    "actual_started_measurement_phases": 6,
+    "sha256": "911c3af958146c41e505b64f31f4e5acc57dc00b34cde74dce8946425c64d98d"
+  },
+  "actual_launcher_exit": 1,
+  "backend_medians": {
+    "candidate": {
+      "cpu_percent": 1.1741739714626431,
+      "peak_working_bytes": 179867648
+    },
+    "source": {
+      "cpu_percent": 1.4205930333538495,
+      "peak_working_bytes": 410243072
+    }
+  },
+  "candidate_revision": "fc5562a37d91ed6673e6ee9a740be4e0dd6c7c5f",
+  "cleanup": {
+    "containers_before_down": 6,
+    "passed": true,
+    "retained_project_resource_counts": {
+      "container": 0,
+      "network": 0,
+      "volume": 0
+    },
+    "retired_generations": 9,
+    "tracked_generations": 9
+  },
+  "median_paired_ratios": {
+    "throughput": 1.0,
+    "whole_cpu": 0.8327737692707756,
+    "whole_peak_working_set": 0.4363649070958595
+  },
+  "pairs": [
+    {
+      "floored_operation_latency_ratios": {
+        "account-isolation": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        },
+        "count-only": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        },
+        "full-scan-cap": {
+          "p95_first_byte_ms": 0.9121494545068962,
+          "p95_total_ms": 0.9122859169477671
+        }
+      },
+      "gates": {
+        "CPU": true,
+        "equal_work": true,
+        "latency": true,
+        "peak_working_set": true,
+        "throughput": true
+      },
+      "passed": true,
+      "ratios": {
+        "throughput": 1.0,
+        "whole_cpu": 0.7512224892611025,
+        "whole_peak_working_set": 0.4346272615701334
+      },
+      "trial": 1
+    },
+    {
+      "floored_operation_latency_ratios": {
+        "account-isolation": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        },
+        "count-only": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        },
+        "full-scan-cap": {
+          "p95_first_byte_ms": 1.1558825036118063,
+          "p95_total_ms": 1.1557911404780215
+        }
+      },
+      "gates": {
+        "CPU": true,
+        "equal_work": true,
+        "latency": false,
+        "peak_working_set": true,
+        "throughput": true
+      },
+      "passed": false,
+      "ratios": {
+        "throughput": 1.0,
+        "whole_cpu": 0.8327737692707756,
+        "whole_peak_working_set": 0.4363649070958595
+      },
+      "trial": 2
+    },
+    {
+      "floored_operation_latency_ratios": {
+        "account-isolation": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        },
+        "count-only": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        },
+        "full-scan-cap": {
+          "p95_first_byte_ms": 1.2369835684600743,
+          "p95_total_ms": 1.2372133739434261
+        }
+      },
+      "gates": {
+        "CPU": true,
+        "equal_work": true,
+        "latency": false,
+        "peak_working_set": true,
+        "throughput": true
+      },
+      "passed": false,
+      "ratios": {
+        "throughput": 1.0,
+        "whole_cpu": 0.8354013869712618,
+        "whole_peak_working_set": 0.45226040324755085
+      },
+      "trial": 3
+    }
+  ],
+  "performance_accepted": false,
+  "phase_reviews": [
+    {
+      "backend": "source",
+      "bytes_per_second": 151.2,
+      "cpu_percent": 1.5122565232138265,
+      "exact_requests": 36,
+      "operations": {
+        "account-isolation": {
+          "p95_first_byte_ms": 10.22036799986381,
+          "p95_total_ms": 10.25475899950834
+        },
+        "count-only": {
+          "p95_first_byte_ms": 9.717034998175222,
+          "p95_total_ms": 9.745535993715748
+        },
+        "full-scan-cap": {
+          "p95_first_byte_ms": 56.003510995651595,
+          "p95_total_ms": 56.03409199829912
+        }
+      },
+      "peak_working_bytes": 413843456,
+      "qualified": true,
+      "qualified_scan_rows": 60060,
+      "raw_sha256": "92f2a734de39ac5270c39440b63eef23d774930d1811a1d9db271d525c5b88d0",
+      "response_bytes": 9072,
+      "samples": 30,
+      "services": {
+        "backend": {
+          "cpu_percent": 1.1806622876980073,
+          "peak_working_bytes": 254836736
+        },
+        "infrastructure": {
+          "cpu_percent": 0.28349723595596443,
+          "peak_working_bytes": 141582336
+        },
+        "origin": {
+          "cpu_percent": 0.048096999559854865,
+          "peak_working_bytes": 17899520
+        }
+      },
+      "trial": 1
+    },
+    {
+      "backend": "candidate",
+      "bytes_per_second": 151.2,
+      "cpu_percent": 1.136041109770031,
+      "exact_requests": 36,
+      "operations": {
+        "account-isolation": {
+          "p95_first_byte_ms": 5.425502997240983,
+          "p95_total_ms": 5.471403994306456
+        },
+        "count-only": {
+          "p95_first_byte_ms": 22.912166998139583,
+          "p95_total_ms": 22.94568799698027
+        },
+        "full-scan-cap": {
+          "p95_first_byte_ms": 51.083572005154565,
+          "p95_total_ms": 51.119112999003846
+        }
+      },
+      "peak_working_bytes": 179867648,
+      "qualified": true,
+      "qualified_scan_rows": 60060,
+      "raw_sha256": "2d7c71dfaa18a8a2d553ede1b2b6629428eb7a8f3b8943fa83eace051383224a",
+      "response_bytes": 9072,
+      "samples": 30,
+      "services": {
+        "backend": {
+          "cpu_percent": 0.8878214384612116,
+          "peak_working_bytes": 24997888
+        },
+        "infrastructure": {
+          "cpu_percent": 0.1996823024631335,
+          "peak_working_bytes": 143097856
+        },
+        "origin": {
+          "cpu_percent": 0.048537368845685665,
+          "peak_working_bytes": 13266944
+        }
+      },
+      "trial": 1
+    },
+    {
+      "backend": "candidate",
+      "bytes_per_second": 151.2,
+      "cpu_percent": 1.1830326149858899,
+      "exact_requests": 36,
+      "operations": {
+        "account-isolation": {
+          "p95_first_byte_ms": 5.894786998396739,
+          "p95_total_ms": 5.924367993429769
+        },
+        "count-only": {
+          "p95_first_byte_ms": 6.018220003170427,
+          "p95_total_ms": 6.056701000488829
+        },
+        "full-scan-cap": {
+          "p95_first_byte_ms": 67.62283800344449,
+          "p95_total_ms": 67.66107900330098
+        }
+      },
+      "peak_working_bytes": 179015680,
+      "qualified": true,
+      "qualified_scan_rows": 60060,
+      "raw_sha256": "6723d777d890ba6fdb0a50b7600bff2ef2b87192eac61ee268658feb9e17ac8e",
+      "response_bytes": 9072,
+      "samples": 30,
+      "services": {
+        "backend": {
+          "cpu_percent": 0.9375830369865378,
+          "peak_working_bytes": 24375296
+        },
+        "infrastructure": {
+          "cpu_percent": 0.19767192548773346,
+          "peak_working_bytes": 143183872
+        },
+        "origin": {
+          "cpu_percent": 0.04777765251161862,
+          "peak_working_bytes": 12365824
+        }
+      },
+      "trial": 2
+    },
+    {
+      "backend": "source",
+      "bytes_per_second": 151.2,
+      "cpu_percent": 1.4205930333538495,
+      "exact_requests": 36,
+      "operations": {
+        "account-isolation": {
+          "p95_first_byte_ms": 29.9003440013621,
+          "p95_total_ms": 29.939084997749887
+        },
+        "count-only": {
+          "p95_first_byte_ms": 8.768668005359359,
+          "p95_total_ms": 8.804909004538786
+        },
+        "full-scan-cap": {
+          "p95_first_byte_ms": 58.50321100297151,
+          "p95_total_ms": 58.54092200024752
+        }
+      },
+      "peak_working_bytes": 410243072,
+      "qualified": true,
+      "qualified_scan_rows": 60060,
+      "raw_sha256": "f16b81477487c04788432272e89f14703a768290ab4d35951b28b559522b4a19",
+      "response_bytes": 9072,
+      "samples": 30,
+      "services": {
+        "backend": {
+          "cpu_percent": 1.1621034292837973,
+          "peak_working_bytes": 255070208
+        },
+        "infrastructure": {
+          "cpu_percent": 0.20920823367460392,
+          "peak_working_bytes": 143659008
+        },
+        "origin": {
+          "cpu_percent": 0.0492813703954483,
+          "peak_working_bytes": 12505088
+        }
+      },
+      "trial": 2
+    },
+    {
+      "backend": "source",
+      "bytes_per_second": 151.2,
+      "cpu_percent": 1.4055207350320515,
+      "exact_requests": 36,
+      "operations": {
+        "account-isolation": {
+          "p95_first_byte_ms": 8.461919002002105,
+          "p95_total_ms": 8.506870006385725
+        },
+        "count-only": {
+          "p95_first_byte_ms": 8.728706998226698,
+          "p95_total_ms": 8.76542799960589
+        },
+        "full-scan-cap": {
+          "p95_first_byte_ms": 55.00461100018583,
+          "p95_total_ms": 55.03066199889872
+        }
+      },
+      "peak_working_bytes": 410161152,
+      "qualified": true,
+      "qualified_scan_rows": 60060,
+      "raw_sha256": "7426ab8780905e4d9b5ee87f4614a031561db32f112d2de1b1eda676f371e00d",
+      "response_bytes": 9072,
+      "samples": 30,
+      "services": {
+        "backend": {
+          "cpu_percent": 1.14278918654054,
+          "peak_working_bytes": 252055552
+        },
+        "infrastructure": {
+          "cpu_percent": 0.21584332180534024,
+          "peak_working_bytes": 146890752
+        },
+        "origin": {
+          "cpu_percent": 0.046888226686171264,
+          "peak_working_bytes": 12541952
+        }
+      },
+      "trial": 3
+    },
+    {
+      "backend": "candidate",
+      "bytes_per_second": 151.2,
+      "cpu_percent": 1.1741739714626431,
+      "exact_requests": 36,
+      "operations": {
+        "account-isolation": {
+          "p95_first_byte_ms": 5.229947004409041,
+          "p95_total_ms": 5.253308001556434
+        },
+        "count-only": {
+          "p95_first_byte_ms": 5.515696000657044,
+          "p95_total_ms": 5.544376996112987
+        },
+        "full-scan-cap": {
+          "p95_first_byte_ms": 68.03979999676812,
+          "p95_total_ms": 68.08467100199778
+        }
+      },
+      "peak_working_bytes": 185499648,
+      "qualified": true,
+      "qualified_scan_rows": 60060,
+      "raw_sha256": "97b24e73bf68281da82ac733cf1c569ee0fd6d32269a1a87bc3b73cd4e8003bc",
+      "response_bytes": 9072,
+      "samples": 30,
+      "services": {
+        "backend": {
+          "cpu_percent": 0.9203593025198954,
+          "peak_working_bytes": 23764992
+        },
+        "infrastructure": {
+          "cpu_percent": 0.20445530959487998,
+          "peak_working_bytes": 148975616
+        },
+        "origin": {
+          "cpu_percent": 0.0493593593478678,
+          "peak_working_bytes": 12935168
+        }
+      },
+      "trial": 3
+    }
+  ],
+  "released_exact_image": "sha256:b309daadc687ed0bb8f627373e4c34c202f995bb91ab782ae65ee2d32b712c74",
+  "report_sha256": "89e1d1329e0b5ef0647fabcffebbc9a4df2fe639908bd478952a9e1174c3ab68",
+  "reported_stage": "measurement-complete",
+  "request_manifest_sha256": "d344bb6e450ffcda06ef9644d5cddf711d41e05892f83acebf7d3e9190fdbe73",
+  "retained_failure": {
+    "fixture_bootstrap_normalization": {
+      "remaining_owned_bootstrap_queued_jobs": 0,
+      "removed_owned_bootstrap_queued_jobs": 3,
+      "sql_preserved": true
+    }
+  },
+  "runner_seal_sha256": "aebf852e38b428c4b7b767c8e9fe154d83b927b967a6ea3fa54665e765786a1b",
+  "scope": "m7-stock-react-regex-preview",
+  "started_measurement": true,
+  "startup_preparations": [
+    {
+      "backend": "source",
+      "classified_pre_warmup_startup_task_count": 1,
+      "qualified": true,
+      "setup_difference_categories": [
+        "queued_jobs"
+      ],
+      "trial": 1
+    },
+    {
+      "backend": "candidate",
+      "classified_pre_warmup_startup_task_count": 0,
+      "qualified": true,
+      "setup_difference_categories": [],
+      "trial": 1
+    },
+    {
+      "backend": "candidate",
+      "classified_pre_warmup_startup_task_count": 0,
+      "qualified": true,
+      "setup_difference_categories": [],
+      "trial": 2
+    },
+    {
+      "backend": "source",
+      "classified_pre_warmup_startup_task_count": 1,
+      "qualified": true,
+      "setup_difference_categories": [
+        "queued_jobs"
+      ],
+      "trial": 2
+    },
+    {
+      "backend": "source",
+      "classified_pre_warmup_startup_task_count": 1,
+      "qualified": true,
+      "setup_difference_categories": [
+        "queued_jobs"
+      ],
+      "trial": 3
+    },
+    {
+      "backend": "candidate",
+      "classified_pre_warmup_startup_task_count": 0,
+      "qualified": true,
+      "setup_difference_categories": [],
+      "trial": 3
+    }
+  ]
+}

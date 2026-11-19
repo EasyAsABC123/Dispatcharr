@@ -31,8 +31,10 @@ Candidate94 is `fc5562a37d91ed6673e6ee9a740be4e0dd6c7c5f`. Its Docker build,
 formatting and strict all-target Clippy passed. Store passed 544 tests and Main
 passed 35, with 79 and one external-fixture tests ignored respectively.
 The run verifies the named workflows. Additional guide sources, capacity
-and representation boundaries, resource performance, and full milestone
-acceptance remain open.
+and representation boundaries remain open. Subsequent Auto Sync performance
+measurements reduced CPU and working set at equal throughput. Two full-scan
+p95 comparisons exceeded the latency budget. Full milestone acceptance remains
+open. [Paired benchmark and receipts](../scripts/rust-perf/candidate94-regex-preview/README.md)
 
 [Exact build and paired test evidence](../scripts/rust-integration/milestone-batch94/acceptance.json)
 · [Milestone ledger](rust-milestones.md)

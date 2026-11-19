@@ -1,0 +1,66 @@
+{
+  "bearer_token_in_header_only": true,
+  "endpoint": "/api/channels/streams/regex-preview/",
+  "method": "GET",
+  "operators": 1,
+  "per_phase": {
+    "measure": {
+      "qualified_scan_rows": 60060,
+      "requests": 36,
+      "response_bytes": 9072
+    },
+    "warmup": {
+      "qualified_scan_rows": 15015,
+      "requests": 9,
+      "response_bytes": 2268
+    }
+  },
+  "plan_sha256": "a4e0371c6a80711bbf522f3cd855e089aa4705a993e62071ceada4120b60ca4b",
+  "requests": {
+    "account-isolation": {
+      "bytes": 306,
+      "expected_total": 2,
+      "query": {
+        "channel_group": "{small}",
+        "exclude": "^News",
+        "find": "(?<=News )([A-Z]{2})",
+        "m3u_account_id": "{first}",
+        "match": " 20$",
+        "replace": "$1 HD"
+      },
+      "role": "standard",
+      "scanned": 2,
+      "sha256": "13739c6bdefbefc6f10562e87309b91bfa44345f25b269b00760670229a62038",
+      "status": 200
+    },
+    "count-only": {
+      "bytes": 61,
+      "expected_total": 3,
+      "query": {
+        "channel_group": "{small}"
+      },
+      "role": "standard",
+      "scanned": 3,
+      "sha256": "b21036da265b21039b6c97a13775ceea5231e9677e17d2dadc06b130d112fe23",
+      "status": 200
+    },
+    "full-scan-cap": {
+      "bytes": 389,
+      "expected_total": 5001,
+      "query": {
+        "channel_group": "{large}",
+        "exclude": "0000$",
+        "find": "^Fixture row (\\d{4})$",
+        "limit": 2,
+        "m3u_account_id": "{first}",
+        "match": "^[A-Z][a-z]+ row ",
+        "replace": "Visible $1"
+      },
+      "role": "admin",
+      "scanned": 5000,
+      "sha256": "532e93b04edede5da09b988010ac38d636635370aa9d1a7a16dbd9744877d2aa",
+      "status": 200
+    }
+  },
+  "source_and_native_do_identical_work": true
+}

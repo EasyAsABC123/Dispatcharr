@@ -53,7 +53,10 @@ The following scheduler correction passed its focused Rust tests.
 
 [The batch guide and Auto Sync checkpoint](rust-milestone-batch94.md)
 passes selected XMLTV and source-less programme publication, the default
-atomic guard, and the exact packaged React regex preview contract.
+atomic guard, and the exact packaged React regex preview contract. The paired
+Auto Sync benchmark measured 16.72% lower CPU and 56.36% lower peak working set,
+with two full-scan p95 failures.
+[Paired Auto Sync benchmark](../scripts/rust-perf/candidate94-regex-preview/README.md)
 
 [The persisted System Logs checkpoint](rust-milestone-batch92.md)
 verifies metadata, cursor tail and attachments against the same read-only
