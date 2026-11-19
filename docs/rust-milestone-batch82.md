@@ -20,8 +20,12 @@ workflow and algorithm credit.
 
 All 528 default Store tests, six Main configuration tests and ten operator
 tests passed. The Store suite skipped 79 cases that require external
-fixtures. Formatting and strict all-target Clippy passed. Exact-image
-Compose checks remain open for the new application paths.
+fixtures. Formatting and strict all-target Clippy passed. The exact Docker
+image matched 18 integration edit cases and four daily-cron transitions
+per backend. Twelve no-network startup cases distinguished the old and new
+Redis/Celery diagnostics. Every scope independently verified cleanup.
+
+[Exact-image package checks](../scripts/rust-integration/milestone-batch82/packaged.json)
 
 [Focused checks](../scripts/rust-integration/milestone-batch82/focused.json)
 · [Retained failover decode](../scripts/rust-integration/milestone-batch82/failover-decode-retained.json)
