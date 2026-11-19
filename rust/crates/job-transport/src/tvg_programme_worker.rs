@@ -316,7 +316,7 @@ async fn run(
                     .map_err(Error::Cache)?;
                 let lease = inner
                     .locks
-                    .acquire_retained_detailed("parse_epg_programs", id, owner.clone())
+                    .acquire_epg_programmes_retained(id, owner.clone())
                     .await;
                 let (body, release) = match lease {
                     Err(TaskLockDetailedError::Operational(TaskLockError::Held)) => {
