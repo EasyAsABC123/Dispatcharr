@@ -1,0 +1,37 @@
+{
+  "base_git": "8acb4fa6b1eea827bfc52053ccfeb6ab2cb09253",
+  "Rust_patch_sha256": "aabd47c6e62f00573cc904bf3e71fac835710ae9c2f7ca951dc99ae2b57cd333",
+  "changed_Rust_paths": [
+    "rust/Cargo.lock",
+    "rust/crates/output-http/src/render.rs",
+    "rust/crates/store/src/backup_files.rs",
+    "rust/crates/store/src/backup_files_tests.rs",
+    "rust/crates/store/src/channels.rs",
+    "rust/crates/store/src/core_settings_special_effects.rs",
+    "rust/crates/store/src/xc_account_tasks.rs",
+    "rust/crates/store/src/xc_live_tasks.rs",
+    "rust/crates/stream-http/src/engine.rs",
+    "rust/crates/timeshift-http/Cargo.toml",
+    "rust/crates/timeshift-http/src/upstream.rs",
+    "rust/crates/upstream-http/src/lib.rs",
+    "rust/crates/vod-http/Cargo.toml",
+    "rust/crates/vod-http/src/engine.rs"
+  ],
+  "actual_Root_focused_exit": 0,
+  "actual_Root_focused_session": 42181,
+  "actual_Root_focused_terminal_chunk": "c6a2d3",
+  "actual_Root_combined_exit": 0,
+  "actual_Root_combined_session": 44561,
+  "actual_Root_combined_terminal_chunk": "c0f8a5",
+  "checks": [
+    "workspace formatting",
+    "strict Clippy all targets for changed crates",
+    "backup filename test",
+    "direct M3U mixed URL test",
+    "channel range float test"
+  ],
+  "passed_focus_tests": 3,
+  "full_application_e2e_executed": false,
+  "full_milestones_closed": false,
+  "scope": "Parallel development and focused checks only. The final acceptance run remains separate."
+}

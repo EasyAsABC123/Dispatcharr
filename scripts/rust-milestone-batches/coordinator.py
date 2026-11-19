@@ -76,11 +76,13 @@ def inventory():
         return {"id": key, "owner": "Root", "depends_on": deps,
                 "heavy": heavy, "resources": ["Root/" + key], "entrypoint": entrypoint}
     functional = [n["id"] for n in rows if not n["id"].startswith("performance/")]
+    datastore_scope = "external/M9/datastore-scope"
     rows.extend([
         root_node("root/M0-executable-coverage", [], "pinned Original HTTP/non-HTTP executable contract inventory"),
         root_node("root/M1-core-acceptance", ["root/M0-executable-coverage"], "bounded core tests, container and equivalent-work benchmark", True),
-        root_node("external/M9/datastore-scope", [], "SQLite and PostgreSQL compatibility crosswalk; preserve required supported stores"),
-        root_node("root/M9-workflow-parity", functional + ["root/M0-executable-coverage", "root/M1-core-acceptance"],
+        root_node(datastore_scope, [], "SQLite and PostgreSQL compatibility crosswalk; preserve required supported stores"),
+        root_node("root/M9-workflow-parity",
+                  functional + ["root/M0-executable-coverage", "root/M1-core-acceptance", datastore_scope],
                   "release images: all contracts, unchanged React, faults, fresh install and upgrade"),
         root_node("root/M9-soak", ["root/M9-workflow-parity"], "at least two hours with refresh, decoder/resource-growth and post-soak cleanup", True),
         root_node("root/M9-rollback", ["root/M9-workflow-parity"], "copied-data migration, restore and rollback rehearsal", True),

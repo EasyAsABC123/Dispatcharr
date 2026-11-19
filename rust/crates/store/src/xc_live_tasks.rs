@@ -758,7 +758,14 @@ impl Prepared {
         if self.account.kind == "STD" {
             self.event_current("parsing",100.0,json!({"elapsed_time":format!("{progress:.2}").parse::<f64>().map_err(|_|unsupported())?,"time_remaining":0,"streams_processed":selected})).await?;
         } else {
-            self.event("parsing",100,"parsing",Some("Refresh in progress..."),json!({"elapsed_time":format!("{progress:.2}").parse::<f64>().map_err(|_|unsupported())?,"time_remaining":0,"streams_processed":selected})).await?;
+            self.event(
+                "parsing",
+                100,
+                "parsing",
+                Some("Refresh in progress..."),
+                json!({"elapsed_time":progress,"time_remaining":0,"streams_processed":selected}),
+            )
+            .await?;
         }
         let stale=self.session.run(move|c|Box::pin(async move{let n=sqlx::query("UPDATE dispatcharr_channels_stream SET is_stale=true WHERE m3u_account_id=$1 AND last_seen<$2").bind(id).bind(start).execute(&mut*c).await?.rows_affected();sqlx::query("UPDATE dispatcharr_channels_channelgroupm3uaccount SET is_stale=true WHERE m3u_account_id=$1 AND last_seen<$2").bind(id).bind(start).execute(&mut*c).await?;Ok::<_,StoreError>(n)})).await??;
         let store = self.store.clone();
@@ -982,25 +989,20 @@ impl Prepared {
         for (k, v) in extra.as_object().ok_or_else(unsupported)? {
             data[k] = v.clone();
         }
-        self.events
-            .send_retained(
-                "updates",
-                json!({"type":"update","data":data}),
-                self.owner.clone(),
-            )
-            .await
-            .map_err(|_| unsupported())
+        self.send_refresh_event(data).await
     }
     async fn error_status(&self, message: &str, action: &str) -> Result<(), StoreError> {
         self.status("error", Some(message), false).await?;
-        self.event(
-            action,
-            100,
-            "error",
-            Some(message),
-            json!({"error":message}),
-        )
-        .await?;
+        // Source fills in last_message before applying the explicit status
+        // and error kwargs in send_m3u_update.
+        let mut data =
+            json!({"progress":100,"type":"m3u_refresh","account":self.account.id,"action":action});
+        if !message.is_empty() {
+            data["message"] = json!(message);
+        }
+        data["status"] = json!("error");
+        data["error"] = json!(message);
+        self.send_refresh_event(data).await?;
         self.audit(
             "m3u_error",
             json!({"account_name":self.account.name,"message":message}),
@@ -1075,6 +1077,9 @@ impl Prepared {
         for (k, v) in extra.as_object().ok_or_else(unsupported)? {
             data[k] = v.clone()
         }
+        self.send_refresh_event(data).await
+    }
+    async fn send_refresh_event(&self, data: Value) -> Result<(), StoreError> {
         self.events
             .send_retained(
                 "updates",

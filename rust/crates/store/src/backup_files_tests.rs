@@ -14,6 +14,29 @@ fn signed_token_rfc_and_original_vector() {
         "f79a4fcf4136478631ea8ba5f343bdc3"
     );
 }
+#[test]
+fn download_filenames_match_original_response_headers() {
+    for (filename, expected) in [
+        (
+            "dispatcharr-backup-café.zip",
+            b"attachment; filename=\"dispatcharr-backup-caf\xe9.zip\"".as_slice(),
+        ),
+        (
+            "dispatcharr-backup-Ě.zip",
+            b"=?utf-8?q?attachment=3B_filename=3D=22dispatcharr-backup-=C4=9A=2Ezip=22?=",
+        ),
+        (
+            "dispatcharr-backup-備份.zip",
+            b"=?utf-8?b?YXR0YWNobWVudDsgZmlsZW5hbWU9ImRpc3BhdGNoYXJyLWJhY2t1cC3lgpnku70uemlwIg==?=",
+        ),
+        (
+            "dispatcharr-backup-🙂.zip",
+            b"=?utf-8?q?attachment=3B_filename=3D=22dispatcharr-backup-=F0=9F=99=82=2Ezip=22?=",
+        ),
+    ] {
+        assert_eq!(download_disposition(filename).unwrap().as_bytes(), expected);
+    }
+}
 fn bytes(raw: &str) -> Vec<u8> {
     raw.as_bytes()
         .chunks_exact(2)

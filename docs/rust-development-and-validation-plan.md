@@ -3,11 +3,20 @@
 Original Dispatcharr and dependency authors retain all application, algorithm,
 model and protocol credit. React remains unchanged.
 
-Use three persistent work lanes alongside the integrating agent: implementation,
-Source/Native acceptance, and test infrastructure. Assign complete feature groups
-and their dependent fixes; immediately queue the next independent work when a lane
-finishes. The integrating agent owns the candidate, commits, application fixtures
-and measurement window. Four concurrent agent slots are currently available.
+Develop across milestones in parallel. The four current lanes cover playback
+(M1–M4), API and protocol behavior (M5 and M7), providers and jobs (M6), and
+baseline, operations and release (M0, M8 and M9). Each lane owns its changed
+paths and uses focused checks tied to pinned Python behavior. A milestone
+dependency controls final acceptance. It does not put another lane's code
+changes on hold.
+
+Integrate the lanes into one release candidate for the final end-to-end run.
+Use the [existing milestone coordinator](../scripts/rust-milestone-batches/README.md)
+to track the required cells, candidate bindings, and retained Python evidence.
+Keep the covered, failed, blocked and unrun cells visible. Use the same
+candidate for Compose acceptance, then measure paired workloads in a quiet
+window. Run the soak and rollback rehearsal on the release images and copied
+data. Close milestones only after their required gates pass.
 
 ## Short development loops, coherent acceptance batches
 

@@ -584,18 +584,15 @@ async fn lightweight(
 }
 // Source ChannelViewSet.numbers_in_range: the group editor uses this bounded
 // advisory scan. Reuse only the shared ACL, never management-list filters.
-// Static Source port; actual Source/Native action characterization is pending.
 fn range_boundary(raw: &str, field: &str) -> Result<f64, StoreError> {
-    // The ordinary finite ASCII float domain covers the unchanged React caller.
-    // Python additionally accepts Unicode decimal digits and underscores; retain
-    // explicit guards until those forms and nonfinite SQL behavior are measured.
-    if raw.len() > 128 || !raw.is_ascii() || raw.contains('_') {
+    if raw.len() > 128 {
         return Err(StoreError::Unsupported(
-            "Channel range numeric grammar unqualified",
+            "Channel range numeric input capacity",
         ));
     }
-    let value = raw.trim_matches(|c: char| matches!(c, '\t'..='\r' | ' '));
-    let parsed = value.parse::<f64>().map_err(|_| {
+    // Source uses float() on the query string. The shared parser supports its
+    // decimal digit, underscore and whitespace grammar.
+    let parsed = dispatcharr_ingest_core::source_float_literal(raw).ok_or_else(|| {
         StoreError::InvalidInput(json!({"detail":format!("Invalid {field} value")}))
     })?;
     if !parsed.is_finite() {
@@ -714,14 +711,10 @@ async fn numbers_in_range(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     OriginalUri(uri): OriginalUri,
-    method: axum::http::Method,
 ) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers, false).await?;
     if user.user_level < 1 {
         return Err(StoreError::PermissionDenied);
-    }
-    if method != axum::http::Method::GET {
-        return Err(StoreError::Unsupported("Channel range method unqualified"));
     }
     let raw = uri.query().unwrap_or_default();
     if raw.len() > 16384 {
@@ -910,6 +903,8 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route("/api/channels/channels/by-uuids/", post(by_uuids))
         .route(
             "/api/channels/channels/numbers-in-range/",
+            // Axum derives HEAD from GET and drops the entity after computing
+            // its length, as DRF's GET action does.
             get(numbers_in_range).layer(axum::middleware::map_response(range_response_headers)),
         )
         .route("/api/channels/channels/ids/", get(ids))
@@ -978,6 +973,33 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn channel_range_accepts_source_finite_float_spellings() {
+        for (raw, expected) in [
+            ("١_٢.٥", 12.5),
+            ("\u{2003}１２.５\u{2003}", 12.5),
+            ("+1.2_5e+1", 12.5),
+            ("1e-999", 0.0),
+        ] {
+            assert_eq!(range_boundary(raw, "start").unwrap(), expected);
+        }
+        for raw in ["1__2", "１_．５", "1_.5"] {
+            assert!(matches!(
+                range_boundary(raw, "end"),
+                Err(StoreError::InvalidInput(value)) if value == json!({"detail":"Invalid end value"})
+            ));
+        }
+        for raw in ["+∞", "Infinity", "1e999"] {
+            let actual = range_boundary(raw, "end");
+            if raw == "+∞" {
+                assert!(matches!(actual, Err(StoreError::InvalidInput(_))));
+            } else {
+                assert!(matches!(actual, Err(StoreError::Unsupported(_))));
+            }
+        }
+    }
+
     #[test]
     fn search_quoting_and_commas_match_pinned_drf_vectors() {
         for (input, expected) in [

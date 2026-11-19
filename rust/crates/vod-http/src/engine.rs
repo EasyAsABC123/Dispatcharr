@@ -101,11 +101,12 @@ impl VodEngine {
             config.idle_grace,
         )
         .await?;
-        let client = reqwest::Client::builder()
+        let builder = reqwest::Client::builder()
             .connect_timeout(config.connect_timeout)
             .read_timeout(config.read_timeout)
             .redirect(reqwest::redirect::Policy::limited(30))
-            .pool_max_idle_per_host(4)
+            .pool_max_idle_per_host(4);
+        let client = dispatcharr_upstream_http::with_playback_requests_trust(builder)
             .build()
             .map_err(|_| StoreError::Unsupported("VOD HTTP client setup failed"))?;
         Ok(Self {

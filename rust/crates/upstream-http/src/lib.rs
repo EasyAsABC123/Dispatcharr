@@ -95,6 +95,39 @@ fn requests_ca_roots(
     Ok(Some(certificates))
 }
 
+fn requests_ca_roots_from_env() -> io::Result<Option<Vec<reqwest::Certificate>>> {
+    requests_ca_roots(
+        std::env::var_os("REQUESTS_CA_BUNDLE"),
+        std::env::var_os("CURL_CA_BUNDLE"),
+    )
+}
+
+fn playback_ca_roots() -> Option<Vec<reqwest::Certificate>> {
+    // Requests checks its CA path only for HTTPS. An invalid selected bundle
+    // therefore leaves HTTP usable but must reject every TLS peer, including
+    // an HTTP-to-HTTPS redirect. An empty store keeps verification enabled.
+    requests_ca_roots_from_env().unwrap_or_else(|_| Some(Vec::new()))
+}
+
+/// Apply the bounded Requests trust policy while retaining the playback
+/// client's own redirects, pooling, and body handling.
+pub fn with_playback_requests_trust(builder: reqwest::ClientBuilder) -> reqwest::ClientBuilder {
+    with_ca_roots(builder, playback_ca_roots())
+}
+
+fn with_ca_roots(
+    builder: reqwest::ClientBuilder,
+    roots: Option<Vec<reqwest::Certificate>>,
+) -> reqwest::ClientBuilder {
+    match roots {
+        Some(roots) => roots.into_iter().fold(
+            builder.tls_built_in_root_certs(false),
+            |builder, certificate| builder.add_root_certificate(certificate),
+        ),
+        None => builder,
+    }
+}
+
 pub struct Attempt {
     client: Client,
     cookies: Arc<AttemptCookies>,
@@ -140,11 +173,15 @@ impl Attempt {
     /// provider calls. Reuse this factory and its physical client; do not bypass
     /// certificate verification to reach an owned acceptance Origin.
     pub fn new_requests(connect: Duration, read: Duration) -> io::Result<Self> {
-        let roots = requests_ca_roots(
-            std::env::var_os("REQUESTS_CA_BUNDLE"),
-            std::env::var_os("CURL_CA_BUNDLE"),
-        )?;
+        let roots = requests_ca_roots_from_env()?;
         Self::configured_with_roots(connect, read, true, true, roots).map_err(io::Error::other)
+    }
+    /// Native playback keeps plain HTTP usable with an invalid CA override.
+    pub fn new_playback_requests(
+        connect: Duration,
+        read: Duration,
+    ) -> Result<Self, reqwest::Error> {
+        Self::configured_with_roots(connect, read, true, true, playback_ca_roots())
     }
     fn configured(
         connect: Duration,
@@ -179,14 +216,7 @@ impl Attempt {
             } else {
                 reqwest::redirect::Policy::none()
             });
-        let builder = if let Some(roots) = roots {
-            roots.into_iter().fold(
-                builder.tls_built_in_root_certs(false),
-                |builder, certificate| builder.add_root_certificate(certificate),
-            )
-        } else {
-            builder
-        };
+        let builder = with_ca_roots(builder, roots);
         let builder = if automatic_cookies {
             builder.cookie_provider(cookies.clone())
         } else {

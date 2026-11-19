@@ -19,6 +19,11 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+The [parallel development checkpoint](rust-milestone-batch69.md) groups playback
+TLS, channel-range and M3U behavior, XC cache and WebSocket behavior, backup
+filenames, and release workflow changes. Focused development checks pass.
+The full acceptance run is reserved for the integrated release candidate.
+
 [Candidate68](rust-milestone-batch68.md) adds bounded XC account creation and
 category-only account deletion. The first Native test found a profile-worker
 TLS trust mismatch and exited after four calls. The corrected snapshot passes

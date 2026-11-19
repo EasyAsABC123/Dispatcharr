@@ -343,19 +343,48 @@ pub(crate) async fn load_group(
     key: &str,
     defaults: Value,
 ) -> Result<Value, StoreError> {
-    load_group_mode(auth, key, defaults, false).await
+    load_group_mode(auth, key, defaults, false, None).await
 }
+async fn read_setting_row(
+    auth: &AuthService,
+    session: Option<&crate::task_sql_session::TaskSqlSession>,
+    read: impl for<'c> FnOnce(
+            &'c mut sqlx::PgConnection,
+        ) -> dispatcharr_contracts::BoxFuture<
+            'c,
+            Result<Option<sqlx::postgres::PgRow>, sqlx::Error>,
+        > + Send
+        + 'static,
+) -> Result<Option<sqlx::postgres::PgRow>, StoreError> {
+    if let Some(session) = session {
+        return Ok(session.run(read).await??);
+    }
+    let mut connection = auth.store.pool().acquire().await?;
+    let observed = read(&mut connection).await;
+    finish(connection).await?;
+    Ok(observed?)
+}
+
 async fn load_group_mode(
     auth: &AuthService,
     key: &str,
     defaults: Value,
     observe_only: bool,
+    session: Option<&crate::task_sql_session::TaskSqlSession>,
 ) -> Result<Value, StoreError> {
     let load = || async move {
-        let mut c = auth.store.pool().acquire().await?;
-        let result=sqlx::query("SELECT octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=65536 THEN value::text END AS value_text FROM core_coresettings WHERE key=$1").bind(key).fetch_optional(&mut*c).await;
-        finish(c).await?;
-        let row = result?;
+        let key = key.to_owned();
+        let row = read_setting_row(auth, session, move |connection| {
+                Box::pin(async move {
+                    sqlx::query("SELECT octet_length(value::text) AS bytes,\
+                            CASE WHEN octet_length(value::text)<=65536 THEN value::text END AS value_text \
+                     FROM core_coresettings WHERE key=$1")
+                    .bind(key)
+                    .fetch_optional(connection)
+                    .await
+                })
+        })
+        .await?;
         let Some(row) = row else { return Ok(defaults) };
         let size: i32 = row.try_get("bytes")?;
         let raw: Option<String> = row.try_get("value_text")?;
@@ -392,14 +421,23 @@ async fn load_group_mode(
 /// Uses the same shared cache and actual SQL Ready fence. Main's existing
 /// image/default-UA consumers are unchanged and not qualified by this helper.
 pub(crate) async fn default_user_agent(auth: &AuthService) -> Result<String, StoreError> {
-    default_user_agent_mode(auth, false).await
+    default_user_agent_mode(auth, false, None).await
 }
 pub(crate) async fn observe_default_user_agent(auth: &AuthService) -> Result<String, StoreError> {
-    default_user_agent_mode(auth, true).await
+    default_user_agent_mode(auth, true, None).await
 }
+/// Resolve the fallback for an admitted profile on the existing SQL session.
+pub(crate) async fn default_user_agent_on_session(
+    auth: &AuthService,
+    session: &crate::task_sql_session::TaskSqlSession,
+) -> Result<String, StoreError> {
+    default_user_agent_mode(auth, false, Some(session)).await
+}
+
 async fn default_user_agent_mode(
     auth: &AuthService,
     observe_only: bool,
+    session: Option<&crate::task_sql_session::TaskSqlSession>,
 ) -> Result<String, StoreError> {
     let cache = auth.notification_cache.as_ref().ok_or_else(capacity)?;
     let get = |key: &'static str| async move {
@@ -413,6 +451,7 @@ async fn default_user_agent_mode(
             "stream_settings",
             json!({"default_user_agent":null}),
             observe_only,
+            session,
         )
         .await?;
         let id = group.get("default_user_agent").and_then(|v| {
@@ -433,10 +472,20 @@ async fn default_user_agent_mode(
         drop(group);
         let fallback = || "Dispatcharr/0.33.0".to_owned();
         let Some(id) = id else { return Ok(fallback()) };
-        let mut c = auth.store.pool().acquire().await?;
-        let result=sqlx::query("SELECT octet_length(user_agent) AS bytes,CASE WHEN octet_length(user_agent)<=65536 THEN user_agent END AS value FROM core_useragent WHERE id::bigint=$1").bind(id).fetch_optional(&mut*c).await;
-        finish(c).await?;
-        let Some(row) = result? else {
+        let row = read_setting_row(auth, session, move |connection| {
+            Box::pin(async move {
+                sqlx::query(
+                    "SELECT octet_length(user_agent) AS bytes,\
+                            CASE WHEN octet_length(user_agent)<=65536 THEN user_agent END AS value \
+                     FROM core_useragent WHERE id::bigint=$1",
+                )
+                .bind(id)
+                .fetch_optional(connection)
+                .await
+            })
+        })
+        .await?;
+        let Some(row) = row else {
             return Ok(fallback());
         };
         let bytes: i32 = row.try_get("bytes")?;

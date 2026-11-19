@@ -281,6 +281,36 @@ class Scheduling(unittest.TestCase):
             self.assertTrue(result['stdout_EOF'] and result['stderr_EOF'])
             self.assertEqual(Path(result['stdout']).read_text(), 'ok\n')
 
+    def test_release_workflow_waits_for_datastore_scope(self):
+        nodes = c.inventory()
+        workflow = "root/M9-workflow-parity"
+        datastore = "external/M9/datastore-scope"
+        # Model the other completed release prerequisites using the actual
+        # inventory. The scheduler must still reject an unqualified datastore.
+        prior = {
+            node["id"]: {"status": "passed"}
+            for node in nodes
+            if node["id"] not in (workflow, datastore)
+        }
+        binding = {
+            "argv": ["unused"], "evaluator_argv": ["unused"], "cleanup_argv": ["unused"],
+            "seconds": 1, "cleanup_seconds": 1, "output_bytes": 1024,
+            "input_sha256": {str(Path(__file__)): c.hashlib.sha256(Path(__file__).read_bytes()).hexdigest()},
+        }
+        for status in ("blocked", "failed", "passed"):
+            with self.subTest(datastore=status), tempfile.TemporaryDirectory() as directory:
+                prior[datastore] = {"status": status}
+                dispatched = []
+
+                def work(node, *_):
+                    dispatched.append(node["id"])
+                    return {"id": node["id"], "status": "passed", "cleanup_verified": True}
+
+                report = c.schedule(nodes, {workflow: binding}, Path(directory) / "run", {},
+                                    worker=work, authorities=prior)
+                self.assertEqual(dispatched, [workflow] if status == "passed" else [])
+                self.assertEqual(report["results"][workflow]["status"], "passed" if status == "passed" else "blocked")
+
     def test_inventory_keeps_m6_performance_required(self):
         self.assertTrue(any(n['id'].startswith('performance/') and 'M6' in n['id'] for n in c.inventory()),
                         "M6 owner declares a performance requirement that cannot disappear from global acceptance")

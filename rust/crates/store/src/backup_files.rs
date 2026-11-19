@@ -9,6 +9,7 @@ use axum::{
     routing::any,
     Json, Router,
 };
+use base64::{engine::general_purpose::STANDARD, Engine};
 use futures_util::StreamExt;
 use serde_json::{json, Value};
 use sha2::{Digest, Sha256};
@@ -74,6 +75,55 @@ fn reply(status: u16, detail: impl Into<String>) -> Response {
 }
 fn invalid(name: &str) -> bool {
     name.contains("..") || name.contains('/') || name.contains('\\')
+}
+fn download_disposition(filename: &str) -> Option<HeaderValue> {
+    let value = format!("attachment; filename=\"{filename}\"");
+    if let Some(latin) = value
+        .chars()
+        .map(|c| u8::try_from(c as u32).ok())
+        .collect::<Option<Vec<_>>>()
+    {
+        return HeaderValue::from_bytes(&latin).ok();
+    }
+    // Django ResponseHeaders falls back to one unfolded UTF-8 encoded word.
+    // Keep line-breaking characters outside this filename encoding path.
+    if value.chars().any(|c| {
+        matches!(
+            c,
+            '\n' | '\r' | '\u{000b}' | '\u{000c}' | '\u{001c}'
+                ..='\u{001e}' | '\u{0085}' | '\u{2028}' | '\u{2029}'
+        )
+    }) {
+        return None;
+    }
+    let is_q_literal = |byte: u8| byte.is_ascii_alphanumeric() || b"!*+-/ ".contains(&byte);
+    let bytes = value.as_bytes();
+    let q_len = bytes
+        .iter()
+        .map(|&byte| if is_q_literal(byte) { 1 } else { 3 })
+        .sum::<usize>();
+    let b_len = bytes.len().div_ceil(3) * 4;
+    let encoded = if b_len < q_len {
+        format!("=?utf-8?b?{}?=", STANDARD.encode(bytes))
+    } else {
+        const HEX: &[u8; 16] = b"0123456789ABCDEF";
+        let mut output = String::with_capacity(q_len + "=?utf-8?q??=".len());
+        output.push_str("=?utf-8?q?");
+        for &byte in bytes {
+            if byte == b' ' {
+                output.push('_');
+            } else if is_q_literal(byte) {
+                output.push(char::from(byte));
+            } else {
+                output.push('=');
+                output.push(char::from(HEX[usize::from(byte >> 4)]));
+                output.push(char::from(HEX[usize::from(byte & 15)]));
+            }
+        }
+        output.push_str("?=");
+        output
+    };
+    HeaderValue::from_str(&encoded).ok()
 }
 fn mac(key: &[u8], value: &str) -> String {
     let mut block = [0u8; 64];
@@ -465,17 +515,12 @@ impl BackupFiles {
             "content-length",
             HeaderValue::from_str(&metadata.len().to_string()).unwrap(),
         );
-        let disposition = format!("attachment; filename=\"{filename}\"");
-        let latin: Option<Vec<u8>> = disposition
-            .chars()
-            .map(|v| u8::try_from(v as u32).ok())
-            .collect();
-        if let Some(value) = latin.and_then(|v| HeaderValue::from_bytes(&v).ok()) {
+        if let Some(value) = download_disposition(&filename) {
             response.headers_mut().insert("content-disposition", value);
         } else {
             return Ok(reply(
                 501,
-                "Non-Latin1 backup download filenames are not migrated",
+                "Backup download filename header cannot be represented",
             ));
         }
         Ok(response)

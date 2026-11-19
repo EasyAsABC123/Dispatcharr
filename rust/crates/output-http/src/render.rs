@@ -1,5 +1,9 @@
 //! Original M3U text formatting and Python query encoding. Upstream retains credit.
-use std::{fmt::Write, net::IpAddr};
+use std::{
+    borrow::Cow,
+    fmt::Write,
+    net::{Ipv4Addr, Ipv6Addr},
+};
 
 pub struct Channel {
     pub id: i64,
@@ -33,7 +37,6 @@ pub struct Context<'a> {
 pub enum Error {
     Capacity,
     InvalidNumber,
-    InvalidProviderUrl,
 }
 fn parameter<'a>(query: &'a [(String, String)], key: &str) -> Option<&'a str> {
     query
@@ -97,19 +100,53 @@ fn append(output: &mut Vec<u8>, text: &str, limit: usize) -> Result<(), Error> {
     output.extend_from_slice(text.as_bytes());
     Ok(())
 }
-fn multicast(url: &str) -> Result<String, Error> {
-    if !url.starts_with("udp://") || url.contains("udp://@") {
-        return Ok(url.into());
+/// Source examines the hostname, without validating a port. An unusable URL
+/// stays in the playlist byte for byte instead of failing the whole export.
+fn multicast(url: &str) -> Cow<'_, str> {
+    let Some(rest) = url.strip_prefix("udp://") else {
+        return Cow::Borrowed(url);
+    };
+    if url.contains("udp://@") {
+        return Cow::Borrowed(url);
     }
-    let parsed = url::Url::parse(url).map_err(|_| Error::InvalidProviderUrl)?;
-    let host = parsed
-        .host_str()
-        .ok_or(Error::InvalidProviderUrl)?
-        .trim_matches(['[', ']']);
-    if host.parse::<IpAddr>().is_ok_and(|ip| ip.is_multicast()) {
-        Ok(url.replacen("udp://", "udp://@", 1))
+    let authority = rest.split(['/', '?', '#']).next().unwrap_or_default();
+    let authority = if authority.contains(['\r', '\n', '\t']) {
+        Cow::Owned(authority.replace(['\r', '\n', '\t'], ""))
     } else {
-        Ok(url.into())
+        Cow::Borrowed(authority)
+    };
+    if udp_multicast_host(&authority) {
+        Cow::Owned(format!("udp://@{rest}"))
+    } else {
+        Cow::Borrowed(url)
+    }
+}
+
+fn udp_multicast_host(authority: &str) -> bool {
+    let host_and_port = authority.rsplit('@').next().unwrap_or_default();
+    if let Some(bracketed) = host_and_port.strip_prefix('[') {
+        let Some((host, suffix)) = bracketed.split_once(']') else {
+            return false;
+        };
+        if !suffix.is_empty() && !suffix.starts_with(':') {
+            return false;
+        }
+        // ipaddress accepts a nonempty IPv6 scope ID, which has no bearing
+        // on whether the literal address is multicast.
+        let host = match host.split_once('%') {
+            Some((host, scope)) if !scope.is_empty() && !scope.contains('%') => host,
+            Some(_) => return false,
+            None => host,
+        };
+        host.parse::<Ipv6Addr>().is_ok_and(|ip| ip.is_multicast())
+    } else if authority.contains(['[', ']']) {
+        false
+    } else {
+        host_and_port
+            .split(':')
+            .next()
+            .and_then(|host| host.parse::<Ipv4Addr>().ok())
+            .is_some_and(|ip| ip.is_multicast())
     }
 }
 pub fn render(context: &Context<'_>, channels: &[Channel]) -> Result<Vec<u8>, Error> {
@@ -240,21 +277,88 @@ pub fn render(context: &Context<'_>, channels: &[Channel]) -> Result<Vec<u8>, Er
                 .direct
                 .as_ref()
                 .map(|direct| multicast(&direct.url))
-                .transpose()?
-                .unwrap_or_else(|| format!("{}/proxy/ts/stream/{}", context.origin, channel.uuid))
+                .unwrap_or_else(|| {
+                    format!("{}/proxy/ts/stream/{}", context.origin, channel.uuid).into()
+                })
         } else if let Some((user, password)) = context.xc {
             format!(
                 "{}/live/{user}/{password}/{}{stream_suffix}",
                 context.origin, channel.id
             )
+            .into()
         } else {
             format!(
                 "{}/proxy/ts/stream/{}{stream_suffix}",
                 context.origin, channel.uuid
             )
+            .into()
         };
         append(&mut out, &stream, context.max_bytes)?;
         append(&mut out, "\n", context.max_bytes)?;
     }
     Ok(out)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn direct_playlist_preserves_unusable_udp_urls_and_marks_multicast_hosts() {
+        let cases = [
+            ("udp://[broken]:1234", "udp://[broken]:1234"),
+            ("udp://239.0.0.1:5000", "udp://@239.0.0.1:5000"),
+            ("udp://239.0.0.2:not-a-port", "udp://@239.0.0.2:not-a-port"),
+            ("udp://[ff02::1%eth0]:5000", "udp://@[ff02::1%eth0]:5000"),
+            ("udp://[ff02::1]:5001", "udp://@[ff02::1]:5001"),
+            ("udp://[2001:db8::1]:5000", "udp://[2001:db8::1]:5000"),
+            ("udp://192.0.2.1:5000", "udp://192.0.2.1:5000"),
+            ("udp://provider.invalid:5000", "udp://provider.invalid:5000"),
+            ("udp://@239.0.0.1:5000", "udp://@239.0.0.1:5000"),
+            ("udp://:5000", "udp://:5000"),
+            ("udp://[239.0.0.1]:5000", "udp://[239.0.0.1]:5000"),
+            ("udp://[ff02::1]bad:5000", "udp://[ff02::1]bad:5000"),
+            (
+                "udp://reader@[ff02::1]:5000",
+                "udp://@reader@[ff02::1]:5000",
+            ),
+        ];
+        let channels: Vec<_> = cases
+            .iter()
+            .enumerate()
+            .map(|(index, (url, _))| Channel {
+                id: index as i64 + 1,
+                uuid: uuid::Uuid::nil(),
+                number: None,
+                name: format!("Channel {index}"),
+                group: None,
+                logo: None,
+                tvg_id: None,
+                guide: None,
+                radio: false,
+                catchup_days: 0,
+                direct: Some(Direct {
+                    url: (*url).into(),
+                    catchup_days: 0,
+                }),
+            })
+            .collect();
+        let body = render(
+            &Context {
+                origin: "http://localhost:9192",
+                profile: None,
+                query: &[],
+                xc: None,
+                direct: true,
+                restricted_direct: false,
+                catchup: false,
+                max_bytes: 4096,
+            },
+            &channels,
+        )
+        .unwrap();
+        let body = String::from_utf8(body).unwrap();
+        let urls: Vec<_> = body.lines().skip(2).step_by(2).collect();
+        assert_eq!(urls, cases.map(|(_, expected)| expected));
+    }
 }

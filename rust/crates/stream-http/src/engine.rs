@@ -2217,9 +2217,10 @@ async fn drive_candidate(
             }
         }
     } else {
-        let Ok(attempt) =
-            crate::upstream::Attempt::new(inner.config.connect_timeout, inner.config.read_timeout)
-        else {
+        let Ok(attempt) = crate::upstream::Attempt::new_playback_requests(
+            inner.config.connect_timeout,
+            inner.config.read_timeout,
+        ) else {
             return;
         };
         let Ok(request) =

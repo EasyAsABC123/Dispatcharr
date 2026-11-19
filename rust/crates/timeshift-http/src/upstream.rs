@@ -116,10 +116,12 @@ impl ArchiveClient {
             return Err("invalid archive HTTP limits");
         }
         let builder = || {
-            Client::builder()
-                .connect_timeout(connect)
-                .read_timeout(read)
-                .pool_max_idle_per_host(2)
+            dispatcharr_upstream_http::with_playback_requests_trust(
+                Client::builder()
+                    .connect_timeout(connect)
+                    .read_timeout(read)
+                    .pool_max_idle_per_host(2),
+            )
         };
         let follow = builder()
             .redirect(reqwest::redirect::Policy::limited(30))

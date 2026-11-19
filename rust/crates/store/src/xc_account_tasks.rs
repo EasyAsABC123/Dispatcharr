@@ -7,7 +7,7 @@ use chrono::{DateTime, Datelike, Utc};
 use dispatcharr_contracts::{BoxFuture, UpdateEventSink};
 use serde_json::{json, Map, Value};
 use sqlx::Row;
-use std::{sync::Arc, time::Duration};
+use std::{borrow::Cow, sync::Arc, time::Duration};
 type Owner = Arc<dyn Send + Sync>;
 /// Actual profile.save() instance fields; never includes credentials or CP.
 #[derive(Clone)]
@@ -85,7 +85,7 @@ pub trait ProfileSaveSignal: Send + Sync {
 }
 pub struct Prepared {
     session: TaskSqlSession,
-    default_agent: String,
+    auth: AuthService,
     signal: Arc<dyn ProfileSaveSignal>,
     owner: Owner,
 }
@@ -113,22 +113,33 @@ pub async fn prepare(
     owner: Owner,
     signal: Arc<dyn ProfileSaveSignal>,
 ) -> Result<Prepared, StoreError> {
-    // Resolve existing cache-authoritative default before holding any SQL cursor.
-    // No callback can check out another connection behind a held profile cursor.
     let writer = auth.task_sql_writer()?;
     let auth = auth
         .with_request_writer_permit(writer)?
         .with_retained_scope(owner.clone());
-    let default_agent = crate::core_settings_special_effects::default_user_agent(&auth).await?;
     let session = auth.borrow_task_sql_session(owner.clone()).await?;
     Ok(Prepared {
         session,
-        default_agent,
+        auth,
         signal,
         owner,
     })
 }
 impl Prepared {
+    async fn user_agent<'a>(&self, profile: &'a Profile) -> Result<Cow<'a, str>, StoreError> {
+        if let Some(agent) = profile.agent.as_deref().filter(|agent| !agent.is_empty()) {
+            return Ok(Cow::Borrowed(agent));
+        }
+        // A cache miss can use the existing SQL actor even during a held
+        // profile cursor. It never checks out a second pool connection.
+        crate::core_settings_special_effects::default_user_agent_on_session(
+            &self.auth,
+            &self.session,
+        )
+        .await
+        .map(Cow::Owned)
+    }
+
     pub async fn close(&self) -> Result<(), StoreError> {
         self.session.close().await
     }
@@ -218,12 +229,8 @@ impl Prepared {
                 profile.name
             )));
         };
-        let agent = profile
-            .agent
-            .as_deref()
-            .filter(|v| !v.is_empty())
-            .unwrap_or(&self.default_agent);
-        match provider::fetch(credentials, agent).await? {
+        let agent = self.user_agent(&profile).await?;
+        match provider::fetch(credentials, &agent).await? {
             Ok(info) => {
                 self.save(&profile, info).await?;
                 emit(events,json!({"type":"account_info_refresh_success","profile_id":id,"profile_name":profile.name,"message":format!("Account information successfully refreshed for profile '{}'",profile.name)}),owner).await?;
@@ -252,6 +259,7 @@ impl Prepared {
         // FETCH pages avoid materializing all profiles. Saves use THIS session.
         self.session.run(move|c|Box::pin(async move{sqlx::query("DECLARE rust_xc_profiles NO SCROLL CURSOR WITH HOLD FOR SELECT p.id::bigint,p.name,p.exp_date,a.name AS account_name,p.m3u_account_id::bigint AS account,a.account_type,CASE WHEN COALESCE(octet_length(a.server_url),0)<=65536 THEN a.server_url END AS server_url,CASE WHEN COALESCE(octet_length(a.username),0)<=65536 THEN a.username END AS username,CASE WHEN COALESCE(octet_length(a.password),0)<=65536 THEN a.password END AS password,CASE WHEN COALESCE(octet_length(u.user_agent),0)<=65536 THEN u.user_agent END AS user_agent,p.search_pattern,p.replace_pattern,CASE WHEN COALESCE(octet_length(p.custom_properties::text),0)<=1048576 THEN p.custom_properties END AS custom_properties,(COALESCE(octet_length(p.custom_properties::text),0)<=1048576 AND COALESCE(octet_length(a.server_url),0)<=65536 AND COALESCE(octet_length(a.username),0)<=65536 AND COALESCE(octet_length(a.password),0)<=65536 AND COALESCE(octet_length(u.user_agent),0)<=65536) AS fits FROM m3u_m3uaccountprofile p JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id LEFT JOIN core_useragent u ON u.id=a.user_agent_id WHERE p.m3u_account_id=$1::bigint AND p.is_active").bind(id).execute(&mut*c).await.map(|_|())})).await??;
         let (mut updated, mut failed, mut total) = (0usize, 0usize, 0usize);
+        let mut provider_agent = None;
         loop {
             let rows = self
                 .session
@@ -266,9 +274,11 @@ impl Prepared {
                     })
                 })
                 .await??;
-            if rows.is_empty() {
-                break;
+            let Some(first) = rows.first() else { break };
+            if provider_agent.is_none() {
+                provider_agent = Some(self.user_agent(first).await?.into_owned());
             }
+            let agent = provider_agent.as_deref().ok_or_else(bad)?;
             for row in rows {
                 if total > 0 {
                     tokio::time::sleep(delay).await
@@ -285,11 +295,6 @@ impl Prepared {
                     failed += 1;
                     continue;
                 };
-                let agent = row
-                    .agent
-                    .as_deref()
-                    .filter(|v| !v.is_empty())
-                    .unwrap_or(&self.default_agent);
                 match provider::fetch(credentials, agent).await? {
                     Ok(info) => {
                         self.save(&row, info).await?;
