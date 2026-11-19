@@ -25,7 +25,7 @@ use std::{
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 
-mod recurring;
+pub(super) mod recurring;
 pub type RecordingChannelId = Uuid;
 pub type RecordingTaskConnection = sqlx::PgConnection;
 const SLOTS: usize = 4;

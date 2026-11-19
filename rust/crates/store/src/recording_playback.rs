@@ -1,9 +1,9 @@
 //! Recording file/HLS playback ported from Original Dispatcharr RecordingViewSet.
 //! Original Dispatcharr authors retain all application and algorithm credit.
 //! Specific routes intentionally bypass RecordingHttp's manage/UI action gate.
-use crate::{channels, AuthService, RestReadLimits, StoreError, User};
+use crate::{channels, recording_http, AuthService, RestReadLimits, StoreError, User};
 use axum::{
-    extract::{ConnectInfo, Request, State},
+    extract::{ConnectInfo, Path, Request, State},
     http::{HeaderMap, Method},
     response::{IntoResponse, Response},
     routing::get,
@@ -55,6 +55,7 @@ impl RecordingPlayback {
     pub fn router(self) -> Router {
         Router::new()
             .route("/api/channels/recordings/", get(list_recordings))
+            .route(recording_http::recurring::PATH, get(recurring_rule))
             .route("/api/channels/recordings/{id}/file/", get(handle))
             .route("/api/channels/recordings/{id}/hls/{*segment}", get(handle))
             .with_state(self)
@@ -109,6 +110,27 @@ fn capacity() -> StoreError {
         json!({"detail":"Recording playback capacity unavailable."}),
     )
 }
+async fn recurring_rule(
+    State(api): State<RecordingPlayback>,
+    Path(id): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    let owner = api.admit()?;
+    tokio::spawn(async move {
+        crate::epg_program_http::json_negotiation(request.headers(), request.uri())?;
+        let auth = api.inner.auth.clone().with_retained_scope(owner.clone());
+        let user = auth
+            .account_user(peer, request.headers().clone(), false)
+            .await?;
+        recording_http::access(&user, true)?;
+        let value = recording_http::recurring::read_value(&auth, &user, &id).await?;
+        recording_http::reply(200, value, owner)
+    })
+    .await
+    .map_err(|_| StoreError::UnhandledRestFault)?
+}
+
 async fn list_recordings(
     State(api): State<RecordingPlayback>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,

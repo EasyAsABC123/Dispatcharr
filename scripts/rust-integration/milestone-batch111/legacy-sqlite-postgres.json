@@ -1,0 +1,129 @@
+{
+  "actual_controller_exit": 0,
+  "business_roles": {
+    "current_original_postgresql": {
+      "business_actual_exit": 0,
+      "channel_fields_preserved": true,
+      "http_statuses": {
+        "anonymous_status": 401,
+        "channel_status": 200,
+        "initialize_status": 200,
+        "login_status": 200,
+        "recurring_status": 200,
+        "wrong_password_status": 401
+      },
+      "readiness_actual_exits": [
+        1,
+        0
+      ],
+      "recurring_schedule_preserved": true,
+      "service_actual_exit": 0
+    },
+    "historical_original_sqlite_rollback": {
+      "business_actual_exit": 0,
+      "channel_fields_preserved": true,
+      "http_statuses": {
+        "anonymous_status": 401,
+        "channel_status": 200,
+        "initialize_status": 200,
+        "login_status": 200,
+        "recurring_status": 200,
+        "wrong_password_status": 401
+      },
+      "readiness_actual_exits": [
+        1,
+        0
+      ],
+      "recurring_schedule_preserved": true,
+      "service_actual_exit": 0
+    },
+    "native_main_postgresql": {
+      "business_actual_exit": 0,
+      "channel_fields_preserved": true,
+      "http_statuses": {
+        "anonymous_status": 401,
+        "channel_status": 200,
+        "initialize_status": 200,
+        "login_status": 200,
+        "recurring_status": 200,
+        "wrong_password_status": 401
+      },
+      "readiness_actual_exits": [
+        0
+      ],
+      "recurring_schedule_preserved": true,
+      "service_actual_exit": 0
+    }
+  },
+  "cleanup": {
+    "all_nine_roles_stopped_exit_zero_without_oom": true,
+    "all_owned_process_generations_absent": true,
+    "exact_owned_objects_removed": {
+      "containers": 9,
+      "networks": 1,
+      "volumes": 1
+    },
+    "remaining_owned_resources": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "current_original": {
+    "historical_admin_hash_and_channel_link_preserved": true,
+    "historical_migration_records_unchanged": 132,
+    "immutable_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "postgresql_migration_rows": 184,
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "current_original_sqlite_migration_verified": false,
+  "evidence_sha256": {
+    "combined_dispatcher_terminal": "fc04269c48bba1f731300a5dbce0c106f3bbbb0681d31baf534995ffb3861f99",
+    "combined_package_manifest": "2f37111a2acec3a5592016ed5450e47f56fbf33b005bba884447d6b267c9007b",
+    "exact_physical_fixture_freeze": "98d4162896295f180ad341384af025b8c191ec97cb7fed856255771f4590461b",
+    "physical_bridge_receipt": "7b67981ca6a481b323b4af629efb365efb7e4e5e44e68164196a04353fbacf91"
+  },
+  "format_version": 1,
+  "full_m8_verified": false,
+  "historical_original": {
+    "immutable_image": "sha256:e7ed9a28f57c51ccedc2f113f4fd857eee22ff4d6b6be5dbea4e995ceeaf371c",
+    "release": "v0.11.2",
+    "revision": "d0ebfb57c4bde04d047a555f66b1da92104eea8f",
+    "source_files_verified": 261,
+    "unchanged_sqlite_sample_sha256": "46505a7a8837b2beef0ed38c1c56b7af83e23637a16d672c3f98b7f76baaa5e7"
+  },
+  "native": {
+    "immutable_image": "sha256:c1ada4a0fbb3bec3b5995a45c5e7a7f2d36e862774b8375a1d73aa0924534e02",
+    "ordinary_recurring_read_postimages": {
+      "rust/crates/store/src/recording_http.rs": "39a7690cd4c47faa5820f779414e79ca5c399e52e97a3463e51e988b993d4b43",
+      "rust/crates/store/src/recording_http/recurring.rs": "56901ee830e4fc9c80fe1ae7c58f0673836773fc343ea0b3a6bb9622c9a5146f",
+      "rust/crates/store/src/recording_playback.rs": "4d82440f8638a9c66cc09d34b65d1df502fabba169d7686d186b3e77570fcdcb"
+    },
+    "platform": "linux/amd64",
+    "revision": "6667998fe8000057e4c08f46fd79a0b11bc751a3",
+    "source_archive_sha256": "21f3bf2074ba78cc17b3a0e80cd430d77953cbf43a60a69f9f6ff59f5a909791",
+    "source_tree_sha256": "08e25f126bca1a96ccbfd176009d52824f1d98926d5e7667492277e604d479d1"
+  },
+  "native_sqlite_backend_verified": false,
+  "negative_transaction": {
+    "actual_bridge_exit": 1,
+    "actual_sqlstate": "23514",
+    "all_rows_and_sequences_unchanged": true,
+    "sequences": 46,
+    "tables": 48
+  },
+  "passed": true,
+  "performance_verified": false,
+  "positive_transaction": {
+    "all_rows_verified": 376,
+    "historical_migrations": 132,
+    "historical_source_scope": "v0.11.2",
+    "input_sha256_unchanged": true,
+    "sqlite_integrity": true,
+    "sqlite_tables": 48,
+    "tables_value_and_count_verified": 48,
+    "transaction_committed": true
+  },
+  "production_cutover_verified": false,
+  "scope": "Original v0.11.2 SQLite to disposable PostgreSQL staging, pinned Original upgrade, ordinary Native Main reads, and pre-cutover historical SQLite rollback"
+}

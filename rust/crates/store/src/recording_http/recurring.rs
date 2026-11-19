@@ -25,7 +25,7 @@ use serde_json::{json, Map, Value};
 use sqlx::{Connection, PgConnection, Postgres, QueryBuilder, Row};
 use std::{collections::BTreeSet, net::SocketAddr, sync::Arc, time::Duration};
 
-pub(super) const PATH: &str = "/api/channels/recurring-rules/{id}/";
+pub(crate) const PATH: &str = "/api/channels/recurring-rules/{id}/";
 const SELECT: &str = "SELECT r.id::bigint AS id,r.channel_id::bigint AS channel_id,r.name,
     CASE WHEN octet_length(r.days_of_week::text)<=65536 THEN r.days_of_week END AS days,
     r.start_time,r.end_time,r.start_date,r.end_date,r.created_at,r.updated_at,r.enabled
@@ -77,6 +77,42 @@ impl Rule {
             "created_at":iso(self.created),"updated_at":iso(self.updated),
         })
     }
+}
+
+fn rule_id(raw_id: &str) -> Result<i64, StoreError> {
+    dispatcharr_ingest_core::source_integer_literal(raw_id)
+        .ok_or(StoreError::NotFound)?
+        .parse::<i64>()
+        .map_err(|_| missing())
+}
+
+pub(crate) async fn read_value(
+    auth: &AuthService,
+    user: &User,
+    raw_id: &str,
+) -> Result<Value, StoreError> {
+    let id = rule_id(raw_id)?;
+    let mut connection = auth.store.pool().acquire().await?;
+    let value = async {
+        let mut tx = connection.begin().await?;
+        let result = async {
+            sqlx::query("SET LOCAL statement_timeout = '5s'")
+                .execute(&mut *tx)
+                .await?;
+            lookup(&mut tx, user, id, false)
+                .await
+                .map(|rule| rule.project())
+        }
+        .await;
+        if result.is_ok() {
+            tx.commit().await?;
+        } else {
+            tx.rollback().await?;
+        }
+        result
+    }
+    .await;
+    settle(connection, value).await
 }
 
 async fn lookup(
@@ -642,10 +678,7 @@ async fn execute(
             json!({"detail":format!("Method \"{method}\" not allowed.")}),
         ));
     }
-    let id = dispatcharr_ingest_core::source_integer_literal(&raw_id)
-        .ok_or(StoreError::NotFound)?
-        .parse::<i64>()
-        .map_err(|_| missing())?;
+    let id = rule_id(&raw_id)?;
     let media = request
         .headers()
         .get(header::CONTENT_TYPE)
