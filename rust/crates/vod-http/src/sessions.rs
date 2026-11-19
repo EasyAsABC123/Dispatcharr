@@ -104,7 +104,7 @@ pub(crate) struct Session {
     last_request: AtomicU64,
     client_ip: String,
     user_agent: String,
-    offset: String,
+    timeshift: crate::offset::Timeshift<String>,
     lease: Arc<Lease>,
     scope: std::sync::OnceLock<LocalScope>,
     metadata_token: String,
@@ -113,7 +113,7 @@ pub(crate) struct Session {
 }
 impl Session {
     pub(crate) fn provider_url(&self) -> std::borrow::Cow<'_, str> {
-        crate::offset::provider_url(&self.candidate.url, &self.offset)
+        crate::offset::provider_url(&self.candidate.url, self.timeshift.borrowed())
     }
 }
 struct Inner {
@@ -594,7 +594,7 @@ impl SessionPool {
                         &previous.candidate
                     },
                     &previous.metadata_token,
-                    &previous.offset,
+                    previous.timeshift.borrowed(),
                 )?;
                 let limit = source
                     .user
@@ -628,7 +628,7 @@ impl SessionPool {
                         last_request: AtomicU64::new(millis()),
                         client_ip: request.client_ip_text(),
                         user_agent: request.playback.header("user-agent").unwrap_or("").into(),
-                        offset: previous.offset.clone(),
+                        timeshift: previous.timeshift.clone(),
                         lease,
                         metadata_token,
                         scope: std::sync::OnceLock::new(),
@@ -716,8 +716,15 @@ impl SessionPool {
             .attach_pending(request_permit.clone(), hook)
             .await
             .map_err(scope_error)?;
-        let offset = crate::offset::requested(&request.playback);
-        let fields = metadata_fields(id, &source, request, &candidate, "recovery-pending", offset)?;
+        let timeshift = crate::offset::requested(&request.playback);
+        let fields = metadata_fields(
+            id,
+            &source,
+            request,
+            &candidate,
+            "recovery-pending",
+            timeshift,
+        )?;
         let limit = source
             .user
             .as_ref()
@@ -756,7 +763,7 @@ impl SessionPool {
             last_request: AtomicU64::new(millis()),
             client_ip: request.client_ip_text(),
             user_agent: request.playback.header("user-agent").unwrap_or("").into(),
-            offset: offset.into(),
+            timeshift: timeshift.owned(),
             lease,
             metadata_token,
             scope: std::sync::OnceLock::new(),
@@ -1086,8 +1093,8 @@ impl SessionPool {
         }
         let initial = source.candidates.first().ok_or_else(unavailable)?;
         let metadata_token = format!("rust-vod-metadata:{}", uuid::Uuid::new_v4());
-        let offset = crate::offset::requested(&request.playback);
-        let fields = metadata_fields(id, &source, request, initial, &metadata_token, offset)?;
+        let timeshift = crate::offset::requested(&request.playback);
+        let fields = metadata_fields(id, &source, request, initial, &metadata_token, timeshift)?;
         let mut pending = PendingCreate {
             connection: connection.clone(),
             id: id.into(),
@@ -1146,7 +1153,7 @@ impl SessionPool {
                 Err(dispatcharr_coordination::Error::OwnerHeld) => {
                     return Err(dispatcharr_store::StoreError::Unsupported(
                         "Cross-worker VOD session adoption is not implemented",
-                    ))
+                    ));
                 }
                 Err(_) => return Err(redis_error()),
             }
@@ -1156,7 +1163,7 @@ impl SessionPool {
             .key(key(id))
             .arg(&metadata_token)
             .arg("stream_url")
-            .arg(crate::offset::provider_url(&candidate.url, offset).as_ref())
+            .arg(crate::offset::provider_url(&candidate.url, timeshift).as_ref())
             .arg("m3u_profile_id")
             .arg(candidate.profile_id)
             .invoke_async(&mut connection)
@@ -1176,7 +1183,7 @@ impl SessionPool {
             last_request: AtomicU64::new(millis()),
             client_ip: request.client_ip_text(),
             user_agent: request.playback.header("user-agent").unwrap_or("").into(),
-            offset: offset.into(),
+            timeshift: timeshift.owned(),
             lease: Arc::new(lease),
             scope: std::sync::OnceLock::new(),
             metadata_token,
@@ -1228,7 +1235,7 @@ fn metadata_fields(
     request: &VodRequest,
     initial: &VodCandidate,
     metadata_token: &str,
-    offset: &str,
+    timeshift: crate::offset::Timeshift<&str>,
 ) -> Result<BTreeMap<String, String>, dispatcharr_store::StoreError> {
     // Resolve identity before admission; conversion failure cannot invent a
     // different Redis owner label from the response identity.
@@ -1242,7 +1249,7 @@ fn metadata_fields(
         ("session_id", id.to_string()),
         (
             "stream_url",
-            crate::offset::provider_url(&initial.url, offset).into_owned(),
+            crate::offset::provider_url(&initial.url, timeshift).into_owned(),
         ),
         ("headers", "{}".into()),
         ("content_length", "".into()),
@@ -1260,9 +1267,9 @@ fn metadata_fields(
             "client_user_agent",
             request.playback.header("user-agent").unwrap_or("").into(),
         ),
-        ("utc_start", "".into()),
-        ("utc_end", "".into()),
-        ("offset", offset.into()),
+        ("utc_start", timeshift.utc_start.into()),
+        ("utc_end", timeshift.utc_end.into()),
+        ("offset", timeshift.offset.into()),
         ("worker_id", worker_id),
         ("connection_type", "redis_backed".into()),
         ("created_at", timestamp),
@@ -1715,6 +1722,7 @@ fn idle_match(
     source: &VodSource,
     request: &VodRequest,
 ) -> Option<Arc<Session>> {
+    let timeshift = crate::offset::requested(&request.playback);
     registry
         .values()
         .filter(|session| {
@@ -1728,7 +1736,7 @@ fn idle_match(
         })
         .filter_map(|session| {
             let score = crate::offset::idle_score(
-                session.offset == crate::offset::requested(&request.playback),
+                session.timeshift.borrowed() == timeshift,
                 session.client_ip == request.client_ip_text(),
                 !session.user_agent.is_empty()
                     && Some(session.user_agent.as_str()) == request.playback.header("user-agent"),

@@ -354,6 +354,7 @@ pub fn source_html_unescape(value: &str) -> String {
 }
 
 mod epg_grid_iso;
+pub use epg_grid_iso::source_iso_local_datetime;
 
 mod epg_current_file;
 pub use epg_current_file::{CurrentFileLookup, CurrentFileOutcome, CurrentFileRequest};
