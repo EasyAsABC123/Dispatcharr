@@ -11,6 +11,13 @@ mod http;
 #[path = "epg_connect_templates.rs"]
 mod templates;
 pub use templates::{dispatch_scoped_event, EventReport};
+
+/// Use the event delivery transport for a single saved webhook. This action
+/// has no event subscription, template evaluation, or DeliveryLog write.
+pub(crate) async fn send_saved_webhook(config: &Value, value: Value) -> Result<Value, Error> {
+    http::send(config, &Payload::Original(value)).await
+}
+
 type Owner = Arc<dyn Send + Sync>;
 #[derive(Debug)]
 pub enum Error {

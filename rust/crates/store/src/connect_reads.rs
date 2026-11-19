@@ -6,7 +6,7 @@ use axum::{
     extract::{ConnectInfo, Path, Request, State},
     http::{header, HeaderMap, StatusCode, Uri},
     response::Response,
-    routing::{get, put},
+    routing::{get, post, put},
     Router,
 };
 use bytes::Bytes;
@@ -20,6 +20,8 @@ mod create_integration;
 mod delivery_logs;
 #[path = "connect_subscriptions.rs"]
 mod subscriptions;
+#[path = "connect_test.rs"]
+mod test_integration;
 
 // Bound the total projection in the same read that obtains the response.
 // The quote covers nested rows, JSON-escaped strings, field names and separators.
@@ -77,6 +79,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/connect/integrations/{id}/subscriptions/set/",
             put(replace_subscriptions),
         )
+        .route("/api/connect/integrations/{id}/test/", post(test_saved))
         .with_state(auth)
 }
 
@@ -103,6 +106,7 @@ enum ConnectRequest {
     Create(Request),
     Update(String, Request),
     Delete(String),
+    Test(String),
     ReplaceSubscriptions(String, Request),
 }
 
@@ -159,6 +163,15 @@ async fn delete(
     execute(auth, peer, headers, ConnectRequest::Delete(id)).await
 }
 
+async fn test_saved(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(id): Path<String>,
+    headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    execute(auth, peer, headers, ConnectRequest::Test(id)).await
+}
+
 async fn execute(
     auth: AuthService,
     peer: SocketAddr,
@@ -206,6 +219,7 @@ async fn execute(
                     .body(Body::empty())
                     .map_err(|_| StoreError::UnhandledRestFault);
             }
+            ConnectRequest::Test(id) => test_integration::test_saved(&auth.store, &id).await?,
             ConnectRequest::ReplaceSubscriptions(id, request) => (
                 StatusCode::OK,
                 subscriptions::replace(&auth.store, id, request).await?,

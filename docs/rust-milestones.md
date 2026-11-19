@@ -22,6 +22,9 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The saved Connect Test checkpoint](rust-milestone-batch89.md)
+records the Original webhook action and the tested Native port.
+
 [The recording playback and legacy HLS checkpoint](rust-milestone-batch88.md)
 documents ordinary DVR reads, old playlist descriptors and their focused checks.
 
