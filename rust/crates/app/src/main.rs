@@ -991,6 +991,7 @@ async fn run() -> Result<(), String> {
     if plugin_actions.startup_discover(Arc::new(())).await.is_err() {
         eprintln!("Plugin discovery requires compatible runtime or unavailable startup resources");
     }
+    let stream_regex = dispatcharr_store::StreamRegexPreview::prepare(auth.clone());
     let auth_routes = match &core_settings {
         Some(core) => auth
             .clone()
@@ -1069,6 +1070,7 @@ async fn run() -> Result<(), String> {
             refresh_tvg: epg_tvg.clone().filter(|_| !selected_jobs_enabled),
         })
         .merge(auth_routes)
+        .merge(stream_regex.router())
         .merge(combined_statistics.router())
         .route("/proxy/stats", any(combined_stats_legacy_alias))
         .merge(output_profiles.clone().router())
@@ -1199,6 +1201,7 @@ async fn run() -> Result<(), String> {
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
     let services = ShutdownServices {
         stream_files: auth.clone(),
+        stream_regex: stream_regex.clone(),
         plugin_actions,
         core_settings,
         selected_jobs,
@@ -1237,6 +1240,7 @@ async fn run() -> Result<(), String> {
     .with_graceful_shutdown(async move {
         shutdown_signal().await;
         signal_services.stream_files.stop_stream_file_admission();
+        signal_services.stream_regex.close_admission();
         signal_services.plugin_actions.stop_admission();
         if let Some(playback) = &signal_services.ordinary_recording_playback {
             playback.close_admission();
@@ -1263,6 +1267,7 @@ async fn run() -> Result<(), String> {
     let shutdown_requires_drain = || {
         refresh_enabled
             || auth.stream_files_were_used()
+            || stream_regex.was_used()
             || ordinary_recording_playback
                 .as_ref()
                 .is_some_and(dispatcharr_store::RecordingPlayback::was_used)
@@ -1333,6 +1338,7 @@ async fn shutdown_signal() {
 #[derive(Clone)]
 struct ShutdownServices {
     stream_files: AuthService,
+    stream_regex: dispatcharr_store::StreamRegexPreview,
     plugin_actions: dispatcharr_store::PluginActions,
     core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
     selected_jobs: Option<selected_jobs::SelectedJobs>,
@@ -1367,6 +1373,7 @@ struct ShutdownServices {
 async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     let ShutdownServices {
         stream_files,
+        stream_regex,
         plugin_actions,
         core_settings,
         selected_jobs,
@@ -1405,9 +1412,10 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     if let Some(playback) = &ordinary_recording_playback {
         playback.close_admission();
     }
-    let stream_files_drained = stream_files
-        .shutdown_stream_files(Duration::from_secs(8))
-        .await;
+    let (stream_files_drained, stream_regex_drained) = tokio::join!(
+        stream_files.shutdown_stream_files(Duration::from_secs(8)),
+        stream_regex.shutdown(Duration::from_secs(8)),
+    );
     plugin_actions
         .shutdown(Duration::from_secs(8))
         .await
@@ -1641,6 +1649,9 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         return Err(
             "Recording playback files or response bodies remain physically unsettled".into(),
         );
+    }
+    if !stream_regex_drained {
+        return Err("Stream regex preview dependency remains physically unsettled".into());
     }
     if !stream_files_drained {
         return Err("Stream upload storage/SQL remains physically unsettled".into());

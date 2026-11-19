@@ -24,6 +24,9 @@ def evaluate(value):
  if value.get('kind')=='version_compare':
   from dispatcharr_native.version_compare import compare
   return compare(value.get('current'),value.get('latest'))
+ if value.get('kind')=='stream_preview':
+  from dispatcharr_native.stream_preview import evaluate as stream_preview
+  return stream_preview(value.get('names'),value.get('config'))
  if value.get('kind')=='profile_urls':
   from dispatcharr_native.profile_urls import evaluate as profile_urls
   try:return profile_urls(value.get('rows'))
