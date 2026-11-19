@@ -444,3 +444,19 @@ networking disabled. All ten tests passed, including the 19 shared rejection
 controls. That receipt verifies 490 partial Original assignments. The later
 VOD capture adds four assignments, and its expanded SDK run remains pending.
 [Merged 490-assignment SDK receipt](../scripts/rust-contracts/sdk-ts-management-latest.json)
+
+## Retained Original Image57 Accounts controls
+
+The [Accounts binding](../scripts/rust-contracts/retained-image57-accounts/bindings.json)
+assigns 22 retained Original observations to seven canonical operations. They
+cover user and group detail reads and deletes and API-key list, generate and
+revoke. The capture records successful owned requests, missing or deleted
+objects, and the exact viewer and anonymous outcomes. The
+[scoped receipt](../scripts/rust-integration/image57-checkpoint/selected-accounts-Original.json)
+ties those observations to the original controller exit and owned cleanup,
+with response digests and parameterized paths. Dispatcharr's original authors
+and contributors retain full credit for the application and its behavior.
+
+The register has 501 partial HTTP assignments and 297 unassigned operations.
+The selected observations provide Original authority for the recorded role
+cells only. All seven overall role matrices remain incomplete.

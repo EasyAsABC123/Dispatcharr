@@ -1,0 +1,548 @@
+{
+  "binding_kind": "retained_original_Image57_accounts_canonical_HTTP",
+  "operation_count": 7,
+  "new_Source_executions": 0,
+  "credit": "Original Dispatcharr authors and contributors retain full application and behavior credit.",
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "performance_verified": false,
+  "fixtures": {
+    "retained-Original-Image57-canonical-Accounts": {
+      "id": "retained-Original-Image57-canonical-Accounts",
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "actual_controller_exit": 0,
+      "exact_owned_namespace_cleanup": true,
+      "credential_material_exported": false,
+      "public_artifacts": [
+        {
+          "path": "scripts/rust-integration/image57-checkpoint/selected-accounts-Original.json",
+          "sha256": "1ed2520de570108d203c95cb4b3edac8d3abff5e7c30a7307a3499579d02b308"
+        }
+      ]
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-08a0d591ac8296e5ed6e:DELETE",
+      "fixture_id": "retained-Original-Image57-canonical-Accounts",
+      "pattern_exact": "api/accounts/^users/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.accounts.api_views.UserViewSet",
+      "resolver_ordinal": 15,
+      "resolver_name": "api:accounts:user-detail",
+      "owning_milestone": "M5",
+      "method": "DELETE",
+      "source_action": "destroy",
+      "observed_methods": [
+        "DELETE"
+      ],
+      "observed_roles": [
+        "admin",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Owned user delete and missing repeat, with a viewer delete denial"
+      ],
+      "result": {
+        "Source_case_observations": 3,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "capture_case": "user_delete",
+      "cases": [
+        {
+          "actual_record_name": "accounts-crud:user:delete",
+          "actual_status_field": "python_status",
+          "case": "delete",
+          "method": "DELETE",
+          "operation": "user_delete",
+          "path_template": "/api/accounts/users/{owned_pk}/",
+          "response_projection_sha256": "20797e4c178039d4bdfb0243aaacaca086bcd4d41f279d797eade6d4584ec2aa",
+          "role": "admin",
+          "status": 204
+        },
+        {
+          "actual_record_name": "accounts-crud:user:delete-missing",
+          "actual_status_field": "python_status",
+          "case": "delete-missing",
+          "method": "DELETE",
+          "operation": "user_delete",
+          "path_template": "/api/accounts/users/{owned_pk}/",
+          "response_projection_sha256": "0ab6f54dd41a1755de3a9a2e9fa6ebe14560d4ac398a026f11210e64437bf496",
+          "role": "admin",
+          "status": 404
+        },
+        {
+          "actual_record_name": "accounts-crud:user:viewer-denied-delete",
+          "actual_status_field": "python_status",
+          "case": "viewer-denied-delete",
+          "method": "DELETE",
+          "operation": "user_delete",
+          "path_template": "/api/accounts/users/{owned_pk}/",
+          "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "role": "viewer",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "contract_id": "route-08a0d591ac8296e5ed6e:GET",
+      "fixture_id": "retained-Original-Image57-canonical-Accounts",
+      "pattern_exact": "api/accounts/^users/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.accounts.api_views.UserViewSet",
+      "resolver_ordinal": 15,
+      "resolver_name": "api:accounts:user-detail",
+      "owning_milestone": "M5",
+      "method": "GET",
+      "source_action": "retrieve",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Owned user detail before and after Original deletion"
+      ],
+      "result": {
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "capture_case": "user_get",
+      "cases": [
+        {
+          "actual_record_name": "accounts-crud:user:read",
+          "actual_status_field": "python_status",
+          "case": "read",
+          "method": "GET",
+          "operation": "user_get",
+          "path_template": "/api/accounts/users/{owned_pk}/",
+          "response_projection_sha256": "615f5c1bcac5efb6eb915b36cde7ab06de3270a81da3427f88587389113ab303",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "actual_record_name": "accounts-crud:user:read-deleted",
+          "actual_status_field": "python_status",
+          "case": "read-deleted",
+          "method": "GET",
+          "operation": "user_get",
+          "path_template": "/api/accounts/users/{owned_pk}/",
+          "response_projection_sha256": "0ab6f54dd41a1755de3a9a2e9fa6ebe14560d4ac398a026f11210e64437bf496",
+          "role": "admin",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "contract_id": "route-8025246798282fe99e06:DELETE",
+      "fixture_id": "retained-Original-Image57-canonical-Accounts",
+      "pattern_exact": "api/accounts/^groups/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.accounts.api_views.GroupViewSet",
+      "resolver_ordinal": 19,
+      "resolver_name": "api:accounts:group-detail",
+      "owning_milestone": "M5",
+      "method": "DELETE",
+      "source_action": "destroy",
+      "observed_methods": [
+        "DELETE"
+      ],
+      "observed_roles": [
+        "admin",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Owned group delete and missing repeat, with a viewer delete denial"
+      ],
+      "result": {
+        "Source_case_observations": 3,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "capture_case": "group_delete",
+      "cases": [
+        {
+          "actual_record_name": "accounts-crud:group:delete",
+          "actual_status_field": "python_status",
+          "case": "delete",
+          "method": "DELETE",
+          "operation": "group_delete",
+          "path_template": "/api/accounts/groups/{owned_pk}/",
+          "response_projection_sha256": "20797e4c178039d4bdfb0243aaacaca086bcd4d41f279d797eade6d4584ec2aa",
+          "role": "admin",
+          "status": 204
+        },
+        {
+          "actual_record_name": "accounts-crud:group:delete-missing",
+          "actual_status_field": "python_status",
+          "case": "delete-missing",
+          "method": "DELETE",
+          "operation": "group_delete",
+          "path_template": "/api/accounts/groups/{owned_pk}/",
+          "response_projection_sha256": "bc978cee112c6be2e60b98bc82fdb21ea87e5ffa129562d2fd863a0ac59796aa",
+          "role": "admin",
+          "status": 404
+        },
+        {
+          "actual_record_name": "accounts-crud:group:viewer-denied-delete",
+          "actual_status_field": "python_status",
+          "case": "viewer-denied-delete",
+          "method": "DELETE",
+          "operation": "group_delete",
+          "path_template": "/api/accounts/groups/{owned_pk}/",
+          "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "role": "viewer",
+          "status": 403
+        }
+      ]
+    },
+    {
+      "contract_id": "route-8025246798282fe99e06:GET",
+      "fixture_id": "retained-Original-Image57-canonical-Accounts",
+      "pattern_exact": "api/accounts/^groups/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.accounts.api_views.GroupViewSet",
+      "resolver_ordinal": 19,
+      "resolver_name": "api:accounts:group-detail",
+      "owning_milestone": "M5",
+      "method": "GET",
+      "source_action": "retrieve",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Owned group detail before and after Original deletion"
+      ],
+      "result": {
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "capture_case": "group_get",
+      "cases": [
+        {
+          "actual_record_name": "accounts-crud:group:read",
+          "actual_status_field": "python_status",
+          "case": "read",
+          "method": "GET",
+          "operation": "group_get",
+          "path_template": "/api/accounts/groups/{owned_pk}/",
+          "response_projection_sha256": "d052e82ca32c7ebc82173286269a0c0c60620a7ac4a080d11a352a282a0a82a6",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "actual_record_name": "accounts-crud:group:read-deleted",
+          "actual_status_field": "python_status",
+          "case": "read-deleted",
+          "method": "GET",
+          "operation": "group_get",
+          "path_template": "/api/accounts/groups/{owned_pk}/",
+          "response_projection_sha256": "bc978cee112c6be2e60b98bc82fdb21ea87e5ffa129562d2fd863a0ac59796aa",
+          "role": "admin",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "contract_id": "route-6b4fdb8f2356d6c5aaec:GET",
+      "fixture_id": "retained-Original-Image57-canonical-Accounts",
+      "pattern_exact": "api/accounts/^api-keys/$",
+      "source_handler": "apps.accounts.api_views.APIKeyViewSet",
+      "resolver_ordinal": 21,
+      "resolver_name": "api:accounts:api-key-list",
+      "owning_milestone": "M5",
+      "method": "GET",
+      "source_action": "list",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "admin",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "API-key list GET as administrator and viewer"
+      ],
+      "result": {
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "capture_case": "key_list",
+      "cases": [
+        {
+          "actual_record_name": "account-body-parity:admin:/api/accounts/api-keys/",
+          "actual_status_field": "python_status",
+          "case": "list-admin",
+          "method": "GET",
+          "operation": "key_list",
+          "path_template": "/api/accounts/api-keys/",
+          "response_projection_sha256": "1adb24972fe586ea9860cabdeaba61226840f56c0023ec3999267fa6c4bc77da",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "actual_record_name": "account-body-parity:viewer:/api/accounts/api-keys/",
+          "actual_status_field": "python_status",
+          "case": "list-viewer",
+          "method": "GET",
+          "operation": "key_list",
+          "path_template": "/api/accounts/api-keys/",
+          "response_projection_sha256": "8f9cdd165e697a4ac0f4a4d9209d15f82fb3f1f31891ddf6dbdef2a722fccaea",
+          "role": "viewer",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "contract_id": "route-fd1eff07889791cc8470:POST",
+      "fixture_id": "retained-Original-Image57-canonical-Accounts",
+      "pattern_exact": "api/accounts/^api-keys/generate/$",
+      "source_handler": "apps.accounts.api_views.APIKeyViewSet",
+      "resolver_ordinal": 23,
+      "resolver_name": "api:accounts:api-key-generate",
+      "owning_milestone": "M5",
+      "method": "POST",
+      "source_action": "generate",
+      "observed_methods": [
+        "POST"
+      ],
+      "observed_roles": [
+        "viewer",
+        "admin",
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        },
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Viewer generates an own key, with separate explicit-target, malformed-target and anonymous controls"
+      ],
+      "result": {
+        "Source_case_observations": 5,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "capture_case": "key_generate",
+      "cases": [
+        {
+          "actual_record_name": "accounts:key-generation-shape:python",
+          "actual_status_field": "status",
+          "case": "own-empty-object",
+          "method": "POST",
+          "operation": "key_generate",
+          "path_template": "/api/accounts/api-keys/generate/",
+          "role": "viewer",
+          "status": 201
+        },
+        {
+          "actual_record_name": "accounts:key-generate-other-user",
+          "actual_status_field": "python_status",
+          "case": "other-user",
+          "method": "POST",
+          "operation": "key_generate",
+          "path_template": "/api/accounts/api-keys/generate/",
+          "response_projection_sha256": "b6806f6e3be33db3ab817136c3463d614a621576cb6efeea8c8397255e26bc9f",
+          "role": "viewer",
+          "status": 403
+        },
+        {
+          "actual_record_name": "accounts:key-generate-explicit-self",
+          "actual_status_field": "python_status",
+          "case": "explicit-self",
+          "method": "POST",
+          "operation": "key_generate",
+          "path_template": "/api/accounts/api-keys/generate/",
+          "response_projection_sha256": "b6806f6e3be33db3ab817136c3463d614a621576cb6efeea8c8397255e26bc9f",
+          "role": "viewer",
+          "status": 403
+        },
+        {
+          "actual_record_name": "accounts:key-generate-malformed-user-id",
+          "actual_status_field": "python_status",
+          "case": "malformed-user-id",
+          "method": "POST",
+          "operation": "key_generate",
+          "path_template": "/api/accounts/api-keys/generate/",
+          "response_projection_sha256": "3185fa1a26b4015ec4a384ed9ed3545736730e2cc6e9441a8e917709756be0c7",
+          "role": "admin",
+          "status": 404
+        },
+        {
+          "actual_record_name": "accounts:key-generate-anonymous",
+          "actual_status_field": "python_status",
+          "case": "anonymous",
+          "method": "POST",
+          "operation": "key_generate",
+          "path_template": "/api/accounts/api-keys/generate/",
+          "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "role": "anonymous",
+          "status": 401
+        }
+      ]
+    },
+    {
+      "contract_id": "route-8fde1c8e922a1fb2273f:POST",
+      "fixture_id": "retained-Original-Image57-canonical-Accounts",
+      "pattern_exact": "api/accounts/^api-keys/revoke/$",
+      "source_handler": "apps.accounts.api_views.APIKeyViewSet",
+      "resolver_ordinal": 25,
+      "resolver_name": "api:accounts:api-key-revoke",
+      "owning_milestone": "M5",
+      "method": "POST",
+      "source_action": "revoke",
+      "observed_methods": [
+        "POST"
+      ],
+      "observed_roles": [
+        "viewer",
+        "admin",
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        },
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Viewer revokes the own key, with separate explicit-target, malformed-target and anonymous controls"
+      ],
+      "result": {
+        "Source_case_observations": 5,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "capture_case": "key_revoke",
+      "cases": [
+        {
+          "actual_record_name": "accounts:key-revoke:python",
+          "actual_status_field": "status",
+          "case": "own-empty-object",
+          "method": "POST",
+          "operation": "key_revoke",
+          "path_template": "/api/accounts/api-keys/revoke/",
+          "response_projection_sha256": "c955e57777ec0d73639dca6748560d00aa5eb8e12f13ebb2ed9656add3908f97",
+          "role": "viewer",
+          "status": 200
+        },
+        {
+          "actual_record_name": "accounts:key-revoke-other-user",
+          "actual_status_field": "python_status",
+          "case": "other-user",
+          "method": "POST",
+          "operation": "key_revoke",
+          "path_template": "/api/accounts/api-keys/revoke/",
+          "response_projection_sha256": "7d1255051620128830cc52b5103a41ab5fa7ac09e6902672b7709f84293faf93",
+          "role": "viewer",
+          "status": 403
+        },
+        {
+          "actual_record_name": "accounts:key-revoke-explicit-self",
+          "actual_status_field": "python_status",
+          "case": "explicit-self",
+          "method": "POST",
+          "operation": "key_revoke",
+          "path_template": "/api/accounts/api-keys/revoke/",
+          "response_projection_sha256": "7d1255051620128830cc52b5103a41ab5fa7ac09e6902672b7709f84293faf93",
+          "role": "viewer",
+          "status": 403
+        },
+        {
+          "actual_record_name": "accounts:key-revoke-malformed-user-id",
+          "actual_status_field": "python_status",
+          "case": "malformed-user-id",
+          "method": "POST",
+          "operation": "key_revoke",
+          "path_template": "/api/accounts/api-keys/revoke/",
+          "response_projection_sha256": "3185fa1a26b4015ec4a384ed9ed3545736730e2cc6e9441a8e917709756be0c7",
+          "role": "admin",
+          "status": 404
+        },
+        {
+          "actual_record_name": "accounts:key-revoke-anonymous",
+          "actual_status_field": "python_status",
+          "case": "anonymous",
+          "method": "POST",
+          "operation": "key_revoke",
+          "path_template": "/api/accounts/api-keys/revoke/",
+          "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "role": "anonymous",
+          "status": 401
+        }
+      ]
+    }
+  ]
+}

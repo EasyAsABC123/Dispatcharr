@@ -28,6 +28,7 @@ import retained_live_stop_contracts
 import retained_ts_controls_contracts
 import retained_canonical_management_contracts
 import retained_exact_vod_contracts
+import retained_image57_accounts_contracts
 import retained_comskip_task_contracts
 import retained_clocked_recording_contracts
 import core_settings_source_contracts as subject
@@ -82,6 +83,7 @@ class CoreSettingsSourceControls(unittest.TestCase):
         retained_ts_controls_contracts.restore_pre_ts_controls(ROOT, register['runtime_routes'])
         retained_canonical_management_contracts.restore_pre_management(ROOT, register['runtime_routes'])
         retained_exact_vod_contracts.restore_pre_vod_split(ROOT, register['runtime_routes'])
+        retained_image57_accounts_contracts.restore_pre_image57_accounts(ROOT, register['runtime_routes'])
         retained_connect_test_contracts.restore_pre_connect_test(ROOT, register['runtime_routes'])
         retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT, register['runtime_routes'])
         retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, register['runtime_routes'])

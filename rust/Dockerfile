@@ -89,6 +89,10 @@ COPY scripts/rust-milestone-batches/m235/ts-controls/request-driver.py ./scripts
 COPY scripts/rust-integration/canonical-management-original/receipt.json ./scripts/rust-integration/canonical-management-original/receipt.json
 COPY scripts/rust-integration/exact-vod-original-c98/receipt.json ./scripts/rust-integration/exact-vod-original-c98/receipt.json
 COPY scripts/rust-integration/exact-vod-original-c98/request-driver.py ./scripts/rust-integration/exact-vod-original-c98/request-driver.py
+COPY scripts/rust-integration/image57-checkpoint/selected-accounts-Original.json ./scripts/rust-integration/image57-checkpoint/selected-accounts-Original.json
+COPY scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/baseline-all/0-integration.json.json ./scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/baseline-all/0-integration.json.json
+COPY scripts/rust-integration/image57-checkpoint/evidence/matrix/controllers/baseline-all.json ./scripts/rust-integration/image57-checkpoint/evidence/matrix/controllers/baseline-all.json
+COPY scripts/rust-integration/image57-checkpoint/evidence/matrix/cleanup/baseline-all.json ./scripts/rust-integration/image57-checkpoint/evidence/matrix/cleanup/baseline-all.json
 
 # Public Original Comskip task authorities for offline register verification.
 COPY scripts/rust-integration/comskip-positive-lifecycle-source1/ ./scripts/rust-integration/comskip-positive-lifecycle-source1/

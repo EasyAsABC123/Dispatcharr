@@ -1,0 +1,291 @@
+{
+  "Historical_Original_capture_verified": true,
+  "Native_parity_assigned": false,
+  "actual_controller_exit": 0,
+  "actual_fixture_tool_digests": {
+    "crud": {
+      "path": "scripts/rust-account-contracts/crud_probes.py",
+      "sha256": "f6f63b1b42bde76e82b6dea21b1904c7e4c55e8763baab2e94dd2055938c9a21"
+    },
+    "keys": {
+      "path": "scripts/rust-account-contracts/probes.py",
+      "sha256": "fa235747e69860886ee534a1c4852bfce56f3340ff46304566d148d0cb4a29ad"
+    },
+    "runner": {
+      "path": "scripts/rust-integration/run.py",
+      "sha256": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66"
+    }
+  },
+  "controller_process_settled": true,
+  "credential_values_exported": false,
+  "credit": "Original Dispatcharr authors and contributors retain full application and behavior credit.",
+  "historical_actual_report_sha256": "89f96307804b67f5af9c4f33b2eca5c0fd110b10f757ed469e989d232b69d576",
+  "historical_public_authorities": {
+    "cleanup": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/cleanup/baseline-all.json",
+      "sha256": "a4937c8cd980262773634caa6caeffc0aacadd8ad594bb76d4d963800d9eef36"
+    },
+    "controller": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/controllers/baseline-all.json",
+      "sha256": "37334783a1d7dcd5d10bb599c90f4b619d336d59a94803dca9b09f859fa3d7ed"
+    },
+    "report": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/baseline-all/0-integration.json.json",
+      "sha256": "e90e3abb9dbff7a3ca42aead79d893328e6cab03b8d949d1fec57a9eee20de66"
+    }
+  },
+  "owned_namespace_cleanup_verified": true,
+  "performance_verified": false,
+  "related_Owned_key_state": {
+    "same_Owned_key_rejected_after_Original_revoke": true,
+    "seed_owned_key_authenticated_with_Original_HTTP": true,
+    "wrong_role_actions_preserved_key_state": true
+  },
+  "scope": "Actual Image57 Original canonical Accounts CRUD and key lifecycle",
+  "selected_Original_observations": [
+    {
+      "actual_record_name": "account-body-parity:admin:/api/accounts/api-keys/",
+      "actual_status_field": "python_status",
+      "case": "list-admin",
+      "method": "GET",
+      "operation": "key_list",
+      "path_template": "/api/accounts/api-keys/",
+      "response_projection_sha256": "1adb24972fe586ea9860cabdeaba61226840f56c0023ec3999267fa6c4bc77da",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "actual_record_name": "account-body-parity:viewer:/api/accounts/api-keys/",
+      "actual_status_field": "python_status",
+      "case": "list-viewer",
+      "method": "GET",
+      "operation": "key_list",
+      "path_template": "/api/accounts/api-keys/",
+      "response_projection_sha256": "8f9cdd165e697a4ac0f4a4d9209d15f82fb3f1f31891ddf6dbdef2a722fccaea",
+      "role": "viewer",
+      "status": 200
+    },
+    {
+      "actual_record_name": "accounts:key-generation-shape:python",
+      "actual_status_field": "status",
+      "case": "own-empty-object",
+      "method": "POST",
+      "operation": "key_generate",
+      "path_template": "/api/accounts/api-keys/generate/",
+      "role": "viewer",
+      "status": 201
+    },
+    {
+      "actual_record_name": "accounts:key-generate-other-user",
+      "actual_status_field": "python_status",
+      "case": "other-user",
+      "method": "POST",
+      "operation": "key_generate",
+      "path_template": "/api/accounts/api-keys/generate/",
+      "response_projection_sha256": "b6806f6e3be33db3ab817136c3463d614a621576cb6efeea8c8397255e26bc9f",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "actual_record_name": "accounts:key-generate-explicit-self",
+      "actual_status_field": "python_status",
+      "case": "explicit-self",
+      "method": "POST",
+      "operation": "key_generate",
+      "path_template": "/api/accounts/api-keys/generate/",
+      "response_projection_sha256": "b6806f6e3be33db3ab817136c3463d614a621576cb6efeea8c8397255e26bc9f",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "actual_record_name": "accounts:key-generate-malformed-user-id",
+      "actual_status_field": "python_status",
+      "case": "malformed-user-id",
+      "method": "POST",
+      "operation": "key_generate",
+      "path_template": "/api/accounts/api-keys/generate/",
+      "response_projection_sha256": "3185fa1a26b4015ec4a384ed9ed3545736730e2cc6e9441a8e917709756be0c7",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "actual_record_name": "accounts:key-generate-anonymous",
+      "actual_status_field": "python_status",
+      "case": "anonymous",
+      "method": "POST",
+      "operation": "key_generate",
+      "path_template": "/api/accounts/api-keys/generate/",
+      "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "role": "anonymous",
+      "status": 401
+    },
+    {
+      "actual_record_name": "accounts:key-revoke:python",
+      "actual_status_field": "status",
+      "case": "own-empty-object",
+      "method": "POST",
+      "operation": "key_revoke",
+      "path_template": "/api/accounts/api-keys/revoke/",
+      "response_projection_sha256": "c955e57777ec0d73639dca6748560d00aa5eb8e12f13ebb2ed9656add3908f97",
+      "role": "viewer",
+      "status": 200
+    },
+    {
+      "actual_record_name": "accounts:key-revoke-other-user",
+      "actual_status_field": "python_status",
+      "case": "other-user",
+      "method": "POST",
+      "operation": "key_revoke",
+      "path_template": "/api/accounts/api-keys/revoke/",
+      "response_projection_sha256": "7d1255051620128830cc52b5103a41ab5fa7ac09e6902672b7709f84293faf93",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "actual_record_name": "accounts:key-revoke-explicit-self",
+      "actual_status_field": "python_status",
+      "case": "explicit-self",
+      "method": "POST",
+      "operation": "key_revoke",
+      "path_template": "/api/accounts/api-keys/revoke/",
+      "response_projection_sha256": "7d1255051620128830cc52b5103a41ab5fa7ac09e6902672b7709f84293faf93",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "actual_record_name": "accounts:key-revoke-malformed-user-id",
+      "actual_status_field": "python_status",
+      "case": "malformed-user-id",
+      "method": "POST",
+      "operation": "key_revoke",
+      "path_template": "/api/accounts/api-keys/revoke/",
+      "response_projection_sha256": "3185fa1a26b4015ec4a384ed9ed3545736730e2cc6e9441a8e917709756be0c7",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "actual_record_name": "accounts:key-revoke-anonymous",
+      "actual_status_field": "python_status",
+      "case": "anonymous",
+      "method": "POST",
+      "operation": "key_revoke",
+      "path_template": "/api/accounts/api-keys/revoke/",
+      "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "role": "anonymous",
+      "status": 401
+    },
+    {
+      "actual_record_name": "accounts-crud:user:read",
+      "actual_status_field": "python_status",
+      "case": "read",
+      "method": "GET",
+      "operation": "user_get",
+      "path_template": "/api/accounts/users/{owned_pk}/",
+      "response_projection_sha256": "615f5c1bcac5efb6eb915b36cde7ab06de3270a81da3427f88587389113ab303",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "actual_record_name": "accounts-crud:user:read-deleted",
+      "actual_status_field": "python_status",
+      "case": "read-deleted",
+      "method": "GET",
+      "operation": "user_get",
+      "path_template": "/api/accounts/users/{owned_pk}/",
+      "response_projection_sha256": "0ab6f54dd41a1755de3a9a2e9fa6ebe14560d4ac398a026f11210e64437bf496",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "actual_record_name": "accounts-crud:user:delete",
+      "actual_status_field": "python_status",
+      "case": "delete",
+      "method": "DELETE",
+      "operation": "user_delete",
+      "path_template": "/api/accounts/users/{owned_pk}/",
+      "response_projection_sha256": "20797e4c178039d4bdfb0243aaacaca086bcd4d41f279d797eade6d4584ec2aa",
+      "role": "admin",
+      "status": 204
+    },
+    {
+      "actual_record_name": "accounts-crud:user:delete-missing",
+      "actual_status_field": "python_status",
+      "case": "delete-missing",
+      "method": "DELETE",
+      "operation": "user_delete",
+      "path_template": "/api/accounts/users/{owned_pk}/",
+      "response_projection_sha256": "0ab6f54dd41a1755de3a9a2e9fa6ebe14560d4ac398a026f11210e64437bf496",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "actual_record_name": "accounts-crud:user:viewer-denied-delete",
+      "actual_status_field": "python_status",
+      "case": "viewer-denied-delete",
+      "method": "DELETE",
+      "operation": "user_delete",
+      "path_template": "/api/accounts/users/{owned_pk}/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "actual_record_name": "accounts-crud:group:read",
+      "actual_status_field": "python_status",
+      "case": "read",
+      "method": "GET",
+      "operation": "group_get",
+      "path_template": "/api/accounts/groups/{owned_pk}/",
+      "response_projection_sha256": "d052e82ca32c7ebc82173286269a0c0c60620a7ac4a080d11a352a282a0a82a6",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "actual_record_name": "accounts-crud:group:read-deleted",
+      "actual_status_field": "python_status",
+      "case": "read-deleted",
+      "method": "GET",
+      "operation": "group_get",
+      "path_template": "/api/accounts/groups/{owned_pk}/",
+      "response_projection_sha256": "bc978cee112c6be2e60b98bc82fdb21ea87e5ffa129562d2fd863a0ac59796aa",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "actual_record_name": "accounts-crud:group:delete",
+      "actual_status_field": "python_status",
+      "case": "delete",
+      "method": "DELETE",
+      "operation": "group_delete",
+      "path_template": "/api/accounts/groups/{owned_pk}/",
+      "response_projection_sha256": "20797e4c178039d4bdfb0243aaacaca086bcd4d41f279d797eade6d4584ec2aa",
+      "role": "admin",
+      "status": 204
+    },
+    {
+      "actual_record_name": "accounts-crud:group:delete-missing",
+      "actual_status_field": "python_status",
+      "case": "delete-missing",
+      "method": "DELETE",
+      "operation": "group_delete",
+      "path_template": "/api/accounts/groups/{owned_pk}/",
+      "response_projection_sha256": "bc978cee112c6be2e60b98bc82fdb21ea87e5ffa129562d2fd863a0ac59796aa",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "actual_record_name": "accounts-crud:group:viewer-denied-delete",
+      "actual_status_field": "python_status",
+      "case": "viewer-denied-delete",
+      "method": "DELETE",
+      "operation": "group_delete",
+      "path_template": "/api/accounts/groups/{owned_pk}/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "viewer",
+      "status": 403
+    }
+  ],
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "whole_operation_accepted": false
+}

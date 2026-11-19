@@ -91,7 +91,8 @@ class NotificationMutationControls(unittest.TestCase):
    'scripts/rust-contracts/retained-live-stop/bindings.json',
    'scripts/rust-contracts/retained-ts-controls/bindings.json',
    'scripts/rust-contracts/retained-canonical-management/bindings.json',
-   'scripts/rust-contracts/retained-exact-vod/bindings.json'])
+   'scripts/rust-contracts/retained-exact-vod/bindings.json',
+   'scripts/rust-contracts/retained-image57-accounts/bindings.json'])
   later_ids=[];supplemental_ids=[]
   import retained_management_contracts
   import retained_auth_plugin_contracts
@@ -104,6 +105,7 @@ class NotificationMutationControls(unittest.TestCase):
   import retained_ts_controls_contracts
   import retained_canonical_management_contracts
   import retained_exact_vod_contracts
+  import retained_image57_accounts_contracts
   for ref in later:
    value=source_contracts.checked(ROOT,ref)
    if ref['kind']==retained_management_contracts.KIND:
@@ -150,6 +152,8 @@ class NotificationMutationControls(unittest.TestCase):
     retained_canonical_management_contracts.validate(ROOT,value)
    elif ref['kind']==retained_exact_vod_contracts.KIND:
     retained_exact_vod_contracts.validate(ROOT,value)
+   elif ref['kind']==retained_image57_accounts_contracts.KIND:
+    retained_image57_accounts_contracts.validate(ROOT,value)
    else:later_ids.extend(c['contract_id']for c in value['contracts'])
   self.assertEqual(len(later_ids),282);self.assertEqual(len(set(later_ids)),282)
   self.assertEqual(len(supplemental_ids),11)
@@ -161,6 +165,7 @@ class NotificationMutationControls(unittest.TestCase):
   retained_ts_controls_contracts.restore_pre_ts_controls(ROOT,historical)
   retained_canonical_management_contracts.restore_pre_management(ROOT,historical)
   retained_exact_vod_contracts.restore_pre_vod_split(ROOT,historical)
+  retained_image57_accounts_contracts.restore_pre_image57_accounts(ROOT,historical)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,historical)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,historical)
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,historical)
@@ -227,6 +232,7 @@ class NotificationMutationControls(unittest.TestCase):
   expected += retained_ts_controls_contracts.load(ROOT)['operation_count']
   expected += retained_canonical_management_contracts.load(ROOT)['operation_count']
   expected += retained_exact_vod_contracts.load(ROOT)['operation_count']
+  expected += retained_image57_accounts_contracts.load(ROOT)['operation_count']
   self.assertEqual(mapping['operations'],expected)
   self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)
   self.assertEqual({key for key,o in ops.items()if 'executable_Source_contract'in o and o['executable_Source_contract'].get('fixture_id')=='retained-Original-notification-mutations-Source2-48'},selected)
