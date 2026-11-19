@@ -1,5 +1,5 @@
-//! Stored programme JSON reads derived from original Dispatcharr.
-//! Original authors retain full credit. Independent router until packaged gates.
+//! Stored programme JSON routes derived from Original Dispatcharr.
+//! Original Dispatcharr authors and contributors retain full credit.
 use crate::{AuthService, EpgReadResource, StoreError};
 use axum::{
     body::Body,
@@ -20,6 +20,8 @@ use std::{
     time::Duration,
 };
 use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
+
+mod mutations;
 
 #[derive(Clone, Copy, Debug)]
 pub struct EpgProgramReadLimits {
@@ -232,15 +234,7 @@ impl EpgProgramReads {
         if user.user_level < 1 {
             return Err(StoreError::PermissionDenied);
         }
-        let id = raw_id
-            .map(|raw| {
-                let number = dispatcharr_ingest_core::source_integer_literal(raw)
-                    .ok_or(StoreError::NotFound)?;
-                number
-                    .parse::<i64>()
-                    .map_err(|_| EpgReadResource::Programs.missing())
-            })
-            .transpose()?;
+        let id = raw_id.map(program_id).transpose()?;
         let lease = Arc::new(
             self.workers
                 .clone()
@@ -272,8 +266,7 @@ impl EpgProgramReads {
             .await?;
         // Keep the original select_related join. Gate each text/JSON column in
         // SQL, before the client decoder allocates a potentially oversized row.
-        let size="coalesce(octet_length(p.title),0)::bigint+coalesce(octet_length(p.sub_title),0)+coalesce(octet_length(p.description),0)+coalesce(octet_length(p.tvg_id),0)+coalesce(octet_length(p.custom_properties::text),0)";
-        let fields=format!("p.id::bigint AS id,p.start_time,p.end_time,({size}>$2) AS oversized,CASE WHEN {size}<=$2 THEN p.title ELSE '' END AS title,CASE WHEN {size}<=$2 THEN p.sub_title END AS sub_title,CASE WHEN {size}<=$2 THEN p.description END AS description,CASE WHEN {size}<=$2 THEN p.tvg_id END AS tvg_id,CASE WHEN {size}<=$2 THEN p.custom_properties END AS custom_properties");
+        let fields = projected_fields("$2");
         let relation = "FROM epg_programdata p JOIN epg_epgdata e ON e.id=p.epg_id";
         let sql=format!("SELECT {fields} {relation} WHERE $1::bigint IS NULL UNION ALL SELECT {fields} {relation} WHERE p.id=$1::bigint");
         let result = async {
@@ -322,9 +315,26 @@ impl EpgProgramReads {
     pub fn router(self) -> Router {
         Router::new()
             .route("/api/epg/programs/", get(list))
-            .route("/api/epg/programs/{id}/", get(detail))
+            .route(
+                "/api/epg/programs/{id}/",
+                get(detail)
+                    .patch(mutations::patch)
+                    .put(mutations::replace)
+                    .delete(mutations::delete),
+            )
             .with_state(self)
     }
+}
+fn program_id(raw: &str) -> Result<i64, StoreError> {
+    dispatcharr_ingest_core::source_integer_literal(raw)
+        .ok_or(StoreError::NotFound)?
+        .parse()
+        .map_err(|_| EpgReadResource::Programs.missing())
+}
+
+fn projected_fields(limit: &str) -> String {
+    let size="coalesce(octet_length(p.title),0)::bigint+coalesce(octet_length(p.sub_title),0)+coalesce(octet_length(p.description),0)+coalesce(octet_length(p.tvg_id),0)+coalesce(octet_length(p.custom_properties::text),0)";
+    format!("p.id::bigint AS id,p.start_time,p.end_time,({size}>{limit}) AS oversized,CASE WHEN {size}<={limit} THEN p.title ELSE '' END AS title,CASE WHEN {size}<={limit} THEN p.sub_title END AS sub_title,CASE WHEN {size}<={limit} THEN p.description END AS description,CASE WHEN {size}<={limit} THEN p.tvg_id END AS tvg_id,CASE WHEN {size}<={limit} THEN p.custom_properties END AS custom_properties")
 }
 fn origin(auth: &AuthService, peer: SocketAddr, headers: &HeaderMap) -> String {
     let header = |name| {

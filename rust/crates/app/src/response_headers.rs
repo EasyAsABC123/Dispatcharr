@@ -10,12 +10,17 @@ use axum::{
 #[derive(Clone)]
 pub struct SourceStaticResponse;
 
+/// This response originates at the public ingress before Django middleware.
+#[derive(Clone)]
+pub(super) struct PublicAdminRedirect;
+
 pub async fn apply(request: Request, next: Next) -> Response {
     let mut response = next.run(request).await;
     if response
         .extensions()
         .get::<SourceStaticResponse>()
         .is_some()
+        || response.extensions().get::<PublicAdminRedirect>().is_some()
     {
         return response;
     }
