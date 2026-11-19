@@ -46,6 +46,10 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The batch guide and Auto Sync checkpoint](rust-milestone-batch94.md)
+passes selected XMLTV and source-less programme publication, the default
+atomic guard, and the exact packaged React regex preview contract.
+
 [The persisted System Logs checkpoint](rust-milestone-batch92.md)
 verifies metadata, cursor tail and attachments against the same read-only
 file set in both packaged backends.
@@ -714,8 +718,8 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
 | M4 | VOD and timeshift parity | M2 | In progress (ordinary DVR functional slice and one- and ten-viewer completed playback budgets passed) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
 | M5 | Accounts, settings, and channel control APIs | M2 | In progress (stock React batch dummy guide assignment and clear verified) | API/permission/database/React workflow parity and API benchmarks |
-| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (scoped refresh-only guide consumption and packaged selected-worker startup verified) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
-| M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (Connect lifecycle and saved webhook Test verified in scoped Compose runs) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
+| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (selected batch guide worker terminals and scoped startup verified) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
+| M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (Auto Sync regex preview and Connect workflows verified in scoped Compose runs) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (packaged System Logs reads and scoped schema/archive/operator checks passed; restore, active collection, admin and plugin gaps) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
 | M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (copied PostgreSQL rollback passed with four matched Original restart timestamp updates; strict fingerprint and final suite open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 | M10 | Controlled rollout | M9 | Proposed | Scoped rollout plan, monitoring and rollback on the selected release image |
