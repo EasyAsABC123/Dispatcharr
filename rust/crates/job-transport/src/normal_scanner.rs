@@ -16,6 +16,7 @@ pub struct Prepared {
     _ports: ScannerFilesPorts,
     registry: Registry,
     xc: crate::normal_xc_live::Worker,
+    _inline_xc_groups: Arc<dyn dispatcharr_store::xc_create_groups::InlineGroups>,
     remote: crate::normal_m3u_remote::Worker,
     auto: Option<crate::normal_auto_sync::Prepared>,
 }
@@ -164,6 +165,10 @@ impl Prepared {
             m3u_roots.cache.clone(),
             recording.clone(),
         );
+        let inline_xc_groups: Arc<dyn dispatcharr_store::xc_create_groups::InlineGroups> =
+            Arc::new(xc.clone());
+        auth.bind_inline_xc_groups(inline_xc_groups.clone())
+            .map_err(|_| Disposition::UnsupportedDomain)?;
         let remote = crate::normal_m3u_remote::Worker::new(
             jobs,
             m3u_ports,
@@ -177,6 +182,7 @@ impl Prepared {
             recording,
         );
         Ok(Self {
+            _inline_xc_groups: inline_xc_groups,
             auto,
             remote,
             xc,

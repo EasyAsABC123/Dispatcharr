@@ -74,6 +74,9 @@ pub async fn preflight(
 
 enum Step {
     Control(StoreError),
+    // Rejected without an outstanding SQL/cache effect. A previous movie
+    // category write may already have committed before the series rejection.
+    Settled(StoreError),
     Caught(String),
 }
 impl From<StoreError> for Step {
@@ -83,7 +86,7 @@ impl From<StoreError> for Step {
 }
 fn draining(cancellation: &dyn Cancellation) -> Result<(), Step> {
     if cancellation.is_draining() {
-        Err(Step::Control(unsupported()))
+        Err(Step::Settled(unsupported()))
     } else {
         Ok(())
     }
@@ -124,6 +127,115 @@ fn source_batches(document: Value) -> Result<impl Iterator<Item = Value>, StoreE
         (!batch.is_empty()).then_some(Value::Array(batch))
     }))
 }
+/// Provider-ID maps returned by Original refresh_categories. No Uncategorized
+/// row or content rows are added by this phase.
+struct CategoryMaps {
+    movies: std::collections::HashMap<String, i64>,
+    series: std::collections::HashMap<String, i64>,
+}
+
+async fn category_maps(
+    auth: &AuthService,
+    account: &Account,
+    client: &mut Client,
+    cancellation: &dyn Cancellation,
+    owner: Owner,
+) -> Result<Option<CategoryMaps>, Step> {
+    draining(cancellation)?;
+    let movie_categories =
+        values::categories(action(client, "get_vod_categories").await?).map_err(Step::Settled)?;
+    if movie_categories.is_empty()
+        && sql::has_selected_categories(auth, owner.clone(), account.id, "movie").await?
+    {
+        return Ok(None);
+    }
+    let movie_map = sql::categories(
+        auth,
+        owner.clone(),
+        account.id,
+        "movie",
+        &movie_categories,
+        account.movie_enabled,
+    )
+    .await?;
+    draining(cancellation)?;
+    let series_categories = values::categories(action(client, "get_series_categories").await?)
+        .map_err(Step::Settled)?;
+    if series_categories.is_empty()
+        && sql::has_selected_categories(auth, owner.clone(), account.id, "series").await?
+    {
+        return Ok(None);
+    }
+    let series_map = sql::categories(
+        auth,
+        owner.clone(),
+        account.id,
+        "series",
+        &series_categories,
+        account.series_enabled,
+    )
+    .await?;
+    Ok(Some(CategoryMaps {
+        movies: movie_map,
+        series: series_map,
+    }))
+}
+
+/// Physical settlement is separate from the endpoint's business outcome.
+pub enum CreateCategoriesError {
+    Settled(StoreError),
+    Unsettled(StoreError),
+}
+
+/// Direct Source create-view helper, after Groups has released its lock and
+/// closed its SQL actor. Do not emit full-ingestion task notifications here.
+pub async fn create_categories(
+    auth: &AuthService,
+    id: i64,
+    cancellation: &dyn Cancellation,
+    owner: Owner,
+) -> Result<(), CreateCategoriesError> {
+    use CreateCategoriesError::{Settled, Unsettled};
+
+    let prepared = preflight(auth, id, owner.clone())
+        .await
+        .map_err(|error| match error {
+            AdmissionError::Unsupported => Settled(unsupported()),
+            AdmissionError::Operational(error) => Unsettled(error),
+        })?;
+    if cancellation.is_draining() {
+        return Err(Settled(unsupported()));
+    }
+    let mut client = category_client(auth, &prepared.account, owner.clone())
+        .await
+        .map_err(Unsettled)?;
+    match category_maps(auth, &prepared.account, &mut client, cancellation, owner).await {
+        Ok(_) => Ok(()),
+        Err(Step::Settled(error)) => Err(Settled(error)),
+        Err(Step::Caught(_)) => Err(Settled(StoreError::UnhandledRestFault)),
+        Err(Step::Control(error)) => Err(Unsettled(error)),
+    }
+}
+
+async fn category_client(
+    auth: &AuthService,
+    account: &Account,
+    owner: Owner,
+) -> Result<Client, StoreError> {
+    let agent = match &account.agent {
+        Some(agent) if !agent.is_empty() => agent.clone(),
+        _ => {
+            let writer = auth.task_sql_writer()?;
+            let scoped = auth
+                .clone()
+                .with_request_writer_permit(writer)?
+                .with_retained_scope(owner);
+            crate::core_settings_special_effects::default_user_agent(&scoped).await?
+        }
+    };
+    Client::new(&account.base, &account.username, &account.password, agent)?.ok_or_else(unsupported)
+}
+
 /// Only actual claimed tasks call execute. Source's direct decorated helpers
 /// remain ordinary in-process phases: no fake Celery children are synthesized.
 pub async fn execute(
@@ -160,49 +272,12 @@ pub async fn execute(
     let outcome = async {
         // Source resolves cached default UA after its start notification. No SQL
         // session/writer remains borrowed across provider network/CPU phases.
-        let agent = match &account.agent {
-            Some(agent) if !agent.is_empty() => agent.clone(),
-            _ => {
-                let writer = auth.task_sql_writer()?;
-                let scoped = auth
-                    .clone()
-                    .with_request_writer_permit(writer)?
-                    .with_retained_scope(owner.clone());
-                crate::core_settings_special_effects::default_user_agent(&scoped).await?
-            }
+        let mut client = category_client(&auth, &account, owner.clone()).await?;
+        let Some(CategoryMaps { movies: mut movie_map, series: mut series_map }) =
+            category_maps(&auth, &account, &mut client, cancellation.as_ref(), owner.clone()).await?
+        else {
+            return Err(Step::Caught(format!("Provider returned no VOD categories for account {}; aborting VOD refresh to preserve existing category selections", account.name)));
         };
-        let mut client = Client::new(&account.base, &account.username, &account.password, agent)?
-            .ok_or_else(unsupported)?;
-        draining(cancellation.as_ref())?;
-        let movie_categories =
-            values::categories(action(&mut client, "get_vod_categories").await?)?;
-        if movie_categories.is_empty()&&sql::has_selected_categories(&auth,owner.clone(),account.id,"movie").await?{
-          return Err(Step::Caught(format!("Provider returned no VOD categories for account {}; aborting VOD refresh to preserve existing category selections",account.name)));
-        }
-        let mut movie_map = sql::categories(
-            &auth,
-            owner.clone(),
-            account.id,
-            "movie",
-            &movie_categories,
-            account.movie_enabled,
-        )
-        .await?;
-        draining(cancellation.as_ref())?;
-        let series_categories =
-            values::categories(action(&mut client, "get_series_categories").await?)?;
-        if series_categories.is_empty()&&sql::has_selected_categories(&auth,owner.clone(),account.id,"series").await?{
-          return Err(Step::Caught(format!("Provider returned no VOD categories for account {}; aborting VOD refresh to preserve existing category selections",account.name)));
-        }
-        let mut series_map = sql::categories(
-            &auth,
-            owner.clone(),
-            account.id,
-            "series",
-            &series_categories,
-            account.series_enabled,
-        )
-        .await?;
         // Source retains one relation-property snapshot across both list kinds,
         // updating only each freshly fetched Uncategorized relation.
         let mut languages = sql::category_languages(&auth, owner.clone(), account.id).await?;
@@ -324,7 +399,7 @@ pub async fn execute(
             .await?;
             Ok(Value::String(message))
         }
-        Err(Step::Control(error)) => Err(error),
+        Err(Step::Control(error) | Step::Settled(error)) => Err(error),
     }
 }
 

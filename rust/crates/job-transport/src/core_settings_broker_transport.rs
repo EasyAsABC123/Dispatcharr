@@ -9,23 +9,32 @@ impl Jobs {
         // The same sealed Store producer also owns Source's new STD-account
         // refresh_m3u_groups.delay publication; normal queue dispatch already
         // delegates this exact root envelope to its existing STD implementation.
-        let (task_id, programme_root) =
-            if let Ok(message) = crate::normal_core_tasks::parse(publication.bytes()) {
-                (message.id, false)
-            } else if let Ok(message) = crate::normal_xc_live::parse(publication.bytes()) {
-                (message.id, false)
-            } else {
-                let message = crate::xml_tvg_protocol::parse(publication.bytes())
-                    .map_err(|_| Error::Protocol)?;
-                if message.common.parent.is_some()
-                    || message.force
-                    || message.defer != 0
-                    || message.eta.is_some()
-                {
-                    return Err(Error::Protocol);
-                }
-                (message.common.id, true)
-            };
+        let (task_id, programme_root) = if let Ok(message) =
+            crate::normal_core_tasks::parse(publication.bytes())
+        {
+            (message.id, false)
+        } else if let Ok(message) = crate::normal_xc_live::parse(publication.bytes()) {
+            (message.id, false)
+        } else if let Ok(message) = crate::normal_xc_accounts::parse(publication.bytes()) {
+            // Direct HTTP Groups publishes an actual unparented Profiles
+            // root. It is not a synthetic Groups child or Info request.
+            if message.kind != crate::normal_xc_accounts::Kind::Profiles || message.parent.is_some()
+            {
+                return Err(Error::Protocol);
+            }
+            (message.id, false)
+        } else {
+            let message =
+                crate::xml_tvg_protocol::parse(publication.bytes()).map_err(|_| Error::Protocol)?;
+            if message.common.parent.is_some()
+                || message.force
+                || message.defer != 0
+                || message.eta.is_some()
+            {
+                return Err(Error::Protocol);
+            }
+            (message.common.id, true)
+        };
         if task_id != publication.task_id() {
             return Err(Error::Protocol);
         }

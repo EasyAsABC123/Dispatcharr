@@ -28,6 +28,12 @@ impl CoreTaskPublication {
         self.id
     }
 }
+/// Only an acknowledged root or a proven refusal may let Inline Groups proceed.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum CoreProfilePublication {
+    Acknowledged,
+    CapacityRefused,
+}
 pub trait CoreTaskBroker: Send + Sync {
     /// Acknowledgement must follow the actual existing broker command reply.
     /// No retry/replay or cache DB fallback is authorized by this port.
@@ -36,6 +42,18 @@ pub trait CoreTaskBroker: Send + Sync {
         publication: CoreTaskPublication,
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), StoreError>>;
+    /// Inline XC may continue after a proven capacity refusal. The default
+    /// cannot prove that distinction and forwards every error unchanged.
+    fn publish_profiles_root(
+        &self,
+        publication: CoreTaskPublication,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<CoreProfilePublication, StoreError>> {
+        Box::pin(async move {
+            self.publish(publication, owner).await?;
+            Ok(CoreProfilePublication::Acknowledged)
+        })
+    }
 }
 impl AuthService {
     /// Early Core and later engine/selected Auth clones share THIS same cell.

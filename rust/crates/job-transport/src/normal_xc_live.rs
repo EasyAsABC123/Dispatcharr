@@ -6,7 +6,7 @@ use crate::{
     transport::{Jobs, M3uPorts},
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
-use dispatcharr_contracts::UpdateEventSink;
+use dispatcharr_contracts::{BoxFuture, UpdateEventSink};
 use dispatcharr_coordination::{TaskLockDetailedError, TaskLockError, TaskLocks};
 use dispatcharr_store::{AuthService, ProducerIdentitySource, Store, StoreError};
 use serde_json::{json, Value};
@@ -190,6 +190,160 @@ impl Drop for FaultGuard {
 #[derive(Clone)]
 pub(crate) struct Worker {
     inner: Arc<Inner>,
+}
+struct InlineCancellation(Arc<Inner>);
+impl dispatcharr_store::vod_ingestion::Cancellation for InlineCancellation {
+    fn is_draining(&self) -> bool {
+        self.0.closed.load(Ordering::Acquire)
+    }
+}
+struct InlineAdmission {
+    inner: Arc<Inner>,
+    slot: tokio::sync::OwnedSemaphorePermit,
+}
+
+impl dispatcharr_store::xc_create_groups::InlineGroups for Worker {
+    fn admit(
+        &self,
+        auth: &AuthService,
+    ) -> Result<Box<dyn dispatcharr_store::xc_create_groups::AdmittedInlineGroups>, StoreError>
+    {
+        if self.inner.closed.load(Ordering::Acquire) || !auth.uses_store_pool(&self.inner.store) {
+            return Err(StoreError::Unsupported(
+                "Inline XC Groups intake unavailable",
+            ));
+        }
+        let slot = self
+            .inner
+            .slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| StoreError::Unsupported("Inline XC Groups capacity unavailable"))?;
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(StoreError::Unsupported(
+                "Inline XC Groups intake unavailable",
+            ));
+        }
+        Ok(Box::new(InlineAdmission {
+            inner: self.inner.clone(),
+            slot,
+        }))
+    }
+}
+
+impl dispatcharr_store::xc_create_groups::AdmittedInlineGroups for InlineAdmission {
+    fn run(
+        self: Box<Self>,
+        auth: AuthService,
+        account: i64,
+        enable_vod: bool,
+        caller: Owner,
+    ) -> BoxFuture<'static, Result<(), StoreError>> {
+        Box::pin(async move {
+            let InlineAdmission { inner, slot } = *self;
+            let owner: Owner = Arc::new((slot, caller, inner.clone()));
+            let joined = tokio::spawn(async move {
+                let mut guard = FaultGuard {
+                    inner: inner.clone(),
+                    owner: owner.clone(),
+                    armed: true,
+                };
+                let result = async {
+                    let lease = match inner
+                        .locks
+                        .acquire_retained_detailed(
+                            "refresh_m3u_account_groups",
+                            account,
+                            owner.clone(),
+                        )
+                        .await
+                    {
+                        Ok(lease) => Some(lease),
+                        Err(TaskLockDetailedError::Operational(TaskLockError::Held)) => None,
+                        Err(TaskLockDetailedError::Operational(
+                            TaskLockError::Capacity | TaskLockError::Invalid,
+                        )) => {
+                            guard.armed = false;
+                            return Err(StoreError::Unsupported(
+                                "Inline XC Groups lock admission unavailable",
+                            ));
+                        }
+                        Err(_) => {
+                            return Err(StoreError::Unsupported(
+                                "Inline XC Groups lock acquisition unsettled",
+                            ))
+                        }
+                    };
+                    let observed = if lease.is_some() {
+                        match dispatcharr_store::xc_live_tasks::prepare_create_groups(
+                            inner.store.clone(),
+                            auth.clone(),
+                            account,
+                            owner.clone(),
+                            inner.events.clone(),
+                        )
+                        .await
+                        {
+                            Ok(Some(prepared)) => {
+                                let outcome = prepared.run().await;
+                                let closed = prepared.close().await;
+                                outcome.and(closed)
+                            }
+                            Ok(None) => Ok(()),
+                            Err(error) => Err(error),
+                        }
+                    } else {
+                        Ok(())
+                    };
+                    // The real TaskLocks renewer is part of this same lease.
+                    // Source releases Groups before optional direct VOD work.
+                    let released = if let Some(lease) = lease {
+                        let lost = lease.is_lost();
+                        match lease.release_owned_detailed().await {
+                            Ok(true) if !lost => Ok(()),
+                            _ => Err(StoreError::Unsupported(
+                                "Inline XC Groups lock release unsettled",
+                            )),
+                        }
+                    } else {
+                        Ok(())
+                    };
+                    observed?;
+                    released?;
+                    if enable_vod {
+                        use dispatcharr_store::vod_ingestion::CreateCategoriesError;
+                        match dispatcharr_store::vod_ingestion::create_categories(
+                            &auth,
+                            account,
+                            &InlineCancellation(inner.clone()),
+                            owner.clone(),
+                        )
+                        .await
+                        {
+                            Ok(()) => {}
+                            Err(CreateCategoriesError::Settled(error)) => {
+                                // Groups SQL and lock retirement were both
+                                // verified above. Preserve the HTTP failure
+                                // without quarantining the shared M3U slot.
+                                guard.armed = false;
+                                return Err(error);
+                            }
+                            Err(CreateCategoriesError::Unsettled(error)) => return Err(error),
+                        }
+                    }
+                    Ok(())
+                }
+                .await;
+                if result.is_ok() {
+                    guard.armed = false;
+                }
+                result
+            });
+            joined
+                .await
+                .map_err(|_| StoreError::Unsupported("Inline XC Groups supervisor failed"))?
+        })
+    }
 }
 impl Worker {
     pub(crate) fn bind_sd(
@@ -494,30 +648,51 @@ impl Worker {
                         None
                     };
                     let group_work = async {
-                        if session.publishes_profiles() {
-                            match publish_profile(&inner, &message, owner.clone()).await {
-                                Ok(receipt) => {
-                                    children.push(receipt.id);
-                                    if let Some(flow) = &flow {
-                                        flow.append_child(&receipt).await.map_err(|_| {
-                                            D::Operational(
-                                                "XC actual child metadata append failed".into(),
-                                            )
-                                        })?;
+                        let mut publication_error = None;
+                        let completion = session
+                            .groups_with_profile_publication(
+                                message.kind == Kind::Single || message.full,
+                                start,
+                                async {
+                                    let published = async {
+                                        if session.publishes_profiles() {
+                                            match publish_profile(&inner, &message, owner.clone()).await {
+                                                Ok(receipt) => {
+                                                    children.push(receipt.id);
+                                                    if let Some(flow) = &flow {
+                                                        flow.append_child(&receipt).await.map_err(|_| {
+                                                            D::Operational(
+                                                                "XC actual child metadata append failed".into(),
+                                                            )
+                                                        })?;
+                                                    }
+                                                }
+                                                Err(crate::transport::Error::Capacity) => {}
+                                                Err(_) => {
+                                                    return Err(D::Operational(
+                                                        "XC profile child publication unsettled".into(),
+                                                    ))
+                                                }
+                                            }
+                                        }
+                                        Ok::<_, D>(())
                                     }
-                                }
-                                Err(crate::transport::Error::Capacity) => {}
-                                Err(_) => {
-                                    return Err(D::Operational(
-                                        "XC profile child publication unsettled".into(),
-                                    ))
-                                }
-                            }
+                                    .await;
+                                    if let Err(error) = published {
+                                        publication_error = Some(error);
+                                        return Err(StoreError::StatusBody(
+                                            503,
+                                            json!({"detail":"XC profile publication unsettled."}),
+                                        ));
+                                    }
+                                    Ok(())
+                                },
+                            )
+                            .await;
+                        match publication_error {
+                            Some(error) => Err(error),
+                            None => completion.map_err(domain),
                         }
-                        session
-                            .groups(message.kind == Kind::Single || message.full, start)
-                            .await
-                            .map_err(domain)
                     }
                     .await;
                     if let Some(group_lock) = group_lock {

@@ -42,7 +42,7 @@ pub struct Prepared {
     events: Arc<dyn UpdateEventSink>,
     owner: Owner,
     hash_keys: Vec<String>,
-    max_events: i64,
+    max_events: Option<i64>,
     filters: crate::xc_live_filters::Filters,
 }
 pub struct Completion {
@@ -283,7 +283,7 @@ async fn prepare_for(
             events,
             owner,
             hash_keys,
-            max_events,
+            max_events: Some(max_events),
             filters,
         })),
         other => {
@@ -298,6 +298,87 @@ async fn prepare_for(
         }
     }
 }
+/// This handle exposes only the synchronous create-view stage. It cannot be
+/// used to run a stream import with empty filters/hash preparation.
+pub struct InlineGroupsPrepared(Prepared);
+impl InlineGroupsPrepared {
+    pub async fn run(&self) -> Result<Completion, StoreError> {
+        let prepared = &self.0;
+        prepared
+            .groups_with_profile_publication(false, Utc::now(), async {
+                let scratch = crate::core_settings_special_budget::Scratch::new();
+                match crate::core_settings_special_broker::publish_profiles_root(
+                    &prepared.auth,
+                    &scratch,
+                    prepared.account.id,
+                )
+                .await?
+                {
+                    crate::CoreProfilePublication::Acknowledged
+                    | crate::CoreProfilePublication::CapacityRefused => Ok(()),
+                }
+            })
+            .await
+    }
+    pub async fn close(&self) -> Result<(), StoreError> {
+        self.0.close().await
+    }
+}
+/// The caller already holds the real Groups lease/renewer. Read the active row
+/// before default-UA/cache/settings or publication, as the direct Source task
+/// does. Release this read-only SQL session before a cache miss can need SQL.
+pub async fn prepare_create_groups(
+    store: Store,
+    auth: AuthService,
+    id: i64,
+    owner: Owner,
+    events: Arc<dyn UpdateEventSink>,
+) -> Result<Option<InlineGroupsPrepared>, StoreError> {
+    if !auth.uses_store_pool(&store) {
+        return Err(unsupported());
+    }
+    let writer = auth.task_sql_writer()?;
+    let owner: Owner = Arc::new((owner, writer.clone()));
+    let auth = auth
+        .with_request_writer_permit(writer)?
+        .with_retained_scope(owner.clone());
+    let session = auth.borrow_task_sql_session(owner.clone()).await?;
+    let observed=session.run(move|c|Box::pin(async move {
+        let row=sqlx::query("SELECT a.id::bigint,a.name,a.account_type,a.file_path,a.status,CASE WHEN COALESCE(octet_length(a.last_message),0)<=65536 THEN a.last_message END AS last_message,a.is_active,a.locked,a.stale_stream_days::bigint,CASE WHEN COALESCE(octet_length(a.server_url),0)<=65536 THEN a.server_url END AS server_url,CASE WHEN COALESCE(octet_length(a.username),0)<=65536 THEN a.username END AS username,CASE WHEN COALESCE(octet_length(a.password),0)<=65536 THEN a.password END AS password,CASE WHEN COALESCE(octet_length(u.user_agent),0)<=65536 THEN u.user_agent END AS user_agent,CASE WHEN COALESCE(octet_length(a.custom_properties::text),0)<=65536 THEN a.custom_properties END AS custom_properties,(COALESCE(octet_length(a.last_message),0)<=65536 AND COALESCE(octet_length(a.server_url),0)<=65536 AND COALESCE(octet_length(a.username),0)<=65536 AND COALESCE(octet_length(a.password),0)<=65536 AND COALESCE(octet_length(a.custom_properties::text),0)<=65536 AND COALESCE(octet_length(u.user_agent),0)<=65536) AS fits FROM m3u_m3uaccount a LEFT JOIN core_useragent u ON u.id=a.user_agent_id WHERE a.id=$1 AND a.is_active").bind(id).fetch_optional(c).await?;
+        let Some(row)=row else { return Ok::<_,StoreError>(None); };
+        if row.try_get::<String,_>("account_type")?!="XC" || !row.try_get::<bool,_>("fits")? { return Err(unsupported()); }
+        let properties=properties(row.try_get::<Option<Value>,_>("custom_properties")?.unwrap_or(Value::Null))?;
+        Ok(Some(Account{id,kind:"XC".into(),missing_input:false,name:row.try_get("name")?,status:row.try_get("status")?,message:row.try_get("last_message")?,active:true,
+            base:row.try_get::<Option<String>,_>("server_url")?.unwrap_or_default(),user:row.try_get::<Option<String>,_>("username")?.unwrap_or_default(),password:row.try_get::<Option<String>,_>("password")?.unwrap_or_default(),
+            agent:row.try_get::<Option<String>,_>("user_agent")?.unwrap_or_default(),properties,locked:row.try_get("locked")?,days:row.try_get("stale_stream_days")?}))
+    })).await;
+    let closed = session.close().await;
+    let account = observed??;
+    closed?;
+    let Some(mut account) = account else {
+        return Ok(None);
+    };
+    if !account.base.is_empty()
+        && !account.user.is_empty()
+        && !account.password.is_empty()
+        && account.agent.is_empty()
+    {
+        account.agent = crate::core_settings_special_effects::default_user_agent(&auth).await?;
+    }
+    let session = auth.borrow_task_sql_session(owner.clone()).await?;
+    Ok(Some(InlineGroupsPrepared(Prepared {
+        store,
+        session,
+        auth,
+        account,
+        events,
+        owner,
+        hash_keys: Vec::new(),
+        max_events: None,
+        filters: crate::xc_live_filters::Filters::empty(),
+    })))
+}
+
 fn properties(raw: Value) -> Result<Map<String, Value>, StoreError> {
     match raw {
         Value::Object(v) => Ok(v),
@@ -371,7 +452,32 @@ impl Prepared {
     pub fn active(&self) -> bool {
         self.account.active
     }
+    /// Existing callers may already own their profile publication. Keep this
+    /// entry point unchanged until that caller opts into the inline hook.
     pub async fn groups(&self, full: bool, start: DateTime<Utc>) -> Result<Completion, StoreError> {
+        self.groups_with_profile_publication(full, start, async { Ok(()) })
+            .await
+    }
+    /// Shared synchronous Groups stage for broker and future HTTP creation.
+    ///
+    /// The publication future is polled after a real Client has been constructed
+    /// and before its first authentication/category request. Early inactive or
+    /// missing-credential returns never invoke it. The caller must publish the
+    /// actual profile frame with its own producer context and retain its physical
+    /// receipt; no Groups task identity is invented here. A proven settled,
+    /// Source-caught publication failure may continue, but an uncertain outcome
+    /// must return an error and retain the caller's existing quarantine scope.
+    ///
+    /// This does not widen prepare(), admit XC create or compose VOD categories.
+    pub async fn groups_with_profile_publication<P>(
+        &self,
+        full: bool,
+        start: DateTime<Utc>,
+        publish_profiles: P,
+    ) -> Result<Completion, StoreError>
+    where
+        P: std::future::Future<Output = Result<(), StoreError>> + Send,
+    {
         if !self.account.active {
             return Ok(Completion {
                 invalidate: false,
@@ -403,7 +509,15 @@ impl Prepared {
         else {
             return Err(unsupported());
         };
-        let value = match client.action("get_live_categories").await? {
+        publish_profiles.await?;
+        let fetched = match client.action("get_live_categories").await? {
+            Ok(value) if !value.is_array() => Err(format!(
+                "Invalid categories response: {}",
+                category_error_value(&value)?
+            )),
+            other => other,
+        };
+        let value = match fetched {
             Ok(v) => v,
             Err(error) => {
                 let auth = [
@@ -972,10 +1086,124 @@ impl Prepared {
     }
     async fn audit(&self, kind: &str, details: Value) -> Result<(), StoreError> {
         let kind = kind.to_owned();
-        let max = self.max_events;
+        let max = match self.max_events {
+            Some(max) => max,
+            None => {
+                let settings = self.session.system_settings(self.auth.clone()).await?;
+                match settings.get("max_system_events") {
+                    None | Some(Value::Null) => 100,
+                    Some(value) if value == &json!(0) => 100,
+                    Some(value) => value
+                        .as_i64()
+                        .filter(|value| (1..=10000).contains(value))
+                        .ok_or_else(unsupported)?,
+                }
+            }
+        };
         self.session.run(move|c|Box::pin(async move{sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details)VALUES($1,$3,NULL,NULL,$2)").bind(kind).bind(details).bind(Utc::now()).execute(&mut*c).await?;let rows:Vec<i64>=sqlx::query_scalar("SELECT id::bigint FROM core_systemevent ORDER BY timestamp DESC LIMIT 1 OFFSET $1").bind(max).fetch_all(&mut*c).await?;if let Some(cutoff)=rows.first(){sqlx::query("DELETE FROM core_systemevent WHERE id<$1").bind(cutoff).execute(&mut*c).await?;}Ok::<_,StoreError>(())})).await?
     }
 }
+// Original core/xtream_codes.py get_live_categories formats a non-list
+// JSON response through Python str before raising ValueError. Scalars reuse
+// qualified spellings; compound strings admit exact ASCII repr only. Do not
+// substitute JSON encoding or invent Unicode isprintable behavior.
+fn category_error_value(value: &Value) -> Result<String, StoreError> {
+    fn push(output: &mut String, text: &str) -> Result<(), StoreError> {
+        if output
+            .len()
+            .checked_add(text.len())
+            .is_none_or(|n| n > 65536)
+        {
+            return Err(unsupported());
+        }
+        output.push_str(text);
+        Ok(())
+    }
+    fn quoted(output: &mut String, text: &str) -> Result<(), StoreError> {
+        if !text.is_ascii() {
+            return Err(unsupported());
+        }
+        let quote = if text.contains('\'') && !text.contains('"') {
+            '"'
+        } else {
+            '\''
+        };
+        let q = quote.to_string();
+        push(output, &q)?;
+        const HEX: &[u8; 16] = b"0123456789abcdef";
+        for byte in text.bytes() {
+            match byte {
+                b'\\' => push(output, r"\\")?,
+                b'\t' => push(output, r"\t")?,
+                b'\n' => push(output, r"\n")?,
+                b'\r' => push(output, r"\r")?,
+                value if value == quote as u8 => {
+                    push(output, r"\")?;
+                    push(output, &q)?;
+                }
+                value if value < 32 || value == 127 => {
+                    let escaped = [
+                        b'\\',
+                        b'x',
+                        HEX[(value >> 4) as usize],
+                        HEX[(value & 15) as usize],
+                    ];
+                    push(
+                        output,
+                        std::str::from_utf8(&escaped).map_err(|_| unsupported())?,
+                    )?;
+                }
+                value => push(
+                    output,
+                    std::str::from_utf8(&[value]).map_err(|_| unsupported())?,
+                )?,
+            }
+        }
+        push(output, &q)
+    }
+    fn repr(output: &mut String, value: &Value, depth: usize) -> Result<(), StoreError> {
+        if depth > 16 {
+            return Err(unsupported());
+        }
+        match value {
+            Value::String(text) => quoted(output, text),
+            Value::Array(values) => {
+                push(output, "[")?;
+                for (index, value) in values.iter().enumerate() {
+                    if index > 0 {
+                        push(output, ", ")?;
+                    }
+                    repr(output, value, depth + 1)?;
+                }
+                push(output, "]")
+            }
+            Value::Object(values) => {
+                push(output, "{")?;
+                for (index, (key, value)) in values.iter().enumerate() {
+                    if index > 0 {
+                        push(output, ", ")?;
+                    }
+                    quoted(output, key)?;
+                    push(output, ": ")?;
+                    repr(output, value, depth + 1)?;
+                }
+                push(output, "}")
+            }
+            value => push(output, &crate::xc_live_provider::scalar(value)?),
+        }
+    }
+    if !value.is_array() && !value.is_object() {
+        let scalar = crate::xc_live_provider::scalar(value)?;
+        if scalar.len() > 65536 {
+            return Err(unsupported());
+        }
+        return Ok(scalar);
+    }
+    let mut output = String::new();
+    repr(&mut output, value, 0)?;
+    Ok(output)
+}
+
 /// Preserve category insertion order, duplicate-name replacement and Python
 /// scalar IDs. No fabricated category/name if the provider supplies null.
 type Categories = Vec<(String, Map<String, Value>)>;

@@ -29,6 +29,9 @@ struct Rule {
     insensitive: bool,
 }
 impl Filters {
+    pub(crate) fn empty() -> Self {
+        Self { sets: Vec::new() }
+    }
     pub(crate) async fn read(session: &TaskSqlSession, id: i64) -> Result<Self, StoreError> {
         let rules=session.run(move|c|Box::pin(async move{let rows=sqlx::query("SELECT filter_type,CASE WHEN octet_length(regex_pattern)<=8192 THEN regex_pattern END AS pattern,(octet_length(regex_pattern)<=8192 AND (custom_properties IS NULL OR jsonb_typeof(custom_properties)='object' OR custom_properties IN('null'::jsonb,'false'::jsonb,'0'::jsonb,'\"\"'::jsonb,'[]'::jsonb))) AS fits,exclude,COALESCE(custom_properties->'case_sensitive'='false'::jsonb,false) AS insensitive FROM m3u_m3ufilter WHERE m3u_account_id=$1 ORDER BY \"order\" LIMIT 257").bind(id).fetch_all(&mut*c).await?;if rows.len()>256{return Err(unsupported())}rows.into_iter().map(|row|{if !row.try_get::<bool,_>("fits")?{return Err(unsupported())}let kind=match row.try_get::<String,_>("filter_type")?.as_str(){"url"=>Target::Url,"group"=>Target::Group,_=>Target::Name};Ok(Rule{kind,pattern:row.try_get("pattern")?,exclude:row.try_get("exclude")?,insensitive:row.try_get("insensitive")?})}).collect::<Result<Vec<_>,StoreError>>()})).await??;
         Self::compile(rules)

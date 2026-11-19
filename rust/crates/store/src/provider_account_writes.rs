@@ -1,6 +1,6 @@
 //! Source M3U account lifecycle draft. All original Dispatcharr/Django/Celery
 //! application and algorithm credit remains with the original authors.
-//! JSON STD writes only; multipart/XC/VOD collectors require separate acceptance.
+//! Bounded JSON STD and XC writes. Multipart uploads and VOD content collectors are separate.
 use crate::{
     admin_writes::{body_object, boolean, character, integer, parse_datetime},
     core_settings_special_budget::Scratch,
@@ -10,6 +10,7 @@ use crate::{
 use axum::{
     extract::{rejection::JsonRejection, ConnectInfo, Path, State},
     http::{HeaderMap, StatusCode},
+    response::{IntoResponse, Response},
     Json,
 };
 use serde_json::{json, Map, Value};
@@ -119,6 +120,7 @@ struct Validated {
     cron: String,
     expiration: Option<Option<chrono::DateTime<chrono::Utc>>>,
     hash_changed: bool,
+    group_selection: Vec<(i64, bool)>,
 }
 fn validate(
     mut input: Map<String, Value>,
@@ -182,6 +184,29 @@ fn validate(
                 // flexible URL validator, not a narrower invented URL policy.
                 if value == &old["server_url"] || value.is_null() || value.as_str() == Some("") {
                     Ok(value.clone())
+                } else if create && input.get("account_type").and_then(Value::as_str) == Some("XC")
+                {
+                    let text = character(name, value, None, true)?;
+                    // Source flexible URL validator accepts these ordinary
+                    // HTTP(S) URLs without rewriting them. Keep all other
+                    // flexible forms guarded until characterized.
+                    if text.len() > 65536 || !text.is_ascii() {
+                        return Err(unsupported());
+                    }
+                    if text.is_empty() {
+                        Ok(Value::String(text))
+                    } else {
+                        let parsed = url::Url::parse(&text).map_err(|_| unsupported())?;
+                        if !matches!(parsed.scheme(), "http" | "https")
+                            || parsed.host_str().is_none()
+                            || !parsed.username().is_empty()
+                            || parsed.password().is_some()
+                            || parsed.fragment().is_some()
+                        {
+                            return Err(unsupported());
+                        }
+                        Ok(Value::String(text))
+                    }
                 } else {
                     Err(unsupported())
                 }
@@ -316,14 +341,76 @@ fn validate(
         && input.len() == 2
         && input.get("auto_enable_new_groups_vod") == Some(&Value::Bool(false))
         && input.get("auto_enable_new_groups_series") == Some(&Value::Bool(false));
+    let xc_group_selection = !create
+        && partial
+        && old["account_type"] == "XC"
+        && saved["account_type"] == "XC"
+        && old["is_active"] == true
+        && old["custom_properties"]["enable_vod"] == false
+        && input.len() == 1
+        && input.contains_key("channel_groups");
+    let mut group_selection = Vec::new();
+    if xc_group_selection {
+        let groups = input["channel_groups"]
+            .as_array()
+            .filter(|groups| groups.len() <= 256)
+            .ok_or_else(unsupported)?;
+        let mut seen = std::collections::HashSet::new();
+        for group in groups {
+            let group = group
+                .as_object()
+                .filter(|group| group.len() == 2)
+                .ok_or_else(unsupported)?;
+            let id = group
+                .get("channel_group")
+                .and_then(Value::as_i64)
+                .filter(|id| (1..=i64::from(i32::MAX)).contains(id))
+                .ok_or_else(unsupported)?;
+            let enabled = group
+                .get("enabled")
+                .and_then(Value::as_bool)
+                .ok_or_else(unsupported)?;
+            // Duplicate-input CASE ordering and wider nested fields remain
+            // outside this measured ordinary selection prerequisite.
+            if !seen.insert(id) {
+                return Err(unsupported());
+            }
+            group_selection.push((id, enabled));
+        }
+    }
+    let xc_create = create && saved["account_type"] == "XC";
+    if xc_create {
+        for key in [
+            "enable_vod",
+            "auto_enable_new_groups_live",
+            "auto_enable_new_groups_vod",
+            "auto_enable_new_groups_series",
+        ] {
+            if input.get(key).is_some_and(|value| !value.is_boolean()) {
+                return Err(unsupported());
+            }
+        }
+        if input
+            .get("custom_properties")
+            .is_some_and(|value| !value.is_null() && !value.is_object())
+        {
+            return Err(unsupported());
+        }
+        if saved["is_active"] == false && input.get("enable_vod") == Some(&Value::Bool(true)) {
+            return Err(unsupported());
+        }
+    }
     if !xc_preferences
+        && !xc_create
+        && !xc_group_selection
         && (saved["account_type"] != "STD" || (!create && old["account_type"] != "STD"))
     {
         return Err(unsupported());
     }
-    if input
-        .get("channel_groups")
-        .is_some_and(|v| v.as_array().is_none_or(|v| !v.is_empty()))
+    if !xc_group_selection
+        && input
+            .get("channel_groups")
+            .is_some_and(|v| v.as_array().is_none_or(|v| !v.is_empty()))
     {
         return Err(unsupported());
     }
@@ -342,6 +429,7 @@ fn validate(
         cron,
         expiration,
         hash_changed: changed,
+        group_selection,
     })
 }
 async fn no_custom_triggers(c: &mut PgConnection) -> Result<(), StoreError> {
@@ -354,6 +442,12 @@ async fn no_custom_triggers(c: &mut PgConnection) -> Result<(), StoreError> {
 }
 async fn preflight(c: &mut PgConnection, id: Option<i64>, saved: &Value) -> Result<(), StoreError> {
     no_custom_triggers(c).await?;
+    if id.is_none() && saved["account_type"] == "XC" {
+        let integrations:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled)").fetch_one(&mut*c).await?;
+        if integrations {
+            return Err(unsupported());
+        }
+    }
     let collision:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE name=$1 AND ($2::bigint IS NULL OR id<>$2))").bind(saved["name"].as_str()).bind(id).fetch_one(&mut*c).await?;
     if collision {
         return Err(field("name", "m3u account with this name already exists."));
@@ -516,6 +610,88 @@ async fn default_profile(
     }
     Ok(())
 }
+// Original model post_save receiver sequence followed by serializer.create's
+// explicit expiration write. This is shared preparation, not XC admission.
+struct SavedAccountEffects<'a> {
+    account: i64,
+    saved: &'a Value,
+    cron: &'a str,
+    timezone: &'a str,
+    create: bool,
+    expiration: Option<Option<chrono::DateTime<chrono::Utc>>>,
+    group_selection: &'a [(i64, bool)],
+}
+async fn save_receivers(
+    session: &TaskSqlSession,
+    auth: &AuthService,
+    effect: SavedAccountEffects<'_>,
+    owner: Owner,
+) -> Result<Scratch, StoreError> {
+    let SavedAccountEffects {
+        account,
+        saved,
+        cron,
+        timezone,
+        create,
+        expiration,
+        group_selection,
+    } = effect;
+    default_profile(session, auth, account, saved, create, None, owner.clone()).await?;
+    let scratch = Scratch::new();
+    // apps/m3u/signals.py:19: XC runs Groups directly in the create view,
+    // after super().create has frozen response.data and playlist_created sent.
+    // Never publish a synthetic Groups root for XC from this model receiver.
+    if create && saved["account_type"] != "XC" {
+        crate::core_settings_special_broker::publish(
+            auth,
+            &scratch,
+            "apps.m3u.tasks.refresh_m3u_groups",
+            json!([account]),
+            json!({}),
+        )
+        .await?;
+    }
+    let task_name = format!("m3u_account-refresh-{account}");
+    let kwargs = format!("{{\"account_id\": {account}}}");
+    let schedule_cron = cron.to_owned();
+    let zone = timezone.to_owned();
+    let interval = saved["refresh_interval"].as_i64().ok_or_else(unsupported)? as i32;
+    let active = saved["is_active"].as_bool().ok_or_else(unsupported)?;
+    let periodic = session
+        .run(move |c| {
+            Box::pin(async move {
+                crate::provider_schedule::upsert(
+                    c,
+                    crate::provider_schedule::Spec {
+                        name: &task_name,
+                        task: "apps.m3u.tasks.refresh_single_m3u_account",
+                        kwargs: &kwargs,
+                        interval_hours: interval,
+                        cron: &schedule_cron,
+                        active,
+                        timezone: &zone,
+                    },
+                )
+                .await
+            })
+        })
+        .await??;
+    let periodic = i32::try_from(periodic).map_err(|_| unsupported())?;
+    session.run(move|c|Box::pin(async move{sqlx::query("UPDATE m3u_m3uaccount SET refresh_task_id=$2 WHERE id=$1 AND refresh_task_id IS DISTINCT FROM $2").bind(account).bind(periodic).execute(c).await.map(|_|())})).await??;
+    if !group_selection.is_empty() {
+        let selected = serde_json::to_value(group_selection).map_err(|_| unsupported())?;
+        // Serializer.update bulk_update changes only enabled; missing account
+        // memberships are ignored, no membership rows or signals are created.
+        session.run(move|c|Box::pin(async move {
+            sqlx::query("UPDATE dispatcharr_channels_channelgroupm3uaccount m SET enabled=(v.pair->>1)::boolean FROM jsonb_array_elements($2::jsonb) AS v(pair) WHERE m.m3u_account_id=$1 AND m.channel_group_id=(v.pair->>0)::bigint").bind(account).bind(sqlx::types::Json(selected)).execute(c).await.map(|_|())
+        })).await??;
+    }
+    if expiration.is_some_and(|v| !create || v.is_some()) {
+        default_profile(session, auth, account, saved, false, expiration, owner).await?;
+    }
+    Ok(scratch)
+}
+
 async fn project(
     session: &TaskSqlSession,
     id: i64,
@@ -541,6 +717,14 @@ async fn change(
     auth.account_user(peer, headers, true).await?;
     let id = raw.map(path_key).transpose()?;
     let input = body_object(body)?;
+    let direct_xc = id.is_none() && input.get("account_type").and_then(Value::as_str) == Some("XC");
+    let direct_vod = input.get("enable_vod") == Some(&Value::Bool(true));
+    let inline_groups = if direct_xc {
+        let _bounded = crate::provider_reads::provider_reply(&input)?;
+        Some(auth.inline_xc_groups_service()?)
+    } else {
+        None
+    };
     // Bind the SAME admitted writer to cache/broker retained physical owners,
     // not only the SQL actor. Lost replies must not release its budget early.
     let writer = auth.task_sql_writer()?;
@@ -578,30 +762,37 @@ async fn change(
                 let raw:Option<Value>=row.try_get("raw")?;let old=raw.ok_or_else(unsupported)?;if old["locked"]==true{return Err(locked())}let cron:String=row.try_get("cron")?;(old,cron)
             }else{(defaults(),String::new())};
             let validated=validate(input,&old,&old_cron,partial,id.is_none())?;let saved=validated.saved;let cron=validated.cron;
-            let check=saved.clone();session.run(move|c|Box::pin(async move{preflight(c,id,&check).await})).await??;
+            let check=saved.clone();let group_ids:Vec<i64>=validated.group_selection.iter().map(|(id,_)|*id).collect();
+            session.run(move|c|Box::pin(async move{
+                preflight(c,id,&check).await?;
+                if !group_ids.is_empty() {
+                    let found:i64=sqlx::query_scalar("SELECT count(*) FROM dispatcharr_channels_channelgroup WHERE id::bigint=ANY($1)").bind(&group_ids).fetch_one(c).await?;
+                    if found!=group_ids.len() as i64{return Err(unsupported());}
+                }
+                Ok::<_,StoreError>(())
+            })).await??;
+            let inline_admission=inline_groups.as_ref().map(|groups|groups.admit(&auth)).transpose()?;
             if validated.hash_changed{lock=Some(TargetLock::acquire(&auth,id.ok_or_else(unsupported)?).await?);}
             let zone=if !cron.trim().is_empty(){let settings=session.system_settings(auth.clone()).await?;settings["time_zone"].as_str().filter(|v|!v.is_empty()).unwrap_or("UTC").to_owned()}else{"UTC".into()};
             if id.is_some()&&old["is_active"]==true&&saved["is_active"]==false{
                 auth.profile_save_signal.as_ref().ok_or_else(unsupported)?.deactivate_account(session.clone(),id.ok_or_else(unsupported)?,owner.clone()).await?;
             }
             let write_saved=saved.clone();let account=session.run(move|c|Box::pin(async move{write(c,id,write_saved).await})).await??;
-            // Original model receiver order: default profile, then new STD
-            // refresh publication, then schedule, then serializer expiration.
-            default_profile(&session,&auth,account,&saved,id.is_none(),None,owner.clone()).await?;
-            let scratch=Scratch::new();
-            if id.is_none(){crate::core_settings_special_broker::publish(&auth,&scratch,"apps.m3u.tasks.refresh_m3u_groups",json!([account]),json!({})).await?;}
-            let task_name=format!("m3u_account-refresh-{account}");let kwargs=format!("{{\"account_id\": {account}}}");let schedule_cron=cron.clone();let interval=saved["refresh_interval"].as_i64().ok_or_else(unsupported)? as i32;let active=saved["is_active"].as_bool().ok_or_else(unsupported)?;
-            let periodic=session.run(move|c|Box::pin(async move{crate::provider_schedule::upsert(c,crate::provider_schedule::Spec{name:&task_name,task:"apps.m3u.tasks.refresh_single_m3u_account",kwargs:&kwargs,interval_hours:interval,cron:&schedule_cron,active,timezone:&zone}).await})).await??;
-            let periodic=i32::try_from(periodic).map_err(|_|unsupported())?;
-            session.run(move|c|Box::pin(async move{sqlx::query("UPDATE m3u_m3uaccount SET refresh_task_id=$2 WHERE id=$1 AND refresh_task_id IS DISTINCT FROM $2").bind(account).bind(periodic).execute(c).await.map(|_|())})).await??;
-            if validated.expiration.is_some_and(|v|id.is_some()||v.is_some()){default_profile(&session,&auth,account,&saved,false,validated.expiration,owner.clone()).await?;}
+            let scratch=save_receivers(&session,&auth,SavedAccountEffects{account,saved:&saved,cron:&cron,timezone:&zone,create:id.is_none(),expiration:validated.expiration,group_selection:&validated.group_selection},owner.clone()).await?;
             if let Some(owned)=&lock{
                 let override_keys=crate::core_settings_special::hash_fields_text(saved["custom_properties"].get("hash_key").and_then(Value::as_str).unwrap_or(""));
                 let keys=if override_keys.is_empty(){crate::core_settings_special::hash_fields_text(global["m3u_hash_key"].as_str().unwrap_or("name,url,tvg_id"))}else{override_keys};
                 crate::core_settings_special_broker::publish(&auth,&scratch,"core.tasks.rehash_streams",json!([keys]),json!({"account_id":account,"locks_preacquired":true,"preacquired_lock_ids":[account],"preacquired_lock_token":owned.token})).await?;handed_off=true;
             }
+            let response=if direct_xc {
+                let mut response=project(&session,account,cron.clone()).await?;
+                // Serializer201 still owns input properties; PostgreSQL jsonb
+                // order belongs only to later queries, never this response.
+                response.0["custom_properties"]=saved["custom_properties"].clone();
+                Some(response)
+            }else{None};
             if id.is_none(){crate::core_task_offsets::retained_event(auth.event_sink.clone().ok_or_else(unsupported)?,json!({"type":"update","data":{"type":"playlist_created","playlist_id":account}}),owner.clone()).await?;}
-            Ok((if id.is_none(){StatusCode::CREATED}else{StatusCode::OK},project(&session,account,cron).await?))
+            Ok((account,inline_admission,(if id.is_none(){StatusCode::CREATED}else{StatusCode::OK},match response {Some(response)=>response,None=>project(&session,account,cron).await?})))
         }.await;
         let released = if !handed_off {
             if let Some(owned) = lock {
@@ -616,7 +807,13 @@ async fn change(
         let value = outcome?;
         released?;
         closed?;
-        Ok::<_, StoreError>(value)
+        let (account, inline_admission, response) = value;
+        if let Some(inline_admission) = inline_admission {
+            inline_admission
+                .run(auth.clone(), account, direct_vod, owner.clone())
+                .await?;
+        }
+        Ok::<_, StoreError>(response)
     });
     operation.await.map_err(|_| {
         StoreError::StatusBody(
@@ -630,8 +827,17 @@ pub(crate) async fn create(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     body: Body,
-) -> Result<(StatusCode, Json<Value>), StoreError> {
-    change(auth, peer, headers, None, body, false).await
+) -> Response {
+    match change(auth, peer, headers, None, body, false).await {
+        Ok((status, value)) if value.0["account_type"] == "XC" => {
+            match crate::provider_reads::xc_account_reply(&value.0, true) {
+                Ok(response) => (status, response).into_response(),
+                Err(error) => error.into_response(),
+            }
+        }
+        Ok(reply) => reply.into_response(),
+        Err(error) => crate::provider_reads::provider_validation_error(error),
+    }
 }
 pub(crate) async fn put(
     State(auth): State<AuthService>,
@@ -648,8 +854,17 @@ pub(crate) async fn patch(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     body: Body,
-) -> Result<(StatusCode, Json<Value>), StoreError> {
-    change(auth, peer, headers, Some(id), body, true).await
+) -> Response {
+    match change(auth, peer, headers, Some(id), body, true).await {
+        Ok((status, value)) if value.0["account_type"] == "XC" => {
+            match crate::provider_reads::xc_account_reply(&value.0, false) {
+                Ok(response) => (status, response).into_response(),
+                Err(error) => error.into_response(),
+            }
+        }
+        Ok(reply) => reply.into_response(),
+        Err(error) => crate::provider_reads::provider_validation_error(error),
+    }
 }
 
 /// Source account Collector executes inside the already-open channel atomic.
@@ -663,7 +878,7 @@ pub(crate) async fn delete_in_collector(
     if c.protocol_transaction_is_idle().await? {
         return Err(unsupported());
     }
-    delete_preflight(c, id).await?;
+    let delete_vod_categories = delete_preflight(c, id).await?;
     // The Source Collector bulk-deletes profiles, then sends their post_delete
     // receivers in reverse primary-key order. Preserve that boundary rather
     // than invoking standalone delete (which opens an inner transaction).
@@ -698,6 +913,14 @@ pub(crate) async fn delete_in_collector(
             .after_profile_delete_in_collector(c, id, profile, owner.clone())
             .await?;
     }
+    // Ordinary category-only XC Collector: preserve global/shared/orphan
+    // categories and every other account's memberships exactly as Source does.
+    if delete_vod_categories {
+        sqlx::query("DELETE FROM vod_m3uvodcategoryrelation WHERE m3u_account_id=$1")
+            .bind(id)
+            .execute(&mut *c)
+            .await?;
+    }
     sqlx::query("DELETE FROM m3u_m3uaccount WHERE id=$1")
         .bind(id)
         .execute(&mut *c)
@@ -705,7 +928,7 @@ pub(crate) async fn delete_in_collector(
     crate::provider_schedule::legacy_delete(c, &format!("m3u_account-refresh-{id}")).await?;
     Ok(())
 }
-async fn delete_preflight(c: &mut PgConnection, id: i64) -> Result<(), StoreError> {
+async fn delete_preflight(c: &mut PgConnection, id: i64) -> Result<bool, StoreError> {
     no_custom_triggers(c).await?;
     let account: Option<(bool, String)> =
         sqlx::query_as("SELECT locked,account_type FROM m3u_m3uaccount WHERE id=$1")
@@ -718,12 +941,26 @@ async fn delete_preflight(c: &mut PgConnection, id: i64) -> Result<(), StoreErro
     if is_locked {
         return Err(locked());
     }
-    if kind != "STD" {
+    if !matches!(kind.as_str(), "STD" | "XC") {
         return Err(unsupported());
     }
     // VOD orphan cleanup is a different Source Collector/signal domain; do not
     // silently delete its relation rows or leave orphan movies/series behind.
-    let vod:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM vod_m3umovierelation WHERE m3u_account_id=$1 UNION ALL SELECT 1 FROM vod_m3useriesrelation WHERE m3u_account_id=$1 UNION ALL SELECT 1 FROM vod_m3uepisoderelation WHERE m3u_account_id=$1 UNION ALL SELECT 1 FROM vod_m3uvodcategoryrelation WHERE m3u_account_id=$1)").bind(id).fetch_one(&mut*c).await?;
+    // Actual SourceXC11 delete removes only this account's category relations;
+    // even newly orphaned global VODCategory rows survive. Content collectors
+    // remain guarded separately; do not infer their cleanup from categories.
+    let xc = kind == "XC";
+    if xc {
+        let custom_triggers: bool = sqlx::query_scalar(
+            "SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled<>'D' AND tgrelid='vod_m3uvodcategoryrelation'::regclass)",
+        )
+        .fetch_one(&mut *c)
+        .await?;
+        if custom_triggers {
+            return Err(unsupported());
+        }
+    }
+    let vod:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM vod_m3umovierelation WHERE m3u_account_id=$1 UNION ALL SELECT 1 FROM vod_m3useriesrelation WHERE m3u_account_id=$1 UNION ALL SELECT 1 FROM vod_m3uepisoderelation WHERE m3u_account_id=$1) OR (NOT $2 AND EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation WHERE m3u_account_id=$1))").bind(id).bind(xc).fetch_one(&mut*c).await?;
     if vod {
         return Err(unsupported());
     }
@@ -746,7 +983,7 @@ async fn delete_preflight(c: &mut PgConnection, id: i64) -> Result<(), StoreErro
     if notices > 128 || dismissals > 1024 {
         return Err(unsupported());
     }
-    Ok(())
+    Ok(xc)
 }
 pub(crate) async fn delete(
     State(auth): State<AuthService>,

@@ -453,7 +453,7 @@ impl serde_json::ser::Formatter for ProviderJsonFormatter {
         }
     }
 }
-fn provider_reply<T: serde::Serialize + ?Sized>(
+pub(super) fn provider_reply<T: serde::Serialize + ?Sized>(
     value: &T,
 ) -> Result<axum::response::Response, StoreError> {
     use axum::response::IntoResponse;
@@ -641,6 +641,113 @@ macro_rules! nested {
 }
 nested!(profiles, profile_detail, Profiles);
 nested!(filters, filter_detail, Filters);
+// Actual XC11 raw create response order, before inline Groups changes status.
+pub(super) fn xc_account_reply(
+    value: &Value,
+    create: bool,
+) -> Result<axum::response::Response, StoreError> {
+    let mut ordered = Map::new();
+    for name in [
+        "id",
+        "name",
+        "server_url",
+        "file_path",
+        "server_group",
+        "max_streams",
+        "is_active",
+        "created_at",
+        "updated_at",
+        "filters",
+        "user_agent",
+        "profiles",
+        "locked",
+        "channel_groups",
+        "refresh_interval",
+        "cron_expression",
+        "custom_properties",
+        "account_type",
+        "username",
+        "stale_stream_days",
+        "priority",
+        "status",
+        "last_message",
+        "earliest_expiration",
+        "all_expirations",
+        "password",
+        "enable_vod",
+        "auto_enable_new_groups_live",
+        "auto_enable_new_groups_vod",
+        "auto_enable_new_groups_series",
+        "hash_key",
+        "exp_date",
+    ] {
+        if !create && name == "cron_expression" {
+            continue;
+        }
+        if !create && name == "exp_date" {
+            ordered.insert("cron_expression".into(), value["cron_expression"].clone());
+        }
+        ordered.insert(name.into(), value[name].clone());
+    }
+    if let Some(groups) = value["channel_groups"].as_array() {
+        ordered.insert(
+            "channel_groups".into(),
+            Value::Array(
+                groups
+                    .iter()
+                    .map(|group| {
+                        let mut fields = Map::new();
+                        for name in [
+                            "channel_group",
+                            "enabled",
+                            "auto_channel_sync",
+                            "auto_sync_channel_start",
+                            "auto_sync_channel_end",
+                            "custom_properties",
+                            "is_stale",
+                            "last_seen",
+                            "stream_count",
+                        ] {
+                            fields.insert(name.into(), group[name].clone());
+                        }
+                        Value::Object(fields)
+                    })
+                    .collect(),
+            ),
+        );
+    }
+    provider_reply(&Value::Object(ordered))
+}
+async fn account_detail_headers(
+    mut response: axum::response::Response,
+) -> axum::response::Response {
+    if response.status() != axum::http::StatusCode::INTERNAL_SERVER_ERROR {
+        response.headers_mut().insert(
+            axum::http::header::ALLOW,
+            axum::http::HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
+        );
+        response.headers_mut().insert(
+            axum::http::header::VARY,
+            axum::http::HeaderValue::from_static("Accept"),
+        );
+    }
+    response
+}
+async fn account_collection_headers(
+    mut response: axum::response::Response,
+) -> axum::response::Response {
+    if response.status() != axum::http::StatusCode::INTERNAL_SERVER_ERROR {
+        response.headers_mut().insert(
+            axum::http::header::ALLOW,
+            axum::http::HeaderValue::from_static("GET, POST, HEAD, OPTIONS"),
+        );
+        response.headers_mut().insert(
+            axum::http::header::VARY,
+            axum::http::HeaderValue::from_static("Accept"),
+        );
+    }
+    response
+}
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route(
@@ -649,14 +756,17 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/m3u/accounts/",
-            get(accounts).post(crate::provider_account_writes::create),
+            get(accounts)
+                .post(crate::provider_account_writes::create)
+                .layer(axum::middleware::map_response(account_collection_headers)),
         )
         .route(
             "/api/m3u/accounts/{parent}/",
             get(account_detail)
                 .patch(crate::provider_account_writes::patch)
                 .put(crate::provider_account_writes::put)
-                .delete(crate::provider_account_writes::delete),
+                .delete(crate::provider_account_writes::delete)
+                .layer(axum::middleware::map_response(account_detail_headers)),
         )
         .route(
             "/api/m3u/accounts/{parent}/auto-created-channels-count/",

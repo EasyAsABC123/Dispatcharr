@@ -1,7 +1,7 @@
 //! Source51 normal Redis/Celery publications and token-owned rehash handoff.
 //! Uses the already shared NotificationCache transport, no Store→job-transport edge.
-use crate::core_settings_special_budget::Scratch;
-use crate::{AuthService, StoreError};
+use crate::core_settings_special_budget::{Charge, Scratch};
+use crate::{AuthService, CoreProfilePublication, CoreTaskPublication, StoreError};
 use serde::Serialize;
 use serde_json::{json, Value};
 use sqlx::Row;
@@ -142,11 +142,70 @@ pub(crate) async fn publish(
     args: Value,
     kwargs: Value,
 ) -> Result<String, StoreError> {
+    let (raw, id, charge) = build_frame(auth, scratch, task, args, kwargs)?;
+    if let Some(broker) = auth.core_task_broker.get() {
+        let publication = CoreTaskPublication::new(raw, &id)?;
+        broker
+            .publish(publication, auth.core_publication_owner(charge))
+            .await?;
+        return Ok(id);
+    }
+    if auth.normal_core_task_broker {
+        return Err(StoreError::Unsupported(
+            "Normal Core task broker has not been composed",
+        ));
+    }
+    // Legacy qualified constructors retain their original explicit cache-DB
+    // publication path; normal Main above can never fall through to this path.
+    let cache = auth.notification_cache.as_ref().ok_or_else(unavailable)?;
+    // The existing cache's physical task carries this charge and original request
+    // token after logical error/observer loss; no second writer slot is acquired.
+    let cache = cache.clone().with_retained_scope(charge);
+    let mut binding = redis::cmd("SADD");
+    binding
+        .arg("_kombu.binding.celery")
+        .arg("celery\u{6}\u{16}\u{6}\u{16}celery");
+    let _: i64 = cache.command_settled(binding).await?;
+    let mut push = redis::cmd("LPUSH");
+    push.arg("celery").arg(raw);
+    let _: i64 = cache.command_settled(push).await?;
+    Ok(id)
+}
+
+pub(crate) async fn publish_profiles_root(
+    auth: &AuthService,
+    scratch: &Scratch,
+    account: i64,
+) -> Result<CoreProfilePublication, StoreError> {
+    let broker = auth.core_task_broker.get().ok_or(StoreError::Unsupported(
+        "Normal Core task broker has not been composed",
+    ))?;
+    let (raw, id, charge) = build_frame(
+        auth,
+        scratch,
+        "apps.m3u.tasks.refresh_account_profiles",
+        json!([account]),
+        json!({}),
+    )?;
+    let publication = CoreTaskPublication::new(raw, &id)?;
+    broker
+        .publish_profiles_root(publication, auth.core_publication_owner(charge))
+        .await
+}
+
+fn build_frame(
+    auth: &AuthService,
+    scratch: &Scratch,
+    task: &str,
+    args: Value,
+    kwargs: Value,
+) -> Result<(Vec<u8>, String, Arc<Charge>), StoreError> {
     use base64::Engine;
     if ![
         "core.tasks.rehash_streams",
         "apps.epg.tasks.parse_programs_for_tvg_id",
         "apps.m3u.tasks.refresh_m3u_groups",
+        "apps.m3u.tasks.refresh_account_profiles",
         "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
     ]
     .contains(&task)
@@ -225,33 +284,7 @@ pub(crate) async fn publish(
     if raw.len() > 65536 {
         return Err(unavailable());
     }
-    if let Some(broker) = auth.core_task_broker.get() {
-        let publication = crate::core_task_broker::CoreTaskPublication::new(raw, &id)?;
-        broker
-            .publish(publication, auth.core_publication_owner(charge))
-            .await?;
-        return Ok(id);
-    }
-    if auth.normal_core_task_broker {
-        return Err(StoreError::Unsupported(
-            "Normal Core task broker has not been composed",
-        ));
-    }
-    // Legacy qualified constructors retain their original explicit cache-DB
-    // publication path; normal Main above can never fall through to this path.
-    let cache = auth.notification_cache.as_ref().ok_or_else(unavailable)?;
-    // The existing cache's physical task carries this charge and original request
-    // token after logical error/observer loss; no second writer slot is acquired.
-    let cache = cache.clone().with_retained_scope(charge);
-    let mut binding = redis::cmd("SADD");
-    binding
-        .arg("_kombu.binding.celery")
-        .arg("celery\u{6}\u{16}\u{6}\u{16}celery");
-    let _: i64 = cache.command_settled(binding).await?;
-    let mut push = redis::cmd("LPUSH");
-    push.arg("celery").arg(raw);
-    let _: i64 = cache.command_settled(push).await?;
-    Ok(id)
+    Ok((raw, id, charge))
 }
 pub(crate) fn changed(old: &[String], new: &[String]) -> bool {
     old.iter().collect::<BTreeSet<_>>() != new.iter().collect::<BTreeSet<_>>()

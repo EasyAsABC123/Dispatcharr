@@ -87,7 +87,10 @@ impl Http {
     pub fn router(self) -> Router {
         Router::new()
             .route("/api/m3u/refresh-account-info/{profile}/", any(handle))
-            .route("/api/m3u/refresh/{account}/", any(refresh_handle))
+            .route(
+                "/api/m3u/refresh/{account}/",
+                any(refresh_handle).layer(axum::middleware::map_response(refresh_response_headers)),
+            )
             .route("/api/m3u/refresh/", any(refresh_all_handle))
             .route("/api/m3u/accounts/{account}/refresh-vod/", any(vod_handle))
             .route(
@@ -161,6 +164,19 @@ async fn handle(
         Ok(Err(error)) => error.into_response(),
         Err(_) => unavailable().into_response(),
     }
+}
+async fn refresh_response_headers(mut response: Response) -> Response {
+    if response.status() != axum::http::StatusCode::INTERNAL_SERVER_ERROR {
+        response.headers_mut().insert(
+            axum::http::header::ALLOW,
+            axum::http::HeaderValue::from_static("POST, OPTIONS"),
+        );
+        response.headers_mut().insert(
+            axum::http::header::VARY,
+            axum::http::HeaderValue::from_static("Accept"),
+        );
+    }
+    response
 }
 async fn refresh_handle(
     State(api): State<Http>,
