@@ -251,3 +251,13 @@ describe the supplied credentials. Two route declarations retain null methods.
 
 The register has 378 partial Source assignments and 420 unassigned operations.
 All prior 373 assignments and 793 unaffected operation dictionaries remain exact.
+
+## Retained Connect collection observations
+
+The [Connect collection binding](../scripts/rust-contracts/retained-connect/bindings.json)
+adds eight retained Original GET and sixteen POST responses at
+`/api/connect/integrations/`. It records role and parser precedence, three
+creations with observable SQL effects, and thirteen rejections preserving SQL
+state. Both underlying packaged runner exits and cleanup results stay attached.
+
+The register has 380 partial Source assignments and 418 unassigned operations.

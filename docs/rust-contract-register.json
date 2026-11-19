@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "ce2285f4409ab30951c581d60f11b54b04208b10abac48b7806c71c535990d79",
+    "scripts/rust-contracts/executable-source-inputs.json": "07d3cbd1fb8e65aff09ec3f438eddbad09428ff007de1f8bd180244e8097f57f",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -45,11 +45,12 @@
     "scripts/rust-contracts/retained-image22-controls/bindings.json": "3de11379faa601354aab3cf1faaa976724dfefdb54cb6eb58bb29926ee3a8c44",
     "scripts/rust-contracts/retained-repository-socket-switch/bindings.json": "f909413998e013506341c1cee9da908af95af1e6c37a9fab2c0f647353c5e995",
     "scripts/rust-contracts/retained-admin-models/bindings.json": "549a30ca43da1120ed4a3108d314a1ff79123ecc1d890f6acb8b24b683fc7e66",
-    "scripts/rust-contracts/retained-dvr-xc/bindings.json": "556f9bb313ed642dd75a05bedb5120008f4ba50784cb000df74add3cb9ed1a94"
+    "scripts/rust-contracts/retained-dvr-xc/bindings.json": "556f9bb313ed642dd75a05bedb5120008f4ba50784cb000df74add3cb9ed1a94",
+    "scripts/rust-contracts/retained-connect/bindings.json": "2baed770de482644dd8a6aa5a65d98fe196c6210aecca292093dcecac4afef5b"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 378,
+    "operations": 380,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -230,6 +231,11 @@
         "path": "scripts/rust-contracts/retained-dvr-xc/bindings.json",
         "sha256": "556f9bb313ed642dd75a05bedb5120008f4ba50784cb000df74add3cb9ed1a94",
         "kind": "retained_original_DVR_XC_playback_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-connect/bindings.json",
+        "sha256": "2baed770de482644dd8a6aa5a65d98fe196c6210aecca292093dcecac4afef5b",
+        "kind": "retained_original_Connect_collection_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -211138,15 +211144,240 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin API key": {
+                "fixture_role_or_supplied_credential": "admin API key",
+                "complete": false
+              },
+              "admin bearer empty collection": {
+                "fixture_role_or_supplied_credential": "admin bearer empty collection",
+                "complete": false
+              },
+              "admin bearer seeded collection": {
+                "fixture_role_or_supplied_credential": "admin bearer seeded collection",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "inactive admin bearer": {
+                "fixture_role_or_supplied_credential": "inactive admin bearer",
+                "complete": false
+              },
+              "invalid bearer plus admin API key": {
+                "fixture_role_or_supplied_credential": "invalid bearer plus admin API key",
+                "complete": false
+              },
+              "standard bearer": {
+                "fixture_role_or_supplied_credential": "standard bearer",
+                "complete": false
+              },
+              "viewer bearer": {
+                "fixture_role_or_supplied_credential": "viewer bearer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin API key",
+              "admin bearer empty collection",
+              "admin bearer seeded collection",
+              "anonymous",
+              "inactive admin bearer",
+              "invalid bearer plus admin API key",
+              "standard bearer",
+              "viewer bearer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "original_transport": "packaged Original TCP HTTP",
+            "actual_runner_exit": 1,
+            "outer_passed": false,
+            "exact_cleanup_passed": true,
+            "other_failed_gate": {
+              "name": "status-parity:/proxy/ts/stream/not-a-channel",
+              "passed": false,
+              "details": {
+                "python_status": 404,
+                "rust_status": 404,
+                "python_body_sha256": "d870486684062c79c0f177319e065555337713c314ea687952666e74a2c10186",
+                "rust_body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f"
+              }
+            },
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "candidate_revision": "07dee4ee867913a773bdc789e5325eb148ae427f",
+            "retained_input_sha256": {
+              "artifacts/rust/m7-connect-list-candidate78-1/receipt.json": "be75bf3a35a30bae1ee7698b4fa97f29d00d374a47a387615bafe1900545915c",
+              "artifacts/rust/m7-connect-list-candidate78-1/execution.json": "e9a46a4da9ffca981ef3c0c087f3f8deaf4f746d0e4fd2d92b6de32a8364d159",
+              "artifacts/rust/m7-connect-list-candidate78-1/independent-cleanup.json": "68d8ee1c6464ddf255f34ac8b51cf5723494b9bf21d429d9d1de86c670ecdddd",
+              "artifacts/rust/m7-connect-list-candidate78-1/evidence/integration.json": "9a03cfe1e783a476d36a0c570ab1f542045a57abbb4f71e3831d51c8ac4e2b97",
+              "artifacts/rust/m7-connect-list-candidate78-1/evidence/tool-source/scripts/rust-account-contracts/probes.py": "dda7ad1dbaf163a53947241ed7f5818ef84a5b9c23c8be3480312dd29d969344",
+              "artifacts/rust/m7-connect-list-candidate78-1/evidence/tool-source/scripts/rust-integration/run.py": "2dfd35c593b82858b89160c2f9038817a4412604d5b498e7b7b60dd69b0bad3c"
+            }
+          },
+          "assertions": [
+            "Match the literal Original collection path, method, fixture role and retained HTTP response",
+            "Preserve observed response bodies by projection digest and scoped database observation"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 8,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-04cdc39881caace6c343:GET",
+            "method": "GET",
+            "source_action": "list",
+            "owning_milestone": "M5",
+            "pattern_exact": "api/connect/^integrations/$",
+            "source_handler": "apps.connect.api_views.IntegrationViewSet",
+            "fixture_id": "m7-connect-list-candidate78-1",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "admin API key",
+              "admin bearer empty collection",
+              "admin bearer seeded collection",
+              "anonymous",
+              "inactive admin bearer",
+              "invalid bearer plus admin API key",
+              "standard bearer",
+              "viewer bearer"
+            ],
+            "source_role_specs": {
+              "admin API key": {
+                "fixture_role_or_supplied_credential": "admin API key",
+                "complete": false
+              },
+              "admin bearer empty collection": {
+                "fixture_role_or_supplied_credential": "admin bearer empty collection",
+                "complete": false
+              },
+              "admin bearer seeded collection": {
+                "fixture_role_or_supplied_credential": "admin bearer seeded collection",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "inactive admin bearer": {
+                "fixture_role_or_supplied_credential": "inactive admin bearer",
+                "complete": false
+              },
+              "invalid bearer plus admin API key": {
+                "fixture_role_or_supplied_credential": "invalid bearer plus admin API key",
+                "complete": false
+              },
+              "standard bearer": {
+                "fixture_role_or_supplied_credential": "standard bearer",
+                "complete": false
+              },
+              "viewer bearer": {
+                "fixture_role_or_supplied_credential": "viewer bearer",
+                "complete": false
+              }
+            },
+            "fully_verified": false,
+            "assertions": [
+              "Match the literal Original collection path, method, fixture role and retained HTTP response",
+              "Preserve observed response bodies by projection digest and scoped database observation"
+            ],
+            "result": {
+              "Source_case_observations": 8,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "cases": [
+              {
+                "case": "empty-collection",
+                "role": "admin bearer empty collection",
+                "method": "GET",
+                "path": "/api/connect/integrations/",
+                "status": 200,
+                "response_projection_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+                "observed_effects": [],
+                "observation_pointer": "/checks/18"
+              },
+              {
+                "case": "admin-seeded-collection",
+                "role": "admin bearer seeded collection",
+                "method": "GET",
+                "path": "/api/connect/integrations/",
+                "status": 200,
+                "response_projection_sha256": "2eb5657b7e9ad85f436029c1c4078aba4f26722c932d609d163ea66a9fdea009",
+                "observed_effects": [],
+                "observation_pointer": "/checks/19"
+              },
+              {
+                "case": "anonymous",
+                "role": "anonymous",
+                "method": "GET",
+                "path": "/api/connect/integrations/",
+                "status": 401,
+                "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "observed_effects": [],
+                "observation_pointer": "/checks/20"
+              },
+              {
+                "case": "standard",
+                "role": "standard bearer",
+                "method": "GET",
+                "path": "/api/connect/integrations/",
+                "status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "observed_effects": [],
+                "observation_pointer": "/checks/21"
+              },
+              {
+                "case": "viewer",
+                "role": "viewer bearer",
+                "method": "GET",
+                "path": "/api/connect/integrations/",
+                "status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "observed_effects": [],
+                "observation_pointer": "/checks/22"
+              },
+              {
+                "case": "inactive-admin",
+                "role": "inactive admin bearer",
+                "method": "GET",
+                "path": "/api/connect/integrations/",
+                "status": 401,
+                "response_projection_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+                "observed_effects": [],
+                "observation_pointer": "/checks/23"
+              },
+              {
+                "case": "admin-api-key",
+                "role": "admin API key",
+                "method": "GET",
+                "path": "/api/connect/integrations/",
+                "status": 200,
+                "response_projection_sha256": "2eb5657b7e9ad85f436029c1c4078aba4f26722c932d609d163ea66a9fdea009",
+                "observed_effects": [],
+                "observation_pointer": "/checks/24"
+              },
+              {
+                "case": "invalid-bearer-before-api-key",
+                "role": "invalid bearer plus admin API key",
+                "method": "GET",
+                "path": "/api/connect/integrations/",
+                "status": 401,
+                "response_projection_sha256": "7f60d6426f0897eb4973a613658786ee9e2ceca048bbd60efad2b8b023791ef5",
+                "observed_effects": [],
+                "observation_pointer": "/checks/25"
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-04cdc39881caace6c343:POST",
@@ -211155,15 +211386,332 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin bearer": {
+                "fixture_role_or_supplied_credential": "admin bearer",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "inactive admin bearer": {
+                "fixture_role_or_supplied_credential": "inactive admin bearer",
+                "complete": false
+              },
+              "standard bearer": {
+                "fixture_role_or_supplied_credential": "standard bearer",
+                "complete": false
+              },
+              "viewer bearer": {
+                "fixture_role_or_supplied_credential": "viewer bearer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin bearer",
+              "anonymous",
+              "inactive admin bearer",
+              "standard bearer",
+              "viewer bearer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "original_transport": "packaged Original TCP HTTP",
+            "actual_runner_exit": 1,
+            "outer_passed": false,
+            "exact_cleanup_passed": true,
+            "other_failed_gate": {
+              "name": "status-parity:/proxy/ts/stream/not-a-channel",
+              "passed": false,
+              "details": {
+                "python_status": 404,
+                "rust_status": 404,
+                "python_body_sha256": "d870486684062c79c0f177319e065555337713c314ea687952666e74a2c10186",
+                "rust_body_sha256": "c8d3eae160a892e32837db3dcae515e843e5383fef52b8141940c8bcf8b6d59f"
+              }
+            },
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "candidate_revision": "07dee4ee867913a773bdc789e5325eb148ae427f",
+            "retained_input_sha256": {
+              "artifacts/rust/m7-connect-create-candidate78-source-1/receipt.json": "39c12e149d96ff5fdea46c42036e4a47d34e248df9fe805995fb1f9ad05352a7",
+              "artifacts/rust/m7-connect-create-candidate78-source-1/execution.json": "f119ea661799e324214dcae7bb07bcf3f0861f0a311de632fb3a95e7dd2e620e",
+              "artifacts/rust/m7-connect-create-candidate78-source-1/independent-cleanup.json": "7b795011e5ab9e7041da1a2a2f58f54f7611934a3fababf16d307bcb18e45989",
+              "artifacts/rust/m7-connect-create-candidate78-source-1/evidence/integration.json": "a00a7ef489cc0e6f8b4b248165ee5b17de0ac76c5999ac4faf4d5bea936bc397",
+              "artifacts/rust/m7-connect-create-candidate78-source-1/evidence/tool-source/scripts/rust-account-contracts/probes.py": "0e8171062156013c7a94b28974508afac982a0f4bc8260bccb307564f229f1c8"
+            },
+            "owned_webhook_guard": {
+              "pointer": "/checks/34",
+              "issued_only_original_collection_post": true,
+              "original_creation_post_count": 16,
+              "actual_owned_webhook_requests_before": 0,
+              "actual_owned_webhook_requests_after": 0
+            },
+            "native_create_exercised": false
+          },
+          "assertions": [
+            "Match the literal Original collection path, method, fixture role and retained HTTP response",
+            "Preserve observed response bodies by projection digest and scoped database observation"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 16,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-04cdc39881caace6c343:POST",
+            "method": "POST",
+            "source_action": "create",
+            "owning_milestone": "M5",
+            "pattern_exact": "api/connect/^integrations/$",
+            "source_handler": "apps.connect.api_views.IntegrationViewSet",
+            "fixture_id": "m7-connect-create-candidate78-source-1",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "admin bearer",
+              "anonymous",
+              "inactive admin bearer",
+              "standard bearer",
+              "viewer bearer"
+            ],
+            "source_role_specs": {
+              "admin bearer": {
+                "fixture_role_or_supplied_credential": "admin bearer",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "inactive admin bearer": {
+                "fixture_role_or_supplied_credential": "inactive admin bearer",
+                "complete": false
+              },
+              "standard bearer": {
+                "fixture_role_or_supplied_credential": "standard bearer",
+                "complete": false
+              },
+              "viewer bearer": {
+                "fixture_role_or_supplied_credential": "viewer bearer",
+                "complete": false
+              }
+            },
+            "fully_verified": false,
+            "assertions": [
+              "Match the literal Original collection path, method, fixture role and retained HTTP response",
+              "Preserve observed response bodies by projection digest and scoped database observation"
+            ],
+            "result": {
+              "Source_case_observations": 16,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "cases": [
+              {
+                "case": "anonymous",
+                "role": "anonymous",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 401,
+                "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/18"
+              },
+              {
+                "case": "standard",
+                "role": "standard bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/19"
+              },
+              {
+                "case": "viewer",
+                "role": "viewer bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/20"
+              },
+              {
+                "case": "inactive-admin",
+                "role": "inactive admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 401,
+                "response_projection_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/21"
+              },
+              {
+                "case": "role-before-json-parser",
+                "role": "standard bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/22"
+              },
+              {
+                "case": "admin-malformed-json",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 400,
+                "response_projection_sha256": "c80851c8ba52b294853884d11a7435e2d5034b17fcabbe8782f5b08b973716cf",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/23"
+              },
+              {
+                "case": "required-fields",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 400,
+                "response_projection_sha256": "15c8fa945a2dc5dad7fc841cf12a1568c86e8b1091eb99e7f8d4417b3f713abb",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/24"
+              },
+              {
+                "case": "invalid-field-aggregation",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 400,
+                "response_projection_sha256": "58e6a982e647f1692cc13497b4b968b2f6854fefd7a6f9aa24e586f5c4b5e473",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/25"
+              },
+              {
+                "case": "top-level-array",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 400,
+                "response_projection_sha256": "a2a6b84f286ebd8e0272c947ed4f7b39a9a8ba6a68c1143faf44e6d4ea052edc",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/26"
+              },
+              {
+                "case": "missing-webhook-url",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 400,
+                "response_projection_sha256": "80ce4f2e987202f4cbf687fddd9647befcddd83825918359dbd39734eed7f83d",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/27"
+              },
+              {
+                "case": "non-string-webhook-url",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 400,
+                "response_projection_sha256": "80ce4f2e987202f4cbf687fddd9647befcddd83825918359dbd39734eed7f83d",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/28"
+              },
+              {
+                "case": "unsupported-model-type",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 400,
+                "response_projection_sha256": "d810dbeee17b12f441817b355a56384e882b7e2ac09f2d7f790d12881392a23d",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/29"
+              },
+              {
+                "case": "missing-local-script",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 400,
+                "response_projection_sha256": "35ee3b75a41f00b35bc2c86582573a2206fb39da1af8e335271320dbe2577ee7",
+                "observed_effects": [
+                  "database_rows_and_sequence_unchanged"
+                ],
+                "observation_pointer": "/checks/30"
+              },
+              {
+                "case": "stock-webhook",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 201,
+                "response_projection_sha256": "02a36b59b18667df707ee669aede50497fd6766df03f98b682344fe402de7cf9",
+                "observed_effects": [
+                  "exactly_one_integration_and_sequence_advance_without_subscriptions_or_deliveries",
+                  "utc_creation_in_request_window"
+                ],
+                "observation_pointer": "/checks/31"
+              },
+              {
+                "case": "duplicate-name-and-default-enabled",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 201,
+                "response_projection_sha256": "ebe41279238bea37d0e18b3bfe87d0f6ef37bab8cb1e5ec134816bee77606550",
+                "observed_effects": [
+                  "exactly_one_integration_and_sequence_advance_without_subscriptions_or_deliveries",
+                  "utc_creation_in_request_window"
+                ],
+                "observation_pointer": "/checks/32"
+              },
+              {
+                "case": "existing-directory-script-path",
+                "role": "admin bearer",
+                "method": "POST",
+                "path": "/api/connect/integrations/",
+                "status": 201,
+                "response_projection_sha256": "514c5200f7b43eff974266cc69ddf0ab80d434515549b8b062180d61cde38b7c",
+                "observed_effects": [
+                  "exactly_one_integration_and_sequence_advance_without_subscriptions_or_deliveries",
+                  "utc_creation_in_request_window"
+                ],
+                "observation_pointer": "/checks/33"
+              }
+            ]
+          }
         }
       ]
     },

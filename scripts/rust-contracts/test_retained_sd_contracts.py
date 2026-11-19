@@ -14,6 +14,7 @@ import retained_image22_controls_contracts
 import retained_repository_socket_switch_contracts
 import retained_admin_model_contracts
 import retained_dvr_xc_contracts
+import retained_connect_contracts
 import shutil
 import tempfile
 import unittest
@@ -61,6 +62,7 @@ class RetainedSDControls(unittest.TestCase):
     def test_only_two_assignments_preserve_796_full_rows_and_161_prior_definitions(self):
         register = json.loads((ROOT / 'docs/rust-contract-register.json').read_bytes())
         import retained_xc_refresh_contracts
+        retained_connect_contracts.restore_pre_connect(ROOT, register['runtime_routes'])
         retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT, register['runtime_routes'])
         retained_admin_model_contracts.restore_pre_admin_models(ROOT, register['runtime_routes'])
         retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT, register['runtime_routes'])
@@ -92,6 +94,7 @@ class RetainedSDControls(unittest.TestCase):
         for key, name in [('non_HTTP_candidates', 'non_HTTP_candidates_sha256'), ('openapi_operations', 'OpenAPI_operations_sha256'), ('observations_for_methods_not_declared_in_discovery', 'legacy_undeclared_method_observations_sha256')]: self.assertEqual(subject.digest(register[key]), proof[name])
         bindings = json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes())
         mapping = source_contracts.apply(ROOT, rows, bindings)
+        retained_connect_contracts.restore_pre_connect(ROOT, rows)
         retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT, rows)
         retained_admin_model_contracts.restore_pre_admin_models(ROOT, rows)
         retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT, rows)
@@ -106,7 +109,7 @@ class RetainedSDControls(unittest.TestCase):
         retained_range_source10_contracts.restore_pre_range(rows)
         retained_source12_contracts.restore_pre_Source12(rows)
         framework_suite_contracts.restore_pre_framework(rows)
-        self.assertEqual(rows, current); self.assertEqual(mapping['operations'], 373)
+        self.assertEqual(rows, current); self.assertEqual(mapping['operations'], 380)
         self.assertEqual(len(mapping['unmapped_method_Source_observations']), 23)
         self.assertEqual(len([x for x in mapping['unmapped_method_Source_observations'] if x['route_id'] == 'route-7e6941c073eccaa2b6dd']), 6)
         source_contracts.apply(ROOT, rows, bindings)

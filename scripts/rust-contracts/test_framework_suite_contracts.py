@@ -13,6 +13,7 @@ import retained_image22_controls_contracts
 import retained_repository_socket_switch_contracts
 import retained_admin_model_contracts
 import retained_dvr_xc_contracts
+import retained_connect_contracts
 import framework_suite_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -40,6 +41,7 @@ class FrameworkSuiteControls(unittest.TestCase):
     p.write_bytes(raw)
  def test_ten_additions_preserve_prior163_and788_whole_dictionaries(self):
   r=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_connect_contracts.restore_pre_connect(ROOT,r['runtime_routes'])
   retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT,r['runtime_routes'])
   retained_admin_model_contracts.restore_pre_admin_models(ROOT,r['runtime_routes'])
   retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT,r['runtime_routes'])
@@ -71,7 +73,8 @@ class FrameworkSuiteControls(unittest.TestCase):
   self.assertEqual(subject.digest(r['openapi_operations']),proof['OpenAPI_sha256'])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],373)
+  self.assertEqual(mapping['operations'],380)
+  retained_connect_contracts.restore_pre_connect(ROOT,rows)
   retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT,rows)
   retained_admin_model_contracts.restore_pre_admin_models(ROOT,rows)
   retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT,rows)
@@ -87,6 +90,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   retained_source12_contracts.restore_pre_Source12(rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_connect_contracts.restore_pre_connect(ROOT,rows)
   retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT,rows)
   retained_admin_model_contracts.restore_pre_admin_models(ROOT,rows)
   retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT,rows)
