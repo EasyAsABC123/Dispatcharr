@@ -164,10 +164,32 @@ impl NotificationCache {
     pub(crate) fn physical_operations(&self) -> usize {
         16 - self.permits.available_permits()
     }
-    pub(crate) async fn get(&self, key: &str) -> Result<Option<Vec<u8>>, StoreError> {
+    fn bounded_get(key: &str) -> redis::Cmd {
         let mut cmd = redis::cmd("EVAL");
         cmd.arg("if redis.call('STRLEN',KEYS[1])>1048576 then return redis.error_reply('cache value exceeds limit') end return redis.call('GET',KEYS[1])").arg(1).arg(key);
-        self.command(cmd).await
+        cmd
+    }
+
+    pub(crate) async fn get(&self, key: &str) -> Result<Option<Vec<u8>>, StoreError> {
+        self.command(Self::bounded_get(key)).await
+    }
+
+    pub(crate) async fn get_auth_history(&self, key: &str) -> Result<Option<Vec<u8>>, StoreError> {
+        let permit = self.admit().await.map_err(|_| unavailable())?;
+        let command = Self::bounded_get(key);
+        let result = self.query_admitted(command.clone(), permit.clone()).await;
+        match result {
+            Err(CacheOperationError::Redis(error)) if error.is_connection_dropped() => {
+                // ConnectionManager reconnects but returns the first socket
+                // failure. Reading the same bounded history again is safe.
+                tracing::debug!(
+                    "Reconnecting after authentication throttle cache read disconnected"
+                );
+                self.query_admitted(command, permit).await
+            }
+            result => result,
+        }
+        .map_err(|_| unavailable())
     }
     pub(crate) async fn invalidate_user_agent(&self, version: &str) -> Result<(), StoreError> {
         // CoreSettings signals ignore connectivity/timeout errors, but do not

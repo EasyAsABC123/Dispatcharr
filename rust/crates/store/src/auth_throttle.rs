@@ -78,7 +78,7 @@ pub(crate) async fn check(
 ) -> Result<Decision, StoreError> {
     let key = scope.key(ip);
     for _ in 0..16 {
-        let raw = cache.get(&key).await.map_err(|_| failed())?;
+        let raw = cache.get_auth_history(&key).await.map_err(|_| failed())?;
         let at = SystemTime::now()
             .duration_since(UNIX_EPOCH)
             .map_err(|_| failed())?
