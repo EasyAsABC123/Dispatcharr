@@ -23,7 +23,8 @@ remains in progress.
 category-only account deletion. The first Native test found a profile-worker
 TLS trust mismatch and exited after four calls. The corrected snapshot passes
 all SDK117 gates, including 1,240 workspace tests, and its Docker release build.
-Native XC runtime parity remains in progress.
+The corrected Native run exits 0 after all twelve HTTP calls and all five task
+results match. Literal wire and state differences remain under review.
 
 [Candidate67](rust-milestone-batch67.md) passes all four SDK115 gates (1,240 passed, zero failed, 802 ignored), its exact-revision Docker build, six runtime package families and three installed dependency lifecycle tests. Ten new Source preview/create observations are captured and reviewed. The affected ten-context Native batch completes with actual exit1: four passed/six failed, with eleven-container/ten-generation cleanup. Guide, logos and live/VOD pass; import, scope and version-observer failures are retained. The three-context retry exits 0, all ten new HTTP comparisons pass, and 23 retained calls qualify through the corrected observer. This covers the selected contexts. Both backends pass the fresh 100-viewer protocol pilot. The [24-phase comparison](rust-candidate67-viewing-comparison.md) passes all twelve scoped live-viewing budget pairs. Broader performance acceptance and full milestone closure remain open.
 

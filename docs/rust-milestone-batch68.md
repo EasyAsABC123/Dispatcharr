@@ -49,6 +49,25 @@ tests. The [corrected Docker build](../scripts/rust-integration/milestone-batch6
 exited 0 in 326.482 seconds with exactly one source file changed from the
 first build.
 
-The repeated viewing measurements apply to Candidate67. Candidate68 runtime
-parity and broader milestones remain open. The Native retry is running against
-the corrected image.
+The [corrected Native run](../scripts/rust-integration/milestone-batch68/native-xc11-attempt2.json)
+exited 0 and completed all twelve HTTP calls. Four containers and three
+captured process generations were confirmed absent. The first active create
+recorded three successful provider HTTP calls with zero TLS errors. The
+comparison matched request and status projections, response field order,
+provider exchanges, task publication lineage, broker state, and media-origin
+state for all twelve calls. All five tasks completed successfully with matching
+result values, including the first refresh's profile child. Redis journal
+review verified the Native refresh result's staged write, rename, expiry, and
+publication after the first observer missed the staged write.
+
+First refresh added one stream and left existing channels intact. Deleting the
+live-only account removed its stream. Deleting the VOD account removed three
+relationships and preserved all three category rows. The literal comparison
+still differs on headers, clocks, schedule IDs, cache observations and
+WebSocket details. Known WebSocket differences include progress elapsed-time
+precision and error-event key order. Runtime capture and task success are
+verified. Full byte-level parity remains open.
+
+The [repeated viewing measurements](rust-candidate67-viewing-comparison.md)
+apply to Candidate67. Broader milestones and Candidate68 performance
+acceptance remain open.
