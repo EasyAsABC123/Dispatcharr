@@ -14,8 +14,14 @@ The explicit URL path retains precedence. The qualification reproduced the
 previous decoding mismatch using the actual SQLx parser and checked the
 corrected values against the pinned Original settings.
 
-Exact-image Compose checks cover the paired deletion and a real PostgreSQL
-login and read through the packaged operator.
+The exact Docker image matched nine deletion cases per backend and passed
+the 15 integrated Connect lifecycle checks. The packaged operator passed
+seven real PostgreSQL cases covering discrete credentials, explicit URL
+precedence and incorrect credentials. Each scope independently verified
+cleanup. The first deletion attempt stopped at its preflight. Its corrected
+fixture used the same immutable image.
+
+[Exact-image package checks](../scripts/rust-integration/milestone-batch83/packaged.json)
 
 [Focused checks](../scripts/rust-integration/milestone-batch83/focused.json)
 · [Original deletion capture](../scripts/rust-integration/milestone-batch83/original-delete.json)
