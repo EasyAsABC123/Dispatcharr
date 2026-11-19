@@ -28,8 +28,23 @@ class IntegrationRunnerTests(unittest.TestCase):
         self.assertEqual(runner.contract_suites('groups,core'),['core','groups'])
         self.assertEqual(runner.contract_suites('proxy_auth'),['proxy_auth'])
         self.assertNotIn('proxy_auth',runner.contract_suites('all'))
+        self.assertEqual(runner.contract_suites('recording_read'), ['recording_read'])
+        self.assertNotIn('recording_read', runner.contract_suites('all'))
+        self.assertEqual(runner.contract_suites('recording_read,core'), ['core', 'recording_read'])
         for value in ('','unknown','core,core','all,groups'):
             with self.assertRaises(ValueError):runner.contract_suites(value)
+
+    def test_recording_read_requires_immutable_prebuilt_candidate(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            target = Path(temporary) / 'must-not-exist'
+            for flags in ([], ['--candidate-image', 'fixture:test'],
+                          ['--candidate-build-manifest', 'build.json']):
+                with mock.patch('sys.argv', ['run.py', '--output', str(target), '--contract-suites',
+                                             'recording_read', *flags]), contextlib.redirect_stderr(io.StringIO()):
+                    with self.assertRaises(SystemExit) as result:
+                        runner.main()
+                    self.assertEqual(result.exception.code, 2)
+                self.assertFalse(target.exists())
 
     def test_keep_preserves_source_mount_and_records_cleanup_path(self):
         with tempfile.TemporaryDirectory() as output:

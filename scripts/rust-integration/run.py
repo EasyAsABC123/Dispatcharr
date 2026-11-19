@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 CONTRACT_SUITES=('accounts','account_crud','app_data','core','profiles','memberships',
                  'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads','server_group_crud','filter_crud','core_utilities','core_stream_crud','notifications')
-OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash','connect_reads','connect_logs','connect_create','connect_lifecycle')
+OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash','connect_reads','connect_logs','connect_create','connect_lifecycle','recording_read')
 
 
 def contract_suites(value):
@@ -130,6 +130,9 @@ def main():
     except ValueError as error:parser.error(str(error))
     if (set(selected_suites)&{'proxy_auth','auth_hash'} or args.trusted_proxy_fixture) and not (args.trusted_proxy_fixture and len(selected_suites)==1 and selected_suites[0] in {'proxy_auth','auth_hash'}):
         parser.error('proxy_auth/auth_hash require --trusted-proxy-fixture and must run as the only selected suite')
+    recording_read = 'recording_read' in selected_suites
+    if recording_read and not (args.candidate_image and args.candidate_build_manifest):
+        parser.error('recording_read requires --candidate-image and --candidate-build-manifest')
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     if any(output.iterdir()):
@@ -164,6 +167,10 @@ def main():
                            BASELINE_EVIDENCE_DIR=str(output), FIXTURE_SECONDS='180')
         compose = ['docker', 'compose', '-p', project, '-f', str(tool_source/'docker/compose.rust-playback.yml'),
                    '-f', str(overlay)]
+        if recording_read:
+            recording_overlay = tool_source/'scripts/rust-integration/recording_read_assets/compose.yml'
+            report['recording_read_overlay_sha256'] = hashlib.sha256(recording_overlay.read_bytes()).hexdigest()
+            compose += ['-f', str(recording_overlay)]
         if args.trusted_proxy_fixture:
             trust=output/'trusted-proxy-fixture.yml'
             trust.write_text('services:\n  baseline:\n    environment:\n      DISPATCHARR_TRUSTED_PROXIES: "0.0.0.0/0,::/0"\n  candidate:\n    environment:\n      DISPATCHARR_TRUSTED_PROXIES: "0.0.0.0/0,::/0"\n')
@@ -228,6 +235,17 @@ def main():
             container=command(compose+['ps','-q','candidate']).strip()
             inspection=json.loads(command(['docker','inspect',container]))[0]
             report['candidate_image_binding']=validate_candidate_image(manifest,inspection)
+            if recording_read:
+                code, state = http(candidate + '/health/ready')
+                env = {item.split('=', 1)[0] for item in inspection['Config']['Env'] if '=' in item}
+                ordinary = (code == 200 and 'selected_workers' not in state
+                            and not {'RUST_EXPERIMENTAL_SELECTED_JOBS', 'RUST_EXPERIMENTAL_SELECTED_BEAT'} & env)
+                owned_data = [item['Destination'] for item in inspection['Mounts']] == ['/data']
+                packaged = ordinary and owned_data and inspection['Config']['User'] == '65532:65532'
+                record('ordinary-recording-package', packaged,
+                       {'selected_workers_unconfigured': ordinary, 'owned_data_only': owned_data})
+                if not packaged:
+                    raise RuntimeError('recording_read requires ordinary Main and the managed media mount')
             for path in ('/proxy/ts/status', '/proxy/ts/stream/not-a-channel'):
                 old, new = http(baseline + path), http(candidate + path)
                 record('status-parity:' + path, old[0] == new[0] and digest(old[1])==digest(new[1]),
@@ -284,7 +302,8 @@ def main():
                                  ('notifications','run_notifications'),
                                  ('proxy_auth','run_proxy_auth'),('environment_ip','run_environment_ip'),('auth_hash','run_auth_hash'),
                                  ('connect_reads','run_connect_reads'),('connect_logs','run_connect_logs'),
-                                 ('connect_create','run_connect_create'),('connect_lifecycle','run_connect_lifecycle')]:
+                                 ('connect_create','run_connect_create'),('connect_lifecycle','run_connect_lifecycle'),
+                                 ('recording_read','run_recording_read')]:
                 if suite in selected_suites:
                     if suite=='core' and 'account_crud' in selected_suites:
                         # Both independent suites deliberately test password
@@ -295,7 +314,7 @@ def main():
                         report.setdefault('suite_isolation',[]).append({'before_suite':'core','reason':'independent login contracts share real per-IP 3/min budgets','wait_seconds':62})
                         for _ in range(2):time.sleep(31)
                     extra=(seed,) if suite=='channel_stops' else ()
-                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash','connect_reads','connect_logs','connect_create','connect_lifecycle'):
+                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash','connect_reads','connect_logs','connect_create','connect_lifecycle','recording_read'):
                         extra=(metadata_fixture,)
                     getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
             if args.api_resource_matrix:

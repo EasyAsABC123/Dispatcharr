@@ -539,6 +539,15 @@ def run_connect_create(http, baseline, candidate, accounts, record, fixture):
     module.run(http, baseline, candidate, accounts, record, fixture, digest)
 
 
+def run_recording_read(http, baseline, candidate, accounts, record, fixture):
+    validate_fixture(baseline, candidate, accounts)
+    spec = importlib.util.spec_from_file_location(
+        'recording_read_probes', Path(__file__).with_name('recording_read_probes.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http, baseline, candidate, accounts, record, fixture, digest)
+
+
 def run_connect_lifecycle(http, baseline, candidate, accounts, record, fixture):
     validate_fixture(baseline, candidate, accounts)
     spec = importlib.util.spec_from_file_location(

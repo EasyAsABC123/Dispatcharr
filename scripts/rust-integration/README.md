@@ -91,6 +91,26 @@ create, subscription selection, edit, Enabled toggle, and deletion requests
 on both backends. It checks database effects, fixture isolation, and zero
 webhook delivery in one owned Compose project.
 
+The opt-in `recording_read` suite checks the ordinary packaged DVR list,
+completed recording playback and seeks, and playback of a seeded active HLS
+manifest and segment. It verifies the exact returned media bytes, the Redis
+viewer heartbeat, and unchanged recording rows and sequence. The additional
+Compose overlay seeds synthetic H.264/AAC fixtures in the project’s managed
+data volume only when this suite is selected. The suite requires an exact
+prebuilt candidate and its manifest. To select it independently, run:
+
+```sh
+python3 -B scripts/rust-integration/run.py --output artifacts/rust/recording-read-1 \
+  --candidate-image dispatcharr-rust-candidate:integration-1 \
+  --candidate-build-manifest artifacts/rust/candidate-build-1/build.json \
+  --contract-suites recording_read
+```
+
+The small completed MKV and active HLS fixture contain synthetic FFmpeg test
+video and sine audio. They are frozen inputs, so the integration runner needs
+no host FFmpeg executable to generate them. The standard Compose bootstrap
+still supplies the original runtime, schema, tokens, and decoder.
+
 Assertions cover the currently implemented account contracts and native media
 slice. The report records status/body digests, role checks, token interoperability,
 and real FFmpeg decoding. Account probes include owner updates, API-key rotation
