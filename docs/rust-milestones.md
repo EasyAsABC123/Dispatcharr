@@ -12,6 +12,11 @@ alone does not establish application parity or an application performance gain.
 The [complete parity plan](rust-complete-parity-plan.md) assigns parallel work
 across M0–M9 and proposes M10/M11 as separate rollout stages.
 
+[The late Redis commit replay](../scripts/rust-core-contracts/late-commit-replay/receipt.json)
+preserved all 23 paired streaming core cases. A fresh Rust writer recovered
+at the physically committed index and delivered both ordered payloads before
+releasing its viewer, local cache and scoped Redis keys.
+
 The [scoped PostgreSQL cutover and rollback](../scripts/rust-integration/cutover-candidate87-scoped.json)
 used copied data, the same loopback URL and authenticated session, and one
 fixture edit confined to the copy. The Original channel, media, schema and
@@ -29,7 +34,8 @@ The [120-second playback and guide diagnostic](rust-m9-playback-refresh-diagnost
 passed on Candidate91 with ten viewers sharing one owned upstream and
 20 decoded clips. A second trial on Candidate94 passed with the longer
 H.264/AAC origin and two distinct XMLTV jobs during ten-viewer playback.
-The two-hour soak remains open.
+A third resource trial passed the full 120 seconds with the one-slot provider,
+complete resource censuses and exact cleanup. The two-hour soak remains open.
 
 The [completed DVR performance attempt](../scripts/rust-perf/candidate88-dvr/README.md)
 verified three one-viewer pairs. Median paired whole-stack CPU fell 45.05%
@@ -46,6 +52,10 @@ and expiry, qualifying all 12 calls without replay. It records pre-setup create
 responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
+
+[The programme mutation and admin redirect checkpoint](rust-milestone-batch99.md)
+records the focused Rust tests and the separate 16-operation Original
+management capture. Packaged Native comparison remains open.
 
 [The guide clear, HDHomeRun and XC alias checkpoint](rust-milestone-batch98.md)
 records three passed Compose scopes on one image. The Original public admin

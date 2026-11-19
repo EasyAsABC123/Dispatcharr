@@ -585,9 +585,22 @@ async fn actual_production_source13_trace() {
         .await
         .unwrap();
     physical_finish_controls(&url).await;
-    logical_timeout_retains_writer_until_reply(&url).await;
+    let late_commit_replay = logical_timeout_retains_writer_until_reply(&url).await;
     physical_reader_reply_controls(&url).await;
-    let report = json!({"passed":true,"scope":"actualproductionwriter/assembly/InputStore/Channel/History13trace; no performance transfer","records":records,"producer_finish_retains_actual_reads":true,"manager_stop_separate":true,"expired_payload_cleanup_was_immediate":removed,"actual_history_and_final_owner":true,"physical_cached_metadata_and_historical_read_scopes":true,"physical_cancelled_publish_and_finish":true,"logical_timeout_retains_writer_until_actual_reply":true,"native_owner_fences_separate_from_source_buffer":true});
+    let report = json!({
+        "passed": true,
+        "scope": "actualproductionwriter/assembly/InputStore/Channel/History13trace; no performance transfer",
+        "records": records,
+        "producer_finish_retains_actual_reads": true,
+        "manager_stop_separate": true,
+        "expired_payload_cleanup_was_immediate": removed,
+        "actual_history_and_final_owner": true,
+        "physical_cached_metadata_and_historical_read_scopes": true,
+        "physical_cancelled_publish_and_finish": true,
+        "logical_timeout_retains_writer_until_actual_reply": true,
+        "native_late_commit_replay": late_commit_replay,
+        "native_owner_fences_separate_from_source_buffer": true,
+    });
     std::fs::write(
         std::env::var("M1_CORE_OUTPUT").unwrap(),
         serde_json::to_vec_pretty(&report).unwrap(),
@@ -734,7 +747,7 @@ async fn physical_finish_controls(url: &str) {
         .unwrap();
 }
 
-async fn logical_timeout_retains_writer_until_reply(url: &str) {
+async fn logical_timeout_retains_writer_until_reply(url: &str) -> Value {
     let mut redis = redis::Client::open(url)
         .unwrap()
         .get_multiplexed_async_connection()
@@ -748,21 +761,25 @@ async fn logical_timeout_retains_writer_until_reply(url: &str) {
         .query_async(&mut redis)
         .await
         .unwrap();
+    let retention = Duration::from_secs(30);
+    let storage_limits = InputConfig {
+        max_chunk_bytes: 376,
+        max_channel_bytes: 376 * 16,
+        max_chunks: 16,
+        chunk_ttl: retention,
+        preserve_source_era: true,
+        ..Default::default()
+    };
     let store = InputStore::connect(
         url,
         InputConfig {
-            max_chunk_bytes: 376,
-            max_channel_bytes: 376 * 16,
-            max_chunks: 16,
             command_timeout: Duration::from_millis(40),
-            chunk_ttl: Duration::from_secs(2),
-            preserve_source_era: true,
-            ..Default::default()
+            ..storage_limits.clone()
         },
     )
     .await
     .unwrap();
-    let cache = Channel::new(376, Duration::from_secs(2), 1).unwrap();
+    let cache = Channel::new(376, retention, 1).unwrap();
     let writer = input_writer::InputWriter::new(
         store.clone(),
         key.clone(),
@@ -774,6 +791,9 @@ async fn logical_timeout_retains_writer_until_reply(url: &str) {
     )
     .await
     .unwrap();
+    let first = [packet(44, 256), packet(45, 256)].concat();
+    let second = [packet(47, 256), packet(48, 256)].concat();
+    let first_received_at = epoch_seconds();
     let _: () = redis::cmd("CLIENT")
         .arg("PAUSE")
         .arg(350)
@@ -783,11 +803,7 @@ async fn logical_timeout_retains_writer_until_reply(url: &str) {
         .unwrap();
     assert_eq!(
         writer
-            .publish(
-                [packet(44, 256), packet(45, 256)].concat().into(),
-                false,
-                epoch_seconds()
-            )
+            .publish(first.clone().into(), false, first_received_at)
             .await,
         Err(dispatcharr_stream_runtime::Error::Stopped)
     );
@@ -815,13 +831,179 @@ async fn logical_timeout_retains_writer_until_reply(url: &str) {
         .await
         .unwrap();
     assert_eq!(actual, 1);
-    assert!(store.cleanup(&key, owner).await.unwrap());
+
+    // Re-admit a producer against the same live owner through a fresh
+    // transport and empty cache. Its first accepted publish uses new media.
+    let reopened_store = InputStore::connect(url, storage_limits).await.unwrap();
+    let late = reopened_store.get(&key, 1).await.unwrap().unwrap();
+    assert_eq!(late.as_ref(), first.as_slice());
+    assert_eq!(late.received_at, first_received_at);
+    drop(late);
+    assert!(reopened_store.get(&key, 2).await.unwrap().is_none());
+    eprintln!("M1 late commit settled: Redis index=1, original local index=0");
+
+    let reopened_cache = Channel::new(376, retention, 1).unwrap();
+    let reopened = input_writer::InputWriter::new(
+        reopened_store.clone(),
+        key.clone(),
+        owner.to_owned(),
+        reopened_cache.clone(),
+        Arc::new(AtomicU64::new(0)),
+        true,
+        None,
+    )
+    .await
+    .unwrap();
+    let reopened_initial_index = reopened.index();
+    assert_eq!(reopened_initial_index, 1);
+    assert_eq!(reopened_cache.retained_bytes(), 0);
+
+    let second_received_at = epoch_seconds().max(first_received_at + 0.001);
+    let published_index = reopened
+        .publish(second.clone().into(), false, second_received_at)
+        .await
+        .unwrap();
+    assert_eq!(published_index, 2);
+    assert_eq!(reopened.index(), 2);
+    assert_eq!(writer.index(), 0);
+    let cached_bytes = reopened_cache.retained_bytes();
+    assert_eq!(cached_bytes, second.len());
+
+    let snapshot = reopened_store.snapshot(&key).await.unwrap();
+    let indexed: Vec<u64> = snapshot.chunks.iter().map(|stamp| stamp.sequence).collect();
+    assert_eq!(snapshot.owner.as_deref(), Some(owner));
+    assert_eq!(snapshot.index, 2);
+    assert_eq!(indexed, [1, 2]);
+    assert!(!snapshot.chunks.iter().any(|stamp| stamp.discontinuity));
+    assert_eq!(snapshot.chunks[0].received_at, first_received_at);
+    assert_eq!(snapshot.chunks[1].received_at, second_received_at);
+    drop(snapshot);
+
+    let mut retained_bytes = 0;
+    for (sequence, expected) in [(1, &first), (2, &second)] {
+        let payload = reopened_store.get(&key, sequence).await.unwrap().unwrap();
+        assert_eq!(payload.as_ref(), expected.as_slice());
+        retained_bytes += payload.as_ref().len();
+    }
+    assert_eq!(retained_bytes, 752);
+    assert!(reopened_store.get(&key, 3).await.unwrap().is_none());
+
+    let history = history::History {
+        store: reopened_store.clone(),
+        channel: key.clone(),
+        owner: owner.to_owned(),
+        initial_behind_chunks: 0,
+        read_timeout: Duration::from_secs(1),
+        retained: None,
+    };
+    let mut viewer = reopened_cache.subscribe(Duration::from_secs(1)).unwrap();
+    history
+        .position(&mut viewer, Duration::from_secs(60))
+        .await
+        .unwrap();
+    assert_eq!(viewer.next_sequence(), 1);
+    let first_payload = history::next(&mut viewer, Some(&history))
+        .await
+        .unwrap()
+        .unwrap();
+    assert!(matches!(first_payload, history::Payload::Historical { .. }));
+    assert_eq!(first_payload.as_ref(), first.as_slice());
+    assert!(!first_payload.discontinuity());
+    assert_eq!(viewer.next_sequence(), 2);
+    drop(first_payload);
+
+    let second_payload = history::next(&mut viewer, Some(&history))
+        .await
+        .unwrap()
+        .unwrap();
+    assert!(matches!(second_payload, history::Payload::Cached(_)));
+    assert_eq!(second_payload.as_ref(), second.as_slice());
+    assert!(!second_payload.discontinuity());
+    let replay_next_sequence = viewer.next_sequence();
+    assert_eq!(replay_next_sequence, 3);
+    let active_viewers = reopened_cache.viewer_count();
+    assert_eq!(active_viewers, 1);
+    drop(second_payload);
+    reopened.finish().await.unwrap();
+    assert!(history::next(&mut viewer, Some(&history))
+        .await
+        .unwrap()
+        .is_none());
+    drop(viewer);
+    eprintln!("M1 late commit replayed: historical sequence 1, cached sequence 2, then EOF");
+
+    assert!(reopened_store.cleanup(&key, owner).await.unwrap());
     cache.stop();
-    let _: () = redis::cmd("DEL")
-        .arg(format!("live:channel:{key}:owner"))
+    reopened_cache.stop();
+    let remaining_viewers = cache.viewer_count() + reopened_cache.viewer_count();
+    assert_eq!(remaining_viewers, 0);
+    let remaining_cache_bytes = cache.retained_bytes() + reopened_cache.retained_bytes();
+    assert_eq!(remaining_cache_bytes, 0);
+
+    let owner_key = format!("live:channel:{key}:owner");
+    let owner_removed: u64 = redis::cmd("DEL")
+        .arg(&owner_key)
         .query_async(&mut redis)
         .await
         .unwrap();
+    assert_eq!(owner_removed, 1);
+    let remaining_keys: u64 = redis::cmd("EXISTS")
+        .arg(owner_key)
+        .arg(
+            [
+                "rust_owner",
+                "index",
+                "chunk_timestamps",
+                "discontinuities",
+                "rust_gc_fence",
+                "chunk:1",
+                "chunk:2",
+                "chunk:3",
+            ]
+            .map(|suffix| format!("live:channel:{key}:input:buffer:{suffix}"))
+            .as_slice(),
+        )
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert_eq!(remaining_keys, 0);
+    let gc_catalog: Option<String> = redis::cmd("HGET")
+        .arg("dispatcharr:rust:input:gc:catalog")
+        .arg(&key)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    let gc_due: Option<f64> = redis::cmd("ZSCORE")
+        .arg("dispatcharr:rust:input:gc:due")
+        .arg(&key)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert!(gc_catalog.is_none());
+    assert!(gc_due.is_none());
+
+    json!({
+        "old_writer_final_index": writer.index(),
+        "late_redis_index": actual,
+        "new_writer_initial_index": reopened_initial_index,
+        "new_published_index": published_index,
+        "stored_sequences": indexed,
+        "stored_payload_bytes": retained_bytes,
+        "new_cache_payload_bytes": cached_bytes,
+        "replay": [
+            {"sequence": 1, "kind": "historical", "bytes": first.len()},
+            {"sequence": 2, "kind": "cached", "bytes": second.len()},
+        ],
+        "payloads_match": true,
+        "next_sequence": replay_next_sequence,
+        "eof_after_finish": true,
+        "peak_fixture_viewers": active_viewers,
+        "remaining_viewers": remaining_viewers,
+        "remaining_cache_bytes": remaining_cache_bytes,
+        "remaining_scoped_redis_keys": remaining_keys,
+        "gc_catalog_absent": gc_catalog.is_none(),
+        "gc_due_absent": gc_due.is_none(),
+    })
 }
 
 struct ScopeMarker(Arc<AtomicBool>);

@@ -67,3 +67,14 @@ and exact Compose cleanup passed. The next observer retries a full census
 within the same sampling deadline when process membership races. Rejected
 attempts remain in its journal, and permission failures still fail the census.
 [Second resource trial receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/resource-short-attempt2.json)
+
+The third short resource trial passed all 28 checks. Ten viewers shared
+one upstream and one provider slot through the full 120 seconds. Both
+XMLTV jobs reached their distinct durable results. All 20 media clips
+passed strict decoding. The observer completed 25 active counter ticks
+and 11 complete censuses in each idle window. At 60 seconds the baseline
+process inventory changed three times. A complete fourth census passed
+within the original bound. Post-idle resource limits passed, and all five
+owned container generations retired. This result qualifies the scoped
+resource and provider setup for the two-hour diagnostic.
+[Passing short resource receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/resource-short-attempt3.json)

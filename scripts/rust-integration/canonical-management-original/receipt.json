@@ -1,0 +1,498 @@
+{
+  "actual_launcher_exit": 0,
+  "candidate_comparison_performed": false,
+  "cases": {
+    "channel_regex": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "POST",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 34,
+          "actual_body_sha256": "7eef36ad51abc3e536b313137639044f718c3a9acfce5746eacad6798d5bf666",
+          "actual_status": 200,
+          "method": "POST",
+          "role": "admin"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "POST",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-fea4e07648f86a38ed69:POST",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^channels/edit/bulk-regex/$"
+    },
+    "logo_delete": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "DELETE",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 0,
+          "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "actual_status": 204,
+          "method": "DELETE",
+          "role": "admin"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "DELETE",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-a71786620f7727bad11a:DELETE",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^logos/(?P<pk>[^/.]+)/$"
+    },
+    "logo_list": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "GET",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 292,
+          "actual_body_sha256": "e67ac27639134556a29dee1a736a3439d095d8febd7fb7f656dbdfd49612ce47",
+          "actual_status": 200,
+          "method": "GET",
+          "role": "standard"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "GET",
+          "role": "viewer"
+        }
+      },
+      "contract_id": "route-2d9b525e474caa7ca58a:GET",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^logos/$"
+    },
+    "logo_upload": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "POST",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 205,
+          "actual_body_sha256": "f972ad487fdc34eba100df8d1f361aff9bfca4a3b255bb24b0603836b01c88f5",
+          "actual_status": 201,
+          "method": "POST",
+          "role": "admin"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "POST",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-392d441ef7d0c20a513f:POST",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^logos/upload/$"
+    },
+    "profile_delete": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "DELETE",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 0,
+          "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "actual_status": 204,
+          "method": "DELETE",
+          "role": "admin"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "DELETE",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-bc28dbffca264c415359:DELETE",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^profiles/(?P<pk>[^/.]+)/$"
+    },
+    "profile_detail": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "GET",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 61,
+          "actual_body_sha256": "3e3a02c4acf85618e90228d3a04981006740655f2c3ef6be9786820001e538a2",
+          "actual_status": 200,
+          "method": "GET",
+          "role": "standard"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "GET",
+          "role": "viewer"
+        },
+        "unassigned_profile": {
+          "actual_body_bytes": 55,
+          "actual_body_sha256": "95582532af7a8a3e24be1393bdfe8e90a5512f084b75193c07f5e62627369b0d",
+          "actual_status": 404,
+          "method": "GET",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-bc28dbffca264c415359:GET",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^profiles/(?P<pk>[^/.]+)/$"
+    },
+    "profile_list": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "GET",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "af141263d12df7d5ff03c951ca0657d5d6502e187b9304d0689b19cf0312663e",
+          "actual_status": 200,
+          "method": "GET",
+          "role": "standard"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "GET",
+          "role": "viewer"
+        }
+      },
+      "contract_id": "route-f140a95f4ea400cc74f0:GET",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^profiles/$"
+    },
+    "program_create_defect": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "POST",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 145,
+          "actual_body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+          "actual_status": 500,
+          "method": "POST",
+          "role": "admin"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "POST",
+          "role": "standard"
+        },
+        "serializer_required_fields": {
+          "actual_body_bytes": 117,
+          "actual_body_sha256": "76773c94fb0f31bfa7343907c7e33493aac729b476f036d5cc7a59e7e0858fd8",
+          "actual_status": 400,
+          "method": "POST",
+          "role": "admin"
+        }
+      },
+      "contract_id": "route-55aadc5558ca3b8248b1:POST",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/epg/^programs/$"
+    },
+    "program_delete": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "DELETE",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 0,
+          "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "actual_status": 204,
+          "method": "DELETE",
+          "role": "admin"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "DELETE",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-82723694fa5ab6ee5f1e:DELETE",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/epg/^programs/(?P<pk>[^/.]+)/$"
+    },
+    "program_patch": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "PATCH",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 292,
+          "actual_body_sha256": "1357c0f7b8f84fd90e27b4910a485c07f1d1c6dd0cb6a88ad73a500a7b2ec0da",
+          "actual_status": 200,
+          "method": "PATCH",
+          "role": "admin"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "PATCH",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-82723694fa5ab6ee5f1e:PATCH",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/epg/^programs/(?P<pk>[^/.]+)/$"
+    },
+    "program_put": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "PUT",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 289,
+          "actual_body_sha256": "29cd327e71997ab4c204f097e56d13cbdb9a1bd92176c33e5036e59f9bd732c3",
+          "actual_status": 200,
+          "method": "PUT",
+          "role": "admin"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "PUT",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-82723694fa5ab6ee5f1e:PUT",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/epg/^programs/(?P<pk>[^/.]+)/$"
+    },
+    "recurring_delete": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "DELETE",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 0,
+          "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "actual_status": 204,
+          "method": "DELETE",
+          "role": "dvr_manager"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "DELETE",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-146f339bc7288e206400:DELETE",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^recurring-rules/(?P<pk>[^/.]+)/$"
+    },
+    "recurring_detail": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "GET",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 274,
+          "actual_body_sha256": "e6143a59acb0fca8611021c6a6601700d43ec8dc953b546674a2a29590f00da1",
+          "actual_status": 200,
+          "method": "GET",
+          "role": "dvr_manager"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "GET",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-146f339bc7288e206400:GET",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^recurring-rules/(?P<pk>[^/.]+)/$"
+    },
+    "recurring_patch": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "PATCH",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 273,
+          "actual_body_sha256": "daf69f4461a3376a595e2e8ab9eb776b0e43507793a79f61167fdf940a12c701",
+          "actual_status": 200,
+          "method": "PATCH",
+          "role": "dvr_manager"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "PATCH",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-146f339bc7288e206400:PATCH",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^recurring-rules/(?P<pk>[^/.]+)/$"
+    },
+    "recurring_put": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "PUT",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 274,
+          "actual_body_sha256": "1a94ad93fa731995b17b3084dc7802507712d01f2f586aa03337ad645b924d73",
+          "actual_status": 200,
+          "method": "PUT",
+          "role": "dvr_manager"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "PUT",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-146f339bc7288e206400:PUT",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^recurring-rules/(?P<pk>[^/.]+)/$"
+    },
+    "stream_delete": {
+      "actual": {
+        "anonymous": {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_status": 401,
+          "method": "DELETE",
+          "role": "anonymous"
+        },
+        "owned_business_case": {
+          "actual_body_bytes": 0,
+          "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "actual_status": 204,
+          "method": "DELETE",
+          "role": "admin"
+        },
+        "role_denial": {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_status": 403,
+          "method": "DELETE",
+          "role": "standard"
+        }
+      },
+      "contract_id": "route-2c78a0593b1b81930c61:DELETE",
+      "owned_state_verified": true,
+      "qualification": "passed",
+      "runtime_route": "api/channels/^streams/(?P<pk>[^/.]+)/$"
+    }
+  },
+  "evidence_sha256": {
+    "cleanup-execution": "151e44eab6fe7b4e56260b5d70fda71cdb0d49435acb2d0133710914fac22434",
+    "independent-cleanup": "3b80b3cff75cb8a7bcaf4648704b14c4ec3096b4422810f74a616e39b6d618c7",
+    "probe-execution": "c6194491a885f48eef9bf7533cd0fd149ce83d246d1f0f756cc355451d80a427",
+    "receipt": "7e744d5ac8c1f5fde6fc9ba54dcdb03c98751bdc881df76528021c79aea8b40f",
+    "startup-execution": "a91f1c9782cf0b70c60632100a0a1539210d6bde6caa9eaaf3611c55b21526ef"
+  },
+  "exact_cleanup": true,
+  "known_source_failure": "Program POST did not commit a row",
+  "milestone_accepted": false,
+  "routes_qualified": 16,
+  "scope": "Original-only exact canonical DRF workflow",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}
