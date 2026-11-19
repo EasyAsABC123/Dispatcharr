@@ -59,9 +59,10 @@ atomic guard, and the exact packaged React regex preview contract. The paired
 Auto Sync benchmark measured 16.72% lower CPU and 56.36% lower peak working set,
 with two full-scan p95 failures.
 [Paired Auto Sync benchmark](../scripts/rust-perf/candidate94-regex-preview/README.md)
-The follow-up batching correction passed its three focused Rust tests,
-workspace formatting and strict Store Clippy. The exact Compose comparison
-and performance replay are pending.
+The follow-up batching correction passed all 48 exact Compose checks.
+The repeat benchmark measured 18.08% lower CPU and 55.42% lower peak
+working set with equal work, with two full-scan p95 failures.
+[Paired batching replay](../scripts/rust-perf/candidate97-regex-preview/README.md)
 
 [The persisted System Logs checkpoint](rust-milestone-batch92.md)
 verifies metadata, cursor tail and attachments against the same read-only
