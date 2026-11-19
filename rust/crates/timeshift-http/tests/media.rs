@@ -1,6 +1,8 @@
 //! Native body/proxy contracts with fake authorization resolution only.
 //! HTTP, Redis, quota leases and body cancellation are actual implementations.
 //! Source-bound Store/Auth/Docker decode remains a separate required gate.
+mod peer_tail_gate;
+
 use axum::{
     body::Body,
     extract::{Path, State},
@@ -452,6 +454,155 @@ async fn explicit_peer_tail_probe_preserves_the_active_archive_and_its_quota() {
     assert_eq!(fixture.redis.get::<_, i64>(&counter).await.unwrap(), 1);
     drop(first);
     fixture.cleanup().await;
+}
+
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback HTTP/Redis"]
+async fn peer_tail_probe_fails_closed_after_a_physically_held_redis_revalidation() {
+    use peer_tail_gate::{Decision, Gate};
+
+    enum Fault {
+        Generation,
+        Cohort,
+        Disconnect,
+    }
+
+    for fault in [Fault::Generation, Fault::Cohort, Fault::Disconnect] {
+        let mut fixture = fixture().await;
+        fixture.resolver.mode.store(5, Ordering::SeqCst);
+        let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+        let session = fixture.mint().await;
+        let route = session.json()["playback_url"].as_str().unwrap().to_owned();
+        let pool = format!("timeshift:pool:{}", session.session_id);
+        let counter = format!("profile_connections:{}", fixture.resolver.profile);
+        let client = reqwest::Client::builder()
+            .timeout(Duration::from_secs(12))
+            .build()
+            .unwrap();
+        let first = client
+            .get(format!("{}{}", fixture.base, route))
+            .send()
+            .await
+            .unwrap();
+        assert_eq!(first.status(), 200);
+        let owner: String = fixture.redis.hget(&pool, "rust_owner_token").await.unwrap();
+        let old_profile: String = fixture.redis.hget(&pool, "profile_id").await.unwrap();
+        let origin_hits = fixture.hits.load(Ordering::SeqCst);
+        let generation_keys: Vec<String> = redis::cmd("KEYS")
+            .arg(format!("timeshift:stream_gen:*:{}", session.session_id))
+            .query_async(&mut fixture.redis)
+            .await
+            .unwrap();
+        let [generation]: [String; 1] = generation_keys.try_into().unwrap();
+        let old_generation: i64 = fixture.redis.get(&generation).await.unwrap();
+        let mut scripts = Vec::new();
+        for label in ["PEER_BUSY_PROBE", "CLAIM_IDLE"] {
+            let signature = format!("const {label}: &str = r#\"");
+            let (_, lua) = include_str!("../src/media_pool.rs")
+                .split_once(signature.as_str())
+                .unwrap();
+            let (lua, _) = lua.split_once("\"#;").unwrap();
+            let digest: String = redis::cmd("SCRIPT")
+                .arg("LOAD")
+                .arg(lua)
+                .query_async(&mut fixture.redis)
+                .await
+                .unwrap();
+            scripts.push(digest);
+        }
+        let [snapshot_script, claim_script]: [String; 2] = scripts.try_into().unwrap();
+        let mut gate = Gate::start(&redis_url, snapshot_script, claim_script, pool.clone()).await;
+        let peer = CatchupMedia::with_resolver(
+            fixture.resolver.clone(),
+            fixture.sessions.clone(),
+            fixture.coordinator.clone(),
+            &gate.url,
+            CatchupMediaConfig::default(),
+        )
+        .await
+        .unwrap();
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let peer_url = format!("http://{}{}", listener.local_addr().unwrap(), route);
+        let router = peer.clone().router();
+        fixture.tasks.push(tokio::spawn(async move {
+            axum::serve(
+                listener,
+                router.into_make_service_with_connect_info::<std::net::SocketAddr>(),
+            )
+            .await
+            .unwrap();
+        }));
+        let probe = tokio::spawn(async move {
+            client
+                .get(peer_url)
+                .header("Range", "bytes=1879744-1879999")
+                .send()
+                .await
+                .unwrap()
+        });
+        tokio::time::timeout(
+            Duration::from_secs(2),
+            gate.reached.wait_for(|reached| *reached),
+        )
+        .await
+        .expect("second physical peer snapshot did not reach the gate")
+        .unwrap();
+
+        match fault {
+            Fault::Generation => {
+                let _: () = redis::cmd("SET")
+                    .arg(&generation)
+                    .arg(old_generation + 1)
+                    .arg("KEEPTTL")
+                    .query_async(&mut fixture.redis)
+                    .await
+                    .unwrap();
+                gate.decision.send_replace(Decision::Forward);
+            }
+            Fault::Cohort => {
+                let _: () = fixture
+                    .redis
+                    .hset(&pool, "profile_id", fixture.resolver.profile + 1)
+                    .await
+                    .unwrap();
+                gate.decision.send_replace(Decision::Forward);
+            }
+            Fault::Disconnect => {
+                gate.decision.send_replace(Decision::Disconnect);
+            }
+        }
+        let response = probe.await.unwrap();
+        assert_eq!(response.status(), 503);
+        let expected = match fault {
+            Fault::Generation | Fault::Cohort => "Stream slot busy",
+            Fault::Disconnect => "Archive session service unavailable",
+        };
+        assert_eq!(response.text().await.unwrap(), expected);
+        assert_eq!(
+            gate.claims.load(Ordering::SeqCst),
+            0,
+            "failed peer probe attempted an ordinary archive claim"
+        );
+        assert_eq!(fixture.hits.load(Ordering::SeqCst), origin_hits);
+        assert_eq!(fixture.redis.get::<_, i64>(&counter).await.unwrap(), 1);
+        assert_eq!(
+            fixture
+                .redis
+                .hget::<_, _, String>(&pool, "rust_owner_token")
+                .await
+                .unwrap(),
+            owner
+        );
+        assert!(peer.shutdown().await);
+
+        let _: () = fixture
+            .redis
+            .hset(&pool, "profile_id", old_profile)
+            .await
+            .unwrap();
+        drop(first);
+        fixture.cleanup().await;
+    }
 }
 
 #[tokio::test]

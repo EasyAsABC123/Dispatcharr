@@ -378,6 +378,29 @@ fn validate(
             group_selection.push((id, enabled));
         }
     }
+    // The live group filter echoes the existing properties when changing
+    // orphan cleanup. Keep any other custom property changes separately guarded.
+    let xc_orphan_cleanup = !create
+        && partial
+        && old["account_type"] == "XC"
+        && saved["account_type"] == "XC"
+        && (old["custom_properties"].is_object() || old["custom_properties"].is_null())
+        && input.len() == 1
+        && input
+            .get("custom_properties")
+            .and_then(Value::as_object)
+            .is_some_and(|properties| {
+                matches!(
+                    properties
+                        .get("orphan_channel_cleanup")
+                        .and_then(Value::as_str),
+                    Some("always" | "preserve_customized" | "never")
+                ) && properties.iter().all(|(key, value)| {
+                    key == "orphan_channel_cleanup"
+                        || key == "hash_key"
+                        || old["custom_properties"].get(key) == Some(value)
+                })
+            });
     let xc_create = create && saved["account_type"] == "XC";
     if xc_create {
         for key in [
@@ -403,6 +426,7 @@ fn validate(
     if !xc_preferences
         && !xc_create
         && !xc_group_selection
+        && !xc_orphan_cleanup
         && (saved["account_type"] != "STD" || (!create && old["account_type"] != "STD"))
     {
         return Err(unsupported());
@@ -1191,6 +1215,63 @@ mod tests {
         assert!(validate_group_references(&ids, &[29, 11]).is_ok());
         keep_first_group_selections(&mut selection);
         assert_eq!(selection, [(11, false), (29, true)]);
+    }
+    #[test]
+    fn xc_live_group_filter_saves_orphan_cleanup_mode_only() {
+        let mut old = defaults();
+        old["name"] = json!("Owned XC");
+        old["account_type"] = json!("XC");
+        for active in [true, false] {
+            old["is_active"] = json!(active);
+            old["status"] = json!(if active { "success" } else { "disabled" });
+            for properties in [
+                json!({"enable_vod":true,"hash_key":"name,url","marker":{"old":1}}),
+                json!({"enable_vod":false,"orphan_channel_cleanup":"always"}),
+                Value::Null,
+            ] {
+                old["custom_properties"] = properties.clone();
+                for mode in ["always", "preserve_customized", "never"] {
+                    let mut incoming = properties.as_object().cloned().unwrap_or_default();
+                    incoming.insert("orphan_channel_cleanup".into(), json!(mode));
+                    // Incoming raw hash_key is ignored by the Original serializer.
+                    incoming.insert("hash_key".into(), json!("changed"));
+                    let mut expected = old.clone();
+                    let mut saved_props = properties.as_object().cloned().unwrap_or_default();
+                    saved_props.insert("orphan_channel_cleanup".into(), json!(mode));
+                    expected["custom_properties"] = Value::Object(saved_props);
+
+                    let input =
+                        Map::from_iter([("custom_properties".into(), Value::Object(incoming))]);
+                    let actual = validate(input, &old, "45 4 * * *", true, false).unwrap();
+                    assert_eq!(actual.saved, expected);
+                    assert_eq!(actual.cron, "45 4 * * *");
+                    assert!(!actual.hash_changed);
+                    assert_eq!(actual.expiration, None);
+                    assert!(actual.group_selection.is_empty());
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn xc_orphan_cleanup_does_not_admit_other_account_changes() {
+        let mut old = defaults();
+        old["name"] = json!("Owned XC");
+        old["account_type"] = json!("XC");
+        old["custom_properties"] = json!({"enable_vod":true,"marker":"keep"});
+        for input in [
+            json!({"custom_properties":{"orphan_channel_cleanup":"invalid"}}),
+            json!({"custom_properties":{"orphan_channel_cleanup":"never","enable_vod":false}}),
+            json!({"custom_properties":{"orphan_channel_cleanup":"never","marker":"new"}}),
+            json!({"custom_properties":{"orphan_channel_cleanup":"never","other_new_key":true}}),
+            json!({"custom_properties":{"orphan_channel_cleanup":"never"},"is_active":false}),
+            json!({"custom_properties":{"orphan_channel_cleanup":"never"},"hash_key":"name"}),
+        ] {
+            assert!(matches!(
+                validate(input.as_object().unwrap().clone(), &old, "", true, false),
+                Err(StoreError::Unsupported(_))
+            ));
+        }
     }
     #[test]
     fn missing_group_references_preserve_sparse_request_indices() {
