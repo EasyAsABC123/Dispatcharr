@@ -281,3 +281,13 @@ observer custody after the stopped-role log cap was reached. The outer controlle
 exited 1 and passed exact cleanup.
 
 The register has 401 partial Source assignments and 397 unassigned operations.
+
+## Retained Original Connect detail update and deletion
+
+The [Connect detail binding](../scripts/rust-contracts/retained-connect-detail/bindings.json)
+associates 14 PUT and seven DELETE responses with the ordinary Connect
+integration detail route. Four PUT successes and two DELETE successes retain
+their symbolic fixture paths and database assertions. Both fixtures passed
+exact cleanup and recorded zero requests at the owned webhook receiver.
+
+The register has 403 partial Source assignments and 395 unassigned operations.

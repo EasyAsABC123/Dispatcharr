@@ -11,7 +11,7 @@ data=json.load(sys.stdin)
 # Notification setup is a management operation. Use the source's documented
 # management-command initialization branch so re-running this helper does not
 # synchronize away owned developer fixtures before the HTTP read under test.
-if str(data.get('action','')).startswith(('notification_','environment_ip_','auth_package_','connect_reads_','connect_logs_','connect_create_')):sys.argv.append('shell')
+if str(data.get('action','')).startswith(('notification_','environment_ip_','auth_package_','connect_reads_','connect_logs_','connect_create_','connect_lifecycle_')):sys.argv.append('shell')
 sys.path.insert(0,'/app');os.environ.setdefault('DJANGO_SETTINGS_MODULE','dispatcharr.settings')
 import django
 django.setup()
@@ -21,6 +21,10 @@ def sanitized_failure(kind,value,tb):
     while tb.tb_next is not None:tb=tb.tb_next
     print(json.dumps({'fixture_error_type':kind.__name__,'fixture_error_line':tb.tb_lineno}),file=sys.stderr)
 sys.excepthook=sanitized_failure
+if str(data.get('action','')).startswith('connect_lifecycle_'):
+    from connect_lifecycle_fixture import dispatch
+    print(json.dumps(dispatch(data)))
+    raise SystemExit(0)
 if data.get('action') == 'connect_create_snapshot':
     from apps.connect.models import DeliveryLog, EventSubscription, Integration
     from django.db import connection, transaction

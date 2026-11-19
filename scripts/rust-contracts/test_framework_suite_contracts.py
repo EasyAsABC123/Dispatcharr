@@ -16,6 +16,7 @@ import retained_dvr_xc_contracts
 import retained_connect_contracts
 import retained_connect_actions_contracts
 import retained_alias19_contracts
+import retained_connect_detail_contracts
 import framework_suite_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -43,6 +44,7 @@ class FrameworkSuiteControls(unittest.TestCase):
     p.write_bytes(raw)
  def test_ten_additions_preserve_prior163_and788_whole_dictionaries(self):
   r=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,r['runtime_routes'])
   retained_alias19_contracts.restore_pre_alias19(ROOT,r['runtime_routes'])
   retained_connect_actions_contracts.restore_pre_connect_actions(ROOT,r['runtime_routes'])
   retained_connect_contracts.restore_pre_connect(ROOT,r['runtime_routes'])
@@ -77,7 +79,8 @@ class FrameworkSuiteControls(unittest.TestCase):
   self.assertEqual(subject.digest(r['openapi_operations']),proof['OpenAPI_sha256'])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],401)
+  self.assertEqual(mapping['operations'],403)
+  retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)
   retained_alias19_contracts.restore_pre_alias19(ROOT,rows)
   retained_connect_actions_contracts.restore_pre_connect_actions(ROOT,rows)
   retained_connect_contracts.restore_pre_connect(ROOT,rows)
@@ -96,6 +99,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   retained_source12_contracts.restore_pre_Source12(rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)
   retained_alias19_contracts.restore_pre_alias19(ROOT,rows)
   retained_connect_actions_contracts.restore_pre_connect_actions(ROOT,rows)
   retained_connect_contracts.restore_pre_connect(ROOT,rows)

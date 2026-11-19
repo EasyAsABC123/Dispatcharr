@@ -70,8 +70,10 @@ using their fixture symbols. The [retained alias capture](../scripts/rust-contra
 adds 19 anonymous Original responses with verified resolver and observer
 evidence. Its controller exited 1 after reaching the fixture log limit.
 The twentieth response remains outside the assignments because its
-post-response evidence is incomplete. M0 now has 401 partial assignments
-and 397 unassigned entries.
+post-response evidence is incomplete. The [retained Connect detail results](../scripts/rust-contracts/retained-connect-detail/README.md)
+add 14 literal PUT and seven literal DELETE responses. Six successful responses
+retain their symbolic fixture paths and database observations. M0 now has 403
+partial assignments and 395 unassigned entries.
 The conservative method inventory and full acceptance requirements remain
 in the [contract register](rust-contract-register.md).
 

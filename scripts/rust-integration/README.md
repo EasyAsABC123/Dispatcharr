@@ -86,6 +86,11 @@ The default runs every contract suite. For a new isolated oracle, use
 authentication and decoded-media checks still run, and the report lists the
 selected suites explicitly. Unknown or duplicate names fail before startup.
 
+The opt-in `connect_lifecycle` suite submits the stock React integration
+create, subscription selection, edit, Enabled toggle, and deletion requests
+on both backends. It checks database effects, fixture isolation, and zero
+webhook delivery in one owned Compose project.
+
 Assertions cover the currently implemented account contracts and native media
 slice. The report records status/body digests, role checks, token interoperability,
 and real FFmpeg decoding. Account probes include owner updates, API-key rotation

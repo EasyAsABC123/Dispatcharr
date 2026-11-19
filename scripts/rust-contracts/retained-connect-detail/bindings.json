@@ -1,0 +1,597 @@
+{
+  "binding_kind": "retained_original_Connect_detail_PUT_DELETE_HTTP",
+  "operation_count": 2,
+  "retained_Source_responses_with_literal_route_path": 21,
+  "additional_symbolic_fixture_path_responses": 6,
+  "fully_verified_operations": 0,
+  "new_Source_executions": 0,
+  "Native_coverage_increased": false,
+  "fixtures": {
+    "m7-connect-update-candidate80-source-1": {
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "actual_runner_exit": 0,
+      "exact_cleanup_passed": true,
+      "candidate_revision": "372299d090875c891a82e23452a894e35db89324",
+      "candidate_detail_method_exercised": false,
+      "input_sha256": {
+        "artifacts/rust/m7-connect-update-candidate80-source-1/receipt.json": "a1f7d779dfb7a1ae00fd16c1967a412239aa97a326cd774824fb6fed801cff05",
+        "artifacts/rust/m7-connect-update-candidate80-source-1/execution.json": "5099268341e4e38bc926d40dda286d5d0a9c1499ff594cf89d05974058b5452d",
+        "artifacts/rust/m7-connect-update-candidate80-source-1/independent-cleanup.json": "422e8f0147253e701704eb9df9cba975db2af8fae4e808b2cdbc9fe862ef251a",
+        "artifacts/rust/m7-connect-update-candidate80-source-1/evidence/integration.json": "e035a54e6a3fbf5bd17503311e397582ce6cbdef7f134c31ac3935751ed6f5dc",
+        "artifacts/rust/m7-connect-update-candidate80-source-1/evidence/tool-source/scripts/rust-account-contracts/probes.py": "8ae64175a509f743bfc34b4f3073d40bd7298458c2753192507c31da8d60ee03",
+        "artifacts/rust/m7-connect-update-candidate80-source-1/evidence/tool-source/scripts/rust-integration/metadata_fixture.py": "7cacfd98c0c316310292877b1fc1dac5a4cca03e2f4774af8233dda9148185b6",
+        "artifacts/rust/m7-connect-update-candidate80-source-1/evidence/tool-source/scripts/rust-integration/run.py": "dd64bf2893bee8c7710e81a7fb1a5916dbc4b00cd31633464f8fa3736f5769c9",
+        "artifacts/rust/m7-connect-update-candidate80-source-1/evidence/compose.log": "52bce7e0509f7bed0212430a14d3f11522d594580497f480a4c09d59e4c43fe9"
+      },
+      "owned_receiver_guard": {
+        "only_owned_integration_detail_put": true,
+        "put_count": 18,
+        "owned_receiver_before": 0,
+        "owned_receiver_after": 0
+      },
+      "actual_successes_with_symbolic_ID": [
+        {
+          "case": "stock-webhook-form",
+          "method": "PUT",
+          "role": "admin",
+          "status": 200,
+          "body_sha256": "e6834c0cc97bea838061f30ff8ce4dabafe5573b276457c991d9629fdf9e27a0",
+          "observation_pointer": "/checks/32",
+          "observed_effects": {
+            "exact_only_target_updated_with_references_and_sequences_preserved": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path_template": "/api/connect/integrations/{fixture_edited_id}/",
+          "original_log_line": null,
+          "literal_path_verified": false
+        },
+        {
+          "case": "missing-config-enabled-preserve-stored",
+          "method": "PUT",
+          "role": "admin",
+          "status": 200,
+          "body_sha256": "c5122dd503db09b12395e5b9c5a7cef4672ea50698108fd92dd2d9f057b82fc1",
+          "observation_pointer": "/checks/33",
+          "observed_effects": {
+            "exact_only_target_updated_with_references_and_sequences_preserved": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path_template": "/api/connect/integrations/{fixture_edited_id}/",
+          "original_log_line": null,
+          "literal_path_verified": false
+        },
+        {
+          "case": "stock-enabled-toggle-with-read-only-fields",
+          "method": "PUT",
+          "role": "admin",
+          "status": 200,
+          "body_sha256": "6d509f6568d739b48e2c2e12dd7f59b588231cfa84c5ef90f4c9a67880ca7826",
+          "observation_pointer": "/checks/34",
+          "observed_effects": {
+            "exact_only_target_updated_with_references_and_sequences_preserved": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path_template": "/api/connect/integrations/{fixture_edited_id}/",
+          "original_log_line": null,
+          "literal_path_verified": false
+        },
+        {
+          "case": "script-conversion-preserves-existing-children",
+          "method": "PUT",
+          "role": "admin",
+          "status": 200,
+          "body_sha256": "3fb9dd300b286fb2c6961ec8f6a17e8b672756fbfadae126a9bbc58229673d5c",
+          "observation_pointer": "/checks/35",
+          "observed_effects": {
+            "exact_only_target_updated_with_references_and_sequences_preserved": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path_template": "/api/connect/integrations/{fixture_edited_id}/",
+          "original_log_line": null,
+          "literal_path_verified": false
+        }
+      ]
+    },
+    "m7-connect-delete-candidate80-source-1": {
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "actual_runner_exit": 0,
+      "exact_cleanup_passed": true,
+      "candidate_revision": "372299d090875c891a82e23452a894e35db89324",
+      "candidate_detail_method_exercised": false,
+      "input_sha256": {
+        "artifacts/rust/m7-connect-delete-candidate80-source-1/receipt.json": "99d0c4025cf1345cff0686afea801b8f3510dd234a94ef9b933582fa769e4f8a",
+        "artifacts/rust/m7-connect-delete-candidate80-source-1/execution.json": "c97cc6c6e99f9ff2ad67254b0cce0a320084fecf42f34f191b702a0afe5da38e",
+        "artifacts/rust/m7-connect-delete-candidate80-source-1/independent-cleanup.json": "988de213d0a716188a6b202aab830f5a33bf1ff6e4b43b42386f82423cb0074b",
+        "artifacts/rust/m7-connect-delete-candidate80-source-1/evidence/integration.json": "50bb741791dd262a6af617fda2137268a52c8ee51b4d509a143f168863678f82",
+        "artifacts/rust/m7-connect-delete-candidate80-source-1/evidence/tool-source/scripts/rust-account-contracts/probes.py": "fef049f2e61bb6e77b78ef9bbe50f8b0fe02c4df9b21431a4789f523f79f7a64",
+        "artifacts/rust/m7-connect-delete-candidate80-source-1/evidence/tool-source/scripts/rust-integration/metadata_fixture.py": "d85587e6567c340025ae3748aeae41db341888ece3832fe1176773d20d3f0401",
+        "artifacts/rust/m7-connect-delete-candidate80-source-1/evidence/tool-source/scripts/rust-integration/run.py": "0334904d6e099ee083f7240f370d015eabb6596704c5f34a18291aaf53bac52f",
+        "artifacts/rust/m7-connect-delete-candidate80-source-1/evidence/compose.log": "65eb7f3725d29e4b15d84ae302d7d38d45f0e152a88692e9c71504fe7887b3ef"
+      },
+      "owned_receiver_guard": {
+        "only_owned_integration_detail_delete": true,
+        "delete_attempted": 9,
+        "delete_completed": 9,
+        "owned_receiver_before": 0,
+        "owned_receiver_after": 0
+      },
+      "actual_successes_with_symbolic_ID": [
+        {
+          "case": "stock-delete-exact-cascade",
+          "method": "DELETE",
+          "role": "admin",
+          "status": 204,
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "observation_pointer": "/checks/24",
+          "observed_effects": {
+            "exact_fixture_shape_observed": true,
+            "exact_cascade_with_unrelated_rows_and_sequences_preserved": true
+          },
+          "body_bytes": 0,
+          "body_digest_scope": "actual HTTP response bytes",
+          "removed_owned_SQL_rows": {
+            "integrations": 1,
+            "subscriptions": 2,
+            "delivery_logs": 3
+          },
+          "path_template": "/api/connect/integrations/{fixture_target_id}/",
+          "original_log_line": null,
+          "literal_path_verified": false
+        },
+        {
+          "case": "childless-delete-ignores-unused-body",
+          "method": "DELETE",
+          "role": "admin",
+          "status": 204,
+          "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "observation_pointer": "/checks/26",
+          "observed_effects": {
+            "exact_fixture_shape_observed": true,
+            "exact_cascade_with_unrelated_rows_and_sequences_preserved": true
+          },
+          "body_bytes": 0,
+          "body_digest_scope": "actual HTTP response bytes",
+          "removed_owned_SQL_rows": {
+            "integrations": 1,
+            "subscriptions": 0,
+            "delivery_logs": 0
+          },
+          "path_template": "/api/connect/integrations/{fixture_childless_id}/",
+          "original_log_line": null,
+          "literal_path_verified": false
+        }
+      ]
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:PUT",
+      "method": "PUT",
+      "source_action": "update",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/connect/^integrations/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.connect.api_views.IntegrationViewSet",
+      "fixture_id": "m7-connect-update-candidate80-source-1",
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive admin",
+        "standard",
+        "viewer"
+      ],
+      "observed_methods": [
+        "PUT"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive admin": {
+          "fixture_role_or_supplied_credential": "inactive admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match retained Original method, role and literal request path against the stable detail route",
+        "Preserve scoped Connect SQL and the owned receiver result with exact process cleanup"
+      ],
+      "result": {
+        "Source_case_observations": 14,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "case": "anonymous",
+          "method": "PUT",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "observation_pointer": "/checks/18",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 312,
+          "literal_path_verified": true
+        },
+        {
+          "case": "standard",
+          "method": "PUT",
+          "role": "standard",
+          "status": 403,
+          "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observation_pointer": "/checks/19",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 313,
+          "literal_path_verified": true
+        },
+        {
+          "case": "viewer",
+          "method": "PUT",
+          "role": "viewer",
+          "status": 403,
+          "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observation_pointer": "/checks/20",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 314,
+          "literal_path_verified": true
+        },
+        {
+          "case": "inactive-admin",
+          "method": "PUT",
+          "role": "inactive admin",
+          "status": 401,
+          "body_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "observation_pointer": "/checks/21",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 315,
+          "literal_path_verified": true
+        },
+        {
+          "case": "role-before-parser",
+          "method": "PUT",
+          "role": "standard",
+          "status": 403,
+          "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observation_pointer": "/checks/22",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 316,
+          "literal_path_verified": true
+        },
+        {
+          "case": "lookup-before-parser",
+          "method": "PUT",
+          "role": "admin",
+          "status": 404,
+          "body_sha256": "13ad72f99240c144ad39943bee6f910132359f11ba6275d282a19f0e6dfeb21d",
+          "observation_pointer": "/checks/23",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/9223372036854775806/",
+          "original_log_line": 317,
+          "literal_path_verified": true
+        },
+        {
+          "case": "admin-malformed-body",
+          "method": "PUT",
+          "role": "admin",
+          "status": 400,
+          "body_sha256": "c80851c8ba52b294853884d11a7435e2d5034b17fcabbe8782f5b08b973716cf",
+          "observation_pointer": "/checks/24",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 318,
+          "literal_path_verified": true
+        },
+        {
+          "case": "wrong-top-level",
+          "method": "PUT",
+          "role": "admin",
+          "status": 400,
+          "body_sha256": "a2a6b84f286ebd8e0272c947ed4f7b39a9a8ba6a68c1143faf44e6d4ea052edc",
+          "observation_pointer": "/checks/25",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 319,
+          "literal_path_verified": true
+        },
+        {
+          "case": "required-name-type",
+          "method": "PUT",
+          "role": "admin",
+          "status": 400,
+          "body_sha256": "15c8fa945a2dc5dad7fc841cf12a1568c86e8b1091eb99e7f8d4417b3f713abb",
+          "observation_pointer": "/checks/26",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 320,
+          "literal_path_verified": true
+        },
+        {
+          "case": "field-error-aggregation",
+          "method": "PUT",
+          "role": "admin",
+          "status": 400,
+          "body_sha256": "58e6a982e647f1692cc13497b4b968b2f6854fefd7a6f9aa24e586f5c4b5e473",
+          "observation_pointer": "/checks/27",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 321,
+          "literal_path_verified": true
+        },
+        {
+          "case": "invalid-webhook-config",
+          "method": "PUT",
+          "role": "admin",
+          "status": 400,
+          "body_sha256": "80ce4f2e987202f4cbf687fddd9647befcddd83825918359dbd39734eed7f83d",
+          "observation_pointer": "/checks/28",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 322,
+          "literal_path_verified": true
+        },
+        {
+          "case": "unsupported-model-type",
+          "method": "PUT",
+          "role": "admin",
+          "status": 400,
+          "body_sha256": "d810dbeee17b12f441817b355a56384e882b7e2ac09f2d7f790d12881392a23d",
+          "observation_pointer": "/checks/29",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 323,
+          "literal_path_verified": true
+        },
+        {
+          "case": "script-path-missing",
+          "method": "PUT",
+          "role": "admin",
+          "status": 400,
+          "body_sha256": "044f147369b742546684145504bceb55df2d39d17d8c8ce2862511a2fe8840d8",
+          "observation_pointer": "/checks/30",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 324,
+          "literal_path_verified": true
+        },
+        {
+          "case": "type-change-revalidates-retained-config",
+          "method": "PUT",
+          "role": "admin",
+          "status": 400,
+          "body_sha256": "3d88b9afa1b42cb5dc1af7ee8d122fd4d99ee320492e8f0399a6e2b6df6cc93b",
+          "observation_pointer": "/checks/31",
+          "observed_effects": {
+            "database_references_and_sequences_unchanged": true
+          },
+          "body_digest_scope": "sorted canonical JSON projection",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 325,
+          "literal_path_verified": true
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-a6f08b2b757cba093f6e:DELETE",
+      "method": "DELETE",
+      "source_action": "destroy",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/connect/^integrations/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.connect.api_views.IntegrationViewSet",
+      "fixture_id": "m7-connect-delete-candidate80-source-1",
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive admin",
+        "standard",
+        "viewer"
+      ],
+      "observed_methods": [
+        "DELETE"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive admin": {
+          "fixture_role_or_supplied_credential": "inactive admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match retained Original method, role and literal request path against the stable detail route",
+        "Preserve scoped Connect SQL and the owned receiver result with exact process cleanup"
+      ],
+      "result": {
+        "Source_case_observations": 7,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "case": "anonymous",
+          "method": "DELETE",
+          "role": "anonymous",
+          "status": 401,
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "observation_pointer": "/checks/18",
+          "observed_effects": {
+            "all_connect_rows_and_sequences_unchanged": true
+          },
+          "body_bytes": 58,
+          "body_digest_scope": "actual HTTP response bytes",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 312,
+          "literal_path_verified": true
+        },
+        {
+          "case": "standard",
+          "method": "DELETE",
+          "role": "standard",
+          "status": 403,
+          "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observation_pointer": "/checks/19",
+          "observed_effects": {
+            "all_connect_rows_and_sequences_unchanged": true
+          },
+          "body_bytes": 63,
+          "body_digest_scope": "actual HTTP response bytes",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 313,
+          "literal_path_verified": true
+        },
+        {
+          "case": "viewer",
+          "method": "DELETE",
+          "role": "viewer",
+          "status": 403,
+          "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observation_pointer": "/checks/20",
+          "observed_effects": {
+            "all_connect_rows_and_sequences_unchanged": true
+          },
+          "body_bytes": 63,
+          "body_digest_scope": "actual HTTP response bytes",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 314,
+          "literal_path_verified": true
+        },
+        {
+          "case": "inactive-admin",
+          "method": "DELETE",
+          "role": "inactive admin",
+          "status": 401,
+          "body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "observation_pointer": "/checks/21",
+          "observed_effects": {
+            "all_connect_rows_and_sequences_unchanged": true
+          },
+          "body_bytes": 52,
+          "body_digest_scope": "actual HTTP response bytes",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 315,
+          "literal_path_verified": true
+        },
+        {
+          "case": "permission-before-lookup",
+          "method": "DELETE",
+          "role": "standard",
+          "status": 403,
+          "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observation_pointer": "/checks/22",
+          "observed_effects": {
+            "all_connect_rows_and_sequences_unchanged": true
+          },
+          "body_bytes": 63,
+          "body_digest_scope": "actual HTTP response bytes",
+          "path": "/api/connect/integrations/9223372036854775806/",
+          "original_log_line": 316,
+          "literal_path_verified": true
+        },
+        {
+          "case": "missing-integration",
+          "method": "DELETE",
+          "role": "admin",
+          "status": 404,
+          "body_sha256": "13ad72f99240c144ad39943bee6f910132359f11ba6275d282a19f0e6dfeb21d",
+          "observation_pointer": "/checks/23",
+          "observed_effects": {
+            "all_connect_rows_and_sequences_unchanged": true
+          },
+          "body_bytes": 52,
+          "body_digest_scope": "actual HTTP response bytes",
+          "path": "/api/connect/integrations/9223372036854775806/",
+          "original_log_line": 317,
+          "literal_path_verified": true
+        },
+        {
+          "case": "repeat-delete",
+          "method": "DELETE",
+          "role": "admin",
+          "status": 404,
+          "body_sha256": "13ad72f99240c144ad39943bee6f910132359f11ba6275d282a19f0e6dfeb21d",
+          "observation_pointer": "/checks/25",
+          "observed_effects": {
+            "all_connect_rows_and_sequences_unchanged": true
+          },
+          "body_bytes": 52,
+          "body_digest_scope": "actual HTTP response bytes",
+          "path": "/api/connect/integrations/1/",
+          "original_log_line": 318,
+          "literal_path_verified": true
+        }
+      ],
+      "fully_verified": false
+    }
+  ],
+  "credit": "Original Dispatcharr and dependency authors retain all application and algorithm credit."
+}

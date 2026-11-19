@@ -19,6 +19,7 @@ import retained_dvr_xc_contracts
 import retained_connect_contracts
 import retained_connect_actions_contracts
 import retained_alias19_contracts
+import retained_connect_detail_contracts
 import core_settings_source_contracts as subject
 import source_contracts
 
@@ -65,6 +66,7 @@ class CoreSettingsSourceControls(unittest.TestCase):
         auth_proof = json.loads((ROOT / 'scripts/rust-contracts/retained-auth-plugin/preservation.json').read_text())
         original_rows = copy.deepcopy(register['runtime_routes'])
         import retained_xc_refresh_contracts
+        retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, register['runtime_routes'])
         retained_alias19_contracts.restore_pre_alias19(ROOT, register['runtime_routes'])
         retained_connect_actions_contracts.restore_pre_connect_actions(ROOT, register['runtime_routes'])
         retained_connect_contracts.restore_pre_connect(ROOT, register['runtime_routes'])
