@@ -294,6 +294,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'captured_original_scanner_task_observations':
             import scanner_task_contracts
             scanner_task_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_clocked_recording_tasks':
+            import retained_clocked_recording_contracts
+            retained_clocked_recording_contracts.validate(root, value, bindings)
         elif reference['kind'] == 'retained_original_comskip_task_observations':
             import retained_comskip_task_contracts
             retained_comskip_task_contracts.validate(root, value, bindings)
@@ -418,7 +421,7 @@ def apply_non_HTTP(root, entries):
         if reference['kind'] not in [
             'pinned_original_account_settings_tests', 'captured_original_scanner_task_observations',
             'pinned_original_provider_output_consumer_tests', 'retained_original_task_operator7_observations',
-            'retained_original_comskip_task_observations',
+            'retained_original_comskip_task_observations', 'retained_original_clocked_recording_tasks',
         ]:
             continue
         value = checked(root, reference)
@@ -438,6 +441,10 @@ def apply_non_HTTP(root, entries):
             import retained_comskip_task_contracts
             retained_comskip_task_contracts.validate(root, value)
             source_kind = 'task_candidate'
+        elif reference['kind'] == 'retained_original_clocked_recording_tasks':
+            import retained_clocked_recording_contracts
+            retained_clocked_recording_contracts.validate(root, value)
+            source_kind = 'task_candidate'
         else:
             import provider_output_contracts
             provider_output_contracts.validate(root, value)
@@ -456,7 +463,7 @@ def apply_non_HTTP(root, entries):
             entry['setup_fixture'] = (copy.deepcopy(value['fixtures'][contract['fixture_id']]) if current_kind in ['model_candidate', 'websocket_consumer_candidate']
                                       else {key: copy.deepcopy(value['fixtures'][key]) for key in contract['fixture_ids']})
             if reference['kind'] in ('retained_original_task_operator7_observations',
-                                     'retained_original_comskip_task_observations'):
+                                     'retained_original_comskip_task_observations', 'retained_original_clocked_recording_tasks'):
                 entry['owning_milestone'] = contract['owning_milestone']
             entry['assertions'] = copy.deepcopy(contract['assertions'])
             entry['result'] = copy.deepcopy(contract['result'])

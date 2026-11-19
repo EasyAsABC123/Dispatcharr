@@ -165,5 +165,5 @@ class ProxyPluginControls(unittest.TestCase):
     def test_nonHTTP250_unchanged(self):
         before = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
         after = copy.deepcopy(before)
-        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, after)['candidates'], 16)
+        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, after)['candidates'], 18)
         self.assertEqual(before, after)

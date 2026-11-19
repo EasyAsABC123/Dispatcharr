@@ -98,6 +98,8 @@ class RetainedSDControls(unittest.TestCase):
         self.assertEqual({k: prior[k] for k in proof['selected']}, proof['selected'])
         self.assertEqual(subject.digest([{k: v for k, v in r.items() if k != 'operations'} for r in rows]), proof['route_structural_sha256'])
         import retained_comskip_task_contracts
+        import retained_clocked_recording_contracts
+        retained_clocked_recording_contracts.restore_pre_clocked_recording(ROOT,register['non_HTTP_candidates'])
         retained_comskip_task_contracts.restore_pre_comskip_task(ROOT,register['non_HTTP_candidates'])
         for key, name in [('non_HTTP_candidates', 'non_HTTP_candidates_sha256'), ('openapi_operations', 'OpenAPI_operations_sha256'), ('observations_for_methods_not_declared_in_discovery', 'legacy_undeclared_method_observations_sha256')]: self.assertEqual(subject.digest(register[key]), proof[name])
         bindings = json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes())

@@ -76,6 +76,8 @@ class FrameworkSuiteControls(unittest.TestCase):
   self.assertEqual(subject.digest({k:v['executable_Source_contract']for k,v in prior.items()if v.get('executable_Source_contract')}),proof['prior163_definitions_sha256'])
   self.assertEqual(subject.digest([{k:v for k,v in route.items()if k!='operations'}for route in rows]),proof['all_routes_structure_sha256'])
   import retained_comskip_task_contracts
+  import retained_clocked_recording_contracts
+  retained_clocked_recording_contracts.restore_pre_clocked_recording(ROOT,r['non_HTTP_candidates'])
   retained_comskip_task_contracts.restore_pre_comskip_task(ROOT,r['non_HTTP_candidates'])
   self.assertEqual(subject.digest(r['non_HTTP_candidates']),proof['non_HTTP_sha256'])
   self.assertEqual(subject.digest(r['openapi_operations']),proof['OpenAPI_sha256'])

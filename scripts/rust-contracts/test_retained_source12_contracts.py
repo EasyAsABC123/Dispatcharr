@@ -64,6 +64,8 @@ class RetainedSource12Controls(unittest.TestCase):
   self.assertEqual(sum(bool(o.get('executable_Source_contract'))for o in ops.values()),174);self.assertEqual(subject.digest({k:v for k,v in ops.items()if k not in {new,old}}),proof['all_unselected796_whole_dicts_sha256'])
   subject.restore_pre_Source12(rows);prior={o['contract_id']:o for r in rows for o in r['operations']};self.assertEqual(prior[new],proof['new_selected_original_unassigned_dict']);self.assertEqual(subject.digest(prior[old]),proof['existing_supplement_target_whole_dict_sha256']);self.assertEqual(subject.digest({k:o['executable_Source_contract']for k,o in prior.items()if o.get('executable_Source_contract')}),proof['all_prior173_definitions_sha256']);self.assertEqual(subject.digest([{k:v for k,v in r.items()if k!='operations'}for r in rows]),proof['route_structure_sha256'])
   import retained_comskip_task_contracts
+  import retained_clocked_recording_contracts
+  retained_clocked_recording_contracts.restore_pre_clocked_recording(ROOT,register['non_HTTP_candidates'])
   retained_comskip_task_contracts.restore_pre_comskip_task(ROOT,register['non_HTTP_candidates'])
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())

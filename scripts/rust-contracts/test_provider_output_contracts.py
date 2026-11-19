@@ -38,7 +38,7 @@ class ProviderOutputControls(unittest.TestCase):
     def test_old250_identity_idempotent_apply(self):
         before = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
         after = copy.deepcopy(before)
-        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, after)['candidates'], 16)
+        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, after)['candidates'], 18)
         self.assertEqual(before, after)
         self.assertTrue(all(not row['fully_verified'] for row in after))
 

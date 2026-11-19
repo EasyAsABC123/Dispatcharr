@@ -70,3 +70,10 @@ COPY scripts/rust-integration/channel-stations-source53/empty4102-backend.json .
 # Public Original Comskip task authorities for offline register verification.
 COPY scripts/rust-integration/comskip-positive-lifecycle-source1/ ./scripts/rust-integration/comskip-positive-lifecycle-source1/
 COPY scripts/rust-integration/comskip-positive-journal-fences1/ ./scripts/rust-integration/comskip-positive-journal-fences1/
+
+# Exact public Original clocked-recording task observations.
+COPY scripts/rust-job-contracts/clocked-recording-source/evidence/integration.json.gz ./scripts/rust-job-contracts/clocked-recording-source/evidence/integration.json.gz
+COPY scripts/rust-job-contracts/clocked-recording-source/evidence/source-clocked-recording-private.json.gz ./scripts/rust-job-contracts/clocked-recording-source/evidence/source-clocked-recording-private.json.gz
+COPY scripts/rust-job-contracts/clocked-recording-source/evidence/independent-cleanup.json.gz ./scripts/rust-job-contracts/clocked-recording-source/evidence/independent-cleanup.json.gz
+COPY scripts/rust-job-contracts/clocked-recording-source/evidence/clocked-prerun.jsonl.gz ./scripts/rust-job-contracts/clocked-recording-source/evidence/clocked-prerun.jsonl.gz
+COPY scripts/rust-job-contracts/clocked-recording-source/evidence/clocked-postrun.jsonl.gz ./scripts/rust-job-contracts/clocked-recording-source/evidence/clocked-postrun.jsonl.gz

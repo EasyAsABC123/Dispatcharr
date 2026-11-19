@@ -63,6 +63,8 @@ class RangeSource10Controls(unittest.TestCase):
   self.assertEqual(subject.digest({k:o['executable_Source_contract']for k,o in ops.items()if o.get('executable_Source_contract')}),proof['all_prior174_definitions_sha256'])
   subject.restore_pre_range(rows);prior={o['contract_id']:o for r in rows for o in r['operations']};self.assertEqual(subject.digest(prior[key]),proof['selected_original_whole_operation_sha256']);self.assertEqual(subject.digest([{k:v for k,v in r.items()if k!='operations'}for r in rows]),proof['route_structure_sha256'])
   import retained_comskip_task_contracts
+  import retained_clocked_recording_contracts
+  retained_clocked_recording_contracts.restore_pre_clocked_recording(ROOT,register['non_HTTP_candidates'])
   retained_comskip_task_contracts.restore_pre_comskip_task(ROOT,register['non_HTTP_candidates'])
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())

@@ -1,0 +1,173 @@
+{
+  "format_version": 1,
+  "kind": "retained_original_clocked_recording_tasks",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "credit": "Original Dispatcharr, Celery, django-celery-beat, FFmpeg and dependency authors retain all credit.",
+  "authorities": [
+    {
+      "path": "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py",
+      "sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279"
+    },
+    {
+      "path": "scripts/rust-job-contracts/clocked-recording-source/evidence/integration.json.gz",
+      "sha256": "4964a230e0f9a8a113215bd111c0888fd60215e43f8e065ae0fda65616c9fde0"
+    },
+    {
+      "path": "scripts/rust-job-contracts/clocked-recording-source/evidence/source-clocked-recording-private.json.gz",
+      "sha256": "88030e2124b312ede0df72e4efc4971a76f705afeea47636d8532254b08e7199"
+    },
+    {
+      "path": "scripts/rust-job-contracts/clocked-recording-source/evidence/independent-cleanup.json.gz",
+      "sha256": "f9854bfe15a4b06303677d5ffb76b60eed2d737b64c38395bc9286e098f1ad14"
+    },
+    {
+      "path": "scripts/rust-job-contracts/clocked-recording-source/evidence/clocked-prerun.jsonl.gz",
+      "sha256": "d324737629835c303b7b7f71911125e31032466f90d0715c3e6a7b74e3c50f83"
+    },
+    {
+      "path": "scripts/rust-job-contracts/clocked-recording-source/evidence/clocked-postrun.jsonl.gz",
+      "sha256": "9dd01371dde0562eef085337e5367d4df1f60e25222dc9f62500ecd606d9efff"
+    }
+  ],
+  "contracts": [],
+  "non_HTTP_contracts": [
+    {
+      "candidate_id": "candidate-390f50055508e3581055",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/channels/tasks.py",
+        "line": 3869,
+        "name": "prefetch_recording_artwork",
+        "callable": "celery.shared_task"
+      },
+      "task_name": "apps.channels.tasks.prefetch_recording_artwork",
+      "owning_milestone": "M6",
+      "fixture_ids": [
+        "retained-Original-future-clocked-recording-Source3"
+      ],
+      "observed_actor": {
+        "producer": "Original Recording model and django-celery-beat",
+        "executor": "actual Original Celery workers",
+        "complete_role_matrix": false
+      },
+      "definition": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py",
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "start_line": 3869,
+        "end_line": 3954,
+        "ast_sha256": "295c86c1560f33cd5a169a013f59b58a73eab0ad887e4df6be0b298ef61a3da6"
+      },
+      "observations": [
+        {
+          "case": "normal-future-clocked-recording-Source3",
+          "task_id": "0300a39b-dfbb-4aa9-b3f8-20dec4670be0",
+          "queue": "celery",
+          "root_id": "0300a39b-dfbb-4aa9-b3f8-20dec4670be0",
+          "parent_id": null,
+          "arguments": [
+            1
+          ],
+          "backend_status": "SUCCESS",
+          "backend_result": "ok",
+          "backend_wire_sha256": "837c8d0e3be5508702a12825b8af593b00ae21deab54ebf03ccee710c9f51e7c",
+          "worker_prerun_and_postrun_observed": true
+        }
+      ],
+      "assertions": [
+        "Exact natural queue, own-root frame, SQL row arguments and executed worker/backend receipt",
+        "Owned recording row kept its periodic task name and poster through successful remux",
+        "Exact process and owned resource cleanup preserved"
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-0f29552aefd3a49114ee",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/channels/tasks.py",
+        "line": 2063,
+        "name": "run_recording",
+        "callable": "celery.shared_task"
+      },
+      "task_name": "apps.channels.tasks.run_recording",
+      "owning_milestone": "M6",
+      "fixture_ids": [
+        "retained-Original-future-clocked-recording-Source3"
+      ],
+      "observed_actor": {
+        "producer": "Original Recording model and django-celery-beat",
+        "executor": "actual Original Celery workers",
+        "complete_role_matrix": false
+      },
+      "definition": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py",
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "start_line": 2063,
+        "end_line": 3104,
+        "ast_sha256": "4245735c3eef4bda8524ff87c3a72014aad69bff8507bd5d22010b79e8f7d457"
+      },
+      "observations": [
+        {
+          "case": "normal-future-clocked-recording-Source3",
+          "task_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+          "queue": "dvr",
+          "root_id": "25d644be-2a76-443d-8db6-4d5b311a422f",
+          "parent_id": null,
+          "arguments": [
+            1,
+            2,
+            "2026-11-13 16:06:43+00:00",
+            "2026-11-13 16:07:13+00:00"
+          ],
+          "backend_status": "SUCCESS",
+          "backend_result": null,
+          "backend_wire_sha256": "cbd79def21d56479666abdff496e8a18a9bdb74953b00196c37dc18552dd5372",
+          "worker_prerun_and_postrun_observed": true
+        }
+      ],
+      "assertions": [
+        "Exact natural queue, own-root frame, SQL row arguments and executed worker/backend receipt",
+        "Owned recording row kept its periodic task name and poster through successful remux",
+        "Exact process and owned resource cleanup preserved"
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "fixtures": {
+    "retained-Original-future-clocked-recording-Source3": {
+      "id": "retained-Original-future-clocked-recording-Source3",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "observed_actor": {
+        "producer": "Original Recording model and django-celery-beat",
+        "executor": "actual Original Celery workers",
+        "complete_role_matrix": false
+      },
+      "actual_controller_exit": 0,
+      "actual_host_exit": 0,
+      "exact_cleanup_passed": true,
+      "original_checks_passed": 17,
+      "unconsumed_Beat_siblings": 2,
+      "Source_replayed_for_mapping": false
+    }
+  },
+  "actual_Original_worker_observations": 2,
+  "new_Source_execution": false,
+  "Native_coverage_increased": false,
+  "fully_verified_added": 0
+}
