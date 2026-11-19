@@ -28,7 +28,10 @@ use tokio::{
 
 const SCAN_LIMIT: usize = 5000;
 const PATTERN_LIMIT: usize = 512;
-const BATCH_SIZE: usize = 512;
+const BATCH_NAMES: usize = 2048;
+// Keep the old maximum name payload (512 names of 512 code points, each
+// escaped to six bytes) while avoiding round trips for ordinary short names.
+const BATCH_NAME_BYTES: usize = 512 * (512 * 6 + 3);
 const REQUESTS: u32 = 2;
 const REQUEST_BUDGET: Duration = Duration::from_secs(5);
 const RESPONSE_LIMIT: usize = 1024 * 1024;
@@ -341,6 +344,34 @@ struct Results {
     exclude: Option<ExcludeResult>,
 }
 
+fn batches(mut names: &[String]) -> impl Iterator<Item = &[String]> {
+    let mut compile_empty = names.is_empty();
+    std::iter::from_fn(move || {
+        if std::mem::take(&mut compile_empty) {
+            return Some(names);
+        }
+        if names.is_empty() {
+            return None;
+        }
+        let mut bytes = 0usize;
+        let count = names
+            .iter()
+            .take(BATCH_NAMES)
+            .take_while(|name| {
+                // Each code point costs at most six bytes in the JSON frame.
+                // The three extra bytes cover the string quotes and separator.
+                let encoded = name.chars().count().saturating_mul(6).saturating_add(3);
+                bytes = bytes.saturating_add(encoded);
+                bytes <= BATCH_NAME_BYTES
+            })
+            .count()
+            .max(1);
+        let batch;
+        (batch, names) = names.split_at(count);
+        Some(batch)
+    })
+}
+
 async fn preview(
     regex: &RegexExecutor,
     owner: Arc<OwnedSemaphorePermit>,
@@ -353,10 +384,8 @@ async fn preview(
     let mut find = Batch::default();
     let mut include = Batch::default();
     let mut exclude = Batch::default();
-    // Compile supplied patterns even when the stream group is empty.
-    let chunks = names.chunks(BATCH_SIZE);
-    let empty = names.is_empty().then_some([].as_slice());
-    for names in empty.into_iter().chain(chunks) {
+    // The empty batch still compiles supplied patterns for an empty group.
+    for names in batches(names) {
         let find_pattern = patterns.find.as_deref().filter(|_| find.error.is_none());
         let include_pattern = patterns
             .include
@@ -520,6 +549,20 @@ mod tests {
         let mut parameters = parameters;
         parameters.insert("m3u_account_id".into(), String::new());
         assert!(Preview::parse(&parameters).is_err());
+    }
+
+    #[test]
+    fn batches_reduce_round_trips_and_keep_wide_frames_bounded() {
+        let short: Vec<_> = (0..SCAN_LIMIT).map(|id| format!("Channel {id}")).collect();
+        assert_eq!(
+            batches(&short).map(<[_]>::len).collect::<Vec<_>>(),
+            [2048, 2048, 904]
+        );
+        assert!(batches(&short).flatten().eq(short.iter()));
+
+        let wide = vec!["😀".repeat(512); 513];
+        assert_eq!(batches(&wide).map(<[_]>::len).collect::<Vec<_>>(), [512, 1]);
+        assert_eq!(batches(&[]).map(<[_]>::len).collect::<Vec<_>>(), [0]);
     }
 
     #[test]

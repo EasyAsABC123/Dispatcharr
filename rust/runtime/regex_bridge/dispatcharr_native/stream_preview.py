@@ -7,7 +7,7 @@ from dispatcharr_native.wire import CompatibilityUnavailable
 
 
 def evaluate(names, config):
-    if not isinstance(names, list) or len(names) > 512 or any(
+    if not isinstance(names, list) or len(names) > 2048 or any(
         not isinstance(name, str) or len(name) > 512 for name in names
     ):
         raise CompatibilityUnavailable("Stream preview name batch capacity")
