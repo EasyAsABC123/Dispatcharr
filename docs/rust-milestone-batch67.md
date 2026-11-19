@@ -88,8 +88,8 @@ measurement payload bytes.
 
 The whole fixture includes backend, infrastructure, origin, and observer.
 These are observations from one pair with idle background workers. The
-repeated comparison at 1, 2, 10, and 100 viewers remains required for
-performance acceptance.
+[repeated live-viewing comparison](rust-candidate67-viewing-comparison.md)
+subsequently passed all 12 scoped budgets at 1, 2, 10, and 100 viewers.
 
 The [development plan](rust-development-and-validation-plan.md) uses three active
 agent lanes plus integration, one coordinated Cargo target, one candidate image

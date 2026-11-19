@@ -1,0 +1,1893 @@
+{
+  "candidate_git_revision": "a05b6745d651603097417686c18d0fcdad208f83",
+  "candidate_image_id": "sha256:75af355bcb7f90304ac22a1db2a7ebe6b4da9549bbb5fc8d932257424e00ef8b",
+  "scope": "Current candidate declared idle-worker VLC paired study at predeclared viewer levels",
+  "protocol_sha256": "9446c541a459a926fb7c55d59e899156a3f4208fdf6fdbea4a754fd198595043",
+  "phase_sha256": "e4f4939f39776c6b5fc6f6cf4b25b5665d659bd2979106e89d33547752d0e216",
+  "frozen_workload_sha256": "0440a5e73ebb7cc3bba3a5a9f6da700be27caa0da65a87867b8ee20eb7273f43",
+  "raw_result_sha256": "d1261221417f5669f67eaa735355c50a01e0d4439f062f42123e2ca0dea3ce30",
+  "terminal_receipt_sha256": "2642ccdf54986c7adf57f1086923cc7d8f513c9375fb188209524ec6fd197672",
+  "independent_cleanup_sha256": "8ab7130afc07e5b17c2cc257e68a3776cd1cda1bc345e592dacfd87b1f706163",
+  "actual_exit": 0,
+  "actual_terminal_consumed": true,
+  "wait_authority": "systemd manager ExecMainCode1/Status0; existing systemd-run scope awaited study; all24 phase command waits/EOF/groups retained",
+  "direct_tool_wait_for_campaign_claimed": false,
+  "elapsed_seconds": 4194.816585073,
+  "measurement_seconds_predeclared": 60,
+  "samples_per_phase": 61,
+  "actual_new_phase_count": 24,
+  "all_phases_valid": true,
+  "useful_media_readers_qualified": 678,
+  "cross_phase_video_audio_equivalence": [
+    true,
+    true
+  ],
+  "cross_phase_duration_spread_seconds": [
+    0.4799999999999969,
+    0.46932222222222464
+  ],
+  "cross_phase_duration_bound_seconds": 1.9839999999989857,
+  "one_origin_and_provider_per_phase": true,
+  "input_drift": [],
+  "cleanup": {
+    "owned_project_count": 24,
+    "object_classes": [
+      "containers",
+      "networks",
+      "volumes"
+    ],
+    "all_owned_projects_absent": true,
+    "original_owner_generation_absent": true,
+    "phase_checks_passed_by_kind": {
+      "containers": 24,
+      "networks": 24,
+      "volumes": 24,
+      "baseline-exact-CID": 24,
+      "origin-exact-CID": 24,
+      "publication-observer-exact-CID": 24,
+      "candidate-exact-CID": 12
+    },
+    "mutations": 0
+  },
+  "recorded_post_exit_scope_stop_message": "Scope already unloaded. Systemd recorded service exit 0.",
+  "pair_budget_thresholds": {
+    "max_CPU_ratio": 0.9,
+    "max_memory_ratio": 0.95,
+    "max_first_byte_ratio": 1.1,
+    "first_byte_floor_ms": 50,
+    "minimum_throughput_ratio": 0.95,
+    "minimum_viewer_rate_fraction": 0.9,
+    "maximum_viewer_rate_fraction": 1.1,
+    "minimum_samples": 50,
+    "maximum_errors": 0,
+    "maximum_OOM_events": 0,
+    "cleanup_seconds": 60
+  },
+  "scoped_comparison_budgets_passed": true,
+  "gain_accepted": false,
+  "live_only_gain_accepted": false,
+  "full_M235_resource_accepted": false,
+  "active_DVR_gain_accepted": false,
+  "full_migration_accepted": false,
+  "metric_boundaries": {
+    "primary": "backend and infrastructure plus origin",
+    "whole_fixture": "primary plus charged observer",
+    "working_set_estimate": "cgroup memory.current minus inactive_file, bounded at zero",
+    "working_set_estimate_max_simultaneous_bytes": "maximum across 61 same-tick aggregate samples",
+    "charged_memory": "raw cgroup memory.current including charged file cache"
+  },
+  "trial_medians": {
+    "1": {
+      "rust_over_python_ratios": {
+        "CPU": {
+          "min": 0.7208470234381213,
+          "median": 0.7327818993405091,
+          "max": 0.7680931954882267
+        },
+        "memory": {
+          "min": 0.3004862724847233,
+          "median": 0.3010555538738957,
+          "max": 0.3015558018264134
+        },
+        "throughput": {
+          "min": 0.9957275604877599,
+          "median": 0.9957275604877599,
+          "max": 0.9973002509353598
+        },
+        "encoded_useful_throughput": {
+          "min": 0.995841033539782,
+          "median": 0.995841033539782,
+          "max": 0.9975534658977604
+        },
+        "first_byte_p95": {
+          "min": 0.9528668803151975,
+          "median": 0.9529109046271151,
+          "max": 0.9784810798169585
+        }
+      },
+      "primary": {
+        "python": {
+          "cpu_core_seconds": 1.604943,
+          "working_set_estimate_median_bytes": 948064256,
+          "working_set_estimate_max_simultaneous_bytes": 951828480,
+          "charged_memory_median_bytes": 1070096384,
+          "charged_memory_max_simultaneous_bytes": 1074946048
+        },
+        "rust": {
+          "cpu_core_seconds": 1.17622,
+          "working_set_estimate_median_bytes": 279830528,
+          "working_set_estimate_max_simultaneous_bytes": 286011392,
+          "charged_memory_median_bytes": 401911808,
+          "charged_memory_max_simultaneous_bytes": 408903680
+        }
+      },
+      "whole_fixture": {
+        "python": {
+          "cpu_core_seconds": 1.948297,
+          "working_set_estimate_median_bytes": 1174753280,
+          "working_set_estimate_max_simultaneous_bytes": 1178419200,
+          "charged_memory_median_bytes": 1486811136,
+          "charged_memory_max_simultaneous_bytes": 1495580672
+        },
+        "rust": {
+          "cpu_core_seconds": 1.492526,
+          "working_set_estimate_median_bytes": 509210624,
+          "working_set_estimate_max_simultaneous_bytes": 515600384,
+          "charged_memory_median_bytes": 817238016,
+          "charged_memory_max_simultaneous_bytes": 828760064
+        }
+      },
+      "backend_and_infrastructure": {
+        "python": {
+          "cpu_core_seconds": 1.207617,
+          "working_set_estimate_median_bytes": 845438976,
+          "working_set_estimate_max_simultaneous_bytes": 849367040,
+          "charged_memory_median_bytes": 846954496,
+          "charged_memory_max_simultaneous_bytes": 851341312
+        },
+        "rust": {
+          "cpu_core_seconds": 0.770158,
+          "working_set_estimate_median_bytes": 177680384,
+          "working_set_estimate_max_simultaneous_bytes": 184987648,
+          "charged_memory_median_bytes": 179261440,
+          "charged_memory_max_simultaneous_bytes": 185196544
+        }
+      }
+    },
+    "2": {
+      "rust_over_python_ratios": {
+        "CPU": {
+          "min": 0.6690269479771641,
+          "median": 0.6917483329998851,
+          "max": 0.7242558479188345
+        },
+        "memory": {
+          "min": 0.2979750396861247,
+          "median": 0.2988188332860178,
+          "max": 0.30113540663450616
+        },
+        "throughput": {
+          "min": 0.9945272436036681,
+          "median": 0.996099934051268,
+          "max": 0.9965139057115598
+        },
+        "encoded_useful_throughput": {
+          "min": 0.9946411751948848,
+          "median": 0.9961528351481075,
+          "max": 0.9966972497187713
+        },
+        "first_byte_p95": {
+          "min": 0.9524715131317955,
+          "median": 0.9525914354217736,
+          "max": 0.9537000357914869
+        }
+      },
+      "primary": {
+        "python": {
+          "cpu_core_seconds": 1.7015,
+          "working_set_estimate_median_bytes": 947007488,
+          "working_set_estimate_max_simultaneous_bytes": 952111104,
+          "charged_memory_median_bytes": 1068380160,
+          "charged_memory_max_simultaneous_bytes": 1073483776
+        },
+        "rust": {
+          "cpu_core_seconds": 1.183059,
+          "working_set_estimate_median_bytes": 278503424,
+          "working_set_estimate_max_simultaneous_bytes": 284549120,
+          "charged_memory_median_bytes": 399851520,
+          "charged_memory_max_simultaneous_bytes": 405897216
+        }
+      },
+      "whole_fixture": {
+        "python": {
+          "cpu_core_seconds": 2.122781,
+          "working_set_estimate_median_bytes": 1178976256,
+          "working_set_estimate_max_simultaneous_bytes": 1184305152,
+          "charged_memory_median_bytes": 1491107840,
+          "charged_memory_max_simultaneous_bytes": 1506594816
+        },
+        "rust": {
+          "cpu_core_seconds": 1.520266,
+          "working_set_estimate_median_bytes": 511913984,
+          "working_set_estimate_max_simultaneous_bytes": 518320128,
+          "charged_memory_median_bytes": 823279616,
+          "charged_memory_max_simultaneous_bytes": 838545408
+        }
+      },
+      "backend_and_infrastructure": {
+        "python": {
+          "cpu_core_seconds": 1.300607,
+          "working_set_estimate_median_bytes": 844902400,
+          "working_set_estimate_max_simultaneous_bytes": 850333696,
+          "charged_memory_median_bytes": 844992512,
+          "charged_memory_max_simultaneous_bytes": 850423808
+        },
+        "rust": {
+          "cpu_core_seconds": 0.773914,
+          "working_set_estimate_median_bytes": 176349184,
+          "working_set_estimate_max_simultaneous_bytes": 182968320,
+          "charged_memory_median_bytes": 176414720,
+          "charged_memory_max_simultaneous_bytes": 183033856
+        }
+      }
+    },
+    "10": {
+      "rust_over_python_ratios": {
+        "CPU": {
+          "min": 0.508884515329584,
+          "median": 0.524733397761694,
+          "max": 0.537128807134196
+        },
+        "memory": {
+          "min": 0.2966207115465456,
+          "median": 0.2971204581850343,
+          "max": 0.2990160006845213
+        },
+        "throughput": {
+          "min": 0.9946761930290713,
+          "median": 0.9950693656409713,
+          "max": 0.996021299528888
+        },
+        "encoded_useful_throughput": {
+          "min": 0.9947658958382151,
+          "median": 0.9951776532117511,
+          "max": 0.9962189337870888
+        },
+        "first_byte_p95": {
+          "min": 0.9526540765730549,
+          "median": 0.952865215951553,
+          "max": 0.953760068897204
+        }
+      },
+      "primary": {
+        "python": {
+          "cpu_core_seconds": 2.304172,
+          "working_set_estimate_median_bytes": 951099392,
+          "working_set_estimate_max_simultaneous_bytes": 954884096,
+          "charged_memory_median_bytes": 1072472064,
+          "charged_memory_max_simultaneous_bytes": 1076256768
+        },
+        "rust": {
+          "cpu_core_seconds": 1.209074,
+          "working_set_estimate_median_bytes": 279629824,
+          "working_set_estimate_max_simultaneous_bytes": 283463680,
+          "charged_memory_median_bytes": 400977920,
+          "charged_memory_max_simultaneous_bytes": 404811776
+        }
+      },
+      "whole_fixture": {
+        "python": {
+          "cpu_core_seconds": 3.536361,
+          "working_set_estimate_median_bytes": 1190379520,
+          "working_set_estimate_max_simultaneous_bytes": 1195585536,
+          "charged_memory_median_bytes": 1569271808,
+          "charged_memory_max_simultaneous_bytes": 1622687744
+        },
+        "rust": {
+          "cpu_core_seconds": 1.839786,
+          "working_set_estimate_median_bytes": 522477568,
+          "working_set_estimate_max_simultaneous_bytes": 527364096,
+          "charged_memory_median_bytes": 897212416,
+          "charged_memory_max_simultaneous_bytes": 948740096
+        }
+      },
+      "backend_and_infrastructure": {
+        "python": {
+          "cpu_core_seconds": 1.901802,
+          "working_set_estimate_median_bytes": 849211392,
+          "working_set_estimate_max_simultaneous_bytes": 853118976,
+          "charged_memory_median_bytes": 849301504,
+          "charged_memory_max_simultaneous_bytes": 853209088
+        },
+        "rust": {
+          "cpu_core_seconds": 0.801136,
+          "working_set_estimate_median_bytes": 178024448,
+          "working_set_estimate_max_simultaneous_bytes": 182042624,
+          "charged_memory_median_bytes": 178089984,
+          "charged_memory_max_simultaneous_bytes": 182108160
+        }
+      }
+    },
+    "100": {
+      "rust_over_python_ratios": {
+        "CPU": {
+          "min": 0.17233096322174904,
+          "median": 0.1726851315872894,
+          "max": 0.17682694960157935
+        },
+        "memory": {
+          "min": 0.2887676030406926,
+          "median": 0.28912834343318067,
+          "max": 0.30224672866430746
+        },
+        "throughput": {
+          "min": 0.9941083442523811,
+          "median": 0.9942793080857142,
+          "max": 0.994515621117149
+        },
+        "encoded_useful_throughput": {
+          "min": 0.994082286723606,
+          "median": 0.9942620624682008,
+          "max": 0.9944988824961339
+        },
+        "first_byte_p95": {
+          "min": 0.09437776915359594,
+          "median": 0.09531957407599868,
+          "max": 0.12310663320707273
+        }
+      },
+      "primary": {
+        "python": {
+          "cpu_core_seconds": 8.610139,
+          "working_set_estimate_median_bytes": 992083968,
+          "working_set_estimate_max_simultaneous_bytes": 996302848,
+          "charged_memory_median_bytes": 1113559040,
+          "charged_memory_max_simultaneous_bytes": 1117777920
+        },
+        "rust": {
+          "cpu_core_seconds": 1.488005,
+          "working_set_estimate_median_bytes": 284119040,
+          "working_set_estimate_max_simultaneous_bytes": 289095680,
+          "charged_memory_median_bytes": 451112960,
+          "charged_memory_max_simultaneous_bytes": 456114176
+        }
+      },
+      "whole_fixture": {
+        "python": {
+          "cpu_core_seconds": 22.14915,
+          "working_set_estimate_median_bytes": 1278074880,
+          "working_set_estimate_max_simultaneous_bytes": 1282965504,
+          "charged_memory_median_bytes": 2315993088,
+          "charged_memory_max_simultaneous_bytes": 2802917376
+        },
+        "rust": {
+          "cpu_core_seconds": 5.720402,
+          "working_set_estimate_median_bytes": 597778432,
+          "working_set_estimate_max_simultaneous_bytes": 613683200,
+          "charged_memory_median_bytes": 1612750848,
+          "charged_memory_max_simultaneous_bytes": 2082463744
+        }
+      },
+      "backend_and_infrastructure": {
+        "python": {
+          "cpu_core_seconds": 8.168884,
+          "working_set_estimate_median_bytes": 890757120,
+          "working_set_estimate_max_simultaneous_bytes": 894132224,
+          "charged_memory_median_bytes": 890949632,
+          "charged_memory_max_simultaneous_bytes": 894324736
+        },
+        "rust": {
+          "cpu_core_seconds": 1.083758,
+          "working_set_estimate_median_bytes": 182272000,
+          "working_set_estimate_max_simultaneous_bytes": 186621952,
+          "charged_memory_median_bytes": 217096192,
+          "charged_memory_max_simultaneous_bytes": 221622272
+        }
+      }
+    }
+  },
+  "pairs": [
+    {
+      "viewers": 1,
+      "trial": 1,
+      "ratios": {
+        "CPU": 0.7327818993405091,
+        "memory": 0.3004862724847233,
+        "throughput": 0.9957275604877599,
+        "encoded_useful_throughput": 0.995841033539782,
+        "first_byte_p95": 0.9784810798169585
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 1,
+      "trial": 2,
+      "ratios": {
+        "CPU": 0.7680931954882267,
+        "memory": 0.3010555538738957,
+        "throughput": 0.9957275604877599,
+        "encoded_useful_throughput": 0.995841033539782,
+        "first_byte_p95": 0.9528668803151975
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 1,
+      "trial": 3,
+      "ratios": {
+        "CPU": 0.7208470234381213,
+        "memory": 0.3015558018264134,
+        "throughput": 0.9973002509353598,
+        "encoded_useful_throughput": 0.9975534658977604,
+        "first_byte_p95": 0.9529109046271151
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 2,
+      "trial": 1,
+      "ratios": {
+        "CPU": 0.6690269479771641,
+        "memory": 0.30113540663450616,
+        "throughput": 0.9965139057115598,
+        "encoded_useful_throughput": 0.9966972497187713,
+        "first_byte_p95": 0.9525914354217736
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 2,
+      "trial": 2,
+      "ratios": {
+        "CPU": 0.7242558479188345,
+        "memory": 0.2988188332860178,
+        "throughput": 0.996099934051268,
+        "encoded_useful_throughput": 0.9961528351481075,
+        "first_byte_p95": 0.9524715131317955
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 2,
+      "trial": 3,
+      "ratios": {
+        "CPU": 0.6917483329998851,
+        "memory": 0.2979750396861247,
+        "throughput": 0.9945272436036681,
+        "encoded_useful_throughput": 0.9946411751948848,
+        "first_byte_p95": 0.9537000357914869
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 10,
+      "trial": 1,
+      "ratios": {
+        "CPU": 0.524733397761694,
+        "memory": 0.2971204581850343,
+        "throughput": 0.996021299528888,
+        "encoded_useful_throughput": 0.9962189337870888,
+        "first_byte_p95": 0.953760068897204
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 10,
+      "trial": 2,
+      "ratios": {
+        "CPU": 0.537128807134196,
+        "memory": 0.2990160006845213,
+        "throughput": 0.9950693656409713,
+        "encoded_useful_throughput": 0.9951776532117511,
+        "first_byte_p95": 0.9526540765730549
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 10,
+      "trial": 3,
+      "ratios": {
+        "CPU": 0.508884515329584,
+        "memory": 0.2966207115465456,
+        "throughput": 0.9946761930290713,
+        "encoded_useful_throughput": 0.9947658958382151,
+        "first_byte_p95": 0.952865215951553
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 100,
+      "trial": 1,
+      "ratios": {
+        "CPU": 0.1726851315872894,
+        "memory": 0.2887676030406926,
+        "throughput": 0.9942793080857142,
+        "encoded_useful_throughput": 0.9942620624682008,
+        "first_byte_p95": 0.09437776915359594
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 100,
+      "trial": 2,
+      "ratios": {
+        "CPU": 0.17233096322174904,
+        "memory": 0.28912834343318067,
+        "throughput": 0.994515621117149,
+        "encoded_useful_throughput": 0.9944988824961339,
+        "first_byte_p95": 0.09531957407599868
+      },
+      "passed": true,
+      "failed": []
+    },
+    {
+      "viewers": 100,
+      "trial": 3,
+      "ratios": {
+        "CPU": 0.17682694960157935,
+        "memory": 0.30224672866430746,
+        "throughput": 0.9941083442523811,
+        "encoded_useful_throughput": 0.994082286723606,
+        "first_byte_p95": 0.12310663320707273
+      },
+      "passed": true,
+      "failed": []
+    }
+  ],
+  "phases": [
+    {
+      "phase": 1,
+      "viewers": 1,
+      "trial": 1,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.99916264700005,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.207617,
+          "cpu_mean_cores": 0.020127230893286153,
+          "charged_memory_median_bytes": 893718528,
+          "charged_memory_max_simultaneous_bytes": 897646592,
+          "working_set_estimate_median_bytes": 845438976,
+          "working_set_estimate_max_simultaneous_bytes": 849367040
+        },
+        "origin": {
+          "cpu_core_seconds": 0.397541,
+          "cpu_mean_cores": 0.006625775801887412,
+          "charged_memory_median_bytes": 404779008,
+          "charged_memory_max_simultaneous_bytes": 405565440,
+          "working_set_estimate_median_bytes": 102731776,
+          "working_set_estimate_max_simultaneous_bytes": 103518208
+        },
+        "observer": {
+          "cpu_core_seconds": 0.348596,
+          "cpu_mean_cores": 0.005810014417216701,
+          "charged_memory_median_bytes": 428806144,
+          "charged_memory_max_simultaneous_bytes": 434061312,
+          "working_set_estimate_median_bytes": 226418688,
+          "working_set_estimate_max_simultaneous_bytes": 227426304
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.953754,
+          "cpu_mean_cores": 0.03256302111239027,
+          "charged_memory_median_bytes": 1727713280,
+          "charged_memory_max_simultaneous_bytes": 1735159808,
+          "working_set_estimate_median_bytes": 1174753280,
+          "working_set_estimate_max_simultaneous_bytes": 1178419200
+        },
+        "primary": {
+          "cpu_core_seconds": 1.605158,
+          "cpu_mean_cores": 0.026753006695173567,
+          "charged_memory_median_bytes": 1298391040,
+          "charged_memory_max_simultaneous_bytes": 1302155264,
+          "working_set_estimate_median_bytes": 948064256,
+          "working_set_estimate_max_simultaneous_bytes": 951828480
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "8f42814bf28b292bd46180ea0c682906d071bbcfb4d903a43d7680689e98157d",
+        "resource-samples.json": "047a6b69c51cebc200c6bc7c7e1505adf0a2b9af098ccac5f706abf520e96139",
+        "useful-media-complete.json": "42cee442c3cb98e75c3a3b459e152a240507073bc0121f5dd1b0d0a942b7572d"
+      }
+    },
+    {
+      "phase": 2,
+      "viewers": 1,
+      "trial": 1,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.998615416003304,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.770158,
+          "cpu_mean_cores": 0.012836262881402716,
+          "charged_memory_median_bytes": 430612480,
+          "charged_memory_max_simultaneous_bytes": 437919744,
+          "working_set_estimate_median_bytes": 177680384,
+          "working_set_estimate_max_simultaneous_bytes": 184987648
+        },
+        "origin": {
+          "cpu_core_seconds": 0.406062,
+          "cpu_mean_cores": 0.006767856177755927,
+          "charged_memory_median_bytes": 230883328,
+          "charged_memory_max_simultaneous_bytes": 232067072,
+          "working_set_estimate_median_bytes": 101376000,
+          "working_set_estimate_max_simultaneous_bytes": 102559744
+        },
+        "observer": {
+          "cpu_core_seconds": 0.316306,
+          "cpu_mean_cores": 0.00527188832287007,
+          "charged_memory_median_bytes": 414658560,
+          "charged_memory_max_simultaneous_bytes": 419999744,
+          "working_set_estimate_median_bytes": 228741120,
+          "working_set_estimate_max_simultaneous_bytes": 229969920
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.492526,
+          "cpu_mean_cores": 0.024876007382028713,
+          "charged_memory_median_bytes": 1076068352,
+          "charged_memory_max_simultaneous_bytes": 1087619072,
+          "working_set_estimate_median_bytes": 508452864,
+          "working_set_estimate_max_simultaneous_bytes": 515026944
+        },
+        "primary": {
+          "cpu_core_seconds": 1.17622,
+          "cpu_mean_cores": 0.019604119059158643,
+          "charged_memory_median_bytes": 662269952,
+          "charged_memory_max_simultaneous_bytes": 668450816,
+          "working_set_estimate_median_bytes": 279830528,
+          "working_set_estimate_max_simultaneous_bytes": 286011392
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "ccb1c1a152a0368b1ebfa4f12b007b97aa744ecad29429ebfd94dc9706e405ad",
+        "resource-samples.json": "8e8ce329de4f0a50fb9ed9f623f058cab7eeb5daa1332322512ed2f674fa7d30",
+        "useful-media-complete.json": "376bc685c8073b5ae16e8f8c1a25495032118241aa1bbded2a58c09f9984bb93"
+      }
+    },
+    {
+      "phase": 3,
+      "viewers": 1,
+      "trial": 2,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.9993542839984,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.797063,
+          "cpu_mean_cores": 0.013284526300520098,
+          "charged_memory_median_bytes": 177410048,
+          "charged_memory_max_simultaneous_bytes": 182849536,
+          "working_set_estimate_median_bytes": 177344512,
+          "working_set_estimate_max_simultaneous_bytes": 182784000
+        },
+        "origin": {
+          "cpu_core_seconds": 0.400078,
+          "cpu_mean_cores": 0.0066680384276518664,
+          "charged_memory_median_bytes": 223154176,
+          "charged_memory_max_simultaneous_bytes": 224088064,
+          "working_set_estimate_median_bytes": 101871616,
+          "working_set_estimate_max_simultaneous_bytes": 102805504
+        },
+        "observer": {
+          "cpu_core_seconds": 0.312772,
+          "cpu_mean_cores": 0.005212922767794104,
+          "charged_memory_median_bytes": 416624640,
+          "charged_memory_max_simultaneous_bytes": 421367808,
+          "working_set_estimate_median_bytes": 230109184,
+          "working_set_estimate_max_simultaneous_bytes": 231510016
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.509913,
+          "cpu_mean_cores": 0.02516548749596607,
+          "charged_memory_median_bytes": 816607232,
+          "charged_memory_max_simultaneous_bytes": 826249216,
+          "working_set_estimate_median_bytes": 509210624,
+          "working_set_estimate_max_simultaneous_bytes": 515600384
+        },
+        "primary": {
+          "cpu_core_seconds": 1.197141,
+          "cpu_mean_cores": 0.019952564728171966,
+          "charged_memory_median_bytes": 400392192,
+          "charged_memory_max_simultaneous_bytes": 406511616,
+          "working_set_estimate_median_bytes": 279044096,
+          "working_set_estimate_max_simultaneous_bytes": 285163520
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "8e5246d76183e19fa981a9df26d5ca5464b66b9f8e080ecd1c50eb78e3c98f12",
+        "resource-samples.json": "550f62879ee23a6ce2dd28fd10061c4206b123d960616c12f9d28c8e4b9ce2f7",
+        "useful-media-complete.json": "19cf9d9678269e1d767d18724d8597914e28f1fd73382fea092c7670e3afda18"
+      }
+    },
+    {
+      "phase": 4,
+      "viewers": 1,
+      "trial": 2,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.999500116999116,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.169594,
+          "cpu_mean_cores": 0.019493395740286003,
+          "charged_memory_median_bytes": 839905280,
+          "charged_memory_max_simultaneous_bytes": 845295616,
+          "working_set_estimate_median_bytes": 839815168,
+          "working_set_estimate_max_simultaneous_bytes": 845205504
+        },
+        "origin": {
+          "cpu_core_seconds": 0.388998,
+          "cpu_mean_cores": 0.006483354015307683,
+          "charged_memory_median_bytes": 222990336,
+          "charged_memory_max_simultaneous_bytes": 225542144,
+          "working_set_estimate_median_bytes": 101699584,
+          "working_set_estimate_max_simultaneous_bytes": 104251392
+        },
+        "observer": {
+          "cpu_core_seconds": 0.338478,
+          "cpu_mean_cores": 0.005641347000224458,
+          "charged_memory_median_bytes": 415547392,
+          "charged_memory_max_simultaneous_bytes": 420585472,
+          "working_set_estimate_median_bytes": 229330944,
+          "working_set_estimate_max_simultaneous_bytes": 230256640
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.89707,
+          "cpu_mean_cores": 0.03161809675581814,
+          "charged_memory_median_bytes": 1478524928,
+          "charged_memory_max_simultaneous_bytes": 1488207872,
+          "working_set_estimate_median_bytes": 1171361792,
+          "working_set_estimate_max_simultaneous_bytes": 1176342528
+        },
+        "primary": {
+          "cpu_core_seconds": 1.558592,
+          "cpu_mean_cores": 0.025976749755593685,
+          "charged_memory_median_bytes": 1063202816,
+          "charged_memory_max_simultaneous_bytes": 1068593152,
+          "working_set_estimate_median_bytes": 941821952,
+          "working_set_estimate_max_simultaneous_bytes": 947212288
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "23d251befd660b7c2079ab81e05caa9076f7a13bbc923e403028cd010933d537",
+        "resource-samples.json": "563619cfbfc883e2d085a5612b455e58d2b3a9469802ff10cf148cfdaa278e9d",
+        "useful-media-complete.json": "ba26e5c619748e7ba90a97efcf461a4245d481eed1b547922f196ab333c10bbe"
+      }
+    },
+    {
+      "phase": 5,
+      "viewers": 1,
+      "trial": 3,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.9985661110004,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.210198,
+          "cpu_mean_cores": 0.020170448703075206,
+          "charged_memory_median_bytes": 846954496,
+          "charged_memory_max_simultaneous_bytes": 851341312,
+          "working_set_estimate_median_bytes": 846864384,
+          "working_set_estimate_max_simultaneous_bytes": 851251200
+        },
+        "origin": {
+          "cpu_core_seconds": 0.394745,
+          "cpu_mean_cores": 0.0065792405650111985,
+          "charged_memory_median_bytes": 223399936,
+          "charged_memory_max_simultaneous_bytes": 224313344,
+          "working_set_estimate_median_bytes": 102117376,
+          "working_set_estimate_max_simultaneous_bytes": 103030784
+        },
+        "observer": {
+          "cpu_core_seconds": 0.343354,
+          "cpu_mean_cores": 0.005722703428691573,
+          "charged_memory_median_bytes": 416526336,
+          "charged_memory_max_simultaneous_bytes": 421298176,
+          "working_set_estimate_median_bytes": 230354944,
+          "working_set_estimate_max_simultaneous_bytes": 231522304
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.948297,
+          "cpu_mean_cores": 0.03247239269677798,
+          "charged_memory_median_bytes": 1486811136,
+          "charged_memory_max_simultaneous_bytes": 1495580672,
+          "working_set_estimate_median_bytes": 1179049984,
+          "working_set_estimate_max_simultaneous_bytes": 1184919552
+        },
+        "primary": {
+          "cpu_core_seconds": 1.604943,
+          "cpu_mean_cores": 0.026749689268086404,
+          "charged_memory_median_bytes": 1070096384,
+          "charged_memory_max_simultaneous_bytes": 1074946048,
+          "working_set_estimate_median_bytes": 948723712,
+          "working_set_estimate_max_simultaneous_bytes": 953573376
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "b3fb6b7975bd40415b3dbcc59fcd026a813974222da65ff6fd7aa90b2d479171",
+        "resource-samples.json": "65e58ebb0858d6218f4684f964b8b3ccc9c57644cd52bc4969e6eddea92a420a",
+        "useful-media-complete.json": "3fd7f240dde77a84b9be06a9afd516f0270ef1758fe04d3bcdd1e2f8b6a51fd6"
+      }
+    },
+    {
+      "phase": 6,
+      "viewers": 1,
+      "trial": 3,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.99870176100012,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.764086,
+          "cpu_mean_cores": 0.012735042218807894,
+          "charged_memory_median_bytes": 179261440,
+          "charged_memory_max_simultaneous_bytes": 185196544,
+          "working_set_estimate_median_bytes": 179195904,
+          "working_set_estimate_max_simultaneous_bytes": 185131008
+        },
+        "origin": {
+          "cpu_core_seconds": 0.392835,
+          "cpu_mean_cores": 0.006547391667986848,
+          "charged_memory_median_bytes": 223141888,
+          "charged_memory_max_simultaneous_bytes": 224313344,
+          "working_set_estimate_median_bytes": 101859328,
+          "working_set_estimate_max_simultaneous_bytes": 103030784
+        },
+        "observer": {
+          "cpu_core_seconds": 0.307525,
+          "cpu_mean_cores": 0.005125527569329757,
+          "charged_memory_median_bytes": 415633408,
+          "charged_memory_max_simultaneous_bytes": 421449728,
+          "working_set_estimate_median_bytes": 230227968,
+          "working_set_estimate_max_simultaneous_bytes": 231653376
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.464446,
+          "cpu_mean_cores": 0.024407961456124498,
+          "charged_memory_median_bytes": 817238016,
+          "charged_memory_max_simultaneous_bytes": 828760064,
+          "working_set_estimate_median_bytes": 510386176,
+          "working_set_estimate_max_simultaneous_bytes": 517980160
+        },
+        "primary": {
+          "cpu_core_seconds": 1.156921,
+          "cpu_mean_cores": 0.019282433886794743,
+          "charged_memory_median_bytes": 401911808,
+          "charged_memory_max_simultaneous_bytes": 408903680,
+          "working_set_estimate_median_bytes": 280563712,
+          "working_set_estimate_max_simultaneous_bytes": 287555584
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "deb934c1eccb51402387e57bf34d1b85966a726ad08c869f5f275307dc257bd9",
+        "resource-samples.json": "c1162780f2ea9f239c0a2482625d9eaec76a713a16fa9b7f6d047b14ae5b7f31",
+        "useful-media-complete.json": "04d0e826b2ffb4cd7c729a725ace5a94a774a091e85d17c8c74b07cbc167daf7"
+      }
+    },
+    {
+      "phase": 7,
+      "viewers": 2,
+      "trial": 1,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.99927413099795,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.307936,
+          "cpu_mean_cores": 0.021799197056023543,
+          "charged_memory_median_bytes": 839553024,
+          "charged_memory_max_simultaneous_bytes": 845647872,
+          "working_set_estimate_median_bytes": 839462912,
+          "working_set_estimate_max_simultaneous_bytes": 845557760
+        },
+        "origin": {
+          "cpu_core_seconds": 0.393564,
+          "cpu_mean_cores": 0.006559479355378895,
+          "charged_memory_median_bytes": 223219712,
+          "charged_memory_max_simultaneous_bytes": 224632832,
+          "working_set_estimate_median_bytes": 101937152,
+          "working_set_estimate_max_simultaneous_bytes": 103350272
+        },
+        "observer": {
+          "cpu_core_seconds": 0.421281,
+          "cpu_mean_cores": 0.007021434944032931,
+          "charged_memory_median_bytes": 427016192,
+          "charged_memory_max_simultaneous_bytes": 437755904,
+          "working_set_estimate_median_bytes": 232321024,
+          "working_set_estimate_max_simultaneous_bytes": 233807872
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 2.122781,
+          "cpu_mean_cores": 0.03538011135543537,
+          "charged_memory_median_bytes": 1489547264,
+          "charged_memory_max_simultaneous_bytes": 1505353728,
+          "working_set_estimate_median_bytes": 1173397504,
+          "working_set_estimate_max_simultaneous_bytes": 1181077504
+        },
+        "primary": {
+          "cpu_core_seconds": 1.7015,
+          "cpu_mean_cores": 0.02835867641140244,
+          "charged_memory_median_bytes": 1062772736,
+          "charged_memory_max_simultaneous_bytes": 1069789184,
+          "working_set_estimate_median_bytes": 941400064,
+          "working_set_estimate_max_simultaneous_bytes": 948416512
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "2cd95916a975340a8a380cdf1aa7bc88b89bc39f9dda7d97ba81129030397a3d",
+        "resource-samples.json": "9ac9754c6593e14a0b3569c0bc366190cb4be2ce49b7b69fb1024ecfac6820be",
+        "useful-media-complete.json": "81189667f6e881efb31619867e7479923a2d68409dbcd1434bf655aeb8cccefe"
+      }
+    },
+    {
+      "phase": 8,
+      "viewers": 2,
+      "trial": 1,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.9996772370032,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.757757,
+          "cpu_mean_cores": 0.012629351271454401,
+          "charged_memory_median_bytes": 177299456,
+          "charged_memory_max_simultaneous_bytes": 184020992,
+          "working_set_estimate_median_bytes": 177233920,
+          "working_set_estimate_max_simultaneous_bytes": 183955456
+        },
+        "origin": {
+          "cpu_core_seconds": 0.3806,
+          "cpu_mean_cores": 0.006343367456738169,
+          "charged_memory_median_bytes": 222732288,
+          "charged_memory_max_simultaneous_bytes": 224215040,
+          "working_set_estimate_median_bytes": 101449728,
+          "working_set_estimate_max_simultaneous_bytes": 102932480
+        },
+        "observer": {
+          "cpu_core_seconds": 0.342412,
+          "cpu_mean_cores": 0.005706897366254939,
+          "charged_memory_median_bytes": 423133184,
+          "charged_memory_max_simultaneous_bytes": 434511872,
+          "working_set_estimate_median_bytes": 233525248,
+          "working_set_estimate_max_simultaneous_bytes": 234995712
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.480769,
+          "cpu_mean_cores": 0.02467961609444751,
+          "charged_memory_median_bytes": 823332864,
+          "charged_memory_max_simultaneous_bytes": 837185536,
+          "working_set_estimate_median_bytes": 511737856,
+          "working_set_estimate_max_simultaneous_bytes": 519266304
+        },
+        "primary": {
+          "cpu_core_seconds": 1.138357,
+          "cpu_mean_cores": 0.018972718728192572,
+          "charged_memory_median_bytes": 399851520,
+          "charged_memory_max_simultaneous_bytes": 406949888,
+          "working_set_estimate_median_bytes": 278503424,
+          "working_set_estimate_max_simultaneous_bytes": 285601792
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "c11dd687cda9daab08c6bd562780f32c0dfaaa858e612544d4b34966406f5d30",
+        "resource-samples.json": "346e4ff95323adb4b4cc5cfef065c093fd696c7729f90c5346c2759f7fb7e80a",
+        "useful-media-complete.json": "82085816d66bbd2db3d95473a4e525dda038e0792fe89c0ff38d649718c3ac65"
+      }
+    },
+    {
+      "phase": 9,
+      "viewers": 2,
+      "trial": 2,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.99945530199693,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.794763,
+          "cpu_mean_cores": 0.013246170252708082,
+          "charged_memory_median_bytes": 176414720,
+          "charged_memory_max_simultaneous_bytes": 183033856,
+          "working_set_estimate_median_bytes": 176349184,
+          "working_set_estimate_max_simultaneous_bytes": 182968320
+        },
+        "origin": {
+          "cpu_core_seconds": 0.404366,
+          "cpu_mean_cores": 0.006739494516486747,
+          "charged_memory_median_bytes": 222867456,
+          "charged_memory_max_simultaneous_bytes": 224616448,
+          "working_set_estimate_median_bytes": 101584896,
+          "working_set_estimate_max_simultaneous_bytes": 103333888
+        },
+        "observer": {
+          "cpu_core_seconds": 0.351248,
+          "cpu_mean_cores": 0.005854186479394749,
+          "charged_memory_median_bytes": 423682048,
+          "charged_memory_max_simultaneous_bytes": 433262592,
+          "working_set_estimate_median_bytes": 233172992,
+          "working_set_estimate_max_simultaneous_bytes": 234266624
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.550377,
+          "cpu_mean_cores": 0.025839851248589576,
+          "charged_memory_median_bytes": 823279616,
+          "charged_memory_max_simultaneous_bytes": 838696960,
+          "working_set_estimate_median_bytes": 512057344,
+          "working_set_estimate_max_simultaneous_bytes": 517824512
+        },
+        "primary": {
+          "cpu_core_seconds": 1.199129,
+          "cpu_mean_cores": 0.019985664769194826,
+          "charged_memory_median_bytes": 400715776,
+          "charged_memory_max_simultaneous_bytes": 405897216,
+          "working_set_estimate_median_bytes": 279367680,
+          "working_set_estimate_max_simultaneous_bytes": 284549120
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "e2d6372d8172f3e4db6c5667da1e6ca26cca7f936cb4b6d4d6159d827ed52481",
+        "resource-samples.json": "d0cd342c1154f27cea6a85816bf5cf22b94d22b47fa6a636e1f9dec6521f26be",
+        "useful-media-complete.json": "1dc7e901edeeed4a75676163c2daa249db0a4389638f16cd5ba2042c88ec713f"
+      }
+    },
+    {
+      "phase": 10,
+      "viewers": 2,
+      "trial": 2,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.999547993000306,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.254192,
+          "cpu_mean_cores": 0.020903357474398258,
+          "charged_memory_median_bytes": 845819904,
+          "charged_memory_max_simultaneous_bytes": 850509824,
+          "working_set_estimate_median_bytes": 845729792,
+          "working_set_estimate_max_simultaneous_bytes": 850419712
+        },
+        "origin": {
+          "cpu_core_seconds": 0.401481,
+          "cpu_mean_cores": 0.00669140040933038,
+          "charged_memory_median_bytes": 222867456,
+          "charged_memory_max_simultaneous_bytes": 224346112,
+          "working_set_estimate_median_bytes": 101584896,
+          "working_set_estimate_max_simultaneous_bytes": 103063552
+        },
+        "observer": {
+          "cpu_core_seconds": 0.409104,
+          "cpu_mean_cores": 0.006818451366462412,
+          "charged_memory_median_bytes": 423919616,
+          "charged_memory_max_simultaneous_bytes": 435765248,
+          "working_set_estimate_median_bytes": 233562112,
+          "working_set_estimate_max_simultaneous_bytes": 235151360
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 2.064777,
+          "cpu_mean_cores": 0.03441320925019105,
+          "charged_memory_median_bytes": 1493139456,
+          "charged_memory_max_simultaneous_bytes": 1507233792,
+          "working_set_estimate_median_bytes": 1180823552,
+          "working_set_estimate_max_simultaneous_bytes": 1185927168
+        },
+        "primary": {
+          "cpu_core_seconds": 1.655673,
+          "cpu_mean_cores": 0.027594757883728636,
+          "charged_memory_median_bytes": 1068687360,
+          "charged_memory_max_simultaneous_bytes": 1073618944,
+          "working_set_estimate_median_bytes": 947314688,
+          "working_set_estimate_max_simultaneous_bytes": 952246272
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "55ea5ccdb1ace5ec0f0fd2a8dc6ab2d602dc3d8c6e1eb9cf0c47eef716a02297",
+        "resource-samples.json": "d20a0def81b7040884cb98fccbaff48da0bfca6ead780eb8eec37e2e397c77d9",
+        "useful-media-complete.json": "e2381953c63157a8369cefe3bf91f577fd7d399a8d26dbf465f13134169e4701"
+      }
+    },
+    {
+      "phase": 11,
+      "viewers": 2,
+      "trial": 3,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.99953464999999,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.300607,
+          "cpu_mean_cores": 0.02167695145615601,
+          "charged_memory_median_bytes": 844992512,
+          "charged_memory_max_simultaneous_bytes": 850423808,
+          "working_set_estimate_median_bytes": 844902400,
+          "working_set_estimate_max_simultaneous_bytes": 850333696
+        },
+        "origin": {
+          "cpu_core_seconds": 0.409638,
+          "cpu_mean_cores": 0.0068273529518116036,
+          "charged_memory_median_bytes": 222973952,
+          "charged_memory_max_simultaneous_bytes": 223780864,
+          "working_set_estimate_median_bytes": 101691392,
+          "working_set_estimate_max_simultaneous_bytes": 102498304
+        },
+        "observer": {
+          "cpu_core_seconds": 0.427016,
+          "cpu_mean_cores": 0.007116988531510221,
+          "charged_memory_median_bytes": 422789120,
+          "charged_memory_max_simultaneous_bytes": 433111040,
+          "working_set_estimate_median_bytes": 231985152,
+          "working_set_estimate_max_simultaneous_bytes": 233324544
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 2.137261,
+          "cpu_mean_cores": 0.035621292939477835,
+          "charged_memory_median_bytes": 1491107840,
+          "charged_memory_max_simultaneous_bytes": 1506594816,
+          "working_set_estimate_median_bytes": 1178976256,
+          "working_set_estimate_max_simultaneous_bytes": 1184305152
+        },
+        "primary": {
+          "cpu_core_seconds": 1.710245,
+          "cpu_mean_cores": 0.028504304407967612,
+          "charged_memory_median_bytes": 1068380160,
+          "charged_memory_max_simultaneous_bytes": 1073483776,
+          "working_set_estimate_median_bytes": 947007488,
+          "working_set_estimate_max_simultaneous_bytes": 952111104
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "4435f1a92875d938d59ba21d633662dfd54c7a79c37c931f0dee3b3827b32014",
+        "resource-samples.json": "1d510044a078ce4577b61f14ce6b0728cf614abf4bad41114b8b170b772e97b8",
+        "useful-media-complete.json": "3f054476929235bf7381bb567578345bf75b0af8e1c60b3c6769b3ae023d54ed"
+      }
+    },
+    {
+      "phase": 12,
+      "viewers": 2,
+      "trial": 3,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.999528169999394,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.773914,
+          "cpu_mean_cores": 0.012898668099642954,
+          "charged_memory_median_bytes": 174325760,
+          "charged_memory_max_simultaneous_bytes": 181915648,
+          "working_set_estimate_median_bytes": 174260224,
+          "working_set_estimate_max_simultaneous_bytes": 181850112
+        },
+        "origin": {
+          "cpu_core_seconds": 0.409145,
+          "cpu_mean_cores": 0.006819136957889916,
+          "charged_memory_median_bytes": 222769152,
+          "charged_memory_max_simultaneous_bytes": 223768576,
+          "working_set_estimate_median_bytes": 101486592,
+          "working_set_estimate_max_simultaneous_bytes": 102486016
+        },
+        "observer": {
+          "cpu_core_seconds": 0.337207,
+          "cpu_mean_cores": 0.005620160862675054,
+          "charged_memory_median_bytes": 425771008,
+          "charged_memory_max_simultaneous_bytes": 435240960,
+          "working_set_estimate_median_bytes": 235118592,
+          "working_set_estimate_max_simultaneous_bytes": 236036096
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.520266,
+          "cpu_mean_cores": 0.025337965920207924,
+          "charged_memory_median_bytes": 822726656,
+          "charged_memory_max_simultaneous_bytes": 838545408,
+          "working_set_estimate_median_bytes": 511913984,
+          "working_set_estimate_max_simultaneous_bytes": 518320128
+        },
+        "primary": {
+          "cpu_core_seconds": 1.183059,
+          "cpu_mean_cores": 0.019717805057532872,
+          "charged_memory_median_bytes": 397225984,
+          "charged_memory_max_simultaneous_bytes": 405053440,
+          "working_set_estimate_median_bytes": 275877888,
+          "working_set_estimate_max_simultaneous_bytes": 283705344
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "f42f0268736208f6597e9db6d87575f1cbc68b6f0e2898a372c524019ad96d9e",
+        "resource-samples.json": "dc3efa221954450c5412caa9365cfa04b84d412badcddc35f650b7a03f2a0eaf",
+        "useful-media-complete.json": "1d6041876dc68c7903daffbb9916a277b88f5b343a45a4cbd7a87f541b1111b1"
+      }
+    },
+    {
+      "phase": 13,
+      "viewers": 10,
+      "trial": 1,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.99955332399986,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.901802,
+          "cpu_mean_cores": 0.0316969359710096,
+          "charged_memory_median_bytes": 846938112,
+          "charged_memory_max_simultaneous_bytes": 852029440,
+          "working_set_estimate_median_bytes": 846848000,
+          "working_set_estimate_max_simultaneous_bytes": 851939328
+        },
+        "origin": {
+          "cpu_core_seconds": 0.40237,
+          "cpu_mean_cores": 0.006706216591766722,
+          "charged_memory_median_bytes": 223121408,
+          "charged_memory_max_simultaneous_bytes": 224247808,
+          "working_set_estimate_median_bytes": 101838848,
+          "working_set_estimate_max_simultaneous_bytes": 102965248
+        },
+        "observer": {
+          "cpu_core_seconds": 1.282855,
+          "cpu_mean_cores": 0.021381075840223918,
+          "charged_memory_median_bytes": 493408256,
+          "charged_memory_max_simultaneous_bytes": 542810112,
+          "working_set_estimate_median_bytes": 236494848,
+          "working_set_estimate_max_simultaneous_bytes": 238596096
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 3.587027,
+          "cpu_mean_cores": 0.05978422840300024,
+          "charged_memory_median_bytes": 1562832896,
+          "charged_memory_max_simultaneous_bytes": 1618096128,
+          "working_set_estimate_median_bytes": 1184673792,
+          "working_set_estimate_max_simultaneous_bytes": 1191825408
+        },
+        "primary": {
+          "cpu_core_seconds": 2.304172,
+          "cpu_mean_cores": 0.03840315256277632,
+          "charged_memory_median_bytes": 1069629440,
+          "charged_memory_max_simultaneous_bytes": 1075408896,
+          "working_set_estimate_median_bytes": 948256768,
+          "working_set_estimate_max_simultaneous_bytes": 954036224
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "453c1dba7cf36c568e2f476a9b9e3760465b7629032d8e3d2249b25fb76986d3",
+        "resource-samples.json": "8fde600aab4a927c29ae36f77cc9b4c0a26f0982f73ea1b21546d412faa64fd9",
+        "useful-media-complete.json": "476bffa15a8b38919d965c0f308783b61178a2ab04b5d8ef3b32b1f183e588f2"
+      }
+    },
+    {
+      "phase": 14,
+      "viewers": 10,
+      "trial": 1,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.99945394699898,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.801136,
+          "cpu_mean_cores": 0.013352388185193987,
+          "charged_memory_median_bytes": 176750592,
+          "charged_memory_max_simultaneous_bytes": 182108160,
+          "working_set_estimate_median_bytes": 176685056,
+          "working_set_estimate_max_simultaneous_bytes": 182042624
+        },
+        "origin": {
+          "cpu_core_seconds": 0.407938,
+          "cpu_mean_cores": 0.00679902854383234,
+          "charged_memory_median_bytes": 222720000,
+          "charged_memory_max_simultaneous_bytes": 223875072,
+          "working_set_estimate_median_bytes": 101437440,
+          "working_set_estimate_max_simultaneous_bytes": 102592512
+        },
+        "observer": {
+          "cpu_core_seconds": 0.630712,
+          "cpu_mean_cores": 0.010511962334809659,
+          "charged_memory_median_bytes": 497635328,
+          "charged_memory_max_simultaneous_bytes": 545312768,
+          "working_set_estimate_median_bytes": 244092928,
+          "working_set_estimate_max_simultaneous_bytes": 245432320
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.839786,
+          "cpu_mean_cores": 0.030663379063835983,
+          "charged_memory_median_bytes": 897597440,
+          "charged_memory_max_simultaneous_bytes": 949624832,
+          "working_set_estimate_median_bytes": 522924032,
+          "working_set_estimate_max_simultaneous_bytes": 528617472
+        },
+        "primary": {
+          "cpu_core_seconds": 1.209074,
+          "cpu_mean_cores": 0.020151416729026327,
+          "charged_memory_median_bytes": 400158720,
+          "charged_memory_max_simultaneous_bytes": 404811776,
+          "working_set_estimate_median_bytes": 278810624,
+          "working_set_estimate_max_simultaneous_bytes": 283463680
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "2186d3c9bbe878d6609a2312091a7373d6ebd11586062dbf8c2885d62fe35357",
+        "resource-samples.json": "17a80676297dcded3549858699955a017c05b18ebffb2ad740f1512df553207a",
+        "useful-media-complete.json": "7d4164769a0e2203bb1893a3a5576f29d045db5fbb52b43f73fcad26fe954b57"
+      }
+    },
+    {
+      "phase": 15,
+      "viewers": 10,
+      "trial": 2,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 60.00014306599769,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.821304,
+          "cpu_mean_cores": 0.013688367361001113,
+          "charged_memory_median_bytes": 179015680,
+          "charged_memory_max_simultaneous_bytes": 184471552,
+          "working_set_estimate_median_bytes": 178950144,
+          "working_set_estimate_max_simultaneous_bytes": 184406016
+        },
+        "origin": {
+          "cpu_core_seconds": 0.411459,
+          "cpu_mean_cores": 0.006857633648430005,
+          "charged_memory_median_bytes": 223105024,
+          "charged_memory_max_simultaneous_bytes": 224083968,
+          "working_set_estimate_median_bytes": 101822464,
+          "working_set_estimate_max_simultaneous_bytes": 102801408
+        },
+        "observer": {
+          "cpu_core_seconds": 0.65193,
+          "cpu_mean_cores": 0.01086547409200181,
+          "charged_memory_median_bytes": 496656384,
+          "charged_memory_max_simultaneous_bytes": 541728768,
+          "working_set_estimate_median_bytes": 241156096,
+          "working_set_estimate_max_simultaneous_bytes": 242720768
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.884693,
+          "cpu_mean_cores": 0.031411475101432926,
+          "charged_memory_median_bytes": 897212416,
+          "charged_memory_max_simultaneous_bytes": 948740096,
+          "working_set_estimate_median_bytes": 521867264,
+          "working_set_estimate_max_simultaneous_bytes": 527364096
+        },
+        "primary": {
+          "cpu_core_seconds": 1.232763,
+          "cpu_mean_cores": 0.020546001009431117,
+          "charged_memory_median_bytes": 401559552,
+          "charged_memory_max_simultaneous_bytes": 407625728,
+          "working_set_estimate_median_bytes": 280211456,
+          "working_set_estimate_max_simultaneous_bytes": 286277632
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "a64ce601d1c4341d231d059d0fd104c44e45502dc511ab0074f27c8b052f66fe",
+        "resource-samples.json": "77928298d26ba35f406b25a02c7772151e9c7a0063da82aa33fa9270592b4654",
+        "useful-media-complete.json": "7793eb740346359d7b401bd903f274a7b50c62f7d8f3967f5a023fbcb5410adb"
+      }
+    },
+    {
+      "phase": 16,
+      "viewers": 10,
+      "trial": 2,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.99947557099949,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.882797,
+          "cpu_mean_cores": 0.03138022427832757,
+          "charged_memory_median_bytes": 850968576,
+          "charged_memory_max_simultaneous_bytes": 855142400,
+          "working_set_estimate_median_bytes": 850878464,
+          "working_set_estimate_max_simultaneous_bytes": 855052288
+        },
+        "origin": {
+          "cpu_core_seconds": 0.412275,
+          "cpu_mean_cores": 0.006871310058571103,
+          "charged_memory_median_bytes": 222818304,
+          "charged_memory_max_simultaneous_bytes": 223817728,
+          "working_set_estimate_median_bytes": 101535744,
+          "working_set_estimate_max_simultaneous_bytes": 102535168
+        },
+        "observer": {
+          "cpu_core_seconds": 1.190942,
+          "cpu_mean_cores": 0.019849206824994935,
+          "charged_memory_median_bytes": 495861760,
+          "charged_memory_max_simultaneous_bytes": 544890880,
+          "working_set_estimate_median_bytes": 238567424,
+          "working_set_estimate_max_simultaneous_bytes": 240775168
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 3.486014,
+          "cpu_mean_cores": 0.0581007411618936,
+          "charged_memory_median_bytes": 1569271808,
+          "charged_memory_max_simultaneous_bytes": 1623564288,
+          "working_set_estimate_median_bytes": 1191526400,
+          "working_set_estimate_max_simultaneous_bytes": 1197137920
+        },
+        "primary": {
+          "cpu_core_seconds": 2.295072,
+          "cpu_mean_cores": 0.038251534336898665,
+          "charged_memory_median_bytes": 1073410048,
+          "charged_memory_max_simultaneous_bytes": 1078771712,
+          "working_set_estimate_median_bytes": 952037376,
+          "working_set_estimate_max_simultaneous_bytes": 957399040
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "529cbce868d5b2147f1b65794f506e45e1f79cb2f930a15030f1d1e12c69b7e0",
+        "resource-samples.json": "fc8384e8b5b4b02a629f289db7e44363946b48d755f9f269c5ee75e2319162cf",
+        "useful-media-complete.json": "5e17f40db45efe785a29c053b9a3c05a8d7ae2336affd45cd4a7c1529e3703eb"
+      }
+    },
+    {
+      "phase": 17,
+      "viewers": 10,
+      "trial": 3,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.9994793879996,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.926772,
+          "cpu_mean_cores": 0.03211314530814697,
+          "charged_memory_median_bytes": 849301504,
+          "charged_memory_max_simultaneous_bytes": 853209088,
+          "working_set_estimate_median_bytes": 849211392,
+          "working_set_estimate_max_simultaneous_bytes": 853118976
+        },
+        "origin": {
+          "cpu_core_seconds": 0.415598,
+          "cpu_mean_cores": 0.006926693435328759,
+          "charged_memory_median_bytes": 222916608,
+          "charged_memory_max_simultaneous_bytes": 224018432,
+          "working_set_estimate_median_bytes": 101634048,
+          "working_set_estimate_max_simultaneous_bytes": 102735872
+        },
+        "observer": {
+          "cpu_core_seconds": 1.193991,
+          "cpu_mean_cores": 0.019900022669843503,
+          "charged_memory_median_bytes": 497160192,
+          "charged_memory_max_simultaneous_bytes": 546660352,
+          "working_set_estimate_median_bytes": 239345664,
+          "working_set_estimate_max_simultaneous_bytes": 241074176
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 3.536361,
+          "cpu_mean_cores": 0.05893986141331923,
+          "charged_memory_median_bytes": 1569546240,
+          "charged_memory_max_simultaneous_bytes": 1622687744,
+          "working_set_estimate_median_bytes": 1190379520,
+          "working_set_estimate_max_simultaneous_bytes": 1195585536
+        },
+        "primary": {
+          "cpu_core_seconds": 2.34237,
+          "cpu_mean_cores": 0.039039838743475726,
+          "charged_memory_median_bytes": 1072472064,
+          "charged_memory_max_simultaneous_bytes": 1076256768,
+          "working_set_estimate_median_bytes": 951099392,
+          "working_set_estimate_max_simultaneous_bytes": 954884096
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "fd8f2e3165509f2fe8fa0c3e7445de03d3f92041d5e7e1c911c95298cc1b7040",
+        "resource-samples.json": "990384910a2e459015ee6f592d7cd3f41347f256e6720b5dac88497ff39fe400",
+        "useful-media-complete.json": "de7ba8bdc887021beee9a842db4ceee0c981ecfe8615d069d458879a60ed3606"
+      }
+    },
+    {
+      "phase": 18,
+      "viewers": 10,
+      "trial": 3,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.99948833899907,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 0.78449,
+          "cpu_mean_cores": 0.013074944832322667,
+          "charged_memory_median_bytes": 178089984,
+          "charged_memory_max_simultaneous_bytes": 181698560,
+          "working_set_estimate_median_bytes": 178024448,
+          "working_set_estimate_max_simultaneous_bytes": 181633024
+        },
+        "origin": {
+          "cpu_core_seconds": 0.407506,
+          "cpu_mean_cores": 0.00679182458519609,
+          "charged_memory_median_bytes": 222904320,
+          "charged_memory_max_simultaneous_bytes": 223682560,
+          "working_set_estimate_median_bytes": 101621760,
+          "working_set_estimate_max_simultaneous_bytes": 102400000
+        },
+        "observer": {
+          "cpu_core_seconds": 0.635597,
+          "cpu_mean_cores": 0.010593373670269588,
+          "charged_memory_median_bytes": 497790976,
+          "charged_memory_max_simultaneous_bytes": 545423360,
+          "working_set_estimate_median_bytes": 243212288,
+          "working_set_estimate_max_simultaneous_bytes": 245272576
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 1.827593,
+          "cpu_mean_cores": 0.030460143087788345,
+          "charged_memory_median_bytes": 896995328,
+          "charged_memory_max_simultaneous_bytes": 948019200,
+          "working_set_estimate_median_bytes": 522477568,
+          "working_set_estimate_max_simultaneous_bytes": 526848000
+        },
+        "primary": {
+          "cpu_core_seconds": 1.191996,
+          "cpu_mean_cores": 0.01986676941751876,
+          "charged_memory_median_bytes": 400977920,
+          "charged_memory_max_simultaneous_bytes": 404586496,
+          "working_set_estimate_median_bytes": 279629824,
+          "working_set_estimate_max_simultaneous_bytes": 283238400
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "acaf3b05622c73f7133eabaff8b9e9cd03712512ad69f68dc10d177a9b6019d6",
+        "resource-samples.json": "7850a4d77eb56277e63e5e2310bce6c285cda340f5bd40d710665bfa515a8175",
+        "useful-media-complete.json": "bbcade99f4c72cf3467a7ea3d9604f3dd056cf6e0af1432eddb9cd465f07a1b4"
+      }
+    },
+    {
+      "phase": 19,
+      "viewers": 100,
+      "trial": 1,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.9988389550017,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 8.168884,
+          "cpu_mean_cores": 0.1361507012848457,
+          "charged_memory_median_bytes": 893280256,
+          "charged_memory_max_simultaneous_bytes": 898179072,
+          "working_set_estimate_median_bytes": 893190144,
+          "working_set_estimate_max_simultaneous_bytes": 898088960
+        },
+        "origin": {
+          "cpu_core_seconds": 0.447878,
+          "cpu_mean_cores": 0.007464777782381794,
+          "charged_memory_median_bytes": 223318016,
+          "charged_memory_max_simultaneous_bytes": 224448512,
+          "working_set_estimate_median_bytes": 102047744,
+          "working_set_estimate_max_simultaneous_bytes": 103165952
+        },
+        "observer": {
+          "cpu_core_seconds": 13.643481,
+          "cpu_mean_cores": 0.22739575027830825,
+          "charged_memory_median_bytes": 1292472320,
+          "charged_memory_max_simultaneous_bytes": 1581682688,
+          "working_set_estimate_median_bytes": 271593472,
+          "working_set_estimate_max_simultaneous_bytes": 274993152
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 22.260243,
+          "cpu_mean_cores": 0.3710112293455357,
+          "charged_memory_median_bytes": 2408157184,
+          "charged_memory_max_simultaneous_bytes": 2704166912,
+          "working_set_estimate_median_bytes": 1267564544,
+          "working_set_estimate_max_simultaneous_bytes": 1273835520
+        },
+        "primary": {
+          "cpu_core_seconds": 8.616762,
+          "cpu_mean_cores": 0.1436154790672275,
+          "charged_memory_median_bytes": 1116258304,
+          "charged_memory_max_simultaneous_bytes": 1122484224,
+          "working_set_estimate_median_bytes": 994885632,
+          "working_set_estimate_max_simultaneous_bytes": 1001136128
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "98375c9e63d17deafa90c12be929680ec026a2ba67c25bd6a6253afd19fd7f68",
+        "resource-samples.json": "f8e3db3ec6bebc60722b72612e2e7cfb047023c7fe02aa26764fcbdd9a57f2c0",
+        "useful-media-complete.json": "4cdc6eac2a1626a2b6702d435652a8e111399d91f9538cd61f103721a8105ba1"
+      }
+    },
+    {
+      "phase": 20,
+      "viewers": 100,
+      "trial": 1,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.999577663998934,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.083758,
+          "cpu_mean_cores": 0.01806276047590046,
+          "charged_memory_median_bytes": 217096192,
+          "charged_memory_max_simultaneous_bytes": 221622272,
+          "working_set_estimate_median_bytes": 182272000,
+          "working_set_estimate_max_simultaneous_bytes": 186798080
+        },
+        "origin": {
+          "cpu_core_seconds": 0.404247,
+          "cpu_mean_cores": 0.006737497424795327,
+          "charged_memory_median_bytes": 234016768,
+          "charged_memory_max_simultaneous_bytes": 235298816,
+          "working_set_estimate_median_bytes": 101822464,
+          "working_set_estimate_max_simultaneous_bytes": 103104512
+        },
+        "observer": {
+          "cpu_core_seconds": 4.130774,
+          "cpu_mean_cores": 0.06884671794079235,
+          "charged_memory_median_bytes": 1163763712,
+          "charged_memory_max_simultaneous_bytes": 1629351936,
+          "working_set_estimate_median_bytes": 307798016,
+          "working_set_estimate_max_simultaneous_bytes": 317808640
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 5.618779,
+          "cpu_mean_cores": 0.09364697584148815,
+          "charged_memory_median_bytes": 1612750848,
+          "charged_memory_max_simultaneous_bytes": 2082463744,
+          "working_set_estimate_median_bytes": 589979648,
+          "working_set_estimate_max_simultaneous_bytes": 599949312
+        },
+        "primary": {
+          "cpu_core_seconds": 1.488005,
+          "cpu_mean_cores": 0.024800257900695788,
+          "charged_memory_median_bytes": 451112960,
+          "charged_memory_max_simultaneous_bytes": 456114176,
+          "working_set_estimate_median_bytes": 284094464,
+          "working_set_estimate_max_simultaneous_bytes": 289095680
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "d4937a0ffb762a9e95ca301d72c9acc552c320249ab934b0aa863758f0c46cf0",
+        "resource-samples.json": "ae3a6d072ac36b61723848f8999b449d3cb74b10b09a5dd5682aadb62e1eacdf",
+        "useful-media-complete.json": "682ee081ad1b10cb18b9c761d6efc89bce3b67fcc605e89c6d0ce346b03fc00b"
+      }
+    },
+    {
+      "phase": 21,
+      "viewers": 100,
+      "trial": 2,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.9987433210008,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.079516,
+          "cpu_mean_cores": 0.017992310175972418,
+          "charged_memory_median_bytes": 182620160,
+          "charged_memory_max_simultaneous_bytes": 186687488,
+          "working_set_estimate_median_bytes": 182554624,
+          "working_set_estimate_max_simultaneous_bytes": 186621952
+        },
+        "origin": {
+          "cpu_core_seconds": 0.404256,
+          "cpu_mean_cores": 0.0067377411196294515,
+          "charged_memory_median_bytes": 222867456,
+          "charged_memory_max_simultaneous_bytes": 223694848,
+          "working_set_estimate_median_bytes": 101584896,
+          "working_set_estimate_max_simultaneous_bytes": 102412288
+        },
+        "observer": {
+          "cpu_core_seconds": 4.23663,
+          "cpu_mean_cores": 0.07061197894318383,
+          "charged_memory_median_bytes": 1166778368,
+          "charged_memory_max_simultaneous_bytes": 1632567296,
+          "working_set_estimate_median_bytes": 313982976,
+          "working_set_estimate_max_simultaneous_bytes": 329564160
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 5.720402,
+          "cpu_mean_cores": 0.0953420302387857,
+          "charged_memory_median_bytes": 1572335616,
+          "charged_memory_max_simultaneous_bytes": 2040963072,
+          "working_set_estimate_median_bytes": 597778432,
+          "working_set_estimate_max_simultaneous_bytes": 613683200
+        },
+        "primary": {
+          "cpu_core_seconds": 1.483772,
+          "cpu_mean_cores": 0.024730051295601872,
+          "charged_memory_median_bytes": 405467136,
+          "charged_memory_max_simultaneous_bytes": 409407488,
+          "working_set_estimate_median_bytes": 284119040,
+          "working_set_estimate_max_simultaneous_bytes": 288059392
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "169b3df8be4b7a9b924fee9ba19c16d89f6def3e4f50da4ba9b78431224f1729",
+        "resource-samples.json": "1c821aa8cf8b802592c23839a33ac744330e94a1cac2738b3a9292a9f5384ef1",
+        "useful-media-complete.json": "c387520028182f2b1af749fdde3bccff589f0c9d5dfc465ad39b57e499b6e4f0"
+      }
+    },
+    {
+      "phase": 22,
+      "viewers": 100,
+      "trial": 2,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.999614623000525,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 8.166343,
+          "cpu_mean_cores": 0.1361065908724933,
+          "charged_memory_median_bytes": 890949632,
+          "charged_memory_max_simultaneous_bytes": 894324736,
+          "working_set_estimate_median_bytes": 890757120,
+          "working_set_estimate_max_simultaneous_bytes": 894132224
+        },
+        "origin": {
+          "cpu_core_seconds": 0.443796,
+          "cpu_mean_cores": 0.007396647508297049,
+          "charged_memory_median_bytes": 223006720,
+          "charged_memory_max_simultaneous_bytes": 224423936,
+          "working_set_estimate_median_bytes": 101724160,
+          "working_set_estimate_max_simultaneous_bytes": 103141376
+        },
+        "observer": {
+          "cpu_core_seconds": 12.600736,
+          "cpu_mean_cores": 0.21001361557361697,
+          "charged_memory_median_bytes": 1193799680,
+          "charged_memory_max_simultaneous_bytes": 1686364160,
+          "working_set_estimate_median_bytes": 285761536,
+          "working_set_estimate_max_simultaneous_bytes": 288120832
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 21.210875,
+          "cpu_mean_cores": 0.35351685395440735,
+          "charged_memory_median_bytes": 2306859008,
+          "charged_memory_max_simultaneous_bytes": 2802917376,
+          "working_set_estimate_median_bytes": 1278074880,
+          "working_set_estimate_max_simultaneous_bytes": 1282965504
+        },
+        "primary": {
+          "cpu_core_seconds": 8.610139,
+          "cpu_mean_cores": 0.14350323838079038,
+          "charged_memory_median_bytes": 1113559040,
+          "charged_memory_max_simultaneous_bytes": 1117777920,
+          "working_set_estimate_median_bytes": 992083968,
+          "working_set_estimate_max_simultaneous_bytes": 996302848
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "eb70fe39dc47258d976ed13174e0fd4259cd6e368fc4b5dd1aa620d58f527f47",
+        "resource-samples.json": "d5ab2bb3ad9e8f9f9cec9d71930d2dfbebb1b31ff838aec1548f9754b93310fe",
+        "useful-media-complete.json": "5d3c5075481e009388242cff6765201074ae005cefa90df2699137592bf41dc5"
+      }
+    },
+    {
+      "phase": 23,
+      "viewers": 100,
+      "trial": 3,
+      "backend": "baseline",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.99942479400124,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 8.170906,
+          "cpu_mean_cores": 0.13618307222200118,
+          "charged_memory_median_bytes": 888086528,
+          "charged_memory_max_simultaneous_bytes": 893050880,
+          "working_set_estimate_median_bytes": 887996416,
+          "working_set_estimate_max_simultaneous_bytes": 892960768
+        },
+        "origin": {
+          "cpu_core_seconds": 0.438071,
+          "cpu_mean_cores": 0.007301253328745219,
+          "charged_memory_median_bytes": 223346688,
+          "charged_memory_max_simultaneous_bytes": 223932416,
+          "working_set_estimate_median_bytes": 102092800,
+          "working_set_estimate_max_simultaneous_bytes": 102678528
+        },
+        "observer": {
+          "cpu_core_seconds": 13.540173,
+          "cpu_mean_cores": 0.22567171346205553,
+          "charged_memory_median_bytes": 1205055488,
+          "charged_memory_max_simultaneous_bytes": 1697763328,
+          "working_set_estimate_median_bytes": 298553344,
+          "working_set_estimate_max_simultaneous_bytes": 300679168
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 22.14915,
+          "cpu_mean_cores": 0.3691560390128019,
+          "charged_memory_median_bytes": 2315993088,
+          "charged_memory_max_simultaneous_bytes": 2812841984,
+          "working_set_estimate_median_bytes": 1288568832,
+          "working_set_estimate_max_simultaneous_bytes": 1295351808
+        },
+        "primary": {
+          "cpu_core_seconds": 8.608977,
+          "cpu_mean_cores": 0.1434843255507464,
+          "charged_memory_median_bytes": 1111310336,
+          "charged_memory_max_simultaneous_bytes": 1116753920,
+          "working_set_estimate_median_bytes": 989966336,
+          "working_set_estimate_max_simultaneous_bytes": 995409920
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "cb9f1dda7da928d3871be014506a605aa498ab3d3eaeb4ad1764d4e5ceb1b28d",
+        "resource-samples.json": "bf05025cddc443974cfeb8a963fc6868dbf367abe4fe1689f768550843a7a636",
+        "useful-media-complete.json": "c96e9266d4405fec4823be8f0b091ed1b19a5739fb6403b6b9bceda8b8c4f652"
+      }
+    },
+    {
+      "phase": 24,
+      "viewers": 100,
+      "trial": 3,
+      "backend": "candidate",
+      "actual_exit": 0,
+      "valid": true,
+      "measurement_seconds": 59.999458606998815,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.106599,
+          "cpu_mean_cores": 0.018443483086211007,
+          "charged_memory_median_bytes": 528154624,
+          "charged_memory_max_simultaneous_bytes": 532246528,
+          "working_set_estimate_median_bytes": 181825536,
+          "working_set_estimate_max_simultaneous_bytes": 185917440
+        },
+        "origin": {
+          "cpu_core_seconds": 0.415701,
+          "cpu_mean_cores": 0.00692841251656743,
+          "charged_memory_median_bytes": 267927552,
+          "charged_memory_max_simultaneous_bytes": 269152256,
+          "working_set_estimate_median_bytes": 114429952,
+          "working_set_estimate_max_simultaneous_bytes": 115654656
+        },
+        "observer": {
+          "cpu_core_seconds": 4.256428,
+          "cpu_mean_cores": 0.07094110678364514,
+          "charged_memory_median_bytes": 1130135552,
+          "charged_memory_max_simultaneous_bytes": 1526444032,
+          "working_set_estimate_median_bytes": 330248192,
+          "working_set_estimate_max_simultaneous_bytes": 338583552
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 5.778728,
+          "cpu_mean_cores": 0.09631300238642358,
+          "charged_memory_median_bytes": 1925578752,
+          "charged_memory_max_simultaneous_bytes": 2326536192,
+          "working_set_estimate_median_bytes": 625717248,
+          "working_set_estimate_max_simultaneous_bytes": 633630720
+        },
+        "primary": {
+          "cpu_core_seconds": 1.5223,
+          "cpu_mean_cores": 0.025371895602778437,
+          "charged_memory_median_bytes": 795697152,
+          "charged_memory_max_simultaneous_bytes": 800686080,
+          "working_set_estimate_median_bytes": 295870464,
+          "working_set_estimate_max_simultaneous_bytes": 300859392
+        }
+      },
+      "raw_sha256": {
+        "shared-ts.json": "e8866cd91ae402c371785901e6a1272d6ba7e16880dcff719f8270953cfc1fed",
+        "resource-samples.json": "7f324197c09282c85fb7089bf0d7c921cf1ecb813d4ea39d86b522963e4a94d8",
+        "useful-media-complete.json": "5053cef4e95aaf446063a55eac3a39632d83da10ddbebbb0d86ba8e0c3c0b057"
+      }
+    }
+  ]
+}
