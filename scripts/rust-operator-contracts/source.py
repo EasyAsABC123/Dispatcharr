@@ -108,6 +108,23 @@ def finish():
         json.dumps(report, indent=2, ensure_ascii=False, default=str)+'\n')
     print(json.dumps({'passed': True, 'cases': len(cases)}))
 
+def check_repeated_user_startup_notification(before, after):
+    key = 'network_security_m3u_epg'
+    previous = next((row for row in before['notifications'] if row['notification_key'] == key), None)
+    current, = (row for row in after['notifications'] if row['notification_key'] == key)
+    assert current['source'] == 'developer'
+    if previous is None:
+        # The first CLI performs app-ready synchronization in the new copied DB.
+        # PostgreSQL nextval returns last_value unchanged when is_called is false.
+        last, called = before['notification_sequence']
+        inserted = last + int(called)
+        assert current['id'] == inserted
+        assert after['notification_sequence'] == [inserted, True]
+    else:
+        assert current['id'] == previous['id']
+        assert after['notification_sequence'] == before['notification_sequence']
+
+
 def run_repeated_user_cases():
     def seed():
         for name in ('a', 'b'):
@@ -131,8 +148,9 @@ def run_repeated_user_cases():
                                              item['custom_properties'].items()
                                              if key != 'allowed_networks'}
         assert json.dumps(after['users'], sort_keys=True) == json.dumps(expected, sort_keys=True), name
-        for field in ('network', 'network_identity', 'user_timestamps', 'notification_sequence', 'cache'):
+        for field in ('network', 'network_identity', 'user_timestamps', 'cache'):
             assert after[field] == before[field], (name, field)
+        check_repeated_user_startup_notification(before, after)
         original_ttls = before['cache_ttls']
         actual_ttls = after['cache_ttls']
         assert actual_ttls.keys() == original_ttls.keys()

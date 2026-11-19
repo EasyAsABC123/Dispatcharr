@@ -1,0 +1,732 @@
+{
+  "binding_kind": "retained_original_image22_core_reads_TCP",
+  "operation_count": 7,
+  "unique_Source_cases": 29,
+  "new_Source_executions": 0,
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "Original_author_credit": "Original Dispatcharr authors retain all application and algorithm credit and licensing.",
+  "fixtures": {
+    "retained-Original-Image22-core-read": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "baseline_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "execution_transport": "TCP HTTP from Original fixture client to original Compose service",
+      "ownership": "Disposable Compose project and seeded local PostgreSQL/Redis settings and actor rows",
+      "setup": [
+        "Start the pinned Original Compose service and wait for readiness.",
+        "Seed owned settings/profile/actor rows; generate fixture JWTs through Original.",
+        "Invoke the natural unformatted Core GET routes over TCP, recording status and canonicalized response."
+      ],
+      "roles": {
+        "admin": {
+          "credential": "fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "standard": {
+          "credential": "fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        },
+        "viewer": {
+          "credential": "fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        },
+        "inactive": {
+          "credential": "fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        }
+      },
+      "historical_controller_passed": true,
+      "historical_cleanup": "project removed",
+      "private_historical_capture": {
+        "path": "artifacts/rust/m5-auth-full-integration-image22-2/integration.json",
+        "sha256": "bc1b852bd233b03bff581d52349a9ee1d7e27e96664885f86e2be4b3c96c99ae",
+        "tool_source": "artifacts/rust/m5-auth-full-integration-image22-2/tool-source",
+        "tool_sha256": {
+          "scripts/rust-account-contracts/core_probes.py": "1dcae3d7273e2740b928bee434e6ad5891d7696551e8ce54c32a08db0c32a79a",
+          "scripts/rust-account-contracts/probes.py": "fa235747e69860886ee534a1c4852bfce56f3340ff46304566d148d0cb4a29ad",
+          "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+          "scripts/rust-integration/seed_accounts.py": "c1f4945a51084a2c83c747de77647fe6eeec9c6202bbf1eb1c13551973674e62",
+          "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9"
+        }
+      },
+      "public_historical_receipt": {
+        "path": "scripts/rust-integration/verified-integration-m5-auth-image22-1.json",
+        "sha256": "e7cb41ab0e72d66c705d254ebd416f3098dd2c4ed797305dcd012883fd0fc4e8"
+      }
+    }
+  },
+  "already_assigned_settings_retrieve_indices": [
+    137,
+    138,
+    139
+  ],
+  "contracts": [
+    {
+      "contract_id": "route-4e613bb9583a369dde8a:GET",
+      "pattern_exact": "api/core/^settings/$",
+      "source_handler": "core.api_views.CoreSettingsViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-Image22-core-read",
+      "fully_verified": false,
+      "assertions": [
+        "Use the retained natural Original HTTP GET and fixture role.",
+        "Preserve actual status and the canonical JSON body digest."
+      ],
+      "remaining": [
+        "Complete route and input grammar, other roles/headers, format suffixes and current packaged candidate."
+      ],
+      "cases": [
+        {
+          "source_index": 135,
+          "record_json_pointer": "/checks/135",
+          "label": "core-read:settings:admin",
+          "path": "/api/core/settings/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "json_projection_sha256": "26b837df27d29d1773ff9e92a7dd3f0846f828cb0fa16f6d3b340f083c91b84a",
+          "record_sha256": "0f51b18134dd1a265fd070881e7157c2d7ca2886048cdb772d2c1d74bf270c65"
+        },
+        {
+          "source_index": 136,
+          "record_json_pointer": "/checks/136",
+          "label": "core-read:settings:standard",
+          "path": "/api/core/settings/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "json_projection_sha256": "26b837df27d29d1773ff9e92a7dd3f0846f828cb0fa16f6d3b340f083c91b84a",
+          "record_sha256": "b006ad7a0bd9f9c921f56d169d5970d3c2841d1fbefc54a0ecc9347b1e3dc796"
+        },
+        {
+          "source_index": 140,
+          "record_json_pointer": "/checks/140",
+          "label": "core-read:settings:viewer",
+          "path": "/api/core/settings/",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "json_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "record_sha256": "a7d393d35a1e1da4407332008a517ca0e4d72747b65686051678d4c5f30da2a0"
+        },
+        {
+          "source_index": 141,
+          "record_json_pointer": "/checks/141",
+          "label": "core-read:settings:inactive",
+          "path": "/api/core/settings/",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "json_projection_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "record_sha256": "bda0ba8ae1c6c6fe4cad731754858a5c58ce865924ffc7045dda1a1148b5fdcd"
+        },
+        {
+          "source_index": 142,
+          "record_json_pointer": "/checks/142",
+          "label": "core-read:settings:None",
+          "path": "/api/core/settings/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "json_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "record_sha256": "9d0b8176aa069f0747176afdd793af54b6942913d23ef3af0742dbae7d6aa7f3"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        },
+        "inactive": {
+          "credential": "fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "standard": {
+          "credential": "fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        },
+        "viewer": {
+          "credential": "fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_response_observations",
+        "Source_case_observations": 5,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-b85d3ade7ecfee8953a1:GET",
+      "pattern_exact": "api/core/^useragents/$",
+      "source_handler": "core.api_views.UserAgentViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-Image22-core-read",
+      "fully_verified": false,
+      "assertions": [
+        "Use the retained natural Original HTTP GET and fixture role.",
+        "Preserve actual status and the canonical JSON body digest."
+      ],
+      "remaining": [
+        "Complete route and input grammar, other roles/headers, format suffixes and current packaged candidate."
+      ],
+      "cases": [
+        {
+          "source_index": 143,
+          "record_json_pointer": "/checks/143",
+          "label": "core-read:useragents:admin",
+          "path": "/api/core/useragents/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "json_projection_sha256": "e5811d43ef5c18bc516dd3c235b643f683dd5314ece5b22ce819258de2b1e77b",
+          "record_sha256": "1f16bc77314357b024fa738563defc782ea291d9f6524c2f9798eb4d1671ff79"
+        },
+        {
+          "source_index": 144,
+          "record_json_pointer": "/checks/144",
+          "label": "core-read:useragents:standard",
+          "path": "/api/core/useragents/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "json_projection_sha256": "e5811d43ef5c18bc516dd3c235b643f683dd5314ece5b22ce819258de2b1e77b",
+          "record_sha256": "1c86b75a0e9cdff7d22a7ce90bb564992db4fe08ec477a115c3084eec3686c5e"
+        },
+        {
+          "source_index": 148,
+          "record_json_pointer": "/checks/148",
+          "label": "core-read:useragents:viewer",
+          "path": "/api/core/useragents/",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "json_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "record_sha256": "6a34b549348711e650995a90ccdc20c175fa4872b192f6b4afca69b1a62386fe"
+        },
+        {
+          "source_index": 149,
+          "record_json_pointer": "/checks/149",
+          "label": "core-read:useragents:inactive",
+          "path": "/api/core/useragents/",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "json_projection_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "record_sha256": "aa8c18582a55a4c261e5304e2b0c1029af93439117015821b924e6bc57ade914"
+        },
+        {
+          "source_index": 150,
+          "record_json_pointer": "/checks/150",
+          "label": "core-read:useragents:None",
+          "path": "/api/core/useragents/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "json_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "record_sha256": "bfec6c0348804daa39ed47a7519dcd41176f66e4ae1b99b8e8c55fbd86cf56ef"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        },
+        "inactive": {
+          "credential": "fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "standard": {
+          "credential": "fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        },
+        "viewer": {
+          "credential": "fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_response_observations",
+        "Source_case_observations": 5,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-ba1955652b652c310e20:GET",
+      "pattern_exact": "api/core/^useragents/(?P<pk>[^/.]+)/$",
+      "source_handler": "core.api_views.UserAgentViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-Image22-core-read",
+      "fully_verified": false,
+      "assertions": [
+        "Use the retained natural Original HTTP GET and fixture role.",
+        "Preserve actual status and the canonical JSON body digest."
+      ],
+      "remaining": [
+        "Complete route and input grammar, other roles/headers, format suffixes and current packaged candidate."
+      ],
+      "cases": [
+        {
+          "source_index": 145,
+          "record_json_pointer": "/checks/145",
+          "label": "core-read:useragents:standard:detail:2",
+          "path": "/api/core/useragents/2/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "json_projection_sha256": "c767e3901e57fe48ca9766c16a24cbc776374d8bd05ca99c74dff6d0a11f9b7b",
+          "record_sha256": "af37207de2f51f5e13761733292c7ba89d7ed789ea60de992b23c1143fecfcd6"
+        },
+        {
+          "source_index": 146,
+          "record_json_pointer": "/checks/146",
+          "label": "core-read:useragents:standard:detail:2147483647",
+          "path": "/api/core/useragents/2147483647/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "json_projection_sha256": "f97e43682e05d6d11d4ef52ff3e5b4107201b17353b8b6fe075d3b97bbefb8f7",
+          "record_sha256": "b5779e73c41260d2be16ccf8743db6ad1c8727166a18ae1806ec7261bfeb910a"
+        },
+        {
+          "source_index": 147,
+          "record_json_pointer": "/checks/147",
+          "label": "core-read:useragents:standard:detail:not-a-number",
+          "path": "/api/core/useragents/not-a-number/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "json_projection_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "record_sha256": "dea2d095743d0c3f50c2af8263339a39b5d411a41c89e2e99dd1b61c1a353ba5"
+        }
+      ],
+      "observed_roles": [
+        "standard"
+      ],
+      "source_role_specs": {
+        "standard": {
+          "credential": "fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_response_observations",
+        "Source_case_observations": 3,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-fdca87537cd595a20d06:GET",
+      "pattern_exact": "api/core/^streamprofiles/$",
+      "source_handler": "core.api_views.StreamProfileViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-Image22-core-read",
+      "fully_verified": false,
+      "assertions": [
+        "Use the retained natural Original HTTP GET and fixture role.",
+        "Preserve actual status and the canonical JSON body digest."
+      ],
+      "remaining": [
+        "Complete route and input grammar, other roles/headers, format suffixes and current packaged candidate."
+      ],
+      "cases": [
+        {
+          "source_index": 151,
+          "record_json_pointer": "/checks/151",
+          "label": "core-read:streamprofiles:admin",
+          "path": "/api/core/streamprofiles/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "json_projection_sha256": "22a2718a20d0b4a9f2d958c1bd1a9dcac95e656d1558a46f2d34be6f424f1e9c",
+          "record_sha256": "aac96a0b12d04c57e0bf3e5a16fc144aa54c0265b2434a499e4a20be3165c0d4"
+        },
+        {
+          "source_index": 152,
+          "record_json_pointer": "/checks/152",
+          "label": "core-read:streamprofiles:standard",
+          "path": "/api/core/streamprofiles/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "json_projection_sha256": "22a2718a20d0b4a9f2d958c1bd1a9dcac95e656d1558a46f2d34be6f424f1e9c",
+          "record_sha256": "5c2ee79543e0a02121cafb315f0be54f165e2c78defc76d6523391ff0b64038a"
+        },
+        {
+          "source_index": 156,
+          "record_json_pointer": "/checks/156",
+          "label": "core-read:streamprofiles:viewer",
+          "path": "/api/core/streamprofiles/",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "json_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "record_sha256": "9743f2cd36c8c0e44a0d263601aaf5934695549580fbaced09c81485fea04612"
+        },
+        {
+          "source_index": 157,
+          "record_json_pointer": "/checks/157",
+          "label": "core-read:streamprofiles:inactive",
+          "path": "/api/core/streamprofiles/",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "json_projection_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "record_sha256": "9ba5d9dd5d1b87bac08a9e7cf310fa4a351f4172a6dcfc6539153bf093d3e6ba"
+        },
+        {
+          "source_index": 158,
+          "record_json_pointer": "/checks/158",
+          "label": "core-read:streamprofiles:None",
+          "path": "/api/core/streamprofiles/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "json_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "record_sha256": "d96d46a1d80728746ba55e4c3f95cb792f24d62a9c1f443ed737729a0a4b57a0"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        },
+        "inactive": {
+          "credential": "fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "standard": {
+          "credential": "fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        },
+        "viewer": {
+          "credential": "fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_response_observations",
+        "Source_case_observations": 5,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-0d2bf3aa82ca7c57fc62:GET",
+      "pattern_exact": "api/core/^streamprofiles/(?P<pk>[^/.]+)/$",
+      "source_handler": "core.api_views.StreamProfileViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-Image22-core-read",
+      "fully_verified": false,
+      "assertions": [
+        "Use the retained natural Original HTTP GET and fixture role.",
+        "Preserve actual status and the canonical JSON body digest."
+      ],
+      "remaining": [
+        "Complete route and input grammar, other roles/headers, format suffixes and current packaged candidate."
+      ],
+      "cases": [
+        {
+          "source_index": 153,
+          "record_json_pointer": "/checks/153",
+          "label": "core-read:streamprofiles:standard:detail:3",
+          "path": "/api/core/streamprofiles/3/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "json_projection_sha256": "b81789d037dee9a171fa9d5f4bdcd05a6efc9a19203c7a3dee4183532f48c935",
+          "record_sha256": "f9753f03c773371013771b5ba2e095c1b20501bcf031785dcb1b40b3bca839ca"
+        },
+        {
+          "source_index": 154,
+          "record_json_pointer": "/checks/154",
+          "label": "core-read:streamprofiles:standard:detail:2147483647",
+          "path": "/api/core/streamprofiles/2147483647/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "json_projection_sha256": "04669bc75507d27d816f838b56ea3168e08cea041592bbcc30b557bb8a9d3576",
+          "record_sha256": "2b764493dd317523214af7380ec3aa812dd130a72035dc0fa0dcfc7d73d91eff"
+        },
+        {
+          "source_index": 155,
+          "record_json_pointer": "/checks/155",
+          "label": "core-read:streamprofiles:standard:detail:not-a-number",
+          "path": "/api/core/streamprofiles/not-a-number/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "json_projection_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "record_sha256": "d00ef610384f29f2392394ee6ebceb478bc797a6b99d7511d25488e2acac2b9a"
+        }
+      ],
+      "observed_roles": [
+        "standard"
+      ],
+      "source_role_specs": {
+        "standard": {
+          "credential": "fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_response_observations",
+        "Source_case_observations": 3,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-3ee13ff4f7b07df52a40:GET",
+      "pattern_exact": "api/core/^outputprofiles/$",
+      "source_handler": "core.api_views.OutputProfileViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-Image22-core-read",
+      "fully_verified": false,
+      "assertions": [
+        "Use the retained natural Original HTTP GET and fixture role.",
+        "Preserve actual status and the canonical JSON body digest."
+      ],
+      "remaining": [
+        "Complete route and input grammar, other roles/headers, format suffixes and current packaged candidate."
+      ],
+      "cases": [
+        {
+          "source_index": 159,
+          "record_json_pointer": "/checks/159",
+          "label": "core-read:outputprofiles:admin",
+          "path": "/api/core/outputprofiles/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "json_projection_sha256": "a27f7877732f09449a4f38d2c3305d3ad9dab2243b03a7580538f5f8324e060a",
+          "record_sha256": "d275c862f129f8cd41b0f5029bcc374077878708a48fe8459c234064031f4a57"
+        },
+        {
+          "source_index": 160,
+          "record_json_pointer": "/checks/160",
+          "label": "core-read:outputprofiles:standard",
+          "path": "/api/core/outputprofiles/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "json_projection_sha256": "a27f7877732f09449a4f38d2c3305d3ad9dab2243b03a7580538f5f8324e060a",
+          "record_sha256": "bd03536fce1c8e36537d3ba1b9eee42683577de1db90101ad701957d2603e3b8"
+        },
+        {
+          "source_index": 164,
+          "record_json_pointer": "/checks/164",
+          "label": "core-read:outputprofiles:viewer",
+          "path": "/api/core/outputprofiles/",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "json_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "record_sha256": "89e6617c1d9cae97623b8a36895d554caa3a18c36d9de46da2d535c4faadf36e"
+        },
+        {
+          "source_index": 165,
+          "record_json_pointer": "/checks/165",
+          "label": "core-read:outputprofiles:inactive",
+          "path": "/api/core/outputprofiles/",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "json_projection_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "record_sha256": "0b748d11162cd39827bf92fa6ca7f648ebb91be79c1fc3ea8066da7bbe2f2461"
+        },
+        {
+          "source_index": 166,
+          "record_json_pointer": "/checks/166",
+          "label": "core-read:outputprofiles:None",
+          "path": "/api/core/outputprofiles/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "json_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "record_sha256": "739915e5cc6476ef3ae5dbdb2162489715a1a36b4b5cc9574d3716209cfcba8d"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "fixture JWT",
+          "user_level": 10,
+          "is_active": true
+        },
+        "anonymous": {
+          "credential": "no Authorization header"
+        },
+        "inactive": {
+          "credential": "fixture JWT",
+          "user_level": 10,
+          "is_active": false
+        },
+        "standard": {
+          "credential": "fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        },
+        "viewer": {
+          "credential": "fixture JWT",
+          "user_level": 0,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_response_observations",
+        "Source_case_observations": 5,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-e07365518a567eba0898:GET",
+      "pattern_exact": "api/core/^outputprofiles/(?P<pk>[^/.]+)/$",
+      "source_handler": "core.api_views.OutputProfileViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "retained-Original-Image22-core-read",
+      "fully_verified": false,
+      "assertions": [
+        "Use the retained natural Original HTTP GET and fixture role.",
+        "Preserve actual status and the canonical JSON body digest."
+      ],
+      "remaining": [
+        "Complete route and input grammar, other roles/headers, format suffixes and current packaged candidate."
+      ],
+      "cases": [
+        {
+          "source_index": 161,
+          "record_json_pointer": "/checks/161",
+          "label": "core-read:outputprofiles:standard:detail:1",
+          "path": "/api/core/outputprofiles/1/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "json_projection_sha256": "061ed68ca19b0267cdc81304116be97262e1488261ce54dcbef0aef6c090d832",
+          "record_sha256": "4bf017e3db83a183be49eb4f7ecc52f74640c2cbaf4e0f689d3bbaeade606650"
+        },
+        {
+          "source_index": 162,
+          "record_json_pointer": "/checks/162",
+          "label": "core-read:outputprofiles:standard:detail:2147483647",
+          "path": "/api/core/outputprofiles/2147483647/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "json_projection_sha256": "c75cad210d0c65f7643dc84e6133cce1fb3386fa45d5e160b203f65170c57fd4",
+          "record_sha256": "c9c3cdee1cb621064de09ade933d89181a462f49a001676b87a9223df82e4faf"
+        },
+        {
+          "source_index": 163,
+          "record_json_pointer": "/checks/163",
+          "label": "core-read:outputprofiles:standard:detail:not-a-number",
+          "path": "/api/core/outputprofiles/not-a-number/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "json_projection_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "record_sha256": "b37370e74c10f92889fdec48101a9eac0aa8aeb763a87617aeab97a4e2d12419"
+        }
+      ],
+      "observed_roles": [
+        "standard"
+      ],
+      "source_role_specs": {
+        "standard": {
+          "credential": "fixture JWT",
+          "user_level": 1,
+          "is_active": true
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_response_observations",
+        "Source_case_observations": 3,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    }
+  ]
+}

@@ -24,7 +24,9 @@ remains in progress.
 
 The [latest Rust checkpoint](rust-milestone-batch71.md) covers fenced archive
 reopening, XC membership and refresh behavior, custom-guide timezone dates,
-operator arguments and the packaged fixed-seed EPG comparison.
+operator arguments, signed backup downloads and the packaged fixed-seed EPG
+comparison. M0 has 188 partial Source assignments and 610 unassigned HTTP
+references after the retained Core GET review.
 
 The [previous parallel checkpoint](rust-milestone-batch70.md) covers typed HLS
 startup, guide multipart handling, fixed-seed XC EPG, operator arguments and

@@ -139,3 +139,15 @@ projection hash. It leaves Source TCP and Native behavior unqualified.
 The generator now reports 181 partial executable Source assignments and 617
 operation rows still awaiting a Source assignment. No application ran for
 this mapping, and all 792 unrelated operation dictionaries remain exact.
+
+## Retained Core HTTP read assignments
+
+The [Core read binding input](../scripts/rust-contracts/retained-core-read/bindings.json)
+adds 29 retained Original HTTP GET observations for seven list and retrieve
+operations across Core settings, user agents, stream profiles and output profiles.
+It preserves each observed path, method, fixture role, status and canonical
+JSON response hash. The settings retrieve operation retains its existing Source
+assignment. No application was rerun.
+
+The register now holds 188 partial executable Source assignments, with 610
+still unassigned. All 791 unrelated operation dictionaries remain exact.

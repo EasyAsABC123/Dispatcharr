@@ -9,7 +9,7 @@ credit. React, the original license and attribution remain part of the build.
 | M5 and M6 · XC accounts | A group-only PATCH can change membership on inactive XC accounts and accounts with VOD enabled. The existing account-scoped write changes the selected membership. Six Rust account-validator tests and eight pinned Original controls passed. The paired Main PATCH and GET fixture is ready. |
 | M6 · XC refresh | A settled malformed account-info reply counts as one profile failure and the next profile still runs. The pinned Source controls verified partial failure, recovery and fallback user-agent use. Ten focused Rust account tests passed. The real Main task and its Profiles child still need paired verification. |
 | M7 · Guide | Custom dummy programmes without a time or date pattern use the Source timezone for the local date while retaining the UTC programme interval. Five pinned Python cases and the Rust controls agree. Localized time and date pattern schedules remain outside this check. |
-| M8 · Operations | Repeated explicit `--user` flags use the final value. The targeted CLI parser tests passed. The paired fixtures cover repeated arguments and signed downloads of three encoded filenames through the packaged application. |
+| M8 · Operations | Repeated explicit `--user` flags use the final value. The targeted CLI parser tests passed. The Source CLI cases passed on a copied database. Packaged Candidate70 matched all 12 signed-filename assertions, including downloads using three tokens issued by Rust. |
 | M8 and M9 · SQLite | The retained SQLite database stops at Channels0037. All six revisions of Channels0038 examined have PostgreSQL-specific SQL. Isolated SQLite checks also found two incompatible VOD0003 statements. The complete SQLite Source fixture and datastore acceptance remain open. [Datastore evidence](rust-sqlite-compatibility.md) |
 
 [Focused checks](../scripts/rust-integration/milestone-batch71/focused.json)
@@ -30,6 +30,31 @@ that the archive contained the Source project file before starting Compose.
 Independent Docker inventories found no containers, volumes or networks left
 for any of the three projects.
 [Packaged evidence](../scripts/rust-integration/milestone-batch71/candidate70-fixed-seed-epg.json)
+
+## Backup and operator follow-up
+
+Candidate70 matched all twelve signed-filename responses, including
+valid, missing and invalid tokens for UTF-8, punctuation and literal percent
+filenames. The Rust package issued each token used by the successful test
+downloads.
+
+The original CLI reference used three cases on a copied database. It exited
+0 for final-target selection, 0 when the final value was empty, and 2 for a
+malformed final option. The first fixture attempt expected the startup
+notification sequence to stay constant. Source created the developer notice
+during startup. The corrected fixture checked the inserted row and its exact
+sequence, then completed all three cases. Packaged Native CLI acceptance is
+still pending. Independent inventories found the three fixture projects absent.
+[Runtime receipts](../scripts/rust-integration/milestone-batch71/operator-source-backup-candidate70.json)
+
+## M0 retained Core coverage
+
+Twenty-nine retained Original HTTP observations now map to seven Core GET
+operations. The register has 188 partial Source assignments and 610
+unassigned HTTP references. Two regenerations matched byte for byte. The
+portable suite passed 364 checks, with one skipped, and the scoped artifact
+custody check passed separately.
+[Register verification](../scripts/rust-integration/milestone-batch71/m0-offline-controls.json)
 
 These checks advance the [complete parity plan](rust-complete-parity-plan.md).
 Full milestone acceptance and new performance measurements remain open.
