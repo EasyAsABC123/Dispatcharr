@@ -21,6 +21,10 @@ use std::{
 };
 use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
 
+pub(super) const VOD_STATS_PATH: &str = "/proxy/vod/stats/";
+pub(super) const VOD_STATS_NAME: &str = "Vod Stats";
+pub(super) const VOD_STATS_DESCRIPTION: &str = "Get current VOD connection statistics";
+
 const MIB: usize = 1024 * 1024;
 #[derive(Clone, Copy)]
 pub struct Config {
@@ -143,6 +147,7 @@ impl CombinedStatistics {
     pub fn router(&self) -> Router {
         Router::new()
             .route("/proxy/stats/", any(dispatch))
+            .route(VOD_STATS_PATH, any(dispatch))
             .with_state(self.clone())
     }
     pub fn close_admission(&self) {
@@ -173,6 +178,11 @@ impl CombinedStatistics {
             _memory: memory,
         }))
     }
+    async fn vod_snapshot(&self, transport: &RedisTransport, owner: Arc<Ownership>) -> Value {
+        dispatcharr_vod_http::source_statistics_retained(&self.inner.store, transport, now(), owner)
+            .await
+    }
+
     async fn snapshot(&self, owner: Arc<Ownership>) -> Result<Value, ()> {
         let (Some(transport), Some(catchup)) = (&self.inner.transport, &self.inner.catchup) else {
             return Err(());
@@ -185,13 +195,7 @@ impl CombinedStatistics {
             .global_live_statistics_retained(guard)
             .await
             .unwrap_or_else(|_| json!({"channels":[],"count":0}));
-        let vod = dispatcharr_vod_http::source_statistics_retained(
-            &self.inner.store,
-            transport,
-            now(),
-            owner.clone(),
-        )
-        .await;
+        let vod = self.vod_snapshot(transport, owner.clone()).await;
         let catchup = catchup.statistics_retained(owner).await;
         Ok(json!({"live":live,"vod":vod,"catchup":catchup,"timestamp":now()}))
     }
@@ -293,8 +297,17 @@ impl CombinedStatistics {
             )
             .await;
         }
+        let vod_only = uri.path() == VOD_STATS_PATH;
         if method == Method::OPTIONS {
-            return finish(StatusCode::OK,&json!({"name":"Combined Stats","description":"Return live, VOD, and catch-up stats in one response.",
+            let (name, description) = if vod_only {
+                (VOD_STATS_NAME, VOD_STATS_DESCRIPTION)
+            } else {
+                (
+                    "Combined Stats",
+                    "Return live, VOD, and catch-up stats in one response.",
+                )
+            };
+            return finish(StatusCode::OK,&json!({"name":name,"description":description,
                 "renders":["application/json","text/html"],"parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]}),
                 &method,identity,Some(negotiated),&uri,&headers,&self.inner.auth,peer,owner,self.inner.config.response_bytes).await;
         }
@@ -315,7 +328,15 @@ impl CombinedStatistics {
             .await;
         }
         drop(user);
-        let (status, value) = match self.snapshot(owner.clone()).await {
+        let snapshot = if vod_only {
+            match &self.inner.transport {
+                Some(transport) => Ok(self.vod_snapshot(transport, owner.clone()).await),
+                None => Err(()),
+            }
+        } else {
+            self.snapshot(owner.clone()).await
+        };
+        let (status, value) = match snapshot {
             Ok(value) => (StatusCode::OK, value),
             Err(()) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
@@ -640,6 +661,27 @@ mod tests {
             StatusCode::NOT_ACCEPTABLE
         );
     }
+    #[test]
+    fn bounded_vod_browsable_context_uses_its_own_view() {
+        let response = html::render(
+            html::Context {
+                status: 401,
+                method: "GET",
+                uri: VOD_STATS_PATH,
+                identity: None,
+                cookie: None,
+                origin: "http://localhost",
+            },
+            &json!({"detail": "Authentication credentials were not provided."}),
+        )
+        .unwrap();
+        let data = std::str::from_utf8(&response.data).unwrap();
+        assert!(data.contains("<h1>Vod Stats</h1>"));
+        assert!(data.contains("/proxy/vod/stats/"));
+        assert!(!data.contains("Combined Stats"));
+        assert!(!data.contains("/proxy/stats/"));
+    }
+
     #[tokio::test]
     async fn held_http_bytes_and_physical_clone_share_admission_until_both_drop() {
         let config = Config::default();

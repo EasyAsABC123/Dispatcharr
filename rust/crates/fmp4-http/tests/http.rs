@@ -36,6 +36,10 @@ struct Fixture {
     origin: tokio::task::JoinHandle<()>,
 }
 async fn setup() -> Fixture {
+    setup_configured(Config::default()).await
+}
+
+async fn setup_configured(config: Config) -> Fixture {
     let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
     let fixture = std::fs::read(std::env::var("FMP4_TEST_FIXTURE").unwrap()).unwrap();
     let connections = Arc::new(AtomicUsize::new(0));
@@ -78,13 +82,8 @@ async fn setup() -> Fixture {
         Some(clients.clone()),
     )
     .unwrap();
-    let gateway = Fmp4Gateway::new(
-        engine.clone(),
-        clients.clone(),
-        outputs.clone(),
-        Config::default(),
-    )
-    .unwrap();
+    let gateway =
+        Fmp4Gateway::new(engine.clone(), clients.clone(), outputs.clone(), config).unwrap();
     let channel = uuid::Uuid::new_v4().to_string();
     let source = PlaybackSource {
         output_profile: None,
@@ -399,6 +398,131 @@ async fn response_init_pins_fragment_generation_and_handed_init_survives_success
     assert!(gateway.active_process_ids().is_empty());
     assert_eq!(connections.load(Ordering::SeqCst), 1);
     assert!(engine.shutdown_wait(Duration::from_secs(10)).await);
+    clients.shutdown().await;
+    origin.abort();
+    let _ = origin.await;
+}
+
+async fn scoped_frame(body: &mut Body) -> bytes::Bytes {
+    time::timeout(Duration::from_secs(2), body.frame())
+        .await
+        .expect("owned playback frame deadline")
+        .expect("body reached EOF while its generation still had media")
+        .unwrap()
+        .into_data()
+        .unwrap()
+}
+
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and FMP4_TEST_FIXTURE"]
+async fn slow_body_resumes_retained_fragments_after_idle_deadline() {
+    // Install the owned output before viewer admission. The production HTTP
+    // body consumes its live Redis generation without launching another remux.
+    let idle = Duration::from_millis(350);
+    let Fixture {
+        gateway,
+        engine,
+        clients,
+        outputs,
+        mut source,
+        connections,
+        origin,
+    } = setup_configured(Config {
+        stream_timeout: idle,
+        poll_interval: Duration::from_millis(10),
+        ..Default::default()
+    })
+    .await;
+    source.startup_behind = Duration::ZERO;
+    let channel = source.channel_id.clone();
+    let lease = outputs
+        .claim(&channel, "fmp4", "owned-slow-body-producer")
+        .await
+        .unwrap()
+        .unwrap();
+    let start = 1.0;
+    lease.put_init(b"owned-init").await.unwrap();
+    assert_eq!(lease.put(b"initial-fragment", start).await.unwrap(), 1);
+
+    let mut slow = gateway.play(source.clone()).await.unwrap().into_body();
+    let mut fast = gateway.play(source).await.unwrap().into_body();
+    for body in [&mut slow, &mut fast] {
+        let frame = scoped_frame(body).await;
+        assert_eq!(frame.as_ref(), b"owned-init");
+    }
+    let held = scoped_frame(&mut slow).await;
+    assert_eq!(held.as_ref(), b"initial-fragment");
+    let started_hold = time::Instant::now();
+    let initial_fast = scoped_frame(&mut fast).await;
+    assert_eq!(initial_fast.as_ref(), held.as_ref());
+    drop(initial_fast);
+    assert_eq!(
+        lease.put(b"fast-only-fragment", start + 1.0).await.unwrap(),
+        2
+    );
+    let fast_frame = scoped_frame(&mut fast).await;
+    assert_eq!(fast_frame.as_ref(), b"fast-only-fragment");
+    drop(fast_frame);
+
+    let mut redis = redis::Client::open(std::env::var("REDIS_TEST_URL").unwrap())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let key = format!("live:channel:{channel}:output:fmp4:buffer:chunk:2");
+    let expires: bool = redis.pexpire(&key, 15).await.unwrap();
+    assert!(expires);
+    assert_eq!(
+        lease.put(b"retained-fragment", start + 2.0).await.unwrap(),
+        3
+    );
+    time::sleep_until(started_hold + idle + Duration::from_millis(100)).await;
+    assert!(outputs.get(&channel, "fmp4", 2).await.unwrap().is_none());
+    let snapshot = outputs.snapshot(&channel, "fmp4").await.unwrap();
+    assert_eq!(snapshot.owner.as_deref(), Some("owned-slow-body-producer"));
+    assert_eq!(snapshot.index, 3);
+    assert_eq!(held.as_ref(), b"initial-fragment");
+    drop(held);
+
+    let resumed = scoped_frame(&mut slow).await;
+    assert_eq!(resumed.as_ref(), b"retained-fragment");
+    drop(resumed);
+
+    // Exhaustion still ends a real idle body. Holding a delivered frame does
+    // not make the idle deadline elapse before the next read is attempted.
+    let idle_started = time::Instant::now();
+    assert!(time::timeout(idle + Duration::from_secs(2), slow.frame())
+        .await
+        .unwrap()
+        .is_none());
+    assert!(idle_started.elapsed() >= idle);
+    drop(slow);
+    drop(fast);
+    assert!(lease.release().await.unwrap());
+    assert!(outputs
+        .snapshot(&channel, "fmp4")
+        .await
+        .unwrap()
+        .owner
+        .is_none());
+    time::timeout(Duration::from_secs(2), async {
+        loop {
+            let count: usize = redis
+                .scard(format!("live:channel:{channel}:clients"))
+                .await
+                .unwrap();
+            if count == 0 {
+                break;
+            }
+            time::sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .unwrap();
+    gateway.shutdown().await;
+    assert!(gateway.active_process_ids().is_empty());
+    assert_eq!(connections.load(Ordering::SeqCst), 0);
+    assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
     clients.shutdown().await;
     origin.abort();
     let _ = origin.await;

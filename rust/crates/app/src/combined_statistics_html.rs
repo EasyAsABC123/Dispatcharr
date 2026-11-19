@@ -1,7 +1,11 @@
 //! Finite, actual Original DRF combined-stats HTML contexts.
 //! Original Dispatcharr, Django/DRF authors retain template/algorithm credit.
-use super::combined_statistics_wire::{self as wire, Output};
+use super::{
+    combined_statistics::{VOD_STATS_DESCRIPTION, VOD_STATS_NAME, VOD_STATS_PATH},
+    combined_statistics_wire::{self as wire, Output},
+};
 use serde_json::Value;
+use std::borrow::Cow;
 
 const ANONYMOUS: &str = include_str!("../datasets/combined-stats-html/anonymous.html.in");
 const STANDARD: &str = include_str!("../datasets/combined-stats-html/standard.html.in");
@@ -63,8 +67,11 @@ pub(super) struct Context<'a> {
     pub origin: &'a str,
 }
 pub(super) fn render(context: Context<'_>, body: &Value) -> Result<Rendered, ()> {
-    let api = context.uri == "/proxy/stats/?format=api";
-    if context.uri != "/proxy/stats/" && !api {
+    let (path, api) = context
+        .uri
+        .strip_suffix("?format=api")
+        .map_or((context.uri, false), |path| (path, true));
+    if !matches!(path, "/proxy/stats/" | VOD_STATS_PATH) {
         return Err(());
     }
     let source = match (context.status, context.method, context.identity, api) {
@@ -75,11 +82,24 @@ pub(super) fn render(context: Context<'_>, body: &Value) -> Result<Rendered, ()>
         (200, "OPTIONS", Some((_, level)), true) if level >= 10 => ADMIN_OPTIONS_API,
         _ => return Err(()),
     };
+    let source = if path == VOD_STATS_PATH {
+        Cow::Owned(
+            source
+                .replace("/proxy/stats/", VOD_STATS_PATH)
+                .replace("Combined Stats", VOD_STATS_NAME)
+                .replace(
+                    "Return live, VOD, and catch-up stats in one response.",
+                    VOD_STATS_DESCRIPTION,
+                ),
+        )
+    } else {
+        Cow::Borrowed(source)
+    };
     let pretty = wire::json(body, wire::Format::Drf(Some(4)), 256 * 1024)?;
     let pretty = std::str::from_utf8(&pretty).map_err(|_| ())?;
     let (_, masked, set_cookie) = dispatcharr_store::source_browsable_csrf(context.cookie);
     let mut output = Output::new(1024 * 1024);
-    let mut remaining = source;
+    let mut remaining = source.as_ref();
     while let Some(start) = remaining.find("@@STATS_") {
         output.text(&remaining[..start])?;
         let tail = &remaining[start..];

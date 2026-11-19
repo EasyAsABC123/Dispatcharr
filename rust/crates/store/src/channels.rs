@@ -900,6 +900,7 @@ fn source_action_error() -> Response {
 
 #[path = "channel_batch_epg.rs"]
 mod batch_epg;
+pub(crate) use batch_epg::batch_body as channel_mutation_json;
 
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()

@@ -5,7 +5,7 @@ use axum::{
     extract::{ConnectInfo, RawQuery, State},
     http::{header, HeaderMap, HeaderValue, Method, StatusCode},
     response::{IntoResponse, Response},
-    routing::any,
+    routing::{any, post},
     Router,
 };
 use bytes::Bytes;
@@ -25,6 +25,8 @@ use tokio::{
     sync::{OwnedSemaphorePermit, Semaphore},
     time::Instant,
 };
+
+mod channel_bulk_regex;
 
 const SCAN_LIMIT: usize = 5000;
 const PATTERN_LIMIT: usize = 512;
@@ -81,6 +83,7 @@ impl StreamRegexPreview {
     pub fn router(&self) -> Router {
         Router::new()
             .route(PATH, any(handle))
+            .route(channel_bulk_regex::PATH, post(channel_bulk_regex::apply))
             .with_state(self.clone())
     }
 

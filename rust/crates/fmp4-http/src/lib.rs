@@ -176,15 +176,53 @@ impl Fmp4Gateway {
                 client.record_bytes(init.as_ref().len());
                 yield Ok::<Bytes,io::Error>(Bytes::from_owner(Frame{data:init,_client:client.clone(),_slot:permit}));
                 let mut last_data=time::Instant::now();
-                'stream:loop{
-                    if *stopped.borrow() || last_data.elapsed()>=inner.config.stream_timeout{break;}
-                    let snapshot=match inner.outputs.snapshot(&channel,&format).await{Ok(snapshot)=>snapshot,Err(dispatcharr_output_store::Error::Capacity)=>{tokio::select!{_=stopped.changed()=>break,_=time::sleep(inner.config.poll_interval)=>{}}continue;},Err(_)=>break};
-                    if snapshot.owner.as_deref()!=Some(expected.as_str()){break;}
-                    let Some((sequence,_))=snapshot.segments.into_iter().find(|(sequence,_)|*sequence>index)else{tokio::select!{_=stopped.changed()=>break 'stream,_=time::sleep(inner.config.poll_interval)=>{}}continue;};
-                    let permit=tokio::select!{_=stopped.changed()=>break,result=slots.clone().acquire_owned()=>match result{Ok(permit)=>permit,Err(_)=>break}};
-                    match inner.outputs.get_owned_retained(&channel,&format,&expected,sequence,(inner.clone(),client.clone())).await{
-                        Ok((Some(data),_retained))=>{index=sequence;last_data=time::Instant::now();client.record_bytes(data.as_ref().len());yield Ok(Bytes::from_owner(Frame{data,_client:client.clone(),_slot:permit}));},
-                        Ok((None,_retained))=>{index=sequence;},Err(dispatcharr_output_store::Error::Capacity)=>{drop(permit);tokio::select!{_=stopped.changed()=>break,_=time::sleep(inner.config.poll_interval)=>{}}},Err(_)=>break,
+                loop {
+                    if *stopped.borrow() {
+                        break;
+                    }
+                    let sequence = match inner.outputs.snapshot(&channel, &format).await {
+                        Ok(snapshot) if snapshot.owner.as_deref() == Some(expected.as_str()) => snapshot
+                            .segments
+                            .into_iter()
+                            .find_map(|(sequence, _)| (sequence > index).then_some(sequence)),
+                        Err(dispatcharr_output_store::Error::Capacity) => None,
+                        _ => break,
+                    };
+                    if let Some(sequence) = sequence {
+                        let permit = tokio::select! {
+                            _ = stopped.changed() => break,
+                            result = slots.clone().acquire_owned() => match result {
+                                Ok(permit) => permit,
+                                Err(_) => break,
+                            },
+                        };
+                        match inner.outputs.get_owned_retained(
+                            &channel, &format, &expected, sequence, (inner.clone(), client.clone())
+                        ).await {
+                            Ok((Some(data), _retained)) => {
+                                index = sequence;
+                                client.record_bytes(data.as_ref().len());
+                                yield Ok(Bytes::from_owner(Frame { data, _client: client.clone(), _slot: permit }));
+                                // Source's idle timer starts after the reader resumes a delivery.
+                                last_data = time::Instant::now();
+                                continue;
+                            }
+                            Ok((None, _retained)) => {
+                                index = sequence;
+                                continue;
+                            }
+                            Err(dispatcharr_output_store::Error::Capacity) => drop(permit),
+                            Err(_) => break,
+                        }
+                    }
+                    // Check idle only after finding no deliverable fragment. Slow
+                    // response bodies must not expire while retained media can resume.
+                    if last_data.elapsed() >= inner.config.stream_timeout {
+                        break;
+                    }
+                    tokio::select! {
+                        _ = stopped.changed() => break,
+                        _ = time::sleep(inner.config.poll_interval) => {},
                     }
                 }
             }

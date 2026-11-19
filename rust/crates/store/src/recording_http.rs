@@ -24,6 +24,8 @@ use std::{
 };
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
+
+mod recurring;
 pub type RecordingChannelId = Uuid;
 pub type RecordingTaskConnection = sqlx::PgConnection;
 const SLOTS: usize = 4;
@@ -272,6 +274,7 @@ impl RecordingHttp {
         Router::new()
             .route("/api/channels/recordings/", any(handle))
             .route("/api/channels/recordings/{*tail}", any(handle))
+            .route(recurring::PATH, any(recurring::handle))
             .with_state(self)
     }
     /// Keep one pair of outer paths: matchit's sibling catchall cannot merge
@@ -284,6 +287,7 @@ impl RecordingHttp {
                 "/api/channels/recordings/{*tail}",
                 any(handle_with_playback),
             )
+            .route(recurring::PATH, any(recurring::with_playback))
             .with_state((self, playback))
     }
     /// Keep management, playback and manual Comskip beneath the same outer
@@ -361,18 +365,10 @@ async fn handle(
             return comskip.dispatch(id, peer, request).await;
         }
     }
-    if api.state.closed.load(Ordering::Acquire) {
-        return StoreError::StatusBody(503, json!({"error":"Recording intake closed"}))
-            .into_response();
-    }
-    let Ok(slot) = api.state.slots.clone().try_acquire_owned() else {
-        return StoreError::StatusBody(503, json!({"error":"Recording request capacity"}))
-            .into_response();
+    let owner = match admit(&api) {
+        Ok(owner) => owner,
+        Err(error) => return error.into_response(),
     };
-    let owner = Arc::new(Owner {
-        _slot: slot,
-        state: api.state.clone(),
-    });
     let method = request.method().clone();
     let uri = request.uri().clone();
     let headers = request.headers().clone();
@@ -393,6 +389,24 @@ async fn handle(
         Ok(Err(error)) => error.into_response(),
         Err(_) => StoreError::UnhandledRestFault.into_response(),
     }
+}
+fn admit(api: &RecordingHttp) -> Result<Arc<Owner>, StoreError> {
+    if api.state.closed.load(Ordering::Acquire) {
+        return Err(StoreError::StatusBody(
+            503,
+            json!({"error":"Recording intake closed"}),
+        ));
+    }
+    let Ok(slot) = api.state.slots.clone().try_acquire_owned() else {
+        return Err(StoreError::StatusBody(
+            503,
+            json!({"error":"Recording request capacity"}),
+        ));
+    };
+    Ok(Arc::new(Owner {
+        _slot: slot,
+        state: api.state.clone(),
+    }))
 }
 pub(super) fn access(user: &User, manage: bool) -> Result<(), StoreError> {
     if user.user_level >= 10 {

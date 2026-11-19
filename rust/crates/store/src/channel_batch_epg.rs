@@ -79,7 +79,7 @@ fn associations(rows: &[Value]) -> Result<BTreeMap<i64, Option<i64>>, StoreError
     Ok(pairs)
 }
 
-async fn batch_body(request: Request) -> Result<Map<String, Value>, StoreError> {
+pub(crate) async fn batch_body(request: Request) -> Result<Map<String, Value>, StoreError> {
     let media = request
         .headers()
         .get(header::CONTENT_TYPE)

@@ -24,6 +24,9 @@ def evaluate(value):
  if value.get('kind')=='version_compare':
   from dispatcharr_native.version_compare import compare
   return compare(value.get('current'),value.get('latest'))
+ if value.get('kind')=='channel_bulk_rename':
+  from dispatcharr_native.channel_bulk_rename import evaluate as channel_bulk_rename
+  return channel_bulk_rename(value.get('names'),value.get('config'))
  if value.get('kind')=='stream_preview':
   from dispatcharr_native.stream_preview import evaluate as stream_preview
   return stream_preview(value.get('names'),value.get('config'))

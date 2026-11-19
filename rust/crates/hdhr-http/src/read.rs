@@ -148,24 +148,7 @@ fn python_int(value: Option<&Value>) -> Option<String> {
                 value.is_finite().then(|| format!("{:.0}", value.trunc()))
             }
         }
-        Value::String(value) => {
-            let value = value.trim();
-            let (negative, digits) = if let Some(value) = value.strip_prefix('-') {
-                (true, value)
-            } else {
-                (false, value.strip_prefix('+').unwrap_or(value))
-            };
-            if digits.is_empty() || !digits.bytes().all(|byte| byte.is_ascii_digit()) {
-                return None;
-            }
-            let digits = digits.trim_start_matches('0');
-            let digits = if digits.is_empty() { "0" } else { digits };
-            Some(format!(
-                "{}{}",
-                if negative && digits != "0" { "-" } else { "" },
-                digits
-            ))
-        }
+        Value::String(value) => dispatcharr_ingest_core::source_integer_literal(value),
         _ => None,
     }
 }
@@ -198,6 +181,11 @@ mod tests {
         for (input, expected) in [
             (json!(true), Some("1")),
             (json!(" +0002 "), Some("2")),
+            (json!("\u{2003}+٠_٠_٢\u{a0}"), Some("2")),
+            (json!("１２"), Some("12")),
+            (json!("-०_०"), Some("0")),
+            (json!("0__2"), None),
+            (json!("²"), None),
             (json!(-1.9), Some("-1")),
             (json!("3.0"), None),
             (json!({}), None),
