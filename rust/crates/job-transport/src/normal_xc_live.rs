@@ -20,6 +20,8 @@ use std::{
 use tokio::sync::Semaphore;
 use uuid::Uuid;
 type Owner = Arc<dyn Send + Sync>;
+pub(crate) const SINGLE_TASK_NAME: &str = "apps.m3u.tasks.refresh_single_m3u_account";
+pub(crate) const SINGLE_TASK_TIMELIMIT: [u64; 2] = [3600, 3500];
 #[derive(Clone)]
 pub(crate) struct Message {
     pub id: Uuid,
@@ -37,7 +39,7 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     let mut v = crate::clocked_recording_envelope::json_value(raw).map_err(|_| ())?;
     let kind = match v["headers"]["task"].as_str() {
         Some("apps.m3u.tasks.refresh_m3u_groups") => Kind::Groups,
-        Some("apps.m3u.tasks.refresh_single_m3u_account") => Kind::Single,
+        Some(SINGLE_TASK_NAME) => Kind::Single,
         _ => return Err(()),
     };
     let bytes = STANDARD
@@ -120,7 +122,7 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     }
     let expected = match kind {
         Kind::Groups => json!([null, null]),
-        Kind::Single => json!([3600, 3500]),
+        Kind::Single => json!(SINGLE_TASK_TIMELIMIT),
     };
     if v["headers"]["timelimit"] != expected {
         return Err(());
@@ -1057,7 +1059,7 @@ mod source_controls {
         value["headers"]["parent_id"] = json!(parent);
         value["headers"]["timelimit"] = match kind {
             Kind::Groups => json!([null, null]),
-            Kind::Single => json!([3600, 3500]),
+            Kind::Single => json!(SINGLE_TASK_TIMELIMIT),
         };
         value["body"] = json!(STANDARD.encode(
             serde_json::to_vec(

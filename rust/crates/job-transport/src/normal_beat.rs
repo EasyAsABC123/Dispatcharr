@@ -860,6 +860,9 @@ fn prepare_publication(
         serde_json::from_slice(&base).map_err(|_| Error::Configuration("periodic base JSON"))?;
     frame["body"]=json!(STANDARD.encode(serde_json::to_vec(&json!([entry.args,entry.kwargs,{"callbacks":null,"errbacks":null,"chain":null,"chord":null}])).map_err(|_|Error::Configuration("periodic body"))?));
     frame["headers"]["task"] = json!(entry.task);
+    if entry.task == crate::normal_xc_live::SINGLE_TASK_NAME {
+        frame["headers"]["timelimit"] = json!(crate::normal_xc_live::SINGLE_TASK_TIMELIMIT);
+    }
     frame["headers"]["argsrepr"] = json!(argsrepr);
     frame["headers"]["kwargsrepr"] = json!(kwargsrepr);
     frame["headers"]["expires"] = expires
@@ -1214,6 +1217,37 @@ mod tests {
             "dvr\u{6}\u{16}6"
         );
     }
+    #[cfg(unix)]
+    #[tokio::test]
+    async fn scheduled_live_xc_frame_reaches_normal_consumer_with_source_time_limits() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .max_connections(8)
+            .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
+            .unwrap();
+        let auth = dispatcharr_store::AuthService::new(
+            dispatcharr_store::Store::from_pool(pool),
+            dispatcharr_store::AuthConfig::new("unused-metadata-only".into()).unwrap(),
+        );
+        let mut entry = model(crate::normal_xc_live::SINGLE_TASK_NAME);
+        entry.name = "m3u_account-refresh-5".into();
+        entry.args = json!([]);
+        entry.kwargs = json!({"account_id": 5});
+        let id = Uuid::new_v4();
+        let publication =
+            prepare_publication(&entry, id, &auth.producer_identity_source()).unwrap();
+        assert_eq!(publication.redis_queue(), "celery");
+        let mut frame: Value = serde_json::from_slice(publication.bytes()).unwrap();
+        assert_eq!(frame["headers"]["periodic_task_name"], entry.name);
+        assert_eq!(frame["headers"]["timelimit"], json!([3600, 3500]));
+        let parsed = crate::normal_xc_live::parse(publication.bytes()).unwrap();
+        assert_eq!(parsed.id, id);
+        assert_eq!(parsed.root, id);
+        assert_eq!(parsed.account, 5);
+        assert!(parsed.parent.is_none());
+        frame["headers"]["timelimit"] = json!([null, null]);
+        assert!(crate::normal_xc_live::parse(&serde_json::to_vec(&frame).unwrap()).is_err());
+    }
+
     #[cfg(unix)]
     #[tokio::test]
     async fn scheduled_cleanup_frame_reaches_existing_normal_consumer_parser() {
