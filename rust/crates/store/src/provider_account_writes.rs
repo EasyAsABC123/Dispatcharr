@@ -15,7 +15,7 @@ use axum::{
 };
 use serde_json::{json, Map, Value};
 use sqlx::{PgConnection, Row};
-use std::{net::SocketAddr, sync::Arc};
+use std::{collections::HashSet, net::SocketAddr, sync::Arc};
 type Body = Result<Json<Value>, JsonRejection>;
 type Owner = Arc<dyn Send + Sync>;
 fn unsupported() -> StoreError {
@@ -357,7 +357,7 @@ fn validate(
             .as_array()
             .filter(|groups| groups.len() <= 256)
             .ok_or_else(unsupported)?;
-        let mut seen = std::collections::HashSet::new();
+        let mut seen = HashSet::new();
         for group in groups {
             let group = group
                 .as_object()
@@ -474,6 +474,27 @@ async fn preflight(c: &mut PgConnection, id: Option<i64>, saved: &Value) -> Resu
     }
     Ok(())
 }
+fn validate_group_references(group_ids: &[i64], existing: &[i64]) -> Result<(), StoreError> {
+    let existing: HashSet<_> = existing.iter().collect();
+    // DRF 3.18 keeps only failing nested rows, keyed by their input index.
+    let errors: Map<String, Value> = group_ids
+        .iter()
+        .enumerate()
+        .filter(|(_, group)| !existing.contains(group))
+        .map(|(index, group)| {
+            (
+                index.to_string(),
+                json!({"channel_group":[format!("Invalid pk \"{group}\" - object does not exist.")]}),
+            )
+        })
+        .collect();
+    if errors.is_empty() {
+        Ok(())
+    } else {
+        Err(StoreError::InvalidInput(json!({"channel_groups": errors})))
+    }
+}
+
 async fn write(c: &mut PgConnection, id: Option<i64>, saved: Value) -> Result<i64, StoreError> {
     let updated = parse_datetime("updated_at", &saved["updated_at"], true)?;
     // Whitelisted explicit columns preserve model defaults, readonly creation
@@ -768,8 +789,8 @@ async fn change(
             session.run(move|c|Box::pin(async move{
                 preflight(c,id,&check).await?;
                 if !group_ids.is_empty() {
-                    let found:i64=sqlx::query_scalar("SELECT count(*) FROM dispatcharr_channels_channelgroup WHERE id::bigint=ANY($1)").bind(&group_ids).fetch_one(c).await?;
-                    if found!=group_ids.len() as i64{return Err(unsupported());}
+                    let found:Vec<i64>=sqlx::query_scalar("SELECT id::bigint FROM dispatcharr_channels_channelgroup WHERE id::bigint=ANY($1)").bind(&group_ids).fetch_all(c).await?;
+                    validate_group_references(&group_ids,&found)?;
                 }
                 Ok::<_,StoreError>(())
             })).await??;
@@ -1139,6 +1160,19 @@ mod tests {
             ),
             Err(StoreError::Unsupported(_))
         ));
+    }
+    #[test]
+    fn missing_group_references_preserve_sparse_request_indices() {
+        let invalid = validate_group_references(&[9, 20, 4, 45], &[4, 9]);
+        assert!(matches!(
+            invalid,
+            Err(StoreError::InvalidInput(body)) if body == json!({"channel_groups":{
+                "1":{"channel_group":["Invalid pk \"20\" - object does not exist."]},
+                "3":{"channel_group":["Invalid pk \"45\" - object does not exist."]}
+            }})
+        ));
+        assert!(validate_group_references(&[9, 4], &[4, 9]).is_ok());
+        assert!(validate_group_references(&[], &[]).is_ok());
     }
     #[test]
     fn captured_existing_xc_preferences_do_not_admit_general_xc_mutations() {

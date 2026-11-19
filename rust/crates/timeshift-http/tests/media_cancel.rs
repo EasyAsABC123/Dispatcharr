@@ -1,6 +1,7 @@
 //! Delayed actual Redis replies: cancellation cannot race archive publication.
 //! All original application credit belongs to upstream Dispatcharr contributors.
-use dispatcharr_coordination::{Coordinator, LeaseConfig};
+use dispatcharr_coordination::{AcquireRequest, Coordinator, LeaseConfig};
+use dispatcharr_store::StoreError;
 use dispatcharr_timeshift_http::{ArchivePool, ArchivePoolConfig, ArchivePoolRequest};
 use redis::AsyncCommands;
 use std::{
@@ -95,6 +96,96 @@ async fn wait(mut predicate: impl AsyncFnMut() -> bool) {
     .await
     .expect("archive delayed-reply deadline");
 }
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback TCP"]
+async fn matching_first_open_contender_reports_busy_before_winner_publishes_pool() {
+    let target = std::env::var("REDIS_TEST_URL").unwrap();
+    let proxy = proxy().await;
+    let mut redis = redis::Client::open(target.as_str())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let lease_config = LeaseConfig {
+        namespace: format!("test:archive-first-race:{}", uuid::Uuid::new_v4()),
+        command_timeout: Duration::from_secs(10),
+        ..Default::default()
+    };
+    let first_coordinator = Coordinator::connect(&proxy.url, lease_config.clone())
+        .await
+        .unwrap();
+    let other_coordinator = Coordinator::connect(&target, lease_config).await.unwrap();
+    let warmup = first_coordinator
+        .acquire_timeshift(AcquireRequest {
+            channel_id: format!("warm-{}", uuid::Uuid::new_v4()),
+            provider_profile_id: None,
+            provider_max_streams: 0,
+            credential_pool: None,
+        })
+        .await
+        .unwrap();
+    assert!(warmup.release().await.unwrap());
+    let winner = ArchivePool::connect(&target, first_coordinator, Default::default())
+        .await
+        .unwrap();
+    let contender = ArchivePool::connect(&target, other_coordinator, Default::default())
+        .await
+        .unwrap();
+    let sid = uuid::Uuid::new_v4().to_string();
+    let profile = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000_000) as i64 + 1000;
+    let counter = format!("profile_connections:{profile}");
+    let pool_key = format!("timeshift:pool:{sid}");
+    let client_key = format!("timeshift:channel:123_{sid}:clients:{sid}");
+    proxy.hold.send_replace(true);
+    let first_pool = winner.clone();
+    let first_request = request(&sid, profile);
+    let first = tokio::spawn(async move { first_pool.open(first_request).await });
+    wait(async || redis.get::<_, i64>(&counter).await.unwrap_or(0) == 1).await;
+    assert!(!redis.exists::<_, bool>(&pool_key).await.unwrap());
+    let pending: String = redis
+        .hget(&client_key, "rust_pending_media_id")
+        .await
+        .unwrap();
+    let winner_token: String = redis.hget(&client_key, "rust_owner_token").await.unwrap();
+    assert_eq!(pending, "123_fixture");
+
+    let contender_result = contender.open(request(&sid, profile)).await;
+    assert!(matches!(
+        contender_result,
+        Err(StoreError::StatusBody(503, ref body)) if body.as_str() == Some("Stream slot busy")
+    ));
+    assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(&client_key, "rust_owner_token")
+            .await
+            .unwrap(),
+        winner_token
+    );
+    assert!(!redis.exists::<_, bool>(&pool_key).await.unwrap());
+
+    proxy.hold.send_replace(false);
+    let ticket = first.await.unwrap().unwrap();
+    ticket
+        .start("http://fixture.invalid/archive.ts", Some(15_001_836), None)
+        .await
+        .unwrap();
+    assert_eq!(
+        redis
+            .hget::<_, _, Option<String>>(&client_key, "rust_pending_media_id")
+            .await
+            .unwrap(),
+        None
+    );
+    assert!(ticket.alive().await.unwrap());
+    drop(ticket);
+    assert!(winner.shutdown().await);
+    assert!(contender.shutdown().await);
+    assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 0);
+    assert!(!redis.exists::<_, bool>(&pool_key).await.unwrap());
+    let _: () = redis.del(counter).await.unwrap();
+}
+
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "requires disposable REDIS_TEST_URL and loopback TCP"]
 async fn idle_reopen_cancelled_during_provider_reply_retains_cleanup_until_owned_reply() {

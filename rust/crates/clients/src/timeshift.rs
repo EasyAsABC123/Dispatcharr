@@ -90,6 +90,7 @@ pub fn decode(result: Vec<String>) -> Result<bool, Error> {
     match result.first().map(String::as_str) {
         Some("OK") => Ok(true),
         Some("EXISTS") => Ok(false),
+        Some("PENDING") => Err(Error::Capacity),
         Some("LIMIT") => Err(Error::UserLimit),
         Some("SCAN_LIMIT") => Err(Error::ScanLimit),
         Some("CORRUPT") => Err(Error::CorruptMetadata),
@@ -102,7 +103,16 @@ local function kind(key)
  local result=redis.call('TYPE',key);if type(result)=='table' then return result.ok end return result
 end
 local data=cjson.decode(ARGV[1]);
-if ARGV[9]=='create' then if kind(KEYS[1])~='none' then return {'EXISTS'} end
+if ARGV[9]=='create' then
+ local current=kind(KEYS[1])
+ if current~='none' then
+  if current=='hash' and redis.call('HSTRLEN',KEYS[1],'rust_owner_token')==36 then
+   local existing=redis.call('HMGET',KEYS[1],'user_id','rust_pending_media_id','last_active','rust_preempted')
+   if existing[1]==tostring(data.user_id) and existing[2]==ARGV[7]
+    and not existing[3] and existing[4]~='1' then return {'PENDING'} end
+  end
+  return {'EXISTS'}
+ end
 elseif kind(KEYS[1])~='hash' or redis.call('HGET',KEYS[1],'rust_owner_token')~=tostring(data.rust_owner_token) or redis.call('HGET',KEYS[1],'user_id')~=tostring(data.user_id) then return {'CORRUPT'} end
 local policy=cjson.decode(ARGV[2]);local limit=tonumber(ARGV[3]);local maximum=tonumber(ARGV[5]);local sid=ARGV[6];local media_id=ARGV[7];local channel=ARGV[8];local user=tostring(data.user_id)
 local examined=0;local clients={};local seen={};local hops={};local active={};local counts={};local unique={};local unique_count=0;local stops={}
@@ -211,6 +221,7 @@ for _,client in ipairs(victims) do redis.call('HSET',client.key,'rust_preempted'
 if not allowed then return {'LIMIT',tostring(#hops)} end
 if ARGV[9]=='create' then
  for key,value in pairs(data) do redis.call('HSET',KEYS[1],key,tostring(value)) end
+ redis.call('HSET',KEYS[1],'rust_pending_media_id',media_id)
  redis.call('PEXPIRE',KEYS[1],ARGV[4])
 end
 return {'OK',tostring(#hops),tostring(#victims)}

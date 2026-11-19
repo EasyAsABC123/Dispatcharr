@@ -87,6 +87,7 @@ def main():
     parser.add_argument('--guide-source', action='store_true', help='Capture original current-programme and streamed guide-grid contracts on owned rows')
     parser.add_argument('--native-current', action='store_true', help='Run frozen current-programme parser/DB selection against original guide capture')
     parser.add_argument('--candidate-current', action='store_true', help='Compare actual Source/native real-clock current-programme wire instead of programme list reads')
+    parser.add_argument('--current-multipart', action='store_true', help='Include six Source multipart requests in the packaged current-programme comparison')
     parser.add_argument('--native-grid', action='store_true', help='Run original/native grid metadata and stored-row component comparisons')
     parser.add_argument('--grid-source-archive', type=Path, help='Replay a retained whole-Rust archive for native grid component gates')
     parser.add_argument('--native-grid-http', action='store_true', help='Compare original Factory grid captures to independent native HTTP, plus physical resource gates')
@@ -94,6 +95,8 @@ def main():
     parser.add_argument('--native-grid-wire', action='store_true', help='Draft actual original/native-network guide replay with real clocks and strict expiry/hour guards')
     parser.add_argument('--candidate-grid-wire', action='store_true', help='Compare actual unpatched original/native packaged grid network replies')
     args = parser.parse_args()
+    if args.current_multipart and not args.candidate_current:
+        parser.error('current-multipart requires candidate-current')
     if args.grid_source_archive and not (args.native_grid or args.native_grid_http or args.native_grid_wire):
         parser.error('grid-source-archive requires a native grid component gate')
     if args.candidate_grid_wire:
@@ -146,7 +149,10 @@ def main():
     with integration.fixture_source(report, False, output) as directory:
         source = Path(directory)/'source'
         source.mkdir(mode=0o755)
-        archive = subprocess.check_output(['git','archive',integration.BASELINE], cwd=ROOT)
+        git_root = subprocess.check_output(
+            ['git', 'rev-parse', '--show-toplevel'], cwd=ROOT, text=True, timeout=10,
+        ).strip()
+        archive = subprocess.check_output(['git', 'archive', integration.BASELINE], cwd=git_root, timeout=30)
         subprocess.run(['tar','-x','--same-permissions','--no-same-owner','-C',str(source)],
                        input=archive, check=True)
         (source/'media').mkdir(exist_ok=True)
@@ -373,7 +379,8 @@ def main():
                     grid_fixture=json.loads(wire.stdout.splitlines()[-1])
                     (output/'guide-wire-source.json').write_text(json.dumps(grid_fixture,indent=2)+'\n')
                 if args.candidate_current:
-                    wire=command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','-'],timeout=180,
+                    current_environment = ['-e', 'CURRENT_MULTIPART_CAPTURE=1'] if args.current_multipart else []
+                    wire=command(compose+['exec','-T',*current_environment,'baseline','/dispatcharrpy/bin/python','-'],timeout=180,
                                  body=(tools/'scripts/rust-epg-contracts/current_wire_source.py').read_text())
                     (output/'current-wire-source-worker.log').write_text(wire.stderr)
                     current_fixture=json.loads(wire.stdout.splitlines()[-1])

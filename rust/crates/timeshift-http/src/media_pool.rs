@@ -769,6 +769,9 @@ impl ArchivePool {
             Ok(false) => Some(StoreError::Unsupported(
                 "existing archive admission/adoption is not yet implemented",
             )),
+            Err(dispatcharr_clients::Error::Capacity) => {
+                Some(StoreError::StatusBody(503, json!("Stream slot busy")))
+            }
             Err(dispatcharr_clients::Error::UserLimit) => {
                 Some(StoreError::StatusBody(403, json!("Stream limit exceeded")))
             }
@@ -1528,6 +1531,7 @@ for key,value in pairs(clients) do redis.call('HSET',KEYS[2],key,value) end
 for key,value in pairs(metadata) do redis.call('HSET',KEYS[4],key,value) end
 redis.call('HSETNX',KEYS[2],'connected_at',ARGV[5])
 redis.call('HSET',KEYS[2],'rust_owner_token',ARGV[1],'last_active',ARGV[5],'rust_total_bytes','0')
+redis.call('HDEL',KEYS[2],'rust_pending_media_id')
 if not keep_anchor then
  redis.call('HSET',KEYS[2],'position_anchor_at',ARGV[5]);redis.call('HDEL',KEYS[2],'paused')
  if ARGV[9]~='' and (not old_programme or old_programme==clients['programme_start']) then redis.call('HSET',KEYS[2],'playback_base_secs',ARGV[9]) else redis.call('HDEL',KEYS[2],'playback_base_secs') end

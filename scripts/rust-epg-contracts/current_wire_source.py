@@ -26,8 +26,29 @@ ProgramData.objects.all().update(start_time=F('start_time')+delta,end_time=F('en
 class NoRedirect(HTTPRedirectHandler):
     def redirect_request(self,*args):return None
 opener=build_opener(NoRedirect());cases=[]
-for case in fixture['cases']:
-    if case['path']!='/api/epg/current-programs/':continue
+fixtures = [case for case in fixture['cases'] if case['path']=='/api/epg/current-programs/']
+if os.environ.get('CURRENT_MULTIPART_CAPTURE') == '1':
+    def multipart(fields):
+        parts = [
+            f'--dispatcharr\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n'
+            for name, value in fields
+        ]
+        return ''.join(parts) + '--dispatcharr--\r\n'
+
+    observed = fixtures[0]
+    for fields, boundary in [
+        ([('epg_data_ids', '[]')], True),
+        ([('channel_uuids', '[]'), ('channel_uuids', 'null')], True),
+        ([(' epg_data_ids ', '')], True),
+        ([('channel_uuids', 'null'), ('epg_data_ids', 'null')], True),
+        ([('unrelated', 'ignored')], True),
+        ([('epg_data_ids', '[]')], False),
+    ]:
+        content_type = 'multipart/form-data'
+        if boundary:
+            content_type += '; boundary=dispatcharr'
+        fixtures.append(dict(observed, content_type=content_type, body=None, raw_body=multipart(fields)))
+for case in fixtures:
     headers={name.removeprefix('HTTP_').replace('_','-'):value for name,value in case['headers'].items()}
     headers['Content-Type']=case['content_type']
     body=case['raw_body'] if case['raw_body'] is not None else json.dumps(case['body'],ensure_ascii=False)
@@ -42,4 +63,4 @@ for case in fixture['cases']:
             'content_type':response.getheader('Content-Type'),'content_length':response.getheader('Content-Length')}
         cases.append(result)
 print(json.dumps({'scope':'Actual original real-clock current-programme wire on owned shifted intervals',
-    'anchor':anchor.isoformat(),'cases':cases,'native_verified':False,'performance_verified':False}))
+    'anchor':anchor.isoformat(),'cases':cases,'includes_multipart':os.environ.get('CURRENT_MULTIPART_CAPTURE') == '1','native_verified':False,'performance_verified':False}))

@@ -16,14 +16,21 @@ def main():
  tools=out/'tool-source';tool_hashes=snapshot_sources(ROOT,tools);nonce=uuid.uuid4().hex[:10];project='dispatcharr-backup-'+nonce;names=['rust_probe_backup_'+nonce+'_'+suffix for suffix in ['a','b','c']]
  report={'passed':False,'project':project,'scope':'original/native database-only v2 ZIP cross-load on three owned copied PostgreSQL17 databases','application_image_verified':False,'job_api_verified':False,'tool_source_sha256':tool_hashes};status=1
  with fixture_source(report,False,out)as directory:
-  temp=Path(directory);source=temp/'source';source.mkdir();source.chmod(0o755);subprocess.run(['tar','-x','--same-permissions','--no-same-owner','-C',str(source)],input=subprocess.check_output(['git','archive',BASELINE],cwd=ROOT),check=True);(source/'media').mkdir(exist_ok=True)
+  temp=Path(directory);source=temp/'source';source.mkdir();source.chmod(0o755)
+  git_root=subprocess.check_output(['git','rev-parse','--show-toplevel'],cwd=ROOT,text=True,timeout=10).strip()
+  original=subprocess.check_output(['git','archive',BASELINE],cwd=git_root,timeout=30)
+  subprocess.run(['tar','-x','--same-permissions','--no-same-owner','-C',str(source)],input=original,check=True)
+  if not (source/'pyproject.toml').is_file():
+   raise RuntimeError('Pinned Original archive is missing pyproject.toml')
+  (source/'media').mkdir(exist_ok=True)
   env=dict(os.environ,BASELINE_SOURCE_DIR=str(source),BASELINE_EVIDENCE_DIR=str(out),DISPATCHARR_ENV='aio',CARGO_TARGET_DIR=str(ROOT/'rust/target'))
-  captured={str(f.relative_to(ROOT)):f.read_bytes()for f in (ROOT/'rust').rglob('*')if f.is_file()and not set(f.relative_to(ROOT/'rust').parts)&{'target','.git','__pycache__'}}
-  frozen=temp/'frozen'
-  with tarfile.open(out/'rust-source.tar','w')as archive:
-   for relative,data in sorted(captured.items()):
-    info=tarfile.TarInfo(relative);info.size=len(data);info.mode=0o644;info.mtime=0;archive.addfile(info,io.BytesIO(data));target=frozen/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
-  report['rust_source_sha256']={name:hashlib.sha256(data).hexdigest()for name,data in captured.items()}
+  if component is None:
+   captured={str(f.relative_to(ROOT)):f.read_bytes()for f in (ROOT/'rust').rglob('*')if f.is_file()and not set(f.relative_to(ROOT/'rust').parts)&{'target','.git','__pycache__'}}
+   frozen=temp/'frozen'
+   with tarfile.open(out/'rust-source.tar','w')as archive:
+    for relative,data in sorted(captured.items()):
+     info=tarfile.TarInfo(relative);info.size=len(data);info.mode=0o644;info.mtime=0;archive.addfile(info,io.BytesIO(data));target=frozen/relative;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+   report['rust_source_sha256']={name:hashlib.sha256(data).hexdigest()for name,data in captured.items()}
   overlay=out/'backup-fixture.yml';overlay.write_text('services:\n  baseline:\n    volumes:\n      - '+str(tools/'scripts/rust-integration')+':/backup-tools:ro\n  origin:\n    entrypoint: [/dispatcharrpy/bin/python, /backup-tools/logo_origin.py]\n    volumes:\n      - '+str(tools/'scripts/rust-integration')+':/backup-tools:ro\n')
   if component is not None:
    with overlay.open('a')as file:file.write('  backup-component:\n    image: '+component['tag']+'\n    volumes:\n      - '+str(out/'component-data')+':/fixture\n')
@@ -35,7 +42,8 @@ def main():
    raw=cmd(compose+['exec','-T','-e','POSTGRES_DB='+db,'-e','BACKUP_ROOT=/evidence/'+root,'-e','BACKUP_DISPOSABLE_FIXTURE=playback-fixture-only','baseline','/dispatcharrpy/bin/python','/backup-tools/backup_fixture.py'],json.dumps(action if isinstance(action,dict)else{'action':action}))
    return json.loads(raw.splitlines()[-1])
   try:
-   build=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-backups','--test','roundtrip','--no-run','--message-format=json','--locked','--offline'],env=env,capture_output=True,text=True,timeout=600);(out/'rust-build.log').write_text(build.stderr);build.check_returncode();products=[json.loads(line)for line in build.stdout.splitlines()if line.startswith('{')];exe=next(Path(v['executable'])for v in products if v.get('executable')and v.get('target',{}).get('name')=='roundtrip');binary=out/'native-backup-probe';shutil.copy2(exe,binary);binary.chmod(0o755);report['binary_sha256']=hashlib.sha256(binary.read_bytes()).hexdigest()
+   if component is None:
+    build=subprocess.run(['cargo','test','--manifest-path',str(frozen/'rust/Cargo.toml'),'-p','dispatcharr-backups','--test','roundtrip','--no-run','--message-format=json','--locked','--offline'],env=env,capture_output=True,text=True,timeout=600);(out/'rust-build.log').write_text(build.stderr);build.check_returncode();products=[json.loads(line)for line in build.stdout.splitlines()if line.startswith('{')];exe=next(Path(v['executable'])for v in products if v.get('executable')and v.get('target',{}).get('name')=='roundtrip');binary=out/'native-backup-probe';shutil.copy2(exe,binary);binary.chmod(0o755);report['binary_sha256']=hashlib.sha256(binary.read_bytes()).hexdigest()
    cmd(compose+['up','-d','baseline']);base='http://'+cmd(compose+['port','baseline','5656']).strip();deadline=time.monotonic()+180
    while True:
     try:
