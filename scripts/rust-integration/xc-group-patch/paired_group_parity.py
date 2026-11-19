@@ -190,6 +190,10 @@ def bind(output, manifest_path, revision, mode):
         require(b"let xc_label = !create" in packaged_source
                 and b"&& !xc_label" in packaged_source,
                 "candidate package lacks playlist editor XC rename")
+    if mode == "interval":
+        require(b"let xc_interval = !create" in packaged_source
+                and b"&& !xc_interval" in packaged_source,
+                "candidate package lacks playlist editor XC interval update")
     package = [ref(manifest_path), ref(source_archive, manifest["source_archive_sha256"])]
     verify(metadata["inputs"])
     for backend in DRIVERS:
@@ -208,6 +212,7 @@ def bind(output, manifest_path, revision, mode):
             xc_group_patch_orphan_modes=mode in {"orphans", "activity"},
             xc_group_patch_active_toggle=mode == "activity",
             xc_group_patch_label_edit=mode == "rename",
+            xc_group_patch_interval_edit=mode == "interval",
             whole_cohort_seconds=WINDOW, cleanup_seconds=CLEANUP, performance=False,
             inputs=metadata["inputs"] + package,
         )
@@ -314,6 +319,7 @@ def run(output):
                     "orphan_cleanup_modes_status": [mode["status"] for mode in probe.get("orphan_cleanup_modes", [])],
                     "active_toggle_status": [step["status"] for step in probe.get("active_toggle", [])],
                     "label_edit_status": probe.get("label_edit", {}).get("status"),
+                    "interval_edit_status": [step["status"] for step in probe.get("interval_edit", [])],
                     "passed": probe["passed"] and report["combined_selected_workflow_passed"]
                     and receipt["actual_exit"] == 0 and receipt["failure"] is None,
                     "sanitized_probe_sha256": digest(results / backend / f"{CASE}.json"),
@@ -335,7 +341,7 @@ def main():
             command.add_argument("--docker", default="docker")
         if action == "bind":
             command.add_argument("--manifest", required=True, type=Path)
-            command.add_argument("--mode", required=True, choices=("references", "duplicates", "orphans", "activity", "rename"))
+            command.add_argument("--mode", required=True, choices=("references", "duplicates", "orphans", "activity", "rename", "interval"))
             command.add_argument("--candidate-revision", required=True)
     args = parser.parse_args()
     output = args.output.resolve()

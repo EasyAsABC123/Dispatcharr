@@ -529,3 +529,11 @@ def run_connect_logs(http, baseline, candidate, accounts, record, fixture):
     denial = {'detail': 'You do not have permission to perform this action.'}
     for role in ('standard', 'viewer'):
         observe(role, '?page=1&page_size=50', 403, denial, accounts[role]['access'])
+
+
+def run_connect_create(http, baseline, candidate, accounts, record, fixture):
+    validate_fixture(baseline, candidate, accounts)
+    spec = importlib.util.spec_from_file_location('connect_create_probes', Path(__file__).with_name('connect_create_probes.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http, baseline, candidate, accounts, record, fixture, digest)

@@ -63,7 +63,7 @@ fn collect<T>(
     }
 }
 
-async fn fields(request: Request) -> Result<Map<String, Value>, StoreError> {
+pub(super) async fn json_payload(request: Request) -> Result<Option<Value>, StoreError> {
     let mime = request
         .headers()
         .get(header::CONTENT_TYPE)
@@ -78,7 +78,7 @@ async fn fields(request: Request) -> Result<Map<String, Value>, StoreError> {
         .await
         .map_err(|_| capacity())?;
     if raw.is_empty() {
-        return Ok(Map::new());
+        return Ok(None);
     }
     if mime != "application/json" {
         return Err(StoreError::StatusBody(
@@ -86,14 +86,22 @@ async fn fields(request: Request) -> Result<Map<String, Value>, StoreError> {
             json!({"detail":format!("Unsupported media type \"{mime}\" in request.")}),
         ));
     }
-    match serde_json::from_slice::<Value>(&raw).map_err(|error| {
+    serde_json::from_slice::<Value>(&raw).map(Some).map_err(|error| {
         StoreError::InvalidInput(json!({"detail":format!("JSON parse error - {}", startup_bootstrap::json_error(&raw,error))}))
-    })? {
-        Value::Object(fields) => Ok(fields),
-        Value::Null => Err(invalid("non_field_errors", "No data provided")),
-        value => Err(invalid(
+    })
+}
+
+async fn fields(request: Request) -> Result<Map<String, Value>, StoreError> {
+    match json_payload(request).await? {
+        None => Ok(Map::new()),
+        Some(Value::Object(fields)) => Ok(fields),
+        Some(Value::Null) => Err(invalid("non_field_errors", "No data provided")),
+        Some(value) => Err(invalid(
             "non_field_errors",
-            &format!("Invalid data. Expected a dictionary, but got {}.", datatype(&value)),
+            &format!(
+                "Invalid data. Expected a dictionary, but got {}.",
+                datatype(&value)
+            ),
         )),
     }
 }

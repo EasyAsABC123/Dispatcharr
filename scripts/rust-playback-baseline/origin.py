@@ -54,6 +54,7 @@ class FixtureState:
         self.mp4 = mp4
         self.lock = threading.Lock()
         self.controls = {}
+        self.connect_create_requests = 0
         self.stats = {'active': 0, 'maximum_active': 0, 'connections': 0, 'bytes': 0,
                       'disconnections': 0, 'eof_connections': 0, 'fault_requests': 0,
                       'fixture_sha256': file_sha256(clip), 'fixture_bytes': clip.stat().st_size,
@@ -109,7 +110,20 @@ def handler_for(state):
             self.end_headers()
             self.wfile.write(payload)
 
+        def observe_connect_create_target(self):
+            if urlsplit(self.path).path != '/owned-connect-create-webhook':
+                return False
+            with state.lock:
+                state.connect_create_requests += 1
+            self.send_response(204)
+            self.send_header('Connection', 'close')
+            self.end_headers()
+            self.close_connection = True
+            return True
+
         def do_POST(self):
+            if self.observe_connect_create_target():
+                return
             if self.path != '/control':
                 self.send_error(404)
                 return
@@ -124,6 +138,8 @@ def handler_for(state):
                 self.json_response({'error': 'invalid fixture control'}, 400)
 
         def do_HEAD(self):
+            if self.observe_connect_create_target():
+                return
             if urlsplit(self.path).path != '/vod.mp4' or state.mp4 is None:
                 self.send_error(404)
                 return
@@ -132,7 +148,14 @@ def handler_for(state):
             serve_file(self, state.mp4, state.stats['vod']['etag'], head=True)
 
         def do_GET(self):
+            if self.observe_connect_create_target():
+                return
             path = urlsplit(self.path).path
+            if path == '/owned-connect-create-stats':
+                with state.lock:
+                    count = state.connect_create_requests
+                self.json_response({'requests':count})
+                return
             if path == '/vod.mp4' and state.mp4 is not None:
                 with state.lock:
                     state.stats['vod']['requests'] += 1

@@ -3,10 +3,10 @@
 use crate::{AuthService, RestReadLimits, StoreError};
 use axum::{
     body::Body,
-    extract::{ConnectInfo, Request, State},
+    extract::{ConnectInfo, Path, Request, State},
     http::{header, HeaderMap, StatusCode, Uri},
     response::Response,
-    routing::get,
+    routing::{get, put},
     Router,
 };
 use bytes::Bytes;
@@ -18,6 +18,8 @@ use tokio::sync::OwnedSemaphorePermit;
 mod create_integration;
 #[path = "connect_delivery_logs.rs"]
 mod delivery_logs;
+#[path = "connect_subscriptions.rs"]
+mod subscriptions;
 
 // Bound the total projection in the same read that obtains the response.
 // The quote covers nested rows, JSON-escaped strings, field names and separators.
@@ -67,6 +69,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/connect/integrations/", get(list).post(create))
         .route("/api/connect/logs/", get(logs))
+        .route(
+            "/api/connect/integrations/{id}/subscriptions/set/",
+            put(replace_subscriptions),
+        )
         .with_state(auth)
 }
 
@@ -91,6 +97,7 @@ enum ConnectRequest {
     Integrations,
     Logs(Uri),
     Create(Request),
+    ReplaceSubscriptions(String, Request),
 }
 
 async fn create(
@@ -103,6 +110,21 @@ async fn create(
         peer,
         request.headers().clone(),
         ConnectRequest::Create(request),
+    )
+    .await
+}
+
+async fn replace_subscriptions(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(id): Path<String>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    execute(
+        auth,
+        peer,
+        request.headers().clone(),
+        ConnectRequest::ReplaceSubscriptions(id, request),
     )
     .await
 }
@@ -143,9 +165,13 @@ async fn execute(
                 StatusCode::CREATED,
                 create_integration::create(&auth.store, request).await?,
             ),
+            ConnectRequest::ReplaceSubscriptions(id, request) => (
+                StatusCode::OK,
+                subscriptions::replace(&auth.store, id, request).await?,
+            ),
         };
-        // PostgreSQL produces valid JSON here. Keep its config tokens and
-        // allocation intact, including numbers outside primitive Rust ranges.
+        // Keep the projection and allocation intact, including config JSON
+        // numbers outside primitive Rust ranges.
         let bytes = payload.into_bytes();
         if bytes.len() > RESPONSE_LIMIT as usize {
             return Err(capacity());

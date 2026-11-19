@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 CONTRACT_SUITES=('accounts','account_crud','app_data','core','profiles','memberships',
                  'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads','server_group_crud','filter_crud','core_utilities','core_stream_crud','notifications')
-OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash','connect_reads','connect_logs')
+OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash','connect_reads','connect_logs','connect_create')
 
 
 def contract_suites(value):
@@ -94,7 +94,8 @@ def http(url, body=None, token=None, method=None, headers=None):
     request_headers = {'Content-Type': 'application/json', **(headers or {})}
     if token:
         request_headers['Authorization'] = 'Bearer ' + token
-    request = urllib.request.Request(url, data=json.dumps(body).encode() if body is not None else None,
+    wire = body if isinstance(body, bytes) else (json.dumps(body).encode() if body is not None else None)
+    request = urllib.request.Request(url, data=wire,
                                      headers=request_headers, method=method)
     try:
         response = urllib.request.urlopen(request, timeout=15)
@@ -178,6 +179,11 @@ def main():
             return command(compose + ['exec', '-T', service, '/dispatcharrpy/bin/python', script], payload=payload)
 
         def metadata_fixture(payload):
+            if payload == {'action': 'connect_create_receiver_count'}:
+                status, result = http(origin + '/owned-connect-create-stats')
+                if status != 200 or not isinstance(result, dict) or type(result.get('requests')) is not int:
+                    raise RuntimeError('Owned Connect create receiver count unavailable')
+                return result
             try:
                 return json.loads(execute('baseline','/integration/metadata_fixture.py',json.dumps(payload)))
             except subprocess.CalledProcessError as error:
@@ -277,7 +283,8 @@ def main():
                                  ('core_stream_crud','run_core_stream_crud'),
                                  ('notifications','run_notifications'),
                                  ('proxy_auth','run_proxy_auth'),('environment_ip','run_environment_ip'),('auth_hash','run_auth_hash'),
-                                 ('connect_reads','run_connect_reads'),('connect_logs','run_connect_logs')]:
+                                 ('connect_reads','run_connect_reads'),('connect_logs','run_connect_logs'),
+                                 ('connect_create','run_connect_create')]:
                 if suite in selected_suites:
                     if suite=='core' and 'account_crud' in selected_suites:
                         # Both independent suites deliberately test password
@@ -288,7 +295,7 @@ def main():
                         report.setdefault('suite_isolation',[]).append({'before_suite':'core','reason':'independent login contracts share real per-IP 3/min budgets','wait_seconds':62})
                         for _ in range(2):time.sleep(31)
                     extra=(seed,) if suite=='channel_stops' else ()
-                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash','connect_reads','connect_logs'):
+                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash','connect_reads','connect_logs','connect_create'):
                         extra=(metadata_fixture,)
                     getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
             if args.api_resource_matrix:

@@ -255,6 +255,91 @@ class Tests(unittest.TestCase):
             self.assertFalse(proof["sql_schedule_preserved"])
 
 
+    def execute_interval_edits(self, *, leave_orphan=False):
+        related = {"user_agent": 41, "server_group": 51}
+        profile = {"id": 30, "name": "Owned PATCH target Default"}
+        account = {"name": "Owned PATCH target", "refresh_task_id": 91, "account_type": "XC"}
+        current = []
+        schedule_rows = {"original": 42, "sibling_task": 43, "reusable": 44}
+
+        class IntervalFixture:
+            def sql(self, source, *, secret):
+                assert secret and probe.RENAME_SEED in source
+                return related
+
+        def setup(_fixture, ids, active):
+            assert ids == IDS
+            current.clear()
+            account.update(is_active=active, refresh_interval=probe.INTERVAL_START,
+                           status="success" if active else "disabled")
+            return schedule_rows
+
+        def task(_fixture, account_id, schedules):
+            assert account_id == IDS["account"] and schedules == schedule_rows
+            hours = account["refresh_interval"]
+            interval_ids = {probe.INTERVAL_START: 42, probe.INTERVAL_EXCLUSIVE: 45, 0: 46, probe.INTERVAL_REUSABLE: 44}
+            return {
+                "task_id": 91, "interval_id": interval_ids[hours], "hours": max(hours, 1), "period": "hours",
+                "enabled": account["is_active"] and hours > 0, "provider_task": True, "kwargs_match": True,
+                "no_cron": True, "sibling_unchanged": True,
+                "exclusive_exists": hours == probe.INTERVAL_EXCLUSIVE or (leave_orphan and bool(current)),
+            }
+
+        requests = []
+        def send(_fixture, method, path, value=None):
+            assert path == "/api/m3u/accounts/11/"
+            if method == "PATCH":
+                assert set(value) == {
+                    "name", "server_url", "username", "user_agent", "server_group", "cron_expression",
+                    "refresh_interval", "max_streams", "is_active", "account_type", "stale_stream_days",
+                    "priority", "enable_vod", "hash_key",
+                }
+                assert value["is_active"] == account["is_active"] and value["cron_expression"] == ""
+                requests.append((value["is_active"], value["refresh_interval"]))
+                current.append(value["refresh_interval"])
+                account["refresh_interval"] = value["refresh_interval"]
+            payload = {
+                **body(False, True), **account, **related, "server_url": probe.RENAME_URL,
+                "username": probe.RENAME_USERNAME, "enable_vod": True, "hash_key": "name,url",
+                "custom_properties": probe.RENAME_PROPERTIES, "cron_expression": "",
+            }
+            payload["profiles"].append({**profile, "is_default": True})
+            return 200, payload
+
+        def safe_account(*_):
+            return {
+                "name": account["name"], "server_url_matches": True, "username_matches": True,
+                "password_matches": True, "default_profiles": [profile],
+            }
+
+        with patch.multiple(
+            probe, request=send, setup_interval_case=setup, interval_snapshot=task,
+            rename_sql=safe_account, preferences_snapshot=lambda *_: deepcopy(account),
+            snapshot=lambda *_: relations(False, True),
+        ):
+            result = []
+            probe.verify_interval(IntervalFixture(), "/api/m3u/accounts/11/", IDS, result)
+        self.assertEqual(requests, [
+            (active, hours) for active in (True, False)
+            for hours in (probe.INTERVAL_EXCLUSIVE, 0, probe.INTERVAL_REUSABLE)
+        ])
+        return result
+
+    def test_active_and_inactive_interval_changes_preserve_task_identity_and_sharing(self):
+        result = self.execute_interval_edits()
+        self.assertEqual(len(result), 6)
+        for attempt in result:
+            self.assertEqual(attempt["status"], 200)
+            self.assertTrue(all(attempt["checks"].values()) and all(attempt["followup"].values()))
+            self.assertTrue(all(passed for key, passed in attempt.items() if key.startswith("sql_")))
+
+    def test_interval_orphan_surviving_a_200_is_detected(self):
+        result = self.execute_interval_edits(leave_orphan=True)
+        failures = [entry for entry in result if not entry["sql_orphan_removed"]]
+        self.assertEqual([entry["hours"] for entry in failures], [0, probe.INTERVAL_REUSABLE] * 2)
+        self.assertTrue(all(entry["status"] == 200 for entry in failures))
+
+
 class WorkflowBindingTests(unittest.TestCase):
     def test_selected_context_dispatches_the_same_probe_and_quiets_original_beat(self):
         for backend in ("Original", "Native"):

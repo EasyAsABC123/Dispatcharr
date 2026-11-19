@@ -17,8 +17,15 @@ verifies those database effects.
 
 All 524 default Store tests and strict all-target Store Clippy passed.
 Seventy-nine tests requiring external fixtures were ignored in the default
-run. The new paths are queued for exact-image Compose checks.
+run. Both exact-image Compose comparisons then passed. Original and
+Native matched all 16 integration-create cases and produced no deliveries.
+The stock XC rename matched its PATCH and GET responses and preserved the
+tested account, task, and profile fields. Independent cleanup passed.
 
-[Focused checks](../scripts/rust-integration/milestone-batch80/focused.json)
+The regular integration runner now includes the opt-in `connect_create`
+suite. It can run on its own or after `connect_reads,connect_logs`.
+
+[Exact-image Compose evidence](../scripts/rust-integration/milestone-batch80/packaged.json)
+· [Focused checks](../scripts/rust-integration/milestone-batch80/focused.json)
 · [Original create capture](rust-milestone-batch79.md)
 · [Milestone ledger](rust-milestones.md)

@@ -508,6 +508,149 @@ def verify_rename(fixture, path, ids):
     }
 
 
+INTERVAL_START = 6
+INTERVAL_EXCLUSIVE = 137
+INTERVAL_REUSABLE = 173
+
+
+def setup_interval_case(fixture, ids, active):
+    script = """
+from django_celery_beat.models import IntervalSchedule, PeriodicTask
+from apps.m3u.models import M3UAccount
+
+for account_id in (ids["account"], ids["foreign_account"]):
+    account = M3UAccount.objects.get(pk=account_id)
+    if account_id == ids["account"]:
+        account.is_active = active
+    account.refresh_interval = start
+    account._cron_expression = ""
+    account.save(update_fields=["is_active", "refresh_interval"])
+M3UAccount.objects.filter(pk=ids["account"]).update(status="success" if active else "disabled")
+first = PeriodicTask.objects.get(name="m3u_account-refresh-" + str(ids["account"]))
+sibling = PeriodicTask.objects.get(name="m3u_account-refresh-" + str(ids["foreign_account"]))
+assert first.interval_id is not None and first.interval_id == sibling.interval_id
+assert not IntervalSchedule.objects.filter(every=exclusive, period=IntervalSchedule.HOURS).exists()
+existing, _ = IntervalSchedule.objects.get_or_create(every=reusable, period=IntervalSchedule.HOURS)
+print(json.dumps({"original": first.interval_id, "sibling_task": sibling.pk, "reusable": existing.pk}))
+"""
+    return fixture.sql(
+        f"ids = {ids!r}\nactive = {active!r}\nstart = {INTERVAL_START}\n"
+        f"exclusive = {INTERVAL_EXCLUSIVE}\nreusable = {INTERVAL_REUSABLE}\n" + script,
+        secret=True,
+    )
+
+
+def interval_snapshot(fixture, account_id, schedules):
+    script = """
+from django_celery_beat.models import IntervalSchedule, PeriodicTask
+from apps.m3u.models import M3UAccount
+
+account = M3UAccount.objects.select_related("refresh_task__interval").get(pk=account_id)
+task = account.refresh_task
+assert task is not None and task.interval is not None
+sibling = PeriodicTask.objects.get(pk=schedules["sibling_task"])
+print(json.dumps({
+    "task_id": task.pk,
+    "interval_id": task.interval_id,
+    "hours": task.interval.every,
+    "period": task.interval.period,
+    "no_cron": task.crontab_id is None,
+    "enabled": task.enabled,
+    "provider_task": task.task == "apps.m3u.tasks.refresh_single_m3u_account",
+    "kwargs_match": json.loads(task.kwargs) == {"account_id": account_id},
+    "sibling_unchanged": sibling.interval_id == schedules["original"],
+    "exclusive_exists": IntervalSchedule.objects.filter(every=exclusive, period=IntervalSchedule.HOURS).exists(),
+}))
+"""
+    return fixture.sql(
+        f"account_id = {account_id!r}\nschedules = {schedules!r}\nexclusive = {INTERVAL_EXCLUSIVE}\n" + script,
+        secret=True,
+    )
+
+
+def observe_interval(payload, ids, related, default, active, hours):
+    state = observe(payload, ids)
+    if isinstance(payload, dict):
+        defaults = [profile for profile in (payload.get("profiles") or [])
+                    if isinstance(profile, dict) and profile.get("is_default")]
+        state.update(
+            account_unchanged=payload.get("name") == "Owned PATCH target"
+            and payload.get("is_active") is active
+            and payload.get("status") == ("success" if active else "disabled")
+            and payload.get("account_type") == "XC",
+            provider_unchanged=payload.get("user_agent") == related["user_agent"]
+            and payload.get("server_group") == related["server_group"]
+            and payload.get("server_url") == RENAME_URL and payload.get("username") == RENAME_USERNAME,
+            default_profile_unchanged=len(defaults) == 1 and all(
+                defaults[0].get(key) == value for key, value in default.items()
+            ),
+            properties_unchanged=payload.get("enable_vod") is True and payload.get("hash_key") == "name,url"
+            and payload.get("custom_properties") == RENAME_PROPERTIES,
+            interval_matches=payload.get("refresh_interval") == hours and payload.get("cron_expression") == "",
+        )
+    return state
+
+
+def verify_interval(fixture, path, ids, record):
+    account_id = ids["account"]
+    related = fixture.sql(
+        f"account_id = {account_id!r}\nexpected_url = {RENAME_URL!r}\nexpected_username = {RENAME_USERNAME!r}\n"
+        f"properties = {RENAME_PROPERTIES!r}\ncron = ''\n" + RENAME_SEED,
+        secret=True,
+    )
+    last = rename_sql(fixture, account_id)
+    assert len(last["default_profiles"]) == 1
+    default = last["default_profiles"][0]
+    assert default["name"] == last["name"] + " Default"
+    assert all(last[key] for key in ("server_url_matches", "username_matches", "password_matches"))
+    relations = snapshot(fixture, ids)
+    for active in (True, False):
+        schedules = setup_interval_case(fixture, ids, active)
+        account = preferences_snapshot(fixture, account_id)
+        assert account["refresh_interval"] == INTERVAL_START and account["is_active"] is active
+        initial = interval_snapshot(fixture, account_id, schedules)
+        assert initial["interval_id"] == schedules["original"] and initial["enabled"] is active
+        assert initial["task_id"] == account["refresh_task_id"]
+        for hours in (INTERVAL_EXCLUSIVE, 0, INTERVAL_REUSABLE):
+            status, payload = request(fixture, "PATCH", path, {
+                "name": account["name"],
+                "server_url": RENAME_URL,
+                "user_agent": str(related["user_agent"]),
+                "server_group": str(related["server_group"]),
+                "is_active": active,
+                "max_streams": 0,
+                "refresh_interval": hours,
+                "cron_expression": "",
+                "account_type": "XC",
+                "username": RENAME_USERNAME,
+                "stale_stream_days": 9,
+                "priority": 4,
+                "enable_vod": True,
+                "hash_key": "name,url",
+            })
+            follow_status, follow = request(fixture, "GET", path)
+            actual = interval_snapshot(fixture, account_id, schedules)
+            record.append({
+                "is_active": active,
+                "hours": hours,
+                "status": status,
+                "checks": observe_interval(payload, ids, related, default, active, hours) if status == 200 else {},
+                "followup_status": follow_status,
+                "followup": observe_interval(follow, ids, related, default, active, hours) if follow_status == 200 else {},
+                "sql_only_interval_changed": preferences_snapshot(fixture, account_id)
+                == {**account, "refresh_interval": hours},
+                "sql_task_matches": actual["task_id"] == initial["task_id"]
+                and actual["enabled"] is (active and hours > 0)
+                and actual["hours"] == max(hours, 1) and actual["period"] == "hours"
+                and actual["no_cron"] and actual["provider_task"] and actual["kwargs_match"],
+                "sql_shared_preserved": actual["sibling_unchanged"],
+                "sql_orphan_removed": actual["exclusive_exists"] is (hours == INTERVAL_EXCLUSIVE),
+                "sql_interval_reused": hours != INTERVAL_REUSABLE or actual["interval_id"] == schedules["reusable"],
+                "sql_credentials_and_profiles_preserved": rename_sql(fixture, account_id) == last
+                and snapshot(fixture, ids) == relations,
+            })
+
+
 def run(fixture, record):
     assert fixture.case == CASE and fixture.backend in {"Original", "Native"}
     evidence = {"case": CASE, "backend": fixture.backend, "passed": False, "steps": []}
@@ -553,6 +696,19 @@ def run(fixture, record):
             evidence["missing_group_references"] = missing
             assert missing["status"] == 400 and missing["exact_sparse_error"] and missing["sql_unchanged"]
             assert missing["followup_status"] == 200 and missing["followup"] and all(missing["followup"].values())
+            if fixture.binding.get("xc_group_patch_interval_edit"):
+                stage = "playlist editor interval"
+                evidence["interval_edit"] = intervals = []
+                verify_interval(fixture, path, ids, intervals)
+                assert len(intervals) == 6
+                for interval in intervals:
+                    assert interval["status"] == interval["followup_status"] == 200
+                    assert interval["checks"] and all(interval["checks"].values())
+                    assert interval["followup"] and all(interval["followup"].values())
+                    assert all(interval[key] for key in (
+                        "sql_only_interval_changed", "sql_task_matches", "sql_shared_preserved",
+                        "sql_orphan_removed", "sql_interval_reused", "sql_credentials_and_profiles_preserved",
+                    ))
             if fixture.binding.get("xc_group_patch_label_edit"):
                 stage = "playlist editor rename"
                 rename = verify_rename(fixture, path, ids)

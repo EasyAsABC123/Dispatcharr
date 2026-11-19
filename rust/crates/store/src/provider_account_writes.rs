@@ -115,8 +115,8 @@ fn hash_keys(value: &Value) -> Result<Vec<String>, StoreError> {
     }
     Ok(keys)
 }
-fn xc_label_update(input: &Map<String, Value>, old: &Value, saved: &Value) -> bool {
-    if !input.get("name").is_some_and(Value::is_string)
+fn xc_editor_update(input: &Map<String, Value>, old: &Value, saved: &Value, edited: &str) -> bool {
+    if input.get("name").is_some_and(|value| !value.is_string())
         || input
             .get("enable_vod")
             .is_some_and(|value| !value.is_boolean())
@@ -164,7 +164,7 @@ fn xc_label_update(input: &Map<String, Value>, old: &Value, saved: &Value) -> bo
     saved["custom_properties"] == Value::Object(expected_properties)
         && saved.as_object().is_some_and(|account| {
             account.iter().all(|(key, value)| {
-                matches!(key.as_str(), "name" | "custom_properties") || old.get(key) == Some(value)
+                key == edited || key == "custom_properties" || old.get(key) == Some(value)
             })
         })
 }
@@ -461,14 +461,26 @@ fn validate(
                         || old["custom_properties"].get(key) == Some(value)
                 })
             });
-    // The playlist editor sends all its current values even on a rename.
-    let xc_label = !create
-        && partial
+    // The playlist editor sends all its current values even for a single edit.
+    let xc_editor = partial
         && old["account_type"] == "XC"
         && (old["custom_properties"].is_object() || old["custom_properties"].is_null())
         && !changed
-        && cron == previous_cron
-        && xc_label_update(&input, old, &saved);
+        && cron == previous_cron;
+    let xc_label = !create
+        && xc_editor
+        && input.get("name").is_some_and(Value::is_string)
+        && xc_editor_update(&input, old, &saved, "name");
+    // Reuse the schedule receiver for edits that keep interval mode and
+    // preserve the account state, including the activity determining Beat enablement.
+    let xc_interval = !create
+        && xc_editor
+        && cron.is_empty()
+        && input
+            .get("refresh_interval")
+            .and_then(Value::as_i64)
+            .is_some_and(|hours| (0..=i64::from(i32::MAX)).contains(&hours))
+        && xc_editor_update(&input, old, &saved, "refresh_interval");
     let xc_create = create && saved["account_type"] == "XC";
     if xc_create {
         for key in [
@@ -493,6 +505,7 @@ fn validate(
     }
     if !xc_preferences
         && !xc_label
+        && !xc_interval
         && !xc_active_toggle
         && !xc_create
         && !xc_group_selection
@@ -1390,6 +1403,71 @@ mod tests {
         .is_err());
         old["custom_properties"] = json!("non-mapping preference state");
         assert!(validate(request.as_object().unwrap().clone(), &old, "", true, false).is_err());
+    }
+
+    #[test]
+    fn xc_playlist_interval_edit_preserves_the_account() {
+        for active in [true, false] {
+            let mut old = defaults();
+            old["name"] = json!("Playlist");
+            old["account_type"] = json!("XC");
+            old["server_url"] = json!("http://owned-provider:8080/api");
+            old["username"] = json!("fixture-user");
+            old["is_active"] = json!(active);
+            old["status"] = json!(if active { "success" } else { "disabled" });
+            old["refresh_interval"] = json!(6);
+            old["custom_properties"] =
+                json!({"enable_vod":true,"hash_key":"name,url","marker":"keep"});
+            for hours in [0, 17] {
+                let request = json!({
+                    "name": "Playlist", "account_type":"XC", "server_url":"http://owned-provider:8080/api",
+                    "username":"fixture-user", "user_agent": null, "server_group":null,
+                    "is_active":active, "max_streams":0, "stale_stream_days":7, "priority":0,
+                    "refresh_interval":hours, "cron_expression":"", "enable_vod":true, "hash_key":"name,url"
+                });
+                let edit =
+                    validate(request.as_object().unwrap().clone(), &old, "", true, false).unwrap();
+                let mut expected = old.clone();
+                expected["refresh_interval"] = json!(hours);
+                assert_eq!(edit.saved, expected);
+                assert!(edit.cron.is_empty() && !edit.hash_changed && edit.expiration.is_none());
+            }
+        }
+    }
+
+    #[test]
+    fn xc_playlist_interval_edit_rejects_wider_changes() {
+        let mut old = defaults();
+        old["name"] = json!("Playlist");
+        old["account_type"] = json!("XC");
+        old["custom_properties"] = json!({"enable_vod":false});
+        for (request, old_cron) in [
+            (json!({"refresh_interval":6, "name":"Other"}), ""),
+            (json!({"refresh_interval":6, "is_active":false}), ""),
+            (json!({"refresh_interval":6, "enable_vod":true}), ""),
+            (json!({"refresh_interval":6, "hash_key":"name"}), ""),
+            (
+                json!({"refresh_interval":6, "cron_expression":"30 5 * * *"}),
+                "",
+            ),
+            (
+                json!({"refresh_interval":6, "cron_expression":""}),
+                "30 5 * * *",
+            ),
+            (json!({"refresh_interval":6}), "30 5 * * *"),
+            (json!({"refresh_interval":-1}), ""),
+        ] {
+            assert!(matches!(
+                validate(
+                    request.as_object().unwrap().clone(),
+                    &old,
+                    old_cron,
+                    true,
+                    false
+                ),
+                Err(StoreError::Unsupported(_))
+            ));
+        }
     }
 
     #[test]
