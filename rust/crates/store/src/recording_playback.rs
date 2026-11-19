@@ -39,6 +39,7 @@ pub(super) struct Owner {
     _inner: Arc<Inner>,
 }
 const SLOTS: usize = 32;
+const WRITER_WAIT: Duration = Duration::from_secs(2);
 impl RecordingPlayback {
     pub fn prepare(auth: AuthService, origin: RecordingPlaybackOrigin) -> Self {
         Self {
@@ -150,8 +151,19 @@ async fn handle(
     };
     let path = request.uri().path().to_owned();
     let head = request.method() == Method::HEAD;
+    // Queue before detaching. A viewer that leaves while waiting drops both
+    // its FIFO writer request and its recording admission slot.
+    let permit = match api.inner.auth.request_writer_permit.clone() {
+        Some(inherited) => inherited,
+        None => match wait_for_writer(api.inner.auth.user_agent_workers.clone(), WRITER_WAIT).await
+        {
+            Ok(permit) => Arc::new(permit),
+            Err(error) => return error.into_response(),
+        },
+    };
     // Disconnection never cancels an in-flight SQL/cache/open operation.
-    match tokio::spawn(async move { execute(api, owner, identity, path, head).await }).await {
+    match tokio::spawn(async move { execute(api, owner, identity, path, head, permit).await }).await
+    {
         Ok(Ok(response)) => response,
         Ok(Err(error)) => error.into_response(),
         Err(_) => StoreError::UnhandledRestFault.into_response(),
@@ -174,24 +186,33 @@ fn viewer(user: &User) -> Result<bool, StoreError> {
     }
     Ok(level.and_then(Value::as_str) != Some("none"))
 }
+async fn wait_for_writer(
+    writers: Arc<Semaphore>,
+    budget: Duration,
+) -> Result<OwnedSemaphorePermit, StoreError> {
+    // Recording admission already bounds the live requests to SLOTS. Queue
+    // their short SQL/auth phase on the existing FIFO writer semaphore. A
+    // full writer cohort can then serve later viewers as permits retire.
+    tokio::time::timeout(budget, writers.acquire_owned())
+        .await
+        .map_err(|_| capacity())?
+        .map_err(|_| capacity())
+}
+
 async fn execute(
     api: RecordingPlayback,
     owner: Arc<Owner>,
     identity: PlaybackRequest,
     path: String,
     head: bool,
+    permit: Arc<OwnedSemaphorePermit>,
 ) -> Result<Response, StoreError> {
-    let auth = api.inner.auth.clone().with_retained_scope(owner.clone());
-    let permit = match auth.request_writer_permit.clone() {
-        Some(v) => v,
-        None => Arc::new(
-            auth.user_agent_workers
-                .clone()
-                .try_acquire_owned()
-                .map_err(|_| capacity())?,
-        ),
-    };
-    let auth = auth.with_request_writer_permit(permit)?;
+    let auth = api
+        .inner
+        .auth
+        .clone()
+        .with_retained_scope(owner.clone())
+        .with_request_writer_permit(permit)?;
     let mut subject = auth
         .authenticate_read_strategy(&identity, Some(RestReadLimits::default()))
         .await?;
@@ -296,4 +317,63 @@ fn percent_decode(raw: &str) -> Result<String, StoreError> {
         .next()
         .map(|(_, v)| v.into_owned())
         .ok_or(StoreError::NotFound)
+}
+
+#[cfg(test)]
+mod writer_admission_tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn ten_viewers_wait_in_order_without_increasing_four_writer_limit() {
+        let writers = Arc::new(Semaphore::new(4));
+        let initial = writers.clone().acquire_many_owned(4).await.unwrap();
+        let mut waiting: Vec<_> = (0..10)
+            .map(|_| Box::pin(wait_for_writer(writers.clone(), WRITER_WAIT)))
+            .collect();
+        for viewer in &mut waiting {
+            assert!(futures_util::poll!(viewer.as_mut()).is_pending());
+        }
+        drop(initial);
+        let mut viewer = 0;
+        while viewer < waiting.len() {
+            let cohort_end = (viewer + 4).min(waiting.len());
+            let mut admitted = Vec::new();
+            for queued in &mut waiting[viewer..cohort_end] {
+                admitted.push(
+                    tokio::time::timeout(WRITER_WAIT, queued.as_mut())
+                        .await
+                        .unwrap()
+                        .unwrap(),
+                );
+            }
+            if cohort_end < waiting.len() {
+                assert!(futures_util::poll!(waiting[cohort_end].as_mut()).is_pending());
+            }
+            assert_eq!(writers.available_permits(), 4 - admitted.len());
+            drop(admitted);
+            viewer = cohort_end;
+        }
+        assert_eq!(writers.available_permits(), 4);
+    }
+
+    #[tokio::test]
+    async fn cancelled_and_timed_out_waiters_do_not_consume_a_writer() {
+        let writers = Arc::new(Semaphore::new(1));
+        let initial = writers.clone().acquire_owned().await.unwrap();
+        let mut cancelled = Box::pin(wait_for_writer(writers.clone(), WRITER_WAIT));
+        assert!(futures_util::poll!(cancelled.as_mut()).is_pending());
+        drop(cancelled);
+
+        let expired = wait_for_writer(writers.clone(), Duration::ZERO).await;
+        assert!(matches!(expired, Err(StoreError::StatusBody(503, _))));
+        assert_eq!(writers.available_permits(), 0);
+
+        let mut waiting = Box::pin(wait_for_writer(writers.clone(), WRITER_WAIT));
+        assert!(futures_util::poll!(waiting.as_mut()).is_pending());
+        drop(initial);
+        let admitted = waiting.await.unwrap();
+        assert_eq!(writers.available_permits(), 0);
+        drop(admitted);
+        assert_eq!(writers.available_permits(), 1);
+    }
 }
