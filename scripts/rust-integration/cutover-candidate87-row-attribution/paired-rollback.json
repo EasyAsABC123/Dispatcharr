@@ -1,0 +1,73 @@
+{
+  "status": "verified paired Candidate87 copied rollback",
+  "paired_result_sha256": "b13997d7261c7b02e80c8be5d02c0a70062a53a41c6325a32c8119bb9bad9f89",
+  "actual_launcher_exit": 0,
+  "launcher_sha256": "5ea1630e53066bedfb52ad6c44ce9d50a0da24331627c0116dc1525a87ce95cd",
+  "Original_control_result_sha256": "e14e558fafa3e9e79beb484b7f35a7793036374b2c8c7cb4001d42c5b09e6cba",
+  "retained_Original_quiescent_fingerprint_sha256": "73f451e4da79aed4aafe0fc89bdd71ef8e0ec56f99405f32b615e2d57df3cde4",
+  "historical_Candidate87_result_sha256": "c4909ad5a0244f49594013ee965c52d62eed8d4163b3580cfd8418bbae9de71b",
+  "historical_Candidate87_post_restart_fingerprint_equal": false,
+  "actual_Original_SQL_unchanged_through_Native": true,
+  "actual_strict_Original_SQL_fingerprint_equal_after_restart": false,
+  "actual_Original_restart_delta_matches_Source_only_control": true,
+  "actual_Original_restart_change_shapes": {
+    "quiescent_to_ready": [
+      [
+        "core_systemnotification",
+        "updated",
+        [
+          "updated_at"
+        ],
+        1
+      ],
+      [
+        "django_celery_beat_periodictask",
+        "updated",
+        [
+          "date_changed"
+        ],
+        2
+      ],
+      [
+        "django_celery_beat_periodictasks",
+        "updated",
+        [
+          "last_update"
+        ],
+        1
+      ]
+    ],
+    "ready_to_authenticated_read": [],
+    "quiescent_to_authenticated_read": [
+      [
+        "core_systemnotification",
+        "updated",
+        [
+          "updated_at"
+        ],
+        1
+      ],
+      [
+        "django_celery_beat_periodictask",
+        "updated",
+        [
+          "date_changed"
+        ],
+        2
+      ],
+      [
+        "django_celery_beat_periodictasks",
+        "updated",
+        [
+          "last_update"
+        ],
+        1
+      ]
+    ]
+  },
+  "exact_cleanup": true,
+  "owned_retired_CID_count": 5,
+  "full_M9_accepted": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr and dependency authors retain all application and algorithm credit."
+}

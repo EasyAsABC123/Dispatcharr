@@ -83,6 +83,8 @@ media and heartbeat matched the fixture, with unchanged recording rows
 and sequences and exact four-container teardown.
 [Ordinary DVR receipt](../scripts/rust-integration/milestone-batch88/dvr-compose.json)
 
+[Completed DVR performance attempt and reconciliation](../scripts/rust-perf/candidate88-dvr/README.md)
+
 [Focused results](../scripts/rust-integration/milestone-batch88/focused.json)
 · [Docker build and workspace checks](../scripts/rust-integration/milestone-batch88/packaging-and-workspace.json)
 · [Packaged HLS comparison](../scripts/rust-integration/milestone-batch88/legacy-hls-compose.json)

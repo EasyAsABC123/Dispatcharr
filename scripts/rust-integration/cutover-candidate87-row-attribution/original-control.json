@@ -1,0 +1,66 @@
+{
+  "status": "verified Original-only restart control",
+  "source_control_result_sha256": "e14e558fafa3e9e79beb484b7f35a7793036374b2c8c7cb4001d42c5b09e6cba",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "historical_Candidate87_result_sha256": "c4909ad5a0244f49594013ee965c52d62eed8d4163b3580cfd8418bbae9de71b",
+  "historical_unchanged_after_original_restart": false,
+  "sanitized_change_shapes": {
+    "quiescent_to_ready": [
+      [
+        "core_systemnotification",
+        "updated",
+        [
+          "updated_at"
+        ],
+        1
+      ],
+      [
+        "django_celery_beat_periodictask",
+        "updated",
+        [
+          "date_changed"
+        ],
+        2
+      ],
+      [
+        "django_celery_beat_periodictasks",
+        "updated",
+        [
+          "last_update"
+        ],
+        1
+      ]
+    ],
+    "ready_to_authenticated_read": [],
+    "quiescent_to_authenticated_read": [
+      [
+        "core_systemnotification",
+        "updated",
+        [
+          "updated_at"
+        ],
+        1
+      ],
+      [
+        "django_celery_beat_periodictask",
+        "updated",
+        [
+          "date_changed"
+        ],
+        2
+      ],
+      [
+        "django_celery_beat_periodictasks",
+        "updated",
+        [
+          "last_update"
+        ],
+        1
+      ]
+    ]
+  },
+  "exact_cleanup": true,
+  "full_M9_passed": false,
+  "performance_verified": false,
+  "credit": "Original Dispatcharr and dependency authors retain all application and algorithm credit."
+}

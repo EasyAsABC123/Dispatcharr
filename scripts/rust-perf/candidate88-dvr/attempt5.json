@@ -1,0 +1,522 @@
+{
+  "all_measurements_completed_and_equal": false,
+  "backend_medians": {
+    "1": {
+      "candidate": {
+        "bytes": 67251260,
+        "cpu_percent": 0.41015037907154367,
+        "peak_working_bytes": 145559552
+      },
+      "source": {
+        "bytes": 67251260,
+        "cpu_percent": 0.7216549751610732,
+        "peak_working_bytes": 393314304
+      }
+    }
+  },
+  "candidate_build_sha256": "e29a05ce22070067db03ed0e90a80f0ff64e14560d1eec394dd14dd77bf6903a",
+  "candidate_image": "sha256:3ee795ee96c2cb4c50b9851cd30e4057a7d6cddccb81fe137d0a115b4a58c034",
+  "candidate_revision": "3c5063347ca6be710894e8d753110bc344dd4df2",
+  "container_ids_before_teardown": 6,
+  "error_type": "ValueError",
+  "externally_observed_controller_exit": 1,
+  "failed_phases": [],
+  "failed_warmup": {
+    "attempted_requests": 14,
+    "backend": "candidate",
+    "exact_successes": 8,
+    "expected_requests": 100,
+    "last_attempted_wave_index": 0,
+    "request_outcomes": [
+      {
+        "count": 4,
+        "error_type": null,
+        "http_status": 206,
+        "inside_wave": true,
+        "request": "closed_seek"
+      },
+      {
+        "count": 4,
+        "error_type": null,
+        "http_status": 200,
+        "inside_wave": true,
+        "request": "complete"
+      },
+      {
+        "count": 6,
+        "error_type": "HTTPError",
+        "http_status": 503,
+        "inside_wave": true,
+        "request": "complete"
+      }
+    ],
+    "sample_errors": [],
+    "sampled": false,
+    "sha256": "a8273d99174d5c0aea737778fa425f4cc2c64ec9a6237620719829f614f53fe9",
+    "trial": 1,
+    "viewers": 10
+  },
+  "freeze_sha256": "d20d377d0595e8bc79a455ce33be3d592f903c63a246834de46a851e91ce35f1",
+  "functional_receipt_sha256": "bb31782a731546bf2f6237f072a4a411084041eaf28ff16c202cd5756ac838ce",
+  "observed_generations_absent": 11,
+  "owned_cleanup_verified": true,
+  "pair_medians": {
+    "1": {
+      "throughput_ratio": 1.0,
+      "whole_cpu_ratio": 0.5495289736823028,
+      "whole_peak_memory_ratio": 0.3700845621927851
+    }
+  },
+  "pairs": [
+    {
+      "gates": {
+        "cpu": true,
+        "equal_work": true,
+        "latency": true,
+        "throughput": true,
+        "working_set": true
+      },
+      "latency_ratios": {
+        "closed_seek": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        },
+        "complete": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        }
+      },
+      "ratios": {
+        "throughput_ratio": 1.0,
+        "whole_cpu_ratio": 0.5495289736823028,
+        "whole_peak_memory_ratio": 0.35944782887745547
+      },
+      "trial": 1,
+      "viewers": 1
+    },
+    {
+      "gates": {
+        "cpu": true,
+        "equal_work": true,
+        "latency": true,
+        "throughput": true,
+        "working_set": true
+      },
+      "latency_ratios": {
+        "closed_seek": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        },
+        "complete": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        }
+      },
+      "ratios": {
+        "throughput_ratio": 1.0,
+        "whole_cpu_ratio": 0.5424772670132174,
+        "whole_peak_memory_ratio": 0.3700845621927851
+      },
+      "trial": 2,
+      "viewers": 1
+    },
+    {
+      "gates": {
+        "cpu": true,
+        "equal_work": true,
+        "latency": true,
+        "throughput": true,
+        "working_set": true
+      },
+      "latency_ratios": {
+        "closed_seek": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        },
+        "complete": {
+          "p95_first_byte_ms": 1.0,
+          "p95_total_ms": 1.0
+        }
+      },
+      "ratios": {
+        "throughput_ratio": 1.0,
+        "whole_cpu_ratio": 0.5804888250954703,
+        "whole_peak_memory_ratio": 0.3999958803658235
+      },
+      "trial": 3,
+      "viewers": 1
+    }
+  ],
+  "phases": [
+    {
+      "backend": "source",
+      "bytes": 67251260,
+      "cpu_percent": 0.7463671593568466,
+      "latency_ms": {
+        "closed_seek": {
+          "p95_first_byte_ms": 7.6426529994932935,
+          "p95_total_ms": 8.53893900057301
+        },
+        "complete": {
+          "p95_first_byte_ms": 8.713662999070948,
+          "p95_total_ms": 22.555290001037065
+        }
+      },
+      "peak_working_bytes": 389296128,
+      "phase_sha256": "0192b0e8c76b44c871504e26b0c164049f01d048bdaec393f348f8a8d099cdf1",
+      "requests": 40,
+      "sample_count": 30,
+      "service_cpu_counter_deltas": {
+        "backend": {
+          "elapsed_seconds": 60.13141051899947,
+          "usage_usec": 313767
+        },
+        "infrastructure": {
+          "elapsed_seconds": 60.130800672002806,
+          "usage_usec": 106336
+        },
+        "origin": {
+          "elapsed_seconds": 60.131364187000145,
+          "usage_usec": 28697
+        }
+      },
+      "service_cpu_percent": {
+        "backend": 0.5218021617850797,
+        "infrastructure": 0.17684115097690783,
+        "origin": 0.047723846594859114
+      },
+      "service_peak_working_bytes": {
+        "backend": 250449920,
+        "infrastructure": 119504896,
+        "origin": 19419136
+      },
+      "trial": 1,
+      "viewers": 1
+    },
+    {
+      "backend": "candidate",
+      "bytes": 67251260,
+      "cpu_percent": 0.41015037907154367,
+      "latency_ms": {
+        "closed_seek": {
+          "p95_first_byte_ms": 5.128183001943398,
+          "p95_total_ms": 5.40592100151116
+        },
+        "complete": {
+          "p95_first_byte_ms": 5.727640000259271,
+          "p95_total_ms": 12.501189001341118
+        }
+      },
+      "peak_working_bytes": 139931648,
+      "phase_sha256": "8289e972d47cf685b87a0469c4f20b6c31735ec29b61cc790b72ecd1f063b3c5",
+      "requests": 40,
+      "sample_count": 30,
+      "service_cpu_counter_deltas": {
+        "backend": {
+          "elapsed_seconds": 60.12694424100118,
+          "usage_usec": 133530
+        },
+        "infrastructure": {
+          "elapsed_seconds": 60.12855972599937,
+          "usage_usec": 84561
+        },
+        "origin": {
+          "elapsed_seconds": 60.12871156000256,
+          "usage_usec": 28523
+        }
+      },
+      "service_cpu_percent": {
+        "backend": 0.2220801367599595,
+        "infrastructure": 0.140633669566238,
+        "origin": 0.0474365727453462
+      },
+      "service_peak_working_bytes": {
+        "backend": 8790016,
+        "infrastructure": 119656448,
+        "origin": 13242368
+      },
+      "trial": 1,
+      "viewers": 1
+    },
+    {
+      "backend": "candidate",
+      "bytes": 67251260,
+      "cpu_percent": 0.3896367246890803,
+      "latency_ms": {
+        "closed_seek": {
+          "p95_first_byte_ms": 5.128272998263128,
+          "p95_total_ms": 5.470382999192225
+        },
+        "complete": {
+          "p95_first_byte_ms": 5.830652997246943,
+          "p95_total_ms": 11.162701997818658
+        }
+      },
+      "peak_working_bytes": 145559552,
+      "phase_sha256": "f90c2be2bd851611823bd087b98ccdfc35b91c172950d2935fba72fe17c808bd",
+      "requests": 40,
+      "sample_count": 30,
+      "service_cpu_counter_deltas": {
+        "backend": {
+          "elapsed_seconds": 60.127494899999874,
+          "usage_usec": 123971
+        },
+        "infrastructure": {
+          "elapsed_seconds": 60.12588167500144,
+          "usage_usec": 81087
+        },
+        "origin": {
+          "elapsed_seconds": 60.126206404002005,
+          "usage_usec": 29218
+        }
+      },
+      "service_cpu_percent": {
+        "backend": 0.20618021789562407,
+        "infrastructure": 0.13486205564236003,
+        "origin": 0.048594451151096146
+      },
+      "service_peak_working_bytes": {
+        "backend": 8400896,
+        "infrastructure": 119742464,
+        "origin": 20439040
+      },
+      "trial": 2,
+      "viewers": 1
+    },
+    {
+      "backend": "source",
+      "bytes": 67251260,
+      "cpu_percent": 0.7182544751310046,
+      "latency_ms": {
+        "closed_seek": {
+          "p95_first_byte_ms": 7.307563999347622,
+          "p95_total_ms": 8.145997999235988
+        },
+        "complete": {
+          "p95_first_byte_ms": 8.446515999821713,
+          "p95_total_ms": 22.159208998346003
+        }
+      },
+      "peak_working_bytes": 393314304,
+      "phase_sha256": "55222dc38b545e07e0a22358af41fea6d954f0024c70fed01425559b513a7c64",
+      "requests": 40,
+      "sample_count": 30,
+      "service_cpu_counter_deltas": {
+        "backend": {
+          "elapsed_seconds": 60.13451612800054,
+          "usage_usec": 314506
+        },
+        "infrastructure": {
+          "elapsed_seconds": 60.134012334001454,
+          "usage_usec": 87483
+        },
+        "origin": {
+          "elapsed_seconds": 60.134274481999455,
+          "usage_usec": 29929
+        }
+      },
+      "service_cpu_percent": {
+        "backend": 0.523004125169232,
+        "infrastructure": 0.14548006461650098,
+        "origin": 0.04977028534527164
+      },
+      "service_peak_working_bytes": {
+        "backend": 253493248,
+        "infrastructure": 120553472,
+        "origin": 19501056
+      },
+      "trial": 2,
+      "viewers": 1
+    },
+    {
+      "backend": "source",
+      "bytes": 67251260,
+      "cpu_percent": 0.7216549751610732,
+      "latency_ms": {
+        "closed_seek": {
+          "p95_first_byte_ms": 7.946762001665775,
+          "p95_total_ms": 8.758664000197314
+        },
+        "complete": {
+          "p95_first_byte_ms": 8.38906400167616,
+          "p95_total_ms": 22.70620399940526
+        }
+      },
+      "peak_working_bytes": 397705216,
+      "phase_sha256": "8fdbfa19975732217d310b40d2507bd4d32c963902847138e1e0bab1d8aeb64f",
+      "requests": 40,
+      "sample_count": 30,
+      "service_cpu_counter_deltas": {
+        "backend": {
+          "elapsed_seconds": 60.133897550000256,
+          "usage_usec": 313898
+        },
+        "infrastructure": {
+          "elapsed_seconds": 60.13352460999886,
+          "usage_usec": 90810
+        },
+        "origin": {
+          "elapsed_seconds": 60.134513807002804,
+          "usage_usec": 29251
+        }
+      },
+      "service_cpu_percent": {
+        "backend": 0.5219984281560986,
+        "infrastructure": 0.1510139320602876,
+        "origin": 0.048642614944686975
+      },
+      "service_peak_working_bytes": {
+        "backend": 254779392,
+        "infrastructure": 125157376,
+        "origin": 19959808
+      },
+      "trial": 3,
+      "viewers": 1
+    },
+    {
+      "backend": "candidate",
+      "bytes": 67251260,
+      "cpu_percent": 0.4189126486555522,
+      "latency_ms": {
+        "closed_seek": {
+          "p95_first_byte_ms": 5.079840997495921,
+          "p95_total_ms": 5.514193999260897
+        },
+        "complete": {
+          "p95_first_byte_ms": 5.810042999655707,
+          "p95_total_ms": 11.571113001991762
+        }
+      },
+      "peak_working_bytes": 159080448,
+      "phase_sha256": "c4a5e6b25bcac49a09c1bbe2d40ede75be76d262eb0f8c591aa54c8d93afc9c0",
+      "requests": 40,
+      "sample_count": 30,
+      "service_cpu_counter_deltas": {
+        "backend": {
+          "elapsed_seconds": 60.12652273899948,
+          "usage_usec": 133191
+        },
+        "infrastructure": {
+          "elapsed_seconds": 60.126073988001735,
+          "usage_usec": 90506
+        },
+        "origin": {
+          "elapsed_seconds": 60.12879838000299,
+          "usage_usec": 28181
+        }
+      },
+      "service_cpu_percent": {
+        "backend": 0.22151788251278529,
+        "infrastructure": 0.15052704092746955,
+        "origin": 0.04686772521529741
+      },
+      "service_peak_working_bytes": {
+        "backend": 7970816,
+        "infrastructure": 141164544,
+        "origin": 19132416
+      },
+      "trial": 3,
+      "viewers": 1
+    },
+    {
+      "backend": "source",
+      "bytes": 672512600,
+      "cpu_percent": 5.661167194130791,
+      "latency_ms": {
+        "closed_seek": {
+          "p95_first_byte_ms": 26.345446000050288,
+          "p95_total_ms": 27.10492800179054
+        },
+        "complete": {
+          "p95_first_byte_ms": 53.05820200010203,
+          "p95_total_ms": 130.74586500079022
+        }
+      },
+      "peak_working_bytes": 415039488,
+      "phase_sha256": "393393321803c49cef02545bdf3f2a20ea1066d18eddfee75f7273576404760e",
+      "requests": 400,
+      "sample_count": 30,
+      "service_cpu_counter_deltas": {
+        "backend": {
+          "elapsed_seconds": 60.13421107799877,
+          "usage_usec": 2609887
+        },
+        "infrastructure": {
+          "elapsed_seconds": 60.13294954500088,
+          "usage_usec": 765241
+        },
+        "origin": {
+          "elapsed_seconds": 60.133848143999785,
+          "usage_usec": 29154
+        }
+      },
+      "service_cpu_percent": {
+        "backend": 4.340103500509507,
+        "infrastructure": 1.2725818470409918,
+        "origin": 0.04848184658029242
+      },
+      "service_peak_working_bytes": {
+        "backend": 257703936,
+        "infrastructure": 147775488,
+        "origin": 11993088
+      },
+      "trial": 1,
+      "viewers": 10
+    }
+  ],
+  "plan": {
+    "comparison": {
+      "latency_floor_ms": 50,
+      "max_p95_ratio": 1.1,
+      "min_throughput_ratio": 0.95,
+      "whole_cpu_max_ratio": 1.0,
+      "whole_peak_memory_max_ratio": 1.0
+    },
+    "limits": {
+      "backend": {
+        "memory_bytes": 536870912,
+        "nano_cpus": 2000000000
+      },
+      "infrastructure": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 1000000000
+      },
+      "origin": {
+        "memory_bytes": 1073741824,
+        "nano_cpus": 2000000000
+      }
+    },
+    "measure_seconds": 60,
+    "minimum_samples": 25,
+    "orders": [
+      [
+        "source",
+        "candidate"
+      ],
+      [
+        "candidate",
+        "source"
+      ],
+      [
+        "source",
+        "candidate"
+      ]
+    ],
+    "sample_seconds": 2,
+    "timeout_seconds": 2.75,
+    "viewers": [
+      1,
+      10
+    ],
+    "warmup_seconds": 15,
+    "wave_seconds": 3
+  },
+  "plan_sha256": "9f9678bf56e4660925176ad6ca8fb40d0ed3051c0446c170457bf9472b3144db",
+  "reported_passed": false,
+  "scope": "m4-ordinary-completed-dvr",
+  "terminal_report_sha256": "9b27f603a3381382781d59590d4e49ff597a529650f76a93ea3b38549a30ff51",
+  "terminal_stage": "prepare-candidate-10-1",
+  "viewer_levels_with_three_passing_pairs": [
+    1
+  ]
+}

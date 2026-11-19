@@ -20,6 +20,17 @@ before restart and differed afterward. The first failed observer attempt
 and both cleanup receipts are retained. Whole-package soak and the release
 decision remain open.
 
+The [instrumented rollback replay](rust-cutover-candidate87-row-attribution.md)
+found zero Original row changes during Native use. A standalone Original
+restart reproduced the same four timestamp updates in the paired replay.
+The strict post-restart fingerprint still differed.
+
+The [completed DVR performance attempt](../scripts/rust-perf/candidate88-dvr/README.md)
+verified three one-viewer pairs. Median paired whole-stack CPU fell 45.05%
+and peak working set fell 62.99% with equal delivery. Native returned
+six HTTP 503 responses in the first ten-viewer warmup, and the controller
+exited 1 after exact cleanup.
+
 The [development and validation plan](rust-development-and-validation-plan.md) defines parallel implementation/acceptance/tooling lanes, affected-workflow batches and default-off fixture concurrency. Performance measurement remains exclusive.
 
 The [XC account lifecycle Source capture](../scripts/rust-integration/milestone-batch67/xc-source11-checkpoint.json)
@@ -684,12 +695,12 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M1 | Shared bounded streaming core | M0 | In progress (technical core gates passed; M0 executable-contract prerequisite open) | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
 | M2 | Authenticated live TS vertical slice | M1 | In progress | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
 | M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
-| M4 | VOD and timeshift parity | M2 | In progress (ordinary DVR list, file, valid seeks and active HLS verified) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
+| M4 | VOD and timeshift parity | M2 | In progress (ordinary DVR functional slice and one-viewer performance verified; ten-viewer warmup failed) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
 | M5 | Accounts, settings, and channel control APIs | M2 | In progress (independent account contracts) | API/permission/database/React workflow parity and API benchmarks |
 | M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (scoped refresh-only guide consumption and packaged selected-worker startup verified) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (Connect lifecycle and saved webhook Test verified in scoped Compose runs) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (native schema/archive/operator slices; Original and Native backup normal16 qualified; physical/restore/admin/plugins gaps) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
-| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (owned PostgreSQL copied-data and rollback scenario passed; full restart fingerprint and final suite open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
+| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (copied PostgreSQL rollback passed with four matched Original restart timestamp updates; strict fingerprint and final suite open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 | M10 | Controlled rollout | M9 | Proposed | Scoped rollout plan, monitoring and rollback on the selected release image |
 | M11 | Default switch and operator handoff | M10 | Proposed | Released image and configuration, upgrade evidence, attribution and monitored fallback |
 
