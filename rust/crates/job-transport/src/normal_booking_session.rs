@@ -129,6 +129,7 @@ async fn read(connection: &mut PgConnection, recording: i64) -> Result<BookingRo
         end: row.try_get("end_time").map_err(database)?,
         task_key: row.try_get("task_key").map_err(database)?,
         artwork,
+        recurring_times: None,
     };
     if row.end <= row.start {
         return Err(Error::Unsupported("booking recording window"));
@@ -200,6 +201,7 @@ mod save_signal_tests {
             end: now + chrono::Duration::seconds(end),
             task_key: Some("dvr-recording-41".into()),
             artwork: true,
+            recurring_times: None,
         }
     }
     #[test]
