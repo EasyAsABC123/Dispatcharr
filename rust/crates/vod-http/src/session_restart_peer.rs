@@ -282,6 +282,7 @@ async fn receipt_actor_failure_is_not_lost_when_session_registry_drains() {
         &request,
         &source.candidates[0],
         &ticket.session.metadata_token,
+        &ticket.session.offset,
     )
     .expect("valid fixture process worker identity");
     scope
