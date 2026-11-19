@@ -73,6 +73,63 @@ fn reply(status: u16, detail: impl Into<String>) -> Response {
     );
     response
 }
+fn schedule_payload(raw: Option<&Value>) -> Result<Value, String> {
+    let settings = raw.and_then(Value::as_object);
+    let get = |name: &str, default: Value| {
+        settings
+            .and_then(|obj| obj.get(name))
+            .cloned()
+            .unwrap_or(default)
+    };
+    let text = |value: Value| {
+        value
+            .as_str()
+            .map(str::to_owned)
+            .or_else(|| crate::python_action::collection_text(&value, 1 << 20))
+            .unwrap_or_default()
+    };
+    let enabled = crate::channels::truthy(Some(&get("schedule_enabled", json!(true))));
+    let frequency = text(get("schedule_frequency", json!("daily")));
+    let time = text(get("schedule_time", json!("03:00")));
+    let day = crate::json_compat::python_json_int(&get("schedule_day_of_week", json!(0)))?;
+    let retention = crate::json_compat::python_json_int(&get("retention_count", json!(3)))?;
+    let cron = text(get("schedule_cron_expression", json!("")));
+    Ok(
+        json!({"enabled":enabled,"frequency":frequency,"time":time,"day_of_week":day,
+              "retention_count":retention,"cron_expression":cron}),
+    )
+}
+
+#[cfg(test)]
+#[test]
+fn source_copied_schedule_projection_and_integer_fault_order() {
+    assert_eq!(
+        schedule_payload(Some(
+            &json!({"schedule_enabled":"false", "schedule_day_of_week":" +０_４ ",
+             "retention_count":true, "schedule_time":null})
+        )),
+        Ok(
+            json!({"enabled":true,"frequency":"daily","time":"None","day_of_week":4,
+              "retention_count":1,"cron_expression":""})
+        )
+    );
+    assert_eq!(
+        schedule_payload(Some(
+            &json!({"schedule_day_of_week":"x'quote", "retention_count":null})
+        )),
+        Err("invalid literal for int() with base 10: \"x'quote\"".into())
+    );
+    assert_eq!(
+        schedule_payload(Some(
+            &json!({"schedule_day_of_week":4.25, "retention_count":[]})
+        )),
+        Err(
+            "int() argument must be a string, a bytes-like object or a real number, not 'list'"
+                .into()
+        )
+    );
+}
+
 fn invalid(name: &str) -> bool {
     name.contains("..") || name.contains('/') || name.contains('\\')
 }
@@ -540,47 +597,10 @@ impl BackupFiles {
             sqlx::query_scalar("SELECT value FROM core_coresettings WHERE key='backup_settings'")
                 .fetch_optional(self.auth.store.pool())
                 .await?;
-        let values = raw.flatten().filter(Value::is_object).unwrap_or(json!({}));
-        let get = |name: &str, default: Value| values.get(name).cloned().unwrap_or(default);
-        let text = |value: Value| {
-            value
-                .as_str()
-                .map(str::to_owned)
-                .or_else(|| crate::python_action::collection_text(&value, 1 << 20))
-                .unwrap_or_default()
-        };
-        let integer = |value: Value| -> Option<Value> {
-            let string = match value {
-                Value::Bool(v) => {
-                    if v {
-                        "1".into()
-                    } else {
-                        "0".into()
-                    }
-                }
-                Value::Number(v) if v.to_string().contains(['.', 'e', 'E']) => {
-                    format!("{:.0}", v.as_f64()?.trunc())
-                }
-                Value::Number(v) => v.to_string(),
-                Value::String(v) => v,
-                _ => return None,
-            };
-            let value = dispatcharr_ingest_core::source_integer_literal(&string)?;
-            serde_json::from_str(&value).ok()
-        };
-        let Some(day) = integer(get("schedule_day_of_week", json!(0))) else {
-            return Ok(reply(
-                501,
-                "Malformed backup schedule integer contract is not migrated",
-            ));
-        };
-        let Some(retention) = integer(get("retention_count", json!(3))) else {
-            return Ok(reply(
-                501,
-                "Malformed backup schedule integer contract is not migrated",
-            ));
-        };
-        Ok(Json(json!({"enabled":crate::channels::truthy(Some(&get("schedule_enabled",json!(true)))),"frequency":text(get("schedule_frequency",json!("daily"))),"time":text(get("schedule_time",json!("03:00"))),"day_of_week":day,"retention_count":retention,"cron_expression":text(get("schedule_cron_expression",json!("")))})).into_response())
+        Ok(match schedule_payload(raw.flatten().as_ref()) {
+            Ok(value) => Json(value).into_response(),
+            Err(error) => reply(500, format!("Failed to get schedule: {error}")),
+        })
     }
     async fn upload(&self, lease: &Lease, request: &mut Request) -> Result<Response, StoreError> {
         let incoming = std::mem::replace(request, Request::new(Body::empty()));

@@ -1,0 +1,102 @@
+{
+  "actual_exit": 0,
+  "candidate_image": {
+    "image_id": "sha256:a34ec5a7bf6326bc1afaf59967f9ccc362bda98ba4fcc4ce987bc1456a10444c",
+    "source_tree_sha256": "131b7c920bf31ba072459c04ea3d74e394e8d224925412705779dfeb95392687"
+  },
+  "candidate_revision": "5a15af2673f2f4c15ab1fd58f3589ccee5ae8917",
+  "exact_cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "full_milestone_accepted": false,
+  "manifest_sha256": "4ae6c27537d11ffff0dc26d4572ef36aaa87f0b1568f28392e0c7077bdc3b484",
+  "matched_checks": {
+    "cases": [
+      {
+        "case": "nonobject-defaults",
+        "role": "admin",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 200
+      },
+      {
+        "case": "legacy-casts",
+        "role": "admin",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 200
+      },
+      {
+        "case": "fractional-numeric",
+        "role": "admin",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 200
+      },
+      {
+        "case": "day-priority",
+        "role": "admin",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 500
+      },
+      {
+        "case": "list-day",
+        "role": "admin",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 500
+      },
+      {
+        "case": "null-retention",
+        "role": "admin",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 500
+      },
+      {
+        "case": "object-retention",
+        "role": "admin",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 500
+      },
+      {
+        "case": "literal-repr-cap",
+        "role": "admin",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 500
+      },
+      {
+        "case": "decimal-limit",
+        "role": "admin",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 500
+      },
+      {
+        "case": "malformed-role-gate",
+        "role": "anonymous",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 401
+      },
+      {
+        "case": "malformed-role-gate",
+        "role": "viewer",
+        "settings_and_scheduled_task_count_unchanged": true,
+        "status": 403
+      }
+    ],
+    "equal_responses_per_backend": 11
+  },
+  "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "passed": true,
+  "performance_verified": false,
+  "receipt_sha256": "f79fcaa3455b4ade5a5578fffe24c8a4d58e64642c420cf0070ee233f0ccf98e",
+  "scope": "backup-legacy-schedule",
+  "supervisor_state_sha256": "00ecf7db07f92ab7e3372ce784d867f776e8e1cfe69e6df37aded4799e1b9665"
+}

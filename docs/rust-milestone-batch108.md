@@ -36,3 +36,13 @@ owned projects passed exact cleanup. The published product changes cover
 the two Core Store files qualified by this run.
 
 [Core JSON receipt](../scripts/rust-integration/milestone-batch108/core-json.json)
+
+## Legacy backup schedule reads
+
+The corrected SQL guest reused the exact Candidate108 package. Both backends
+matched all eleven schedule reads, including legacy integer conversions,
+malformed persisted values and role denials. Stored settings and the task
+schedule stayed unchanged during every HTTP read. The Compose replay exited
+0 and retired all four exact container and process generations.
+
+[Backup schedule receipt](../scripts/rust-integration/milestone-batch108/backup-schedule.json)
