@@ -34,11 +34,21 @@ observations. The selected remote viewer reached EOF, and its peer received
 provider slot. This verifies the selected controls and shared-viewer
 behavior. Complete status fields and the wider M3 matrix remain open.
 
-All three runs verified the retirement of their owned Compose resources.
-Initial fMP4 and bulk-rename probes exited 1 in the test harness. The two
-Candidate94 password diagnostic probes also exited 1 before the scheduled
-login. Their teardown is recorded and their behavior checks remain open.
-These scoped functional runs establish no new performance gains.
+HDHomeRun matched all 135 paired application checks, including the restored
+default-profile integer cases. The lineup-generated stream delivered
+1,165,788 media bytes without a TS synchronization error. FFmpeg decoded 74
+frames with audio and video, and the packaged process exited cleanly.
+
+The successful runs verified owned Compose teardown. Initial fMP4 and
+bulk-rename probes exited 1 in the test harness. The corrected bulk-rename
+probe passed six Original and seven Native checks before it exposed a
+behavior difference. The Original returned 200 for the overlength result
+where Candidate100 returned 500. The Original SQL readback for that response
+remains pending.
+
+The two Candidate94 password diagnostic probes exited 1 before the
+scheduled login. Their teardown is recorded and their behavior checks
+remain open. These scoped runs establish no new performance gains.
 
 [Compose evidence](../scripts/rust-integration/milestone-batch100/compose-first.json)
 
