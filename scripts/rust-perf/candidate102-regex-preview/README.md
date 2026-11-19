@@ -90,3 +90,24 @@ used a different schedule from the release protocol. The two failed
 release attempts remain the governing evidence.
 
 [Shifted timing receipt](shifted-clock-diagnostic.json)
+
+## Sample allocation experiment
+
+A separate image retained result samples only while the requested sample
+limit had room. It ran the same regex calls on all input rows. The 48
+ordinary and 50 wide-Unicode functional checks passed before measurement.
+The six measured phases again matched all 216 responses, 360,360 scanned
+rows and equal throughput.
+
+| Pair | Original full-scan p95 | Rust full-scan p95 | 1.10 latency gate |
+| --- | ---: | ---: | --- |
+| 1 | 64.73 ms | 47.04 ms | Passed |
+| 2 | 55.59 ms | 65.64 ms | Failed |
+| 3 | 55.84 ms | 65.19 ms | Failed |
+
+Median paired combined CPU was 21.65% lower and peak working set was
+55.84% lower than Original. The controller exited 1 after exact cleanup.
+The independent reducer confirmed these results. The experiment leaves
+Auto Sync resource acceptance open.
+
+[Sample allocation experiment receipt](allocation-experiment.json)
