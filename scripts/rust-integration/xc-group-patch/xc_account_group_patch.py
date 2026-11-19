@@ -568,7 +568,7 @@ print(json.dumps({
     )
 
 
-def observe_interval(payload, ids, related, default, active, hours):
+def observe_interval(payload, ids, related, default, active, hours, cron=""):
     state = observe(payload, ids)
     if isinstance(payload, dict):
         defaults = [profile for profile in (payload.get("profiles") or [])
@@ -586,9 +586,28 @@ def observe_interval(payload, ids, related, default, active, hours):
             ),
             properties_unchanged=payload.get("enable_vod") is True and payload.get("hash_key") == "name,url"
             and payload.get("custom_properties") == RENAME_PROPERTIES,
-            interval_matches=payload.get("refresh_interval") == hours and payload.get("cron_expression") == "",
+            schedule_fields_match=payload.get("refresh_interval") == hours and payload.get("cron_expression") == cron,
         )
     return state
+
+
+def stock_schedule_draft(account, related, hours, cron):
+    return {
+        "name": account["name"],
+        "server_url": RENAME_URL,
+        "user_agent": str(related["user_agent"]),
+        "server_group": str(related["server_group"]),
+        "is_active": account["is_active"],
+        "max_streams": 0,
+        "refresh_interval": hours,
+        "cron_expression": cron,
+        "account_type": "XC",
+        "username": RENAME_USERNAME,
+        "stale_stream_days": 9,
+        "priority": 4,
+        "enable_vod": True,
+        "hash_key": "name,url",
+    }
 
 
 def verify_interval(fixture, path, ids, record):
@@ -612,22 +631,7 @@ def verify_interval(fixture, path, ids, record):
         assert initial["interval_id"] == schedules["original"] and initial["enabled"] is active
         assert initial["task_id"] == account["refresh_task_id"]
         for hours in (INTERVAL_EXCLUSIVE, 0, INTERVAL_REUSABLE):
-            status, payload = request(fixture, "PATCH", path, {
-                "name": account["name"],
-                "server_url": RENAME_URL,
-                "user_agent": str(related["user_agent"]),
-                "server_group": str(related["server_group"]),
-                "is_active": active,
-                "max_streams": 0,
-                "refresh_interval": hours,
-                "cron_expression": "",
-                "account_type": "XC",
-                "username": RENAME_USERNAME,
-                "stale_stream_days": 9,
-                "priority": 4,
-                "enable_vod": True,
-                "hash_key": "name,url",
-            })
+            status, payload = request(fixture, "PATCH", path, stock_schedule_draft(account, related, hours, ""))
             follow_status, follow = request(fixture, "GET", path)
             actual = interval_snapshot(fixture, account_id, schedules)
             record.append({
@@ -647,6 +651,133 @@ def verify_interval(fixture, path, ids, record):
                 "sql_orphan_removed": actual["exclusive_exists"] is (hours == INTERVAL_EXCLUSIVE),
                 "sql_interval_reused": hours != INTERVAL_REUSABLE or actual["interval_id"] == schedules["reusable"],
                 "sql_credentials_and_profiles_preserved": rename_sql(fixture, account_id) == last
+                and snapshot(fixture, ids) == relations,
+            })
+
+
+DAILY_CRON = "37 4 * * *"
+CRON_TIMEZONE = "America/New_York"
+
+
+def setup_daily_cron_case(fixture, ids, active):
+    script = """
+from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
+from apps.m3u.models import M3UAccount
+from core.models import CoreSettings
+from core.scheduling import parse_cron_expression
+
+CoreSettings.set_system_time_zone(timezone)
+assert CoreSettings.get_system_time_zone() == timezone
+for account_id in (ids["account"], ids["foreign_account"]):
+    account = M3UAccount.objects.get(pk=account_id)
+    if account_id == ids["account"]:
+        account.is_active = active
+        account.refresh_interval = start
+        account._cron_expression = ""
+    else:
+        account.refresh_interval = 6 if active else 0
+        account._cron_expression = "" if active else cron
+    account.save(update_fields=["is_active", "refresh_interval"])
+M3UAccount.objects.filter(pk=ids["account"]).update(status="success" if active else "disabled")
+first = PeriodicTask.objects.get(name="m3u_account-refresh-" + str(ids["account"]))
+sibling = PeriodicTask.objects.get(name="m3u_account-refresh-" + str(ids["foreign_account"]))
+crontab, _ = CrontabSchedule.objects.get_or_create(timezone=timezone, **parse_cron_expression(cron))
+interval, _ = IntervalSchedule.objects.get_or_create(every=6, period=IntervalSchedule.HOURS)
+assert first.interval_id is not None and first.interval_id != interval.pk
+assert (sibling.interval_id, sibling.crontab_id) == (
+    (interval.pk, None) if active else (None, crontab.pk)
+)
+print(json.dumps({
+    "task": first.pk, "original": first.interval_id, "sibling_task": sibling.pk,
+    "sibling_interval": sibling.interval_id, "sibling_cron": sibling.crontab_id,
+    "reuse_interval": interval.pk, "reuse_cron": crontab.pk,
+}))
+"""
+    return fixture.sql(
+        f"ids = {ids!r}\nactive = {active!r}\nstart = {INTERVAL_EXCLUSIVE}\n"
+        f"cron = {DAILY_CRON!r}\ntimezone = {CRON_TIMEZONE!r}\n" + script,
+        secret=True,
+    )
+
+
+def cron_transition_snapshot(fixture, account_id, schedules):
+    script = """
+from django_celery_beat.models import CrontabSchedule, IntervalSchedule, PeriodicTask
+from apps.m3u.models import M3UAccount
+
+account = M3UAccount.objects.select_related("refresh_task__interval", "refresh_task__crontab").get(pk=account_id)
+task = account.refresh_task
+sibling = PeriodicTask.objects.get(pk=schedules["sibling_task"])
+cron = task.crontab
+interval = task.interval
+print(json.dumps({
+    "task_id": task.pk,
+    "interval_id": task.interval_id,
+    "hours": interval.every if interval else None,
+    "period": interval.period if interval else None,
+    "crontab_id": task.crontab_id,
+    "cron": " ".join((cron.minute, cron.hour, cron.day_of_month, cron.month_of_year, cron.day_of_week)) if cron else "",
+    "timezone": str(cron.timezone) if cron else None,
+    "enabled": task.enabled,
+    "provider_task": task.task == "apps.m3u.tasks.refresh_single_m3u_account",
+    "kwargs_match": json.loads(task.kwargs) == {"account_id": account_id},
+    "sibling_unchanged": (sibling.interval_id, sibling.crontab_id)
+        == (schedules["sibling_interval"], schedules["sibling_cron"]),
+    "old_interval_exists": IntervalSchedule.objects.filter(pk=schedules["original"]).exists(),
+    "cron_exists": CrontabSchedule.objects.filter(pk=schedules["reuse_cron"]).exists(),
+    "reuse_interval_exists": IntervalSchedule.objects.filter(pk=schedules["reuse_interval"]).exists(),
+}))
+"""
+    return fixture.sql(f"account_id = {account_id!r}\nschedules = {schedules!r}\n" + script, secret=True)
+
+
+def verify_daily_cron(fixture, path, ids, record):
+    account_id = ids["account"]
+    related = fixture.sql(
+        f"account_id = {account_id!r}\nexpected_url = {RENAME_URL!r}\nexpected_username = {RENAME_USERNAME!r}\n"
+        f"properties = {RENAME_PROPERTIES!r}\ncron = ''\n" + RENAME_SEED,
+        secret=True,
+    )
+    identity = rename_sql(fixture, account_id)
+    assert len(identity["default_profiles"]) == 1
+    default = identity["default_profiles"][0]
+    assert default["name"] == identity["name"] + " Default"
+    assert all(identity[key] for key in ("server_url_matches", "username_matches", "password_matches"))
+    relations = snapshot(fixture, ids)
+    for active in (True, False):
+        schedules = setup_daily_cron_case(fixture, ids, active)
+        account = preferences_snapshot(fixture, account_id)
+        assert account["refresh_interval"] == INTERVAL_EXCLUSIVE and account["is_active"] is active
+        assert account["refresh_task_id"] == schedules["task"]
+        before = cron_transition_snapshot(fixture, account_id, schedules)
+        assert before["interval_id"] == schedules["original"] and before["crontab_id"] is None
+        assert before["cron_exists"] and before["reuse_interval_exists"] and before["enabled"] is active
+        for hours, cron in ((0, DAILY_CRON), (6, "")):
+            status, payload = request(fixture, "PATCH", path, stock_schedule_draft(account, related, hours, cron))
+            follow_status, follow = request(fixture, "GET", path)
+            actual = cron_transition_snapshot(fixture, account_id, schedules)
+            use_cron = bool(cron)
+            record.append({
+                "is_active": active,
+                "uses_cron": use_cron,
+                "status": status,
+                "checks": observe_interval(payload, ids, related, default, active, hours, cron) if status == 200 else {},
+                "followup_status": follow_status,
+                "followup": observe_interval(follow, ids, related, default, active, hours, cron) if follow_status == 200 else {},
+                "sql_only_schedule_fields_changed": preferences_snapshot(fixture, account_id)
+                == {**account, "refresh_interval": hours},
+                "sql_task_preserved": actual["task_id"] == schedules["task"] and actual["enabled"] is active
+                and actual["provider_task"] and actual["kwargs_match"],
+                "sql_schedule_and_timezone_match": actual["cron"] == cron
+                and actual["timezone"] == (CRON_TIMEZONE if use_cron else None)
+                and actual["crontab_id"] == (schedules["reuse_cron"] if use_cron else None)
+                and actual["interval_id"] == (None if use_cron else schedules["reuse_interval"])
+                and actual["hours"] == (None if use_cron else hours)
+                and actual["period"] == (None if use_cron else "hours"),
+                "sql_shared_schedules_untouched": actual["sibling_unchanged"] and actual["reuse_interval_exists"],
+                "sql_orphans_removed": not actual["old_interval_exists"]
+                and actual["cron_exists"] is (use_cron or schedules["sibling_cron"] is not None),
+                "sql_credentials_and_profiles_preserved": rename_sql(fixture, account_id) == identity
                 and snapshot(fixture, ids) == relations,
             })
 
@@ -696,6 +827,19 @@ def run(fixture, record):
             evidence["missing_group_references"] = missing
             assert missing["status"] == 400 and missing["exact_sparse_error"] and missing["sql_unchanged"]
             assert missing["followup_status"] == 200 and missing["followup"] and all(missing["followup"].values())
+            if fixture.binding.get("xc_group_patch_daily_cron_edit"):
+                stage = "playlist editor daily cron"
+                evidence["daily_cron_edit"] = schedules = []
+                verify_daily_cron(fixture, path, ids, schedules)
+                assert len(schedules) == 4
+                for schedule in schedules:
+                    assert schedule["status"] == schedule["followup_status"] == 200
+                    assert schedule["checks"] and all(schedule["checks"].values())
+                    assert schedule["followup"] and all(schedule["followup"].values())
+                    assert all(schedule[key] for key in (
+                        "sql_only_schedule_fields_changed", "sql_task_preserved", "sql_schedule_and_timezone_match",
+                        "sql_shared_schedules_untouched", "sql_orphans_removed", "sql_credentials_and_profiles_preserved",
+                    ))
             if fixture.binding.get("xc_group_patch_interval_edit"):
                 stage = "playlist editor interval"
                 evidence["interval_edit"] = intervals = []

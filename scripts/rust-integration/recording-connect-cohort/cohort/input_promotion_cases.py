@@ -28,6 +28,62 @@ def prepare_context(fixture):
    try:fixture.role('promotion-origin',[],stop=True)
    except Exception as error:save(fixture.output/'input-promotion-preparation-cleanup-error.json',{'type':type(error).__name__})
   raise
+
+
+def backup_window(source, target, frames):
+    """Start the retained backup suffix at transport metadata before its first keyframe."""
+    packet_bytes = 188
+    backup_frame = next((frame for frame in frames if frame.get('key_frame') == 1
+                         and (frame.get('width'), frame.get('height')) == (320, 180)), None)
+    if backup_frame is None:
+        raise ValueError('No decoded keyframe from the 320x180 backup')
+    marker = int(backup_frame['pkt_pos'])
+    if marker % packet_bytes or marker >= source.stat().st_size:
+        raise ValueError('Backup marker is not a valid TS packet offset')
+    earliest = max(0, marker - 256 * packet_bytes)
+    with source.open('rb') as stream:
+        stream.seek(earliest)
+        prefix = stream.read(marker - earliest)
+        for offset in range(len(prefix) - packet_bytes, -1, -packet_bytes):
+            packet = prefix[offset:offset + packet_bytes]
+            if packet[0] == 0x47 and packet[1] & 0x5f == 0x40 and packet[2] == 0:
+                start = earliest + offset
+                break
+        else:
+            raise ValueError('No preceding TS programme association packet')
+        stream.seek(start)
+        cap = 4 * 1024 * 1024 // packet_bytes * packet_bytes
+        data = stream.read(cap)
+    data = data[:len(data) // packet_bytes * packet_bytes]
+    target.write_bytes(data)
+    return {'keyframe_offset':marker,'transport_start':start,'sha256':hashlib.sha256(data).hexdigest()}
+
+
+def decode_backup(fixture, label, media):
+    def guest(path):
+        return '/evidence/' + str(path.relative_to(fixture.output))
+
+    def frames(path):
+        text = fixture.command(fixture.compose+['exec','-T','baseline','ffprobe','-v','error',
+            '-select_streams','v:0','-show_frames','-show_entries','frame=width,height,key_frame,pkt_pos',
+            '-of','json',guest(path)],30)
+        return json.loads(text)['frames']
+
+    suffix = media.with_name(label+'-backup.ts')
+    evidence = backup_window(media, suffix, frames(media))
+    backup = frames(suffix)
+    alternate_only = bool(backup) and {(row.get('width'),row.get('height')) for row in backup} == {(320,180)}
+    text = fixture.command(fixture.compose+['exec','-T','baseline','ffmpeg','-hide_banner','-loglevel','error',
+       '-xerror','-threads','1','-filter_threads','1','-filter_complex_threads','1','-i',guest(suffix),
+       '-t','1.25','-map','0:v:0','-map','0:a:0','-threads:v','1','-threads:a','1',
+       '-progress','pipe:1','-nostats','-f','null','-'],30,allow=True)
+    receipt = fixture.cli[-1]
+    error = Path(receipt['stderr']).read_bytes()
+    count = max((int(line.split('=',1)[1]) for line in text.splitlines() if line.startswith('frame=')),default=0)
+    return {'name':label+'-actual-backup-AV-decode',**evidence,'backup_only_resolution':alternate_only,'frames':count,
+            'passed':alternate_only and count>=25 and receipt['actual_exit']==0 and not error
+            and receipt['stdout_EOF'] and receipt['stderr_EOF'] and receipt['process_group_settled']}
+
 def run(fixture):
  out=fixture.output/'input-promotion-capture';out.mkdir(mode=0o755);report={'status':'running','scope':'Source lockedProxy HLS URL→actual FFmpeg, shared two viewers, real TS failover; no resource gains','cells':[],'full_M3_passed':False,'performance_verified':False};readers=[]
  def persist():save(out/'report.json',report)
@@ -51,6 +107,8 @@ def run(fixture):
   for reader in readers:reader.close()
   for label in('owner','follower'):
    path=out/(label+'.ts');guest='/evidence/'+str(path.relative_to(fixture.output));text=fixture.command(fixture.compose+['exec','-T','baseline','ffmpeg','-hide_banner','-v','error','-xerror','-threads','1','-filter_threads','1','-filter_complex_threads','1','-i',guest,'-t','3','-map','0:v:0','-map','0:a:0','-threads:v','1','-threads:a','1','-f','null','-'],30,allow=True);receipt=fixture.cli[-1];error=Path(receipt['stderr']).read_bytes();cell={'name':label+'-actual-AV-prefix-decode','passed':receipt['actual_exit']==0 and not error and receipt['stdout_EOF']and receipt['stderr_EOF']and receipt['process_group_settled'],'stderr_sha256':hashlib.sha256(error).hexdigest(),'file_sha256':hashlib.sha256(path.read_bytes()).hexdigest()};report['cells'].append(cell);persist()
+  for label in ('owner','follower'):
+   report['cells'].append(decode_backup(fixture,label,out/(label+'.ts')));persist()
   if fixture.backend=='Native':report['actual_Main_stop']=fixture.stop_native(expected=0)
   else:
    for name in['beat','dvr','celery','web']:fixture.role(name,[],stop=True)

@@ -1,0 +1,39 @@
+{
+  "base_revision": "16272d7941e9c5d8614557bf0923c9384bfe27cb",
+  "tested_source_sha256": {
+    "rust/crates/app/src/redis_config.rs": "036a1c9ac3a67c9c0d1a02a3c35748f2435373a8745940d3e71ef8b03f228ec5",
+    "rust/crates/store/src/connect_reads.rs": "1cc55fc17b2383f98f6c9bf0febfdb0e1a4f40450a455334db770a2c66570ab6",
+    "rust/crates/store/src/connect_create.rs": "0e6db5c789518dd11cbf5ba4be5a7ead98561b4fdd093aebdbc517a0b4d7a78c",
+    "rust/crates/store/src/provider_account_writes.rs": "595cf00b89a80e4ab4b76523aea91876705c7d4790d6ed0049833d45a9ccddc8"
+  },
+  "checks": {
+    "store": {
+      "passed": 528,
+      "failed": 0,
+      "ignored": 79,
+      "log_sha256": "f3f88be46bdd8c60d364061600b72bfd011b9a0bbdd591470d516eea41d5eb54"
+    },
+    "main_redis": {
+      "passed": 6,
+      "failed": 0,
+      "ignored": 0,
+      "log_sha256": "6108bb4ac2443782ed2cdc130b1898a01224ea9713256872abd74ef621cfb602"
+    },
+    "operator": {
+      "passed": 10,
+      "failed": 0,
+      "ignored": 0,
+      "log_sha256": "d11da49528b5dc05e4a0b7d8a357d303bcc2997006ca8ed66ba60c46789f403e"
+    }
+  },
+  "format_passed": true,
+  "strict_all_target_clippy": {
+    "packages": [
+      "dispatcharr-store",
+      "dispatcharr-rs"
+    ],
+    "log_sha256": "85eadab22151f6922b4fc1b69a7e3fa902a15b7f1f8674652f1926f76c77ffb8"
+  },
+  "full_milestone_accepted": false,
+  "performance_verified": false
+}

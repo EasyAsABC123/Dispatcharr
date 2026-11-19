@@ -168,6 +168,19 @@ fn xc_editor_update(input: &Map<String, Value>, old: &Value, saved: &Value, edit
             })
         })
 }
+// The basic React Cron Builder emits canonical ASCII fields for daily runs.
+fn xc_daily_cron(expression: &str) -> bool {
+    let fields: Vec<_> = expression.splitn(6, ' ').collect();
+    let [minute, hour, "*", "*", "*"] = fields.as_slice() else {
+        return false;
+    };
+    let valid_number = |field: &str, max: u8| {
+        field
+            .parse::<u8>()
+            .is_ok_and(|number| number <= max && number.to_string() == field)
+    };
+    valid_number(minute, 59) && valid_number(hour, 23)
+}
 struct Validated {
     saved: Value,
     cron: String,
@@ -465,22 +478,33 @@ fn validate(
     let xc_editor = partial
         && old["account_type"] == "XC"
         && (old["custom_properties"].is_object() || old["custom_properties"].is_null())
-        && !changed
-        && cron == previous_cron;
+        && !changed;
     let xc_label = !create
         && xc_editor
+        && cron == previous_cron
         && input.get("name").is_some_and(Value::is_string)
         && xc_editor_update(&input, old, &saved, "name");
-    // Reuse the schedule receiver for edits that keep interval mode and
-    // preserve the account state, including the activity determining Beat enablement.
+    let interval_hours = input
+        .get("refresh_interval")
+        .and_then(Value::as_i64)
+        .filter(|hours| (0..=i64::from(i32::MAX)).contains(hours));
     let xc_interval = !create
         && xc_editor
         && cron.is_empty()
-        && input
-            .get("refresh_interval")
-            .and_then(Value::as_i64)
-            .is_some_and(|hours| (0..=i64::from(i32::MAX)).contains(&hours))
+        && previous_cron.is_empty()
+        && interval_hours.is_some()
         && xc_editor_update(&input, old, &saved, "refresh_interval");
+    // The editor clears the interval when switching to a daily cron.
+    // Switching back explicitly clears the cron and supplies the new interval.
+    let xc_daily_schedule_transition = !create
+        && xc_editor
+        && input.get("cron_expression").is_some_and(Value::is_string)
+        && xc_editor_update(&input, old, &saved, "refresh_interval")
+        && match (previous_cron.is_empty(), cron.is_empty()) {
+            (true, false) => interval_hours == Some(0) && xc_daily_cron(&cron),
+            (false, true) => interval_hours.is_some() && xc_daily_cron(previous_cron),
+            _ => false,
+        };
     let xc_create = create && saved["account_type"] == "XC";
     if xc_create {
         for key in [
@@ -506,6 +530,7 @@ fn validate(
     if !xc_preferences
         && !xc_label
         && !xc_interval
+        && !xc_daily_schedule_transition
         && !xc_active_toggle
         && !xc_create
         && !xc_group_selection
@@ -1406,6 +1431,96 @@ mod tests {
     }
 
     #[test]
+    fn xc_playlist_editor_switches_between_interval_and_daily_cron() {
+        for active in [true, false] {
+            let mut old = defaults();
+            old["name"] = json!("Playlist");
+            old["account_type"] = json!("XC");
+            old["server_url"] = json!("http://owned-provider:8080/api");
+            old["username"] = json!("fixture-user");
+            old["is_active"] = json!(active);
+            old["status"] = json!(if active { "success" } else { "disabled" });
+            old["refresh_interval"] = json!(137);
+            old["custom_properties"] =
+                json!({"enable_vod":true,"hash_key":"name,url","marker":"keep"});
+            let request = json!({
+                "name": "Playlist", "account_type":"XC", "server_url":"http://owned-provider:8080/api",
+                "username":"fixture-user", "user_agent":null, "server_group":null,
+                "is_active":active, "max_streams":0, "stale_stream_days":7, "priority":0,
+                "refresh_interval":0, "cron_expression":"37 4 * * *", "enable_vod":true, "hash_key":"name,url"
+            });
+            let enter =
+                validate(request.as_object().unwrap().clone(), &old, "", true, false).unwrap();
+            old["refresh_interval"] = json!(0);
+            assert_eq!(enter.saved, old);
+            assert_eq!(enter.cron, "37 4 * * *");
+            assert!(!enter.hash_changed && enter.expiration.is_none());
+
+            let mut request = request.as_object().unwrap().clone();
+            request.insert("refresh_interval".into(), json!(6));
+            request.insert("cron_expression".into(), json!(""));
+            let leave = validate(request, &old, &enter.cron, true, false).unwrap();
+            old["refresh_interval"] = json!(6);
+            assert_eq!(leave.saved, old);
+            assert!(leave.cron.is_empty() && !leave.hash_changed && leave.expiration.is_none());
+        }
+    }
+
+    #[test]
+    fn xc_daily_schedule_transition_rejects_broader_schedule_and_account_changes() {
+        let mut old = defaults();
+        old["name"] = json!("Playlist");
+        old["account_type"] = json!("XC");
+        old["custom_properties"] = json!({"enable_vod":false});
+        for (request, previous_cron) in [
+            (
+                json!({"refresh_interval":0, "cron_expression":"60 4 * * *"}),
+                "",
+            ),
+            (
+                json!({"refresh_interval":0, "cron_expression":"37 24 * * *"}),
+                "",
+            ),
+            (
+                json!({"refresh_interval":0, "cron_expression":"37 4 * * 0"}),
+                "",
+            ),
+            (
+                json!({"refresh_interval":0, "cron_expression":"37  4 * * *"}),
+                "",
+            ),
+            (
+                json!({"refresh_interval":1, "cron_expression":"37 4 * * *"}),
+                "",
+            ),
+            (
+                json!({"refresh_interval":0, "cron_expression":"37 4 * * *", "name":"Other"}),
+                "",
+            ),
+            (
+                json!({"refresh_interval":0, "cron_expression":"37 4 * * *", "is_active":false}),
+                "",
+            ),
+            (
+                json!({"refresh_interval":0, "cron_expression":"37 4 * * *"}),
+                "31 4 * * *",
+            ),
+            (json!({"cron_expression":""}), "37 4 * * *"),
+        ] {
+            assert!(matches!(
+                validate(
+                    request.as_object().unwrap().clone(),
+                    &old,
+                    previous_cron,
+                    true,
+                    false
+                ),
+                Err(StoreError::Unsupported(_))
+            ));
+        }
+    }
+
+    #[test]
     fn xc_playlist_interval_edit_preserves_the_account() {
         for active in [true, false] {
             let mut old = defaults();
@@ -1452,7 +1567,7 @@ mod tests {
             ),
             (
                 json!({"refresh_interval":6, "cron_expression":""}),
-                "30 5 * * *",
+                "*/15 5 * * *",
             ),
             (json!({"refresh_interval":6}), "30 5 * * *"),
             (json!({"refresh_interval":-1}), ""),

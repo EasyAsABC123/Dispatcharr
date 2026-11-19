@@ -8,18 +8,43 @@ pub fn url() -> Result<Option<String>, String> {
 fn from_environment(read: impl Fn(&str) -> Option<String>) -> Result<Option<String>, &'static str> {
     const TLS_UNAVAILABLE: &str = "Redis TLS transport is unavailable in this Rust build";
     let tls = read("REDIS_SSL").is_some_and(|value| value.eq_ignore_ascii_case("true"));
-    if let Some(address) = read("REDIS_URL").filter(|value| !value.is_empty()) {
+    let explicit = read("REDIS_URL").filter(|value| !value.is_empty());
+    if let Some(address) = explicit.as_deref() {
         let secure_url =
-            Url::parse(&address).is_ok_and(|url| matches!(url.scheme(), "rediss" | "valkeys"));
-        return match (tls, secure_url) {
-            (true, false) => Err("REDIS_SSL=true requires a TLS Redis URL"),
-            (false, true) => Err("A TLS Redis URL requires REDIS_SSL=true"),
-            (true, true) => Err(TLS_UNAVAILABLE),
-            (false, false) => Ok(Some(address)),
-        };
+            Url::parse(address).is_ok_and(|url| matches!(url.scheme(), "rediss" | "valkeys"));
+        match (tls, secure_url) {
+            (true, false) => return Err("REDIS_SSL=true requires a TLS Redis URL"),
+            (false, true) => return Err("A TLS Redis URL requires REDIS_SSL=true"),
+            _ => {}
+        }
+    }
+    // Original validates explicit Celery overrides independently of which
+    // tasks are active. Enforce this before starting any Native role.
+    for (name, needs_secure, needs_enabled) in [
+        (
+            "CELERY_BROKER_URL",
+            "REDIS_SSL=true requires a TLS CELERY_BROKER_URL",
+            "A TLS CELERY_BROKER_URL requires REDIS_SSL=true",
+        ),
+        (
+            "CELERY_RESULT_BACKEND",
+            "REDIS_SSL=true requires a TLS CELERY_RESULT_BACKEND",
+            "A TLS CELERY_RESULT_BACKEND requires REDIS_SSL=true",
+        ),
+    ] {
+        if let Some(address) = read(name) {
+            match (tls, address.starts_with("rediss://")) {
+                (true, false) => return Err(needs_secure),
+                (false, true) => return Err(needs_enabled),
+                _ => {}
+            }
+        }
     }
     if tls {
         return Err(TLS_UNAVAILABLE);
+    }
+    if explicit.is_some() {
+        return Ok(explicit);
     }
     let defaults = [
         ("REDIS_HOST", "localhost"),
@@ -145,6 +170,71 @@ mod tests {
                 ("REDIS_SSL", "true")
             ]),
             Err("Redis TLS transport is unavailable in this Rust build")
+        );
+    }
+
+    #[test]
+    fn celery_tls_overrides_are_validated_before_redis_is_available() {
+        assert_eq!(
+            build(&[("CELERY_BROKER_URL", "rediss://broker:6379/2")]),
+            Err("A TLS CELERY_BROKER_URL requires REDIS_SSL=true")
+        );
+        assert_eq!(
+            build(&[
+                ("REDIS_URL", "redis://cache:6379/0"),
+                ("CELERY_RESULT_BACKEND", "rediss://result:6379/3"),
+            ]),
+            Err("A TLS CELERY_RESULT_BACKEND requires REDIS_SSL=true")
+        );
+        assert_eq!(
+            build(&[
+                ("REDIS_URL", "rediss://cache:6379/0"),
+                ("REDIS_SSL", "true"),
+                ("CELERY_BROKER_URL", "redis://broker:6379/2"),
+            ]),
+            Err("REDIS_SSL=true requires a TLS CELERY_BROKER_URL")
+        );
+        assert_eq!(
+            build(&[
+                ("REDIS_SSL", "true"),
+                ("CELERY_BROKER_URL", "rediss://broker:6379/2"),
+                ("CELERY_RESULT_BACKEND", "redis://result:6379/3"),
+            ]),
+            Err("REDIS_SSL=true requires a TLS CELERY_RESULT_BACKEND")
+        );
+        assert_eq!(
+            build(&[("CELERY_BROKER_URL", "rediss://[unparseable")]),
+            Err("A TLS CELERY_BROKER_URL requires REDIS_SSL=true")
+        );
+        assert_eq!(
+            build(&[
+                ("REDIS_SSL", "true"),
+                ("CELERY_BROKER_URL", "rediss://broker:6379/2"),
+                ("CELERY_RESULT_BACKEND", "rediss://result:6379/3"),
+            ]),
+            Err("Redis TLS transport is unavailable in this Rust build")
+        );
+    }
+
+    #[test]
+    fn matching_plaintext_celery_overrides_keep_the_cache_configuration() {
+        assert_eq!(
+            build(&[
+                ("CELERY_BROKER_URL", "redis://broker:6379/2"),
+                ("CELERY_RESULT_BACKEND", "redis://result:6379/3"),
+            ]),
+            Ok(None)
+        );
+        for unused_broker in ["", "memory://", "REDISS://host:6379/0"] {
+            assert_eq!(build(&[("CELERY_BROKER_URL", unused_broker)]), Ok(None));
+        }
+        assert_eq!(
+            build(&[
+                ("REDIS_URL", "redis://cache:6379/0"),
+                ("CELERY_BROKER_URL", "redis://broker:6379/2"),
+                ("CELERY_RESULT_BACKEND", "redis://result:6379/3"),
+            ]),
+            Ok(Some("redis://cache:6379/0".to_owned()))
         );
     }
 

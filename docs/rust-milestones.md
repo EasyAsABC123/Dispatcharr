@@ -22,6 +22,9 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The integration-edit, XC daily schedule and Redis startup checkpoint](rust-milestone-batch82.md)
+records the next Rust fixes and retained failover media controls.
+
 [The subscription replacement and XC interval checkpoint](rust-milestone-batch81.md)
 records the next Rust implementation and its verification.
 

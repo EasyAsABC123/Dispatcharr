@@ -69,6 +69,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/connect/integrations/", get(list).post(create))
         .route("/api/connect/logs/", get(logs))
+        .route("/api/connect/integrations/{id}/", put(update))
         .route(
             "/api/connect/integrations/{id}/subscriptions/set/",
             put(replace_subscriptions),
@@ -97,6 +98,7 @@ enum ConnectRequest {
     Integrations,
     Logs(Uri),
     Create(Request),
+    Update(String, Request),
     ReplaceSubscriptions(String, Request),
 }
 
@@ -125,6 +127,21 @@ async fn replace_subscriptions(
         peer,
         request.headers().clone(),
         ConnectRequest::ReplaceSubscriptions(id, request),
+    )
+    .await
+}
+
+async fn update(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    Path(id): Path<String>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    execute(
+        auth,
+        peer,
+        request.headers().clone(),
+        ConnectRequest::Update(id, request),
     )
     .await
 }
@@ -164,6 +181,10 @@ async fn execute(
             ConnectRequest::Create(request) => (
                 StatusCode::CREATED,
                 create_integration::create(&auth.store, request).await?,
+            ),
+            ConnectRequest::Update(id, request) => (
+                StatusCode::OK,
+                create_integration::update(&auth.store, id, request).await?,
             ),
             ConnectRequest::ReplaceSubscriptions(id, request) => (
                 StatusCode::OK,

@@ -340,6 +340,91 @@ class Tests(unittest.TestCase):
         self.assertTrue(all(entry["status"] == 200 for entry in failures))
 
 
+    def execute_daily_cron(self, *, wrong_timezone=False, leave_orphan=False):
+        account = {"name": "Owned PATCH target", "refresh_task_id": 91, "account_type": "XC"}
+        profile = {"id": 30, "name": "Owned PATCH target Default"}
+        related = {"user_agent": 41, "server_group": 51}
+
+        class CronFixture:
+            def sql(self, source, *, secret):
+                assert secret and probe.RENAME_SEED in source
+                return related
+
+        schedules = {"task": 91, "original": 43, "reuse_interval": 42, "reuse_cron": 44}
+        observed = []
+
+        def setup(_fixture, ids, active):
+            assert ids == IDS
+            account.update(refresh_interval=probe.INTERVAL_EXCLUSIVE, is_active=active,
+                           status="success" if active else "disabled")
+            return {**schedules, "sibling_cron": None if active else 44}
+
+        def task(_fixture, account_id, setup_values):
+            assert account_id == IDS["account"]
+            hours = account["refresh_interval"]
+            initial = hours == probe.INTERVAL_EXCLUSIVE
+            uses_cron = hours == 0
+            return {
+                "task_id": 91, "interval_id": 43 if initial else None if uses_cron else 42,
+                "crontab_id": 44 if uses_cron else None, "hours": None if uses_cron else hours,
+                "cron": probe.DAILY_CRON if uses_cron else "",
+                "timezone": ("UTC" if wrong_timezone else probe.CRON_TIMEZONE) if uses_cron else None,
+                "period": None if uses_cron else "hours",
+                "enabled": account["is_active"], "provider_task": True, "kwargs_match": True,
+                "sibling_unchanged": True, "old_interval_exists": initial,
+                "reuse_interval_exists": True,
+                "cron_exists": initial or uses_cron or setup_values["sibling_cron"] is not None or leave_orphan,
+            }
+
+        def safe_account(*_):
+            return {
+                "name": account["name"], "server_url_matches": True, "username_matches": True,
+                "password_matches": True, "default_profiles": [profile],
+            }
+
+        def send(_fixture, method, path, value=None):
+            assert path == "/api/m3u/accounts/11/"
+            if method == "PATCH":
+                assert "password" not in value and "exp_date" not in value
+                observed.append((value["is_active"], value["refresh_interval"], value["cron_expression"]))
+                account["refresh_interval"] = value["refresh_interval"]
+            payload = {
+                **body(False, True), **account, **related, "server_url": probe.RENAME_URL,
+                "username": probe.RENAME_USERNAME, "enable_vod": True, "hash_key": "name,url",
+                "custom_properties": probe.RENAME_PROPERTIES, "cron_expression": observed[-1][2],
+            }
+            payload["profiles"].append({**profile, "is_default": True})
+            return 200, payload
+
+        with patch.multiple(
+            probe, request=send, setup_daily_cron_case=setup, cron_transition_snapshot=task,
+            rename_sql=safe_account, preferences_snapshot=lambda *_: deepcopy(account),
+            snapshot=lambda *_: relations(False, True),
+        ):
+            result = []
+            probe.verify_daily_cron(CronFixture(), "/api/m3u/accounts/11/", IDS, result)
+        self.assertEqual(observed, [
+            (active, hours, cron) for active in (True, False)
+            for hours, cron in ((0, probe.DAILY_CRON), (6, ""))
+        ])
+        return result
+
+    def test_daily_cron_round_trips_keep_the_task_and_configured_timezone(self):
+        for attempt in self.execute_daily_cron():
+            self.assertEqual(attempt["status"], attempt["followup_status"])
+            self.assertEqual(attempt["status"], 200)
+            self.assertTrue(all(attempt["checks"].values()) and all(attempt["followup"].values()))
+            self.assertTrue(all(passed for key, passed in attempt.items() if key.startswith("sql_")))
+
+    def test_daily_cron_detects_wrong_zone_and_leftover_orphan_despite_200(self):
+        result = self.execute_daily_cron(wrong_timezone=True, leave_orphan=True)
+        self.assertTrue(all(attempt["status"] == 200 for attempt in result))
+        self.assertEqual([attempt["sql_schedule_and_timezone_match"] for attempt in result],
+                         [False, True, False, True])
+        self.assertEqual([attempt["sql_orphans_removed"] for attempt in result],
+                         [True, False, True, True])
+
+
 class WorkflowBindingTests(unittest.TestCase):
     def test_selected_context_dispatches_the_same_probe_and_quiets_original_beat(self):
         for backend in ("Original", "Native"):
