@@ -43,7 +43,10 @@ adds 57 retained observations across six unresolved declarations. The
 adds 283 model responses across 103 previously unmapped operations. Its
 controller exited 1 and exact cleanup passed. Failed expectations and
 blocked cases remain visible in the receipt. M0 now has 373 partial Source
-assignments and 425 unassigned entries.
+assignments and 425 unassigned entries after the admin capture. The
+[retained DVR and XC packet](../scripts/rust-contracts/retained-dvr-xc/README.md)
+adds 49 responses across five operations, bringing M0 to 378 partial
+assignments and 420 unassigned entries.
 The conservative method inventory and full acceptance requirements remain
 in the [contract register](rust-contract-register.md).
 

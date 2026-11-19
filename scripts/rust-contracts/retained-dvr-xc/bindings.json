@@ -1,0 +1,888 @@
+{
+  "binding_kind": "retained_original_DVR_XC_playback_HTTP",
+  "scope": "Retained Original DVR and XC HTTP observations",
+  "Origin_credit": "All application and algorithm credit remains with original Dispatcharr authors.",
+  "based_on_register_sha256": "9f434b7d87d3db08fe26aad6cbc8018ad81f6e7b86963c81ac25595c82c46f00",
+  "operation_count": 5,
+  "unique_Source_cases": 49,
+  "new_Source_executions": 0,
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "fixtures": {
+    "DVR-HLS": {
+      "references": [
+        {
+          "path": "scripts/rust-milestone-batches/m478/batch8-recording/attempt6/execution.json",
+          "sha256": "7effa00b411123c543859611af8f902a6680136f6025b96db0eebad443fe5d0e"
+        },
+        {
+          "path": "scripts/rust-milestone-batches/m478/batch8-recording/attempt6/report.json",
+          "sha256": "b16ead68bc1aefe64d07bc06883ebd9b8d723431f6339239b4c0ede093f5728e"
+        },
+        {
+          "path": "scripts/rust-milestone-batches/m478/batch8-recording/attempt6/Original/cleanup.json",
+          "sha256": "a34cabce1440ac2cbab215ce1426c266e48b308f28ca82cf5aeaae710fd9fb12"
+        },
+        {
+          "path": "scripts/rust-milestone-batches/m478/batch8-recording/attempt6/Original/active-playback.json",
+          "sha256": "ec33ff2fde0495a6121a21b1765d7c91cb9f3280ad881212f642addf6f2576b6"
+        },
+        {
+          "path": "artifacts/rust/normal-recording-whole-batch-1/binding5.json",
+          "sha256": "dbcec78b823046156f2b4c4eb86fab3f1ce9e2634ab4350ae43f6e1b70dd33d9"
+        },
+        {
+          "path": "artifacts/rust/run-recording-whole-batch6.py",
+          "sha256": "e176be60e145e4c68b260ad5a6705d6cca2ba419be666a8b77453da7e334ff62"
+        },
+        {
+          "path": "artifacts/rust/m3-normal-recording-http-driver-1/cohort/playback_cases.py",
+          "sha256": "b1f538d1cd23bcf28ed88ce58d658eee1ad967063b4603b0b0bde3666b53f3df"
+        }
+      ],
+      "outer_controller_exit": 1,
+      "exact_Original_cleanup": true,
+      "selected_HLS_probe_reported_pass": true
+    },
+    "DVR-authorization": {
+      "references": [
+        {
+          "path": "scripts/rust-milestone-batches/m478/batch8-recording/attempt6/execution.json",
+          "sha256": "7effa00b411123c543859611af8f902a6680136f6025b96db0eebad443fe5d0e"
+        },
+        {
+          "path": "scripts/rust-milestone-batches/m478/batch8-recording/attempt6/report.json",
+          "sha256": "b16ead68bc1aefe64d07bc06883ebd9b8d723431f6339239b4c0ede093f5728e"
+        },
+        {
+          "path": "scripts/rust-milestone-batches/m478/batch8-recording/attempt6/Original/cleanup.json",
+          "sha256": "a34cabce1440ac2cbab215ce1426c266e48b308f28ca82cf5aeaae710fd9fb12"
+        },
+        {
+          "path": "scripts/rust-milestone-batches/m478/batch8-recording/attempt6/Original/authorization.json",
+          "sha256": "a529acd5e29231ad4d06e87da9f9ae865dca77f54b3ff7546450e12d3c0c3818"
+        }
+      ],
+      "outer_controller_exit": 1,
+      "exact_Original_cleanup": true,
+      "selected_authorization_probe_reported_pass": true
+    },
+    "Original-manual-Comskip": {
+      "references": [
+        {
+          "path": "scripts/rust-integration/comskip-positive-lifecycle-source1/index.json",
+          "sha256": "325f5f56fe112b850ce203905e9cff9a408cc0ebd54eb37aba4190bfd46f1772"
+        },
+        {
+          "path": "scripts/rust-integration/comskip-positive-lifecycle-source1/qualification.json",
+          "sha256": "e3443e1ec433c319b51f2942cd5cc069813b19450bb842c9621a48ba4b9c079e"
+        },
+        {
+          "path": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/positive-mark/HTTP.json",
+          "sha256": "2838da90374811e07c928b717cb3d7f216a6b05939a94648503ecee95c85a5eb"
+        },
+        {
+          "path": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/mark-repeat/HTTP.json",
+          "sha256": "2838da90374811e07c928b717cb3d7f216a6b05939a94648503ecee95c85a5eb"
+        },
+        {
+          "path": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/positive-cut/HTTP.json",
+          "sha256": "e18776853d539d7f84c2407fa90b952bed0bb57d23382f0c203c2cbbd3cce373"
+        },
+        {
+          "path": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/cut-repeat/HTTP.json",
+          "sha256": "e18776853d539d7f84c2407fa90b952bed0bb57d23382f0c203c2cbbd3cce373"
+        }
+      ],
+      "narrow_manual_business_leaves": true,
+      "literal_controller_exits": [
+        1,
+        1,
+        1
+      ],
+      "global_producer_graph_qualified": false
+    },
+    "XC-live-entry-paired": {
+      "references": [
+        {
+          "path": "scripts/rust-xc-contracts/verified-xc-live-host-1.json",
+          "sha256": "cd5d3c219c176ce993610408285f58f714ed30cde74a1c3f7f53a8e0c1f09142"
+        },
+        {
+          "path": "scripts/rust-xc-contracts/live_source.py",
+          "sha256": "9239f2aefbe8d55c232cceffeb377ec1dfcf575d7efcaa8b54e6d04b06ee1116"
+        },
+        {
+          "path": "artifacts/rust/m7-xc-live-native-2/xc-source.json",
+          "sha256": "d6e4d94766f3588c7a00d0d7afe9147c4cf223d82aee1233eec0660dfe2edfde"
+        }
+      ],
+      "private_capture_path": "artifacts/rust/m7-xc-live-native-2/xc-source.json",
+      "retained_Original_HTTP_rows": 36,
+      "Source_cleanup_verified": true,
+      "positive_media_qualified": false
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-0b392188d7e4e96171af:GET",
+      "pattern_exact": "api/channels/recordings/<int:pk>/hls/<path:seg_path>",
+      "source_handler": "apps.channels.api_views.RecordingViewSet",
+      "method": "GET",
+      "source_action": "hls",
+      "owning_milestone": "M5",
+      "fixture_id": "DVR-HLS",
+      "observed_roles": [
+        "admin"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "source_index": 0,
+          "label": "hls-playlist",
+          "path": "/api/channels/recordings/1/hls/index.m3u8",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "5fc7502111b745971944c0bf4959e1c10b29c4ed8dafa3eaa8c3d30d522e4ba6",
+          "response_hash_scope": "actual body digest",
+          "credential_mode": "admin_authorization"
+        },
+        {
+          "source_index": 1,
+          "label": "hls-query-token",
+          "path": "/api/channels/recordings/1/hls/index.m3u8",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "f5b7df163cb4f9545dbc6da9dafcc527d0ab9d83cfd381ed05502ed3a7fe221c",
+          "response_hash_scope": "actual body digest",
+          "credential_mode": "admin_query_token"
+        },
+        {
+          "source_index": 2,
+          "label": "hls-ts",
+          "path": "/api/channels/recordings/1/hls/seg_00000.ts",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "751ef5c4cd6dd4f61dcc62d29a7af154df60ebbc1f3270e693d6ddccb23b4515",
+          "response_hash_scope": "actual body digest",
+          "credential_mode": "admin_authorization"
+        },
+        {
+          "source_index": 3,
+          "label": "hls-ts-range-ignored",
+          "path": "/api/channels/recordings/1/hls/seg_00000.ts",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "751ef5c4cd6dd4f61dcc62d29a7af154df60ebbc1f3270e693d6ddccb23b4515",
+          "response_hash_scope": "actual body digest",
+          "credential_mode": "admin_authorization"
+        },
+        {
+          "source_index": 7,
+          "label": "hls-missing",
+          "path": "/api/channels/recordings/1/hls/normal-never-created.ts",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_projection_sha256": "9af6fdc290174c1d0f5739ac8e25ed8e9a715acfa039e8b41b721f8492b73cfa",
+          "response_hash_scope": "actual body digest",
+          "credential_mode": "admin_authorization"
+        },
+        {
+          "source_index": 8,
+          "label": "hls-unsupported",
+          "path": "/api/channels/recordings/1/hls/normal-unsupported.txt",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_projection_sha256": "98f32c7a646eaf9b585a6ddbd475161a942701cbcd936a06d4047b9ab85b0f51",
+          "response_hash_scope": "actual body digest",
+          "credential_mode": "admin_authorization"
+        },
+        {
+          "source_index": 9,
+          "label": "hls-symlink-escape",
+          "path": "/api/channels/recordings/1/hls/normal-escape.ts",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 403,
+          "response_projection_sha256": "18e11a797e00b786f40daa25b22dd4cee77ad3efc4b71e0dea081993d7adca44",
+          "response_hash_scope": "actual body digest",
+          "credential_mode": "admin_authorization"
+        },
+        {
+          "source_index": 10,
+          "label": "hls-traversal",
+          "path": "/api/channels/recordings/1/hls/%2E%2E/normal-outside.ts",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 403,
+          "response_projection_sha256": "18e11a797e00b786f40daa25b22dd4cee77ad3efc4b71e0dea081993d7adca44",
+          "response_hash_scope": "actual body digest",
+          "credential_mode": "admin_authorization"
+        }
+      ],
+      "assertions": [
+        "Match literal retained target family, method, fixture role and actual response",
+        "Keep viewer behavior and controller settlement evidence separate"
+      ],
+      "result": {
+        "Source_case_observations": 8,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-203e37771a6f3e3d4056:METHOD_UNRESOLVED",
+      "pattern_exact": "<str:username>/<str:password>/<str:channel_id>",
+      "source_handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M3",
+      "fixture_id": "XC-live-entry-paired",
+      "observed_roles": [
+        "standard"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        }
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "source_index": 20,
+          "label": "short=True",
+          "path": "/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "6fee3a9f1b4b440b52e11016fdfae0cf02511c385c0cd827c4c3430b29120c1e",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 21,
+          "label": "wrong credentials short=True",
+          "path": "/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 401,
+          "response_projection_sha256": "153da78f5761ef4d1deb6c0dc60d6e1765126fef66ec6ee4022567e729d78285",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        }
+      ],
+      "assertions": [
+        "Match literal retained target family, method, fixture role and actual response",
+        "Keep viewer behavior and controller settlement evidence separate"
+      ],
+      "result": {
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-9075d4e584abb111bb98:METHOD_UNRESOLVED",
+      "pattern_exact": "live/<str:username>/<str:password>/<str:channel_id>",
+      "source_handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M3",
+      "fixture_id": "XC-live-entry-paired",
+      "observed_roles": [
+        "admin",
+        "inactive",
+        "limited",
+        "standard",
+        "viewer"
+      ],
+      "observed_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST",
+        "PUT"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        },
+        "inactive": {
+          "fixture_role_or_supplied_credential": "inactive",
+          "complete": false
+        },
+        "limited": {
+          "fixture_role_or_supplied_credential": "limited",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "source_index": 0,
+          "label": "viewer missing channel",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 404,
+          "response_projection_sha256": "ef6e6ae0a88cdfdd6660518dc46feb0322bfe411d7213423d241cf1c935cdbf9",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 1,
+          "label": "standard missing channel",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "e833aa3e3456dc4f2e0d8be19430bb41076c47c394d3b0cb8832c81f62185c7c",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 2,
+          "label": "admin missing channel",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_projection_sha256": "263c5579f42ee4b574e8de3d20277c9b09e5682aa7247395c37ba0aeb62ab1c0",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 3,
+          "label": "limited missing channel",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "limited",
+          "HTTP_status": 404,
+          "response_projection_sha256": "a97d4d1731d04ad1c6edf553f10efe56b4e59108d815ae7ff6376d2571c66f3a",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 4,
+          "label": "inactive missing channel",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 404,
+          "response_projection_sha256": "b279ef42d5a25548a3a38d11734130382381493ca2b9759207aa37cfd53b2600",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 5,
+          "label": "numeric/suffix invalid.ts",
+          "path": "/live/<user>/<pass>/invalid.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "d4f8dfdfffc36f7a6bd6cb73133e636f2d88b8c2d15c538037faa658bdd74d2d",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 6,
+          "label": "numeric/suffix 999999",
+          "path": "/live/<user>/<pass>/999999",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "9bf8a038871296b738515b3fd74500b8d30dd3f62cfa6cc630ad8b117bc15720",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 7,
+          "label": "numeric/suffix 999999.TS",
+          "path": "/live/<user>/<pass>/999999.TS",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "51c498421be032ae0a50745f936fd56f3f182acbd0bdfc50b64f00585c8e81da",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 8,
+          "label": "numeric/suffix 999999.mp4",
+          "path": "/live/<user>/<pass>/999999.mp4",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "7ee56f2e63617ecaadfa3a18b56c57138c9e4ffa4741b894ebe0463984762239",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 9,
+          "label": "numeric/suffix 999999.MP4",
+          "path": "/live/<user>/<pass>/999999.MP4",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "4e0f84c22dc5ff284884f95b6f5696efcea9fa071a526b0f8cf056bfb6229d44",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 10,
+          "label": "numeric/suffix 999999.m3u8",
+          "path": "/live/<user>/<pass>/999999.m3u8",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "35b4f79491405476318f49fc43108e15a0a15828f11d77a6c2b8040773ab200a",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 11,
+          "label": "numeric/suffix 999999.unknown",
+          "path": "/live/<user>/<pass>/999999.unknown",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "d2b0d937de04285b5023984a9edd186ad45f33e4449435f1271d6f258819b846",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 12,
+          "label": "numeric/suffix 999999.1.ts",
+          "path": "/live/<user>/<pass>/999999.1.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "dfdde92283f2097a7fad7b2605371ae2243c1fe596503c220c7889247cdcf27c",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 13,
+          "label": "numeric/suffix -1.ts",
+          "path": "/live/<user>/<pass>/-1.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "500a5058ef2809e96e1d7834c9a17012cf9dafbf2ef0917ac83102693846ae6d",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 14,
+          "label": "numeric/suffix +999999.ts",
+          "path": "/live/<user>/<pass>/%2B999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "b4f4c7eaafb913e25f1484ebbb0bd573af5f7f7358cf41e9127c88af8e6cb958",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 15,
+          "label": "numeric/suffix  999999.ts",
+          "path": "/live/<user>/<pass>/%20999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "8bad4eb1a14514bbde8cccd631b4927131fb7c6ecb79b5bad072e4cac9767d78",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 16,
+          "label": "numeric/suffix \u0669\u0669\u0669\u0669\u0669\u0669.ts",
+          "path": "/live/<user>/<pass>/%D9%A9%D9%A9%D9%A9%D9%A9%D9%A9%D9%A9.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "e160fcc90b8afd9bbccf5feaf28abff354ca25a656252b2fcaa4cce357f72ba8",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 17,
+          "label": "numeric/suffix 1208925819614629174706176.ts",
+          "path": "/live/<user>/<pass>/1208925819614629174706176.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "bb06c65438d133046714dc82b3dfe75d85ab74be04392a0ab92375437ab8f8b3",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 18,
+          "label": "short=False",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "a71245f4cb8aa512ec2849d364e065a1fb9c7cb16cb18bc388a31b690e7fc8de",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 19,
+          "label": "wrong credentials short=False",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 401,
+          "response_projection_sha256": "ea74abaf3e4a1f1b03274c447757f9f21e37c0d1f2ade4c88439d0a679ae29e2",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 22,
+          "label": "method HEAD",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "HEAD",
+          "role": "standard",
+          "HTTP_status": 405,
+          "response_projection_sha256": "0eaca5843295a6d1eccb10925b9eaa18f3d21c80d5d82cf0e4a7b899fc11c34e",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 23,
+          "label": "method invalid Bearer HEAD",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "HEAD",
+          "role": "standard",
+          "HTTP_status": 401,
+          "response_projection_sha256": "fce4712db760186f7f56a0650bce93c572ca8ba0b02d2f9fb57b30e954557712",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 24,
+          "label": "method OPTIONS",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "OPTIONS",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_projection_sha256": "999c8fc99d2eb2b1d663c7eeac75a27d200a7bf4b4910b7d7a38a16c9a38d352",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 25,
+          "label": "method invalid Bearer OPTIONS",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "OPTIONS",
+          "role": "standard",
+          "HTTP_status": 401,
+          "response_projection_sha256": "dbc86203d4875d6c64771ae55df047e2fc94cbd0b6175c1c1f4678b46b59e965",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 26,
+          "label": "method POST",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "POST",
+          "role": "standard",
+          "HTTP_status": 405,
+          "response_projection_sha256": "a3a3c6a4ea534cdbd20f5d601d4ae62db1e12785e8526af0f6ca34014399def6",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 27,
+          "label": "method invalid Bearer POST",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "POST",
+          "role": "standard",
+          "HTTP_status": 401,
+          "response_projection_sha256": "f0e2bd5e75955f08d8c7a63265c3f96eea00c3d651e464ef670bfe8b3de58ab4",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 28,
+          "label": "method PUT",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "PUT",
+          "role": "standard",
+          "HTTP_status": 405,
+          "response_projection_sha256": "70440bf07dc11c31d5599fc83a39d34183115f344ca43acf582440d8c94ac869",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 29,
+          "label": "method invalid Bearer PUT",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "PUT",
+          "role": "standard",
+          "HTTP_status": 401,
+          "response_projection_sha256": "464b1df4940daca7d3eb2552195f8c5498ac43e3f15721d3199c10c71e38b65a",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 30,
+          "label": "method DELETE",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "DELETE",
+          "role": "standard",
+          "HTTP_status": 405,
+          "response_projection_sha256": "2dbf4d0113fb902a155e86e46e902420fc8d588426dc322fa9c375aeb509a83f",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 31,
+          "label": "method invalid Bearer DELETE",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "DELETE",
+          "role": "standard",
+          "HTTP_status": 401,
+          "response_projection_sha256": "5d4a171e1eeda87864e914431e0c737532a731aa3abfcd396f15d45d0e1a8088",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 32,
+          "label": "GET invalid Bearer before XC",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 401,
+          "response_projection_sha256": "f994a15028d77e6f75e628ea8ebe16a577ea12d2a14d42ad2253d45384504f20",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 33,
+          "label": "GET invalid API key before XC",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 401,
+          "response_projection_sha256": "97877781c5347e729c3eae6c7a92ffe2d54424b3c9f49a48d799cfac05742639",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 34,
+          "label": "XC_API deny",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 403,
+          "response_projection_sha256": "e48dad18630ceca703e48c3d5f1d774a79849621160a66286e43023cb2f9eb0a",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        },
+        {
+          "source_index": 35,
+          "label": "STREAMS not applied before XC lookup",
+          "path": "/live/<user>/<pass>/999999.ts",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "2899b9477d64d287d9e4f7422b69ff6310790cf9e0fbd7b428fc915518a6eb43",
+          "response_hash_scope": "retained response projection with normalized Allow order",
+          "fixture_role_is_auth_success": false,
+          "credential_path_components_omitted": true
+        }
+      ],
+      "assertions": [
+        "Match literal retained target family, method, fixture role and actual response",
+        "Keep viewer behavior and controller settlement evidence separate"
+      ],
+      "result": {
+        "Source_case_observations": 34,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-b406c782172baf90cd51:GET",
+      "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.channels.api_views.RecordingViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "DVR-authorization",
+      "observed_roles": [
+        "manager"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "manager": {
+          "fixture_role_or_supplied_credential": "manager",
+          "complete": false
+        }
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "source_index": 8,
+          "label": "manager-hidden-recording",
+          "path": "/api/channels/recordings/2/",
+          "method": "GET",
+          "role": "manager",
+          "HTTP_status": 404,
+          "response_projection_sha256": "3debb171a48e851d32109002c27e476eb034f548329e5a1448024189e55d15b7",
+          "response_hash_scope": "actual returned JSON projection"
+        }
+      ],
+      "assertions": [
+        "Match literal retained target family, method, fixture role and actual response",
+        "Keep viewer behavior and controller settlement evidence separate"
+      ],
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-f3532fc9c5a320a9d392:POST",
+      "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/comskip/$",
+      "source_handler": "apps.channels.api_views.RecordingViewSet",
+      "method": "POST",
+      "source_action": "comskip",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-manual-Comskip",
+      "observed_roles": [
+        "admin"
+      ],
+      "observed_methods": [
+        "POST"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "source_index": 0,
+          "label": "positive-mark",
+          "path": "/api/channels/recordings/1/comskip/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "aece903016900c2d813f17c6b6b91a95710aca9016e5f41cb0ff8256e48666bd",
+          "response_hash_scope": "actual returned JSON projection"
+        },
+        {
+          "source_index": 1,
+          "label": "mark-repeat",
+          "path": "/api/channels/recordings/1/comskip/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "aece903016900c2d813f17c6b6b91a95710aca9016e5f41cb0ff8256e48666bd",
+          "response_hash_scope": "actual returned JSON projection"
+        },
+        {
+          "source_index": 2,
+          "label": "positive-cut",
+          "path": "/api/channels/recordings/2/comskip/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "aece903016900c2d813f17c6b6b91a95710aca9016e5f41cb0ff8256e48666bd",
+          "response_hash_scope": "actual returned JSON projection"
+        },
+        {
+          "source_index": 3,
+          "label": "cut-repeat",
+          "path": "/api/channels/recordings/2/comskip/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "aece903016900c2d813f17c6b6b91a95710aca9016e5f41cb0ff8256e48666bd",
+          "response_hash_scope": "actual returned JSON projection"
+        }
+      ],
+      "assertions": [
+        "Match literal retained target family, method, fixture role and actual response",
+        "Keep viewer behavior and controller settlement evidence separate"
+      ],
+      "result": {
+        "Source_case_observations": 4,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    }
+  ]
+}

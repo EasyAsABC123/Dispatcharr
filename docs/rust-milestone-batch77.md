@@ -21,7 +21,17 @@ acceptance.
 
 Twenty-five focused Rust tests passed and one fixture-bound test was skipped.
 Strict Clippy passed on the touched crates. Nine offline XC fixture controls
-passed. Packaged checks for the new paths are tracked separately.
+passed. Candidate77 then passed the paired packaged XC activity and local
+Refresh All comparisons. The two fixture setup attempts preceding
+the refresh comparison remain in its receipt. The final comparison reused
+the successful Original run after independently checking its cleanup.
+
+The two-viewer HLS check passed with two equivalent profile spellings, one
+origin connection, one selected transform, and identical decoded segments.
+Candidate76 reproduced the fallback for the encoded spelling in the control.
+The selected Native HLS owner and transform persisted after one viewer left.
+
+[Exact-image Compose evidence](../scripts/rust-integration/milestone-batch77/packaged.json)
 
 [Focused checks](../scripts/rust-integration/milestone-batch77/focused.json)
 · [Portable XC fixture](../scripts/rust-integration/xc-group-patch/README.md)

@@ -232,6 +232,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_SD25_resolver_scoped_HTTP':
             import retained_sd_contracts
             retained_sd_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_DVR_XC_playback_HTTP':
+            import retained_dvr_xc_contracts
+            retained_dvr_xc_contracts.validate(root, value)
         elif reference['kind'] == 'retained_original_admin_model_TCP':
             import retained_admin_model_contracts
             retained_admin_model_contracts.validate(root, value)
@@ -376,6 +379,9 @@ def apply(root, rows, bindings):
                 operation['role_matrix']['state'] = 'partial_Original_retained_transport_observations'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             if reference['kind'] == 'retained_original_admin_model_TCP':
+                operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
+                operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
+            if reference['kind'] == 'retained_original_DVR_XC_playback_HTTP':
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'

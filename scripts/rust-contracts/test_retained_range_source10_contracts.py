@@ -10,6 +10,7 @@ import retained_playback_contracts
 import retained_image22_controls_contracts
 import retained_repository_socket_switch_contracts
 import retained_admin_model_contracts
+import retained_dvr_xc_contracts
 import retained_range_source10_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -33,6 +34,7 @@ class RangeSource10Controls(unittest.TestCase):
     p.write_bytes(raw)
  def test_all174_definitions_797_whole_rows_and_selected_primary_unchanged(self):
   register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT,register['runtime_routes'])
   retained_admin_model_contracts.restore_pre_admin_models(ROOT,register['runtime_routes'])
   retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT,register['runtime_routes'])
   retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,register['runtime_routes'])
@@ -56,6 +58,7 @@ class RangeSource10Controls(unittest.TestCase):
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
   self.assertEqual(mapping['operations'],373)
+  retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT,rows)
   retained_admin_model_contracts.restore_pre_admin_models(ROOT,rows)
   retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT,rows)
   retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,rows)
@@ -68,6 +71,7 @@ class RangeSource10Controls(unittest.TestCase):
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT,rows)
   retained_admin_model_contracts.restore_pre_admin_models(ROOT,rows)
   retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT,rows)
   retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,rows)

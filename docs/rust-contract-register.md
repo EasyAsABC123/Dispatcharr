@@ -240,3 +240,14 @@ statuses do not establish full admin or Native parity.
 
 The register has 373 partial Source assignments and 425 unassigned operations.
 All prior 270 assignments and the other 695 operation dictionaries remain exact.
+
+## Retained DVR and Xtream playback observations
+
+The [DVR and XC binding](../scripts/rust-contracts/retained-dvr-xc/bindings.json)
+adds 49 Original responses across five operation IDs. The fixture observations
+cover DVR HLS playlists and segments, a manager-hidden recording, four manual
+Comskip actions, and long and short Xtream live-entry paths. Request roles
+describe the supplied credentials. Two route declarations retain null methods.
+
+The register has 378 partial Source assignments and 420 unassigned operations.
+All prior 373 assignments and 793 unaffected operation dictionaries remain exact.
