@@ -51,7 +51,7 @@ def main():
     report['separate_component_source_match']=matching
     paths=[Path(__file__).resolve(),*[Path(__file__).with_name(name) for name in ['gateway_cases.py','gateway_control.py','ws_client.py','interop.py','browser_peer.js']],ROOT/'docker/compose.rust-playback.yml',ROOT/'docker/compose.rust-candidate.yml',ROOT/'docker/compose.rust-replicas.yml',ROOT/'scripts/rust-integration/fixture_ports.py',*[ROOT/'scripts/rust-playback-baseline'/name for name in ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']],ROOT/'scripts/rust-baseline/dependencies.py']
     if args.profile_preview:
-        paths += [Path(__file__).with_name(name) for name in ['profile_cases.py','profile_source_inside.py','datasets/source-preview.json']]
+        paths += [Path(__file__).parent/name for name in ['profile_cases.py','profile_source_inside.py','datasets/source-preview.json']]
     copies=out/'tools'
     for path in paths:
         target=copies/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
