@@ -2,7 +2,7 @@
 
 The Original Dispatcharr authors retain full credit for the project, workflows, and behavior tested here.
 
-This workload runs the stock Original and the selected Rust candidate through the normal Main account PATCH and GET routes. Its SQL assertions observe state in a disposable database. The case covers sparse missing-group errors, duplicate first-selection behavior, the React Group Filter preference triple, all three orphan-cleanup values, and playlist activation and deactivation. It records a projected functional result separately from generated files that contain fixture logs and credentials.
+This workload runs the stock Original and the selected Rust candidate through the normal Main account PATCH and GET routes. Its SQL assertions observe state in a disposable database. The case covers sparse missing-group errors, duplicate first-selection behavior, the React Group Filter preference triple, all three orphan-cleanup values, playlist activation and deactivation, and a playlist editor account rename. It records a projected functional result separately from generated files that contain fixture logs and credentials.
 
 ## Run
 
@@ -19,7 +19,7 @@ python3 -B "$fixture/paired_group_parity.py" bind --output "$stage" \
 python3 -B "$fixture/paired_group_parity.py" run --output "$stage"
 ```
 
-`references` runs the valid and missing-reference cases. `duplicates` adds duplicate selection and the three account-level preferences. `orphans` adds the three orphan-cleanup transitions. `activity` adds both playlist activation transitions and scoped SQL checks for cron linkage and expiration notifications. The binder verifies the candidate package source archive and requires the relevant implementation before executing a mode.
+`references` runs the valid and missing-reference cases. `duplicates` adds duplicate selection and the three account-level preferences. `orphans` adds the three orphan-cleanup transitions. `activity` adds both playlist activation transitions and scoped SQL checks for cron linkage and expiration notifications. `rename` runs the reference checks plus a complete stock-editor account rename, with projected SQL checks for preserved credentials, settings, cron and default profile label. The binder verifies the candidate package source archive and requires the relevant implementation before executing a mode.
 
 Staging regenerates the pinned Original tar and fixture support from Git objects. The same generated driver runs both backends. The runner uses the dispatcher lease, preserves the normal startup observations, and checks exact cleanup before starting Native. The Original Beat role stops after startup and before the account requests, while Native runs with its selected scheduler disabled.
 

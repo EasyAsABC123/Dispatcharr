@@ -376,6 +376,138 @@ def verify_activity(fixture, path, ids):
     return results
 
 
+RENAME = "Owned PATCH updated label"
+RENAME_USERNAME = "fixture-user"
+RENAME_URL = "http://owned-provider:8080/api"
+RENAME_PROPERTIES = {**ACCOUNT_PROPERTIES, "enable_vod": True}
+RENAME_SEED = """
+from hashlib import sha256
+from django.db import transaction
+from apps.m3u.models import M3UAccount, ServerGroup
+from core.models import UserAgent
+
+with transaction.atomic():
+    account = M3UAccount.objects.get(pk=account_id)
+    agent = UserAgent.objects.create(name="Owned rename agent", user_agent="OwnedRename/1")
+    group = ServerGroup.objects.create(name="Owned rename server group")
+    account.user_agent = agent
+    account.server_group = group
+    account.server_url = expected_url
+    account.username = expected_username
+    account.password = sha256(b"disposable XC rename preservation fixture").hexdigest()
+    account.custom_properties = properties
+    account.status = "disabled"
+    account.stale_stream_days = 9
+    account.priority = 4
+    account._cron_expression = cron
+    account.save()
+print(json.dumps({"user_agent": agent.pk, "server_group": group.pk}))
+"""
+
+
+def rename_sql(fixture, account_id):
+    script = """
+from hashlib import sha256
+from apps.m3u.models import M3UAccount, M3UAccountProfile
+
+account = M3UAccount.objects.get(pk=account_id)
+profiles = list(M3UAccountProfile.objects.filter(m3u_account_id=account_id, is_default=True)
+                .values("id", "name", "is_active", "max_streams", "search_pattern", "replace_pattern"))
+print(json.dumps({
+    "name": account.name,
+    "server_url_matches": account.server_url == expected_url,
+    "username_matches": account.username == expected_username,
+    "password_matches": account.password == sha256(b"disposable XC rename preservation fixture").hexdigest(),
+    "stale_stream_days": account.stale_stream_days,
+    "priority": account.priority,
+    "default_profiles": profiles,
+}))
+"""
+    return fixture.sql(
+        f"account_id = {account_id!r}\nexpected_url = {RENAME_URL!r}\n"
+        f"expected_username = {RENAME_USERNAME!r}\n" + script,
+        secret=True,
+    )
+
+
+def observe_rename(payload, ids, related, default, *, previous=False):
+    state = observe(payload, ids)
+    if isinstance(payload, dict):
+        defaults = [p for p in (payload.get("profiles") or []) if isinstance(p, dict) and p.get("is_default")]
+        state.update(
+            name_matches=payload.get("name") == ("Owned PATCH target" if previous else RENAME),
+            default_profile_unchanged=len(defaults) == 1 and all(
+                defaults[0].get(key) == value for key, value in default.items()
+            ),
+            provider_matches=payload.get("server_url") == RENAME_URL
+            and payload.get("username") == RENAME_USERNAME
+            and payload.get("user_agent") == related["user_agent"]
+            and payload.get("server_group") == related["server_group"],
+            schedule_matches=payload.get("cron_expression") == ACTIVITY_CRON
+            and payload.get("refresh_interval") == 0,
+            options_match=payload.get("account_type") == "XC" and payload.get("is_active") is False
+            and payload.get("status") == "disabled" and payload.get("max_streams") == 0
+            and payload.get("stale_stream_days") == 9 and payload.get("priority") == 4,
+            properties_match=payload.get("enable_vod") is True and payload.get("hash_key") == "name,url"
+            and payload.get("custom_properties") == RENAME_PROPERTIES,
+        )
+    return state
+
+
+def verify_rename(fixture, path, ids):
+    account_id = ids["account"]
+    related = fixture.sql(
+        f"account_id = {account_id!r}\nexpected_url = {RENAME_URL!r}\nexpected_username = {RENAME_USERNAME!r}\n"
+        f"properties = {RENAME_PROPERTIES!r}\ncron = {ACTIVITY_CRON!r}\n" + RENAME_SEED,
+        secret=True,
+    )
+    initial = rename_sql(fixture, account_id)
+    account = preferences_snapshot(fixture, account_id)
+    relations = snapshot(fixture, ids)
+    schedule = schedule_and_notifications(fixture, account_id, {})
+    assert initial["name"] == "Owned PATCH target"
+    assert len(initial["default_profiles"]) == 1
+    default = initial["default_profiles"][0]
+    assert default["name"] == initial["name"] + " Default"
+    assert all(initial[key] for key in ("server_url_matches", "username_matches", "password_matches"))
+    assert schedule["task_id"] == account["refresh_task_id"] and schedule["cron"] == ACTIVITY_CRON
+    assert schedule["enabled"] is False and schedule["provider_task"] and schedule["kwargs_match"]
+    get_status, before = request(fixture, "GET", path)
+    assert get_status == 200 and all(observe_rename(before, ids, related, default, previous=True).values())
+    # M3U.jsx supplies the form fields and prepareSubmitValues omits password and exp_date for this XC draft.
+    status, patched = request(fixture, "PATCH", path, {
+        "name": RENAME,
+        "server_url": RENAME_URL,
+        "user_agent": str(related["user_agent"]),
+        "server_group": str(related["server_group"]),
+        "is_active": False,
+        "max_streams": 0,
+        "refresh_interval": 0,
+        "cron_expression": ACTIVITY_CRON,
+        "account_type": "XC",
+        "username": RENAME_USERNAME,
+        "stale_stream_days": 9,
+        "priority": 4,
+        "enable_vod": True,
+        "hash_key": "name,url",
+    })
+    follow_status, follow = request(fixture, "GET", path)
+    final = rename_sql(fixture, account_id)
+    return {
+        "status": status,
+        "checks": observe_rename(patched, ids, related, default) if status == 200 else {},
+        "followup_status": follow_status,
+        "followup": observe_rename(follow, ids, related, default) if follow_status == 200 else {},
+        "sql_account_preserved": final == {**initial, "name": RENAME}
+        and preferences_snapshot(fixture, account_id) == {**account, "name": RENAME},
+        "sql_schedule_preserved": schedule_and_notifications(fixture, account_id, {}) == schedule,
+        "sql_relationships_unchanged": snapshot(fixture, ids) == relations,
+        "sql_credentials_preserved": all(final[key] for key in (
+            "server_url_matches", "username_matches", "password_matches",
+        )),
+    }
+
+
 def run(fixture, record):
     assert fixture.case == CASE and fixture.backend in {"Original", "Native"}
     evidence = {"case": CASE, "backend": fixture.backend, "passed": False, "steps": []}
@@ -421,6 +553,17 @@ def run(fixture, record):
             evidence["missing_group_references"] = missing
             assert missing["status"] == 400 and missing["exact_sparse_error"] and missing["sql_unchanged"]
             assert missing["followup_status"] == 200 and missing["followup"] and all(missing["followup"].values())
+            if fixture.binding.get("xc_group_patch_label_edit"):
+                stage = "playlist editor rename"
+                rename = verify_rename(fixture, path, ids)
+                evidence["label_edit"] = rename
+                assert rename["status"] == rename["followup_status"] == 200
+                assert rename["checks"] and all(rename["checks"].values())
+                assert rename["followup"] and all(rename["followup"].values())
+                assert all(rename[key] for key in (
+                    "sql_account_preserved", "sql_schedule_preserved",
+                    "sql_relationships_unchanged", "sql_credentials_preserved",
+                ))
             if fixture.binding.get("xc_group_patch_duplicates"):
                 stage = "duplicate group selections"
                 duplicate = verify_duplicate_groups(fixture, path, ids, after)

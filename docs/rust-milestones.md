@@ -22,6 +22,9 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The integration-create and XC rename checkpoint](rust-milestone-batch80.md)
+records the next Rust fixes and their focused verification.
+
 [The Delivery Logs, TS response and Redis TLS checkpoint](rust-milestone-batch79.md)
 records the next Rust fixes and the full Store library test result.
 

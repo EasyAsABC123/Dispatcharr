@@ -3,8 +3,8 @@
 use crate::{AuthService, RestReadLimits, StoreError};
 use axum::{
     body::Body,
-    extract::{ConnectInfo, State},
-    http::{header, HeaderMap, Uri},
+    extract::{ConnectInfo, Request, State},
+    http::{header, HeaderMap, StatusCode, Uri},
     response::Response,
     routing::get,
     Router,
@@ -14,6 +14,8 @@ use serde_json::json;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::sync::OwnedSemaphorePermit;
 
+#[path = "connect_create.rs"]
+mod create_integration;
 #[path = "connect_delivery_logs.rs"]
 mod delivery_logs;
 
@@ -63,7 +65,7 @@ fn capacity() -> StoreError {
 
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
-        .route("/api/connect/integrations/", get(list))
+        .route("/api/connect/integrations/", get(list).post(create))
         .route("/api/connect/logs/", get(logs))
         .with_state(auth)
 }
@@ -73,7 +75,7 @@ async fn list(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
 ) -> Result<Response, StoreError> {
-    read(auth, peer, headers, None).await
+    execute(auth, peer, headers, ConnectRequest::Integrations).await
 }
 
 async fn logs(
@@ -82,14 +84,34 @@ async fn logs(
     headers: HeaderMap,
     uri: Uri,
 ) -> Result<Response, StoreError> {
-    read(auth, peer, headers, Some(uri)).await
+    execute(auth, peer, headers, ConnectRequest::Logs(uri)).await
 }
 
-async fn read(
+enum ConnectRequest {
+    Integrations,
+    Logs(Uri),
+    Create(Request),
+}
+
+async fn create(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    execute(
+        auth,
+        peer,
+        request.headers().clone(),
+        ConnectRequest::Create(request),
+    )
+    .await
+}
+
+async fn execute(
     auth: AuthService,
     peer: SocketAddr,
     headers: HeaderMap,
-    logs_uri: Option<Uri>,
+    request: ConnectRequest,
 ) -> Result<Response, StoreError> {
     let permit = Arc::new(
         auth.user_agent_workers
@@ -104,13 +126,23 @@ async fn read(
         auth.retained_rest_reads(RestReadLimits::default())?
             .account_user(peer, headers.clone(), true)
             .await?;
-        let payload = match logs_uri {
-            Some(uri) => delivery_logs::list(&auth.store, &headers, &uri).await?,
-            None => sqlx::query_scalar::<_, Option<String>>(LIST)
-                .bind(RESPONSE_LIMIT)
-                .fetch_one(auth.store.pool())
-                .await?
-                .ok_or_else(capacity)?,
+        let (status, payload) = match request {
+            ConnectRequest::Integrations => (
+                StatusCode::OK,
+                sqlx::query_scalar::<_, Option<String>>(LIST)
+                    .bind(RESPONSE_LIMIT)
+                    .fetch_one(auth.store.pool())
+                    .await?
+                    .ok_or_else(capacity)?,
+            ),
+            ConnectRequest::Logs(uri) => (
+                StatusCode::OK,
+                delivery_logs::list(&auth.store, &headers, &uri).await?,
+            ),
+            ConnectRequest::Create(request) => (
+                StatusCode::CREATED,
+                create_integration::create(&auth.store, request).await?,
+            ),
         };
         // PostgreSQL produces valid JSON here. Keep its config tokens and
         // allocation intact, including numbers outside primitive Rust ranges.
@@ -124,6 +156,7 @@ async fn read(
             _permit: permit,
         }));
         Response::builder()
+            .status(status)
             .header(header::CONTENT_TYPE, "application/json")
             .header(header::CONTENT_LENGTH, length)
             .body(body)

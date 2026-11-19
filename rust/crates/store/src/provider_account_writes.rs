@@ -115,6 +115,59 @@ fn hash_keys(value: &Value) -> Result<Vec<String>, StoreError> {
     }
     Ok(keys)
 }
+fn xc_label_update(input: &Map<String, Value>, old: &Value, saved: &Value) -> bool {
+    if !input.get("name").is_some_and(Value::is_string)
+        || input
+            .get("enable_vod")
+            .is_some_and(|value| !value.is_boolean())
+        || !input.keys().all(|key| {
+            matches!(
+                key.as_str(),
+                "name"
+                    | "server_url"
+                    | "server_group"
+                    | "max_streams"
+                    | "is_active"
+                    | "user_agent"
+                    | "refresh_interval"
+                    | "account_type"
+                    | "username"
+                    | "stale_stream_days"
+                    | "priority"
+                    | "enable_vod"
+                    | "hash_key"
+                    | "cron_expression"
+            )
+        })
+    {
+        return false;
+    }
+    if let Some(url) = input.get("server_url").and_then(Value::as_str) {
+        // Source's flexible hostname fallback provides positive authority
+        // for the URL already stored in an ordinary form echo.
+        static FLEXIBLE_URL: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+            regex::Regex::new(
+                r"^(rts?p|https?|udp)://([a-zA-Z0-9_\-.]+:[^\s@]+@)?([a-zA-Z0-9]([a-zA-Z0-9_\-.]{0,61}[a-zA-Z0-9])?|[0-9.]+)?(:[0-9]+)?(/[^\s]*)?$",
+            )
+            .expect("pinned flexible URL fallback")
+        });
+        if !url.is_empty() && !FLEXIBLE_URL.is_match(url) {
+            return false;
+        }
+    }
+    let mut expected_properties = properties(&old["custom_properties"]);
+    if input.get("enable_vod") == Some(&Value::Bool(false)) {
+        expected_properties
+            .entry("enable_vod")
+            .or_insert(Value::Bool(false));
+    }
+    saved["custom_properties"] == Value::Object(expected_properties)
+        && saved.as_object().is_some_and(|account| {
+            account.iter().all(|(key, value)| {
+                matches!(key.as_str(), "name" | "custom_properties") || old.get(key) == Some(value)
+            })
+        })
+}
 struct Validated {
     saved: Value,
     cron: String,
@@ -125,7 +178,7 @@ struct Validated {
 fn validate(
     mut input: Map<String, Value>,
     old: &Value,
-    cron: &str,
+    previous_cron: &str,
     partial: bool,
     create: bool,
 ) -> Result<Validated, StoreError> {
@@ -325,7 +378,7 @@ fn validate(
     saved["custom_properties"] = Value::Object(cp);
     let cron = match input.get("cron_expression") {
         Some(v) => character("cron_expression", v, None, true)?,
-        None if partial => cron.to_owned(),
+        None if partial => previous_cron.to_owned(),
         None => String::new(),
     };
     let expiration = input
@@ -408,6 +461,14 @@ fn validate(
                         || old["custom_properties"].get(key) == Some(value)
                 })
             });
+    // The playlist editor sends all its current values even on a rename.
+    let xc_label = !create
+        && partial
+        && old["account_type"] == "XC"
+        && (old["custom_properties"].is_object() || old["custom_properties"].is_null())
+        && !changed
+        && cron == previous_cron
+        && xc_label_update(&input, old, &saved);
     let xc_create = create && saved["account_type"] == "XC";
     if xc_create {
         for key in [
@@ -431,6 +492,7 @@ fn validate(
         }
     }
     if !xc_preferences
+        && !xc_label
         && !xc_active_toggle
         && !xc_create
         && !xc_group_selection
@@ -1328,6 +1390,93 @@ mod tests {
         .is_err());
         old["custom_properties"] = json!("non-mapping preference state");
         assert!(validate(request.as_object().unwrap().clone(), &old, "", true, false).is_err());
+    }
+
+    #[test]
+    fn xc_playlist_editor_rename_preserves_the_echoed_values() {
+        let mut old = defaults();
+        old["name"] = json!("Old name");
+        old["account_type"] = json!("XC");
+        old["server_url"] = json!("http://owned-provider:8080/api");
+        old["username"] = json!("fixture-user");
+        old["user_agent_id"] = json!(7);
+        old["server_group_id"] = json!(9);
+        old["custom_properties"] = json!({"enable_vod":true,"hash_key":"name,url","marker":"keep"});
+        let mut input = json!({
+            "name": "Updated name",
+            "account_type": "XC",
+            "server_url": "http://owned-provider:8080/api",
+            "username": "fixture-user",
+            "user_agent": "7",
+            "server_group": "9",
+            "is_active": true,
+            "max_streams": 0,
+            "refresh_interval": 0,
+            "cron_expression": "30 5 * * *",
+            "stale_stream_days": 7,
+            "priority": 0,
+            "enable_vod": true,
+            "hash_key": "name,url"
+        });
+
+        let renamed = validate(
+            input.as_object().unwrap().clone(),
+            &old,
+            "30 5 * * *",
+            true,
+            false,
+        )
+        .unwrap();
+        let mut expected = old.clone();
+        expected["name"] = input["name"].clone();
+        assert_eq!(renamed.saved, expected);
+        assert_eq!(renamed.cron, "30 5 * * *");
+        assert!(renamed.expiration.is_none() && !renamed.hash_changed);
+
+        old["custom_properties"] = Value::Null;
+        input["hash_key"] = Value::Null;
+        input["enable_vod"] = Value::Bool(false);
+        input["cron_expression"] = json!("");
+        let renamed = validate(input.as_object().unwrap().clone(), &old, "", true, false).unwrap();
+        assert_eq!(renamed.saved["name"], input["name"]);
+        assert_eq!(
+            renamed.saved["custom_properties"],
+            json!({"enable_vod":false})
+        );
+        assert!(!renamed.hash_changed);
+        let named = validate(
+            Map::from_iter([("name".into(), json!("Label only"))]),
+            &old,
+            "",
+            true,
+            false,
+        )
+        .unwrap();
+        assert_eq!(named.saved["name"], "Label only");
+    }
+
+    #[test]
+    fn xc_playlist_editor_rename_keeps_other_mutations_guarded() {
+        let mut old = defaults();
+        old["name"] = json!("Old name");
+        old["account_type"] = json!("XC");
+        old["server_url"] = json!("invalid stored URL");
+        old["custom_properties"] = json!({"enable_vod":false});
+        for request in [
+            json!({"name":"Updated","is_active":false}),
+            json!({"name":"Updated","enable_vod":true}),
+            json!({"name":"Updated","username":"other"}),
+            json!({"name":"Updated","password":"fixture-only"}),
+            json!({"name":"Updated","server_url":"invalid stored URL"}),
+            json!({"name":"Updated","hash_key":"name"}),
+            json!({"name":"Updated","cron_expression":"31 5 * * *"}),
+            json!({"name":"Updated","max_streams":2}),
+        ] {
+            assert!(matches!(
+                validate(request.as_object().unwrap().clone(), &old, "", true, false),
+                Err(StoreError::Unsupported(_))
+            ));
+        }
     }
 
     #[test]

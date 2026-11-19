@@ -16,7 +16,7 @@ import time
 
 from scoped_driver import patch_run
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = next(parent for parent in Path(__file__).resolve().parents if (parent / ".git").exists())
 OVERLAYS = Path(__file__).resolve().parent
 COORDINATOR = ROOT / "scripts/rust-milestone-batches/coordinator.py"
 BUILD = ROOT / "scripts/rust-integration/build.py"
@@ -186,6 +186,10 @@ def bind(output, manifest_path, revision, mode):
         require(b"let xc_active_toggle = !create" in packaged_source
                 and b"&& !xc_active_toggle" in packaged_source,
                 "candidate package lacks playlist table XC activity toggle")
+    if mode == "rename":
+        require(b"let xc_label = !create" in packaged_source
+                and b"&& !xc_label" in packaged_source,
+                "candidate package lacks playlist editor XC rename")
     package = [ref(manifest_path), ref(source_archive, manifest["source_archive_sha256"])]
     verify(metadata["inputs"])
     for backend in DRIVERS:
@@ -203,6 +207,7 @@ def bind(output, manifest_path, revision, mode):
             xc_group_patch_duplicates=mode in {"duplicates", "orphans", "activity"},
             xc_group_patch_orphan_modes=mode in {"orphans", "activity"},
             xc_group_patch_active_toggle=mode == "activity",
+            xc_group_patch_label_edit=mode == "rename",
             whole_cohort_seconds=WINDOW, cleanup_seconds=CLEANUP, performance=False,
             inputs=metadata["inputs"] + package,
         )
@@ -308,6 +313,7 @@ def run(output):
                     "group_filter_preferences_status": probe.get("group_filter_preferences", {}).get("status"),
                     "orphan_cleanup_modes_status": [mode["status"] for mode in probe.get("orphan_cleanup_modes", [])],
                     "active_toggle_status": [step["status"] for step in probe.get("active_toggle", [])],
+                    "label_edit_status": probe.get("label_edit", {}).get("status"),
                     "passed": probe["passed"] and report["combined_selected_workflow_passed"]
                     and receipt["actual_exit"] == 0 and receipt["failure"] is None,
                     "sanitized_probe_sha256": digest(results / backend / f"{CASE}.json"),
@@ -329,7 +335,7 @@ def main():
             command.add_argument("--docker", default="docker")
         if action == "bind":
             command.add_argument("--manifest", required=True, type=Path)
-            command.add_argument("--mode", required=True, choices=("references", "duplicates", "orphans", "activity"))
+            command.add_argument("--mode", required=True, choices=("references", "duplicates", "orphans", "activity", "rename"))
             command.add_argument("--candidate-revision", required=True)
     args = parser.parse_args()
     output = args.output.resolve()

@@ -175,6 +175,86 @@ class Tests(unittest.TestCase):
         self.assertFalse(result["passed"])
         self.assertEqual(len(requests),2)
 
+    def execute_rename(self, *, damaged_password=False, relabeled_profile=False, changed_schedule=False):
+        related = {"user_agent": 41, "server_group": 51}
+        profile = {
+            "id": 30, "name": "Owned PATCH target Default", "is_active": True, "max_streams": 0,
+            "search_pattern": "^(.*)$", "replace_pattern": "$1",
+        }
+        account = {
+            "name": "Owned PATCH target", "server_url": probe.RENAME_URL,
+            "username": probe.RENAME_USERNAME, **related, "cron_expression": probe.ACTIVITY_CRON,
+            "refresh_task_id": 91, "refresh_interval": 0, "status": "disabled", "is_active": False,
+            "account_type": "XC", "max_streams": 0, "stale_stream_days": 9, "priority": 4,
+            "enable_vod": True, "hash_key": "name,url", "custom_properties": dict(probe.RENAME_PROPERTIES),
+        }
+
+        class RenameFixture:
+            def sql(self, source, *, secret):
+                assert secret and probe.RENAME_SEED in source
+                return related
+
+        patched = False
+
+        def rename_sql(*_):
+            return {
+                "name": account["name"], "username_matches": True, "server_url_matches": True,
+                "password_matches": not (patched and damaged_password),
+                "default_profiles": [deepcopy(profile)],
+            }
+
+        def schedule(*_):
+            return {
+                "enabled": False, "task_id": 91, "provider_task": True, "kwargs_match": True,
+                "cron": "31 5 * * *" if patched and changed_schedule else probe.ACTIVITY_CRON,
+            }
+
+        def request(_fixture, method, path, value=None):
+            nonlocal patched
+            assert path == "/api/m3u/accounts/11/"
+            if method == "PATCH":
+                assert value == {
+                    "name": probe.RENAME, "server_url": probe.RENAME_URL, "user_agent": "41",
+                    "server_group": "51", "is_active": False, "max_streams": 0, "refresh_interval": 0,
+                    "cron_expression": probe.ACTIVITY_CRON, "account_type": "XC",
+                    "username": probe.RENAME_USERNAME, "stale_stream_days": 9, "priority": 4,
+                    "enable_vod": True, "hash_key": "name,url",
+                }
+                patched = True
+                account["name"] = probe.RENAME
+                if relabeled_profile:
+                    profile["name"] = probe.RENAME + " Default"
+            response = {**body(False, True), **account}
+            response["profiles"].append({**profile, "is_default": True})
+            return 200, response
+
+        with patch.multiple(
+            probe, request=request, rename_sql=rename_sql, schedule_and_notifications=schedule,
+            preferences_snapshot=lambda *_: deepcopy(account), snapshot=lambda *_: relations(False, True),
+        ):
+            result = probe.verify_rename(RenameFixture(), "/api/m3u/accounts/11/", IDS)
+        assert patched and result["status"] == result["followup_status"] == 200
+        return result
+
+    def test_playlist_rename_preserves_default_profile_schedule_and_credentials(self):
+        proof = self.execute_rename()
+        self.assertTrue(all(proof["checks"].values()) and all(proof["followup"].values()))
+        self.assertTrue(proof["sql_account_preserved"] and proof["sql_relationships_unchanged"])
+        self.assertTrue(proof["sql_schedule_preserved"] and proof["sql_credentials_preserved"])
+
+    def test_playlist_rename_rejects_side_effects_despite_200(self):
+        with self.subTest(field="credential"):
+            proof = self.execute_rename(damaged_password=True)
+            self.assertFalse(proof["sql_credentials_preserved"])
+        with self.subTest(field="default profile label"):
+            proof = self.execute_rename(relabeled_profile=True)
+            self.assertFalse(proof["checks"]["default_profile_unchanged"])
+            self.assertFalse(proof["sql_account_preserved"])
+        with self.subTest(field="schedule"):
+            proof = self.execute_rename(changed_schedule=True)
+            self.assertFalse(proof["sql_schedule_preserved"])
+
+
 class WorkflowBindingTests(unittest.TestCase):
     def test_selected_context_dispatches_the_same_probe_and_quiets_original_beat(self):
         for backend in ("Original", "Native"):
