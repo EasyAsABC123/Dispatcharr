@@ -382,8 +382,27 @@ return 0
         user: Option<User>,
         skip: bool,
     ) -> Result<PlaybackResolution, PlaybackError> {
-        let row=sqlx::query("SELECT s.id::bigint AS id,s.m3u_account_id::bigint AS account,a.is_active AS account_active, COALESCE(s.stream_profile_id,$2::bigint)::bigint AS profile_id FROM dispatcharr_channels_stream s LEFT JOIN m3u_m3uaccount a ON a.id=s.m3u_account_id WHERE s.stream_hash=$1")
-            .bind(&request.channel_id).bind(self.store.setting("stream_settings").await.map_err(playback_error)?.get("default_stream_profile").and_then(|v|v.as_i64().or_else(||v.as_str()?.parse().ok()))).fetch_optional(self.store.pool()).await.map_err(crate::StoreError::from).map_err(playback_error)?.ok_or_else(||PlaybackError::new(404,"Not found"))?;
+        let settings = self
+            .store
+            .setting("stream_settings")
+            .await
+            .map_err(playback_error)?;
+        let default_profile = settings
+            .get("default_stream_profile")
+            .and_then(|value| value.as_i64().or_else(|| value.as_str()?.parse().ok()));
+        let row = sqlx::query(
+            "SELECT s.id::bigint AS id,s.m3u_account_id::bigint AS account,a.is_active AS account_active, \
+             COALESCE(s.stream_profile_id,$2::bigint)::bigint AS profile_id \
+             FROM dispatcharr_channels_stream s LEFT JOIN m3u_m3uaccount a ON a.id=s.m3u_account_id \
+             WHERE s.stream_hash=$1",
+        )
+        .bind(&request.channel_id)
+        .bind(default_profile)
+        .fetch_optional(self.store.pool())
+        .await
+        .map_err(crate::StoreError::from)
+        .map_err(playback_error)?
+        .ok_or_else(|| playback_error(crate::StoreError::NotFound))?;
         let id: i64 = row
             .try_get("id")
             .map_err(crate::StoreError::from)

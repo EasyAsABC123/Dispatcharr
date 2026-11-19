@@ -467,3 +467,65 @@ def run_connect_reads(http, baseline, candidate, accounts, record, fixture):
         rewritten = http(candidate + route, token=token, headers=headers)
         record('connect-reads:' + label, original[0] == status and original == rewritten
                and (status != 200 or original[1] == expected), evidence(original, rewritten))
+
+
+
+def run_connect_logs(http, baseline, candidate, accounts, record, fixture):
+    """Compare the read-only Delivery Logs panel against owned fixtures."""
+    validate_fixture(baseline, candidate, accounts)
+    path = '/api/connect/logs/'
+    admin = accounts['admin']['access']
+
+    def observe(label, query, expected_status, expected_body, token=admin):
+        def get(base):
+            status, body = http(base + path + query, token=token, headers={'Accept': 'application/json'})
+            if status == 200 and isinstance(body, dict):
+                body = dict(body)
+                for key in ('next', 'previous'):
+                    uri = body.get(key)
+                    if isinstance(uri, str) and uri.startswith(base + path):
+                        body[key] = uri[len(base):]
+            return status, body
+
+        original, native = get(baseline), get(candidate)
+        authority = original == (expected_status, expected_body)
+        record('connect-logs:' + label, authority and original == native,
+               {**evidence(original, native), 'original_contract_verified': authority})
+
+    def page(results, count=None, next_page=None, previous_page=None):
+        return {'results': results, 'count': len(results) if count is None else count,
+                'next': next_page, 'previous': previous_page}
+
+    observe('empty-react-query', '?page=1&page_size=50', 200, page([]))
+    seeded = fixture({'action': 'connect_logs_seed'})
+    webhook, script = seeded['integration_ids']
+    subscriptions = [
+        dict(id=seeded['subscription_ids'][0], event='channel_start', enabled=True,
+             payload_template=None, integration=webhook),
+        dict(id=seeded['subscription_ids'][1], event='recording_end', enabled=False,
+             payload_template='', integration=script),
+    ]
+    records = []
+    for index, log in enumerate(seeded['log_ids']):
+        success = index % 2 == 0
+        stamp = f'2026-11-09T12:00:0{index}' + (f'.{index * 1000:06}' if index else '') + 'Z'
+        records.append(dict(id=log, subscription=subscriptions[index % 2],
+                            status='success' if success else 'failed', request_payload={'ordinal': index},
+                            response_payload={'ack': success}, error_message=None if success else 'owned log error',
+                            created_at=stamp))
+    records.reverse()
+    observe('populated-react-query', '?page=1&page_size=50', 200, page(records))
+    observe('first-page', '?page_size=2', 200, page(records[:2], 4, next_page=path+'?page=2&page_size=2'))
+    observe('second-page', '?page=2&page_size=2', 200, page(records[2:], 4, previous_page=path+'?page_size=2'))
+    observe('last-page', '?page=last&page_size=2', 200, page(records[2:], 4, previous_page=path+'?page_size=2'))
+    observe('type-filter', '?type=webhook', 200, page(records[1::2]))
+    observe('disabled-integration-filter', f'?integration={script}', 200, page(records[::2]))
+    observe('combined-filters', f'?integration={webhook}&type=webhook', 200, page(records[1::2]))
+    observe('conflicting-filters', f'?integration={script}&type=webhook', 200, page([]))
+    observe('filtered-page', f'?type=webhook&page_size=1&integration={webhook}', 200,
+            page(records[1:2], 2, next_page=path+f'?integration={webhook}&page=2&page_size=1&type=webhook'))
+    observe('invalid-page', '?page=3&page_size=2', 404, {'detail': 'Invalid page.'})
+    observe('anonymous', '', 401, {'detail': 'Authentication credentials were not provided.'}, None)
+    denial = {'detail': 'You do not have permission to perform this action.'}
+    for role in ('standard', 'viewer'):
+        observe(role, '?page=1&page_size=50', 403, denial, accounts[role]['access'])

@@ -12,7 +12,7 @@ mod vod_api_native_tests;
 #[path = "vod_api_owned_read.rs"]
 mod vod_api_owned_read;
 #[path = "vod_api_pagination.rs"]
-mod vod_api_pagination;
+pub(crate) mod vod_api_pagination;
 #[path = "vod_api_projection.rs"]
 mod vod_api_projection;
 #[path = "vod_api_query.rs"]

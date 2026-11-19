@@ -36,17 +36,26 @@ impl Page {
 /// page uses Django Paginator, allow_empty_first_page=True. QueryDict is last.
 /// Error mapping is Source404 {"detail":"Invalid page."}, not400/empty list.
 pub(crate) fn ordinary(pairs: &[(String, String)], count: u64) -> Result<Page, InvalidPage> {
+    ordinary_with_limits(pairs, count, 20, 100)
+}
+
+pub(crate) fn ordinary_with_limits(
+    pairs: &[(String, String)],
+    count: u64,
+    default_size: u64,
+    maximum_size: u64,
+) -> Result<Page, InvalidPage> {
     let zero = BigInt::from(0);
     let size = last_query(pairs, "page_size")
         .and_then(integer)
         .filter(|n| n > &zero)
         .map(|n| {
-            n.min(BigInt::from(100))
+            n.min(BigInt::from(maximum_size))
                 .to_string()
                 .parse::<u64>()
                 .expect("positive cutoff")
         })
-        .unwrap_or(20);
+        .unwrap_or(default_size);
     let pages = count.div_ceil(size).max(1);
     let raw = last_query(pairs, "page")
         .filter(|v| !v.is_empty())

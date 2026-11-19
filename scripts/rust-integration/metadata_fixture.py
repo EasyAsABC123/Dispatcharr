@@ -11,7 +11,7 @@ data=json.load(sys.stdin)
 # Notification setup is a management operation. Use the source's documented
 # management-command initialization branch so re-running this helper does not
 # synchronize away owned developer fixtures before the HTTP read under test.
-if str(data.get('action','')).startswith(('notification_','environment_ip_','auth_package_','connect_reads_')):sys.argv.append('shell')
+if str(data.get('action','')).startswith(('notification_','environment_ip_','auth_package_','connect_reads_','connect_logs_')):sys.argv.append('shell')
 sys.path.insert(0,'/app');os.environ.setdefault('DJANGO_SETTINGS_MODULE','dispatcharr.settings')
 import django
 django.setup()
@@ -21,6 +21,36 @@ def sanitized_failure(kind,value,tb):
     while tb.tb_next is not None:tb=tb.tb_next
     print(json.dumps({'fixture_error_type':kind.__name__,'fixture_error_line':tb.tb_lineno}),file=sys.stderr)
 sys.excepthook=sanitized_failure
+if data.get('action') == 'connect_logs_seed':
+    from datetime import datetime, timedelta, timezone
+    from apps.connect.models import DeliveryLog, EventSubscription, Integration
+    from django.db import transaction
+
+    with transaction.atomic():
+        if DeliveryLog.objects.exists():
+            raise RuntimeError('Connect log oracle requires an empty fixture delivery table')
+        first, second = Integration.objects.bulk_create([
+            Integration(name='rust-probe-connect-logs-webhook', type='webhook', enabled=True),
+            Integration(name='rust-probe-connect-logs-script', type='script', enabled=False),
+        ])
+        subscriptions = EventSubscription.objects.bulk_create([
+            EventSubscription(integration=first, event='channel_start', enabled=True, payload_template=None),
+            EventSubscription(integration=second, event='recording_end', enabled=False, payload_template=''),
+        ])
+        logs = DeliveryLog.objects.bulk_create([
+            DeliveryLog(subscription=subscriptions[index % 2], status='success' if index % 2 == 0 else 'failed',
+                        request_payload={'ordinal': index}, response_payload={'ack': index % 2 == 0},
+                        error_message=None if index % 2 == 0 else 'owned log error')
+            for index in range(4)
+        ])
+        epoch = datetime(2026, 11, 9, 12, 0, 0, tzinfo=timezone.utc)
+        for index, log in enumerate(logs):
+            DeliveryLog.objects.filter(pk=log.pk).update(created_at=epoch + timedelta(seconds=index,
+                                                                                     microseconds=index * 1000))
+    print(json.dumps({'integration_ids': [first.pk, second.pk],
+                      'subscription_ids': [item.pk for item in subscriptions],
+                      'log_ids': [item.pk for item in logs]}))
+    raise SystemExit(0)
 if data.get('action') == 'connect_reads_seed':
     from datetime import datetime, timezone
     from apps.connect.models import EventSubscription, Integration

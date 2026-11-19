@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 CONTRACT_SUITES=('accounts','account_crud','app_data','core','profiles','memberships',
                  'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads','server_group_crud','filter_crud','core_utilities','core_stream_crud','notifications')
-OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash','connect_reads')
+OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash','connect_reads','connect_logs')
 
 
 def contract_suites(value):
@@ -277,7 +277,7 @@ def main():
                                  ('core_stream_crud','run_core_stream_crud'),
                                  ('notifications','run_notifications'),
                                  ('proxy_auth','run_proxy_auth'),('environment_ip','run_environment_ip'),('auth_hash','run_auth_hash'),
-                                 ('connect_reads','run_connect_reads')]:
+                                 ('connect_reads','run_connect_reads'),('connect_logs','run_connect_logs')]:
                 if suite in selected_suites:
                     if suite=='core' and 'account_crud' in selected_suites:
                         # Both independent suites deliberately test password
@@ -288,7 +288,7 @@ def main():
                         report.setdefault('suite_isolation',[]).append({'before_suite':'core','reason':'independent login contracts share real per-IP 3/min budgets','wait_seconds':62})
                         for _ in range(2):time.sleep(31)
                     extra=(seed,) if suite=='channel_stops' else ()
-                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash','connect_reads'):
+                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash','connect_reads','connect_logs'):
                         extra=(metadata_fixture,)
                     getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
             if args.api_resource_matrix:

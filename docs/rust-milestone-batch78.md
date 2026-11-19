@@ -18,8 +18,19 @@ components and the operator. This discrete configuration currently covers
 TCP Redis. A discrete TLS request requires an explicit URL.
 
 Ten focused Rust tests, formatting, strict all-target Clippy on the app
-and Store, and the fixture syntax check passed. The exact-image Compose
-checks remain open.
+and Store, and the fixture syntax check passed.
+
+Candidate78 matched all eight scoped Integrations responses against Original.
+The same controller retained an independent TS 404 body mismatch and
+exited 1. The older-image control reproduced eight missing-route responses.
+Both Compose projects were independently removed.
+
+The packaged operator passed all 17 cases with discrete Redis configuration.
+The combined run could not seed the separate Main authorization fixture.
+It exited 1 and verified cleanup. Main and the explicit URL precedence
+comparison require separate completion evidence.
+
+[Packaged scope evidence](../scripts/rust-integration/milestone-batch78/packaged-scopes.json)
 
 [Focused checks](../scripts/rust-integration/milestone-batch78/focused.json)
 · [Milestone ledger](rust-milestones.md)

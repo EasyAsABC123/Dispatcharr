@@ -4,7 +4,7 @@ use crate::{AuthService, RestReadLimits, StoreError};
 use axum::{
     body::Body,
     extract::{ConnectInfo, State},
-    http::{header, HeaderMap},
+    http::{header, HeaderMap, Uri},
     response::Response,
     routing::get,
     Router,
@@ -13,6 +13,9 @@ use bytes::Bytes;
 use serde_json::json;
 use std::{net::SocketAddr, sync::Arc};
 use tokio::sync::OwnedSemaphorePermit;
+
+#[path = "connect_delivery_logs.rs"]
+mod delivery_logs;
 
 // Bound the total projection in the same read that obtains the response.
 // The quote covers nested rows, JSON-escaped strings, field names and separators.
@@ -61,6 +64,7 @@ fn capacity() -> StoreError {
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/connect/integrations/", get(list))
+        .route("/api/connect/logs/", get(logs))
         .with_state(auth)
 }
 
@@ -68,6 +72,24 @@ async fn list(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    read(auth, peer, headers, None).await
+}
+
+async fn logs(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Result<Response, StoreError> {
+    read(auth, peer, headers, Some(uri)).await
+}
+
+async fn read(
+    auth: AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    logs_uri: Option<Uri>,
 ) -> Result<Response, StoreError> {
     let permit = Arc::new(
         auth.user_agent_workers
@@ -80,13 +102,16 @@ async fn list(
     // with the returned body until Hyper consumes or discards it.
     tokio::spawn(async move {
         auth.retained_rest_reads(RestReadLimits::default())?
-            .account_user(peer, headers, true)
+            .account_user(peer, headers.clone(), true)
             .await?;
-        let payload = sqlx::query_scalar::<_, Option<String>>(LIST)
-            .bind(RESPONSE_LIMIT)
-            .fetch_one(auth.store.pool())
-            .await?
-            .ok_or_else(capacity)?;
+        let payload = match logs_uri {
+            Some(uri) => delivery_logs::list(&auth.store, &headers, &uri).await?,
+            None => sqlx::query_scalar::<_, Option<String>>(LIST)
+                .bind(RESPONSE_LIMIT)
+                .fetch_one(auth.store.pool())
+                .await?
+                .ok_or_else(capacity)?,
+        };
         // PostgreSQL produces valid JSON here. Keep its config tokens and
         // allocation intact, including numbers outside primitive Rust ranges.
         let bytes = payload.into_bytes();

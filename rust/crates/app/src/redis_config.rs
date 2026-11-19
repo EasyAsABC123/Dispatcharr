@@ -6,8 +6,20 @@ pub fn url() -> Result<Option<String>, String> {
 }
 
 fn from_environment(read: impl Fn(&str) -> Option<String>) -> Result<Option<String>, &'static str> {
+    const TLS_UNAVAILABLE: &str = "Redis TLS transport is unavailable in this Rust build";
+    let tls = read("REDIS_SSL").is_some_and(|value| value.eq_ignore_ascii_case("true"));
     if let Some(address) = read("REDIS_URL").filter(|value| !value.is_empty()) {
-        return Ok(Some(address));
+        let secure_url =
+            Url::parse(&address).is_ok_and(|url| matches!(url.scheme(), "rediss" | "valkeys"));
+        return match (tls, secure_url) {
+            (true, false) => Err("REDIS_SSL=true requires a TLS Redis URL"),
+            (false, true) => Err("A TLS Redis URL requires REDIS_SSL=true"),
+            (true, true) => Err(TLS_UNAVAILABLE),
+            (false, false) => Ok(Some(address)),
+        };
+    }
+    if tls {
+        return Err(TLS_UNAVAILABLE);
     }
     let defaults = [
         ("REDIS_HOST", "localhost"),
@@ -17,10 +29,6 @@ fn from_environment(read: impl Fn(&str) -> Option<String>) -> Result<Option<Stri
         ("REDIS_PASSWORD", ""),
     ];
     let overrides = defaults.map(|(name, _)| read(name));
-    let tls = read("REDIS_SSL").is_some_and(|value| value.eq_ignore_ascii_case("true"));
-    if tls {
-        return Err("Discrete Redis TLS configuration requires an explicit REDIS_URL in Rust");
-    }
     if overrides.iter().all(Option::is_none) {
         return Ok(None);
     }
@@ -118,13 +126,36 @@ mod tests {
     }
 
     #[test]
+    fn explicit_redis_url_cannot_bypass_the_tls_requirement() {
+        assert_eq!(
+            build(&[("REDIS_URL", "redis://redis:6379/0"), ("REDIS_SSL", "TRUE")]),
+            Err("REDIS_SSL=true requires a TLS Redis URL")
+        );
+        assert_eq!(
+            build(&[("REDIS_URL", "unix:///owned.sock"), ("REDIS_SSL", "true")]),
+            Err("REDIS_SSL=true requires a TLS Redis URL")
+        );
+        assert_eq!(
+            build(&[("REDIS_URL", "rediss://redis:6379/0")]),
+            Err("A TLS Redis URL requires REDIS_SSL=true")
+        );
+        assert_eq!(
+            build(&[
+                ("REDIS_URL", "rediss://redis:6379/0"),
+                ("REDIS_SSL", "true")
+            ]),
+            Err("Redis TLS transport is unavailable in this Rust build")
+        );
+    }
+
+    #[test]
     fn invalid_discrete_values_and_implicit_tls_do_not_connect_as_plaintext() {
         assert_eq!(build(&[("REDIS_HOST", "")]), Err("Invalid REDIS_HOST"));
         assert_eq!(build(&[("REDIS_DB", "-1")]), Err("Invalid REDIS_DB"));
         assert_eq!(build(&[("REDIS_PORT", "bad")]), Err("Invalid REDIS_PORT"));
         assert_eq!(
             build(&[("REDIS_HOST", "redis"), ("REDIS_SSL", "TrUe")]),
-            Err("Discrete Redis TLS configuration requires an explicit REDIS_URL in Rust")
+            Err("Redis TLS transport is unavailable in this Rust build")
         );
     }
 }
