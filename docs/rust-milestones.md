@@ -12,6 +12,23 @@ alone does not establish application parity or an application performance gain.
 The [complete parity plan](rust-complete-parity-plan.md) assigns parallel work
 across M0–M9 and proposes M10/M11 as separate rollout stages.
 
+The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-connect-hdhr-565.json)
+passed all 26 tests and independently verified cleanup. The register has
+565 partial Original assignments and 233 unassigned HTTP operations.
+
+The [Redis write retry and shared playback checks](rust-migration-shared-playback-checks.md)
+verified the same-writer retry after a rejected write, the joined transport
+switch, and two equivalent fMP4 viewers sharing one upstream. The paired HLS
+screen passed with 33.30% less CPU and 47.18% less peak working memory. The
+100-viewer
+pilot passed. Its measured phases reached the end, but the selected media
+spans failed the fixed equal-work bound before any resource result qualified.
+
+The [Candidate107 VOD and XMLTV results](rust-milestone-batch107.md) verify
+calendar seek ranges, alternate-provider capacity and remote source creation.
+The [Candidate108 API results](rust-milestone-batch108.md) verify Core JSON
+routes, the stock React channel-guide edit and legacy backup schedule reads.
+
 [The late Redis commit replay](../scripts/rust-core-contracts/late-commit-replay/receipt.json)
 preserved all 23 paired streaming core cases. A fresh Rust writer recovered
 at the physically committed index and delivered both ordered payloads before
