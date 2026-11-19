@@ -48,7 +48,29 @@ The previously slow request in pair 2, wave 7 took 45.46 ms total with
 timing enabled. Pair 3, wave 6 took 45.30 ms. The instrumented run did
 not reproduce either spike, so the stage breakdown cannot establish its
 cause. The original release result remains the governing result. The
-same uninstrumented image is queued for a repeat using the existing
-request manifest and budgets.
+same uninstrumented image repeated the existing request manifest and
+budgets in the run below.
 
 [Diagnostic receipt](timing-diagnostic.json)
+
+
+## Exact release repeat
+
+The uninstrumented Candidate102 image completed all six phases again.
+All 216 responses matched with 360,360 scanned rows and 180 samples.
+Median paired combined CPU was 22.61% lower, and peak simultaneous
+working set was 55.67% lower. Completed throughput was unchanged.
+
+| Pair | Original full-scan p95 | Rust full-scan p95 | 1.10 latency gate |
+| --- | ---: | ---: | --- |
+| 1 | 57.51 ms | 50.99 ms | Passed |
+| 2 | 55.82 ms | 62.58 ms | Failed |
+| 3 | 55.50 ms | 61.59 ms | Failed |
+
+The two slow Rust requests were again in pair 2 wave 7 and pair 3
+wave 6. Their delays occurred before the first response byte. The
+independent verifier reconciled all measured work and verified exact
+teardown. The release launcher exited 1 and M7 resource acceptance
+remains open. The timing image did not isolate the cause.
+
+[Independent repeat receipt](attempt2.json)

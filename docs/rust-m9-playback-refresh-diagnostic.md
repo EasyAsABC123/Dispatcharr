@@ -154,3 +154,21 @@ This qualifies the same image to run the two-hour fixture. It does
 not establish a comparative performance gain or full M9 acceptance.
 
 [Candidate103 short resource receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/resource-short-candidate103.json)
+
+## Candidate103 two-hour attempt
+
+The same image advanced past the earlier five-minute login failure. The
+first scheduled password request returned HTTP 200, and the observer
+recorded the typed XMLTV refresh publication. The fixture timed out
+while waiting for the guide workflow to settle. The timeout combines
+result, queue and lock checks, so this capture cannot tell which
+condition stayed open.
+
+The last contiguous playback observation was at 330 seconds, with ten
+viewers sharing the upstream. The controller exited 1. Both output
+streams closed, the process group settled, and independent teardown
+found no remaining owned Compose resources. A shorter run of the same
+five-minute prefix will record the separate terminal conditions before
+another two-hour attempt.
+
+[Candidate103 two-hour attempt receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/long-candidate103-first.json)
