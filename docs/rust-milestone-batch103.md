@@ -37,3 +37,18 @@ acceptance and performance gates open.
 
 [Functional receipts](../scripts/rust-integration/milestone-batch103/functional.json) ·
 [Preceding XC comparison](rust-milestone-batch101.md)
+
+## Scheduled XMLTV through Beat
+
+The repaired fixture seeded the XMLTV source inactive, observed the
+startup barrier, then enabled the source and armed its existing
+schedule. Both backends ran the scheduled job once, with no provider
+request or programme before activation.
+
+Original and Native each fetched the owned provider once, stored the
+same programme, recorded the same task time limit, and completed the
+expected Index and Series children. Both returned exit 0 with an empty
+scoped broker and verified teardown. This verifies the scheduled XMLTV
+workflow in the selected configuration.
+
+[Scheduled guide pair and cleanup](../scripts/rust-integration/milestone-batch103/scheduled-guide-pair.json)
