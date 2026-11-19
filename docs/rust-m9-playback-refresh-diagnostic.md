@@ -129,7 +129,13 @@ recorded a single history append during ten advancing viewers. It kept
 the same provider slot and upstream generation during the request.
 
 Both owned Compose projects and their observed process generations were
-removed. The directed single-Redis-connection test and the full two-hour
-soak remain pending.
+removed. A separate short run identified the exact connection that served
+the bounded login-history read and disconnected that connection in the
+disposable Redis instance. The next ordinary login succeeded through a
+new connection and appended one history entry. The other connections
+remained active. The fourth login returned HTTP 429 without changing
+history or extending its expiry. The full two-hour soak remains pending.
+
+[Directed disconnect evidence](../scripts/rust-integration/m9-playback-refresh-diagnostic/password-fast-recovery.json)
 
 [Successor natural-auth evidence](../scripts/rust-integration/m9-playback-refresh-diagnostic/password-cache-successor.json)
