@@ -1,4 +1,4 @@
-//! Original Dispatcharr's bulk EPG assignment for the shipped dummy/clear UI.
+//! Original Dispatcharr's bulk EPG assignment with scoped programme dispatch.
 //! Original Dispatcharr authors and contributors retain full application credit.
 use crate::{AuthService, StoreError};
 use axum::{
@@ -20,12 +20,18 @@ WITH requested AS (
     WHERE c.epg_data_id IS DISTINCT FROM r.epg_id
     ORDER BY c.id
     FOR UPDATE OF c
+), guides AS MATERIALIZED (
+    SELECT assigned.epg_id, e.id IS NOT NULL AS guide_exists, s.source_type
+    FROM (SELECT DISTINCT epg_id FROM changed WHERE epg_id IS NOT NULL) assigned
+    LEFT JOIN epg_epgdata e ON e.id = assigned.epg_id
+    LEFT JOIN epg_epgsource s ON s.id = e.epg_source_id
 ), domain AS MATERIALIZED (
     SELECT NOT EXISTS (
-        SELECT 1 FROM changed c
-        LEFT JOIN epg_epgdata e ON e.id = c.epg_id
-        LEFT JOIN epg_epgsource s ON s.id = e.epg_source_id
-        WHERE c.epg_id IS NOT NULL AND s.source_type IS DISTINCT FROM 'dummy'
+        SELECT 1
+        FROM guides g
+        WHERE g.source_type IS DISTINCT FROM 'dummy'
+          AND (NOT $3::boolean OR NOT g.guide_exists
+               OR (g.source_type IS NOT NULL AND g.source_type <> 'xmltv'))
     ) AS allowed
 ), updated AS (
     UPDATE dispatcharr_channels_channel c
@@ -34,7 +40,9 @@ WITH requested AS (
     WHERE c.id = r.id AND d.allowed
     RETURNING c.id
 )
-SELECT d.allowed, (SELECT count(*) FROM updated) FROM domain d
+SELECT d.allowed, (SELECT count(*) FROM updated),
+       ARRAY(SELECT g.epg_id FROM guides g WHERE d.allowed AND g.source_type IS DISTINCT FROM 'dummy')
+FROM domain d
 ";
 
 fn required() -> StoreError {
@@ -117,18 +125,25 @@ pub(super) async fn set(
             .filter(|rows| !rows.is_empty())
             .ok_or_else(required)?;
         let (channels, epgs): (Vec<_>, Vec<_>) = associations(rows)?.into_iter().unzip();
-        let (allowed, updated): (bool, i64) = sqlx::query_as(UPDATE)
+        let publisher_ready =
+            crate::channel_writes::channel_guide_publisher_ready(&auth, Some("xmltv"));
+        let (allowed, updated, programmes): (bool, i64, Vec<i64>) = sqlx::query_as(UPDATE)
             .bind(channels)
             .bind(epgs)
+            .bind(publisher_ready)
             .fetch_one(auth.store.pool())
             .await?;
         if !allowed {
             return Err(unsupported());
         }
-        // Django bulk_update skips model save signals. The program dispatcher
-        // produces no jobs when the changed guides are dummy or null.
+        // Original bulk_update commits before dispatching once per changed
+        // guide. It skips the single-channel model save and cache signal.
+        let programs_refreshed = programmes.len();
+        for guide_id in programmes {
+            crate::core_settings_special_broker::publish_tvg_programmes(&auth, guide_id).await?;
+        }
         Ok(Json(
-            json!({"success": true, "channels_updated": updated, "programs_refreshed": 0}),
+            json!({"success": true, "channels_updated": updated, "programs_refreshed": programs_refreshed}),
         ))
     })
     .await

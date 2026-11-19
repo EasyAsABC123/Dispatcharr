@@ -349,7 +349,7 @@ fn guide_unsupported() -> StoreError {
     StoreError::Unsupported("Channel guide coupling outside Source25 positive domain")
 }
 
-fn channel_guide_publisher_ready(auth: &AuthService, source_type: Option<&str>) -> bool {
+pub(super) fn channel_guide_publisher_ready(auth: &AuthService, source_type: Option<&str>) -> bool {
     auth.core_task_broker.get().is_some()
         || (source_type.is_none_or(|kind| kind == "xmltv")
             && auth
