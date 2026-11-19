@@ -1,6 +1,6 @@
 //! Source-backed EPG detail lifecycle and bounded dummy JSON creation.
 //! Original Dispatcharr/Django/Celery/Channels authors retain all behavior credit.
-//! No upload, XMLTV create or SD credential changes are admitted here.
+//! Remote XMLTV source creation uses the bounded selected-worker producer.
 use crate::{
     admin_writes::{body_object, boolean, character, integer, parse_datetime},
     AuthService, StoreError, TaskSqlSession,
@@ -13,6 +13,9 @@ use axum::{
 use serde_json::{json, Map, Value};
 use sqlx::{Connection, PgConnection, Row};
 use std::{net::SocketAddr, sync::Arc};
+#[path = "epg_source_writes/xmltv_create.rs"]
+mod xmltv_create;
+pub(super) use xmltv_create::create_xmltv;
 type Body = Result<Json<Value>, JsonRejection>;
 type Owner = Arc<dyn Send + Sync>;
 fn unsupported() -> StoreError {
@@ -224,6 +227,40 @@ async fn project(
     }
     Ok(Json(value))
 }
+async fn schedule_refresh(
+    session: &TaskSqlSession,
+    id: i64,
+    active: bool,
+    interval: i32,
+    cron: String,
+    zone: String,
+) -> Result<(), StoreError> {
+    let name = format!("epg_source-refresh-{id}");
+    let kwargs = format!("{{\"source_id\": {id}}}");
+    let periodic = session
+        .run(move |c| {
+            Box::pin(async move {
+                crate::provider_schedule::upsert(
+                    c,
+                    crate::provider_schedule::Spec {
+                        name: &name,
+                        task: "apps.epg.tasks.refresh_epg_data",
+                        kwargs: &kwargs,
+                        interval_hours: interval,
+                        cron: &cron,
+                        active,
+                        timezone: &zone,
+                    },
+                )
+                .await
+            })
+        })
+        .await??;
+    let periodic = i32::try_from(periodic).map_err(|_| unsupported())?;
+    session.run(move|c|Box::pin(async move{sqlx::query("UPDATE epg_epgsource SET refresh_task_id=$2 WHERE id=$1 AND refresh_task_id IS DISTINCT FROM $2").bind(id).bind(periodic).execute(c).await.map(|_|())})).await??;
+    Ok(())
+}
+
 async fn dummy_signal(
     session: &TaskSqlSession,
     auth: AuthService,
@@ -436,14 +473,7 @@ async fn change(
             else{
                 let interval=saved["refresh_interval"].as_i64().ok_or_else(unsupported)? as i32;
                 let active=saved["is_active"].as_bool().ok_or_else(unsupported)?;
-                let name=format!("epg_source-refresh-{id}");let kwargs=format!("{{\"source_id\": {id}}}");let schedule_cron=cron.clone();
-                let periodic=session.run(move|c|Box::pin(async move{
-                    // Shared core.scheduling implementation owned by the account
-                    // draft; this module must not fork its interval/cron logic.
-                    crate::provider_schedule::upsert(c,crate::provider_schedule::Spec{name:&name,task:"apps.epg.tasks.refresh_epg_data",kwargs:&kwargs,interval_hours:interval,cron:&schedule_cron,active,timezone:&zone}).await
-                })).await??;
-                let periodic = i32::try_from(periodic).map_err(|_| unsupported())?;
-                session.run(move|c|Box::pin(async move{sqlx::query("UPDATE epg_epgsource SET refresh_task_id=$2 WHERE id=$1 AND refresh_task_id IS DISTINCT FROM $2").bind(id).bind(periodic).execute(c).await.map(|_|())})).await??;
+                schedule_refresh(&session,id,active,interval,cron.clone(),zone).await?;
             }
             project(&session,id,Some(cron)).await
         }.await;

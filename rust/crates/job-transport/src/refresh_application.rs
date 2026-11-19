@@ -410,6 +410,39 @@ impl RefreshApplication {
         }
     }
 }
+impl dispatcharr_store::sd_source_http::InitialXmltvRefresh for RefreshApplication {
+    fn publish_initial(
+        &self,
+        source: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), StoreError>> {
+        Box::pin(async move {
+            if !self.inner.normal_dispatch.load(Ordering::Acquire)
+                || self.inner.closed.load(Ordering::Acquire)
+            {
+                return Err(StoreError::UnhandledRestFault);
+            }
+            let task_id = Uuid::new_v4();
+            let message = RefreshMessage {
+                task_id,
+                source_id: source,
+                force: false,
+                retry: 0,
+                root: task_id,
+                parent: None,
+                eta: None,
+                call: RefreshCall::initial(source),
+            };
+            self.inner
+                .jobs
+                .publish_refresh(&message, owner)
+                .await
+                .map_err(|_| StoreError::UnhandledRestFault)?;
+            Ok(())
+        })
+    }
+}
+
 fn python_truth(value: &Value) -> bool {
     match value {
         Value::Null => false,

@@ -1,4 +1,4 @@
-//! EPG source JSON producers on shared Auth/SQL/SD/event/dependency owners.
+//! EPG source JSON producers on shared Auth/SQL/SD/Refresh/event owners.
 //! Original Dispatcharr/Django/Celery authors retain all API/algorithm credit.
 use crate::{
     sd_guide_auth::{self as auth, Read, Source},
@@ -40,9 +40,13 @@ pub trait Publisher: Send + Sync {
         owner: Scope,
     ) -> BoxFuture<'_, Result<Uuid, StoreError>>;
 }
+pub trait InitialXmltvRefresh: Send + Sync {
+    fn publish_initial(&self, source: i64, owner: Scope) -> BoxFuture<'_, Result<(), StoreError>>;
+}
 struct Inner {
     auth: AuthService,
     jobs: Arc<dyn Publisher>,
+    initial_xmltv: Arc<dyn InitialXmltvRefresh>,
     slots: Arc<Semaphore>,
     closed: AtomicBool,
     names: crate::RegexExecutor,
@@ -56,12 +60,13 @@ struct Owner {
     inner: Arc<Inner>,
 }
 impl SdSourceHttp {
-    pub fn prepare(jobs: Arc<dyn Publisher>) -> Self {
+    pub fn prepare(jobs: Arc<dyn Publisher>, initial_xmltv: Arc<dyn InitialXmltvRefresh>) -> Self {
         let auth = jobs.auth_service();
         Self {
             inner: Arc::new(Inner {
                 auth,
                 jobs,
+                initial_xmltv,
                 slots: Arc::new(Semaphore::new(4)),
                 closed: AtomicBool::new(false),
                 // One persistent family dependency, never a request-owned pool.
@@ -175,9 +180,14 @@ impl SdSourceHttp {
     if publish{owner.inner.jobs.publish(source,Trigger::LineupAdded,owner.clone()).await?;}
     Ok(StoreError::StatusBody(status,reply).into_response())
    }else{
-    if value.get("source_type").and_then(Value::as_str)==Some("dummy") {
+    let source_type=value.get("source_type").and_then(Value::as_str);
+    if source_type==Some("dummy") {
      let reply=crate::epg_source_writes::create_dummy(scoped,&value,owner.clone(),&owner.inner.names).await?;
-     return Ok((StatusCode::CREATED,crate::provider_reads::dummy_create_reply(&reply)?).into_response());
+     return Ok((StatusCode::CREATED,crate::provider_reads::epg_create_reply(&reply)?).into_response());
+    }
+    if source_type==Some("xmltv") {
+     let reply=crate::epg_source_writes::create_xmltv(scoped,&value,owner.clone(),owner.inner.initial_xmltv.as_ref()).await?;
+     return Ok((StatusCode::CREATED,crate::provider_reads::epg_create_reply(&reply)?).into_response());
     }
     let input=crate::sd_source_writes::validate(&value)?;
     let(id,active,reply)=crate::sd_source_writes::create(scoped,input,owner.clone()).await?;
