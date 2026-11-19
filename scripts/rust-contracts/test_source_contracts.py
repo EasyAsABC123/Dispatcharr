@@ -172,6 +172,11 @@ class SourceContracts(unittest.TestCase):
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
+        import retained_hdhr_contracts
+        for name in retained_hdhr_contracts.dependencies():
+            p = self.root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, p)
         self.value = json.loads((self.root / 'scripts/rust-contracts/executable-source-bindings.json').read_text())
         self.bindings = json.loads((self.root / 'scripts/rust-contracts/case-bindings.json').read_text())
         self.register = json.loads((self.root / 'docs/rust-contract-register.json').read_text())
@@ -188,10 +193,10 @@ class SourceContracts(unittest.TestCase):
 
     def test_exact_partial_assignments(self):
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 225)
+        self.assertEqual(result['operations'], 250)
         assigned = [o for r in rows for o in r['operations'] if 'executable_Source_contract' in o]
-        self.assertEqual(len(assigned), 225)
-        self.assertEqual(sum(o['method'] is None for o in assigned), 64)
+        self.assertEqual(len(assigned), 250)
+        self.assertEqual(sum(o['method'] is None for o in assigned), 80)
         self.assertEqual(sum(o['result']['new_Source_cases_this_task'] for o in assigned), 78)
         self.assertTrue(all(not o['fully_verified'] for r in rows for o in r['operations']))
 
@@ -212,23 +217,43 @@ class SourceContracts(unittest.TestCase):
         self.assertEqual((case["method"], case["literal_path"], case["role"], case["status"]),
                          ("POST", "/api/m3u/refresh/6/", "admin", 202))
         self.assertTrue(case["profile_parent_is_refresh_root"])
-        self.assertEqual(result["operations"], 225)
+        self.assertEqual(result["operations"], 250)
         xc.restore_pre_xc(self.root, rows)
         self.assertEqual(operation, xc.reference(self.root)["prior_operation"])
-        self.assertEqual(sum("executable_Source_contract" in op for row in rows for op in row["operations"]), 224)
+        self.assertEqual(sum("executable_Source_contract" in op for row in rows for op in row["operations"]), 249)
         audit = m0_source_assignments.generate(self.root)
-        self.assertEqual(audit["counts"]["executable_Source_partial_operations"], 225)
-        self.assertEqual(audit["counts"]["operations_without_executable_Source_assignment"], 573)
-        self.assertEqual(audit["counts"]["method_unresolved_with_Source_fixture"], 64)
+        self.assertEqual(audit["counts"]["executable_Source_partial_operations"], 250)
+        self.assertEqual(audit["counts"]["operations_without_executable_Source_assignment"], 548)
+        self.assertEqual(audit["counts"]["method_unresolved_with_Source_fixture"], 80)
         self.assertEqual(audit["counts"]["fully_verified_operations"], 0)
+
+    def test_retained_hdhr_preserves_unresolved_methods(self):
+        import retained_hdhr_contracts as hdhr
+        value = json.loads((self.root / hdhr.INPUT).read_bytes())
+        hdhr.validate(self.root, value)
+        result, rows = self.apply()
+        self.assertEqual(result['operations'], 250)
+        self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 120)
+        self.assertEqual(sum(o['method'] is None for route in rows for o in route['operations']), 322)
+        declared = {o['contract_id']: o for route in rows for o in route['operations']}
+        unresolved = [c for c in value['contracts'] if c['method'] is None]
+        self.assertEqual(len(unresolved), 16)
+        self.assertTrue(all(declared[c['contract_id']]['method'] is None for c in unresolved))
+        hdhr.restore_pre_hdhr(self.root, rows)
+        self.assertEqual(sum('executable_Source_contract' in op for route in rows for op in route['operations']), 225)
+        unresolved[0]['method'] = 'GET'
+        with self.assertRaises(AssertionError):
+            hdhr.validate(self.root, value)
 
     def test_retained_provider_channel_vod_joins_exact_observations(self):
         import retained_provider_channel_vod_contracts as packet
         value = json.loads((self.root / packet.INPUT).read_bytes())
         packet.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 225)
+        self.assertEqual(result['operations'], 250)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 132)
+        import retained_hdhr_contracts
+        retained_hdhr_contracts.restore_pre_hdhr(self.root, rows)
         packet.restore_pre_provider_channel_vod(self.root, rows)
         self.assertEqual(sum('executable_Source_contract' in op for route in rows for op in route['operations']), 211)
         value['contracts'][0]['cases'][0]['HTTP_status'] = 299
@@ -240,9 +265,11 @@ class SourceContracts(unittest.TestCase):
         value = json.loads((self.root / core.INPUT).read_bytes())
         core.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 225)
+        self.assertEqual(result['operations'], 250)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 96)
         import retained_provider_channel_vod_contracts
+        import retained_hdhr_contracts
+        retained_hdhr_contracts.restore_pre_hdhr(self.root, rows)
         retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(self.root, rows)
         core.restore_pre_serializer_null(self.root, rows)
         self.assertEqual(sum('executable_Source_contract' in op for route in rows for op in route['operations']), 188)
@@ -255,10 +282,12 @@ class SourceContracts(unittest.TestCase):
         value = json.loads((self.root / core.INPUT).read_bytes())
         core.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 225)
+        self.assertEqual(result['operations'], 250)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 29)
         import retained_serializer_null_contracts
         import retained_provider_channel_vod_contracts
+        import retained_hdhr_contracts
+        retained_hdhr_contracts.restore_pre_hdhr(self.root, rows)
         retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(self.root, rows)
         retained_serializer_null_contracts.restore_pre_serializer_null(self.root, rows)
         core.restore_pre_core_reads(self.root, rows)

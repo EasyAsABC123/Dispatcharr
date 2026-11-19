@@ -7,6 +7,7 @@ import retained_epg_reads_contracts
 import retained_core_read_contracts
 import retained_serializer_null_contracts
 import retained_provider_channel_vod_contracts
+import retained_hdhr_contracts
 import framework_suite_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -34,6 +35,7 @@ class FrameworkSuiteControls(unittest.TestCase):
     p.write_bytes(raw)
  def test_ten_additions_preserve_prior163_and788_whole_dictionaries(self):
   r=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_hdhr_contracts.restore_pre_hdhr(ROOT,r['runtime_routes'])
   retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,r['runtime_routes'])
   retained_serializer_null_contracts.restore_pre_serializer_null(ROOT,r['runtime_routes'])
   retained_core_read_contracts.restore_pre_core_reads(ROOT,r['runtime_routes'])
@@ -59,7 +61,8 @@ class FrameworkSuiteControls(unittest.TestCase):
   self.assertEqual(subject.digest(r['openapi_operations']),proof['OpenAPI_sha256'])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],225)
+  self.assertEqual(mapping['operations'],250)
+  retained_hdhr_contracts.restore_pre_hdhr(ROOT,rows)
   retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,rows)
   retained_serializer_null_contracts.restore_pre_serializer_null(ROOT,rows)
   retained_core_read_contracts.restore_pre_core_reads(ROOT,rows)
@@ -69,6 +72,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   retained_source12_contracts.restore_pre_Source12(rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_hdhr_contracts.restore_pre_hdhr(ROOT,rows)
   retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,rows)
   retained_serializer_null_contracts.restore_pre_serializer_null(ROOT,rows)
   retained_core_read_contracts.restore_pre_core_reads(ROOT,rows)

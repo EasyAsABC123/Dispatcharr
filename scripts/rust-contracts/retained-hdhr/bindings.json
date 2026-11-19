@@ -1,0 +1,2124 @@
+{
+  "binding_kind": "retained_original_HDHR_Image27_TCP",
+  "operation_count": 25,
+  "unique_Source_cases": 120,
+  "fully_verified_operations": 0,
+  "new_Source_executions": 0,
+  "Native_coverage_increased": false,
+  "Original_author_credit": "Original Dispatcharr authors retain all application and algorithm credit and licensing.",
+  "fixtures": {
+    "retained-Original-Image27-HDHomeRun": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "roles": {
+        "anonymous": {
+          "credential": "No authentication header"
+        },
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        },
+        "standard": {
+          "credential": "Original fixture JWT",
+          "role": "standard"
+        },
+        "viewer": {
+          "credential": "Original fixture JWT",
+          "role": "viewer"
+        },
+        "inactive": {
+          "credential": "Original fixture JWT",
+          "role": "inactive"
+        },
+        "invalid_bearer": {
+          "credential": "Invalid bearer fixture value"
+        },
+        "invalid_API_key": {
+          "credential": "Invalid API-key fixture value"
+        }
+      },
+      "execution_transport": "Original TCP HTTP through the Image27 Compose fixture",
+      "ownership": "Disposable Compose project with owned HDHomeRun device, profiles, settings, and user seed rows",
+      "setup": [
+        "Use the captured Original network response rows and frozen fixture request plan.",
+        "Name the actual request actors by replaying the fixture call sequence offline with captured profile aliases and output IDs."
+      ],
+      "public_historical_receipt": {
+        "path": "scripts/rust-hdhr-contracts/verified-hdhr-image27-1.json",
+        "sha256": "182c397aa39f5262697a98bb14f7a2950e1bfd7010526bda866c528e6281d1de"
+      },
+      "private_historical_capture": {
+        "path": "artifacts/rust/m7-hdhr-image27-1/hdhr-image.json",
+        "sha256": "2e25ff267dccc33e7c211496238732fe3696941d93e2fe01645440652baa12a5"
+      },
+      "frozen_request_plan": {
+        "path": "scripts/rust-hdhr-contracts/probe.py",
+        "sha256": "111963af9cfac17ba4803ca9efc8eabf8858d3dde05d1bb0f4e051f26502b002"
+      },
+      "historical_cleanup": "isolated Compose project removed"
+    }
+  },
+  "outside_existing_declared_operation_indices": [
+    40,
+    43,
+    46,
+    49,
+    61,
+    114,
+    115
+  ],
+  "contracts": [
+    {
+      "contract_id": "route-738f58384c1fa0b26ef6:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/discover.json",
+      "source_handler": "apps.hdhr.api_views.DiscoverAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 0,
+          "record_json_pointer": "/expected/0",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "81e660bc66faeca27455be79cf507d793d884363cef40b24167980865b20eceb"
+        },
+        {
+          "source_index": 8,
+          "record_json_pointer": "/expected/8",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "b4c383a9feead2e8d856dea6719d5fa0672b085a8ca7d186cca6165973ea7c19"
+        },
+        {
+          "source_index": 38,
+          "record_json_pointer": "/expected/38",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 200,
+          "response_projection_sha256": "1bc1549edce54372045c20350bef7eac3f3ee12c810b1169deba2682302dbfd9"
+        },
+        {
+          "source_index": 41,
+          "record_json_pointer": "/expected/41",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_projection_sha256": "42799a9af4185ec25b798b502e607646ee62c551f70899a38230dde4af674e70"
+        },
+        {
+          "source_index": 44,
+          "record_json_pointer": "/expected/44",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "4da555fc3f5c974b22abcd4e8df62f0d8eb2dcade8f3a8bb0429e7520c04dbc2"
+        },
+        {
+          "source_index": 47,
+          "record_json_pointer": "/expected/47",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "response_projection_sha256": "bf011eafcfb3370af453134b8688606f3f24f2d9dcac31ad2a11007a1bebfb86"
+        },
+        {
+          "source_index": 50,
+          "record_json_pointer": "/expected/50",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "invalid_bearer",
+          "HTTP_status": 401,
+          "response_projection_sha256": "a202a18071de84643bb4f6f9faf9170d5ce5c2cab2f21315198a0e9a840c61ee"
+        },
+        {
+          "source_index": 51,
+          "record_json_pointer": "/expected/51",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "invalid_API_key",
+          "HTTP_status": 401,
+          "response_projection_sha256": "8227b82853d759e06b22d4934a51aaa0126194ba7aecded0f53a037d60f5e397"
+        },
+        {
+          "source_index": 54,
+          "record_json_pointer": "/expected/54",
+          "path": "/hdhr/discover.json",
+          "method": "HEAD",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "bc954e783778791d06856e9c2c069f14ff4b6ae0c56ce51860424fe38c20f542"
+        },
+        {
+          "source_index": 55,
+          "record_json_pointer": "/expected/55",
+          "path": "/hdhr/discover.json",
+          "method": "OPTIONS",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "21f27eddb74821255c8309f5566aec2000c19c7a10ec3f75c5958add05dac159"
+        },
+        {
+          "source_index": 56,
+          "record_json_pointer": "/expected/56",
+          "path": "/hdhr/discover.json",
+          "method": "POST",
+          "role": "anonymous",
+          "HTTP_status": 405,
+          "response_projection_sha256": "59a0cbc53285a6de460e5216cafd0ce446a8ac9e878dd56ffd8ff98624cb6889"
+        },
+        {
+          "source_index": 57,
+          "record_json_pointer": "/expected/57",
+          "path": "/hdhr/discover.json",
+          "method": "PUT",
+          "role": "anonymous",
+          "HTTP_status": 405,
+          "response_projection_sha256": "af0381b7cb25ebc6ba33e341b94bef212e27b98393adaa4d3c613bbe20a36f2e"
+        },
+        {
+          "source_index": 58,
+          "record_json_pointer": "/expected/58",
+          "path": "/hdhr/discover.json",
+          "method": "DELETE",
+          "role": "anonymous",
+          "HTTP_status": 405,
+          "response_projection_sha256": "d1fdc5a727db98c06f172c26856e5aa54bebb900e2a7803cdc33e91fd7cb9cc1"
+        },
+        {
+          "source_index": 60,
+          "record_json_pointer": "/expected/60",
+          "path": "/hdhr/discover.json?format=xml",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 404,
+          "response_projection_sha256": "fdb28d5e483fce99e7cb49eabbf16591ce50985db777a76767609fac3cd1a418"
+        },
+        {
+          "source_index": 106,
+          "record_json_pointer": "/expected/106",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "eec32b79a6fa414c2095fca957b22c0a904a38cd4896e3440c2f959df71a3445"
+        },
+        {
+          "source_index": 107,
+          "record_json_pointer": "/expected/107",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "804b49453cec91c00bbf7fea0b525f73c0f14e3707a0609b8d5a4f000478ad7b"
+        },
+        {
+          "source_index": 108,
+          "record_json_pointer": "/expected/108",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "5fa83b542949deddf11aede514ae73f8c2634b327b29350cab139d55894878e4"
+        },
+        {
+          "source_index": 110,
+          "record_json_pointer": "/expected/110",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_projection_sha256": "bb38766e5fadc41136377c2d10ab8d3c4734f22b3cddda319d7720c1c683edb9"
+        },
+        {
+          "source_index": 111,
+          "record_json_pointer": "/expected/111",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "b82f4cf69786314126307a2083d02492e459851288d63422eb463c2a948658d4"
+        },
+        {
+          "source_index": 124,
+          "record_json_pointer": "/expected/124",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 403,
+          "response_projection_sha256": "8c1148b4eb6b1c6c6d523861777fa95823ba4f787979aa267d77a485a948390c"
+        },
+        {
+          "source_index": 125,
+          "record_json_pointer": "/expected/125",
+          "path": "/hdhr/discover.json",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 403,
+          "response_projection_sha256": "31ec648daad2862b3a2c2779a7354ccd86087eeacbd918772f61a50d699ef59a"
+        },
+        {
+          "source_index": 126,
+          "record_json_pointer": "/expected/126",
+          "path": "/hdhr/discover.json",
+          "method": "OPTIONS",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "8a808146f1de5894731932119ef4d11db0e515430412633d243040dfecf55163"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive",
+        "invalid_API_key",
+        "invalid_bearer",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        },
+        "anonymous": {
+          "credential": "No authentication header"
+        },
+        "inactive": {
+          "credential": "Original fixture JWT",
+          "role": "inactive"
+        },
+        "invalid_API_key": {
+          "credential": "Invalid API-key fixture value"
+        },
+        "invalid_bearer": {
+          "credential": "Invalid bearer fixture value"
+        },
+        "standard": {
+          "credential": "Original fixture JWT",
+          "role": "standard"
+        },
+        "viewer": {
+          "credential": "Original fixture JWT",
+          "role": "viewer"
+        }
+      },
+      "observed_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST",
+        "PUT"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 22,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-fbe7149a6bd50bc271b2:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/lineup.json",
+      "source_handler": "apps.hdhr.api_views.LineupAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 1,
+          "record_json_pointer": "/expected/1",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "8edb745fa9358aa9ecce78c9846c1183d31e4956821c95719ffad4323f5f60f1"
+        },
+        {
+          "source_index": 9,
+          "record_json_pointer": "/expected/9",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "c39444527e48cac3a4d3cf1101306dd9583a722f044852c6b6219b3abefc4b02"
+        },
+        {
+          "source_index": 62,
+          "record_json_pointer": "/expected/62",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "16c875052715e0d084504bad849b08393db002c2f7973c02f76f666856b9400e"
+        },
+        {
+          "source_index": 63,
+          "record_json_pointer": "/expected/63",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "b3152e1921750bf33c8d3d2836a28c90f1bfcc2fc914c2671dfe3b1ec74c000a"
+        },
+        {
+          "source_index": 64,
+          "record_json_pointer": "/expected/64",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "9df8450c31db6b1a559ac1a98b044bec058bca010f28159d8ca70fba9a7d8957"
+        },
+        {
+          "source_index": 65,
+          "record_json_pointer": "/expected/65",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "6e469acf330fd0a2072925584321b50d4fa5c56cca0522c928f51a8d5d712559"
+        },
+        {
+          "source_index": 66,
+          "record_json_pointer": "/expected/66",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "e299c6334bb262b1cdd5141a4675603ea5e44af1b75103610e48db7e223a6c9d"
+        },
+        {
+          "source_index": 67,
+          "record_json_pointer": "/expected/67",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "9251e00286ac586514a720d1e4e4341c9b402150c74a9b380b289f0e9ce9e5c5"
+        },
+        {
+          "source_index": 103,
+          "record_json_pointer": "/expected/103",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "f322b6fcf2ec70b76e4105847af839e113017b6f716677cd4cfa2ec6cdb6f033"
+        },
+        {
+          "source_index": 104,
+          "record_json_pointer": "/expected/104",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "239e6d69f25a856ee9ca1ad78f2dc0dbcaab6a0a12a47708115fdd6d631f2443"
+        },
+        {
+          "source_index": 105,
+          "record_json_pointer": "/expected/105",
+          "path": "/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "23ddae740f710dd00d5d064227db9bbf2d34b005ef68c6524d6232af9b19d461"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 11,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-9198a3509e35fbb64b8e:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/lineup_status.json",
+      "source_handler": "apps.hdhr.api_views.LineupStatusAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 2,
+          "record_json_pointer": "/expected/2",
+          "path": "/hdhr/lineup_status.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "aee8d08d41339033cd1b18285ba467e1919764b411bf59e3a2b0247eb7463fc7"
+        },
+        {
+          "source_index": 10,
+          "record_json_pointer": "/expected/10",
+          "path": "/hdhr/lineup_status.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "0d1000a8adabb8b68f4e8ae9a3c3f328715c3361bd4aa9fa3bd95ffa445d0a80"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-759c1dc8400b4ffc3c20:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/device.xml",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceXMLAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 3,
+          "record_json_pointer": "/expected/3",
+          "path": "/hdhr/device.xml",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "79e709831df67c7dc24e5ef8667b42b7e2cc681a8863ef2b9522fbc1d350ba80"
+        },
+        {
+          "source_index": 11,
+          "record_json_pointer": "/expected/11",
+          "path": "/hdhr/device.xml",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "f50355bffff5ec95eb03b5a42578c7e297910128ef050a0d04774d00c3179e5d"
+        },
+        {
+          "source_index": 59,
+          "record_json_pointer": "/expected/59",
+          "path": "/hdhr/device.xml",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 406,
+          "response_projection_sha256": "7ef8b4c55e5eff58d811a581ec95e1c797e122468ead4931dc1b0dab0dd9c3de"
+        },
+        {
+          "source_index": 112,
+          "record_json_pointer": "/expected/112",
+          "path": "/hdhr/device.xml",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "cfd152c2e10ed8551c9c734294b644a660ec205944bcb3855bb8cac25e18a05f"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 4,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-a26a14ed63fd710b3c15:METHOD_UNRESOLVED",
+      "pattern_exact": "api/hdhr/discover.json",
+      "source_handler": "apps.hdhr.api_views.DiscoverAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 4,
+          "record_json_pointer": "/expected/4",
+          "path": "/api/hdhr/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "53b9a72814c636667e9714df3c782619d01cb046bbd98b831608fe09a319c300"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-e8188f6c24990880a1c7:METHOD_UNRESOLVED",
+      "pattern_exact": "api/hdhr/lineup.json",
+      "source_handler": "apps.hdhr.api_views.LineupAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 5,
+          "record_json_pointer": "/expected/5",
+          "path": "/api/hdhr/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "bd9f296ed649137ced78fe83155bcbdabad53ebef75e400b93ca0051179bdd74"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-0209fd1e400c2bb59dc1:METHOD_UNRESOLVED",
+      "pattern_exact": "api/hdhr/lineup_status.json",
+      "source_handler": "apps.hdhr.api_views.LineupStatusAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 6,
+          "record_json_pointer": "/expected/6",
+          "path": "/api/hdhr/lineup_status.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "a77fb8373cf74d87707a7a480b9ab862bcbb43b8e0520362308532af3be82f01"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-211f6f72b66012a44e2f:METHOD_UNRESOLVED",
+      "pattern_exact": "api/hdhr/device.xml",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceXMLAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 7,
+          "record_json_pointer": "/expected/7",
+          "path": "/api/hdhr/device.xml",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "67a4ccf5451376d3c31493a0482421164846036b765e258e8a938c2a4733dda1"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-174bbfec5d24c6c52d7b:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/<str:channel_profile>/discover.json",
+      "source_handler": "apps.hdhr.api_views.DiscoverAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 12,
+          "record_json_pointer": "/expected/12",
+          "path": "/hdhr/HDHR%20fixture/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "3a2b3db0006a6bb915cda5ca0c43f2491860a2c10088360e6bf346b9b8310aaf"
+        },
+        {
+          "source_index": 15,
+          "record_json_pointer": "/expected/15",
+          "path": "/hdhr/Kids%20%26%20News/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "674654b88647e4b5f1c76db509d94afc28b9045cf2428f2c0962e739034f75ea"
+        },
+        {
+          "source_index": 18,
+          "record_json_pointer": "/expected/18",
+          "path": "/hdhr/Caf%C3%A9%20%E6%9D%B1%E4%BA%AC/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "71e4c79159c6257051eb12e23950c571c3ad9b38ae0c3b1daa087b71d70a57d2"
+        },
+        {
+          "source_index": 21,
+          "record_json_pointer": "/expected/21",
+          "path": "/hdhr/Plus%2BNews/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "f7b594f1230d962caa9b57421f85b668467802b743637e2eb5acb4cd6268a291"
+        },
+        {
+          "source_index": 24,
+          "record_json_pointer": "/expected/24",
+          "path": "/hdhr/devices/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "94ea19f944cacf91e451306789812af07b0fa894997fd63031670aa281911671"
+        },
+        {
+          "source_index": 27,
+          "record_json_pointer": "/expected/27",
+          "path": "/hdhr/unknown/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "d5d2d412e205df4cb8b923262d54237e641fe760f96a899a822c5fe31c7ce539"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-7850f9793043afebdf5a:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/<str:channel_profile>/lineup.json",
+      "source_handler": "apps.hdhr.api_views.LineupAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 13,
+          "record_json_pointer": "/expected/13",
+          "path": "/hdhr/HDHR%20fixture/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "b6033b8e8d0ca28734e5719a2552a8fc8f606205eeb13c5fdc79c2dd1fe1a7f8"
+        },
+        {
+          "source_index": 16,
+          "record_json_pointer": "/expected/16",
+          "path": "/hdhr/Kids%20%26%20News/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "e8da4f431c4fd9c3af2b6045958bb3a64be1cb8bcf7ff6bc96664dd10f0f89ff"
+        },
+        {
+          "source_index": 19,
+          "record_json_pointer": "/expected/19",
+          "path": "/hdhr/Caf%C3%A9%20%E6%9D%B1%E4%BA%AC/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "d73585d0c302eef65342a1c5b51221ce182722af4ecb102daa332bb329630f21"
+        },
+        {
+          "source_index": 22,
+          "record_json_pointer": "/expected/22",
+          "path": "/hdhr/Plus%2BNews/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "586ef8117498348fc0a4a97d7bef8e071441cb23335cd147544cc45e57c03845"
+        },
+        {
+          "source_index": 25,
+          "record_json_pointer": "/expected/25",
+          "path": "/hdhr/devices/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "d40c609b68719e63849b8b2a125fe883bb4699fe6ec74e5df12a64ae52d0632c"
+        },
+        {
+          "source_index": 28,
+          "record_json_pointer": "/expected/28",
+          "path": "/hdhr/unknown/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "12d27ea8561b95e550df3c20bea48039a26fa4fa0003b6b6683fa6539abbdefa"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-ffc697ca6f835d388f08:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/<str:channel_profile>/lineup_status.json",
+      "source_handler": "apps.hdhr.api_views.LineupStatusAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 14,
+          "record_json_pointer": "/expected/14",
+          "path": "/hdhr/HDHR%20fixture/lineup_status.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "d63e1295db04452309f9e3a2cbfa6ab4aaab31d55575e8817550c1bb3532aeb0"
+        },
+        {
+          "source_index": 17,
+          "record_json_pointer": "/expected/17",
+          "path": "/hdhr/Kids%20%26%20News/lineup_status.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "20873eb1bf1a521cdc949cdd32fd0dd632c73939444dd607be277c0bdc008503"
+        },
+        {
+          "source_index": 20,
+          "record_json_pointer": "/expected/20",
+          "path": "/hdhr/Caf%C3%A9%20%E6%9D%B1%E4%BA%AC/lineup_status.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "d23e796c6b3703bd870568e5c615202004801a10527de233f1c1376767fabe9f"
+        },
+        {
+          "source_index": 23,
+          "record_json_pointer": "/expected/23",
+          "path": "/hdhr/Plus%2BNews/lineup_status.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "e69c4dc0bbf95a91d7b3636a50a97af9e395930f7a969b7c3271024865f1aba3"
+        },
+        {
+          "source_index": 26,
+          "record_json_pointer": "/expected/26",
+          "path": "/hdhr/devices/lineup_status.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "da7fbd518956fc619edb623272d3a800342f827daa6043c022761727c97c1558"
+        },
+        {
+          "source_index": 29,
+          "record_json_pointer": "/expected/29",
+          "path": "/hdhr/unknown/lineup_status.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "2d79056d58fed8fd1760de2f1408a5495723e617aec53d952f01b313a758257d"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-ca744a4278edd228bc65:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/output_profile/<int:output_profile_id>/discover.json",
+      "source_handler": "apps.hdhr.api_views.DiscoverAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 30,
+          "record_json_pointer": "/expected/30",
+          "path": "/hdhr/output_profile/3/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "eb9e0b883645b8abd6a16ec4ae029a306eea0ae80639159de4ed50d536410d41"
+        },
+        {
+          "source_index": 32,
+          "record_json_pointer": "/expected/32",
+          "path": "/hdhr/output_profile/4/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "4d5a26eab0bedfee513df995f668166d4b86fb5269927b4ec2835baa4c24f915"
+        },
+        {
+          "source_index": 34,
+          "record_json_pointer": "/expected/34",
+          "path": "/hdhr/output_profile/0/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "17f57da529f14db3706a0a1c6ad37cef7ef6a7491d49ad4fc086bd375955a7f0"
+        },
+        {
+          "source_index": 36,
+          "record_json_pointer": "/expected/36",
+          "path": "/hdhr/output_profile/99999/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "60b9349dcf1c003fe4fe643d566ec0d99ac1b89c7bf0b7d0497f43959b218d6b"
+        },
+        {
+          "source_index": 101,
+          "record_json_pointer": "/expected/101",
+          "path": "/hdhr/output_profile/0003/discover.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "ef537ff8f916944721ad4d3a927621046795600366f002c9f4e2c7ef9d1367f7"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 5,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-d4a2134fc211ce9343d4:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/output_profile/<int:output_profile_id>/lineup.json",
+      "source_handler": "apps.hdhr.api_views.LineupAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 31,
+          "record_json_pointer": "/expected/31",
+          "path": "/hdhr/output_profile/3/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "5606b53acfe58d3476035d73c530d7ae381f6a81c21e1780e0d088bc56a6f45b"
+        },
+        {
+          "source_index": 33,
+          "record_json_pointer": "/expected/33",
+          "path": "/hdhr/output_profile/4/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "70a262cf922ae71c44438545416c0d82cb950959ee1afb44385c817d8b2aa6b0"
+        },
+        {
+          "source_index": 35,
+          "record_json_pointer": "/expected/35",
+          "path": "/hdhr/output_profile/0/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "0bbf6e10477c8bdbc6d43927d9e3f42a3c12a0a70043b5c5bf41db93eb56cb0d"
+        },
+        {
+          "source_index": 37,
+          "record_json_pointer": "/expected/37",
+          "path": "/hdhr/output_profile/99999/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "454cfaffd09596ea8c5dd7da821ad07f9da5fb39a434b615f7e87824199c1543"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 4,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-19bf65ba611362c0b318:GET",
+      "pattern_exact": "hdhr/^devices/$",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 39,
+          "record_json_pointer": "/expected/39",
+          "path": "/hdhr/devices/",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "response_projection_sha256": "44e51c9232126a10b165e387c5a693e355e751df5e475f1b86be35f6cf5cf84e"
+        },
+        {
+          "source_index": 42,
+          "record_json_pointer": "/expected/42",
+          "path": "/hdhr/devices/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_projection_sha256": "a3c5f8e755e2d24ec87a43d98df4fb663c28b1b9b75ddd5541d558f6bc3e7720"
+        },
+        {
+          "source_index": 45,
+          "record_json_pointer": "/expected/45",
+          "path": "/hdhr/devices/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "cf9e1a2046c57312e344f03fcfa1740b7e85b01d12966eccf69d15b54c5d397c"
+        },
+        {
+          "source_index": 48,
+          "record_json_pointer": "/expected/48",
+          "path": "/hdhr/devices/",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "response_projection_sha256": "57ccae85fd85a0524c671f3c90c6ae7f0985238a45bf4576276263a5eeae4d56"
+        },
+        {
+          "source_index": 52,
+          "record_json_pointer": "/expected/52",
+          "path": "/hdhr/devices/",
+          "method": "GET",
+          "role": "invalid_bearer",
+          "HTTP_status": 401,
+          "response_projection_sha256": "8698395f799a98d940fd53d3a7b0c59245fde395f6a9e3608b3f3ca4717cabdd"
+        },
+        {
+          "source_index": 53,
+          "record_json_pointer": "/expected/53",
+          "path": "/hdhr/devices/",
+          "method": "GET",
+          "role": "invalid_API_key",
+          "HTTP_status": 401,
+          "response_projection_sha256": "f721bcc01cf268e0d23709c825ada2194aea4998b133b151164e1e9726937c7e"
+        },
+        {
+          "source_index": 109,
+          "record_json_pointer": "/expected/109",
+          "path": "/hdhr/devices/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 403,
+          "response_projection_sha256": "705b737290c24779ea66b7aafa77011cb4a43245454b97b2dd078dab16a74ff3"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "inactive",
+        "invalid_API_key",
+        "invalid_bearer",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        },
+        "inactive": {
+          "credential": "Original fixture JWT",
+          "role": "inactive"
+        },
+        "invalid_API_key": {
+          "credential": "Invalid API-key fixture value"
+        },
+        "invalid_bearer": {
+          "credential": "Invalid bearer fixture value"
+        },
+        "standard": {
+          "credential": "Original fixture JWT",
+          "role": "standard"
+        },
+        "viewer": {
+          "credential": "Original fixture JWT",
+          "role": "viewer"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 7,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-19bf65ba611362c0b318:POST",
+      "pattern_exact": "hdhr/^devices/$",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+      "method": "POST",
+      "source_action": "create",
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 68,
+          "record_json_pointer": "/expected/68",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "6afa4aeafdbbb005adc8b97456923b8636ade2af6967deafa8d4bd6ba6e88a2c"
+        },
+        {
+          "source_index": 69,
+          "record_json_pointer": "/expected/69",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 201,
+          "response_projection_sha256": "918e2e67d147ec0b26959e46a358bff8c33b5dd309a9175f6a91f4b9187efabe"
+        },
+        {
+          "source_index": 70,
+          "record_json_pointer": "/expected/70",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "eb8b515ccfc1116825e76946558846be56eb834756de5912473f80f67b1a9bba"
+        },
+        {
+          "source_index": 71,
+          "record_json_pointer": "/expected/71",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "1d8d6132bd405c598d3b45500b330d701aecc2feea590ffca44a34e76babd881"
+        },
+        {
+          "source_index": 72,
+          "record_json_pointer": "/expected/72",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "1adcb324568eddbc5c86115026f1abffb014673b2350f761e43695661a2dcdbb"
+        },
+        {
+          "source_index": 73,
+          "record_json_pointer": "/expected/73",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "7ae1d4c274c69c06e91e4a0dcf2b1484066ca4b83e3c670ca7a3e905c7dfd4d4"
+        },
+        {
+          "source_index": 74,
+          "record_json_pointer": "/expected/74",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 201,
+          "response_projection_sha256": "73aa9f90c82056f72a13b3010ca13125f55ebf4a3a051f2f4515f7b1bfa4e736"
+        },
+        {
+          "source_index": 75,
+          "record_json_pointer": "/expected/75",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "81d698b518cf3f80e66278cdd76c8a1e0a0c04f748fd7a2ddf42c537c08acc38"
+        },
+        {
+          "source_index": 76,
+          "record_json_pointer": "/expected/76",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 201,
+          "response_projection_sha256": "2bc710b75c6b365d638779edab3a57e77de71cbcac0ddc562ebc403ecb8388c5"
+        },
+        {
+          "source_index": 77,
+          "record_json_pointer": "/expected/77",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "ce2e3d5981e620fa53b8b7d6dbd9b2a4a34772604655b702101556b3034b6fb4"
+        },
+        {
+          "source_index": 78,
+          "record_json_pointer": "/expected/78",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "7cd59c481e015584fdbf92781e15024974d03384393164ab6aa752532c66b7a6"
+        },
+        {
+          "source_index": 79,
+          "record_json_pointer": "/expected/79",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "85148b4cc4c099791f285060464d53ccf757ea18f1407aea54405359e2196ecc"
+        },
+        {
+          "source_index": 81,
+          "record_json_pointer": "/expected/81",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 415,
+          "response_projection_sha256": "aee92487d1c093f302380f93d8f43bda91f14ae5e955b071caf24496f62ba1d8"
+        },
+        {
+          "source_index": 82,
+          "record_json_pointer": "/expected/82",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "c6793c83ff53ea975bee130ae12223fce92f6124e7dc47ba3d58087e951bd37d"
+        },
+        {
+          "source_index": 83,
+          "record_json_pointer": "/expected/83",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "168d5f4706a27302be8f49c75fadd262d1cfeb2c10c70d4ff44a007c8e48745c"
+        },
+        {
+          "source_index": 84,
+          "record_json_pointer": "/expected/84",
+          "path": "/hdhr/devices/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 201,
+          "response_projection_sha256": "8a539ba6c79b2cbf60b6e5a03e6ab33b877d0b9a0d37f8577df77570efc62179"
+        }
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        }
+      },
+      "observed_methods": [
+        "POST"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 16,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-810dc0b91be9e6d31409:PATCH",
+      "pattern_exact": "hdhr/^devices/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+      "method": "PATCH",
+      "source_action": "partial_update",
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 80,
+          "record_json_pointer": "/expected/80",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "3587380907e28d20f2582e2acc99ec15da11eeda2c72672f38ddfd5e80288daa"
+        },
+        {
+          "source_index": 85,
+          "record_json_pointer": "/expected/85",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "04c529fc78d853efb34f54eb2b6cc3ebe51393fbca046c799a08f6bc698e1843"
+        },
+        {
+          "source_index": 86,
+          "record_json_pointer": "/expected/86",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "8d54ea6d48f60ec7ab4dd8ba0fd4148a0c519732ed57fb67d167e822d201c7ce"
+        },
+        {
+          "source_index": 87,
+          "record_json_pointer": "/expected/87",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "743145ee89ce1b5887b6ff4b3073be2c2df5aee2baa103dde15762f272604b1f"
+        },
+        {
+          "source_index": 88,
+          "record_json_pointer": "/expected/88",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "6d266a7daa9e1e5936512e76459f2bca602d24f17a1bf754a98266de00a4dbf3"
+        },
+        {
+          "source_index": 89,
+          "record_json_pointer": "/expected/89",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "f6d03deb9193633bbd753e52fdb0e8232d136ff0cb8fadc931195d71774367e6"
+        },
+        {
+          "source_index": 90,
+          "record_json_pointer": "/expected/90",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "136da9425a497637aa96a1f14e047e607b238018a903ef5963607f13cb94037f"
+        },
+        {
+          "source_index": 91,
+          "record_json_pointer": "/expected/91",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "6f286c209db77e22e44e0ad1877dc1e1280ac8dfb431f439f6954af038149da0"
+        },
+        {
+          "source_index": 92,
+          "record_json_pointer": "/expected/92",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "1d077f75dc6be054876dd1447aeee2adbc50f71e315a8c446393391f1df6146d"
+        },
+        {
+          "source_index": 93,
+          "record_json_pointer": "/expected/93",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "26ca630a6b008a62f8972fa213e056f4547c4e2572fa7ff2a60f354a43f5f16b"
+        },
+        {
+          "source_index": 94,
+          "record_json_pointer": "/expected/94",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "39b399f48c656436e5f9b451552b6bb0a230c204ca0abf7fb63e391a91072b1c"
+        },
+        {
+          "source_index": 95,
+          "record_json_pointer": "/expected/95",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "62a94e8841ff0efc59591215f3bb69f49833aaad9e3f9a3902cc23535eac0f8f"
+        },
+        {
+          "source_index": 116,
+          "record_json_pointer": "/expected/116",
+          "path": "/hdhr/devices/1/",
+          "method": "PATCH",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "2ace047bb6b591adb5b60a4c372819a48a3088d8220afac561d46fc524c1028d"
+        }
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        }
+      },
+      "observed_methods": [
+        "PATCH"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 13,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-529265bdb047246c9c78:GET",
+      "pattern_exact": "hdhr/^devices\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 96,
+          "record_json_pointer": "/expected/96",
+          "path": "/hdhr/devices.json",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "2bf1dae932746f6d0d8baa7feb71d329297a3465c7450c62670d76667110936e"
+        }
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-3d8f07733be09ee8a755:GET",
+      "pattern_exact": "hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 97,
+          "record_json_pointer": "/expected/97",
+          "path": "/hdhr/devices/1.json",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "8f08a11ffe56d15aed600dcc8de53ff0812a6654fe8e2124459a73f826719b75"
+        }
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-189d9a32320fbe47702c:GET",
+      "pattern_exact": "api/hdhr/^devices\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 98,
+          "record_json_pointer": "/expected/98",
+          "path": "/api/hdhr/devices.json",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "5b1937704986874820d40997ad38e4c1aaf95711b3ce934980420a2678817958"
+        }
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-09a570c962f59367a91f:METHOD_UNRESOLVED",
+      "pattern_exact": "api/hdhr/",
+      "source_handler": "rest_framework.routers.APIRootView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M8",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 99,
+          "record_json_pointer": "/expected/99",
+          "path": "/api/hdhr/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "4991c0c9c105e2377d3864e71001234726cd6f4068730d96ac3e53c6dc04747d"
+        }
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-2960384fdec3b1438421:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/lineup.json",
+      "source_handler": "apps.hdhr.api_views.LineupAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 100,
+          "record_json_pointer": "/expected/100",
+          "path": "/hdhr/HDHR%20fixture/output_profile/3/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "e18b504fccf46391e870a47b7efbddc61c9aaf0667377072ca1608e1825ccb92"
+        },
+        {
+          "source_index": 102,
+          "record_json_pointer": "/expected/102",
+          "path": "/hdhr/devices/output_profile/3/lineup.json",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "b63ced64fbf8c678db77c8157ad3486976b7633fa8991ede74a4d151a4dd5a10"
+        }
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-810dc0b91be9e6d31409:GET",
+      "pattern_exact": "hdhr/^devices/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 113,
+          "record_json_pointer": "/expected/113",
+          "path": "/hdhr/devices/1/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "d3959793a1964c40963be1afbd1b61265c12f3a7c20e653334ce1068ca847409"
+        },
+        {
+          "source_index": 120,
+          "record_json_pointer": "/expected/120",
+          "path": "/hdhr/devices/1/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_projection_sha256": "ba1045c0eca7a679839ff7ef4b01143b6173110fdcc4a8704fc43a8dc70a240d"
+        }
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-810dc0b91be9e6d31409:PUT",
+      "pattern_exact": "hdhr/^devices/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+      "method": "PUT",
+      "source_action": "update",
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 117,
+          "record_json_pointer": "/expected/117",
+          "path": "/hdhr/devices/1/",
+          "method": "PUT",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_projection_sha256": "a80ec6ed3efc573d8123ae42a4213eb913cbd3c0d77e27533c1ed10e228a6470"
+        },
+        {
+          "source_index": 118,
+          "record_json_pointer": "/expected/118",
+          "path": "/hdhr/devices/1/",
+          "method": "PUT",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "86e0a5139f12092bae6677ae936b6ac260926cd7cb5dd4c3f71d8a6debb8f931"
+        },
+        {
+          "source_index": 121,
+          "record_json_pointer": "/expected/121",
+          "path": "/hdhr/devices/9999/",
+          "method": "PUT",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_projection_sha256": "0b13f56be6ce6770d1bf97745b2450236cb79e3fb7062954d2f2e877dcdbe558"
+        }
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        }
+      },
+      "observed_methods": [
+        "PUT"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 3,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-810dc0b91be9e6d31409:DELETE",
+      "pattern_exact": "hdhr/^devices/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+      "method": "DELETE",
+      "source_action": "destroy",
+      "owning_milestone": "M7",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 119,
+          "record_json_pointer": "/expected/119",
+          "path": "/hdhr/devices/1/",
+          "method": "DELETE",
+          "role": "admin",
+          "HTTP_status": 204,
+          "response_projection_sha256": "37d7131d7f035cf3dc82399df5dfa8fbb37fc9632e0692280266550d5d613f45"
+        }
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        }
+      },
+      "observed_methods": [
+        "DELETE"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    },
+    {
+      "contract_id": "route-6f82f9fae4deeebd0cf0:METHOD_UNRESOLVED",
+      "pattern_exact": "hdhr/",
+      "source_handler": "rest_framework.routers.APIRootView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M8",
+      "fixture_id": "retained-Original-Image27-HDHomeRun",
+      "fully_verified": false,
+      "assertions": [
+        "Preserve observed Original request path, actor, method, status and response projection."
+      ],
+      "remaining": [
+        "Other grammar, role and configuration domains and current candidate parity."
+      ],
+      "cases": [
+        {
+          "source_index": 122,
+          "record_json_pointer": "/expected/122",
+          "path": "/hdhr/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "ab111f13f25a028624988ed612ed94a2b47624b62b7d18c7cc2f209f51856e1c"
+        },
+        {
+          "source_index": 123,
+          "record_json_pointer": "/expected/123",
+          "path": "/hdhr/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "response_projection_sha256": "69c26583465b097bbe81aed917512e55ffaceda13468e2bd67403d8eb8120837"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "credential": "Original fixture JWT",
+          "role": "admin"
+        },
+        "anonymous": {
+          "credential": "No authentication header"
+        }
+      },
+      "observed_methods": [
+        "GET"
+      ],
+      "result": {
+        "state": "retained_Original_network_observations",
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false
+      }
+    }
+  ]
+}

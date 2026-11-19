@@ -70,7 +70,8 @@ class NotificationMutationControls(unittest.TestCase):
    'scripts/rust-contracts/retained-epg-reads/bindings.json',
    'scripts/rust-contracts/retained-core-read/bindings.json',
    'scripts/rust-contracts/retained-serializer-null/bindings.json',
-   'scripts/rust-contracts/retained-provider-channel-vod/bindings.json'])
+   'scripts/rust-contracts/retained-provider-channel-vod/bindings.json',
+   'scripts/rust-contracts/retained-hdhr/bindings.json'])
   later_ids=[];supplemental_ids=[]
   import retained_management_contracts
   import retained_auth_plugin_contracts
@@ -104,7 +105,7 @@ class NotificationMutationControls(unittest.TestCase):
    elif ref['kind']==retained_xc_refresh_contracts.KIND:
     retained_xc_refresh_contracts.validate(ROOT,value)
    else:later_ids.extend(c['contract_id']for c in value['contracts'])
-  self.assertEqual(len(later_ids),104);self.assertEqual(len(set(later_ids)),104)
+  self.assertEqual(len(later_ids),129);self.assertEqual(len(set(later_ids)),129)
   self.assertEqual(len(supplemental_ids),11)
   self.assertFalse(selected.intersection(later_ids))
   historical=copy.deepcopy(new['runtime_routes'])
@@ -160,7 +161,7 @@ class NotificationMutationControls(unittest.TestCase):
   self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+7)
   self.assertEqual(non_HTTP_mapping['fully_verified_added'],0)
   expected=old['base_HTTP_assignments']+len(selected)+len(later_ids)
-  self.assertEqual(expected,224) # pre-XC preservation count
+  self.assertEqual(expected,249) # pre-XC preservation count
   expected += 1
   self.assertEqual(mapping['operations'],expected)
   self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)

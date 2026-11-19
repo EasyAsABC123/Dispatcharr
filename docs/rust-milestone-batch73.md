@@ -27,5 +27,13 @@ HTTP references. The portable suite passed 366 checks with one skipped.
 An independent capture review matched all 132 route observations.
 [Register checks](../scripts/rust-integration/milestone-batch73/m0-retained-http-checks.json)
 
+The retained HDHomeRun packet adds 120 actual HTTP observations across
+25 existing register entries. Nine have declared methods. The other
+sixteen keep their unresolved-method state and record the observed
+wire methods separately. The register now has 250 partial Source
+assignments and 548 unassigned references. Twenty-eight focused checks
+passed. The full portable suite passed 367 checks with one skipped.
+[HDHomeRun verification](../scripts/rust-integration/milestone-batch73/m0-hdhr-checks.json)
+
 The [complete parity plan](rust-complete-parity-plan.md) tracks the remaining
 functional, performance, soak and rollback gates.

@@ -177,3 +177,16 @@ open.
 
 The register now holds 225 partial executable Source assignments, with 573
 still unassigned. All 784 unrelated operation dictionaries remain exact.
+
+## Retained HDHomeRun HTTP assignments
+
+The [HDHomeRun binding](../scripts/rust-contracts/retained-hdhr/bindings.json)
+adds 120 Original HTTP observations across 25 existing operation IDs. Nine
+device CRUD and format operations have declared methods. Sixteen existing
+method-unresolved IDs retain their declaration and record the methods and
+status codes observed on the wire. Seven captured requests stay outside this
+assignment. The frozen request plan ties every response record to its fixture
+actor without starting an application.
+
+The register now holds 250 partial executable Source assignments, with 548
+still unassigned. All 773 unrelated operation dictionaries remain exact.
