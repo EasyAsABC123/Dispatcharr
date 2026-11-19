@@ -1,10 +1,12 @@
 //! Original Dispatcharr core helper read APIs. Original authors retain credit.
 //! The timezone dataset is pinned to the original runtime, not the host OS.
 use crate::{AuthService, StoreError};
+#[path = "persisted_log_list.rs"]
+mod persisted_logs;
 use axum::{
     extract::{ConnectInfo, RawQuery, State},
     http::HeaderMap,
-    routing::get,
+    routing::{any, get},
     Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
@@ -164,6 +166,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/core/timezones/", get(timezones))
         .route("/api/core/system-events/", get(events))
+        .route("/api/core/logs/", any(persisted_logs::handle))
         .with_state(auth)
 }
 #[cfg(test)]
