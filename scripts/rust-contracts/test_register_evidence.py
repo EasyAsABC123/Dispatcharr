@@ -105,6 +105,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(retained_epg_reads_contracts.dependencies())
         import retained_core_read_contracts
         refs.update(retained_core_read_contracts.dependencies())
+        import retained_serializer_null_contracts
+        refs.update(retained_serializer_null_contracts.dependencies())
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)

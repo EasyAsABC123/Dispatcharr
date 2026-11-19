@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import retained_epg_reads_contracts
 import retained_core_read_contracts
+import retained_serializer_null_contracts
 import unittest
 import retained_auth_plugin_contracts as subject
 import source_contracts
@@ -63,6 +64,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
         register = json.loads((ROOT / 'docs/rust-contract-register.json').read_bytes())
         current_rows = copy.deepcopy(register['runtime_routes'])
         import retained_xc_refresh_contracts
+        retained_serializer_null_contracts.restore_pre_serializer_null(ROOT, register['runtime_routes'])
         retained_core_read_contracts.restore_pre_core_reads(ROOT, register['runtime_routes'])
         retained_epg_reads_contracts.restore_pre_epg(ROOT, register['runtime_routes'])
         retained_xc_refresh_contracts.restore_pre_xc(ROOT, register['runtime_routes'])
@@ -93,7 +95,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
         mapping = source_contracts.apply(ROOT, rows, json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes()))
         self.assertEqual(rows, current_rows)
         self.assertEqual([row for row in mapping['unmapped_method_Source_observations'] if row['route_id'] != 'route-7e6941c073eccaa2b6dd' and row.get('fixture_id') != retained_epg_reads_contracts.FIXTURE], self.value['unmapped_method_Source_observations'])
-        self.assertEqual(mapping['operations'], 188)
+        self.assertEqual(mapping['operations'], 211)
         self.assertEqual(sum(o['method'] is None for o in operations.values()), 322)
         self.assertTrue(all(o['fully_verified'] is False for o in operations.values()))
 

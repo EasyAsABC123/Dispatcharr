@@ -22,7 +22,12 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
-The [latest Rust checkpoint](rust-milestone-batch71.md) covers fenced archive
+The [latest Rust checkpoint](rust-milestone-batch72.md) covers archive
+fingerprint handoff, first-tick Beat readiness and new retained serializer
+contracts. M0 has 211 partial Source assignments and 587 unassigned HTTP
+references.
+
+The [Candidate71 checkpoint](rust-milestone-batch71.md) covers fenced archive
 reopening, XC membership and refresh behavior, custom-guide timezone dates,
 operator arguments, signed backup downloads and the packaged fixed-seed EPG
 comparison. M0 has 188 partial Source assignments and 610 unassigned HTTP

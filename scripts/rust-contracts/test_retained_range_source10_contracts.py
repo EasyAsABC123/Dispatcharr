@@ -3,6 +3,7 @@ import copy,json,shutil,tempfile,unittest
 from pathlib import Path
 import retained_epg_reads_contracts
 import retained_core_read_contracts
+import retained_serializer_null_contracts
 import retained_range_source10_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -26,6 +27,7 @@ class RangeSource10Controls(unittest.TestCase):
     p.write_bytes(raw)
  def test_all174_definitions_797_whole_rows_and_selected_primary_unchanged(self):
   register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_serializer_null_contracts.restore_pre_serializer_null(ROOT,register['runtime_routes'])
   retained_core_read_contracts.restore_pre_core_reads(ROOT,register['runtime_routes'])
   retained_epg_reads_contracts.restore_pre_epg(ROOT,register['runtime_routes'])
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,register['runtime_routes'])
@@ -41,12 +43,14 @@ class RangeSource10Controls(unittest.TestCase):
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],188)
+  self.assertEqual(mapping['operations'],211)
+  retained_serializer_null_contracts.restore_pre_serializer_null(ROOT,rows)
   retained_core_read_contracts.restore_pre_core_reads(ROOT,rows)
   retained_epg_reads_contracts.restore_pre_epg(ROOT,rows)
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_serializer_null_contracts.restore_pre_serializer_null(ROOT,rows)
   retained_core_read_contracts.restore_pre_core_reads(ROOT,rows)
   retained_epg_reads_contracts.restore_pre_epg(ROOT,rows)
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)

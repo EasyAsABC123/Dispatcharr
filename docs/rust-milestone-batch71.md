@@ -6,7 +6,7 @@ credit. React, the original license and attribution remain part of the build.
 | Milestone | Change and focused evidence |
 | --- | --- |
 | M4 · Timeshift | An established archive session becomes transferable after its worker releases the provider lease. One Redis operation checks the descriptor and rotates the fenced pool, client and metadata tokens. A late cleanup from the old owner leaves the new owner intact. Twelve real Redis pool tests and two cancellation tests passed. The explicit-session two-worker run matched the Source media and provider reservations. |
-| M5 and M6 · XC accounts | A group-only PATCH can change membership on inactive XC accounts and accounts with VOD enabled. The existing account-scoped write changes the selected membership. Six Rust account-validator tests and eight pinned Original controls passed. The paired Main PATCH and GET fixture is ready. |
+| M5 and M6 · XC accounts | A group-only PATCH can change membership on inactive XC accounts and accounts with VOD enabled. The existing account-scoped write changes the selected membership. Six Rust account-validator tests and eight pinned Original controls passed. The paired Main PATCH and GET comparison passed after retaining the verified Original observations and rerunning only Native. |
 | M6 · XC refresh | A settled malformed account-info reply counts as one profile failure and the next profile still runs. The pinned Source controls verified partial failure, recovery and fallback user-agent use. Ten focused Rust account tests passed. The real Main task and its Profiles child still need paired verification. |
 | M7 · Guide | Custom dummy programmes without a time or date pattern use the Source timezone for the local date while retaining the UTC programme interval. Five pinned Python cases and the Rust controls agree. Localized time and date pattern schedules remain outside this check. |
 | M8 · Operations | Repeated explicit `--user` flags use the final value. The targeted CLI parser tests passed. The Source CLI cases passed on a copied database. Packaged Candidate70 matched all 12 signed-filename assertions, including downloads using three tokens issued by Rust. |
@@ -46,6 +46,17 @@ during startup. The corrected fixture checked the inserted row and its exact
 sequence, then completed all three cases. Packaged Candidate71 matched all three cases, including the captured SQL,
 Redis and ordered Channels effects. Independent inventories verified cleanup.
 [Runtime receipts](../scripts/rust-integration/milestone-batch71/operator-source-backup-candidate70.json)
+
+## Packaged XC group update
+
+The Original PATCH and follow-up GET both returned 200. The intended
+membership was disabled, the unrelated group was ignored, and the sibling
+membership and profile persisted. That controller exited after cleanup
+because an unrelated range finalizer expected a playback binding. The
+Native-only continuation reused the verified Original result and passed the
+same HTTP and PostgreSQL checks. Independent cleanup passed for both
+projects.
+[Scoped comparison](../scripts/rust-integration/milestone-batch71/xc-group-patch.json)
 
 ## Candidate71 packaged archive and operator checks
 

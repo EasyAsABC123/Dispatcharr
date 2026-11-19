@@ -151,3 +151,16 @@ assignment. No application was rerun.
 
 The register now holds 188 partial executable Source assignments, with 610
 still unassigned. All 791 unrelated operation dictionaries remain exact.
+
+## Retained malformed-request HTTP assignments
+
+The [serializer binding input](../scripts/rust-contracts/retained-serializer-null/bindings.json)
+adds 96 Original HTTP observations for 23 declared POST, PUT and PATCH
+operations. The retained responses cover malformed input, denied roles and
+missing targets, with no mutations across 16 protected model tables. The
+mapping preserves exact paths, methods, fixture roles, status and response
+projection hashes. It excludes already assigned operations and ambiguous
+self-route matches. Positive writes and current candidate parity remain open.
+
+The register now holds 211 partial executable Source assignments, with 587
+still unassigned. All 775 unrelated operation dictionaries remain exact.
