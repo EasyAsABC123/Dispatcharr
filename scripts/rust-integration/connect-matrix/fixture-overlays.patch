@@ -1,0 +1,54 @@
+--- a/scripts/rust-integration/metadata_fixture.py
++++ b/scripts/rust-integration/metadata_fixture.py
+@@ -14 +14 @@
+-if str(data.get('action','')).startswith(('notification_','environment_ip_','auth_package_','connect_reads_','connect_logs_','connect_create_','connect_lifecycle_')):sys.argv.append('shell')
++if str(data.get('action','')).startswith(('notification_','environment_ip_','auth_package_','connect_reads_','connect_logs_','connect_create_','connect_lifecycle_','connect_matrix_')):sys.argv.append('shell')
+@@ -23,0 +24,4 @@
++if str(data.get('action','')).startswith('connect_matrix_'):
++    from connect_matrix_fixture import dispatch
++    print(json.dumps(dispatch(data)))
++    raise SystemExit(0)
+--- a/scripts/rust-integration/run.py
++++ b/scripts/rust-integration/run.py
+@@ -26 +26 @@
+-OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash','connect_reads','connect_logs','connect_create')
++OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash','connect_reads','connect_logs','connect_create','connect_lifecycle','connect_matrix')
+@@ -137 +137,5 @@
+-    project = 'dispatcharr-rust-probe-' + uuid.uuid4().hex[:10]
++    if selected_suites != ['connect_matrix'] or not args.candidate_build_manifest or not args.candidate_image:
++        parser.error('The copied runner requires only connect_matrix and an exact candidate build')
++    project = os.environ.get('DISPATCHARR_LIFECYCLE_PROJECT', '')
++    if not re.fullmatch(r'dispatcharr-connect-matrix-[0-9a-f]{12}', project):
++        parser.error('Expected the owned Connect matrix Compose namespace')
+@@ -158,2 +162 @@
+-        with archive.open('wb') as stream:
+-            subprocess.run(['git', 'archive', BASELINE], cwd=ROOT, stdout=stream, check=True, timeout=30)
++        shutil.copyfile(ROOT / 'original-source.tar', archive)
+@@ -287 +290 @@
+-                                 ('connect_create','run_connect_create')]:
++                                 ('connect_create','run_connect_create'),('connect_lifecycle','run_connect_lifecycle'),('connect_matrix',None)]:
+@@ -288,0 +292,5 @@
++                    if suite=='connect_matrix':
++                        sys.path.insert(0,str(tool_source/'scripts/rust-integration'))
++                        from connect_matrix_probe import run as observe_connect_matrix
++                        observe_connect_matrix(baseline,candidate,accounts,record,metadata_fixture)
++                        continue
+@@ -298 +306 @@
+-                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash','connect_reads','connect_logs','connect_create'):
++                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash','connect_reads','connect_logs','connect_create','connect_lifecycle','connect_matrix'):
+@@ -327,0 +336,15 @@
++            owned = []
++            try:
++                ids = command(['docker', 'container', 'ls', '-aq', '--no-trunc', '--filter',
++                               'label=com.docker.compose.project=' + project], timeout=10).splitlines()
++                for container_id in ids:
++                    item = json.loads(command(['docker', 'inspect', container_id], timeout=10))[0]
++                    state = item['State']
++                    pid = state['Pid']
++                    generation = Path(f'/proc/{pid}/stat').read_text().rsplit(')', 1)[1].split()[19] if pid else None
++                    owned.append({'id': item['Id'], 'pid': pid, 'generation': generation,
++                                  'image': item['Image'], 'actual_exit_before_cleanup': state['ExitCode'],
++                                  'service': item['Config']['Labels']['com.docker.compose.service']})
++            except (OSError, ValueError, KeyError, IndexError, subprocess.SubprocessError) as error:
++                report['owned_capture_error'] = type(error).__name__
++            (output / 'owned-before-compose-down.json').write_text(json.dumps(owned, indent=2)+'\n')
