@@ -8,7 +8,25 @@ BASE='scripts/rust-contracts/framework-suite/'
 INPUT=BASE+'bindings.json'
 INVENTORY_SHA='81e3071afe33a85e0e33ea53fb1d7ada2ad3b26f434839446faed70b48062a97'
 sha=lambda b:hashlib.sha256(b).hexdigest()
-fingerprint=lambda n:sha(ast.dump(n,include_attributes=False).encode())
+def normalized_ast(node):
+    # The retained dump omits empty optional fields. Explicit formatting gives
+    # the same bytes in Bookworm's SDK Python and newer host interpreters.
+    if isinstance(node, ast.AST):
+        fields = []
+        for name, value in ast.iter_fields(node):
+            if isinstance(value, list) and not value:
+                continue
+            literal_none = name == 'value' and isinstance(node, (ast.Constant, ast.MatchSingleton))
+            if value is None and not literal_none:
+                continue
+            fields.append(f'{name}={normalized_ast(value)}')
+        return f'{type(node).__name__}({", ".join(fields)})'
+    if isinstance(node, list):
+        return f'[{", ".join(normalized_ast(value) for value in node)}]'
+    return repr(node)
+
+def fingerprint(node):
+    return sha(normalized_ast(node).encode())
 def digest(v):return sha(json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode())
 def checked(root,name,expected):
  p=Path(root)/name;assert p.is_file()and not p.is_symlink();data=p.read_bytes();assert sha(data)==expected,'exact framework authority bytes';return data
