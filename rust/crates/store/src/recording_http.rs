@@ -100,6 +100,16 @@ pub trait RecordingJobs: Send + Sync {
         recording: i64,
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), RecordingEffectError>>;
+    fn supports_recurring_booking(&self) -> bool {
+        false
+    }
+    fn schedule_recurring(
+        &self,
+        _recording: i64,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
+        Box::pin(async { Err(RecordingEffectError::Unsupported) })
+    }
     fn revoke(
         &self,
         task: String,
@@ -139,6 +149,7 @@ struct Inner {
     slots: Arc<Semaphore>,
     closed: AtomicBool,
     uncertain: Mutex<Vec<Arc<Owner>>>,
+    recurring_writer: tokio::sync::Mutex<()>,
 }
 struct Owner {
     _slot: OwnedSemaphorePermit,
@@ -267,6 +278,7 @@ impl RecordingHttp {
                 slots: Arc::new(Semaphore::new(SLOTS)),
                 closed: AtomicBool::new(false),
                 uncertain: Mutex::new(Vec::with_capacity(SLOTS)),
+                recurring_writer: tokio::sync::Mutex::new(()),
             }),
         }
     }

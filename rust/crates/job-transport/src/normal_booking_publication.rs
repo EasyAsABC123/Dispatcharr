@@ -21,7 +21,19 @@ struct BookingRow {
     end: DateTime<Utc>,
     task_key: Option<String>,
     artwork: bool,
+    recurring_times: Option<(String, String)>,
 }
+impl BookingRow {
+    fn arguments(&self) -> (String, String) {
+        self.recurring_times.clone().unwrap_or_else(|| {
+            (
+                python_datetime(self.start, false),
+                python_datetime(self.end, false),
+            )
+        })
+    }
+}
+
 impl NormalRecordingPublisher {
     /// Reread the real committed row, schedule future Beat or publish a unique
     /// immediate named root, then persist the actual resulting task_id. Physical
@@ -31,7 +43,18 @@ impl NormalRecordingPublisher {
         recording: i64,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<BookingPublication, Error> {
-        self.schedule_booking_context(recording, None, caller).await
+        self.schedule_booking_context(recording, None, false, caller)
+            .await
+    }
+    /// The recurring planner stores Source's local ISO values in program JSON.
+    /// Retain those offsets in Beat arguments after verifying the persisted UTC instants.
+    pub async fn schedule_recurring_booking(
+        &self,
+        recording: i64,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<BookingPublication, Error> {
+        self.schedule_booking_context(recording, None, true, caller)
+            .await
     }
     pub async fn schedule_booking_child(
         &self,
@@ -39,13 +62,14 @@ impl NormalRecordingPublisher {
         parent: Uuid,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<BookingPublication, Error> {
-        self.schedule_booking_context(recording, Some(parent), caller)
+        self.schedule_booking_context(recording, Some(parent), false, caller)
             .await
     }
     async fn schedule_booking_context(
         &self,
         recording: i64,
         parent: Option<Uuid>,
+        recurring: bool,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<BookingPublication, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
@@ -64,7 +88,7 @@ impl NormalRecordingPublisher {
         });
         let inner = self.inner.clone();
         tokio::spawn(async move {
-            let row = booking_row(inner.pool.clone(), recording, owner.clone()).await?;
+            let row = booking_row(inner.pool.clone(), recording, recurring, owner.clone()).await?;
             let now = Utc::now();
             let task = if row.task_key.as_ref().is_some_and(|key| !key.is_empty())
                 || !(row.start > now - chrono::Duration::seconds(1) || row.end > now)
@@ -186,8 +210,7 @@ fn immediate_frame(row: &BookingRow, key: &str, reply: Uuid) -> Result<Vec<u8>, 
     .map_err(|_| Error::Unsupported("booking common envelope"))?;
     let mut value: Value =
         serde_json::from_slice(&raw).map_err(|_| Error::Unsupported("booking JSON"))?;
-    let start = python_datetime(row.start, false);
-    let end = python_datetime(row.end, false);
+    let (start, end) = row.arguments();
     value["headers"]["task"] = json!("apps.channels.tasks.run_recording");
     value["headers"]["id"] = json!(key);
     value["headers"]["root_id"] = json!(key);
@@ -201,9 +224,29 @@ fn immediate_frame(row: &BookingRow, key: &str, reply: Uuid) -> Result<Vec<u8>, 
     value["body"]=json!(STANDARD.encode(serde_json::to_vec(&json!([[row.recording,row.channel,start,end],{},{"callbacks":null,"errbacks":null,"chain":null,"chord":null}])).map_err(|_|Error::Unsupported("booking body"))?));
     serde_json::to_vec(&value).map_err(|_| Error::Unsupported("booking frame"))
 }
+fn recurring_time(
+    properties: &Value,
+    field: &str,
+    instant: DateTime<Utc>,
+) -> Result<String, Error> {
+    let value = properties["program"][field]
+        .as_str()
+        .filter(|raw| raw.len() <= 40 && raw.as_bytes().get(10) == Some(&b'T'))
+        .ok_or(Error::Unsupported("recurring booking program clock"))?;
+    let parsed = DateTime::parse_from_rfc3339(value)
+        .map_err(|_| Error::Unsupported("recurring booking program clock"))?;
+    if parsed.with_timezone(&Utc) != instant {
+        return Err(Error::Unsupported(
+            "recurring booking persisted clock disagreement",
+        ));
+    }
+    Ok(value.replacen('T', " ", 1))
+}
+
 async fn booking_row(
     pool: PgPool,
     recording: i64,
+    recurring: bool,
     owner: Arc<dyn Send + Sync>,
 ) -> Result<BookingRow, Error> {
     if recording <= 0 {
@@ -216,7 +259,19 @@ async fn booking_row(
    let object=properties.as_object();
    let truthy=match &properties{Value::Null=>false,Value::Bool(v)=>*v,Value::String(v)=>!v.is_empty(),Value::Array(v)=>!v.is_empty(),Value::Object(v)=>!v.is_empty(),Value::Number(v)=>v.as_f64()!=Some(0.0)};
    let artwork=(!truthy||object.is_some())&&!object.and_then(|v|v.get("status")).and_then(Value::as_str).is_some_and(|status|matches!(status,"recording"|"completed"|"stopped"|"interrupted"));
-   let row=BookingRow{recording,channel:row.try_get("channel_id").map_err(database)?,start:row.try_get("start_time").map_err(database)?,end:row.try_get("end_time").map_err(database)?,task_key:row.try_get("task_key").map_err(database)?,artwork};if row.end<=row.start{return Err(Error::Unsupported("booking recording window"));}Ok(row)
+   let start = row.try_get("start_time").map_err(database)?;
+   let end = row.try_get("end_time").map_err(database)?;
+   if end <= start {return Err(Error::Unsupported("booking recording window"));}
+   let recurring_times = if recurring {
+       if properties["rule"]["type"] != "recurring" || !properties["rule"]["id"].as_i64().is_some_and(|id| id > 0) {
+           return Err(Error::Unsupported("recurring booking persisted rule identity"));
+       }
+       Some((recurring_time(&properties, "start_time", start)?, recurring_time(&properties, "end_time", end)?))
+   } else {
+       None
+   };
+   Ok(BookingRow{recording,channel:row.try_get("channel_id").map_err(database)?, start, end,
+       task_key:row.try_get("task_key").map_err(database)?, artwork, recurring_times})
   }.await;
   let ready=connection.ping().await.err().map(Box::new);let close=connection.close().await.err().map(Box::new);settle(observed,ready,close)
  }).await.map_err(|_|Error::Supervisor)?
@@ -260,7 +315,13 @@ async fn future(
    let mut tx=connection.begin().await.map_err(database)?;let name=format!("dvr-recording-{}",row.recording);
    let result=async {
     let clocked=match clocked.first(){Some(value)=>*value,None=>{let id=sqlx::query_scalar::<_,i64>("INSERT INTO django_celery_beat_clockedschedule (clocked_time) VALUES ($1) RETURNING id::bigint").bind(row.start).fetch_one(&mut *tx).await.map_err(database)?;marker(&mut tx).await?;id}};
-    let args=serde_json::to_string(&json!([row.recording,row.channel,python_datetime(row.start,false),python_datetime(row.end,false)])).map_err(|_|Error::Unsupported("booking args"))?;
+    let (start, end) = row.arguments();
+    let args = if row.recurring_times.is_some() {
+        format!("[{}, {}, {}, {}]", row.recording, row.channel, json!(start), json!(end))
+    } else {
+        serde_json::to_string(&json!([row.recording, row.channel, start, end]))
+            .map_err(|_| Error::Unsupported("booking args"))?
+    };
     let id=sqlx::query_scalar::<_,i64>("INSERT INTO django_celery_beat_periodictask (name,task,interval_id,crontab_id,solar_id,clocked_id,args,kwargs,queue,exchange,routing_key,headers,priority,expires,expire_seconds,one_off,start_time,enabled,last_run_at,total_run_count,date_changed,description) VALUES ($1,'apps.channels.tasks.run_recording',NULL,NULL,NULL,$2,$3,'{}',NULL,NULL,NULL,'{}',NULL,NULL,NULL,true,NULL,true,NULL,0,$4,'') ON CONFLICT (name) DO UPDATE SET task=EXCLUDED.task,clocked_id=EXCLUDED.clocked_id,args=EXCLUDED.args,one_off=true,enabled=true,interval_id=NULL,crontab_id=NULL,solar_id=NULL,date_changed=EXCLUDED.date_changed RETURNING id::bigint").bind(&name).bind(clocked).bind(args).bind(Utc::now()).fetch_one(&mut *tx).await.map_err(database)?;
     marker(&mut tx).await?;Ok::<i64,Error>(id)
    }.await;

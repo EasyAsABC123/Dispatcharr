@@ -149,7 +149,38 @@ impl DisplayTimezone {
         .await;
     }
 }
+fn system_settings_row(row: Option<sqlx::postgres::PgRow>) -> Result<Value, StoreError> {
+    match row {
+        Some(row) => {
+            let bytes: i32 = row.try_get("bytes")?;
+            let raw: Option<String> = row.try_get("value_text")?;
+            bounded_system_value(bytes, raw.as_deref())
+        }
+        None => Ok(crate::source_system_settings_defaults()),
+    }
+}
+
 impl AuthService {
+    /// Resolve the Source settings group using the caller's existing SQL owner
+    /// on a cache miss, avoiding a second checkout while a rule is locked.
+    pub(crate) async fn recurring_system_settings(
+        &self,
+        connection: &mut sqlx::PgConnection,
+    ) -> Result<Value, StoreError> {
+        let load = || async move {
+            system_settings_row(
+                sqlx::query(SYSTEM_SQL)
+                    .bind("system_settings")
+                    .fetch_optional(connection)
+                    .await?,
+            )
+        };
+        match &self.notification_cache {
+            Some(cache) => cache.settings_group_bounded("system_settings", load).await,
+            None => load().await,
+        }
+    }
+
     // Unlike pool.fetch_optional, explicit connection ownership keeps the
     // callback's original permit alive after ErrorResponse through actual Ready.
     async fn callback_system_settings(&self) -> Result<Value, StoreError> {
@@ -168,14 +199,7 @@ impl AuthService {
             // Await SQLx return/after_release instead of spawning Drop cleanup
             // after dropping the callback AuthService and its original token.
             connection.return_to_pool().await;
-            match result? {
-                Some(row) => {
-                    let bytes: i32 = row.try_get("bytes")?;
-                    let raw: Option<String> = row.try_get("value_text")?;
-                    bounded_system_value(bytes, raw.as_deref())
-                }
-                None => Ok(crate::source_system_settings_defaults()),
-            }
+            system_settings_row(result?)
         }
         match &self.notification_cache {
             Some(cache) => cache.settings_group("system_settings", || load(self)).await,

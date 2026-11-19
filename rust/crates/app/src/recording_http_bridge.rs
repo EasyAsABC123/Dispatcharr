@@ -142,6 +142,23 @@ impl RecordingJobs for Bridge {
                 .map_err(publication_error)
         })
     }
+    fn supports_recurring_booking(&self) -> bool {
+        true
+    }
+    fn schedule_recurring(
+        &self,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), Effect>> {
+        Box::pin(async move {
+            self.admit_scheduling(owner.clone()).await?;
+            self.publisher
+                .schedule_recurring_booking(recording, owner)
+                .await
+                .map(|_| ())
+                .map_err(publication_error)
+        })
+    }
     fn revoke(
         &self,
         task: String,

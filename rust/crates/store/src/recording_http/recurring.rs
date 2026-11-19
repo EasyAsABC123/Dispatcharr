@@ -1,13 +1,13 @@
 //! Original Dispatcharr's scoped recurring DVR rule detail routes.
 //! Original Dispatcharr, Django and DRF contributors retain behavior credit.
 use super::{
-    access, admit, delete_periodic_in_collector, field, iso, publish, python_int, reply, settle,
-    Owner, RecordingHttp, RAW, ROWS,
+    access, admit, delete_periodic_in_collector, effect, field, iso, publish, python_int, reply,
+    settle, Owner, RecordingEffectError, RecordingHttp, RAW, ROWS,
 };
 use crate::{
     admin_writes::{body_object, boolean, character},
     channel_memberships::primary_key,
-    channels, RecordingPlayback, StoreError, User,
+    channels, AuthService, RecordingPlayback, StoreError, User,
 };
 use axum::{
     body::{to_bytes, Bytes},
@@ -16,7 +16,11 @@ use axum::{
     response::Response,
     Json,
 };
-use chrono::{DateTime, Datelike, NaiveDate, NaiveTime, Timelike, Utc};
+use chrono::{
+    DateTime, Datelike, Days, LocalResult, NaiveDate, NaiveTime, SecondsFormat, TimeZone, Timelike,
+    Utc,
+};
+use chrono_tz::Tz;
 use serde_json::{json, Map, Value};
 use sqlx::{Connection, PgConnection, Postgres, QueryBuilder, Row};
 use std::{collections::BTreeSet, net::SocketAddr, sync::Arc, time::Duration};
@@ -218,7 +222,7 @@ async fn accessible(
         .is_some())
 }
 
-async fn update(
+async fn validate_update(
     connection: &mut PgConnection,
     user: &User,
     old: &Rule,
@@ -274,15 +278,16 @@ async fn update(
         return Err(StoreError::InvalidInput(Value::Object(errors)));
     }
     dates(&next, old)?;
-    if next.enabled {
-        return Err(unsupported_rebuild());
-    }
+    Ok(next)
+}
+
+async fn save_rule(connection: &mut PgConnection, next: &mut Rule) -> Result<(), StoreError> {
     next.updated = sqlx::query_scalar(
         "UPDATE dispatcharr_channels_recurringrecordingrule SET
         channel_id=$2,name=$3,days_of_week=$4,start_time=$5,end_time=$6,start_date=$7,end_date=$8,
         enabled=$9,updated_at=clock_timestamp() WHERE id=$1 RETURNING updated_at",
     )
-    .bind(old.id)
+    .bind(next.id)
     .bind(next.channel)
     .bind(&next.name)
     .bind(&next.days)
@@ -293,7 +298,166 @@ async fn update(
     .bind(next.enabled)
     .fetch_one(connection)
     .await?;
-    Ok(next)
+    Ok(())
+}
+
+struct Appointment {
+    start: DateTime<Tz>,
+    end: DateTime<Tz>,
+    properties: Value,
+}
+
+fn wall_clock(zone: Tz, date: NaiveDate, time: NaiveTime) -> Result<DateTime<Tz>, StoreError> {
+    match zone.from_local_datetime(&date.and_time(time)) {
+        LocalResult::Single(value) => Ok(value),
+        LocalResult::Ambiguous(first, second) => Ok(first.min(second)),
+        // ZoneInfo allows imaginary clock values using the pre-transition
+        // offset. Keep that exceptional domain outside this bounded rebuild.
+        LocalResult::None => Err(unsupported_rebuild()),
+    }
+}
+
+fn local_iso(value: &DateTime<Tz>) -> String {
+    value.to_rfc3339_opts(
+        if value.timestamp_subsec_micros() == 0 {
+            SecondsFormat::Secs
+        } else {
+            SecondsFormat::Micros
+        },
+        false,
+    )
+}
+
+fn rebuild_plan(
+    rule: &Rule,
+    zone: Tz,
+    channel_name: &str,
+    now: DateTime<Utc>,
+) -> Result<Option<Vec<Appointment>>, StoreError> {
+    let days = match &rule.days {
+        Value::Array(values) => values
+            .iter()
+            .map(|value| python_int(Some(value)).ok().flatten())
+            .collect::<Option<Vec<_>>>()
+            .unwrap_or_default()
+            .into_iter()
+            .filter(|day| (0..=6).contains(day))
+            .collect::<BTreeSet<_>>(),
+        Value::Null => BTreeSet::new(),
+        _ => return Err(unsupported_rebuild()),
+    };
+    if days.is_empty() {
+        return Ok(None);
+    }
+
+    let today = now.with_timezone(&zone).date_naive();
+    let mut day = rule.start_date.unwrap_or(today).max(today);
+    // Source uses the entire explicitly bounded interval for a rebuild.
+    // Fourteen days is only the fallback when there is no explicit end.
+    let end_day = match rule.end_date {
+        Some(end) => end,
+        None => (now + chrono::Duration::days(14))
+            .with_timezone(&zone)
+            .date_naive(),
+    };
+    if end_day < day {
+        return Ok(None);
+    }
+
+    let title = if rule.name.is_empty() {
+        channel_name
+    } else {
+        &rule.name
+    };
+    let description = if rule.name.is_empty() {
+        format!("Recurring recording for {channel_name}")
+    } else {
+        rule.name.clone()
+    };
+    let mut bookings = Vec::new();
+    loop {
+        if days.contains(&i64::from(day.weekday().num_days_from_monday())) {
+            let start = wall_clock(zone, day, rule.start)?;
+            if start.with_timezone(&Utc) > now {
+                let end_date = if rule.end <= rule.start {
+                    day.checked_add_days(Days::new(1))
+                        .ok_or_else(unsupported_rebuild)?
+                } else {
+                    day
+                };
+                let end = wall_clock(zone, end_date, rule.end)?;
+                if end <= start || bookings.len() == ROWS as usize {
+                    return Err(unsupported_rebuild());
+                }
+                let properties = json!({
+                    "rule": {"type":"recurring","id":rule.id,"days_of_week":days,"name":rule.name},
+                    "status":"scheduled",
+                    "description":description,
+                    "program":{"title":title,"description":description,"start_time":local_iso(&start),"end_time":local_iso(&end)},
+                });
+                bookings.push(Appointment {
+                    start,
+                    end,
+                    properties,
+                });
+            }
+        }
+        if day == end_day {
+            break;
+        }
+        day = day.succ_opt().ok_or_else(unsupported_rebuild)?;
+    }
+    Ok(Some(bookings))
+}
+
+async fn insert_bookings(
+    connection: &mut PgConnection,
+    rule: &Rule,
+    appointments: Vec<Appointment>,
+) -> Result<Vec<i64>, StoreError> {
+    let mut recordings = Vec::with_capacity(appointments.len());
+    for appointment in appointments {
+        if let Some(id) = sqlx::query_scalar(
+            "INSERT INTO dispatcharr_channels_recording (channel_id,start_time,end_time,task_id,custom_properties)
+             SELECT $1,$2,$3,NULL,$4 WHERE NOT EXISTS(
+               SELECT 1 FROM dispatcharr_channels_recording
+               WHERE channel_id=$1 AND start_time=$2 AND custom_properties #> '{rule,id}' = to_jsonb($5::bigint)
+             ) RETURNING id::bigint",
+        )
+        .bind(rule.channel)
+        .bind(appointment.start.with_timezone(&Utc))
+        .bind(appointment.end.with_timezone(&Utc))
+        .bind(appointment.properties)
+        .bind(rule.id)
+        .fetch_optional(&mut *connection)
+        .await?
+        {
+            recordings.push(id);
+        }
+    }
+    Ok(recordings)
+}
+
+async fn plan_on(
+    connection: &mut PgConnection,
+    auth: &AuthService,
+    rule: &Rule,
+) -> Result<Option<Vec<Appointment>>, StoreError> {
+    if !rule.enabled {
+        return Ok(None);
+    }
+    let settings = auth.recurring_system_settings(connection).await?;
+    // Django's pinned server timezone is UTC, also used for invalid names.
+    let zone = settings["time_zone"]
+        .as_str()
+        .and_then(|value| value.parse::<Tz>().ok())
+        .unwrap_or(chrono_tz::UTC);
+    let channel_name: String =
+        sqlx::query_scalar("SELECT name FROM dispatcharr_channels_channel WHERE id=$1")
+            .bind(rule.channel)
+            .fetch_one(connection)
+            .await?;
+    rebuild_plan(rule, zone, &channel_name, Utc::now())
 }
 
 async fn purge(connection: &mut PgConnection, rule_id: i64) -> Result<bool, StoreError> {
@@ -356,14 +520,23 @@ fn input(body: &Bytes, media: &str) -> Result<Map<String, Value>, StoreError> {
     body_object(Ok(Json(body)))
 }
 
+struct Outcome {
+    status: u16,
+    payload: Value,
+    removed: bool,
+    bookings: Vec<i64>,
+    rebuild: bool,
+}
+
 async fn database(
-    owner: &Owner,
+    owner: &Arc<Owner>,
+    auth: &AuthService,
     user: &User,
     id: i64,
     method: Method,
     body: Bytes,
     media: &str,
-) -> Result<(u16, Value, bool), StoreError> {
+) -> Result<Outcome, StoreError> {
     let mut connection = owner.state.auth.store.pool().acquire().await?;
     let write = !matches!(method, Method::GET | Method::HEAD);
     let result = async {
@@ -374,12 +547,44 @@ async fn database(
                 .await?;
             let old = lookup(&mut tx, user, id, write).await?;
             match method {
-                Method::GET | Method::HEAD => Ok((200, old.project(), false)),
+                Method::GET | Method::HEAD => Ok(Outcome {
+                    status: 200,
+                    payload: old.project(),
+                    removed: false,
+                    bookings: Vec::new(),
+                    rebuild: false,
+                }),
                 Method::PATCH | Method::PUT => {
                     let changes = input(&body, media)?;
-                    let next =
-                        update(&mut tx, user, &old, changes, method == Method::PATCH).await?;
-                    Ok((200, next.project(), purge(&mut tx, id).await?))
+                    let mut next =
+                        validate_update(&mut tx, user, &old, changes, method == Method::PATCH)
+                            .await?;
+                    let plan = plan_on(&mut tx, auth, &next).await?;
+                    if plan.as_ref().is_some_and(|rows| !rows.is_empty()) {
+                        if !owner.state.jobs.supports_recurring_booking() {
+                            return Err(unsupported_rebuild());
+                        }
+                        owner
+                            .state
+                            .jobs
+                            .admit_scheduling(owner.clone())
+                            .await
+                            .map_err(effect)?;
+                    }
+                    save_rule(&mut tx, &mut next).await?;
+                    let removed = purge(&mut tx, id).await?;
+                    let rebuild = plan.is_some();
+                    let bookings = match plan {
+                        Some(appointments) => insert_bookings(&mut tx, &next, appointments).await?,
+                        None => Vec::new(),
+                    };
+                    Ok(Outcome {
+                        status: 200,
+                        payload: next.project(),
+                        removed,
+                        bookings,
+                        rebuild,
+                    })
                 }
                 Method::DELETE => {
                     sqlx::query(
@@ -388,7 +593,13 @@ async fn database(
                     .bind(id)
                     .execute(&mut *tx)
                     .await?;
-                    Ok((204, Value::Null, purge(&mut tx, id).await?))
+                    Ok(Outcome {
+                        status: 204,
+                        payload: Value::Null,
+                        removed: purge(&mut tx, id).await?,
+                        bookings: Vec::new(),
+                        rebuild: false,
+                    })
                 }
                 _ => unreachable!("recurring method admitted before SQL"),
             }
@@ -449,18 +660,39 @@ async fn execute(
     } else {
         Bytes::new()
     };
-    let _writer = matches!(method, Method::PATCH | Method::PUT | Method::DELETE)
-        .then(|| auth.task_sql_writer())
-        .transpose()?;
-    let (status, value, removed) = database(&owner, &user, id, method, body, &media).await?;
-    if removed {
+    let write = matches!(method, Method::PATCH | Method::PUT | Method::DELETE);
+    // Exclude a subsequent detail mutation before this request's committed
+    // recordings finish their save-signal effects. SQL ownership is released
+    // before the ordinary booking port rereads the committed recording.
+    let _recurring = if write {
+        Some(owner.state.recurring_writer.lock().await)
+    } else {
+        None
+    };
+    let _writer = write.then(|| auth.task_sql_writer()).transpose()?;
+    let result = database(&owner, &auth, &user, id, method, body, &media).await?;
+    if result.removed {
         publish(
             &owner,
             json!({"success":true,"type":"recordings_refreshed"}),
         )
         .await;
     }
-    reply(status, value, owner)
+    let refreshed = result.rebuild && (result.removed || !result.bookings.is_empty());
+    for id in result.bookings {
+        match owner.state.jobs.schedule_recurring(id, owner.clone()).await {
+            Ok(()) | Err(RecordingEffectError::SettledFailure) => {}
+            Err(error) => return Err(effect(error)),
+        }
+    }
+    if refreshed {
+        publish(
+            &owner,
+            json!({"success":true,"type":"recordings_refreshed"}),
+        )
+        .await;
+    }
+    reply(result.status, result.payload, owner.clone())
 }
 
 pub(super) async fn handle(
@@ -487,6 +719,89 @@ pub(super) async fn with_playback(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn calendar_rule() -> Rule {
+        let created = Utc.with_ymd_and_hms(2026, 11, 19, 12, 0, 0).unwrap();
+        Rule {
+            id: 9,
+            channel: 15,
+            name: String::new(),
+            days: json!([0, 3, 0]),
+            start: NaiveTime::from_hms_opt(23, 30, 0).unwrap(),
+            end: NaiveTime::from_hms_opt(1, 15, 0).unwrap(),
+            start_date: NaiveDate::from_ymd_opt(2026, 12, 14),
+            end_date: NaiveDate::from_ymd_opt(2026, 12, 17),
+            enabled: true,
+            created,
+            updated: created,
+        }
+    }
+
+    #[test]
+    fn explicit_end_allows_two_weekdays_beyond_14_days_with_local_overnight_times() {
+        let rule = calendar_rule();
+        let appointments = rebuild_plan(
+            &rule,
+            chrono_tz::America::New_York,
+            "Owned channel",
+            rule.created,
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(appointments.len(), 2);
+        for (appointment, (day, next_day)) in appointments.iter().zip([(14, 15), (17, 18)]) {
+            assert_eq!(
+                appointment.properties["rule"]["days_of_week"],
+                json!([0, 3])
+            );
+            assert_eq!(appointment.properties["program"]["title"], "Owned channel");
+            assert_eq!(
+                appointment.properties["description"],
+                "Recurring recording for Owned channel"
+            );
+            assert_eq!(
+                appointment.properties["program"]["start_time"],
+                format!("2026-12-{day}T23:30:00-05:00")
+            );
+            assert_eq!(
+                appointment.properties["program"]["end_time"],
+                format!("2026-12-{next_day}T01:15:00-05:00")
+            );
+            assert_eq!(appointment.start.with_timezone(&Utc).day(), next_day);
+        }
+    }
+
+    #[test]
+    fn missing_end_uses_14_days_and_calendar_admission_is_bounded() {
+        let mut rule = calendar_rule();
+        rule.end_date = None;
+        assert!(rebuild_plan(&rule, chrono_tz::UTC, "Owned", rule.created)
+            .unwrap()
+            .is_none());
+        rule.end_date = NaiveDate::from_ymd_opt(2030, 1, 1);
+        rule.days = json!([0, 1, 2, 3, 4, 5, 6]);
+        assert!(matches!(
+            rebuild_plan(&rule, chrono_tz::UTC, "Owned", rule.created),
+            Err(StoreError::Unsupported(_))
+        ));
+    }
+
+    #[test]
+    fn wall_clock_prefers_zoneinfo_fold_zero_and_refuses_imaginary_time() {
+        let zone = chrono_tz::America::New_York;
+        let clock = NaiveTime::from_hms_opt(1, 30, 0).unwrap();
+        let fall = NaiveDate::from_ymd_opt(2026, 11, 1).unwrap();
+        assert_eq!(
+            local_iso(&wall_clock(zone, fall, clock).unwrap()),
+            "2026-11-01T01:30:00-04:00"
+        );
+        let spring = NaiveDate::from_ymd_opt(2026, 3, 8).unwrap();
+        let gap = NaiveTime::from_hms_opt(2, 30, 0).unwrap();
+        assert!(matches!(
+            wall_clock(zone, spring, gap),
+            Err(StoreError::Unsupported(_))
+        ));
+    }
 
     #[test]
     fn weekday_validation_sorts_deduplicates_and_rejects_outside_the_week() {
