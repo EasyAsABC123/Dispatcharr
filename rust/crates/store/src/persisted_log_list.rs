@@ -1,10 +1,11 @@
 //! Original Dispatcharr's persisted log listing. Original authors retain credit.
 use crate::{AuthService, StoreError};
 use axum::{
-    extract::{ConnectInfo, State},
+    extract::{ConnectInfo, Path as RoutePath, RawQuery, State},
     http::{header, HeaderMap, HeaderValue, Method, StatusCode},
     response::{IntoResponse, Response},
-    Json,
+    routing::any,
+    Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
 use regex::Regex;
@@ -20,10 +21,17 @@ use std::{
         unix::fs::{MetadataExt, OpenOptionsExt},
     },
     path::{Path, PathBuf},
-    sync::OnceLock,
+    sync::{Arc, OnceLock},
 };
+use tokio::sync::{OwnedSemaphorePermit, Semaphore};
+
+#[path = "persisted_log_download.rs"]
+mod log_download;
+#[path = "persisted_log_tail.rs"]
+mod log_tail;
 
 const MAX_ENTRIES: usize = 4096;
+const LOG_FILE_READERS: usize = 4;
 const MAX_CMDLINE: u64 = 64 * 1024;
 
 #[derive(Serialize)]
@@ -77,6 +85,19 @@ impl LogDirectory {
         // symlink cannot redirect the subsequent no-follow operation.
         Some(anchor.join(target.file_name()?))
     }
+
+    fn open_regular(&self, name: &str) -> Option<File> {
+        let path = self.contained_path(name)?;
+        if !fs::symlink_metadata(&path).ok()?.is_file() {
+            return None;
+        }
+        let file = OpenOptions::new()
+            .read(true)
+            .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+            .open(path)
+            .ok()?;
+        file.metadata().ok()?.is_file().then_some(file)
+    }
 }
 
 fn modified(seconds: i64, nanoseconds: i64) -> Option<String> {
@@ -109,16 +130,11 @@ fn collector_pid_file(role: &str) -> String {
 }
 
 fn open_pid_file(directory: &LogDirectory, role: &str) -> Option<File> {
-    let path = directory.contained_path(&collector_pid_file(role))?;
-    if !fs::symlink_metadata(&path).ok()?.is_file() {
-        return None;
-    }
-    let file = OpenOptions::new()
-        .read(true)
-        .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
-        .open(path)
-        .ok()?;
-    file.metadata().ok()?.is_file().then_some(file)
+    directory.open_regular(&collector_pid_file(role))
+}
+
+fn missing_log() -> StoreError {
+    StoreError::StatusBody(404, json!({"detail":"Log file not found"}))
 }
 
 fn collector_running(directory: &LogDirectory, role: &str) -> bool {
@@ -193,19 +209,87 @@ fn listing(root: &Path, role: &str) -> Result<Listing, StoreError> {
     })
 }
 
-pub(super) async fn handle(
-    State(auth): State<AuthService>,
+#[derive(Clone)]
+struct Logs {
+    auth: AuthService,
+    file_readers: Arc<Semaphore>,
+}
+
+enum LogRead {
+    Listing,
+    Tail { name: String, query: Option<String> },
+    Download(String),
+}
+
+pub(super) fn router(auth: AuthService) -> Router {
+    Router::new()
+        .route("/api/core/logs/", any(handle))
+        .route("/api/core/logs/{name}/", any(tail))
+        .route("/api/core/logs/{name}/download/", any(download))
+        .with_state(Logs {
+            auth,
+            file_readers: Arc::new(Semaphore::new(LOG_FILE_READERS)),
+        })
+}
+
+async fn handle(
+    State(logs): State<Logs>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     method: Method,
     headers: HeaderMap,
 ) -> Response {
+    dispatch(logs, peer, method, headers, LogRead::Listing).await
+}
+
+async fn tail(
+    State(logs): State<Logs>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    RoutePath(name): RoutePath<String>,
+    RawQuery(query): RawQuery,
+    method: Method,
+    headers: HeaderMap,
+) -> Response {
+    dispatch(logs, peer, method, headers, LogRead::Tail { name, query }).await
+}
+
+async fn download(
+    State(logs): State<Logs>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    RoutePath(name): RoutePath<String>,
+    method: Method,
+    headers: HeaderMap,
+) -> Response {
+    dispatch(logs, peer, method, headers, LogRead::Download(name)).await
+}
+
+fn file_slot(readers: Arc<Semaphore>) -> Result<OwnedSemaphorePermit, StoreError> {
+    readers.try_acquire_owned().map_err(|_| {
+        StoreError::StatusBody(
+            503,
+            json!({"detail": "Persisted log file reader capacity unavailable."}),
+        )
+    })
+}
+
+async fn dispatch(
+    logs: Logs,
+    peer: SocketAddr,
+    method: Method,
+    headers: HeaderMap,
+    request: LogRead,
+) -> Response {
+    let Logs { auth, file_readers } = logs;
     let result = async {
         let permit = auth.task_sql_writer()?;
         let auth = auth.with_request_writer_permit(permit)?;
         auth.account_user(peer, headers, true).await?;
         if method == Method::OPTIONS {
             return Ok(Json(json!({
-                "name": "List Log Files",
+                "name": match request {
+                    LogRead::Listing => "List Log Files",
+                    LogRead::Tail { .. } => "Get Log File",
+                    LogRead::Download(_) => "Download Log File",
+                },
                 "description": "",
                 "renders": ["application/json", "text/html"],
                 "parses": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"],
@@ -221,13 +305,29 @@ pub(super) async fn handle(
             .map(PathBuf::from)
             .unwrap_or_else(|| PathBuf::from("/data/logs"));
         let role = env::var("DISPATCHARR_LOG_ROLE").unwrap_or_default();
-        tokio::task::spawn_blocking(move || {
-            // A cancelled request cannot drop physical blocking work's permit.
-            let _owner = auth;
-            listing(&root, &role).map(|value| Json(value).into_response())
-        })
-        .await
-        .map_err(|_| StoreError::UnhandledRestFault)?
+        let worker = match request {
+            LogRead::Listing => tokio::task::spawn_blocking(move || {
+                // Preserve the listing's original bounded filesystem owner.
+                let _owner = auth;
+                listing(&root, &role).map(|value| Json(value).into_response())
+            }),
+            LogRead::Tail { name, query } => {
+                drop(auth);
+                let permit = file_slot(file_readers)?;
+                let cursor = url::form_urlencoded::parse(query.as_deref().unwrap_or("").as_bytes())
+                    .filter(|(key, _)| key == "cursor")
+                    .map(|(_, value)| value.into_owned())
+                    .last()
+                    .unwrap_or_default();
+                tokio::task::spawn_blocking(move || log_tail::serve(permit, &root, &name, &cursor))
+            }
+            LogRead::Download(name) => {
+                drop(auth);
+                let permit = file_slot(file_readers)?;
+                tokio::task::spawn_blocking(move || log_download::serve(permit, &root, &name))
+            }
+        };
+        worker.await.map_err(|_| StoreError::UnhandledRestFault)?
     }
     .await;
     let mut response = result.unwrap_or_else(StoreError::into_response);

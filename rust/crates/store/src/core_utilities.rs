@@ -6,7 +6,7 @@ mod persisted_logs;
 use axum::{
     extract::{ConnectInfo, RawQuery, State},
     http::HeaderMap,
-    routing::{any, get},
+    routing::get,
     Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
@@ -166,8 +166,8 @@ pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/core/timezones/", get(timezones))
         .route("/api/core/system-events/", get(events))
-        .route("/api/core/logs/", any(persisted_logs::handle))
-        .with_state(auth)
+        .with_state(auth.clone())
+        .merge(persisted_logs::router(auth))
 }
 #[cfg(test)]
 mod tests {
