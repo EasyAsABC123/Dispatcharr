@@ -3,6 +3,7 @@ import copy,json,shutil,tempfile,unittest
 from pathlib import Path
 import retained_source12_contracts as subject
 import source_contracts
+import retained_xc_refresh_contracts
 ROOT=Path(__file__).resolve().parents[2]
 class RetainedSource12Controls(unittest.TestCase):
  def test_source12_exact_observations_and_unresolved_method(self):
@@ -22,9 +23,30 @@ class RetainedSource12Controls(unittest.TestCase):
     with self.assertRaises(AssertionError):subject.generate(root)
     p.write_bytes(raw)
  def test_previous173_and796_whole_rows_and_M3U_primary_preserved(self):
-  register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes());import retained_range_source10_contracts;retained_range_source10_contracts.restore_pre_range(register['runtime_routes']);proof=json.loads((ROOT/subject.BASE/'preservation.json').read_bytes());rows=copy.deepcopy(register['runtime_routes']);current=copy.deepcopy(rows);ops={o['contract_id']:o for r in rows for o in r['operations']};new=proof['new_selected_original_unassigned_dict']['contract_id'];old='route-56d9c31dd9fc91261e25:METHOD_UNRESOLVED'
+  register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_xc_refresh_contracts.restore_pre_xc(ROOT,register['runtime_routes'])
+  import retained_range_source10_contracts
+  retained_range_source10_contracts.restore_pre_range(register['runtime_routes'])
+  proof=json.loads((ROOT/subject.BASE/'preservation.json').read_bytes())
+  rows=copy.deepcopy(register['runtime_routes'])
+  current=copy.deepcopy(rows)
+  ops={o['contract_id']:o for r in rows for o in r['operations']}
+  new=proof['new_selected_original_unassigned_dict']['contract_id']
+  old='route-56d9c31dd9fc91261e25:METHOD_UNRESOLVED'
   self.assertEqual(sum(bool(o.get('executable_Source_contract'))for o in ops.values()),174);self.assertEqual(subject.digest({k:v for k,v in ops.items()if k not in {new,old}}),proof['all_unselected796_whole_dicts_sha256'])
   subject.restore_pre_Source12(rows);prior={o['contract_id']:o for r in rows for o in r['operations']};self.assertEqual(prior[new],proof['new_selected_original_unassigned_dict']);self.assertEqual(subject.digest(prior[old]),proof['existing_supplement_target_whole_dict_sha256']);self.assertEqual(subject.digest({k:o['executable_Source_contract']for k,o in prior.items()if o.get('executable_Source_contract')}),proof['all_prior173_definitions_sha256']);self.assertEqual(subject.digest([{k:v for k,v in r.items()if k!='operations'}for r in rows]),proof['route_structure_sha256'])
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
-  bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes());mapping=source_contracts.apply(ROOT,rows,bindings);self.assertEqual(mapping['operations'],174);retained_range_source10_contracts.restore_pre_range(rows);self.assertEqual(rows,current);source_contracts.apply(ROOT,rows,bindings);retained_range_source10_contracts.restore_pre_range(rows);self.assertEqual(rows,current);self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertEqual(sum(o['method']is None and bool(o.get('executable_Source_contract'))for o in ops.values()),63);self.assertTrue(all(not o['fully_verified']for o in ops.values()))
+  bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
+  mapping=source_contracts.apply(ROOT,rows,bindings)
+  self.assertEqual(mapping['operations'],175)
+  retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
+  retained_range_source10_contracts.restore_pre_range(rows)
+  self.assertEqual(rows,current)
+  source_contracts.apply(ROOT,rows,bindings)
+  retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
+  retained_range_source10_contracts.restore_pre_range(rows)
+  self.assertEqual(rows,current)
+  self.assertEqual(sum(o['method']is None for o in ops.values()),322)
+  self.assertEqual(sum(o['method']is None and bool(o.get('executable_Source_contract'))for o in ops.values()),63)
+  self.assertTrue(all(not o['fully_verified']for o in ops.values()))
 if __name__=='__main__':unittest.main()

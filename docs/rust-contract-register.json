@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "f49917c0caf09ca8547535fabeba855325438a439c1c917658366d5928cba206",
+    "scripts/rust-contracts/executable-source-inputs.json": "a651b814d45e3900f4ce1fac491f9d47b8b9661dee381f682d62c26cb71af9f3",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -34,11 +34,12 @@
     "scripts/rust-contracts/retained-sd/bindings.json": "33e154cc3944ad6ba4918b7e6c97bcc1f40f7547ce065adba750ff161a100865",
     "scripts/rust-contracts/framework-suite/bindings.json": "1f4252ec6faae38ebea22259e12f91744de39716cbd68b1b278045584f29986b",
     "scripts/rust-contracts/retained-source12/bindings.json": "fcb151049a68c680f0da8ef922a2a500c2c2b384497d87b1548c66b4c9c1781a",
-    "scripts/rust-contracts/retained-range-source10/bindings.json": "046df70ef895169fb842a7f832925eb5d4bd4a3f5ee65e8e9dcf8c545f85939b"
+    "scripts/rust-contracts/retained-range-source10/bindings.json": "046df70ef895169fb842a7f832925eb5d4bd4a3f5ee65e8e9dcf8c545f85939b",
+    "scripts/rust-contracts/retained-xc-refresh-source11/bindings.json": "533a972e393b32f81c0536a2551539c84c765d17c46e1da9372d6fff38218312"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 174,
+    "operations": 175,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -164,6 +165,11 @@
         "path": "scripts/rust-contracts/retained-range-source10/bindings.json",
         "sha256": "046df70ef895169fb842a7f832925eb5d4bd4a3f5ee65e8e9dcf8c545f85939b",
         "kind": "retained_original_range_Source10_resolver_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-xc-refresh-source11/bindings.json",
+        "sha256": "533a972e393b32f81c0536a2551539c84c765d17c46e1da9372d6fff38218312",
+        "kind": "retained_original_xc_Source11_single_refresh_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -61596,15 +61602,105 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "actual_fixture_role": "admin",
+                "complete_role_matrix": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "actual_Source_controller_exit": 0,
+            "verified_cleanup": {
+              "exact_CIDs": 3,
+              "host_generations": 2
+            },
+            "Source_HTTP_replayed": false,
+            "qualified_owned_account": 6,
+            "preceding_fixture_actions": "Normal account create and group selection before first refresh",
+            "capture_reference": {
+              "path": "scripts/rust-contracts/retained-xc-refresh-source11/reference.json",
+              "sha256": "bd2a25ff3ae52d4d5f0155df66f3e69a8e741987126e702b973117b6885f1ad9"
+            }
+          },
+          "assertions": [
+            "Retained admin POST to the explicit single-account refresh view returned exact status 202 and a captured JSON response.",
+            "The actual refresh task published its actual profile child, with root/parent lineage bound by the retained journal.",
+            "The reviewed capture includes 61 SQL tables and 59 literal sequence observations, provider, broker, cache and ordered WebSocket evidence.",
+            "Pinned Source URL declaration and handler match the existing route identity. The observed POST does not resolve the full method declaration."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "retained_original_XC11_scoped_qualified_refresh_observation",
+            "new_Source_cases_this_task": 0,
+            "retained_observations": 1,
+            "Native_coverage_increased": false,
+            "fully_verified": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-c7d88007daf59544f9ea:METHOD_UNRESOLVED",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M5",
+            "pattern_exact": "api/m3u/refresh/<int:account_id>/",
+            "source_handler": "apps.m3u.api_views.RefreshSingleM3UAPIView",
+            "resolver_ordinal": 184,
+            "fixture_id": "retained-XC11:original-single-refresh",
+            "cases": [
+              {
+                "cell": "first-full-refresh",
+                "subcall": 2,
+                "literal_path": "/api/m3u/refresh/6/",
+                "role": "admin",
+                "status": 202,
+                "body_bytes": 61,
+                "body_sha256": "7268d7342a10ba2f5ccc53a1e22fc826543b3f4cc073533f8aa7fcdf08848262",
+                "SQL_tables": 61,
+                "literal_sequences": 59,
+                "published_task_names": [
+                  "apps.m3u.tasks.refresh_single_m3u_account",
+                  "apps.m3u.tasks.refresh_account_profiles"
+                ],
+                "profile_parent_is_refresh_root": true,
+                "capture_qualified_and_business_reviewed": true,
+                "method": "POST"
+              }
+            ],
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "actual_fixture_role": "admin",
+                "complete_role_matrix": false
+              }
+            },
+            "assertions": [
+              "Retained admin POST to the explicit single-account refresh view returned exact status 202 and a captured JSON response.",
+              "The actual refresh task published its actual profile child, with root/parent lineage bound by the retained journal.",
+              "The reviewed capture includes 61 SQL tables and 59 literal sequence observations, provider, broker, cache and ordered WebSocket evidence.",
+              "Pinned Source URL declaration and handler match the existing route identity. The observed POST does not resolve the full method declaration."
+            ],
+            "result": {
+              "state": "retained_original_XC11_scoped_qualified_refresh_observation",
+              "new_Source_cases_this_task": 0,
+              "retained_observations": 1,
+              "Native_coverage_increased": false,
+              "fully_verified": false
+            },
+            "remaining": [
+              "Full method and effective-role matrix, Native wire/state parity, and full milestone acceptance."
+            ]
+          }
         }
       ]
     },

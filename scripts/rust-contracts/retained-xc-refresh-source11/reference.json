@@ -1,0 +1,121 @@
+{
+  "Original_credit": "Original Dispatcharr and dependency authors retain all application, algorithm and protocol credit.",
+  "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "prior_register_revision": "8acb4fa6b1eea827bfc52053ccfeb6ab2cb09253",
+  "resolver_ordinal": 184,
+  "pattern_exact": "api/m3u/refresh/<int:account_id>/",
+  "source_handler": "apps.m3u.api_views.RefreshSingleM3UAPIView",
+  "original_route_source_and_handler": {
+    "apps/m3u/api_urls.py": "492bbd9c4c8127a55cde251c00bb565aa5c8ef2d6a26999b2e70059781cdc81a",
+    "apps/m3u/api_views.py": "1299f6d86af5bd86ca04087f3ca70120ee1b04686c182ea0682560f0b7165d63"
+  },
+  "original_route_declaration_line": 32,
+  "prior_operation": {
+    "contract_id": "route-c7d88007daf59544f9ea:METHOD_UNRESOLVED",
+    "method": null,
+    "source_action": null,
+    "owning_milestone": "M5",
+    "milestone_assignment": "proposed work ownership, not acceptance",
+    "role_matrix": {
+      "state": "unmapped",
+      "required_roles": []
+    },
+    "setup_fixture": null,
+    "assertions": [],
+    "coverage_state": "not_yet_mapped",
+    "related_evidence": [],
+    "result": null,
+    "fully_verified": false
+  },
+  "case": {
+    "cell": "first-full-refresh",
+    "subcall": 2,
+    "observed_method": "POST",
+    "literal_path": "/api/m3u/refresh/6/",
+    "role": "admin",
+    "status": 202,
+    "body_bytes": 61,
+    "body_sha256": "7268d7342a10ba2f5ccc53a1e22fc826543b3f4cc073533f8aa7fcdf08848262",
+    "SQL_tables": 61,
+    "literal_sequences": 59,
+    "published_task_names": [
+      "apps.m3u.tasks.refresh_single_m3u_account",
+      "apps.m3u.tasks.refresh_account_profiles"
+    ],
+    "profile_parent_is_refresh_root": true,
+    "capture_qualified_and_business_reviewed": true
+  },
+  "raw_capture_hash_references": {
+    "wire.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/wire.json",
+      "sha256": "53297552a4a12027ee30278410b6de0f8495df5a307e16815000c9d039c5a2a1"
+    },
+    "wire-provenance.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/wire-provenance.json",
+      "sha256": "ec586eeb1927a64a71355b930968fc1eb913027cdeb98c25aabf9c6624b7c289"
+    },
+    "SQL-before.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/SQL-before.json",
+      "sha256": "d0a92f6e971726884fe6d905876c30fb0b71896ee0e47736d4bfbed7e0aa8d87"
+    },
+    "SQL-after.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/SQL-after.json",
+      "sha256": "24873a3453cb8d678431c5db6485ea268c2cfb1ccee6d98ab62bc6500f22b4aa"
+    },
+    "actual-producer-causal-frames.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/actual-producer-causal-frames.json",
+      "sha256": "fd623c98371836e6dd7e8a01402c95f4d3aebdffb9a10035a031273ecbfd14c7"
+    },
+    "actual-provider-delta.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/actual-provider-delta.json",
+      "sha256": "b2b0230a6106f362b2d07530ca5e0ba63302d0cb89a3aef128150799e52701e9"
+    },
+    "WS-before.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/WS-before.json",
+      "sha256": "ef90789b03bfdc1121a77902c2d87f5c56917069134d41279828a3b169806585"
+    },
+    "WS.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/WS.json",
+      "sha256": "324cb251bada0fdf1c13a722db43ebbe664f04bde1a7850482514587e76d115e"
+    },
+    "cache-before.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/cache-before.json",
+      "sha256": "a661c1aee333bcab28669d4497530edebaeffa7d3e8a602f45ab46e9faf21877"
+    },
+    "cache-after.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/cache-after.json",
+      "sha256": "4838a187479d71017a46c53145c79c4a18028cc7711a1e87aeb607a80b88f06d"
+    },
+    "broker-before.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/broker-before.json",
+      "sha256": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885"
+    },
+    "broker-after.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/broker-after.json",
+      "sha256": "ea3616b67d288fb5f4b98fdf8ca211e0d52659d916a26cdd9838e3d8e131a885"
+    },
+    "media-origin-before.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/media-origin-before.json",
+      "sha256": "748813d4d64a276d5c6923b32f0539c62d096938d4382d07ba62d23b01776cf5"
+    },
+    "media-origin-after.json": {
+      "path": "artifacts/rust/normal-graph-source-xc-create-eleven-1/fixtures/Original-1694acc6/xc-account-create-eleven/private/first-full-refresh-2/media-origin-after.json",
+      "sha256": "748813d4d64a276d5c6923b32f0539c62d096938d4382d07ba62d23b01776cf5"
+    }
+  },
+  "original_authority_hashes": {
+    "artifacts/rust/source-xc-create-eleven-capture-qualification-2/qualification.json": "aa4626642342d8b545a6ff39527eb376b714daa35df7ea477edc73a2212a852a",
+    "artifacts/rust/source-xc-create-eleven-business-review-1/behavior-review.json": "330cea7c961e5703fb845c401efb2e47d6e4e9b406d438355f8bfb9b68607c43",
+    "artifacts/rust/source-xc-create-eleven-durable-agent-execution-1/terminal.json": "f43e38d95d02fa7d0f97815e915558e39bff2a415b360e1d0727e787fd030bc7",
+    "artifacts/rust/source-xc-create-eleven-durable-agent-execution-1/independent-cleanup.json": "23c198dcb6183793e0e14da0b014f29491bd53e15a590aecb2ee0acdd2b40995"
+  },
+  "actual_source_controller_exit": 0,
+  "verified_cleanup": {
+    "exact_CIDs": 3,
+    "host_generations": 2
+  },
+  "new_source_requests": 0,
+  "method_resolution_performed": false,
+  "effective_role_matrix_complete": false,
+  "Native_parity_accepted": false
+}

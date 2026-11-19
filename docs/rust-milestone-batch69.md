@@ -34,6 +34,18 @@ The combined Rust code passed workspace formatting, strict compilation
 including Main, and three focused tests for HLS, HDHomeRun and XC.
 [Second check receipt](../scripts/rust-integration/milestone-batch69/parallel-wave-2.json)
 
+M0 now assigns the retained Python XC refresh call to its explicit route.
+It remains partial coverage of the observed POST and its task lineage. The
+register has 175 partial HTTP assignments and 623 absent. The regeneration
+preserved the other 797 operation records and all 174 prior definitions.
+Ten focused register controls passed without restarting Python.
+
+M1's existing bounded TS discontinuity and buffer proofs still cover the
+reviewed technical domain. M0 coverage remains its formal prerequisite.
+The release candidate needs the clean write-failure and retry sequence and
+a decoder check across a source switch. The earlier Core8 benchmark remains
+scoped to its measured image.
+
 The [milestone coordinator](../scripts/rust-milestone-batches/README.md) still
 requires complete case bindings and an exact release image. The final run
 covers functional Compose workflows, paired performance, a two-hour soak, and

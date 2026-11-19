@@ -1,0 +1,83 @@
+{
+  "format_version": 1,
+  "binding_kind": "retained_original_xc_Source11_single_refresh_HTTP",
+  "credit": "Original Dispatcharr and dependency authors retain all application, algorithm and protocol credit.",
+  "contracts": [
+    {
+      "contract_id": "route-c7d88007daf59544f9ea:METHOD_UNRESOLVED",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M5",
+      "pattern_exact": "api/m3u/refresh/<int:account_id>/",
+      "source_handler": "apps.m3u.api_views.RefreshSingleM3UAPIView",
+      "resolver_ordinal": 184,
+      "fixture_id": "retained-XC11:original-single-refresh",
+      "cases": [
+        {
+          "cell": "first-full-refresh",
+          "subcall": 2,
+          "literal_path": "/api/m3u/refresh/6/",
+          "role": "admin",
+          "status": 202,
+          "body_bytes": 61,
+          "body_sha256": "7268d7342a10ba2f5ccc53a1e22fc826543b3f4cc073533f8aa7fcdf08848262",
+          "SQL_tables": 61,
+          "literal_sequences": 59,
+          "published_task_names": [
+            "apps.m3u.tasks.refresh_single_m3u_account",
+            "apps.m3u.tasks.refresh_account_profiles"
+          ],
+          "profile_parent_is_refresh_root": true,
+          "capture_qualified_and_business_reviewed": true,
+          "method": "POST"
+        }
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "actual_fixture_role": "admin",
+          "complete_role_matrix": false
+        }
+      },
+      "assertions": [
+        "Retained admin POST to the explicit single-account refresh view returned exact status 202 and a captured JSON response.",
+        "The actual refresh task published its actual profile child, with root/parent lineage bound by the retained journal.",
+        "The reviewed capture includes 61 SQL tables and 59 literal sequence observations, provider, broker, cache and ordered WebSocket evidence.",
+        "Pinned Source URL declaration and handler match the existing route identity. The observed POST does not resolve the full method declaration."
+      ],
+      "result": {
+        "state": "retained_original_XC11_scoped_qualified_refresh_observation",
+        "new_Source_cases_this_task": 0,
+        "retained_observations": 1,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "remaining": [
+        "Full method and effective-role matrix, Native wire/state parity, and full milestone acceptance."
+      ]
+    }
+  ],
+  "fixtures": {
+    "retained-XC11:original-single-refresh": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "actual_Source_controller_exit": 0,
+      "verified_cleanup": {
+        "exact_CIDs": 3,
+        "host_generations": 2
+      },
+      "Source_HTTP_replayed": false,
+      "qualified_owned_account": 6,
+      "preceding_fixture_actions": "Normal account create and group selection before first refresh",
+      "capture_reference": {
+        "path": "scripts/rust-contracts/retained-xc-refresh-source11/reference.json",
+        "sha256": "bd2a25ff3ae52d4d5f0155df66f3e69a8e741987126e702b973117b6885f1ad9"
+      }
+    }
+  },
+  "new_assignments": 1,
+  "retained_Source_observations": 1,
+  "new_Source_HTTP": 0,
+  "fully_verified_added": 0
+}

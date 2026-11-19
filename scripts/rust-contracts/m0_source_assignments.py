@@ -18,11 +18,23 @@ def method_sites(value):
 
 def generate(root,register_path=None,historical_log=None):
  root=Path(root);path=Path(register_path)if register_path else root/'docs/rust-contract-register.json';register=json.loads(path.read_bytes());manifest=json.loads((root/'scripts/rust-contracts/executable-source-inputs.json').read_bytes());types={};source_inputs=[]
+ supplements={(op['contract_id'],capture['input']['path']):capture
+              for route in register['runtime_routes']for op in route['operations']
+              for capture in op.get('supplemental_executable_Source_captures',[])}
+ admitted_supplements=set()
  for reference in manifest['inputs']:
   source=root/reference['path'];assert sha(source)==reference['sha256'],'exact Source assignment input';binding=json.loads(source.read_bytes());source_inputs.append(reference)
   for contract in binding['contracts']:
-   if contract['contract_id']in types and reference['kind']in['retained_original_management12_channelguide25_HTTP','retained_original_auth51_plugin35_resolver_scoped_HTTP']:continue
-   assert contract['contract_id']not in types,'one primary Source definition per operation';types[contract['contract_id']]=(reference['kind'],contract)
+   identifier=contract['contract_id']
+   if identifier in types:
+    key=(identifier,reference['path'])
+    assert key not in admitted_supplements,'one retained supplemental definition per input and operation'
+    assert supplements.get(key)=={
+     'definition':contract, 'setup_fixture':binding['fixtures'][contract['fixture_id']], 'input':reference,
+    },'one primary Source definition per operation'
+    admitted_supplements.add(key)
+    continue
+   types[identifier]=(reference['kind'],contract)
  assigned=[];missing=[];unknown=[];seen=set()
  for route in register['runtime_routes']:
   for operation in route['operations']:

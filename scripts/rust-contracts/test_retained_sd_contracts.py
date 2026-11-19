@@ -50,6 +50,8 @@ class RetainedSDControls(unittest.TestCase):
 
     def test_only_two_assignments_preserve_796_full_rows_and_161_prior_definitions(self):
         register = json.loads((ROOT / 'docs/rust-contract-register.json').read_bytes())
+        import retained_xc_refresh_contracts
+        retained_xc_refresh_contracts.restore_pre_xc(ROOT, register['runtime_routes'])
         import retained_range_source10_contracts
         retained_range_source10_contracts.restore_pre_range(register['runtime_routes'])
         import retained_source12_contracts
@@ -70,10 +72,11 @@ class RetainedSDControls(unittest.TestCase):
         for key, name in [('non_HTTP_candidates', 'non_HTTP_candidates_sha256'), ('openapi_operations', 'OpenAPI_operations_sha256'), ('observations_for_methods_not_declared_in_discovery', 'legacy_undeclared_method_observations_sha256')]: self.assertEqual(subject.digest(register[key]), proof[name])
         bindings = json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes())
         mapping = source_contracts.apply(ROOT, rows, bindings)
+        retained_xc_refresh_contracts.restore_pre_xc(ROOT, rows)
         retained_range_source10_contracts.restore_pre_range(rows)
         retained_source12_contracts.restore_pre_Source12(rows)
         framework_suite_contracts.restore_pre_framework(rows)
-        self.assertEqual(rows, current); self.assertEqual(mapping['operations'], 174)
+        self.assertEqual(rows, current); self.assertEqual(mapping['operations'], 175)
         self.assertEqual(len(mapping['unmapped_method_Source_observations']), 20)
         self.assertEqual(len([x for x in mapping['unmapped_method_Source_observations'] if x['route_id'] == 'route-7e6941c073eccaa2b6dd']), 6)
         source_contracts.apply(ROOT, rows, bindings)

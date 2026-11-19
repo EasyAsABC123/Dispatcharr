@@ -127,6 +127,11 @@ class SourceContracts(unittest.TestCase):
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
+        import retained_xc_refresh_contracts
+        for name in retained_xc_refresh_contracts.dependencies():
+            p = self.root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, p)
         import retained_range_source10_contracts
         for name in retained_range_source10_contracts.dependencies():
             p = self.root / name
@@ -163,12 +168,39 @@ class SourceContracts(unittest.TestCase):
 
     def test_exact_partial_assignments(self):
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 174)
+        self.assertEqual(result['operations'], 175)
         assigned = [o for r in rows for o in r['operations'] if 'executable_Source_contract' in o]
-        self.assertEqual(len(assigned), 174)
-        self.assertEqual(sum(o['method'] is None for o in assigned), 63)
+        self.assertEqual(len(assigned), 175)
+        self.assertEqual(sum(o['method'] is None for o in assigned), 64)
         self.assertEqual(sum(o['result']['new_Source_cases_this_task'] for o in assigned), 78)
         self.assertTrue(all(not o['fully_verified'] for r in rows for o in r['operations']))
+
+    def test_retained_xc_refresh_adds_only_observed_post_reference(self):
+        import m0_source_assignments
+        import retained_xc_refresh_contracts as xc
+
+        result, rows = self.apply()
+        packet = xc.generate(self.root)
+        route, = [row for row in rows if row["resolver_ordinal"] == 184]
+        operation, = route["operations"]
+        self.assertFalse(route["declared_methods_resolved"])
+        self.assertIsNone(operation["method"])
+        self.assertIsNone(operation["source_action"])
+        self.assertFalse(operation["fully_verified"])
+        self.assertEqual(operation["executable_Source_contract"], packet["contracts"][0])
+        case, = operation["executable_Source_contract"]["cases"]
+        self.assertEqual((case["method"], case["literal_path"], case["role"], case["status"]),
+                         ("POST", "/api/m3u/refresh/6/", "admin", 202))
+        self.assertTrue(case["profile_parent_is_refresh_root"])
+        self.assertEqual(result["operations"], 175)
+        xc.restore_pre_xc(self.root, rows)
+        self.assertEqual(operation, xc.reference(self.root)["prior_operation"])
+        self.assertEqual(sum("executable_Source_contract" in op for row in rows for op in row["operations"]), 174)
+        audit = m0_source_assignments.generate(self.root)
+        self.assertEqual(audit["counts"]["executable_Source_partial_operations"], 175)
+        self.assertEqual(audit["counts"]["operations_without_executable_Source_assignment"], 623)
+        self.assertEqual(audit["counts"]["method_unresolved_with_Source_fixture"], 64)
+        self.assertEqual(audit["counts"]["fully_verified_operations"], 0)
 
     def test_captured_aggregate_does_not_resolve_operation_method(self):
         value = json.loads((self.root / 'scripts/rust-contracts/station-aggregate-source53-55-bindings.json').read_text())

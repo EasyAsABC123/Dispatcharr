@@ -65,10 +65,12 @@ class NotificationMutationControls(unittest.TestCase):
    'scripts/rust-contracts/retained-sd/bindings.json',
    'scripts/rust-contracts/framework-suite/bindings.json',
    'scripts/rust-contracts/retained-source12/bindings.json',
-   'scripts/rust-contracts/retained-range-source10/bindings.json'])
+   'scripts/rust-contracts/retained-range-source10/bindings.json',
+   'scripts/rust-contracts/retained-xc-refresh-source11/bindings.json'])
   later_ids=[];supplemental_ids=[]
   import retained_management_contracts
   import retained_auth_plugin_contracts
+  import retained_xc_refresh_contracts
   for ref in later:
    value=source_contracts.checked(ROOT,ref)
    if ref['kind']==retained_management_contracts.KIND:
@@ -95,11 +97,14 @@ class NotificationMutationControls(unittest.TestCase):
     import retained_range_source10_contracts
     retained_range_source10_contracts.validate(ROOT,value)
     supplemental_ids.extend(c['contract_id']for c in value['contracts'])
+   elif ref['kind']==retained_xc_refresh_contracts.KIND:
+    retained_xc_refresh_contracts.validate(ROOT,value)
    else:later_ids.extend(c['contract_id']for c in value['contracts'])
   self.assertEqual(len(later_ids),54);self.assertEqual(len(set(later_ids)),54)
   self.assertEqual(len(supplemental_ids),11)
   self.assertFalse(selected.intersection(later_ids))
   historical=copy.deepcopy(new['runtime_routes'])
+  retained_xc_refresh_contracts.restore_pre_xc(ROOT,historical)
   historical_ops={o['contract_id']:o for r in historical for o in r['operations']}
   for key in supplemental_ids:
    # Reverse only the new cohort's separate field. Original Source fields
@@ -151,7 +156,9 @@ class NotificationMutationControls(unittest.TestCase):
   self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+7)
   self.assertEqual(non_HTTP_mapping['fully_verified_added'],0)
   expected=old['base_HTTP_assignments']+len(selected)+len(later_ids)
-  self.assertEqual(expected,174);self.assertEqual(mapping['operations'],expected)
+  self.assertEqual(expected,174) # pre-XC preservation count
+  expected += 1
+  self.assertEqual(mapping['operations'],expected)
   self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)
   self.assertEqual({key for key,o in ops.items()if 'executable_Source_contract'in o and o['executable_Source_contract'].get('fixture_id')=='retained-Original-notification-mutations-Source2-48'},selected)
  def test_prior_rows_preserved_except_exact_validated_later_assignments(self):

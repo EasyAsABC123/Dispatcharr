@@ -117,4 +117,11 @@ The portable register gate passes 354 tests with zero failures and one optional 
 
 The [Source12 cohort](../scripts/rust-contracts/retained-source12/README.md) adds one partial search POST definition from nine qualified HTTP captures and supplements the existing M3U unresolved-method definition with three exports. The register reaches 174 HTTP assignments and 624 absent. All 173 prior primary definitions, the existing M3U primary, 796 unrelated operation dictionaries and all 322 unresolved declarations remain unchanged.
 
+The [retained XC11 refresh reference](../scripts/rust-contracts/retained-xc-refresh-source11/README.md)
+adds one partial assignment for the observed admin POST to the single-account
+refresh view. The register now has 175 partial HTTP assignments and 623
+unassigned operations. All 322 unresolved method declarations remain
+unchanged, and all 174 earlier primary definitions keep their exact evidence.
+
+
 The portable gate passes 358 tests with zero failures and one optional skip. A separate three-path pure resolver control binds the actual search and get.php handlers without query credentials or HTTP replay. Its first stale-cardinality failure remains recorded; the minimal corrected control exits0 with exact cleanup. Source captures and handler custody do not establish full Native endpoints, roles, milestones or performance.
