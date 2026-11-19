@@ -1,0 +1,1849 @@
+{
+  "Native_verified": false,
+  "cohorts": {
+    "epg": {
+      "actual_child_results": {
+        "cleanup": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        },
+        "probe": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        },
+        "startup": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        }
+      },
+      "fixture_sha256": "9a376010703aa89b0606a7256c22a117d4da35a9f7c1d42962a77bae95afa2ae",
+      "observations": [
+        {
+          "actual_path": "/api/epg/epgdata.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/epg/epgdata.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/epgdata.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 229,
+              "actual_body_sha256": "49329df461716c719efa27d0a2b64ea1028f783273e1b724414567967b69034b",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/epgdata.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 229,
+              "actual_body_sha256": "49329df461716c719efa27d0a2b64ea1028f783273e1b724414567967b69034b",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/epgdata.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-4ce88ce8b59bfa6db6fc:GET",
+          "declaration": "GET",
+          "name": "epgdata_list",
+          "observed_method": "GET",
+          "path_template": "/api/epg/epgdata.json",
+          "proof": {
+            "after_sha256": "ef14fd46d15fb2efdcc1a7868032f0b84bc6341c0ebc606226a30e2b50187aff",
+            "before_sha256": "ef14fd46d15fb2efdcc1a7868032f0b84bc6341c0ebc606226a30e2b50187aff",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "list",
+            "handler": "apps.epg.api_views.EPGDataViewSet",
+            "ordinal": 168,
+            "pattern": "api/epg/^epgdata\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:epgdata-list"
+          }
+        },
+        {
+          "actual_path": "/api/epg/epgdata/3.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/epg/epgdata/3.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/epgdata/3.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 115,
+              "actual_body_sha256": "957a3048f689ec22f751237fa1992567173ae29b7c66687de6df846fffdba1cd",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/epgdata/3.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 115,
+              "actual_body_sha256": "957a3048f689ec22f751237fa1992567173ae29b7c66687de6df846fffdba1cd",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/epgdata/3.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-c5f4fd3cbfb4c9bfd8ba:GET",
+          "declaration": "GET",
+          "name": "epgdata_retrieve",
+          "observed_method": "GET",
+          "path_template": "/api/epg/epgdata/{pk}.json",
+          "proof": {
+            "after_sha256": "415344bfe5af215054cac247b04581d7892ca214c6ff99e5336dcc9c391d1731",
+            "before_sha256": "415344bfe5af215054cac247b04581d7892ca214c6ff99e5336dcc9c391d1731",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "retrieve",
+            "handler": "apps.epg.api_views.EPGDataViewSet",
+            "ordinal": 170,
+            "pattern": "api/epg/^epgdata/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:epgdata-detail"
+          }
+        },
+        {
+          "actual_path": "/api/epg/programs/5/poster.json",
+          "cases": [
+            {
+              "actual_body_bytes": 145,
+              "actual_body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+              "actual_content_type": "text/html",
+              "actual_status": 500,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/5/poster.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 145,
+              "actual_body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+              "actual_content_type": "text/html",
+              "actual_status": 500,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/5/poster.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 145,
+              "actual_body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+              "actual_content_type": "text/html",
+              "actual_status": 500,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/5/poster.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 145,
+              "actual_body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+              "actual_content_type": "text/html",
+              "actual_status": 500,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/5/poster.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-13b512e454749586945a:GET",
+          "declaration": "GET",
+          "name": "poster_json",
+          "observed_method": "GET",
+          "path_template": "/api/epg/programs/{pk}/poster.json",
+          "proof": {
+            "after_sha256": "acd432e628dbbc1c902aaf7765535e50120539e84f03c0e9f064a79202abd5d9",
+            "before_sha256": "acd432e628dbbc1c902aaf7765535e50120539e84f03c0e9f064a79202abd5d9",
+            "known_legacy_error": true,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "poster",
+            "handler": "apps.epg.api_views.ProgramViewSet",
+            "ordinal": 166,
+            "pattern": "api/epg/^programs/(?P<pk>[^/.]+)/poster\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:program-poster"
+          }
+        },
+        {
+          "actual_path": "/api/epg/programs/7/poster",
+          "cases": [
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 404,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/7/poster",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 404,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/7/poster",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 404,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/7/poster",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 404,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/7/poster",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-61006edc93649cfd3177:GET",
+          "declaration": "GET",
+          "name": "poster_no_slash",
+          "observed_method": "GET",
+          "path_template": "/api/epg/programs/{pk}/poster",
+          "proof": {
+            "after_sha256": "cb2f1fa605d6519ba44de4c7d32fcc27fe078264faa6ed8a44122305d9cce089",
+            "before_sha256": "cb2f1fa605d6519ba44de4c7d32fcc27fe078264faa6ed8a44122305d9cce089",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "poster",
+            "handler": "apps.epg.api_views.ProgramViewSet",
+            "ordinal": 148,
+            "pattern": "api/epg/programs/<int:pk>/poster",
+            "view_name": "api:epg:program-poster-noslash"
+          }
+        },
+        {
+          "actual_path": "/api/epg/programs.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "POST",
+              "path": "/api/epg/programs.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/epg/programs.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/epg/programs.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 145,
+              "actual_body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+              "actual_content_type": "text/html",
+              "actual_status": 500,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/epg/programs.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-69a67acf65189dcd2e64:POST",
+          "declaration": "POST",
+          "name": "programs_create",
+          "observed_method": "POST",
+          "path_template": "/api/epg/programs.json",
+          "proof": {
+            "after_sha256": "99368505d54c78c1092d280f638436678ea02852c0586612c74d610dc289b6a1",
+            "before_sha256": "99368505d54c78c1092d280f638436678ea02852c0586612c74d610dc289b6a1",
+            "known_legacy_error": true,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "create",
+            "handler": "apps.epg.api_views.ProgramViewSet",
+            "ordinal": 160,
+            "pattern": "api/epg/^programs\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:program-list"
+          }
+        },
+        {
+          "actual_path": "/api/epg/programs/12.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "DELETE",
+              "path": "/api/epg/programs/12.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/epg/programs/12.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/epg/programs/12.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 204,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/epg/programs/12.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-dafd1a6542f902f1b0fb:DELETE",
+          "declaration": "DELETE",
+          "name": "programs_destroy",
+          "observed_method": "DELETE",
+          "path_template": "/api/epg/programs/{pk}.json",
+          "proof": {
+            "after_sha256": "30ad5744f9277078a95858a11c52dd2b18a48e23a0e665e7db94de7bd538ee9c",
+            "before_sha256": "6beef219f4774f0dcbd410772ab5c082b3d82a2f6c1234aeecd610d8516a3064",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "destroy",
+            "handler": "apps.epg.api_views.ProgramViewSet",
+            "ordinal": 164,
+            "pattern": "api/epg/^programs/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:program-detail"
+          }
+        },
+        {
+          "actual_path": "/api/epg/programs.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/epg/programs.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 593,
+              "actual_body_sha256": "116898fbeb15b2ec00d41505843e17756ee7beb98f274321f78ca2f03b6b29d7",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 593,
+              "actual_body_sha256": "116898fbeb15b2ec00d41505843e17756ee7beb98f274321f78ca2f03b6b29d7",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-69a67acf65189dcd2e64:GET",
+          "declaration": "GET",
+          "name": "programs_list",
+          "observed_method": "GET",
+          "path_template": "/api/epg/programs.json",
+          "proof": {
+            "after_sha256": "ac76795ed6c221f6554e2d2068193187b0dae93bcf82e7de49f8b78c1cfb91b1",
+            "before_sha256": "ac76795ed6c221f6554e2d2068193187b0dae93bcf82e7de49f8b78c1cfb91b1",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "list",
+            "handler": "apps.epg.api_views.ProgramViewSet",
+            "ordinal": 160,
+            "pattern": "api/epg/^programs\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:program-list"
+          }
+        },
+        {
+          "actual_path": "/api/epg/programs/16.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PATCH",
+              "path": "/api/epg/programs/16.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/epg/programs/16.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/epg/programs/16.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 293,
+              "actual_body_sha256": "c598b40c8fcbc58a0debeb157e92a6fb8d23b811c8bac950053bb9838543c409",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/epg/programs/16.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-dafd1a6542f902f1b0fb:PATCH",
+          "declaration": "PATCH",
+          "name": "programs_partial_update",
+          "observed_method": "PATCH",
+          "path_template": "/api/epg/programs/{pk}.json",
+          "proof": {
+            "after_sha256": "95cfc78f2de52bab4b6091569ad61244f575be3af70a31428cdcfbb7361b5b34",
+            "before_sha256": "f5f06d4e3608b9b888731aa0d9ee49efd518e76b82ab61cb0ad1f4eb7fa4e4c9",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "partial_update",
+            "handler": "apps.epg.api_views.ProgramViewSet",
+            "ordinal": 164,
+            "pattern": "api/epg/^programs/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:program-detail"
+          }
+        },
+        {
+          "actual_path": "/api/epg/programs/18.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/epg/programs/18.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/18.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 810,
+              "actual_body_sha256": "403a7a2081aa0e7299cde9fc5ef31ebfb5fa277f8f7991c1b28af923f4bb4f04",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/18.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 810,
+              "actual_body_sha256": "403a7a2081aa0e7299cde9fc5ef31ebfb5fa277f8f7991c1b28af923f4bb4f04",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/programs/18.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-dafd1a6542f902f1b0fb:GET",
+          "declaration": "GET",
+          "name": "programs_retrieve",
+          "observed_method": "GET",
+          "path_template": "/api/epg/programs/{pk}.json",
+          "proof": {
+            "after_sha256": "8b4ae952e16c407ceb86571e31f928e6e16da66534093ef5d82f1ad825274247",
+            "before_sha256": "8b4ae952e16c407ceb86571e31f928e6e16da66534093ef5d82f1ad825274247",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "retrieve",
+            "handler": "apps.epg.api_views.ProgramViewSet",
+            "ordinal": 164,
+            "pattern": "api/epg/^programs/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:program-detail"
+          }
+        },
+        {
+          "actual_path": "/api/epg/programs/20.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PUT",
+              "path": "/api/epg/programs/20.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/epg/programs/20.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/epg/programs/20.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 303,
+              "actual_body_sha256": "8774ed426b34e064c54428f150d0d0cea24be4f28bc72a582ffade64e72b500f",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/epg/programs/20.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-dafd1a6542f902f1b0fb:PUT",
+          "declaration": "PUT",
+          "name": "programs_update",
+          "observed_method": "PUT",
+          "path_template": "/api/epg/programs/{pk}.json",
+          "proof": {
+            "after_sha256": "28f96faa3b8a02f1e66f299d462359aa1e9800dc7f1bc9155045999f33d3354b",
+            "before_sha256": "d394b8a5480ec85744735dc3aeeacccc00e929fba521ef115107e86ef5a3f021",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "update",
+            "handler": "apps.epg.api_views.ProgramViewSet",
+            "ordinal": 164,
+            "pattern": "api/epg/^programs/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:program-detail"
+          }
+        },
+        {
+          "actual_path": "/api/epg/sources/21.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "DELETE",
+              "path": "/api/epg/sources/21.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/epg/sources/21.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/epg/sources/21.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 204,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/epg/sources/21.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-854a6c2e1cec893df51e:DELETE",
+          "declaration": "DELETE",
+          "name": "sources_destroy",
+          "observed_method": "DELETE",
+          "path_template": "/api/epg/sources/{pk}.json",
+          "proof": {
+            "after_sha256": "b4865fe55cda2af55578b21582f1ac6101225d451b71a5924875a872e0e65f7f",
+            "before_sha256": "af4c0dd9e405c7a71fc1d1df0926ba5772c2e1543315ee8a9a9d261b9f0e9802",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "destroy",
+            "handler": "apps.epg.api_views.EPGSourceViewSet",
+            "ordinal": 154,
+            "pattern": "api/epg/^sources/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:epg-source-detail"
+          }
+        },
+        {
+          "actual_path": "/api/epg/sources.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/epg/sources.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/sources.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 697,
+              "actual_body_sha256": "70f70b3d5eeb1e87c748abb010c5fc5bd65da2bffd4d15211bcb746380f6eec5",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/sources.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 697,
+              "actual_body_sha256": "70f70b3d5eeb1e87c748abb010c5fc5bd65da2bffd4d15211bcb746380f6eec5",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/sources.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-afbd7d0e9079035ed17b:GET",
+          "declaration": "GET",
+          "name": "sources_list",
+          "observed_method": "GET",
+          "path_template": "/api/epg/sources.json",
+          "proof": {
+            "after_sha256": "52937953257afcc89cd707dda904a282cdfd5f129033726730c197b52e855178",
+            "before_sha256": "52937953257afcc89cd707dda904a282cdfd5f129033726730c197b52e855178",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "list",
+            "handler": "apps.epg.api_views.EPGSourceViewSet",
+            "ordinal": 150,
+            "pattern": "api/epg/^sources\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:epg-source-list"
+          }
+        },
+        {
+          "actual_path": "/api/epg/sources/25.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PATCH",
+              "path": "/api/epg/sources/25.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/epg/sources/25.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/epg/sources/25.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 348,
+              "actual_body_sha256": "131d7c92a08852aef0a2eef1ca13c72fb37324fee41abe58de65247e7e840ca1",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/epg/sources/25.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-854a6c2e1cec893df51e:PATCH",
+          "declaration": "PATCH",
+          "name": "sources_partial_update",
+          "observed_method": "PATCH",
+          "path_template": "/api/epg/sources/{pk}.json",
+          "proof": {
+            "after_sha256": "b15f9bf16e3eb49da7a8e8acdbf0be179a507c469dd09dabc6db515e6fd85879",
+            "before_sha256": "66febc2692f2a566cdfb80089ce7efa28e61227c9b44da7298eb80c3d3d1b242",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "partial_update",
+            "handler": "apps.epg.api_views.EPGSourceViewSet",
+            "ordinal": 154,
+            "pattern": "api/epg/^sources/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:epg-source-detail"
+          }
+        },
+        {
+          "actual_path": "/api/epg/sources/27.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/epg/sources/27.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/sources/27.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 348,
+              "actual_body_sha256": "277af738038d195898a2260d80df25516d534efb2a97ec853e600e8d12e5eea8",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/sources/27.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 348,
+              "actual_body_sha256": "277af738038d195898a2260d80df25516d534efb2a97ec853e600e8d12e5eea8",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/epg/sources/27.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-854a6c2e1cec893df51e:GET",
+          "declaration": "GET",
+          "name": "sources_retrieve",
+          "observed_method": "GET",
+          "path_template": "/api/epg/sources/{pk}.json",
+          "proof": {
+            "after_sha256": "d410d76fb2b298bb8fbfa0e4b2f88ead131f5e1ad069082cc4c152fac3fa53bb",
+            "before_sha256": "d410d76fb2b298bb8fbfa0e4b2f88ead131f5e1ad069082cc4c152fac3fa53bb",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "retrieve",
+            "handler": "apps.epg.api_views.EPGSourceViewSet",
+            "ordinal": 154,
+            "pattern": "api/epg/^sources/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:epg-source-detail"
+          }
+        },
+        {
+          "actual_path": "/api/epg/sources/29.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PUT",
+              "path": "/api/epg/sources/29.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/epg/sources/29.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/epg/sources/29.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 349,
+              "actual_body_sha256": "a85c44b8cc2c93f6d83d4c5f60e17b69be110ea7702617f8e52420d897764f63",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/epg/sources/29.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-854a6c2e1cec893df51e:PUT",
+          "declaration": "PUT",
+          "name": "sources_update",
+          "observed_method": "PUT",
+          "path_template": "/api/epg/sources/{pk}.json",
+          "proof": {
+            "after_sha256": "e95eb3bedb5c847e3d9192246f1ab1c6b5ea18c3ccb757600af18ac3db0a3a19",
+            "before_sha256": "ad9777ad72063b7d25964b57cef245e857efbafb29bfac36ee52981f94d5809f",
+            "known_legacy_error": false,
+            "role_checks_have_expected_state": true,
+            "selected_schedule_and_queue_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "update",
+            "handler": "apps.epg.api_views.EPGSourceViewSet",
+            "ordinal": 154,
+            "pattern": "api/epg/^sources/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:epg:epg-source-detail"
+          }
+        }
+      ],
+      "outer_actual_exit": 0,
+      "owned_roles_retired": [
+        "baseline",
+        "origin"
+      ],
+      "physical_cleanup": true,
+      "raw_fingerprints": {
+        "cleanup-execution.json": "f24267e33e90eae979f87c2c7f8fe205871b3d69080a87d7433905d6852bf332",
+        "independent-cleanup.json": "51032a85d18e32f1399dc6f4d80bcbf8881ba446e44ab2eb890c9ea5153d65c9",
+        "outer-launcher.py": "e032f9eaf479fc026baa7e7fc69b00949c8feff1ea402c4d4084762a8f7ce948",
+        "outer-state.json": "4ebc3c1b11a85e5f5ef5337bed4d29ee13c7f5bb52077da8972b43ab78fe7a11",
+        "outer.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "owned-roles.json": "21e40cb5f3680b909f85c48115000dbfe05fa2a62e62804265f2f3abb620aa37",
+        "probe-execution.json": "37247138bc554f3b7d3a7b54b1d2fafcc89888650df4d87730509d5fd189138a",
+        "probe.stdout": "16a10ec0406673ed256a129e3fd8a01a87da99779b2ac9b2f4556cff33292230",
+        "project-before.json": "1ad187a6487df270243fc4248f54fe993fb67520dfd51843dad5e76049969660",
+        "receipt.json": "09786e3ce4775b4e34ed848618e3a991e880b85832372d066d04c37ed21fcd44",
+        "startup-execution.json": "ebd6de2c5f4ef4efec8bc91e921fa4d95bcfb1f3d543a0eb22a10f1baf57ca48"
+      },
+      "scope_base": "47162474e954fd79c0e2ddb2b1740a80dc1ab884",
+      "selected_cases": 60,
+      "selected_operations": 15
+    },
+    "vod": {
+      "actual_child_results": {
+        "cleanup": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        },
+        "probe": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        },
+        "startup": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        }
+      },
+      "fixture_sha256": "3b2c386512a2ef42a6dd353542c5b436899ab58a4ce5fe0039402b838afba057",
+      "observations": [
+        {
+          "actual_path": "/api/vod/vodlogos/",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "POST",
+              "path": "/api/vod/vodlogos/",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/vod/vodlogos/",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/vod/vodlogos/",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 248,
+              "actual_body_sha256": "ee8676c225aa92cd7c4664d1835b8d0ebcf02683dccf20c3a73566a393d1c976",
+              "actual_content_type": "application/json",
+              "actual_status": 201,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/vod/vodlogos/",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-7d7717aa3be59e096436:POST",
+          "declaration": "POST",
+          "name": "canonical_create",
+          "observed_method": "POST",
+          "path_template": "/api/vod/vodlogos/",
+          "proof": {
+            "after_sha256": "59d0c0f1ebe83f1a20450569572234f4d39bad2424d75fc0c84deb56869036cf",
+            "before_sha256": "0cce8183781e4fd372dc99ec9cdb8593356d29b89c83b33151fe1a0e6e6fe10f",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "create",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 306,
+            "pattern": "api/vod/^vodlogos/$",
+            "view_name": "api:vod:vodlogo-list"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos/5/",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "DELETE",
+              "path": "/api/vod/vodlogos/5/",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/vod/vodlogos/5/",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/vod/vodlogos/5/",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 204,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/vod/vodlogos/5/",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-9f605220b86d88da53f3:DELETE",
+          "declaration": "DELETE",
+          "name": "canonical_destroy",
+          "observed_method": "DELETE",
+          "path_template": "/api/vod/vodlogos/{pk}/",
+          "proof": {
+            "after_sha256": "d4bc9ef9cd568670f939c0e3268f3df9313bb433267c4e7eae79c87884055fa1",
+            "before_sha256": "a619de72f35690ba460223e039987c574555580a0a0acaa724017ad0efb247ae",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "destroy",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 312,
+            "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)/$",
+            "view_name": "api:vod:vodlogo-detail"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos/",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 1011,
+              "actual_body_sha256": "7b90ebad09ed2834a3e1909a8060211c97255c1932f9c9414eca0849751d4f5a",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 1011,
+              "actual_body_sha256": "7b90ebad09ed2834a3e1909a8060211c97255c1932f9c9414eca0849751d4f5a",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-7d7717aa3be59e096436:GET",
+          "declaration": "GET",
+          "name": "canonical_list",
+          "observed_method": "GET",
+          "path_template": "/api/vod/vodlogos/",
+          "proof": {
+            "after_sha256": "d67e3250487adc32051331a815655a3011a38ccab2805b5bb7a74ac3a2042ce2",
+            "before_sha256": "d67e3250487adc32051331a815655a3011a38ccab2805b5bb7a74ac3a2042ce2",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "list",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 306,
+            "pattern": "api/vod/^vodlogos/$",
+            "view_name": "api:vod:vodlogo-list"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos/11/",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PATCH",
+              "path": "/api/vod/vodlogos/11/",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/vod/vodlogos/11/",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/vod/vodlogos/11/",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 337,
+              "actual_body_sha256": "65bda9b3c13df1d2408084927dd37c268b745fc9cdfc4c2b83a8d21eb4ed3d71",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/vod/vodlogos/11/",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-9f605220b86d88da53f3:PATCH",
+          "declaration": "PATCH",
+          "name": "canonical_partial_update",
+          "observed_method": "PATCH",
+          "path_template": "/api/vod/vodlogos/{pk}/",
+          "proof": {
+            "after_sha256": "66bd252d2751075ae8f3ec84b400681a1bc114010d43882b89126c8a0e479743",
+            "before_sha256": "419b9d16c58c1005f5f70349c9d9e3b5bb4faeada2cd71cb63f5bba63369a945",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "partial_update",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 312,
+            "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)/$",
+            "view_name": "api:vod:vodlogo-detail"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos/14/",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/14/",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/14/",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 330,
+              "actual_body_sha256": "7ee9414c2394f06cb9e258d7cea347a50ee67ed7da6d5a13b8589991d390c693",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/14/",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 330,
+              "actual_body_sha256": "7ee9414c2394f06cb9e258d7cea347a50ee67ed7da6d5a13b8589991d390c693",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/14/",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-9f605220b86d88da53f3:GET",
+          "declaration": "GET",
+          "name": "canonical_retrieve",
+          "observed_method": "GET",
+          "path_template": "/api/vod/vodlogos/{pk}/",
+          "proof": {
+            "after_sha256": "35cde921870bde917378b06e1af5f7c9994d83338e4ec3b4810e1ce86db88c85",
+            "before_sha256": "35cde921870bde917378b06e1af5f7c9994d83338e4ec3b4810e1ce86db88c85",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "retrieve",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 312,
+            "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)/$",
+            "view_name": "api:vod:vodlogo-detail"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos/17/",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PUT",
+              "path": "/api/vod/vodlogos/17/",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/vod/vodlogos/17/",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/vod/vodlogos/17/",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 335,
+              "actual_body_sha256": "626f3dce6c6d9cf46701eedce506b30e24abd2104d2df802cf2eeba4d28dd8ff",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/vod/vodlogos/17/",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-9f605220b86d88da53f3:PUT",
+          "declaration": "PUT",
+          "name": "canonical_update",
+          "observed_method": "PUT",
+          "path_template": "/api/vod/vodlogos/{pk}/",
+          "proof": {
+            "after_sha256": "84d3fc191650c65e4d135e59d2509817c217965dbc9623d650304bc8181774a8",
+            "before_sha256": "168b6303e7c06386828d4df052e8d2723cd3b082df512d2eafc9a964a1eb035a",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "update",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 312,
+            "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)/$",
+            "view_name": "api:vod:vodlogo-detail"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "POST",
+              "path": "/api/vod/vodlogos.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/vod/vodlogos.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/vod/vodlogos.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 245,
+              "actual_body_sha256": "5bc06b82b0e1f2572a1b69314c4e8ed1f46fb5b17da107ae2eb7d5dd6b765c29",
+              "actual_content_type": "application/json",
+              "actual_status": 201,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/vod/vodlogos.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-d6b23238108488fe5308:POST",
+          "declaration": "POST",
+          "name": "json_create",
+          "observed_method": "POST",
+          "path_template": "/api/vod/vodlogos.json",
+          "proof": {
+            "after_sha256": "3eb41f23d287b12541fd3715dc8273644301e42e12669c5cc811ede204018f33",
+            "before_sha256": "5c38a381683bf25c3b2433776ba1ffc35c30abd842ebeff7fd63d2212787722b",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "create",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 307,
+            "pattern": "api/vod/^vodlogos\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:vod:vodlogo-list"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos/24.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "DELETE",
+              "path": "/api/vod/vodlogos/24.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/vod/vodlogos/24.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/vod/vodlogos/24.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 204,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/vod/vodlogos/24.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-dfe6f62818994e8e42be:DELETE",
+          "declaration": "DELETE",
+          "name": "json_destroy",
+          "observed_method": "DELETE",
+          "path_template": "/api/vod/vodlogos/{pk}.json",
+          "proof": {
+            "after_sha256": "e9d0de56ff038e0b8f06abcb97bc8515b993bce32108a405d4feeee6aaa3bc01",
+            "before_sha256": "cf6a0b13ae3b1fb3746f8fac87fb479ea5c8079399925fe670085286838ad435",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "destroy",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 313,
+            "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:vod:vodlogo-detail"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos.json?used=movies&no_pagination=true",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/vod/vodlogos.json?used=movies&no_pagination=true",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos.json?used=movies&no_pagination=true",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 653,
+              "actual_body_sha256": "0d2db5edc8c3bbe0086b2d96662f3480b5ab46ee80df0dbf7bfe7ae82e33055a",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos.json?used=movies&no_pagination=true",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 653,
+              "actual_body_sha256": "0d2db5edc8c3bbe0086b2d96662f3480b5ab46ee80df0dbf7bfe7ae82e33055a",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos.json?used=movies&no_pagination=true",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-d6b23238108488fe5308:GET",
+          "declaration": "GET",
+          "name": "json_list",
+          "observed_method": "GET",
+          "path_template": "/api/vod/vodlogos.json?used=movies&no_pagination=true",
+          "proof": {
+            "after_sha256": "0a15f700a546adb607a89f6783098399a9f870d6329d4869998a343d8bb227ea",
+            "before_sha256": "0a15f700a546adb607a89f6783098399a9f870d6329d4869998a343d8bb227ea",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "list",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 307,
+            "pattern": "api/vod/^vodlogos\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:vod:vodlogo-list"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos/30.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PATCH",
+              "path": "/api/vod/vodlogos/30.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/vod/vodlogos/30.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/vod/vodlogos/30.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 332,
+              "actual_body_sha256": "3b3b19692a763ee5028896df86fe009f3fe8eff2aaf0bb30d7b598ece1a8fba3",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/vod/vodlogos/30.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-dfe6f62818994e8e42be:PATCH",
+          "declaration": "PATCH",
+          "name": "json_partial_update",
+          "observed_method": "PATCH",
+          "path_template": "/api/vod/vodlogos/{pk}.json",
+          "proof": {
+            "after_sha256": "0550b71f4e9eb4896dc2501b56d1c341651e9bf17170e80ade5c2a26ff55915a",
+            "before_sha256": "e71ba60157733339f9716e684febd92e74626f54ece8772b0520c2a7bf66d6e6",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "partial_update",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 313,
+            "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:vod:vodlogo-detail"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos/33.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/33.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/33.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 325,
+              "actual_body_sha256": "ba3d0f70ca5d2b8a85598fbee1c2142f441d38c9d3980a4f6a74514b2d62dbc9",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/33.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 325,
+              "actual_body_sha256": "ba3d0f70ca5d2b8a85598fbee1c2142f441d38c9d3980a4f6a74514b2d62dbc9",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/vod/vodlogos/33.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-dfe6f62818994e8e42be:GET",
+          "declaration": "GET",
+          "name": "json_retrieve",
+          "observed_method": "GET",
+          "path_template": "/api/vod/vodlogos/{pk}.json",
+          "proof": {
+            "after_sha256": "cf47717baca96ec6b5c1d369095e686c2ad64d3e6ffc2420ac18eac9f0a7f599",
+            "before_sha256": "cf47717baca96ec6b5c1d369095e686c2ad64d3e6ffc2420ac18eac9f0a7f599",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "retrieve",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 313,
+            "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:vod:vodlogo-detail"
+          }
+        },
+        {
+          "actual_path": "/api/vod/vodlogos/36.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PUT",
+              "path": "/api/vod/vodlogos/36.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/vod/vodlogos/36.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/vod/vodlogos/36.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 330,
+              "actual_body_sha256": "bed26db2e53e59f7457c4dc1f17caa7b3ff85a9d70648d2902202b03f9a89f5a",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/vod/vodlogos/36.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-dfe6f62818994e8e42be:PUT",
+          "declaration": "PUT",
+          "name": "json_update",
+          "observed_method": "PUT",
+          "path_template": "/api/vod/vodlogos/{pk}.json",
+          "proof": {
+            "after_sha256": "af0cee0ab3834fd8ec191da10287b15d646e7a06bbe13c8bd3fcd2b3efb7b307",
+            "before_sha256": "ec705b8cd3ea23e0f30cbf19d0db7ebc06f0eb908ba5eea411d449b8c0d36c4e",
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "update",
+            "handler": "apps.vod.api_views.VODLogoViewSet",
+            "ordinal": 313,
+            "pattern": "api/vod/^vodlogos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:vod:vodlogo-detail"
+          }
+        }
+      ],
+      "outer_actual_exit": 0,
+      "owned_roles_retired": [
+        "baseline",
+        "origin"
+      ],
+      "physical_cleanup": true,
+      "raw_fingerprints": {
+        "cleanup-execution.json": "e8689ec58e4aea9a519e8d8f8b4ff4a482b510def362d2af9afd4d6b95285b1a",
+        "independent-cleanup.json": "ba81fd23366412f153ee45fe29e5cc3fb57aa769dc243a69b8bc44e4f714d929",
+        "outer-launcher.py": "8e01d517a0399ac5b6e77c8bc858748d9c90a0cf02aba19c10c0e05a8fb84b7f",
+        "outer-state.json": "0ea74c21684090116be129bd8a7f0b48296903676a08499246c770f0bf1dcd4d",
+        "outer.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "owned-roles.json": "2bf0dfcbc392a6547026082005acef898f51e5e1c8a868f1677b148767d56def",
+        "probe-execution.json": "3a7e18aae5002a0c394145e3566b1fe7dcb6ebdb478bf1d1c43fa18b1ac09cd2",
+        "probe.stdout": "a4edfe44a4fc2d022bb8003a02465b544624fdc9cd05fcef8dd572fe181d0b1a",
+        "project-before.json": "1ad187a6487df270243fc4248f54fe993fb67520dfd51843dad5e76049969660",
+        "receipt.json": "4b9b023f29550cbd08061e23e07267ca00ae97043f7b92c7dd7d2614fd41452b",
+        "startup-execution.json": "ddb20173c49a74e1a58bc8de2519a579cbb4b25f8b4a99a48201d3cc91660931"
+      },
+      "scope_base": "af55f5d60c7e80ac28af1fe5d11480d98a3504f9",
+      "selected_cases": 48,
+      "selected_operations": 12
+    }
+  },
+  "credit": "Original Dispatcharr authors and contributors retain full application, UI and behavior credit.",
+  "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "performance_verified": false,
+  "scope": "retained_Original_EPG_library_and_VOD_logo_HTTP",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "whole_operation_verified": false
+}

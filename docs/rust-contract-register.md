@@ -578,3 +578,19 @@ exact owned application and origin container and process generations. The
 register now has 592 partial HTTP Original assignments, 206 unassigned
 operations, and 218 methodless declarations with scoped observations. Original
 Dispatcharr authors and contributors retain full credit.
+
+## Retained Original EPG and VOD logo libraries
+
+The [two owned Original captures](../scripts/rust-integration/retained-epg-vod-logo/receipt.json)
+add 27 partial assignments from 108 HTTP observations. Fifteen EPG operations
+include formatted Source, Programme and EPG Data declarations, plus exact
+bare and formatted poster calls. The formatted Programme create retained
+one administrator HTML 500 and the formatted poster retained four HTML 500
+responses. The bare poster returned four empty 404s for a programme without
+an image. Twelve VOD logo operations cover exact canonical and formatted CRUD,
+including the movies-linked no-pagination list query.
+
+Both launchers and all child phases exited zero with exact owned cleanup.
+The register has 619 partial HTTP Original assignments, 179 unassigned
+operations, and 218 methodless declarations with scoped observations. Original
+Dispatcharr authors and contributors retain full credit.
