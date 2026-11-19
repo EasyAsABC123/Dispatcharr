@@ -15,6 +15,11 @@ Store Clippy and all 530 Store library tests passed for the Native port.
 The suite left 79 external-fixture cases ignored. The exact-image Native
 Compose comparison is pending.
 
+The exact Docker build at `f80057914` succeeded and preserved all 497 React,
+license and attribution inputs. The Native fixture accepted this image and
+its retained Original authority. Its live Compose comparison remains pending.
+
 [Focused results](../scripts/rust-integration/milestone-batch89/focused.json)
 · [Original Compose receipt](../scripts/rust-integration/milestone-batch84/packaged.json)
+· [Docker build and fixture binding](../scripts/rust-integration/milestone-batch89/packaging.json)
 · [Milestone ledger](rust-milestones.md)

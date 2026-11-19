@@ -28,6 +28,14 @@ matching Candidate86. The refresh fixture passed exact-image preflight.
 A separate owned PostgreSQL cutover and rollback rehearsal is bound to the
 same image. Compose runtime and performance results remain pending.
 
+The shipped operator passed all nine PostgreSQL cases with the expected
+actual exits, including the Original-compatible defaults and explicit URL
+precedence. Schema bootstrap and exact project cleanup passed. The first
+refresh fixture stopped at the data initializer’s media mount permissions
+before any business check. Its owned fixture was removed. The refresh
+comparison awaits a corrected media setup.
+
 [Focused results](../scripts/rust-integration/milestone-batch87/focused.json)
 · [Docker build and fixture bindings](../scripts/rust-integration/milestone-batch87/packaging.json)
+· [Compose results](../scripts/rust-integration/milestone-batch87/packaged.json)
 · [Milestone ledger](rust-milestones.md)

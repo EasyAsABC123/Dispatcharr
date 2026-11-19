@@ -69,6 +69,15 @@ CPUs. Container caps can total nine GiB and eight CPU quota units; controllers,
 Docker overhead and ancestor limits still need measured headroom. Do not compile
 alongside an opted-in two-fixture pair or accept performance gains from overlap.
 
+The first real overlap launched both owned Compose projects. Original failed
+at its read-only source mount. The controller killed the Native owner while it
+was waiting, leaving its disposable project. A separate host recovery retired
+its exact four containers, network, volume, and process generations, released
+the loopback port, and removed the matching cleanup marker. The revised harness
+creates the media mount point and lets a remaining owner clean up when its peer
+fails. Full isolation and resource admission require the revised live run.
+[First overlap and recovery receipt](rust-functional-overlap-first-attempt.json)
+
 ## Remove repeated observation startup
 
 The recorded Native22 controller took 3,563 seconds. Its 5,500 command receipts
