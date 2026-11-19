@@ -848,6 +848,12 @@ fn session_redirect_response(request: &VodRequest, location: &str) -> Response {
 }
 fn error_response(error: StoreError) -> Response {
     let mut response = match error {
+        StoreError::Forbidden => (
+            StatusCode::FORBIDDEN,
+            [(header::CONTENT_TYPE, "application/json")],
+            r#"{"error": "Forbidden"}"#,
+        )
+            .into_response(),
         StoreError::StatusBody(code, serde_json::Value::String(value))
             if (code == 503 && value == "No available stream")
                 || code == 500
@@ -1059,6 +1065,17 @@ mod method_auth_tests {
     use dispatcharr_contracts::BoxFuture;
     use dispatcharr_store::User;
     use std::sync::atomic::{AtomicUsize, Ordering};
+
+    #[tokio::test]
+    async fn vod_forbidden_keeps_source_wire_body() {
+        let response = error_response(StoreError::Forbidden);
+        assert_eq!(response.status(), StatusCode::FORBIDDEN);
+        assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+        let body = axum::body::to_bytes(response.into_body(), 32)
+            .await
+            .unwrap();
+        assert_eq!(&body[..], br#"{"error": "Forbidden"}"#);
+    }
 
     #[test]
     fn xc_redirect_keeps_path_and_source_query_order() {

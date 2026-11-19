@@ -862,6 +862,9 @@ fn prepare_publication(
     frame["headers"]["task"] = json!(entry.task);
     if entry.task == crate::normal_xc_live::SINGLE_TASK_NAME {
         frame["headers"]["timelimit"] = json!(crate::normal_xc_live::SINGLE_TASK_TIMELIMIT);
+    } else if entry.task == crate::refresh_protocol::NAME {
+        frame["headers"]["timelimit"] =
+            json!([crate::refresh_protocol::HARD_TIME_LIMIT_SECONDS, null]);
     }
     frame["headers"]["argsrepr"] = json!(argsrepr);
     frame["headers"]["kwargsrepr"] = json!(kwargsrepr);
@@ -1246,6 +1249,39 @@ mod tests {
         assert!(parsed.parent.is_none());
         frame["headers"]["timelimit"] = json!([null, null]);
         assert!(crate::normal_xc_live::parse(&serde_json::to_vec(&frame).unwrap()).is_err());
+    }
+
+    #[cfg(unix)]
+    #[tokio::test]
+    async fn scheduled_xmltv_frame_reaches_existing_refresh_parser() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .max_connections(8)
+            .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
+            .unwrap();
+        let auth = dispatcharr_store::AuthService::new(
+            dispatcharr_store::Store::from_pool(pool),
+            dispatcharr_store::AuthConfig::new("unused-metadata-only".into()).unwrap(),
+        );
+        let mut entry = model(crate::refresh_protocol::NAME);
+        entry.name = "epg_source-refresh-5".into();
+        entry.args = json!([]);
+        entry.kwargs = json!({"source_id": 5});
+        let id = Uuid::new_v4();
+        let publication =
+            prepare_publication(&entry, id, &auth.producer_identity_source()).unwrap();
+        assert_eq!(publication.redis_queue(), "celery");
+        let mut frame: Value = serde_json::from_slice(publication.bytes()).unwrap();
+        assert_eq!(frame["headers"]["periodic_task_name"], entry.name);
+        assert_eq!(frame["headers"]["timelimit"], json!([14400, null]));
+        let parsed = crate::refresh_protocol::parse(publication.bytes()).unwrap();
+        assert_eq!(parsed.task_id, id);
+        assert_eq!(parsed.root, id);
+        assert_eq!(parsed.source_id, 5);
+        assert!(parsed.parent.is_none() && parsed.eta.is_none());
+        assert!(!parsed.force);
+        assert_eq!(parsed.retry, 0);
+        frame["headers"]["timelimit"] = json!([null, null]);
+        assert!(crate::refresh_protocol::parse(&serde_json::to_vec(&frame).unwrap()).is_err());
     }
 
     #[cfg(unix)]

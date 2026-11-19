@@ -8,7 +8,8 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::{DateTime, Datelike, Timelike, Utc};
 use serde_json::{json, Map, Value};
 use uuid::Uuid;
-const NAME: &str = "apps.epg.tasks.refresh_epg_data";
+pub(crate) const NAME: &str = "apps.epg.tasks.refresh_epg_data";
+pub(crate) const HARD_TIME_LIMIT_SECONDS: u32 = 14_400;
 fn invalid() -> ProtocolError {
     ProtocolError::InvalidArgument
 }
@@ -146,7 +147,7 @@ pub fn encode(
             v.format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string()
         })
     });
-    h["timelimit"] = json!([14400, null]);
+    h["timelimit"] = json!([HARD_TIME_LIMIT_SECONDS, null]);
     h["argsrepr"] = json!(args);
     h["kwargsrepr"] = json!(kwargs);
     let bytes = serde_json::to_vec(&e).map_err(|_| invalid())?;
@@ -164,7 +165,7 @@ pub fn parse(bytes: &[u8]) -> Result<RefreshMessage, ProtocolError> {
     // task.request.headers; ordinary result metadata/body semantics are unchanged.
     crate::periodic_headers::take(&mut e)?;
     let h = &e["headers"];
-    if h["task"] != NAME || h["timelimit"] != json!([14400, null]) {
+    if h["task"] != NAME || h["timelimit"] != json!([HARD_TIME_LIMIT_SECONDS, null]) {
         return Err(invalid());
     }
     let uuid = |v: &Value| Uuid::parse_str(v.as_str().ok_or_else(invalid)?).map_err(|_| invalid());

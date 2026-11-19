@@ -274,7 +274,7 @@ async fn update(
         return Err(StoreError::InvalidInput(Value::Object(errors)));
     }
     dates(&next, old)?;
-    if old.enabled || next.enabled {
+    if next.enabled {
         return Err(unsupported_rebuild());
     }
     next.updated = sqlx::query_scalar(
@@ -382,9 +382,6 @@ async fn database(
                     Ok((200, next.project(), purge(&mut tx, id).await?))
                 }
                 Method::DELETE => {
-                    if old.enabled {
-                        return Err(unsupported_rebuild());
-                    }
                     sqlx::query(
                         "DELETE FROM dispatcharr_channels_recurringrecordingrule WHERE id=$1",
                     )

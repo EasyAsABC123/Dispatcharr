@@ -83,13 +83,32 @@ pub fn project_status_at(
     detailed: bool,
     now: f64,
 ) -> Value {
-    let created = meta
+    let started = meta
         .get("init_time")
-        .and_then(|v| v.parse::<f64>().ok())
-        .unwrap_or(0.0);
-    let uptime = if created > 0.0 { now - created } else { 0.0 };
+        .and_then(|value| value.parse::<f64>().ok())
+        .filter(|start| detailed || *start > 0.0);
+    let uptime = started.map(|start| now - start);
     let value = |key: &str, default: &str| meta.get(key).map_or(default.to_string(), Clone::clone);
-    let mut info = json!({"channel_id":id,"state":meta.get("state"),"url":value("url",""),"stream_profile":value("stream_profile",""),"owner":meta.get("owner"),"buffer_index":index,"client_count":clients.len(),"uptime":if !detailed && created<=0.0 {json!(0)} else {json!(uptime)},"started_at":if created>0.0{Some(created)}else{None}});
+    let mut info = json!({
+        "channel_id": id,
+        "state": meta.get("state"),
+        "url": value("url", ""),
+        "stream_profile": value("stream_profile", ""),
+        "owner": meta.get("owner"),
+        "buffer_index": index,
+        "client_count": clients.len(),
+    });
+    if detailed {
+        info["state"] = json!(value("state", "unknown"));
+        info["owner"] = json!(value("owner", "unknown"));
+        info["started_at"] = started.map_or_else(|| json!("0"), |start| json!(start));
+        if let Some(uptime) = uptime {
+            info["uptime"] = json!(uptime);
+        }
+    } else {
+        info["started_at"] = json!(started);
+        info["uptime"] = uptime.map_or_else(|| json!(0), |seconds| json!(seconds));
+    }
     for key in ["channel_name", "stream_name"] {
         if let Some(v) = meta.get(key).filter(|v| !v.is_empty()) {
             info[key] = json!(v);
@@ -109,7 +128,7 @@ pub fn project_status_at(
     }
     if let Some(bytes) = meta.get("total_bytes").and_then(|v| v.parse::<u64>().ok()) {
         info["total_bytes"] = json!(bytes);
-        if uptime > 0.0 {
+        if let Some(uptime) = uptime.filter(|seconds| *seconds > 0.0) {
             let bitrate = bytes as f64 * 8.0 / uptime / 1000.0;
             info["avg_bitrate_kbps"] = json!(bitrate);
             info["avg_bitrate"] = json!(if bitrate > 1000.0 {
@@ -193,6 +212,21 @@ pub fn project_status_at(
 #[cfg(test)]
 mod combined_stats_scalar_tests {
     use super::*;
+    #[test]
+    fn source_detailed_status_keeps_defaults_and_preserves_explicit_zero_start() {
+        let partial = BTreeMap::from([("channel_name".into(), "fixture".into())]);
+        let detail = project_status_at("fixture", &partial, 0, Vec::new(), true, 10.5);
+        assert_eq!(detail["state"], "unknown");
+        assert_eq!(detail["owner"], "unknown");
+        assert_eq!(detail["started_at"], "0");
+        assert!(detail.get("uptime").is_none());
+
+        let explicit_start = BTreeMap::from([("init_time".into(), "0".into())]);
+        let detail = project_status_at("fixture", &explicit_start, 0, Vec::new(), true, 10.5);
+        assert_eq!(detail["started_at"].as_f64(), Some(0.0));
+        assert_eq!(detail["uptime"].as_f64(), Some(10.5));
+    }
+
     #[test]
     fn source_basic_nonpositive_init_uses_integer_zero_without_rounding_real_uptime() {
         let zero = BTreeMap::from([("init_time".into(), "0".into())]);
