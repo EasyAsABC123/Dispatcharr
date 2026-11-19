@@ -1,0 +1,38 @@
+{
+  "base_revision": "ebf55852a126964fb313a0ae436c1fd8df09ee9e",
+  "actual_exit": 0,
+  "actual_tool_chunk": "d56dee",
+  "rust_format_passed": true,
+  "python_fixture_compile_passed": true,
+  "strict_clippy_packages": [
+    "dispatcharr-rs",
+    "dispatcharr-store"
+  ],
+  "strict_clippy_log_sha256": "926447a2b27556b7ce6d276829840f05800bbe37fcaeb4c1914d3f9033e0c33f",
+  "checks": {
+    "main_redis_config": {
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "log_sha256": "7596f37fdf8453eab5b7d8d72582ca03a879d8483f7095e9357102e0d56c6ab1"
+    },
+    "safe_operator_config": {
+      "passed": 7,
+      "failed": 0,
+      "ignored": 0,
+      "log_sha256": "af35a813db0c80237f314c5ce9915a63f55f8f864c25e4ef635e0d59ab3767dd"
+    }
+  },
+  "source_sha256": {
+    "rust/crates/app/src/bin/dispatcharr-operator.rs": "867e9ef35cff40f0043edbf5766912f62dd28fd802c1218c619990f074f801b4",
+    "rust/crates/app/src/main.rs": "cbd19145b6f35efca09fbb5dd0c2415ae87acaf3850050d8d0fb70a3000f109f",
+    "rust/crates/app/src/realtime.rs": "39a4d1bc0ffd4eb990da1ba5089ea7af60009da451548f3c061787883e21b3da",
+    "rust/crates/app/src/redis_config.rs": "fa45d3ebf55b59a1096eb7cc7d21a29e062f9a465c09388566f3114369033618",
+    "rust/crates/app/src/selected_jobs.rs": "bd70da1e3172ee1b8cd5a4ebe8f93a968380f7ea0dc18fcc0634a70d1a3d4ce9",
+    "rust/crates/store/src/lib.rs": "3c5e9f14e500f52e23fec3580272e93144d200981392a2894b5dc208f4ee931b",
+    "rust/crates/store/src/auth.rs": "857cc23d763f398999756e8db8131de18ead2c5ace685895c46488987d30c314",
+    "rust/crates/store/src/connect_reads.rs": "6f857ff5bf840fdff561f9e64d9e1ec66d821ae3296306c471112bcd6c29a5c5"
+  },
+  "full_milestone_accepted": false,
+  "performance_verified": false
+}

@@ -1,10 +1,9 @@
 //! Native live events. Original Dispatcharr authors retain full credit.
 use dispatcharr_realtime::{BusConfig, GatewayConfig, RealtimeBus, RealtimeGateway};
 use dispatcharr_store::AuthService;
-use std::env;
 
-pub async fn bus() -> Result<Option<RealtimeBus>, String> {
-    let Ok(url) = env::var("REDIS_URL") else {
+pub async fn bus(url: Option<&str>) -> Result<Option<RealtimeBus>, String> {
+    let Some(url) = url else {
         return Ok(None);
     };
     let mut config = BusConfig::default();
@@ -14,7 +13,7 @@ pub async fn bus() -> Result<Option<RealtimeBus>, String> {
     config.max_message_bytes = crate::positive("RUST_WS_EVENT_BYTES", config.max_message_bytes)?;
     config.max_publish_bytes = crate::positive("RUST_WS_PUBLISH_BYTES", config.max_publish_bytes)?;
     config.max_read_bytes = crate::positive("RUST_WS_READ_BYTES", config.max_read_bytes)?;
-    RealtimeBus::connect(&url, config)
+    RealtimeBus::connect(url, config)
         .await
         .map(Some)
         .map_err(|_| "Realtime Redis initialization failed (credentials omitted)".into())

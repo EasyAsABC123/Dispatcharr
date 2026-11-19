@@ -11,6 +11,7 @@ mod plugin_jobs_bridge;
 mod proxy_health;
 mod realtime;
 mod recording_http_bridge;
+mod redis_config;
 mod response_headers;
 mod selected_jobs;
 mod static_assets;
@@ -182,6 +183,7 @@ async fn combined_stats_legacy_alias(request: axum::extract::Request) -> Respons
 
 async fn run() -> Result<(), String> {
     let selected_jobs_enabled = selected_jobs::enabled()?;
+    let cache_url = redis_config::url()?;
     let bind: SocketAddr = env::var("RUST_BIND")
         .unwrap_or_else(|_| "127.0.0.1:9192".into())
         .parse()
@@ -209,9 +211,9 @@ async fn run() -> Result<(), String> {
     .await
     .map_err(|_| "Database connection failed (credentials omitted)")?;
     let auth = AuthService::new(store.clone(), auth_config);
-    let auth = if let Ok(url) = env::var("REDIS_URL") {
+    let auth = if let Some(url) = cache_url.as_deref() {
         auth.with_notification_cache(
-            dispatcharr_store::NotificationCache::connect(&url)
+            dispatcharr_store::NotificationCache::connect(url)
                 .await
                 .map_err(|_| "Notification cache initialization failed (credentials omitted)")?,
         )
@@ -221,7 +223,7 @@ async fn run() -> Result<(), String> {
     // Original startup warms the system group before HTTP, leaving the
     // display-zone debounce untouched until the first real request.
     auth.startup_system_settings_group().await;
-    let realtime_bus = realtime::bus().await?;
+    let realtime_bus = realtime::bus(cache_url.as_deref()).await?;
     // Attach before every resolver/environment/XC clone so original producers
     // publish through the same bounded process transport.
     let auth = if let Some(bus) = &realtime_bus {
@@ -357,8 +359,8 @@ async fn run() -> Result<(), String> {
         ..Default::default()
     };
     let lease_config = LeaseConfig::default();
-    let (coordinator, clients, outputs, inputs) = if let Ok(url) = env::var("REDIS_URL") {
-        let coordinator = Coordinator::connect(&url, lease_config.clone())
+    let (coordinator, clients, outputs, inputs) = if let Some(url) = cache_url.as_deref() {
+        let coordinator = Coordinator::connect(url, lease_config.clone())
             .await
             .map_err(|_| "Redis coordination unavailable (credentials omitted)")?;
         let client_config = ClientConfig {
@@ -371,13 +373,13 @@ async fn run() -> Result<(), String> {
             )?,
             ..ClientConfig::default()
         };
-        let clients = ClientStore::connect(&url, client_config)
+        let clients = ClientStore::connect(url, client_config)
             .await
             .map_err(|_| "Redis client metadata unavailable (credentials omitted)")?;
-        let outputs = OutputStore::connect(&url, output_config)
+        let outputs = OutputStore::connect(url, output_config)
             .await
             .map_err(|_| "Redis output storage unavailable (credentials omitted)")?;
-        let inputs = InputStore::connect(&url, input_config)
+        let inputs = InputStore::connect(url, input_config)
             .await
             .map_err(|_| "Redis input storage unavailable (credentials omitted)")?;
         (
@@ -462,12 +464,14 @@ async fn run() -> Result<(), String> {
         );
     }
     let vod = if let Some(coordinator) = coordinator.clone() {
-        let redis_url = env::var("REDIS_URL").map_err(|_| "Redis VOD configuration missing")?;
+        let redis_url = cache_url
+            .as_deref()
+            .ok_or("Redis VOD configuration missing")?;
         let engine = dispatcharr_vod_http::VodEngine::new(
             store.clone(),
             auth.clone(),
             coordinator,
-            &redis_url,
+            redis_url,
             dispatcharr_vod_http::VodConfig {
                 max_sessions: positive("RUST_MAX_VOD_SESSIONS", 1024)?,
                 max_requests: positive("RUST_MAX_VOD_REQUESTS", 2048)?,
@@ -482,7 +486,7 @@ async fn run() -> Result<(), String> {
                 .with_events(
                     store.clone(),
                     auth.clone(),
-                    &redis_url,
+                    redis_url,
                     Arc::new(bus.clone()),
                 )
                 .await
@@ -502,12 +506,13 @@ async fn run() -> Result<(), String> {
         None
     };
     let (catchup_sessions, catchup, catchup_management) = if let Some(coordinator) = coordinator {
-        let redis_url =
-            env::var("REDIS_URL").map_err(|_| "Redis catch-up configuration missing")?;
+        let redis_url = cache_url
+            .as_deref()
+            .ok_or("Redis catch-up configuration missing")?;
         let sessions = dispatcharr_timeshift_http::CatchupSessions::new(
             store.clone(),
             auth.clone(),
-            &redis_url,
+            redis_url,
             dispatcharr_timeshift_http::SessionConfig::default(),
         )
         .await
@@ -517,7 +522,7 @@ async fn run() -> Result<(), String> {
             auth.clone(),
             sessions.clone(),
             coordinator,
-            &redis_url,
+            redis_url,
             dispatcharr_timeshift_http::CatchupMediaConfig {
                 pool: dispatcharr_timeshift_http::ArchivePoolConfig {
                     max_sessions: positive("RUST_MAX_TIMESHIFT_SESSIONS", 1024)?,
@@ -532,7 +537,7 @@ async fn run() -> Result<(), String> {
         .map_err(|_| "Catch-up media initialization failed (credentials omitted)")?;
         let media = if let Some(bus) = &realtime_bus {
             media
-                .with_events(store.clone(), &redis_url, Arc::new(bus.clone()))
+                .with_events(store.clone(), redis_url, Arc::new(bus.clone()))
                 .await
                 .map_err(|_| "Catch-up event initialization failed (credentials omitted)")?
         } else {
@@ -542,7 +547,7 @@ async fn run() -> Result<(), String> {
             store.clone(),
             auth.clone(),
             media.clone(),
-            &redis_url,
+            redis_url,
         )
         .await
         .map_err(|_| "Catch-up management initialization failed (credentials omitted)")?;
@@ -555,12 +560,12 @@ async fn run() -> Result<(), String> {
     } else {
         (None, None, None)
     };
-    let output = if let Ok(redis_url) = env::var("REDIS_URL") {
+    let output = if let Some(redis_url) = cache_url.as_deref() {
         Some(
             dispatcharr_output_http::OutputGateway::new(
                 store.clone(),
                 auth.clone(),
-                &redis_url,
+                redis_url,
                 dispatcharr_output_http::OutputConfig {
                     max_requests: positive("RUST_MAX_OUTPUT_REQUESTS", 4)?,
                     max_channels: positive("RUST_MAX_OUTPUT_CHANNELS", 50000)?,
@@ -576,12 +581,12 @@ async fn run() -> Result<(), String> {
     } else {
         None
     };
-    let xmltv = if let Ok(redis_url) = env::var("REDIS_URL") {
+    let xmltv = if let Some(redis_url) = cache_url.as_deref() {
         Some(
             dispatcharr_xmltv_http::gateway::Gateway::new(
                 store.clone(),
                 auth.clone(),
-                &redis_url,
+                redis_url,
                 dispatcharr_xmltv_http::gateway::Config {
                     max_requests: positive("RUST_MAX_XMLTV_REQUESTS", 64)?,
                     max_builds: positive("RUST_MAX_XMLTV_BUILDS", 2)?,
@@ -631,8 +636,8 @@ async fn run() -> Result<(), String> {
     } else {
         None
     };
-    let xc = if let Ok(redis_url) = env::var("REDIS_URL") {
-        let counts = dispatcharr_xc_http::counts::ConnectionCounts::connect_source(&redis_url)
+    let xc = if let Some(redis_url) = cache_url.as_deref() {
+        let counts = dispatcharr_xc_http::counts::ConnectionCounts::connect_source(redis_url)
             .await
             .map_err(|_| "XC counter initialization failed (credentials omitted)")?;
         Some(
@@ -678,9 +683,8 @@ async fn run() -> Result<(), String> {
         },
     )
     .map_err(|_| "HDHR initialization failed (credentials omitted)")?;
-    let profile_redis = env::var("REDIS_URL").ok();
     let output_profiles =
-        dispatcharr_store::OutputProfileWrites::new(auth.clone(), profile_redis.as_deref())
+        dispatcharr_store::OutputProfileWrites::new(auth.clone(), cache_url.as_deref())
             .await
             .map_err(|_| "Output profile initialization failed (credentials omitted)")?;
     // Original BACKUP_ROOT semantics; no production restore authority or job queue.
@@ -718,7 +722,9 @@ async fn run() -> Result<(), String> {
     };
     let version_tasks_enabled = version_tasks_enabled || selected_jobs_enabled;
     let version_tasks = if version_tasks_enabled {
-        let cache = env::var("REDIS_URL").map_err(|_| "Enabled version tasks require REDIS_URL")?;
+        let cache = cache_url
+            .clone()
+            .ok_or("Enabled version tasks require Redis configuration")?;
         let bus = realtime_bus
             .as_ref()
             .ok_or("Enabled version tasks require the realtime publisher")?;
@@ -757,7 +763,9 @@ async fn run() -> Result<(), String> {
     let mut epg_artwork = None;
     let mut epg_tvg = None;
     let epg_refresh = if refresh_enabled {
-        let cache = env::var("REDIS_URL").map_err(|_| "Enabled EPG jobs require REDIS_URL")?;
+        let cache = cache_url
+            .clone()
+            .ok_or("Enabled EPG jobs require Redis configuration")?;
         let bus = realtime_bus
             .as_ref()
             .ok_or("Enabled EPG jobs require the realtime publisher")?;
@@ -940,7 +948,7 @@ async fn run() -> Result<(), String> {
         store.clone(),
         engine.clone(),
         catchup_management.clone(),
-        env::var("REDIS_URL").ok().as_deref(),
+        cache_url.as_deref(),
         combined_statistics::Config::default(),
     )
     .await
@@ -1007,6 +1015,9 @@ async fn run() -> Result<(), String> {
                     .map_err(|_| "Actual Main listener address unavailable")?,
                 existing,
                 plugin_actions.clone(),
+                cache_url
+                    .as_deref()
+                    .ok_or("Selected jobs require Redis configuration")?,
             )
             .await?,
         )

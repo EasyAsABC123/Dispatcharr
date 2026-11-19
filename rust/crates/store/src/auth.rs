@@ -244,6 +244,7 @@ impl AuthService {
             crate::streams::router(self.clone()).merge(crate::logos::router(self.clone()));
         let startup = crate::startup::router(self.clone());
         let providers = crate::provider_reads::router(self.clone());
+        let connect = crate::connect_reads::router(self.clone());
         Router::new()
             .route("/api/accounts/token/", post(login))
             .route("/api/accounts/auth/login/", any(route_compat::login))
@@ -258,6 +259,7 @@ impl AuthService {
             .merge(streams)
             .merge(startup)
             .merge(providers)
+            .merge(connect)
     }
 
     /// Same peer trust used by forwarded client-IP resolution. Export origin

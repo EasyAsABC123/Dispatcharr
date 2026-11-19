@@ -21,6 +21,7 @@ mod channel_profiles;
 mod channel_relations;
 mod channel_writes;
 mod channels;
+mod connect_reads;
 mod core_reads;
 mod core_stream_writes;
 mod output_profile_writes;

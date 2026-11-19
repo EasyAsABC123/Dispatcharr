@@ -11,7 +11,7 @@ data=json.load(sys.stdin)
 # Notification setup is a management operation. Use the source's documented
 # management-command initialization branch so re-running this helper does not
 # synchronize away owned developer fixtures before the HTTP read under test.
-if str(data.get('action','')).startswith(('notification_','environment_ip_','auth_package_')):sys.argv.append('shell')
+if str(data.get('action','')).startswith(('notification_','environment_ip_','auth_package_','connect_reads_')):sys.argv.append('shell')
 sys.path.insert(0,'/app');os.environ.setdefault('DJANGO_SETTINGS_MODULE','dispatcharr.settings')
 import django
 django.setup()
@@ -21,6 +21,32 @@ def sanitized_failure(kind,value,tb):
     while tb.tb_next is not None:tb=tb.tb_next
     print(json.dumps({'fixture_error_type':kind.__name__,'fixture_error_line':tb.tb_lineno}),file=sys.stderr)
 sys.excepthook=sanitized_failure
+if data.get('action') == 'connect_reads_seed':
+    from datetime import datetime, timezone
+    from apps.connect.models import EventSubscription, Integration
+    from django.db import transaction
+
+    names = ['rust-probe-connect-list-webhook', 'rust-probe-connect-list-script']
+    configs = [{'url': 'http://origin:8080/unused-connect-list', 'headers': {'X-Owned-Connect': 'literal'}},
+               {'path': '/owned-connect-list-not-executed'}]
+    stamps = [datetime(2026, 11, 9, 12, 0, 0, tzinfo=timezone.utc),
+              datetime(2026, 11, 9, 13, 0, 0, 123456, tzinfo=timezone.utc)]
+    with transaction.atomic():
+        if Integration.objects.exists():
+            raise RuntimeError('Connect read oracle requires an empty fixture integration table')
+        first, second = Integration.objects.bulk_create([
+            Integration(name=names[0], type='webhook', config=configs[0], enabled=True),
+            Integration(name=names[1], type='script', config=configs[1], enabled=False),
+        ])
+        for item, stamp in zip((first, second), stamps, strict=True):
+            Integration.objects.filter(pk=item.pk).update(created_at=stamp)
+        subscriptions = EventSubscription.objects.bulk_create([
+            EventSubscription(integration=first, event='channel_start', enabled=True, payload_template=None),
+            EventSubscription(integration=first, event='recording_end', enabled=False, payload_template=''),
+        ])
+    print(json.dumps({'integration_ids': [first.pk, second.pk],
+                      'subscription_ids': [item.pk for item in subscriptions]}))
+    raise SystemExit(0)
 if str(data.get('action','')).startswith('auth_package_'):
     from auth_package_fixture import dispatch
     print(json.dumps(dispatch(data)))

@@ -122,11 +122,12 @@ impl SelectedJobs {
         actual: SocketAddr,
         existing: Existing,
         restore_plugins: dispatcharr_store::PluginActions,
+        cache: &str,
     ) -> Result<Self, String> {
         let local = loopback(actual)?;
         let beat_enabled = flag("RUST_EXPERIMENTAL_SELECTED_BEAT")?;
         let beat_identity = auth.producer_identity_source();
-        let cache = env::var("REDIS_URL").map_err(|_| "Selected jobs require REDIS_URL")?;
+        let cache = cache.to_owned();
         let broker = env::var("CELERY_BROKER_URL").unwrap_or_else(|_| cache.clone());
         let backend = env::var("CELERY_RESULT_BACKEND").unwrap_or_else(|_| broker.clone());
         let plugin_directory =

@@ -22,6 +22,9 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The Connect collection and Redis configuration checkpoint](rust-milestone-batch78.md)
+records the next Rust fixes and their focused checks.
+
 [The account activity, HLS profile and local-playlist checkpoint](rust-milestone-batch77.md)
 records the next focused Rust fixes and upcoming packaged comparisons.
 

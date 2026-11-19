@@ -419,3 +419,51 @@ def run_auth_hash(http,baseline,candidate,accounts,record,fixture):
     spec=importlib.util.spec_from_file_location('dispatcharr_auth_hash_probes',Path(__file__).with_name('auth_hash_probes.py'))
     module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
     module.run(http,baseline,candidate,accounts,record,fixture)
+
+
+def run_connect_reads(http, baseline, candidate, accounts, record, fixture):
+    """Observe the exact existing Integrations UI GET against both packaged apps."""
+    validate_fixture(baseline, candidate, accounts)
+    route = '/api/connect/integrations/'
+    admin = accounts['admin']
+    empty_source = http(baseline + route, token=admin['access'])
+    empty_native = http(candidate + route, token=admin['access'])
+    record('connect-reads:empty-collection', empty_source == empty_native == (200, []),
+           evidence(empty_source, empty_native))
+
+    seed = fixture({'action': 'connect_reads_seed'})
+    first, second = seed['integration_ids']
+    channel_start, recording_end = seed['subscription_ids']
+    expected = [
+        {'id': first, 'name': 'rust-probe-connect-list-webhook', 'type': 'webhook',
+         'config': {'url': 'http://origin:8080/unused-connect-list', 'headers': {'X-Owned-Connect': 'literal'}},
+         'enabled': True, 'created_at': '2026-11-09T12:00:00Z', 'subscriptions': [
+             {'id': channel_start, 'event': 'channel_start', 'enabled': True,
+              'payload_template': None, 'integration': first},
+             {'id': recording_end, 'event': 'recording_end', 'enabled': False,
+              'payload_template': '', 'integration': first},
+         ]},
+        {'id': second, 'name': 'rust-probe-connect-list-script', 'type': 'script',
+         'config': {'path': '/owned-connect-list-not-executed'}, 'enabled': False,
+         'created_at': '2026-11-09T13:00:00.123456Z', 'subscriptions': []},
+    ]
+    source = http(baseline + route, token=admin['access'])
+    native = http(candidate + route, token=admin['access'])
+    authority = source == (200, expected)
+    record('connect-reads:admin-seeded-collection', authority and source == native,
+           {**evidence(source, native), 'original_matches_seeded_contract': authority,
+            'expected_integrations': len(expected), 'expected_subscriptions': 2})
+
+    cases = [
+        ('anonymous', None, {}, 401),
+        ('standard', accounts['standard']['access'], {}, 403),
+        ('viewer', accounts['viewer']['access'], {}, 403),
+        ('inactive-admin', accounts['inactive']['access'], {}, 401),
+        ('admin-api-key', None, {'X-API-Key': admin['api_key']}, 200),
+        ('invalid-bearer-before-api-key', 'invalid', {'X-API-Key': admin['api_key']}, 401),
+    ]
+    for label, token, headers, status in cases:
+        original = http(baseline + route, token=token, headers=headers)
+        rewritten = http(candidate + route, token=token, headers=headers)
+        record('connect-reads:' + label, original[0] == status and original == rewritten
+               and (status != 200 or original[1] == expected), evidence(original, rewritten))
