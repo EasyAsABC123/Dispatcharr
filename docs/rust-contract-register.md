@@ -368,6 +368,10 @@ eight download GET observations to the existing partial Source contracts. The
 two log rows retain their unresolved declared methods and their historical
 framework assertions. The register now has 471 partial executable HTTP
 assignments and 327 unassigned operations. The role coverage stays partial.
+The exact network-disabled SDK reproduced the current register and passed
+five tests including the 19 corruption controls.
+[Paired-read SDK receipt](../scripts/rust-contracts/sdk-paired-reads-latest.json)
+
 
 [Candidate92 System Logs](../scripts/rust-integration/milestone-batch92/acceptance.json)
 · [Candidate94 regex preview](../scripts/rust-integration/milestone-batch94/acceptance.json).

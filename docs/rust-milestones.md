@@ -47,6 +47,10 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The XC live-to-VOD checkpoint](rust-milestone-batch95.md)
+verifies three direct pairs and records the timed-out Native scheduled case.
+The following scheduler correction passed its focused Rust tests.
+
 [The batch guide and Auto Sync checkpoint](rust-milestone-batch94.md)
 passes selected XMLTV and source-less programme publication, the default
 atomic guard, and the exact packaged React regex preview contract.
