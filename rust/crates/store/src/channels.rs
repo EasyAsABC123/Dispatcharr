@@ -898,6 +898,9 @@ fn source_action_error() -> Response {
     ).into_response()
 }
 
+#[path = "channel_batch_epg.rs"]
+mod batch_epg;
+
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/channels/channels/by-uuids/", post(by_uuids))
@@ -909,6 +912,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route("/api/channels/channels/ids/", get(ids))
         .route("/api/channels/channels/summary/", get(summary))
+        .route(
+            "/api/channels/channels/batch-set-epg/",
+            post(batch_epg::set),
+        )
         .route(
             "/api/channels/channels/{id}/set-epg/",
             post(crate::channel_writes::set_epg),
