@@ -742,6 +742,24 @@ impl Session {
         Ok(state.playlist.clone())
     }
 }
+/// Source gives the ready channel a fresh playlist wait budget. Going back
+/// to a starting state restores the original startup deadline.
+pub(crate) fn cold_wait_exceeded(
+    now: Instant,
+    started: Instant,
+    ready: bool,
+    ready_since: &mut Option<Instant>,
+    init_grace: Duration,
+    ready_grace: Duration,
+) -> bool {
+    if ready {
+        now.duration_since(*ready_since.get_or_insert(now)) >= ready_grace
+    } else {
+        *ready_since = None;
+        now.duration_since(started) >= init_grace
+    }
+}
+
 pub(crate) fn response_bytes(
     payload: Arc<Payload>,
     session: Arc<Session>,
@@ -766,4 +784,32 @@ pub(crate) fn session_segment(
         .map(|stored| stored.payload.clone())
         .ok_or_else(|| failure(404, "Segment expired"))?;
     Ok(response_bytes(payload, session.clone(), request))
+}
+
+#[cfg(test)]
+mod cold_wait_tests {
+    use super::cold_wait_exceeded;
+    use std::time::{Duration, Instant};
+
+    #[test]
+    fn ready_channel_can_wait_past_startup_deadline_and_starting_resets_ready_budget() {
+        let start = Instant::now();
+        let mut ready_since = None;
+        let mut expired = |second, ready| {
+            cold_wait_exceeded(
+                start + Duration::from_secs(second),
+                start,
+                ready,
+                &mut ready_since,
+                Duration::from_secs(20),
+                Duration::from_secs(10),
+            )
+        };
+        assert!(!expired(18, true));
+        assert!(!expired(19, false));
+        assert!(!expired(19, true));
+        assert!(!expired(28, true));
+        assert!(expired(29, true));
+        assert!(expired(29, false));
+    }
 }

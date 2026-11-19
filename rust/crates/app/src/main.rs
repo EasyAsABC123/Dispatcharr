@@ -333,6 +333,7 @@ async fn run() -> Result<(), String> {
         max_segment_bytes: positive("RUST_OUTPUT_SEGMENT_BYTES", 32 * 1024 * 1024)?,
         max_stored_segments: positive("RUST_OUTPUT_MAX_SEGMENTS", 256)?,
         max_requests_per_session: positive("RUST_HLS_REQUESTS_PER_SESSION", 8)?,
+        initialization_timeout: config.health_initialization_grace,
         ..Default::default()
     };
     let output_config = OutputConfig {

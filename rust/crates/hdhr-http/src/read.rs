@@ -52,6 +52,22 @@ async fn lineup(
     output: Option<String>,
     origin: &str,
 ) -> Result<(&'static str, Vec<u8>), StoreError> {
+    // Source returns an empty lineup for an unknown channel profile before
+    // attempting to read the default output-profile setting.
+    let profile_id = if let Some(name) = profile {
+        let id = sqlx::query_scalar::<_, i64>(
+            "SELECT id::bigint FROM dispatcharr_channels_channelprofile WHERE name=$1",
+        )
+        .bind(name)
+        .fetch_optional(inner.store.pool())
+        .await?;
+        let Some(id) = id else {
+            return Ok(("application/json", b"[]".to_vec()));
+        };
+        Some(id)
+    } else {
+        None
+    };
     let output = match output {
         Some(value) => Some(value),
         None => python_int(
@@ -76,8 +92,8 @@ async fn lineup(
     let suffix = output
         .map(|value| format!("?output_profile={value}"))
         .unwrap_or_default();
-    let mut rows=sqlx::query("SELECT c.uuid::text AS uuid,COALESCE(o.name,c.name) AS name,COALESCE(o.channel_number,c.channel_number) AS number FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE NOT c.hidden_from_output AND ($1::text IS NULL OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelprofilemembership m JOIN dispatcharr_channels_channelprofile p ON m.channel_profile_id=p.id WHERE m.channel_id=c.id AND m.enabled AND p.name=$1)) ORDER BY COALESCE(o.channel_number,c.channel_number) LIMIT $2")
-        .bind(profile).bind((inner.config.max_channels+1) as i64).fetch(inner.store.pool());
+    let mut rows=sqlx::query("SELECT c.uuid::text AS uuid,COALESCE(o.name,c.name) AS name,COALESCE(o.channel_number,c.channel_number) AS number FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE NOT c.hidden_from_output AND ($1::bigint IS NULL OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelprofilemembership m WHERE m.channel_id=c.id AND m.enabled AND m.channel_profile_id=$1)) ORDER BY COALESCE(o.channel_number,c.channel_number) LIMIT $2")
+        .bind(profile_id).bind((inner.config.max_channels+1) as i64).fetch(inner.store.pool());
     let mut metadata = 0usize;
     let mut output = Vec::new();
     output.push(b'[');

@@ -1,0 +1,33 @@
+{
+  "base_git": "e430843394fcd6177aed5b757dc9d85c34fb0cb8",
+  "Rust_patch_sha256": "37fb878787ffd572acae7f9165ef96a698c601ce52db6d772a9b5fd51b5b2d54",
+  "changed_Rust_paths": [
+    "rust/crates/app/src/main.rs",
+    "rust/crates/hls-http/src/gateway.rs",
+    "rust/crates/hls-http/src/routes.rs",
+    "rust/crates/hls-http/src/shared.rs",
+    "rust/crates/output-store/src/lib.rs",
+    "rust/crates/stream-http/src/engine.rs",
+    "rust/crates/hdhr-http/src/gateway.rs",
+    "rust/crates/hdhr-http/src/read.rs",
+    "rust/crates/store/src/xc_account_provider.rs",
+    "rust/crates/store/src/xc_account_tasks.rs"
+  ],
+  "actual_exit": 0,
+  "actual_exec_session": 29718,
+  "actual_terminal_chunk": "c0a58e",
+  "attempt1_Clippy_exit": 101,
+  "attempt1_correction": "Move the HLS test module below production declarations.",
+  "checks": [
+    "workspace formatting",
+    "strict package Clippy including Main",
+    "XC loopback retry exhaustion",
+    "HLS startup and ready deadline reset",
+    "HDHomeRun profile path parser"
+  ],
+  "focused_Rust_passes": 3,
+  "HLS_Source_clock_observations": 2412,
+  "HLS_Redis_state_cases": 144,
+  "full_application_e2e_executed": false,
+  "full_milestones_closed": false
+}

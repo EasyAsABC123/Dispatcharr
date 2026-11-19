@@ -479,7 +479,10 @@ fn endpoint(path: &str) -> Result<Endpoint, StoreError> {
     let parts: Vec<_> = path.split('/').collect();
     let route = *parts.last().ok_or(StoreError::NotFound)?;
     let decode = |value: &str| {
-        url::form_urlencoded::parse(format!("v={}", value.replace('+', "%2B")).as_bytes())
+        // The router selects a path segment, not a query parameter. Protect
+        // literal path '+' and '&' before decoding percent escapes.
+        let escaped = value.replace('+', "%2B").replace('&', "%26");
+        url::form_urlencoded::parse(format!("v={escaped}").as_bytes())
             .next()
             .map(|(_, v)| v.into_owned())
             .unwrap_or_default()
@@ -556,6 +559,26 @@ fn origin(auth: &AuthService, identity: &PlaybackRequest, _headers: &HeaderMap) 
 mod tests {
     use super::*;
     use http_body_util::BodyExt;
+
+    #[test]
+    fn hdhr_channel_profile_path_keeps_literal_query_delimiters() {
+        for (path, expected) in [
+            ("/hdhr/Rock&Roll/discover.json", "Rock&Roll"),
+            ("/hdhr/Rock%26Roll/discover.json", "Rock&Roll"),
+            ("/hdhr/Sport+News&Music/lineup.json", "Sport+News&Music"),
+            (
+                "/hdhr/P%C3%BAblico+2&4/output_profile/003/discover.json",
+                "Público+2&4",
+            ),
+        ] {
+            let actual = match endpoint(path).unwrap() {
+                Endpoint::Discover { profile, .. } | Endpoint::Lineup { profile, .. } => profile,
+                _ => panic!("unexpected HDHR route"),
+            };
+            assert_eq!(actual.as_deref(), Some(expected), "{path}");
+        }
+    }
+
     async fn fixture(config: HdhrConfig) -> HdhrGateway {
         let store = Store::connect(
             &std::env::var("DATABASE_TEST_URL").expect("real PostgreSQL fixture"),

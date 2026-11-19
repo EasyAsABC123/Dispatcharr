@@ -1,6 +1,7 @@
 //! HLS capability routes follow the original views/session lifecycle.
 use crate::gateway::{
-    failure, response_bytes, session_segment, wall_time, HlsGateway, Inner, Session,
+    cold_wait_exceeded, failure, response_bytes, session_segment, wall_time, HlsGateway, Inner,
+    Session,
 };
 use axum::{
     body::Body,
@@ -158,6 +159,11 @@ async fn playlist_result(gateway: HlsGateway, token: String) -> Result<Response,
             "application/vnd.apple.mpegurl",
         ));
     }
+    let init_grace = gateway
+        .inner
+        .engine
+        .hls_initialization_grace(gateway.inner.config.initialization_timeout)
+        .await?;
     if gateway
         .inner
         .clients
@@ -176,7 +182,7 @@ async fn playlist_result(gateway: HlsGateway, token: String) -> Result<Response,
     };
     let slots = Arc::new(Semaphore::new(1));
     let output = async_stream::stream! {
-        let guard=guard;let start=Instant::now();let mut touch=Instant::now();let mut count=0u64;
+        let guard=guard;let start=Instant::now();let mut ready_since=None;let mut touch=Instant::now();let mut count=0u64;
         let slot=slots.clone().acquire_owned().await.unwrap();
         yield Ok::<Bytes,Infallible>(Bytes::from_owner(Comment {data:b"#EXTM3U\n".to_vec(),_slot:slot,_session:session.clone(),_request:permit.clone()}));
         loop {
@@ -192,8 +198,8 @@ async fn playlist_result(gateway: HlsGateway, token: String) -> Result<Response,
                 Err(_)=>{guard.completed.store(true,Ordering::Release);break;},
                 Ok(None)=>{},
             }
-            let ready=session.manager.state.lock().unwrap_or_else(|e|e.into_inner()).ready;
-            if ready.is_some_and(|time|time.elapsed()>=gateway.inner.config.ready_timeout)||start.elapsed()>=gateway.inner.config.initialization_timeout {
+            let ready=session.manager.state.lock().unwrap_or_else(|e|e.into_inner()).ready.is_some();
+            if cold_wait_exceeded(Instant::now(),start,ready,&mut ready_since,init_grace,gateway.inner.config.ready_timeout) {
                 guard.completed.store(true,Ordering::Release);break;
             }
             if touch.elapsed()>=Duration::from_secs(3) {

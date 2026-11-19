@@ -363,6 +363,18 @@ impl StreamEngine {
         Ok(self)
     }
 
+    /// Sample the same TS settings slot used by channel health. A standalone
+    /// gateway without a dynamic source keeps its configured startup grace.
+    pub async fn hls_initialization_grace(
+        &self,
+        fallback: Duration,
+    ) -> Result<Duration, PlaybackError> {
+        match &self.inner.health_settings {
+            Some(source) => Ok(source.snapshot().await?.initialization),
+            None => Ok(fallback),
+        }
+    }
+
     /// Authorization/resolution must run before calling this method for each viewer.
     pub async fn play(&self, mut source: PlaybackSource) -> Result<Response<Body>, PlaybackError> {
         if let Some(profile) = source.output_profile.take() {

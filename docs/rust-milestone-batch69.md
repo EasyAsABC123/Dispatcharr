@@ -18,6 +18,22 @@ Workspace formatting and strict linting across all affected Rust crates passed.
 The three targeted Rust regressions passed in the shared workspace.
 [Check receipt](../scripts/rust-integration/milestone-batch69/parallel-wave-1.json)
 
+A second group addresses HLS cold-start, HDHomeRun and XC failure paths. HLS
+polls channel and output state together, returns 410 for an already stopped
+cold stream, and gives a ready channel its own playlist deadline. The clock
+matched 2,412 observations from the pinned Python helper. An isolated Redis
+test matched 144 states, including stopped streams with a pending descriptor.
+
+HDHomeRun preserves literal ampersands in profile paths and returns an empty
+lineup for an unknown profile before loading default output settings. XC
+counts a profile failure after all four connection attempts have ended and
+continues processing the remaining profiles. Store and capacity errors
+retain their existing handling.
+
+The combined Rust code passed workspace formatting, strict compilation
+including Main, and three focused tests for HLS, HDHomeRun and XC.
+[Second check receipt](../scripts/rust-integration/milestone-batch69/parallel-wave-2.json)
+
 The [milestone coordinator](../scripts/rust-milestone-batches/README.md) still
 requires complete case bindings and an exact release image. The final run
 covers functional Compose workflows, paired performance, a two-hour soak, and

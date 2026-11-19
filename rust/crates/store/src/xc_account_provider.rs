@@ -188,13 +188,34 @@ fn truthy(v: &Value) -> bool {
         Value::Object(v) => !v.is_empty(),
     }
 }
+pub(crate) enum FetchFailure {
+    /// The awaited provider requests all ended without a response.
+    ConnectionAttemptsExhausted,
+    Operational(StoreError),
+}
+
+impl From<StoreError> for FetchFailure {
+    fn from(error: StoreError) -> Self {
+        Self::Operational(error)
+    }
+}
+
+impl From<FetchFailure> for StoreError {
+    fn from(error: FetchFailure) -> Self {
+        match error {
+            FetchFailure::ConnectionAttemptsExhausted => unsupported(),
+            FetchFailure::Operational(error) => error,
+        }
+    }
+}
+
 /// Secret values are persisted only in the actual profile CP, as Source does;
 /// Source-compatible exception values may contain the actual provider URL/body.
 /// They are application data only: never log them or publish them as evidence.
 pub(crate) async fn fetch(
     c: Credentials,
     agent: &str,
-) -> Result<Result<Value, String>, StoreError> {
+) -> Result<Result<Value, String>, FetchFailure> {
     let attempt = dispatcharr_upstream_http::Attempt::new_requests(
         Duration::from_secs(60),
         Duration::from_secs(60),
@@ -218,10 +239,10 @@ pub(crate) async fn fetch(
         }
     }
     let Some(response) = response else {
-        return Err(unsupported());
+        return Err(FetchFailure::ConnectionAttemptsExhausted);
     };
     if attempt.cookie_budget_exceeded() {
-        return Err(unsupported());
+        return Err(unsupported().into());
     }
     let status = response.status();
     let actual_url = response.url().as_str().to_owned();
@@ -231,10 +252,10 @@ pub(crate) async fn fetch(
     while let Some(part) = stream.next().await {
         let part = match part {
             Ok(part) => part,
-            Err(_) => return Err(unsupported()),
+            Err(_) => return Err(unsupported().into()),
         };
         if part.len() > BODY - raw.len() {
-            return Err(unsupported());
+            return Err(unsupported().into());
         }
         raw.extend_from_slice(&part)
     }
@@ -268,7 +289,7 @@ pub(crate) async fn fetch(
         Ok(v) => v,
         Err(error) => {
             if error.to_string().starts_with("recursion limit exceeded") {
-                return Err(unsupported());
+                return Err(unsupported().into());
             }
             return Ok(Err(format!(
                 "XC API returned invalid JSON from {endpoint}. Response: {}",
@@ -293,7 +314,7 @@ pub(crate) async fn fetch(
         .is_some_and(|v| truthy(v) && !v.is_object())
         || value.get("server_info").is_some_and(|v| !v.is_object())
     {
-        return Err(unsupported());
+        return Err(unsupported().into());
     }
     Ok(normalize(value, Utc::now()))
 }
@@ -435,6 +456,42 @@ impl crate::AuthService {
 #[cfg(test)]
 mod source_controls {
     use super::*;
+
+    #[tokio::test]
+    async fn exhausted_provider_connections_are_distinct_from_operational_failures() {
+        use tokio::net::TcpListener;
+
+        let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let base = format!("http://{}", listener.local_addr().unwrap());
+        let upstream = tokio::spawn(async move {
+            for _ in 0..4 {
+                let (connection, _) = listener.accept().await.unwrap();
+                // Close before sending headers to exercise actual send errors.
+                drop(connection);
+            }
+        });
+        let outcome = tokio::time::timeout(
+            Duration::from_secs(10),
+            fetch(
+                Credentials {
+                    url: base,
+                    username: "fixture-user".into(),
+                    password: "fixture-password".into(),
+                },
+                "fixture",
+            ),
+        )
+        .await
+        .unwrap();
+        assert!(matches!(
+            outcome,
+            Err(FetchFailure::ConnectionAttemptsExhausted)
+        ));
+        tokio::time::timeout(Duration::from_secs(1), upstream)
+            .await
+            .unwrap()
+            .unwrap();
+    }
     #[test]
     fn vod_profile_transform_and_pool_use_the_same_changed_credentials() {
         let (base, user, password, pool) = crate::AuthService::resolve_vod_profile_credentials(

@@ -1,10 +1,10 @@
 //! Shared Redis capability reads, retaining original upstream HLS attribution.
-use crate::gateway::{failure, lock, wall_time, Inner};
+use crate::gateway::{cold_wait_exceeded, failure, lock, wall_time, Inner};
 use axum::{body::Body, response::Response};
 use bytes::Bytes;
 use dispatcharr_contracts::PlaybackError;
 use dispatcharr_hls_core::{render_media_playlist, SegmentDescriptor};
-use dispatcharr_output_store::SegmentBytes;
+use dispatcharr_output_store::{HlsColdState, SegmentBytes};
 use std::{
     convert::Infallible,
     sync::{
@@ -239,6 +239,18 @@ pub(crate) async fn playlist(inner: Arc<Inner>, token: String) -> Result<Respons
             "application/vnd.apple.mpegurl",
         ));
     }
+    let poll = retry(&inner, &token, || {
+        outputs.poll_hls_cold_playlist(&info.channel_id, &format, &info.client_id)
+    })
+    .await?;
+    if poll.state == HlsColdState::Stopped {
+        let _ = inner.clients.drop_hls_token(&token).await;
+        return Err(failure(410, "Stream stopped"));
+    }
+    let init_grace = inner
+        .engine
+        .hls_initialization_grace(inner.config.initialization_timeout)
+        .await?;
     if inner
         .clients
         .enter_hls_cold_start(&token)
@@ -259,23 +271,66 @@ pub(crate) async fn playlist(inner: Arc<Inner>, token: String) -> Result<Respons
     };
     let slots = Arc::new(Semaphore::new(1));
     let stream = async_stream::stream! {
-        let guard=guard;let start=Instant::now();let mut active=None;let mut touched=Instant::now();let mut count=0;
-        match frame(&inner,b"#EXTM3U\n".to_vec(),session.clone(),request.clone(),Some(slots.clone().acquire_owned().await.unwrap())) {Ok(bytes)=>yield Ok::<_,Infallible>(bytes),Err(_)=>{guard.completed.store(true,Ordering::Release);return;}}
+        let guard = guard;
+        let started = Instant::now();
+        let mut ready_since = None;
+        let mut touched = started;
+        let mut sent_marker = false;
+        let mut count = 0;
         loop {
-            if inner.stopped.load(Ordering::Acquire) {guard.completed.store(true,Ordering::Release);break;}
-            match outputs.snapshot(&info.channel_id,&format).await {
-                Ok(snapshot)=>if let Some(descriptor)=snapshot.descriptor {
-                    guard.completed.store(true,Ordering::Release);
-                    if let Ok(data)=render(&descriptor,inner.config.max_stored_segments) {if let Ok(bytes)=frame(&inner,data,session.clone(),request.clone(),Some(slots.clone().acquire_owned().await.unwrap())) {yield Ok(bytes.slice(8..));}}
-                    break;
-                },
-                Err(_)=>{guard.completed.store(true,Ordering::Release);break;},
+            if inner.stopped.load(Ordering::Acquire) {
+                guard.completed.store(true, Ordering::Release);
+                break;
             }
-            if active.is_none()&&matches!(outputs.state(&info.channel_id,&format).await,Ok(Some(state)) if state=="active") {active=Some(Instant::now());}
-            if start.elapsed()>=inner.config.initialization_timeout||active.is_some_and(|time:Instant|time.elapsed()>=inner.config.ready_timeout) {guard.completed.store(true,Ordering::Release);break;}
-            if touched.elapsed()>=Duration::from_secs(3) {if touch(&inner,&token).await.is_err() {guard.completed.store(true,Ordering::Release);break;}touched=Instant::now();}
-            tokio::time::sleep(Duration::from_millis(250)).await;count+=1;
-            match frame(&inner,format!("# dispatcharr: waiting {count}\n").into_bytes(),session.clone(),request.clone(),Some(slots.clone().acquire_owned().await.unwrap())) {Ok(bytes)=>yield Ok(bytes),Err(_)=>{guard.completed.store(true,Ordering::Release);break;}}
+            let poll = match outputs.poll_hls_cold_playlist(&info.channel_id, &format, &info.client_id).await {
+                Ok(poll) => poll,
+                Err(_) => {
+                    guard.completed.store(true, Ordering::Release);
+                    break;
+                }
+            };
+            if poll.state == HlsColdState::Stopped {
+                guard.completed.store(true, Ordering::Release);
+                let _ = inner.clients.drop_hls_token(&token).await;
+                break;
+            }
+            let slot = slots.clone().acquire_owned().await.unwrap();
+            if let Some(descriptor) = poll.descriptor {
+                guard.completed.store(true, Ordering::Release);
+                if let Ok(data) = render(&descriptor, inner.config.max_stored_segments) {
+                    if let Ok(bytes) = frame(&inner, data, session.clone(), request.clone(), Some(slot)) {
+                        yield Ok::<_, Infallible>(if sent_marker { bytes.slice(b"#EXTM3U\n".len()..) } else { bytes });
+                    }
+                }
+                break;
+            }
+            let data = if sent_marker {
+                count += 1;
+                format!("# dispatcharr: waiting {count}\n").into_bytes()
+            } else {
+                sent_marker = true;
+                b"#EXTM3U\n".to_vec()
+            };
+            match frame(&inner, data, session.clone(), request.clone(), Some(slot)) {
+                Ok(bytes) => yield Ok(bytes),
+                Err(_) => {
+                    guard.completed.store(true, Ordering::Release);
+                    break;
+                }
+            }
+            let now = Instant::now();
+            if cold_wait_exceeded(now, started, poll.state == HlsColdState::Ready, &mut ready_since, init_grace, inner.config.ready_timeout) {
+                guard.completed.store(true, Ordering::Release);
+                break;
+            }
+            if now.duration_since(touched) >= Duration::from_secs(3) {
+                if touch(&inner, &token).await.is_err() {
+                    guard.completed.store(true, Ordering::Release);
+                    break;
+                }
+                touched = now;
+            }
+            tokio::time::sleep(Duration::from_millis(250)).await;
         }
     };
     Ok(crate::routes::body(

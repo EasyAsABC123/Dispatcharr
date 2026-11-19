@@ -295,12 +295,17 @@ impl Prepared {
                     failed += 1;
                     continue;
                 };
-                match provider::fetch(credentials, agent).await? {
-                    Ok(info) => {
+                match provider::fetch(credentials, agent).await {
+                    Ok(Ok(info)) => {
                         self.save(&row, info).await?;
                         updated += 1
                     }
-                    Err(_) => failed += 1,
+                    // Source counts completed provider failures per profile.
+                    // Store and budget failures still need worker settlement.
+                    Ok(Err(_)) | Err(provider::FetchFailure::ConnectionAttemptsExhausted) => {
+                        failed += 1
+                    }
+                    Err(provider::FetchFailure::Operational(error)) => return Err(error),
                 }
             }
         }

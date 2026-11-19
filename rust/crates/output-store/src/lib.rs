@@ -148,6 +148,17 @@ pub struct Snapshot {
     pub descriptor: Option<serde_json::Value>,
     pub segments: Vec<(u64, f64)>,
 }
+/// Source channel state for one cold HLS playlist poll.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum HlsColdState {
+    Starting,
+    Ready,
+    Stopped,
+}
+pub struct HlsColdPoll {
+    pub descriptor: Option<serde_json::Value>,
+    pub state: HlsColdState,
+}
 pub struct SegmentBytes {
     data: Vec<u8>,
     _bytes: OwnedSemaphorePermit,
@@ -344,6 +355,46 @@ impl OutputStore {
             index,
             descriptor,
             segments,
+        })
+    }
+    /// Read the five Source cold-start keys together. Keep media bytes out of
+    /// this poll and bound the descriptor before Redis sends it to the worker.
+    pub async fn poll_hls_cold_playlist(
+        &self,
+        channel: &str,
+        format: &str,
+        client: &str,
+    ) -> Result<HlsColdPoll, Error> {
+        if !format.starts_with("hls")
+            || client.is_empty()
+            || client.len() > 256
+            || client.contains(':')
+        {
+            return Err(Error::InvalidKey);
+        }
+        let keys = keys(channel, format)?;
+        let poll_keys = [
+            keys[2].clone(),
+            keys[6].clone(),
+            format!("live:channel:{channel}:metadata"),
+            format!("live:channel:{channel}:stopping"),
+            format!("live:channel:{channel}:client:{client}:stop"),
+        ];
+        let (state, descriptor): (u8, String) =
+            self.invoke(HLS_COLD_PLAYLIST_POLL, &poll_keys, &[]).await?;
+        let state = match state {
+            0 => HlsColdState::Starting,
+            1 => HlsColdState::Ready,
+            2 => HlsColdState::Stopped,
+            _ => return Err(Error::Corrupt),
+        };
+        Ok(HlsColdPoll {
+            state,
+            descriptor: if descriptor.is_empty() {
+                None
+            } else {
+                Some(serde_json::from_str(&descriptor).map_err(|_| Error::Corrupt)?)
+            },
         })
     }
     /// Init media uses the same pre-reserved byte admission as an output chunk.
@@ -598,6 +649,27 @@ impl OutputLease {
         Ok((result == 1, guard))
     }
 }
+// Original HLS views poll this playlist, the output and channel states,
+// and the stopping keys in one Redis exchange.
+const HLS_COLD_PLAYLIST_POLL: &str = r#"
+if redis.call('STRLEN', KEYS[2]) > 128 or redis.call('HSTRLEN', KEYS[3], 'state') > 128 then
+    return redis.error_reply('CORRUPT HLS cold state')
+end
+local output = redis.call('GET', KEYS[2])
+local state = redis.call('HGET', KEYS[3], 'state')
+if output == 'stopped' or redis.call('EXISTS', KEYS[4], KEYS[5]) ~= 0
+    or state == 'error' or state == 'stopping' or state == 'stopped' then
+    return {2, ''}
+end
+if redis.call('STRLEN', KEYS[1]) > 65536 then
+    return redis.error_reply('CORRUPT HLS cold descriptor')
+end
+local playlist = redis.call('GET', KEYS[1]) or ''
+if not state or state == 'initializing' or state == 'connecting' or state == 'buffering' then
+    return {0, playlist}
+end
+return {1, playlist}
+"#;
 const SNAPSHOT: &str = r#"
 if redis.call('STRLEN',KEYS[1])>128 or redis.call('STRLEN',KEYS[2])>32 or redis.call('STRLEN',KEYS[3])>65536 then return redis.error_reply('CORRUPT metadata') end
 local index=redis.call('GET',KEYS[2]) or '0';if not tonumber(index) or tonumber(index)<0 or tonumber(index)>9007199254740000 then return redis.error_reply('CORRUPT index') end
