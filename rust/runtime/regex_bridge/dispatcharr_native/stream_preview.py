@@ -53,20 +53,23 @@ def evaluate(names, config):
             try:
                 if index == 0:
                     renamed = pattern.sub(replacement, name, timeout=0.1)[:512]
-                    sample = {"before": name, "after": renamed} if renamed != name else None
+                    matched = renamed != name
                 else:
-                    matched = pattern.search(name, timeout=0.1)
-                    sample = {"name": name, "matches": True} if matched else None
+                    matched = bool(pattern.search(name, timeout=0.1))
             except (TimeoutError, regex.error) as error:
                 results[index]["error"] = f"Pattern timed out: {error}"
                 compiled[index] = None
                 # Source continues to the next stream, skipping subsequent
                 # patterns on this one row after a runtime pattern failure.
                 break
-            if sample is not None:
+            if matched:
                 result = results[index]
                 result["count"] += 1
-                if len(result["samples"]) < limit:
-                    result["samples"].append(sample)
+                samples = result["samples"]
+                if len(samples) < limit:
+                    samples.append(
+                        {"before": name, "after": renamed}
+                        if index == 0 else {"name": name, "matches": True}
+                    )
     check_deadline()
     return dict(zip(("find", "include", "exclude"), results))
