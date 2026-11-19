@@ -1,0 +1,330 @@
+{
+  "candidate": {
+    "git_revision": "6a015a0bc753b3688e099e57ec5b9cf2b64936ad",
+    "image_id": "sha256:778210bb926b98ba12e7e5a1a7a866eb7dacc0fd272856f3436973f9a409c619",
+    "source_tree_sha256": "f8de24d7d5089e8434af7f286761a06a19758f6c557949da95201e801f96242a"
+  },
+  "disabled_recurring_dvr": {
+    "actual_exit": 0,
+    "cleanup_verified": true,
+    "paired_observations_equal": true,
+    "report_sha256": "a05e6ae2183c678c43e869dcce3135be8963252ee9a552fca5f1a37632e229cf",
+    "verified_original_observations": {
+      "stored_effects": [
+        {
+          "beat_marker_advanced": true,
+          "kind": "stored_effects",
+          "method": "PATCH",
+          "scoped_sql_role_denial": true,
+          "target_absent": {
+            "clock": false,
+            "recording": false,
+            "task": false
+          },
+          "unaffected_recordings": {
+            "different_rule_future": {
+              "clock": true,
+              "recording": true,
+              "task": true
+            },
+            "matching_past": {
+              "clock": null,
+              "recording": true,
+              "task": null
+            },
+            "string_rule_id": {
+              "clock": null,
+              "recording": true,
+              "task": null
+            }
+          }
+        },
+        {
+          "beat_marker_advanced": true,
+          "kind": "stored_effects",
+          "method": "PUT",
+          "scoped_sql_role_denial": true,
+          "target_absent": {
+            "clock": false,
+            "recording": false,
+            "task": false
+          },
+          "unaffected_recordings": {
+            "different_rule_future": {
+              "clock": true,
+              "recording": true,
+              "task": true
+            },
+            "matching_past": {
+              "clock": null,
+              "recording": true,
+              "task": null
+            },
+            "string_rule_id": {
+              "clock": null,
+              "recording": true,
+              "task": null
+            }
+          }
+        },
+        {
+          "beat_marker_advanced": true,
+          "kind": "stored_effects",
+          "method": "DELETE",
+          "scoped_sql_role_denial": true,
+          "target_absent": {
+            "clock": false,
+            "recording": false,
+            "task": false
+          },
+          "unaffected_recordings": {
+            "different_rule_future": {
+              "clock": true,
+              "recording": true,
+              "task": true
+            },
+            "matching_past": {
+              "clock": null,
+              "recording": true,
+              "task": null
+            },
+            "string_rule_id": {
+              "clock": null,
+              "recording": true,
+              "task": null
+            }
+          }
+        }
+      ],
+      "wire": [
+        [
+          "GET",
+          "anonymous",
+          401
+        ],
+        [
+          "GET",
+          "standard",
+          403
+        ],
+        [
+          "GET",
+          "dvr_manager",
+          404
+        ],
+        [
+          "GET",
+          "admin",
+          200
+        ],
+        [
+          "GET",
+          "dvr_manager",
+          200
+        ],
+        [
+          "PATCH",
+          "anonymous",
+          401
+        ],
+        [
+          "PATCH",
+          "standard",
+          403
+        ],
+        [
+          "PATCH",
+          "dvr_manager",
+          400
+        ],
+        [
+          "PATCH",
+          "dvr_manager",
+          200
+        ],
+        [
+          "PUT",
+          "anonymous",
+          401
+        ],
+        [
+          "PUT",
+          "standard",
+          403
+        ],
+        [
+          "PUT",
+          "dvr_manager",
+          200
+        ],
+        [
+          "DELETE",
+          "anonymous",
+          401
+        ],
+        [
+          "DELETE",
+          "standard",
+          403
+        ],
+        [
+          "DELETE",
+          "dvr_manager",
+          204
+        ],
+        [
+          "GET",
+          "dvr_manager",
+          404
+        ]
+      ]
+    }
+  },
+  "initial_unsettled_scopes": {
+    "bulk_regex": {
+      "actual_exit": 1,
+      "cleanup_verified": true,
+      "launcher_outcome": "both probes could not import the packaged Django app before issuing requests",
+      "test_result": "unobserved"
+    },
+    "fmp4": {
+      "actual_exit": 1,
+      "cleanup_verified": true,
+      "launcher_outcome": "timeout",
+      "test_result": "unobserved"
+    },
+    "password_diagnostic": {
+      "actual_exits": [
+        1,
+        1
+      ],
+      "candidate_revision": "fc5562a37d91ed6673e6ee9a740be4e0dd6c7c5f",
+      "cleanup_verified": true,
+      "launcher_outcome": "the inactive encoder snapshot lacked a pid key before the scheduled password request",
+      "test_result": "unobserved"
+    }
+  },
+  "milestones_accepted": [],
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_verified": false,
+  "ts_controls": {
+    "actual_exit": 0,
+    "cleanup_verified": true,
+    "live_upstream_connections": 1,
+    "observations": [
+      {
+        "case": "detail_anonymous",
+        "method": "GET",
+        "passed": true,
+        "role": "anonymous",
+        "status": 401
+      },
+      {
+        "case": "detail_standard",
+        "method": "GET",
+        "passed": true,
+        "role": "standard",
+        "status": 403
+      },
+      {
+        "case": "detail_missing",
+        "method": "GET",
+        "passed": true,
+        "role": "admin",
+        "status": 404
+      },
+      {
+        "case": "detail_active",
+        "method": "GET",
+        "passed": true,
+        "role": "admin",
+        "status": 200
+      },
+      {
+        "case": "stop_standard",
+        "method": "POST",
+        "passed": true,
+        "role": "standard",
+        "status": 403
+      },
+      {
+        "case": "stop_target",
+        "method": "POST",
+        "passed": true,
+        "role": "admin",
+        "status": 200
+      },
+      {
+        "case": "detail_survivor",
+        "method": "GET",
+        "passed": true,
+        "role": "admin",
+        "status": 200
+      }
+    ],
+    "report_sha256": "61e32abc6109f4e643c2788ed5fc7ca591fed38c8408208838b289ebabd9eda5",
+    "surviving_media_bytes_after_eof": 511736,
+    "target_eof": true,
+    "upstream_provider_slots": 1
+  },
+  "unchanged_react_and_credit_paths": 497,
+  "vod_stats": {
+    "actual_exit": 0,
+    "cleanup_verified": true,
+    "matched_observations": [
+      {
+        "native_status": 200,
+        "operation": "vod-stats",
+        "original_status": 200,
+        "owned_follow_selected_wire_differences": {},
+        "owned_follow_semantic_differences": {},
+        "role": "admin",
+        "selected_wire_differences": {},
+        "semantic_differences": {}
+      },
+      {
+        "native_status": 403,
+        "operation": "vod-stats",
+        "original_status": 403,
+        "owned_follow_selected_wire_differences": {},
+        "owned_follow_semantic_differences": {},
+        "role": "viewer",
+        "selected_wire_differences": {},
+        "semantic_differences": {}
+      },
+      {
+        "native_status": 401,
+        "operation": "vod-stats",
+        "original_status": 401,
+        "owned_follow_selected_wire_differences": {},
+        "owned_follow_semantic_differences": {},
+        "role": "anonymous",
+        "selected_wire_differences": {},
+        "semantic_differences": {}
+      },
+      {
+        "native_status": 206,
+        "operation": "vod-session-with-profile",
+        "original_status": 206,
+        "owned_follow_selected_wire_differences": {},
+        "owned_follow_semantic_differences": {},
+        "role": "anonymous",
+        "selected_wire_differences": {},
+        "semantic_differences": {}
+      }
+    ],
+    "report_sha256": "d1ddb7afd33a5ea88914285b20fac603c375d2c68af1a8647f2683eca2d6e120",
+    "xc_movie_and_episode_candidate100_differences": [
+      {
+        "native_status": 200,
+        "operation": "xc-movie-ext",
+        "original_status": 301
+      },
+      {
+        "native_status": 200,
+        "operation": "xc-series-ext",
+        "original_status": 301
+      }
+    ]
+  }
+}

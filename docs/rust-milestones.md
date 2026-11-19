@@ -54,8 +54,14 @@ deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
 [The viewing and client compatibility checkpoint](rust-milestone-batch100.md)
-records the focused Rust tests and the exact Original and Candidate98 VOD
-observations that guide the next package verification.
+records the exact Docker build, recurring DVR detail and VOD stats parity,
+and two-replica TS controls. Targeted client stop disconnected just the
+selected viewer while its peer continued through the shared upstream.
+
+The [network-disabled SDK](../scripts/rust-contracts/sdk-exact-vod-494.json)
+reproduced the committed contract register and passed all 12 tests, including
+the 19 corruption controls. The register has 494 partial HTTP assignments
+and 304 unassigned HTTP operations.
 
 [The programme mutation and admin redirect checkpoint](rust-milestone-batch99.md)
 records the configured admin Compose pass, paired gzip guide recovery, and
