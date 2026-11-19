@@ -1,0 +1,276 @@
+{
+  "credit": "Original Dispatcharr and dependency authors retain full application and tool credit.",
+  "original": {
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "image_reference": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff"
+  },
+  "candidate": {
+    "revision": "3c5063347ca6be710894e8d753110bc344dd4df2",
+    "image_id": "sha256:3ee795ee96c2cb4c50b9851cd30e4057a7d6cddccb81fe137d0a115b4a58c034",
+    "source_tree_sha256": "495a2fca271ad8484a0ad745cf34d3b839c75ad1bfe6885768aa2772199f964a"
+  },
+  "workload": {
+    "viewers_per_phase": 10,
+    "authenticated": true,
+    "live_format": "VLC-input MPEG-TS",
+    "same_channel": true,
+    "idle_workers": true,
+    "upstream_connections_per_phase": 1,
+    "provider_slots_per_phase": 1,
+    "warmup_seconds": 15,
+    "measurement_seconds": 60,
+    "samples_per_phase": 61,
+    "decoder_drain_seconds": 5,
+    "post_window_bytes_counted": false,
+    "phase_order": [
+      "Original",
+      "Native",
+      "Native",
+      "Original",
+      "Original",
+      "Native"
+    ],
+    "retained_phases": 0,
+    "input_fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c"
+  },
+  "protocol_qualification_at_100_viewers": {
+    "decoded_duration_spread_limit_seconds": 2.005333333332999,
+    "first": {
+      "actual_exit": 1,
+      "qualified": false,
+      "physical_phase_actual_exits": [
+        0,
+        0
+      ],
+      "joint_decoded_duration_spread_seconds": {
+        "video": 2.1199999999999974,
+        "audio": 2.133322222222219
+      },
+      "result_sha256": "460122f3863a49a4f219e1388d0ad9fbcff46b06c327e50de50a9918032b4171"
+    },
+    "unchanged_retry": {
+      "actual_exit": 0,
+      "qualified": true,
+      "physical_phase_actual_exits": [
+        0,
+        0
+      ],
+      "joint_decoded_duration_spread_seconds": {
+        "video": 0.4799999999999969,
+        "audio": 0.46932222222222464
+      },
+      "result_sha256": "a30490120fcb6b7045c6bb77a2011440add37ba31f4e66471585ec76fdd00ea2"
+    }
+  },
+  "measurement": {
+    "outer_actual_exit": 1,
+    "outer_controller_passed": false,
+    "outer_failure": "Post-write AttributeError from the pair reducer shadowing parsed CLI options with a metrics dictionary.",
+    "scoped_numerical_budgets_verified": true,
+    "full_campaign_accepted": false,
+    "active_recording_performance_accepted": false,
+    "milestone_accepted": false,
+    "phase_actual_exits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "phase_EOF_and_group_settlement_verified": true,
+    "owned_projects_removed": 6,
+    "exact_measured_containers_removed": 21,
+    "joint_decoded_duration_spread_seconds": {
+      "video": 0.4399999999999977,
+      "audio": 0.42665555555555557
+    },
+    "decoded_duration_spread_limit_seconds": 2.005333333332999
+  },
+  "ratio_budgets_native_over_original": {
+    "max_primary_cpu": 0.9,
+    "max_primary_working_set": 0.95,
+    "max_p95_first_byte": 1.1,
+    "min_wire_bytes": 0.95,
+    "min_encoded_useful_bytes": 0.95
+  },
+  "paired_trials": [
+    {
+      "trial": 1,
+      "primary_and_delivery_ratios": {
+        "CPU": 0.5218375468872404,
+        "memory": 0.2950104198694954,
+        "throughput": 0.9949024410588638,
+        "encoded_useful_throughput": 0.9949982847373703,
+        "first_byte_p95": 0.9533757943384946
+      },
+      "budgets_passed": {
+        "CPU": true,
+        "memory": true,
+        "throughput": true,
+        "encoded_useful_throughput": true,
+        "first_byte_p95": true
+      },
+      "whole_fixture_ratios": {
+        "cpu_mean_cores": 0.5367019773996742,
+        "working_set_estimate_max_simultaneous_bytes": 0.4258437896171121
+      }
+    },
+    {
+      "trial": 2,
+      "primary_and_delivery_ratios": {
+        "CPU": 0.5171301199546207,
+        "memory": 0.2987581738556602,
+        "throughput": 0.994344298866794,
+        "encoded_useful_throughput": 0.9945042607972805,
+        "first_byte_p95": 0.9529926572584073
+      },
+      "budgets_passed": {
+        "CPU": true,
+        "memory": true,
+        "throughput": true,
+        "encoded_useful_throughput": true,
+        "first_byte_p95": true
+      },
+      "whole_fixture_ratios": {
+        "cpu_mean_cores": 0.5256557165009846,
+        "working_set_estimate_max_simultaneous_bytes": 0.4295396820364323
+      }
+    },
+    {
+      "trial": 3,
+      "primary_and_delivery_ratios": {
+        "CPU": 0.5025358194183749,
+        "memory": 0.30087344519863557,
+        "throughput": 0.996584579031605,
+        "encoded_useful_throughput": 0.9967408241114627,
+        "first_byte_p95": 0.9535341146611046
+      },
+      "budgets_passed": {
+        "CPU": true,
+        "memory": true,
+        "throughput": true,
+        "encoded_useful_throughput": true,
+        "first_byte_p95": true
+      },
+      "whole_fixture_ratios": {
+        "cpu_mean_cores": 0.5238539049217075,
+        "working_set_estimate_max_simultaneous_bytes": 0.43250150224453004
+      }
+    }
+  ],
+  "backend_medians": {
+    "primary": {
+      "Original": {
+        "cpu_core_seconds": 2.261056,
+        "cpu_mean_cores": 0.037682064926849536,
+        "working_set_estimate_max_simultaneous_bytes": 955867136
+      },
+      "Native": {
+        "cpu_core_seconds": 1.161156,
+        "cpu_mean_cores": 0.01935151186093923,
+        "working_set_estimate_max_simultaneous_bytes": 285573120
+      }
+    },
+    "whole_fixture": {
+      "Original": {
+        "cpu_core_seconds": 3.382792,
+        "cpu_mean_cores": 0.05637676150887391,
+        "working_set_estimate_max_simultaneous_bytes": 1162727424
+      },
+      "Native": {
+        "cpu_core_seconds": 1.778186,
+        "cpu_mean_cores": 0.029634766964952246,
+        "working_set_estimate_max_simultaneous_bytes": 499437568
+      }
+    },
+    "delivery": {
+      "Original": {
+        "window_bytes": 92071520,
+        "window_encoded_useful_bytes": 84797510,
+        "p95_ms_floored_at_50": 7096.906227001455
+      },
+      "Native": {
+        "window_bytes": 91602180,
+        "window_encoded_useful_bytes": 84373377,
+        "p95_ms_floored_at_50": 6765.5151809995
+      }
+    }
+  },
+  "median_native_over_original_across_pairs": {
+    "primary_and_delivery_ratios": {
+      "CPU": 0.5171301199546207,
+      "memory": 0.2987581738556602,
+      "throughput": 0.9949024410588638,
+      "encoded_useful_throughput": 0.9949982847373703,
+      "first_byte_p95": 0.9533757943384946
+    },
+    "whole_fixture_ratios": {
+      "cpu_mean_cores": 0.5256557165009846,
+      "working_set_estimate_max_simultaneous_bytes": 0.4295396820364323
+    }
+  },
+  "verified_source_sha256": {
+    "candidate_build_manifest": "e29a05ce22070067db03ed0e90a80f0ff64e14560d1eec394dd14dd77bf6903a",
+    "frozen_protocol": "9446c541a459a926fb7c55d59e899156a3f4208fdf6fdbea4a754fd198595043",
+    "frozen_phase_driver": "e4f4939f39776c6b5fc6f6cf4b25b5665d659bd2979106e89d33547752d0e216",
+    "measured_workload": "a40e0c826eacfbd1e6badedb093b99c021c713c0edbf54c2fac5c53d6fd6dc3d",
+    "measured_result": "471ca0b3259d1ef584df5d4bfc866680f7c036a05400c804c268e29778d6f369",
+    "independent_receipt": "8a2262424be2d7bb78a7e682e3438da65047e0f441bdd0f162d5b8e2e107008d"
+  },
+  "evidence_reconciled": {
+    "frozen_inputs": 271,
+    "phase_evidence_files": 18,
+    "phase_sha256": [
+      {
+        "phase": 1,
+        "evidence": {
+          "shared-ts.json": "31cb2ce4e32fdad8fdf3dbe8492b7b01a37313f6d0244853c0cee5d53c35e1e2",
+          "resource-samples.json": "ea31d34f781c77691f90a27abe0612fa83881585582ce8bc942434489a9e27ea",
+          "useful-media-complete.json": "6923de7824585e753b022ef011fd6184c0fc7d4524f50a6e0a81769f39f52b76"
+        }
+      },
+      {
+        "phase": 2,
+        "evidence": {
+          "shared-ts.json": "529c54677abc6386d582f3bd9d0d9f53d01e0e7cb7f1f1ef7fd6321670e5057d",
+          "resource-samples.json": "1106e44b0445682c8ececd79000ff6ab699c5f81398eb239d0cb7bb0443de075",
+          "useful-media-complete.json": "f47bd283b3e845092862b39e2a57f95577dcdeb5a0768ed48742399464ef02bc"
+        }
+      },
+      {
+        "phase": 3,
+        "evidence": {
+          "shared-ts.json": "b02fbb1296691e32706499fe8b7c01ac3cf32c3b9fe904fd5606dd547d5d6e17",
+          "resource-samples.json": "b096787f02548e01b589bfb07bfaaaa425b3ebb612833d72b8bd66029441ef4a",
+          "useful-media-complete.json": "79bb848172e4ddcf31bc2aab2db371d7a8f79e9f069e4cb156a20697548e3221"
+        }
+      },
+      {
+        "phase": 4,
+        "evidence": {
+          "shared-ts.json": "8cf0fa0e6b5b6db456eb14fb9909aa688b0f2e3b8a64235ce69a1a07458c3b97",
+          "resource-samples.json": "6e82ea5940cfee324c9b7b4821cb60a8a7990dbdc0a333ccb4e6675bfe9e06e7",
+          "useful-media-complete.json": "71f9ef70f3fedc19e57790d4aefe92d6218e955d7a52bada758729f9027c1940"
+        }
+      },
+      {
+        "phase": 5,
+        "evidence": {
+          "shared-ts.json": "90b1a04af8b4c2795872bcaee9ae0f1192055e51f718f77bafaf094649d8ee7b",
+          "resource-samples.json": "6d0fdd7a94c038531a6ebe3b3b00170a1721ef57f31b685f5033a77117656ad3",
+          "useful-media-complete.json": "dc76ee25d78469ae6cdf65f9f5f4fa15854a9b24135edfb82219d87241aa9f98"
+        }
+      },
+      {
+        "phase": 6,
+        "evidence": {
+          "shared-ts.json": "7f48a0d5ae893148045aacf155364b06a4827d092afd82a33e1fd96122ffcb78",
+          "resource-samples.json": "435a47e6c6366eade9f5486ea02b187136f80aaa44d68d33f232cf1768799908",
+          "useful-media-complete.json": "ddffa3970ebae748ecc1d3da789f08de48aee5ee31d3070ff1bbcb19674c1f95"
+        }
+      }
+    ]
+  }
+}

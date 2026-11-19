@@ -1,0 +1,13 @@
+--- a/run.py
++++ b/run.py
+@@ -148,8 +148,8 @@
+      if len(vals)!=count:raise ValueError('AllViewerLatencyRequired')
+      return max(50,vals[math.ceil(.95*len(vals))-1])
+     def delivered(row,key):return sum(v[key]for v in row['useful_media_complete']['readers'])
+-    a,b=original['metrics']['primary'],native['metrics']['primary']
+-    ratios={'CPU':b['cpu_mean_cores']/max(a['cpu_mean_cores'],1e-9),'memory':b['working_set_estimate_max_simultaneous_bytes']/max(a['working_set_estimate_max_simultaneous_bytes'],1),'throughput':delivered(native,'window_bytes')/max(delivered(original,'window_bytes'),1),'encoded_useful_throughput':delivered(native,'window_encoded_useful_bytes')/max(delivered(original,'window_encoded_useful_bytes'),1),'first_byte_p95':p95(native)/p95(original)}
++    original_primary,native_primary=original['metrics']['primary'],native['metrics']['primary']
++    ratios={'CPU':native_primary['cpu_mean_cores']/max(original_primary['cpu_mean_cores'],1e-9),'memory':native_primary['working_set_estimate_max_simultaneous_bytes']/max(original_primary['working_set_estimate_max_simultaneous_bytes'],1),'throughput':delivered(native,'window_bytes')/max(delivered(original,'window_bytes'),1),'encoded_useful_throughput':delivered(native,'window_encoded_useful_bytes')/max(delivered(original,'window_encoded_useful_bytes'),1),'first_byte_p95':p95(native)/p95(original)}
+     failed=[key for key,limit in [('CPU',.9),('memory',.95),('first_byte_p95',1.1)]if ratios[key]>limit]+[key for key in ('throughput','encoded_useful_throughput')if ratios[key]<.95]
+     result['pairs'].append({'viewers':count,'trial':trial,'ratios':ratios,'passed':not failed,'failed':failed})
+   result['scoped_comparison_budgets_passed']=len(result['pairs'])==3*len(levels) and all(p['passed']for p in result['pairs']);result['live_only_gain_accepted']=False
