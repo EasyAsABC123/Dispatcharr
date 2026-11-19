@@ -117,3 +117,19 @@ adds a single retry when the bounded history read observes a dropped Redis
 connection. The compare-and-set write still has one physical attempt.
 
 [Paired diagnostic evidence](../scripts/rust-integration/m9-playback-refresh-diagnostic/password-cache-diagnostic.json)
+
+
+## Candidate103 password regression
+
+The exact Candidate103 image completed both natural cooldown cases with
+HTTP 200 at five minutes. The stationary case then admitted two more
+attempts, returned HTTP 429 for the fourth, and verified the stored
+throttle history and expiry were preserved at the limit. The viewing case
+recorded a single history append during ten advancing viewers. It kept
+the same provider slot and upstream generation during the request.
+
+Both owned Compose projects and their observed process generations were
+removed. The directed single-Redis-connection test and the full two-hour
+soak remain pending.
+
+[Successor natural-auth evidence](../scripts/rust-integration/m9-playback-refresh-diagnostic/password-cache-successor.json)

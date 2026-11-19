@@ -37,6 +37,11 @@ H.264/AAC origin and two distinct XMLTV jobs during ten-viewer playback.
 A third resource trial passed the full 120 seconds with the one-slot provider,
 complete resource censuses and exact cleanup. The two-hour soak remains open.
 
+The [five-minute password regression](rust-m9-playback-refresh-diagnostic.md)
+passed on Candidate103 with zero and ten viewers. The viewing cohort
+preserved one upstream and its provider slot during login. The fourth
+stationary login still returned HTTP 429 with no throttle-history change.
+
 The [completed DVR performance attempt](../scripts/rust-perf/candidate88-dvr/README.md)
 verified three one-viewer pairs. Median paired whole-stack CPU fell 45.05%
 and peak working set fell 62.99% with equal delivery. Native returned
