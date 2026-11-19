@@ -377,6 +377,85 @@ async fn fixture_with_idle(startup_idle: Duration) -> Fixture {
 }
 #[tokio::test]
 #[ignore = "requires disposable REDIS_TEST_URL and loopback HTTP"]
+async fn explicit_peer_tail_probe_preserves_the_active_archive_and_its_quota() {
+    let mut fixture = fixture().await;
+    fixture.resolver.mode.store(5, Ordering::SeqCst);
+    let url = std::env::var("REDIS_TEST_URL").unwrap();
+    let peer = CatchupMedia::with_resolver(
+        fixture.resolver.clone(),
+        fixture.sessions.clone(),
+        fixture.coordinator.clone(),
+        &url,
+        CatchupMediaConfig::default(),
+    )
+    .await
+    .unwrap();
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let peer_base = format!("http://{}", listener.local_addr().unwrap());
+    let router = peer.clone().router();
+    fixture.tasks.push(tokio::spawn(async move {
+        axum::serve(
+            listener,
+            router.into_make_service_with_connect_info::<std::net::SocketAddr>(),
+        )
+        .await
+        .unwrap();
+    }));
+    let session = fixture.mint().await;
+    let route = session.json()["playback_url"].as_str().unwrap().to_owned();
+    let client = reqwest::Client::new();
+    let first = client
+        .get(format!("{}{}", fixture.base, route))
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(first.status(), 200);
+    let pool = format!("timeshift:pool:{}", session.session_id);
+    let counter = format!("profile_connections:{}", fixture.resolver.profile);
+    let owner: String = fixture.redis.hget(&pool, "rust_owner_token").await.unwrap();
+    let before = fixture.hits.load(Ordering::SeqCst);
+
+    let response = client
+        .get(format!("{peer_base}{route}"))
+        .header("Range", "bytes=1879744-1879999")
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(response.status(), 206);
+    assert_eq!(
+        response.headers()["content-range"],
+        "bytes 1879744-1879999/1880000"
+    );
+    assert_eq!(
+        response.bytes().await.unwrap().as_ref(),
+        &payload()[1879744..]
+    );
+    assert_eq!(fixture.hits.load(Ordering::SeqCst), before + 1);
+    assert_eq!(fixture.redis.get::<_, i64>(&counter).await.unwrap(), 1);
+    assert_eq!(
+        fixture
+            .redis
+            .hget::<_, _, String>(&pool, "rust_owner_token")
+            .await
+            .unwrap(),
+        owner
+    );
+
+    let response = client
+        .get(format!("{peer_base}{route}"))
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(response.status(), 503);
+    assert_eq!(fixture.hits.load(Ordering::SeqCst), before + 1);
+    assert!(peer.shutdown().await);
+    assert_eq!(fixture.redis.get::<_, i64>(&counter).await.unwrap(), 1);
+    drop(first);
+    fixture.cleanup().await;
+}
+
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback HTTP"]
 async fn idle_archive_keeps_its_stored_fallback_after_primary_capacity_recovers() {
     let mut fixture = fixture_with_idle(Duration::from_secs(5)).await;
     fixture.resolver.mode.store(6, Ordering::SeqCst);

@@ -31,6 +31,10 @@ def capture(base,fixture):
         # emitted length, without timestamp, row or error-body normalization.
         if actual!=case['expected']:differences.append({'index':index,'method':case['method'],'role':case['role'],'expected':case['expected'],'actual':actual})
         cases.append({'index':index,'method':case['method'],'role':case['role'],**actual})
-    expected_count = 70 if fixture.get('includes_multipart', False) else 64
+    expected_count = 64
+    if fixture.get('includes_multipart', False):
+        expected_count += 6
+    if fixture.get('includes_file_multipart', False):
+        expected_count += 5
     return {'scope':'Packaged real-clock current-programme HTTP wire replay','passed':len(cases)==expected_count and not differences,
         'cases':cases,'differences':differences,'performance_verified':False,'application_parity_verified':False}

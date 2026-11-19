@@ -563,7 +563,15 @@ impl CatchupMedia {
                     .open_stored_idle(pool_request, &route.owner)
                     .await
             } else {
-                if let Some(probe) = self.inner.pool.busy_probe(&pool_request, range).await? {
+                let probe = if provided == Some(sid) && !self.inner.pool.is_local(sid) {
+                    self.inner
+                        .pool
+                        .peer_busy_probe(&pool_request, range)
+                        .await?
+                } else {
+                    self.inner.pool.busy_probe(&pool_request, range).await?
+                };
+                if let Some(probe) = probe {
                     return self
                         .probe_response(
                             probe,

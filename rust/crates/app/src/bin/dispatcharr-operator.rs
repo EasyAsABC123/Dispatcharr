@@ -1,4 +1,7 @@
 //! Native safe operator CLI. Original Dispatcharr authors retain full credit.
+#[path = "../database_config.rs"]
+mod database_config;
+
 use dispatcharr_store::{
     operator_commands::{OperatorCommands, OperatorError},
     Store,
@@ -16,7 +19,7 @@ fn main() {
         .build()
         .expect("operator runtime");
     let result = runtime.block_on(async {
-        let database = std::env::var("DATABASE_URL").map_err(|_| OperatorError::Unavailable)?;
+        let database = database_config::url().map_err(|_| OperatorError::Unavailable)?;
         let redis = std::env::var("REDIS_URL").map_err(|_| OperatorError::Unavailable)?;
         let store = Store::connect(&database, 2)
             .await

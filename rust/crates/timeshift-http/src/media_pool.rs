@@ -453,6 +453,73 @@ impl ArchivePool {
             check_existing(&self.inner, &entry, request, probe).await?,
         ))
     }
+    /// Serve only a bounded, known-length probe of a Native busy peer.
+    /// No provider lease, client record or proxy generation is created.
+    pub(crate) async fn peer_busy_probe(
+        &self,
+        request: &ArchivePoolRequest,
+        range: Option<&str>,
+    ) -> Result<Option<ArchiveProbe>, StoreError> {
+        if dispatcharr_timeshift_core::parse_client_range(range).is_none() {
+            return Ok(None);
+        }
+        if *self.inner.stopped.borrow() {
+            return Err(unavailable());
+        }
+        let sid = &request.session_id;
+        let stats = format!("{}_{}", request.channel_id, sid);
+        let keys = [
+            format!("timeshift:pool:{sid}"),
+            format!("timeshift:channel:{stats}:clients:{sid}"),
+            self.inner.coordinator.timeshift_owner_key(sid),
+            format!("timeshift:stream_gen:{}:{sid}", request.virtual_channel_id),
+            format!(
+                "timeshift:channel:{}:client:{sid}:stop",
+                request.virtual_channel_id
+            ),
+        ];
+        let descriptor = serde_json::to_vec(&request.pool_fields).map_err(|_| unavailable())?;
+        let args = [descriptor.as_slice()];
+        let read = || {
+            self.inner
+                .transport
+                .command::<Vec<String>, _>(PEER_BUSY_PROBE, &keys, &args, ())
+        };
+        let (snapshot, _) = read().await.map_err(|_| unavailable())?;
+        let [owner, _, _, final_url, length] = snapshot.as_slice() else {
+            return Ok(None);
+        };
+        let Some(length) = length.parse::<i128>().ok().filter(|length| *length > 0) else {
+            return Ok(None);
+        };
+        if !dispatcharr_timeshift_core::is_near_eof_probe(range, Some(length))
+            || !uuid::Uuid::parse_str(owner).is_ok_and(|id| id.to_string() == owner.as_str())
+        {
+            return Ok(None);
+        }
+        let permit = self
+            .inner
+            .probe_slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| unavailable())?;
+        let probe = ArchiveProbe {
+            inner: self.inner.clone(),
+            final_url: final_url.clone(),
+            length: Some(length),
+            _permit: permit,
+        };
+        let probe = check_archive_admission(&self.inner, request, owner, probe).await?;
+        let (current, _) = read().await.map_err(|_| unavailable())?;
+        if *self.inner.stopped.borrow() {
+            return Err(unavailable());
+        }
+        if current != snapshot {
+            return Err(StoreError::StatusBody(503, json!("Stream slot busy")));
+        }
+        Ok(Some(probe))
+    }
+
     /// A seek waits for the old supervised body to drain its final mutation,
     /// while retaining its provider reservation continuously across handoff.
     pub async fn open_playback(
@@ -1211,6 +1278,17 @@ async fn check_existing<G: Send + 'static>(
     request: &ArchivePoolRequest,
     guard: G,
 ) -> Result<G, StoreError> {
+    let (_, guard) =
+        check_archive_admission(inner, request, &entry.token, (Operation::new(entry), guard))
+            .await?;
+    Ok(guard)
+}
+async fn check_archive_admission<G: Send + 'static>(
+    inner: &Arc<Inner>,
+    request: &ArchivePoolRequest,
+    owner: &str,
+    guard: G,
+) -> Result<G, StoreError> {
     if request
         .client_fields
         .iter()
@@ -1234,21 +1312,16 @@ async fn check_existing<G: Send + 'static>(
         fields: &request.client_fields,
         stream_limit: request.stream_limit,
         policy: &request.limit_policy,
-        owner_token: &entry.token,
+        owner_token: owner,
         now: &timestamp(),
         ttl: inner.config.pending_admission_ttl,
         scan_limit: inner.config.admission_scan_limit,
     })
     .map_err(|_| unavailable())?;
     let args: Vec<_> = prepared.args.iter().map(Vec::as_slice).collect();
-    let (result, (_, guard)): (Vec<String>, (Operation, G)) = inner
+    let (result, guard): (Vec<String>, G) = inner
         .transport
-        .command(
-            timeshift::SCRIPT,
-            &prepared.keys,
-            &args,
-            (Operation::new(entry), guard),
-        )
+        .command(timeshift::SCRIPT, &prepared.keys, &args, guard)
         .await
         .map_err(|_| unavailable())?;
     publish_displaced(inner, &result);
@@ -1472,6 +1545,27 @@ for _,field in ipairs({'rust_owner_token','profile_id','account_id','dispatcharr
  table.insert(values,redis.call('HGET',KEYS[1],field))
 end
 return values
+"#;
+
+const PEER_BUSY_PROBE: &str = r#"
+if redis.call('TYPE',KEYS[1]).ok~='hash' or redis.call('TYPE',KEYS[2]).ok~='hash'
+ or redis.call('TYPE',KEYS[3]).ok~='string' or redis.call('TYPE',KEYS[4]).ok~='string'
+ or redis.call('EXISTS',KEYS[5])~=0 then return {} end
+if redis.call('HGET',KEYS[1],'busy')~='1' or redis.call('HGET',KEYS[2],'rust_preempted')=='1'
+ or not redis.call('HGET',KEYS[2],'last_active') then return {} end
+local fields=cjson.decode(ARGV[1])
+for _,field in ipairs({'user_id','media_id','profile_id','account_id','stream_id','dispatcharr_stream_id','provider_timestamp'}) do
+ if not fields[field] or fields[field]=='' or redis.call('HGET',KEYS[1],field)~=fields[field] then return {} end
+end
+if redis.call('HGET',KEYS[2],'user_id')~=fields.user_id then return {} end
+local pool_token=redis.call('HGET',KEYS[1],'rust_owner_token')
+if not pool_token or #pool_token~=36 or redis.call('HGET',KEYS[2],'rust_owner_token')~=pool_token then return {} end
+local url_size=redis.call('HSTRLEN',KEYS[1],'final_url')
+local length_size=redis.call('HSTRLEN',KEYS[1],'content_length')
+if url_size==0 or url_size>16384 or length_size==0 or length_size>39
+ or redis.call('STRLEN',KEYS[3])>128 or redis.call('STRLEN',KEYS[4])>20 then return {} end
+return {pool_token,redis.call('GET',KEYS[3]),redis.call('GET',KEYS[4]),
+ redis.call('HGET',KEYS[1],'final_url'),redis.call('HGET',KEYS[1],'content_length')}
 "#;
 
 const CLAIM_IDLE: &str = r#"

@@ -30,8 +30,11 @@ fixtures = [case for case in fixture['cases'] if case['path']=='/api/epg/current
 if os.environ.get('CURRENT_MULTIPART_CAPTURE') == '1':
     def multipart(fields):
         parts = [
-            f'--dispatcharr\r\nContent-Disposition: form-data; name="{name}"\r\n\r\n{value}\r\n'
-            for name, value in fields
+            '--dispatcharr\r\n'
+            f'Content-Disposition: form-data; name="{name}"'
+            + ('; filename="fixture.txt"\r\nContent-Type: application/octet-stream' if file else '')
+            + f'\r\n\r\n{value}\r\n'
+            for name, value, file in fields
         ]
         return ''.join(parts) + '--dispatcharr--\r\n'
 
@@ -47,7 +50,19 @@ if os.environ.get('CURRENT_MULTIPART_CAPTURE') == '1':
         content_type = 'multipart/form-data'
         if boundary:
             content_type += '; boundary=dispatcharr'
-        fixtures.append(dict(observed, content_type=content_type, body=None, raw_body=multipart(fields)))
+        fixtures.append(dict(observed, content_type=content_type, body=None, raw_body=multipart((name, value, False) for name, value in fields)))
+    if os.environ.get('CURRENT_FILE_MULTIPART_CAPTURE') == '1':
+        for fields in [
+            [('epg_data_ids', '[]', True)],
+            [('channel_uuids', '[]', True)],
+            [('channel_uuids', '[]', False), ('epg_data_ids', '[]', True)],
+            [('epg_data_ids', '', False), ('epg_data_ids', '[]', True)],
+            [('unrelated', 'file bytes', True)],
+        ]:
+            fixtures.append(dict(
+                observed, content_type='multipart/form-data; boundary=dispatcharr',
+                body=None, raw_body=multipart(fields),
+            ))
 for case in fixtures:
     headers={name.removeprefix('HTTP_').replace('_','-'):value for name,value in case['headers'].items()}
     headers['Content-Type']=case['content_type']
@@ -63,4 +78,4 @@ for case in fixtures:
             'content_type':response.getheader('Content-Type'),'content_length':response.getheader('Content-Length')}
         cases.append(result)
 print(json.dumps({'scope':'Actual original real-clock current-programme wire on owned shifted intervals',
-    'anchor':anchor.isoformat(),'cases':cases,'includes_multipart':os.environ.get('CURRENT_MULTIPART_CAPTURE') == '1','native_verified':False,'performance_verified':False}))
+    'anchor':anchor.isoformat(),'cases':cases,'includes_multipart':os.environ.get('CURRENT_MULTIPART_CAPTURE') == '1','includes_file_multipart':os.environ.get('CURRENT_FILE_MULTIPART_CAPTURE') == '1','native_verified':False,'performance_verified':False}))

@@ -22,7 +22,10 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
-The [latest Rust checkpoint](rust-milestone-batch74.md) covers concurrent
+[The guide, XC, archive and operator checkpoint](rust-milestone-batch75.md)
+records the new focused changes and the packaged missing-group regression.
+
+The [previous Rust checkpoint](rust-milestone-batch74.md) covers concurrent
 archive setup, XC group validation, packaged multipart guide requests and
 standalone PostgreSQL cross-restore.
 

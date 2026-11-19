@@ -94,7 +94,10 @@ def main():
     parser.add_argument('--grid-negotiation-source', action='store_true', help='Capture additional original-only guide Accept/format/method grammar separately from accepted40cases')
     parser.add_argument('--native-grid-wire', action='store_true', help='Draft actual original/native-network guide replay with real clocks and strict expiry/hour guards')
     parser.add_argument('--candidate-grid-wire', action='store_true', help='Compare actual unpatched original/native packaged grid network replies')
+    parser.add_argument('--current-file-multipart', action='store_true', help='Include five current-programme multipart file cases')
     args = parser.parse_args()
+    if args.current_file_multipart and not args.current_multipart:
+        parser.error('current-file-multipart requires current-multipart')
     if args.current_multipart and not args.candidate_current:
         parser.error('current-multipart requires candidate-current')
     if args.grid_source_archive and not (args.native_grid or args.native_grid_http or args.native_grid_wire):
@@ -380,6 +383,8 @@ def main():
                     (output/'guide-wire-source.json').write_text(json.dumps(grid_fixture,indent=2)+'\n')
                 if args.candidate_current:
                     current_environment = ['-e', 'CURRENT_MULTIPART_CAPTURE=1'] if args.current_multipart else []
+                    if args.current_file_multipart:
+                        current_environment += ['-e', 'CURRENT_FILE_MULTIPART_CAPTURE=1']
                     wire=command(compose+['exec','-T',*current_environment,'baseline','/dispatcharrpy/bin/python','-'],timeout=180,
                                  body=(tools/'scripts/rust-epg-contracts/current_wire_source.py').read_text())
                     (output/'current-wire-source-worker.log').write_text(wire.stderr)

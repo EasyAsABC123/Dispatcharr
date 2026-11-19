@@ -328,19 +328,23 @@ fn validate(
     if !errors.is_empty() {
         return Err(StoreError::InvalidInput(Value::Object(errors)));
     }
-    // Source3 qualified an ordinary PATCH of these two preferences on an
-    // existing activeXC account. Do not admit XC create/credentials/activation,
-    // enable_vod transitions or a general unqualified XC full serializer.
+    // The playlist group filter saves these preferences independently of
+    // group memberships, activation and the VOD refresh setting.
     let xc_preferences = !create
         && partial
         && old["account_type"] == "XC"
         && saved["account_type"] == "XC"
-        && old["is_active"] == true
-        && old["custom_properties"].is_object()
-        && old["custom_properties"]["enable_vod"] == true
-        && input.len() == 2
-        && input.get("auto_enable_new_groups_vod") == Some(&Value::Bool(false))
-        && input.get("auto_enable_new_groups_series") == Some(&Value::Bool(false));
+        && (old["custom_properties"].is_object() || old["custom_properties"].is_null())
+        && !input.is_empty()
+        && input.iter().all(|(key, value)| {
+            value.is_boolean()
+                && matches!(
+                    key.as_str(),
+                    "auto_enable_new_groups_live"
+                        | "auto_enable_new_groups_vod"
+                        | "auto_enable_new_groups_series"
+                )
+        });
     // The Original serializer updates live memberships even on inactive
     // accounts and with VOD enabled. This shape leaves activation, settings
     // and the existing provider state alone.
@@ -357,7 +361,6 @@ fn validate(
             .as_array()
             .filter(|groups| groups.len() <= 256)
             .ok_or_else(unsupported)?;
-        let mut seen = HashSet::new();
         for group in groups {
             let group = group
                 .as_object()
@@ -372,11 +375,6 @@ fn validate(
                 .get("enabled")
                 .and_then(Value::as_bool)
                 .ok_or_else(unsupported)?;
-            // Duplicate-input CASE ordering and wider nested fields remain
-            // outside this measured ordinary selection prerequisite.
-            if !seen.insert(id) {
-                return Err(unsupported());
-            }
             group_selection.push((id, enabled));
         }
     }
@@ -493,6 +491,13 @@ fn validate_group_references(group_ids: &[i64], existing: &[i64]) -> Result<(), 
     } else {
         Err(StoreError::InvalidInput(json!({"channel_groups": errors})))
     }
+}
+
+fn keep_first_group_selections(selection: &mut Vec<(i64, bool)>) {
+    // Source bulk_update emits one ordered CASE per batch. The first WHEN for
+    // a membership wins. Retain all submitted indices until validation ends.
+    let mut seen = HashSet::new();
+    selection.retain(|(id, _)| seen.insert(*id));
 }
 
 async fn write(c: &mut PgConnection, id: Option<i64>, saved: Value) -> Result<i64, StoreError> {
@@ -784,7 +789,7 @@ async fn change(
                 let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT CASE WHEN octet_length(to_jsonb(a)::text)<=1048576 THEN to_jsonb(a) END AS raw,COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week),'') AS cron FROM m3u_m3uaccount a LEFT JOIN django_celery_beat_periodictask t ON t.id=a.refresh_task_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=t.crontab_id WHERE a.id=$1").bind(id).fetch_optional(c).await})).await??.ok_or_else(missing)?;
                 let raw:Option<Value>=row.try_get("raw")?;let old=raw.ok_or_else(unsupported)?;if old["locked"]==true{return Err(locked())}let cron:String=row.try_get("cron")?;(old,cron)
             }else{(defaults(),String::new())};
-            let validated=validate(input,&old,&old_cron,partial,id.is_none())?;let saved=validated.saved;let cron=validated.cron;
+            let mut validated=validate(input,&old,&old_cron,partial,id.is_none())?;let saved=validated.saved;let cron=validated.cron;
             let check=saved.clone();let group_ids:Vec<i64>=validated.group_selection.iter().map(|(id,_)|*id).collect();
             session.run(move|c|Box::pin(async move{
                 preflight(c,id,&check).await?;
@@ -794,6 +799,7 @@ async fn change(
                 }
                 Ok::<_,StoreError>(())
             })).await??;
+            keep_first_group_selections(&mut validated.group_selection);
             let inline_admission=inline_groups.as_ref().map(|groups|groups.admit(&auth)).transpose()?;
             if validated.hash_changed{lock=Some(TargetLock::acquire(&auth,id.ok_or_else(unsupported)?).await?);}
             let zone=if !cron.trim().is_empty(){let settings=session.system_settings(auth.clone()).await?;settings["time_zone"].as_str().filter(|v|!v.is_empty()).unwrap_or("UTC").to_owned()}else{"UTC".into()};
@@ -1134,7 +1140,7 @@ mod tests {
         }
     }
     #[test]
-    fn xc_group_selection_keeps_other_mutations_and_duplicate_rows_outside_its_scope() {
+    fn xc_group_selection_keeps_other_mutations_outside_its_scope() {
         let mut old = defaults();
         old["account_type"] = json!("XC");
         old["is_active"] = json!(false);
@@ -1142,7 +1148,6 @@ mod tests {
         for input in [
             json!({"channel_groups":[],"enable_vod":false}),
             json!({"channel_groups":[{"channel_group":11,"enabled":false,"auto_channel_sync":true}]}),
-            json!({"channel_groups":[{"channel_group":11,"enabled":false},{"channel_group":11,"enabled":true}]}),
         ] {
             assert!(matches!(
                 validate(input.as_object().unwrap().clone(), &old, "", true, false),
@@ -1160,6 +1165,32 @@ mod tests {
             ),
             Err(StoreError::Unsupported(_))
         ));
+    }
+    #[test]
+    fn duplicate_group_selections_validate_all_indices_and_keep_first_value() {
+        let mut old = defaults();
+        old["account_type"] = json!("XC");
+        let input = json!({"channel_groups":[
+            {"channel_group":11,"enabled":false},
+            {"channel_group":29,"enabled":true},
+            {"channel_group":11,"enabled":true},
+            {"channel_group":29,"enabled":false}
+        ]});
+        let mut selection = validate(input.as_object().unwrap().clone(), &old, "", true, false)
+            .unwrap()
+            .group_selection;
+        let ids: Vec<_> = selection.iter().map(|(id, _)| *id).collect();
+        assert_eq!(ids, [11, 29, 11, 29]);
+        assert!(matches!(
+            validate_group_references(&ids, &[11]),
+            Err(StoreError::InvalidInput(body)) if body == json!({"channel_groups":{
+                "1":{"channel_group":["Invalid pk \"29\" - object does not exist."]},
+                "3":{"channel_group":["Invalid pk \"29\" - object does not exist."]}
+            }})
+        ));
+        assert!(validate_group_references(&ids, &[29, 11]).is_ok());
+        keep_first_group_selections(&mut selection);
+        assert_eq!(selection, [(11, false), (29, true)]);
     }
     #[test]
     fn missing_group_references_preserve_sparse_request_indices() {
@@ -1194,7 +1225,63 @@ mod tests {
         wider["enable_vod"] = json!(false);
         assert!(validate(wider.as_object().unwrap().clone(), &old, "", true, false).is_err());
         assert!(validate(request.as_object().unwrap().clone(), &old, "", false, false).is_err());
-        old["is_active"] = json!(false);
+        assert!(validate(Map::new(), &old, "", true, false).is_err());
+        assert!(validate(
+            json!({"auto_enable_new_groups_live":"true"})
+                .as_object()
+                .unwrap()
+                .clone(),
+            &old,
+            "",
+            true,
+            false
+        )
+        .is_err());
+        old["custom_properties"] = json!("non-mapping preference state");
         assert!(validate(request.as_object().unwrap().clone(), &old, "", true, false).is_err());
+    }
+
+    #[test]
+    fn xc_group_filter_preferences_preserve_account_state() {
+        let mut old = defaults();
+        old["name"] = json!("Owned XC");
+        old["account_type"] = json!("XC");
+        let states = [
+            json!({"enable_vod":true,"marker":"keep","auto_enable_new_groups_live":true}),
+            json!({"enable_vod":false}),
+            json!({}),
+            Value::Null,
+        ];
+        let inputs = [
+            json!({
+                "auto_enable_new_groups_live":false,
+                "auto_enable_new_groups_vod":false,
+                "auto_enable_new_groups_series":true
+            }),
+            json!({"auto_enable_new_groups_series":false}),
+        ];
+
+        for active in [true, false] {
+            old["is_active"] = json!(active);
+            old["status"] = json!(if active { "success" } else { "disabled" });
+            for properties in &states {
+                old["custom_properties"] = properties.clone();
+                for request in &inputs {
+                    let request = request.as_object().unwrap();
+                    let mut expected = old.clone();
+                    let mut expected_properties =
+                        properties.as_object().cloned().unwrap_or_default();
+                    expected_properties.extend(request.clone());
+                    expected["custom_properties"] = Value::Object(expected_properties);
+                    let actual =
+                        validate(request.clone(), &old, "30 5 * * *", true, false).unwrap();
+                    assert_eq!(actual.saved, expected);
+                    assert_eq!(actual.cron, "30 5 * * *");
+                    assert!(!actual.hash_changed);
+                    assert_eq!(actual.expiration, None);
+                    assert!(actual.group_selection.is_empty());
+                }
+            }
+        }
     }
 }

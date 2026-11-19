@@ -74,8 +74,8 @@ async fn multipart_body(content_type: &str, bytes: Bytes) -> Result<Value, Store
     };
     // A plain Django QueryDict value is a string, even when its spelling
     // looks like a JSON array or null. Repeating a field does not produce a
-    // list through request.data.get(). Only selector presence affects the
-    // view, so do not retain field values or upload contents.
+    // list through request.data.get(). Ordinary uploads are scalar values
+    // too. The view checks only presence and type for these values.
     let boundary = match multer::parse_boundary(content_type) {
         Ok(boundary) => boundary,
         Err(multer::Error::NoBoundary) => {
@@ -105,8 +105,8 @@ async fn multipart_body(content_type: &str, bytes: Bytes) -> Result<Value, Store
         .await
         .map_err(|_| outside_supported_form())?
     {
-        let file = field.file_name().is_some_and(|name| !name.is_empty());
-        if file {
+        let filename = field.file_name().filter(|name| !name.is_empty());
+        if filename.is_some() {
             file_count += 1;
         } else {
             text_count += 1;
@@ -119,7 +119,12 @@ async fn multipart_body(content_type: &str, bytes: Bytes) -> Result<Value, Store
             .unwrap_or_default()
             .trim_matches(|value| matches!(value, '\t'..='\r' | ' '));
         if matches!(name, "channel_uuids" | "epg_data_ids") {
-            if file {
+            if filename.is_some_and(|name| {
+                matches!(name, "." | "..")
+                    || !name.bytes().all(|byte| {
+                        (32..=126).contains(&byte) && !matches!(byte, b'&' | b'/' | b'\\')
+                    })
+            }) {
                 return Err(outside_supported_form());
             }
             fields.insert(name.to_owned(), Value::String(String::new()));
@@ -270,6 +275,19 @@ mod multipart_tests {
         assert!(matches!(
             CurrentProgramSelection::from_json(&data),
             Ok(CurrentProgramSelection::Channels(None))
+        ));
+    }
+
+    #[tokio::test]
+    async fn ordinary_multipart_file_is_a_non_list_selector() {
+        let body = Bytes::from_static(
+            b"--dispatcharr\r\nContent-Disposition: form-data; name=\"epg_data_ids\"; filename=\"fixture.txt\"\r\nContent-Type: application/octet-stream\r\n\r\n[]\r\n--dispatcharr--\r\n",
+        );
+        let data = multipart_body(CONTENT_TYPE, body).await.unwrap();
+        assert!(matches!(
+            CurrentProgramSelection::from_json(&data),
+            Err(StoreError::StatusBody(400, ref body))
+                if body == &json!({"error":"epg_data_ids must be an array of integers or null"})
         ));
     }
 
