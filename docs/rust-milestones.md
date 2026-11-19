@@ -33,8 +33,10 @@ records the exact-image Compose results for those four workloads.
 The [retained Original playback packet](../scripts/rust-contracts/retained-playback/README.md)
 binds 54 observed HTTP responses to seven additional route-operation entries.
 The [retained Image22 controls](../scripts/rust-contracts/retained-image22-controls/README.md)
-add 22 responses across seven channel and transport operations. M0 now has
-264 partial Source assignments and 534 unassigned entries.
+add 22 responses across seven channel and transport operations. The
+[repository, socket and switch packet](../scripts/rust-contracts/retained-repository-socket-switch/README.md)
+adds 57 retained observations across six unresolved declarations. M0 now
+has 270 partial Source assignments and 528 unassigned entries.
 The conservative method inventory and full acceptance requirements remain
 in the [contract register](rust-contract-register.md).
 

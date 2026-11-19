@@ -214,3 +214,15 @@ method-unresolved IDs retain their original declarations.
 
 The register now has 264 partial Source assignments and 534 unassigned operations.
 All 791 unaffected operation dictionaries and all 257 earlier assignments remain exact.
+
+## Retained repository, TS switch and WebSocket handshakes
+
+The [repository, TS switch and handshake binding](../scripts/rust-contracts/retained-repository-socket-switch/bindings.json)
+adds 57 Original responses to six method-unresolved operation IDs. Repository
+responses retain their TCP or Django APIClient transport. The Source24 framework
+exception has no returned HTTP status and stays outside the assignment. Source2
+records two actual returned 500 responses. The WebSocket records cover the
+opening GET handshake. Frames and post-upgrade behavior stay outside this scope.
+
+The register has 270 partial Source assignments and 528 unassigned operations.
+All prior 264 assignments and the other 792 operation dictionaries remain exact.

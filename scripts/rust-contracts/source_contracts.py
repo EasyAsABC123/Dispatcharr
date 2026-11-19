@@ -232,6 +232,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_SD25_resolver_scoped_HTTP':
             import retained_sd_contracts
             retained_sd_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_repository_socket_switch':
+            import retained_repository_socket_switch_contracts
+            retained_repository_socket_switch_contracts.validate(root, value)
         elif reference['kind'] == 'retained_original_Image22_TS_stream_group_HTTP':
             import retained_image22_controls_contracts
             retained_image22_controls_contracts.validate(root, value)
@@ -365,6 +368,9 @@ def apply(root, rows, bindings):
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             if reference['kind'] in ['retained_original_xc_Source11_single_refresh_HTTP', 'retained_original_Source12_search_M3U_resolver_HTTP', 'captured_original_Source51_matching_admin_HTTP', 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP', 'retained_original_management12_channelguide25_HTTP', 'retained_original_auth51_plugin35_resolver_scoped_HTTP', 'retained_original_SD25_resolver_scoped_HTTP', 'retained_original_image22_core_reads_TCP', 'retained_original_image22_serializer_null_TCP', 'retained_original_provider_channel_vod_HTTP', 'retained_original_HDHR_Image27_TCP', 'retained_original_playback_VOD_XC_TCP', 'retained_original_Image22_TS_stream_group_HTTP']:
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
+                operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
+            if reference['kind'] == 'retained_original_repository_socket_switch':
+                operation['role_matrix']['state'] = 'partial_Original_retained_transport_observations'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'
         loaded.append({'path': reference['path'], 'sha256': reference['sha256'], 'kind': reference['kind']})

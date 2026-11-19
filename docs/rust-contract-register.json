@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "5249ce245236051fe1865daabcdd49d9b45a89605adab12788c5615f5623cb9e",
+    "scripts/rust-contracts/executable-source-inputs.json": "9459d3077a14ab744481fef60690fef9d698c4c852eb2c5fcbbb8a00d574bb84",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -42,11 +42,12 @@
     "scripts/rust-contracts/retained-provider-channel-vod/bindings.json": "1fb9dae1ab5ec1b6a90226491f071947dad34119013c703fdfc9d44456bcbb9a",
     "scripts/rust-contracts/retained-hdhr/bindings.json": "9c77f36ed60e1ab57c33e27794223215cb956fe09196184acda1be7833806ac4",
     "scripts/rust-contracts/retained-playback/bindings.json": "8f1609f176b00a6a41557e944fc690135bb644a35a975c905cd1f4fc213e2655",
-    "scripts/rust-contracts/retained-image22-controls/bindings.json": "3de11379faa601354aab3cf1faaa976724dfefdb54cb6eb58bb29926ee3a8c44"
+    "scripts/rust-contracts/retained-image22-controls/bindings.json": "3de11379faa601354aab3cf1faaa976724dfefdb54cb6eb58bb29926ee3a8c44",
+    "scripts/rust-contracts/retained-repository-socket-switch/bindings.json": "f909413998e013506341c1cee9da908af95af1e6c37a9fab2c0f647353c5e995"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 264,
+    "operations": 270,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -212,6 +213,11 @@
         "path": "scripts/rust-contracts/retained-image22-controls/bindings.json",
         "sha256": "3de11379faa601354aab3cf1faaa976724dfefdb54cb6eb58bb29926ee3a8c44",
         "kind": "retained_original_Image22_TS_stream_group_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-repository-socket-switch/bindings.json",
+        "sha256": "f909413998e013506341c1cee9da908af95af1e6c37a9fab2c0f647353c5e995",
+        "kind": "retained_original_repository_socket_switch"
       }
     ],
     "fully_verified_added": 0,
@@ -171910,15 +171916,282 @@
           "owning_milestone": "M8",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_retained_transport_observations",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              },
+              "admin_denied": {
+                "fixture_actor_or_credential_case": "admin_denied",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_actor_or_credential_case": "anonymous",
+                "complete": false
+              },
+              "basic": {
+                "fixture_actor_or_credential_case": "basic",
+                "complete": false
+              },
+              "duplicate_pair": {
+                "fixture_actor_or_credential_case": "duplicate_pair",
+                "complete": false
+              },
+              "standard": {
+                "fixture_actor_or_credential_case": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "admin_denied",
+              "anonymous",
+              "basic",
+              "duplicate_pair",
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "scope": "Returned Original HTTP and APIClient metadata responses",
+            "epochs": {
+              "HTTPS12": {
+                "references": [
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/captured-report.json",
+                    "sha256": "807188a7f189babd61611e1c8127d6468cfa1b588f6c9b19190ff38c7eec1e45"
+                  },
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/qualification.json",
+                    "sha256": "abdc6af7436eb8fdf14c381d7006c2cf6bec7b43aa27d066ed31e843c5f843ae"
+                  },
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/Root-independent-cleanup.json",
+                    "sha256": "8908a018ce5493aed998458449da043452209a54da39318b20f4d23fc0997c00"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 12
+              },
+              "Source24": {
+                "references": [
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/data/Source24-projection.json.gz",
+                    "sha256": "0c325b9cd8e9fd9e521d0f36a38a2fbb97e7a034f79bbc6d321b39262e9faa20"
+                  },
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/lifecycle/Source24/execution-report.json.gz",
+                    "sha256": "c2e4f22f1ceb3b870bc5a76e9151fc1d4e3a8a3a02452437d4aa4d10d386b5d2"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 23
+              },
+              "Source2": {
+                "references": [
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/data/Source2-projection.json.gz",
+                    "sha256": "0086eedd17cf9267cfbb0ab685e0cd4f387e2f5e2927ddb07daa4f4b5ce12eab"
+                  },
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/lifecycle/Source2/execution-report.json.gz",
+                    "sha256": "8341f009e4484a06023d55342d40aed0e6ee4b7643cde095d53d310bc869e2c7"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 2
+              }
+            }
+          },
+          "assertions": [
+            "Bind retained observed route, request method, fixture actor and returned status",
+            "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 9,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-e906572127d879858b21:METHOD_UNRESOLVED",
+            "source_handler": "apps.plugins.api_views.PluginRepoListCreateAPIView",
+            "pattern_exact": "api/plugins/repos/",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M8",
+            "fixture_id": "repository",
+            "observed_methods": [
+              "GET",
+              "POST"
+            ],
+            "observed_roles": [
+              "admin",
+              "admin_denied",
+              "anonymous",
+              "basic",
+              "duplicate_pair",
+              "standard"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              },
+              "admin_denied": {
+                "fixture_actor_or_credential_case": "admin_denied",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_actor_or_credential_case": "anonymous",
+                "complete": false
+              },
+              "basic": {
+                "fixture_actor_or_credential_case": "basic",
+                "complete": false
+              },
+              "duplicate_pair": {
+                "fixture_actor_or_credential_case": "duplicate_pair",
+                "complete": false
+              },
+              "standard": {
+                "fixture_actor_or_credential_case": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Bind retained observed route, request method, fixture actor and returned status",
+              "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+            ],
+            "cases": [
+              {
+                "record_index": 8,
+                "label": "create",
+                "path": "/api/plugins/repos/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 201,
+                "response_projection_sha256": "f441e1e77e45004a5e0b0e8ae95f9dc2d6b74f89b4ec164938f109e57e49897f",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              },
+              {
+                "record_index": 1,
+                "label": "anonymous-list",
+                "path": "/api/plugins/repos/",
+                "method": "GET",
+                "role": "anonymous",
+                "HTTP_status": 401,
+                "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoListCreateAPIView"
+              },
+              {
+                "record_index": 2,
+                "label": "basic-list",
+                "path": "/api/plugins/repos/",
+                "method": "GET",
+                "role": "basic",
+                "HTTP_status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoListCreateAPIView"
+              },
+              {
+                "record_index": 3,
+                "label": "standard-list",
+                "path": "/api/plugins/repos/",
+                "method": "GET",
+                "role": "standard",
+                "HTTP_status": 200,
+                "response_projection_sha256": "0e68282871fca8cda25ecf31883c7138c03e6f3d3f926dbf680b470f3d83d7c1",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoListCreateAPIView"
+              },
+              {
+                "record_index": 4,
+                "label": "user-network-denied-list",
+                "path": "/api/plugins/repos/",
+                "method": "GET",
+                "role": "admin_denied",
+                "HTTP_status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoListCreateAPIView"
+              },
+              {
+                "record_index": 19,
+                "label": "list-after-delete",
+                "path": "/api/plugins/repos/",
+                "method": "GET",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "632526cec0acef7393af404f025d0b790f413002be7afb72456bb08da5c08ccb",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoListCreateAPIView"
+              },
+              {
+                "record_index": 22,
+                "label": "create-missing-url-validation-only",
+                "path": "/api/plugins/repos/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 400,
+                "response_projection_sha256": "00ca25244884d9f8960c9fca18930009cf4f7405f24bfbd852f3d94c3576ee4e",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoListCreateAPIView"
+              },
+              {
+                "record_index": 23,
+                "label": "create-duplicate-url-validation-only",
+                "path": "/api/plugins/repos/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 400,
+                "response_projection_sha256": "210ee42c26ea21fe933014dd447e87c81f553614d7328078504ced47a7b69291",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoListCreateAPIView"
+              },
+              {
+                "record_index": 2,
+                "label": "fresh-duplicate-persisted-api-key-rendered-witness",
+                "path": "/api/plugins/repos/",
+                "method": "GET",
+                "role": "duplicate_pair",
+                "HTTP_status": 500,
+                "response_projection_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source2",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoListCreateAPIView"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 9,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -177377,15 +177650,231 @@
           "owning_milestone": "M8",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_retained_transport_observations",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_actor_or_credential_case": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_actor_or_credential_case": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "scope": "Returned Original HTTP and APIClient metadata responses",
+            "epochs": {
+              "HTTPS12": {
+                "references": [
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/captured-report.json",
+                    "sha256": "807188a7f189babd61611e1c8127d6468cfa1b588f6c9b19190ff38c7eec1e45"
+                  },
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/qualification.json",
+                    "sha256": "abdc6af7436eb8fdf14c381d7006c2cf6bec7b43aa27d066ed31e843c5f843ae"
+                  },
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/Root-independent-cleanup.json",
+                    "sha256": "8908a018ce5493aed998458449da043452209a54da39318b20f4d23fc0997c00"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 12
+              },
+              "Source24": {
+                "references": [
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/data/Source24-projection.json.gz",
+                    "sha256": "0c325b9cd8e9fd9e521d0f36a38a2fbb97e7a034f79bbc6d321b39262e9faa20"
+                  },
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/lifecycle/Source24/execution-report.json.gz",
+                    "sha256": "c2e4f22f1ceb3b870bc5a76e9151fc1d4e3a8a3a02452437d4aa4d10d386b5d2"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 23
+              },
+              "Source2": {
+                "references": [
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/data/Source2-projection.json.gz",
+                    "sha256": "0086eedd17cf9267cfbb0ab685e0cd4f387e2f5e2927ddb07daa4f4b5ce12eab"
+                  },
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/lifecycle/Source2/execution-report.json.gz",
+                    "sha256": "8341f009e4484a06023d55342d40aed0e6ee4b7643cde095d53d310bc869e2c7"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 2
+              }
+            }
+          },
+          "assertions": [
+            "Bind retained observed route, request method, fixture actor and returned status",
+            "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 8,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-6341bfe67df8f5e35bd9:METHOD_UNRESOLVED",
+            "source_handler": "apps.plugins.api_views.PluginRepoPreviewAPIView",
+            "pattern_exact": "api/plugins/repos/preview/",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M8",
+            "fixture_id": "repository",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_actor_or_credential_case": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_actor_or_credential_case": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Bind retained observed route, request method, fixture actor and returned status",
+              "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+            ],
+            "cases": [
+              {
+                "record_index": 0,
+                "label": "anonymous-preview",
+                "path": "/api/plugins/repos/preview/",
+                "method": "POST",
+                "role": "anonymous",
+                "HTTP_status": 401,
+                "response_projection_sha256": "eb099b542fd429c5e724017a02981198b7785b4777f0eb00d1122fe8029ff3b2",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              },
+              {
+                "record_index": 1,
+                "label": "standard-preview",
+                "path": "/api/plugins/repos/preview/",
+                "method": "POST",
+                "role": "standard",
+                "HTTP_status": 403,
+                "response_projection_sha256": "57486671ae6760ca928f9c9e5b95672c75bbe859c192748c3f6271192afd902e",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              },
+              {
+                "record_index": 2,
+                "label": "trusted-preview",
+                "path": "/api/plugins/repos/preview/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "b19f51dd0d7e9b6cf6ed7a48fea290886e89e143cade0d339d2019918e392577",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              },
+              {
+                "record_index": 3,
+                "label": "untrusted-preview",
+                "path": "/api/plugins/repos/preview/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "02c98f9cf4cd9739c7247269de750022071a6135bef16427875eb94e94fd3fa5",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              },
+              {
+                "record_index": 4,
+                "label": "wrong-SAN-preview",
+                "path": "/api/plugins/repos/preview/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "02c98f9cf4cd9739c7247269de750022071a6135bef16427875eb94e94fd3fa5",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              },
+              {
+                "record_index": 5,
+                "label": "redirect-preview",
+                "path": "/api/plugins/repos/preview/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "b19f51dd0d7e9b6cf6ed7a48fea290886e89e143cade0d339d2019918e392577",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              },
+              {
+                "record_index": 6,
+                "label": "blocked-loopback-preview",
+                "path": "/api/plugins/repos/preview/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "ac8f0175d1db51e0a364b99092613985eae7536a8233ce261db3191c4d0e7154",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              },
+              {
+                "record_index": 7,
+                "label": "mixed-DNS-preview",
+                "path": "/api/plugins/repos/preview/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "ac8f0175d1db51e0a364b99092613985eae7536a8233ce261db3191c4d0e7154",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 8,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -177426,15 +177915,382 @@
           "owning_milestone": "M8",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_retained_transport_observations",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_actor_or_credential_case": "standard",
+                "complete": false
+              },
+              "unique_admin": {
+                "fixture_actor_or_credential_case": "unique_admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "standard",
+              "unique_admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "scope": "Returned Original HTTP and APIClient metadata responses",
+            "epochs": {
+              "HTTPS12": {
+                "references": [
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/captured-report.json",
+                    "sha256": "807188a7f189babd61611e1c8127d6468cfa1b588f6c9b19190ff38c7eec1e45"
+                  },
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/qualification.json",
+                    "sha256": "abdc6af7436eb8fdf14c381d7006c2cf6bec7b43aa27d066ed31e843c5f843ae"
+                  },
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/Root-independent-cleanup.json",
+                    "sha256": "8908a018ce5493aed998458449da043452209a54da39318b20f4d23fc0997c00"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 12
+              },
+              "Source24": {
+                "references": [
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/data/Source24-projection.json.gz",
+                    "sha256": "0c325b9cd8e9fd9e521d0f36a38a2fbb97e7a034f79bbc6d321b39262e9faa20"
+                  },
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/lifecycle/Source24/execution-report.json.gz",
+                    "sha256": "c2e4f22f1ceb3b870bc5a76e9151fc1d4e3a8a3a02452437d4aa4d10d386b5d2"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 23
+              },
+              "Source2": {
+                "references": [
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/data/Source2-projection.json.gz",
+                    "sha256": "0086eedd17cf9267cfbb0ab685e0cd4f387e2f5e2927ddb07daa4f4b5ce12eab"
+                  },
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/lifecycle/Source2/execution-report.json.gz",
+                    "sha256": "8341f009e4484a06023d55342d40aed0e6ee4b7643cde095d53d310bc869e2c7"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 2
+              }
+            }
+          },
+          "assertions": [
+            "Bind retained observed route, request method, fixture actor and returned status",
+            "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 19,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-2893312784054a3f5856:METHOD_UNRESOLVED",
+            "source_handler": "apps.plugins.api_views.PluginRepoDetailAPIView",
+            "pattern_exact": "api/plugins/repos/<int:pk>/",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M8",
+            "fixture_id": "repository",
+            "observed_methods": [
+              "DELETE",
+              "PATCH",
+              "PUT"
+            ],
+            "observed_roles": [
+              "admin",
+              "standard",
+              "unique_admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_actor_or_credential_case": "standard",
+                "complete": false
+              },
+              "unique_admin": {
+                "fixture_actor_or_credential_case": "unique_admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Bind retained observed route, request method, fixture actor and returned status",
+              "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+            ],
+            "cases": [
+              {
+                "record_index": 10,
+                "label": "disable",
+                "path": "/api/plugins/repos/2/",
+                "method": "PATCH",
+                "role": "admin",
+                "HTTP_status": 405,
+                "response_projection_sha256": "71a94b0e3ffccd27a7f9cd939f1f349d15a32bfbefd14bf5abbfabbbe4c92242",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              },
+              {
+                "record_index": 11,
+                "label": "delete",
+                "path": "/api/plugins/repos/2/",
+                "method": "DELETE",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "1f2618b664b7a918385b1f079674f0666f86a504929b189ebc8f98866af0046d",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              },
+              {
+                "record_index": 5,
+                "label": "standard-put-denied",
+                "path": "/api/plugins/repos/801/",
+                "method": "PUT",
+                "role": "standard",
+                "HTTP_status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 6,
+                "label": "standard-delete-denied",
+                "path": "/api/plugins/repos/802/",
+                "method": "DELETE",
+                "role": "standard",
+                "HTTP_status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 7,
+                "label": "missing-put-before-body",
+                "path": "/api/plugins/repos/987654321/",
+                "method": "PUT",
+                "role": "admin",
+                "HTTP_status": 404,
+                "response_projection_sha256": "847e1ebd07ea7761ba3d36bcce91d6dba53fd7b5dce6e10509781bced16b011a",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 8,
+                "label": "existing-put-malformed-json",
+                "path": "/api/plugins/repos/801/",
+                "method": "PUT",
+                "role": "admin",
+                "HTTP_status": 400,
+                "response_projection_sha256": "c80851c8ba52b294853884d11a7435e2d5034b17fcabbe8782f5b08b973716cf",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 9,
+                "label": "empty-put-retains-fields",
+                "path": "/api/plugins/repos/801/",
+                "method": "PUT",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "dae30706d0af119bc901ed3f05d988b54bd0ffd344c73be111386ea2551e2e50",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 10,
+                "label": "put-disable",
+                "path": "/api/plugins/repos/801/",
+                "method": "PUT",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "2e954562812b40795ec3afc007441bab65019d005869286382a5c95ed1455ae7",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 11,
+                "label": "put-public-key-trim",
+                "path": "/api/plugins/repos/801/",
+                "method": "PUT",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "d901f31f7ab8e8dfd19fb13ef484eac13ba39d319cfaa8d120ee298d34c744d8",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 12,
+                "label": "put-ignored-readonly-and-url",
+                "path": "/api/plugins/repos/801/",
+                "method": "PUT",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "12fef406f0621f52f3090ce8ac29dc67b998ceef5929ff891119d11e19c1266b",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 13,
+                "label": "put-invalid-boolean",
+                "path": "/api/plugins/repos/801/",
+                "method": "PUT",
+                "role": "admin",
+                "HTTP_status": 400,
+                "response_projection_sha256": "e4b6f8636651f638e718419475d69ae296fc2d8d2e4faf4eb026c448d3d03ac4",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 14,
+                "label": "put-null-public-key",
+                "path": "/api/plugins/repos/801/",
+                "method": "PUT",
+                "role": "admin",
+                "HTTP_status": 400,
+                "response_projection_sha256": "1e2cb12dd512c90a30e3fc714841b884bfb7932214f26ae062131042b7ac8c33",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 15,
+                "label": "put-null-enabled",
+                "path": "/api/plugins/repos/801/",
+                "method": "PUT",
+                "role": "admin",
+                "HTTP_status": 400,
+                "response_projection_sha256": "316c4829c4753b6b3432bd448c2358fdd74a2461d3ac53ae9554121e27f4c95a",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 16,
+                "label": "official-delete-refused",
+                "path": "/api/plugins/repos/1/",
+                "method": "DELETE",
+                "role": "admin",
+                "HTTP_status": 400,
+                "response_projection_sha256": "5314d2e6e602b56121450d995b25121fefc6bdbd2415f8efa99f11840f0a9604",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 17,
+                "label": "missing-delete",
+                "path": "/api/plugins/repos/987654321/",
+                "method": "DELETE",
+                "role": "admin",
+                "HTTP_status": 404,
+                "response_projection_sha256": "847e1ebd07ea7761ba3d36bcce91d6dba53fd7b5dce6e10509781bced16b011a",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 18,
+                "label": "custom-delete-detaches-config",
+                "path": "/api/plugins/repos/801/",
+                "method": "DELETE",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "c955e57777ec0d73639dca6748560d00aa5eb8e12f13ebb2ed9656add3908f97",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 20,
+                "label": "admin-patch-not-implemented-by-view",
+                "path": "/api/plugins/repos/802/",
+                "method": "PATCH",
+                "role": "admin",
+                "HTTP_status": 405,
+                "response_projection_sha256": "3e91ddbaf795bc0c4cb6c99bb1c72d70181345f64bb214ecb667076ea95a19ad",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 21,
+                "label": "standard-patch-permission-first",
+                "path": "/api/plugins/repos/802/",
+                "method": "PATCH",
+                "role": "standard",
+                "HTTP_status": 403,
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source24",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              },
+              {
+                "record_index": 1,
+                "label": "fresh-malformed-repository-array-rendered-witness",
+                "path": "/api/plugins/repos/802/",
+                "method": "PUT",
+                "role": "unique_admin",
+                "HTTP_status": 500,
+                "response_projection_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+                "transport": "Original_Django_APIClient",
+                "projection_scope": "returned response body",
+                "fixture_case_source": "Source2",
+                "resolved_handler": "apps.plugins.api_views.PluginRepoDetailAPIView"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 19,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -177474,15 +178330,127 @@
           "owning_milestone": "M8",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_retained_transport_observations",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "scope": "Returned Original HTTP and APIClient metadata responses",
+            "epochs": {
+              "HTTPS12": {
+                "references": [
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/captured-report.json",
+                    "sha256": "807188a7f189babd61611e1c8127d6468cfa1b588f6c9b19190ff38c7eec1e45"
+                  },
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/qualification.json",
+                    "sha256": "abdc6af7436eb8fdf14c381d7006c2cf6bec7b43aa27d066ed31e843c5f843ae"
+                  },
+                  {
+                    "path": "scripts/rust-integration/plugin-repository-transport-source1/Root-independent-cleanup.json",
+                    "sha256": "8908a018ce5493aed998458449da043452209a54da39318b20f4d23fc0997c00"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 12
+              },
+              "Source24": {
+                "references": [
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/data/Source24-projection.json.gz",
+                    "sha256": "0c325b9cd8e9fd9e521d0f36a38a2fbb97e7a034f79bbc6d321b39262e9faa20"
+                  },
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/lifecycle/Source24/execution-report.json.gz",
+                    "sha256": "c2e4f22f1ceb3b870bc5a76e9151fc1d4e3a8a3a02452437d4aa4d10d386b5d2"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 23
+              },
+              "Source2": {
+                "references": [
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/data/Source2-projection.json.gz",
+                    "sha256": "0086eedd17cf9267cfbb0ab685e0cd4f387e2f5e2927ddb07daa4f4b5ce12eab"
+                  },
+                  {
+                    "path": "scripts/rust-pluginrepo-contracts/metadata-component/lifecycle/Source2/execution-report.json.gz",
+                    "sha256": "8341f009e4484a06023d55342d40aed0e6ee4b7643cde095d53d310bc869e2c7"
+                  }
+                ],
+                "actual_controller_exit": 0,
+                "retained_responses": 2
+              }
+            }
+          },
+          "assertions": [
+            "Bind retained observed route, request method, fixture actor and returned status",
+            "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-3401d1e3590d5d19427d:METHOD_UNRESOLVED",
+            "source_handler": "apps.plugins.api_views.PluginRepoRefreshAPIView",
+            "pattern_exact": "api/plugins/repos/<int:pk>/refresh/",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M8",
+            "fixture_id": "repository",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Bind retained observed route, request method, fixture actor and returned status",
+              "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+            ],
+            "cases": [
+              {
+                "record_index": 9,
+                "label": "refresh",
+                "path": "/api/plugins/repos/2/refresh/",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "677ba84c100f07ddf6f52de510e8f56450890937577f12e4e88e74b10ae787e8",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "exact retained private response-record digest",
+                "fixture_case_source": "HTTPS12"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -217758,15 +218726,130 @@
           "owning_milestone": "M3",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_retained_transport_observations",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_actor_or_credential_case": "anonymous",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "scope": "Actual Original admin TS switch and auth/method probes",
+            "references": [
+              {
+                "path": "scripts/rust-playback-baseline/verified-source-application-stream-change-1.json",
+                "sha256": "c51c87d271db732a8187686c561457b30bfbcc229941986f66061f51e634e9e8"
+              },
+              {
+                "path": "scripts/rust-playback-baseline/stream-change-policy.json",
+                "sha256": "a4af53bb8567676e3c4f6d56acf23f8a10180854db9a36cf14e817bef6a7a560"
+              },
+              {
+                "path": "scripts/rust-playback-baseline/stream_change.py",
+                "sha256": "e19dd356d81c760fad86fece79db0002d2e1ca8f2879110ed46bf26fea00be1f"
+              }
+            ],
+            "closed_own_run": true,
+            "path_normalization": "The owned channel identifier is omitted."
+          },
+          "assertions": [
+            "Bind retained observed route, request method, fixture actor and returned status",
+            "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-211afdb7c19d0ea91286:METHOD_UNRESOLVED",
+            "source_handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+            "pattern_exact": "proxy/ts/change_stream/<str:channel_id>",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M3",
+            "fixture_id": "switch",
+            "observed_methods": [
+              "GET",
+              "POST"
+            ],
+            "observed_roles": [
+              "admin",
+              "anonymous"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_actor_or_credential_case": "anonymous",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Bind retained observed route, request method, fixture actor and returned status",
+              "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+            ],
+            "cases": [
+              {
+                "record_index": 0,
+                "label": "method_probe",
+                "path": "/proxy/ts/change_stream/<owned-channel>",
+                "method": "GET",
+                "role": "admin",
+                "HTTP_status": 405,
+                "response_projection_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "returned body",
+                "fixture_case_source": "TS-change"
+              },
+              {
+                "record_index": 1,
+                "label": "anonymous_probe",
+                "path": "/proxy/ts/change_stream/<owned-channel>",
+                "method": "POST",
+                "role": "anonymous",
+                "HTTP_status": 401,
+                "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "returned body",
+                "fixture_case_source": "TS-change"
+              },
+              {
+                "record_index": 2,
+                "label": "switch",
+                "path": "/proxy/ts/change_stream/<owned-channel>",
+                "method": "POST",
+                "role": "admin",
+                "HTTP_status": 200,
+                "response_projection_sha256": "50e6fbdd47aa1a350a75df4ac2b258f5c3b7e8f49269c1de7cacf8e819729ad2",
+                "transport": "Original_TCP_HTTP",
+                "projection_scope": "returned body",
+                "fixture_case_source": "TS-change"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -232039,15 +233122,419 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_retained_transport_observations",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              },
+              "admin_apikey_query": {
+                "fixture_actor_or_credential_case": "admin_apikey_query",
+                "complete": false
+              },
+              "admin_duplicate_token_blank_first": {
+                "fixture_actor_or_credential_case": "admin_duplicate_token_blank_first",
+                "complete": false
+              },
+              "admin_duplicate_token_invalid_first": {
+                "fixture_actor_or_credential_case": "admin_duplicate_token_invalid_first",
+                "complete": false
+              },
+              "admin_duplicate_token_valid_first": {
+                "fixture_actor_or_credential_case": "admin_duplicate_token_valid_first",
+                "complete": false
+              },
+              "admin_header_only": {
+                "fixture_actor_or_credential_case": "admin_header_only",
+                "complete": false
+              },
+              "admin_refresh_token": {
+                "fixture_actor_or_credential_case": "admin_refresh_token",
+                "complete": false
+              },
+              "admin_wrong_query_key": {
+                "fixture_actor_or_credential_case": "admin_wrong_query_key",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_actor_or_credential_case": "anonymous",
+                "complete": false
+              },
+              "inactive": {
+                "fixture_actor_or_credential_case": "inactive",
+                "complete": false
+              },
+              "invalid_credential": {
+                "fixture_actor_or_credential_case": "invalid_credential",
+                "complete": false
+              },
+              "missing_user": {
+                "fixture_actor_or_credential_case": "missing_user",
+                "complete": false
+              },
+              "standard": {
+                "fixture_actor_or_credential_case": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_actor_or_credential_case": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "admin_apikey_query",
+              "admin_duplicate_token_blank_first",
+              "admin_duplicate_token_invalid_first",
+              "admin_duplicate_token_valid_first",
+              "admin_header_only",
+              "admin_refresh_token",
+              "admin_wrong_query_key",
+              "anonymous",
+              "inactive",
+              "invalid_credential",
+              "missing_user",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "scope": "Actual Original HTTP upgrade handshakes",
+            "references": [
+              {
+                "path": "scripts/rust-realtime-contracts/verified-source-wire-1.json",
+                "sha256": "b09b658e0f093dd6948822d5c34908260777d5d4f1e2e8ea51e35e741a2a0cf7"
+              },
+              {
+                "path": "scripts/rust-realtime-contracts/source_inside.py",
+                "sha256": "066919c768452513170d89ea765adc0408d8154704d4754807e7b8c297a934ce"
+              },
+              {
+                "path": "scripts/rust-contracts/retained-repository-socket-switch/historical_ws_client.py",
+                "sha256": "52ff33a27291a7ccf72f933a4be369827481d6fec422ba16d6e5ea62ffad20ec"
+              }
+            ],
+            "retained_handshake_requests": 17,
+            "excluded": "Frames, post-handshake state and 38 other top-level observations.",
+            "cleanup_scope": "Owned Compose fixture removed; Source orphan behavior measured before removal",
+            "Source_exception_cleanup_passed": false
+          },
+          "assertions": [
+            "Bind retained observed route, request method, fixture actor and returned status",
+            "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 17,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-1156f2f1488d795754d5:METHOD_UNRESOLVED",
+            "source_handler": "dispatcharr.consumers.MyWebSocketConsumer",
+            "pattern_exact": "ws/",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M7",
+            "fixture_id": "socket",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "admin",
+              "admin_apikey_query",
+              "admin_duplicate_token_blank_first",
+              "admin_duplicate_token_invalid_first",
+              "admin_duplicate_token_valid_first",
+              "admin_header_only",
+              "admin_refresh_token",
+              "admin_wrong_query_key",
+              "anonymous",
+              "inactive",
+              "invalid_credential",
+              "missing_user",
+              "standard",
+              "viewer"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_actor_or_credential_case": "admin",
+                "complete": false
+              },
+              "admin_apikey_query": {
+                "fixture_actor_or_credential_case": "admin_apikey_query",
+                "complete": false
+              },
+              "admin_duplicate_token_blank_first": {
+                "fixture_actor_or_credential_case": "admin_duplicate_token_blank_first",
+                "complete": false
+              },
+              "admin_duplicate_token_invalid_first": {
+                "fixture_actor_or_credential_case": "admin_duplicate_token_invalid_first",
+                "complete": false
+              },
+              "admin_duplicate_token_valid_first": {
+                "fixture_actor_or_credential_case": "admin_duplicate_token_valid_first",
+                "complete": false
+              },
+              "admin_header_only": {
+                "fixture_actor_or_credential_case": "admin_header_only",
+                "complete": false
+              },
+              "admin_refresh_token": {
+                "fixture_actor_or_credential_case": "admin_refresh_token",
+                "complete": false
+              },
+              "admin_wrong_query_key": {
+                "fixture_actor_or_credential_case": "admin_wrong_query_key",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_actor_or_credential_case": "anonymous",
+                "complete": false
+              },
+              "inactive": {
+                "fixture_actor_or_credential_case": "inactive",
+                "complete": false
+              },
+              "invalid_credential": {
+                "fixture_actor_or_credential_case": "invalid_credential",
+                "complete": false
+              },
+              "missing_user": {
+                "fixture_actor_or_credential_case": "missing_user",
+                "complete": false
+              },
+              "standard": {
+                "fixture_actor_or_credential_case": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_actor_or_credential_case": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Bind retained observed route, request method, fixture actor and returned status",
+              "Keep framework outcomes separate from actual TCP and WebSocket handshakes"
+            ],
+            "cases": [
+              {
+                "record_index": 0,
+                "label": "auth-absent",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "anonymous",
+                "HTTP_status": 403,
+                "response_projection_sha256": "1b7a9fa2ed7a7be3f788ccfcb371f3abc28c2604f27cee7a2d7d62c5000ac624",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 1,
+                "label": "auth-invalid",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "invalid_credential",
+                "HTTP_status": 403,
+                "response_projection_sha256": "8081f8e97f8fd41aa558aa0a0fc3377f8fe7da42b0bc296caa98135d96fbff51",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 2,
+                "label": "auth-refresh",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "admin_refresh_token",
+                "HTTP_status": 403,
+                "response_projection_sha256": "b4af6d2bf42c6801595a7a3f37736a320c4ba7d25d1effea329addd0c8b6a670",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 3,
+                "label": "auth-inactive",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "inactive",
+                "HTTP_status": 403,
+                "response_projection_sha256": "82bc07da646d944cf6df71c433a5e6381763a4f0e0bd43718e90caef3018447f",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 4,
+                "label": "auth-missing-user",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "missing_user",
+                "HTTP_status": 403,
+                "response_projection_sha256": "4393e754f876cc48b7890da7e6c9b6f870a48974843de9e39005f6aa00f06d52",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 5,
+                "label": "auth-apikey-query",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "admin_apikey_query",
+                "HTTP_status": 403,
+                "response_projection_sha256": "e033bbc38cc21a876c89bc8f0aef539f594dafe34d631b85cd05e0da40e2242d",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 6,
+                "label": "auth-header-only",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "admin_header_only",
+                "HTTP_status": 403,
+                "response_projection_sha256": "d54e19f25fd250524c4a6653a6af9171d5058e70dfc14ba5edd2be64392a92da",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 7,
+                "label": "auth-wrong-case",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "admin_wrong_query_key",
+                "HTTP_status": 403,
+                "response_projection_sha256": "bfbc01be4cfb9ba8411ededae34f91f355995d23fe90377918769a2b450d9854",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 8,
+                "label": "auth-invalid-first",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "admin_duplicate_token_invalid_first",
+                "HTTP_status": 403,
+                "response_projection_sha256": "b76071fa85b05fc4fecefc57080d7398d20c5680e71b3312c704a9c802394e73",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 9,
+                "label": "auth-blank-first",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "admin_duplicate_token_blank_first",
+                "HTTP_status": 101,
+                "response_projection_sha256": "9e703c6a852e5299bb1b93e2a2b47560e61583de6c02ea15fda7ed26a0245af8",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 10,
+                "label": "auth-valid-first",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "admin_duplicate_token_valid_first",
+                "HTTP_status": 101,
+                "response_projection_sha256": "70ffd158a5f094723bab15664603a2710db546b216799e13c70ca9845acbc743",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 11,
+                "label": "role-admin",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "admin",
+                "HTTP_status": 101,
+                "response_projection_sha256": "fc3ca81669f001f62663a88aad46856b2a4c9b3335f4615effdb9ee0e52d637e",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 12,
+                "label": "role-standard",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "standard",
+                "HTTP_status": 101,
+                "response_projection_sha256": "71cc6c740d8f465ff94e81cddfa90d5d64a657b2d4d54da227fbdce7e2a057a1",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 13,
+                "label": "role-viewer",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "viewer",
+                "HTTP_status": 101,
+                "response_projection_sha256": "c548b62474d57e196ad2af364b4e60ce98fdb1847825be5a55a83115854212f2",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 14,
+                "label": "origin",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "standard",
+                "HTTP_status": 101,
+                "response_projection_sha256": "82bf60500823e0e27c177ae98ca14c966724bd6b517829ff2a880e62b997ed84",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 15,
+                "label": "origin",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "standard",
+                "HTTP_status": 101,
+                "response_projection_sha256": "82bf60500823e0e27c177ae98ca14c966724bd6b517829ff2a880e62b997ed84",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              },
+              {
+                "record_index": 16,
+                "label": "origin",
+                "path": "/ws/",
+                "method": "GET",
+                "role": "standard",
+                "HTTP_status": 101,
+                "response_projection_sha256": "82bf60500823e0e27c177ae98ca14c966724bd6b517829ff2a880e62b997ed84",
+                "transport": "Original_Daphne_WebSocket_handshake",
+                "projection_scope": "handshake status and case only",
+                "fixture_case_source": "Daphne55"
+              }
+            ],
+            "fully_verified": false,
+            "result": {
+              "Source_case_observations": 17,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     }

@@ -8,6 +8,7 @@ import retained_provider_channel_vod_contracts
 import retained_hdhr_contracts
 import retained_playback_contracts
 import retained_image22_controls_contracts
+import retained_repository_socket_switch_contracts
 import retained_source12_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -31,6 +32,7 @@ class RetainedSource12Controls(unittest.TestCase):
     p.write_bytes(raw)
  def test_previous173_and796_whole_rows_and_M3U_primary_preserved(self):
   register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT,register['runtime_routes'])
   retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,register['runtime_routes'])
   retained_playback_contracts.restore_pre_playback(ROOT,register['runtime_routes'])
   retained_hdhr_contracts.restore_pre_hdhr(ROOT,register['runtime_routes'])
@@ -52,7 +54,8 @@ class RetainedSource12Controls(unittest.TestCase):
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],264)
+  self.assertEqual(mapping['operations'],270)
+  retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT,rows)
   retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,rows)
   retained_playback_contracts.restore_pre_playback(ROOT,rows)
   retained_hdhr_contracts.restore_pre_hdhr(ROOT,rows)
@@ -64,6 +67,7 @@ class RetainedSource12Controls(unittest.TestCase):
   retained_range_source10_contracts.restore_pre_range(rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT,rows)
   retained_image22_controls_contracts.restore_pre_image22_controls(ROOT,rows)
   retained_playback_contracts.restore_pre_playback(ROOT,rows)
   retained_hdhr_contracts.restore_pre_hdhr(ROOT,rows)

@@ -13,6 +13,7 @@ import retained_provider_channel_vod_contracts
 import retained_hdhr_contracts
 import retained_playback_contracts
 import retained_image22_controls_contracts
+import retained_repository_socket_switch_contracts
 import core_settings_source_contracts as subject
 import source_contracts
 
@@ -59,6 +60,7 @@ class CoreSettingsSourceControls(unittest.TestCase):
         auth_proof = json.loads((ROOT / 'scripts/rust-contracts/retained-auth-plugin/preservation.json').read_text())
         original_rows = copy.deepcopy(register['runtime_routes'])
         import retained_xc_refresh_contracts
+        retained_repository_socket_switch_contracts.restore_pre_repository_socket_switch(ROOT, register['runtime_routes'])
         retained_image22_controls_contracts.restore_pre_image22_controls(ROOT, register['runtime_routes'])
         retained_playback_contracts.restore_pre_playback(ROOT, register['runtime_routes'])
         retained_hdhr_contracts.restore_pre_hdhr(ROOT, register['runtime_routes'])
