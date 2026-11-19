@@ -191,6 +191,11 @@ pub(super) fn datetime(raw: &str) -> Option<GridTimestamp> {
         offset_micros,
     })
 }
+/// Local date and clock from CPython's datetime.fromisoformat grammar.
+pub fn source_iso_local_datetime(raw: &str) -> Option<chrono::NaiveDateTime> {
+    datetime(raw).map(|value| value.local)
+}
+
 pub(super) fn date(raw: &str) -> Option<GridTimestamp> {
     let len = raw.len();
     if !matches!(len, 7 | 8 | 10) {

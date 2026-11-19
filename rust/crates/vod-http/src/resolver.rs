@@ -264,24 +264,6 @@ impl VodResolver for SqlVodResolver {
             }) {
                 return Err(StoreError::Forbidden);
             }
-            for name in [
-                "utc_start",
-                "start",
-                "playliststart",
-                "utc_end",
-                "end",
-                "playlistend",
-            ] {
-                if request
-                    .playback
-                    .parameter(name)
-                    .is_some_and(|value| !value.is_empty())
-                {
-                    return Err(StoreError::Unsupported(
-                        "VOD timeshift/offset transforms are not implemented",
-                    ));
-                }
-            }
             let requested =
                 uuid::Uuid::parse_str(&request.content_id).map_err(|_| StoreError::NotFound)?;
             let preferred_account = request

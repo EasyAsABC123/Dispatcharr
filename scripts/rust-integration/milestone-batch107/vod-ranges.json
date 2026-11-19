@@ -1,0 +1,334 @@
+{
+  "alternate_provider": {
+    "actual_exit": 0,
+    "candidate_image": {
+      "image_id": "sha256:3d200c0a1334fa5fec7927d7978441ec475d3e8a9254ffc7479f82608ea6a895",
+      "source_tree_sha256": "4acce6af92800291f997a4ebed91ddec2df93cf4f5da6376d993101d3282c23e"
+    },
+    "candidate_revision": "d58a400ad8bbec4fa7fc7546dca8525430afa47c",
+    "exact_cleanup": {
+      "compose_down_passed": true,
+      "exact_resource_identity_checks": {
+        "network": [
+          true
+        ],
+        "volume": [
+          true
+        ]
+      },
+      "exact_role_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "full_milestone_accepted": false,
+    "manifest_sha256": "600ef2153fe473e7f91922a8b8b893ef9334ff4d1505f696a9ef98f3d47c69bf",
+    "matched_checks": {
+      "observation": {
+        "available": {
+          "counters": [
+            1,
+            0
+          ],
+          "profile_owned": true,
+          "retired": true,
+          "wire": {
+            "bytes": 65536,
+            "content_range": "bytes 8192-73727/4299455",
+            "mime": "video/mp4",
+            "sha256": "cb975419bcdbb647305034e69af51bc1c9a5e125ff5631245f9ad1ed339b9b5b",
+            "status": 206
+          }
+        },
+        "available_after_release": {
+          "counters": [
+            1,
+            0
+          ],
+          "profile_owned": true,
+          "retired": true,
+          "wire": {
+            "bytes": 65536,
+            "content_range": "bytes 8192-73727/4299455",
+            "mime": "video/mp4",
+            "sha256": "cb975419bcdbb647305034e69af51bc1c9a5e125ff5631245f9ad1ed339b9b5b",
+            "status": 206
+          }
+        },
+        "saturated": {
+          "alternate_range": {
+            "bytes": 131072,
+            "content_range": "bytes 8192-139263/4299455",
+            "mime": "video/mp4",
+            "sha256": "6a2fc694848613dcbc1dd35f55672bff78887fd73f2108c7264b7e3533877c36",
+            "status": 206
+          },
+          "both_full": {
+            "counters": [
+              1,
+              1
+            ],
+            "wire": {
+              "bytes": 19,
+              "content_range": null,
+              "mime": "text/html; charset=utf-8",
+              "sha256": "8a734e98fdf672183da1b087d70cb7893f95818aadc601af7921f8f18910d01c",
+              "status": 503
+            }
+          },
+          "held_preferred": {
+            "counters": [
+              1,
+              0
+            ],
+            "first_bytes": 8192,
+            "owned": true,
+            "status": 206
+          },
+          "retired": true,
+          "simultaneous": {
+            "alternate_owned": true,
+            "counters": [
+              1,
+              1
+            ],
+            "preferred_owned": true
+          }
+        }
+      },
+      "upstream_path_roles_and_ranges": [
+        [
+          "preferred",
+          "bytes=8192-73727"
+        ],
+        [
+          "preferred",
+          "bytes=8192-532479"
+        ],
+        [
+          "alternate",
+          "bytes=8192-139263"
+        ],
+        [
+          "preferred",
+          "bytes=8192-73727"
+        ]
+      ]
+    },
+    "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "passed": true,
+    "performance_verified": false,
+    "receipt_sha256": "007eba7f64b3a1496a38a40b6c97cddb41746eebfe00bfeb8ee431d57aa3c822",
+    "scope": "vod-alternate-provider",
+    "supervisor_state_sha256": "00ecf7db07f92ab7e3372ce784d867f776e8e1cfe69e6df37aded4799e1b9665"
+  },
+  "calendar": {
+    "actual_exit": 0,
+    "candidate_image": {
+      "image_id": "sha256:7e7059895df9f87554ce31bf235a760bd47a5649c1518efc87a63b61f0926d8c",
+      "source_tree_sha256": "a044196e9d96b31fc3d7ecc03325eb6d75d8e6980222ef73cc33d14c17fcbea6"
+    },
+    "candidate_revision": "1ea708bf321ec7348a9f04a7fa5d16668e4d072b",
+    "exact_cleanup": {
+      "compose_down_passed": true,
+      "exact_role_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "full_milestone_accepted": false,
+    "manifest_sha256": "08acd1a0ce474b18d9ab04401b330869d9b344a8f0aaad2eb6d9bf8209691bb8",
+    "matched_checks": {
+      "equal_responses_per_backend": 5,
+      "ranges": [
+        {
+          "metadata_timeshift_exact": true,
+          "name": "primary-wins",
+          "provider": {
+            "calendar": [
+              "2026-02-28",
+              "11-22-33"
+            ],
+            "query": [
+              [
+                "utc_start",
+                "2026-02-28T11:22:33Z"
+              ],
+              [
+                "start",
+                "2026-02-28T11:22:33Z"
+              ],
+              [
+                "utc_end",
+                "2026-03-01T00:00:00Z"
+              ],
+              [
+                "end",
+                "2026-03-01T00:00:00Z"
+              ]
+            ]
+          },
+          "provider_request_count": 1,
+          "range": "bytes 0-65535/4299455",
+          "sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "size": 65536,
+          "status": 206
+        },
+        {
+          "metadata_timeshift_exact": true,
+          "name": "duplicate-start-and-local-clock",
+          "provider": {
+            "calendar": [
+              "2026-03-01",
+              "00-03-04"
+            ],
+            "query": [
+              [
+                "utc_start",
+                "2026-03-01T00:03:04+02:30"
+              ],
+              [
+                "start",
+                "2026-03-01T00:03:04+02:30"
+              ],
+              [
+                "utc_end",
+                "literal end"
+              ],
+              [
+                "end",
+                "literal end"
+              ]
+            ]
+          },
+          "provider_request_count": 1,
+          "range": "bytes 0-65535/4299455",
+          "sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "size": 65536,
+          "status": 206
+        },
+        {
+          "metadata_timeshift_exact": true,
+          "name": "invalid-start-keeps-provider-path",
+          "provider": {
+            "calendar": [
+              "2000-01-12",
+              "13-14-15"
+            ],
+            "query": [
+              [
+                "utc_start",
+                "bad"
+              ],
+              [
+                "start",
+                "bad"
+              ],
+              [
+                "offset",
+                "13"
+              ],
+              [
+                "seek",
+                "13"
+              ],
+              [
+                "t",
+                "13"
+              ]
+            ]
+          },
+          "provider_request_count": 1,
+          "range": "bytes 0-65535/4299455",
+          "sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "size": 65536,
+          "status": 206
+        },
+        {
+          "metadata_timeshift_exact": true,
+          "name": "week-date-and-empty-seek",
+          "provider": {
+            "calendar": [
+              "2026-02-28",
+              "00-00-00"
+            ],
+            "query": [
+              [
+                "utc_start",
+                "2026-W09-6"
+              ],
+              [
+                "start",
+                "2026-W09-6"
+              ]
+            ]
+          },
+          "provider_request_count": 1,
+          "range": "bytes 0-65535/4299455",
+          "sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "size": 65536,
+          "status": 206
+        },
+        {
+          "metadata_timeshift_exact": true,
+          "name": "end-only-and-time-fallback",
+          "provider": {
+            "calendar": [
+              "2000-01-12",
+              "13-14-15"
+            ],
+            "query": [
+              [
+                "utc_end",
+                "literal end"
+              ],
+              [
+                "end",
+                "literal end"
+              ],
+              [
+                "offset",
+                "14"
+              ],
+              [
+                "seek",
+                "14"
+              ],
+              [
+                "t",
+                "14"
+              ]
+            ]
+          },
+          "provider_request_count": 1,
+          "range": "bytes 0-65535/4299455",
+          "sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "size": 65536,
+          "status": 206
+        }
+      ]
+    },
+    "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "passed": true,
+    "performance_verified": false,
+    "receipt_sha256": "9ae222462b18931146eb220e03d42a6e319be81bae58932c61b62738f1859f9c",
+    "scope": "vod-calendar-range",
+    "supervisor_state_sha256": "00ecf7db07f92ab7e3372ce784d867f776e8e1cfe69e6df37aded4799e1b9665"
+  }
+}

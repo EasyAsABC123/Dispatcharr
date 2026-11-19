@@ -30,3 +30,19 @@ These results qualify the stated functional cases. Broader milestone
 acceptance and the separate performance gates remain open.
 
 [Functional receipts](../scripts/rust-integration/milestone-batch107/functional.json)
+
+## Calendar and alternate-provider VOD ranges
+
+The corrected calendar guest accepted the previously rejected query fields and
+reused the exact Candidate107 image. All five Original and five Rust calls
+matched on HTTP 206, the 65,536-byte Range body, provider query and Redis
+metadata. Both sides performed one provider request per case. The replay
+exited 0 and retired its four exact service generations.
+
+The separate Candidate106 capacity case matched the preferred-provider read,
+saturation-driven switch to the alternate, HTTP 503 while both slots were
+full, and the return to preferred after release. Exact Range bodies and the
+four real upstream requests matched. The full-capacity request made no upstream
+connection. The controller exited 0 and exact teardown passed.
+
+[VOD range receipts](../scripts/rust-integration/milestone-batch107/vod-ranges.json)
