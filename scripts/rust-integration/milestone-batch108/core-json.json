@@ -1,0 +1,246 @@
+{
+  "actual_calls": 156,
+  "actual_calls_by_backend": {
+    "native": 78,
+    "source": 78
+  },
+  "actual_launcher_exit": 0,
+  "actual_pair_exit": 0,
+  "allowed_reads_each_backend": 18,
+  "allowed_writes_each_backend": 14,
+  "authorized_writes_matched_sql_and_cache_effects": true,
+  "denials_each_backend": 46,
+  "evidence_sha256": {
+    "binding.json": "1751c53fbff2ebc07547e7226d6068c94d9a9572a8a05f14e27d5518f79510d3",
+    "evidence/integration.json": "2f5c90da8053ce810d818332808410ebd9c2aebbfa003ba6ec1c2a9766eddbe2",
+    "evidence/owned-before-compose-down.json": "d60a99f5cc6e4b7c960a74baa282abf2ce633f183a540cc9e7b61d1818f7cac6",
+    "execution.json": "8513729d63bf651429e33ac35713b88c2c4749d04d3853523b0d0af3984b3d51",
+    "execution.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "execution.stdout": "34d7520e4f5cc7b07a74e09e16c3a631f670598c0bab029695a016f01c540cd6",
+    "independent-cleanup.json": "e505097b29b83b937380281859fb58ef4a693ee52f21a352734ef6c8e81dbcbc",
+    "receipt.json": "aa10a885e9b62f5391b76cb21344917e2d73398234b7e9208a00431546a70b46"
+  },
+  "exact_owned_role_exits_and_retirement": {
+    "baseline": 0,
+    "candidate": 0,
+    "data-init": 0,
+    "origin": 0
+  },
+  "fixture_freeze_sha256": "6c400f09469e3c2a1f32b3fa3095c77e757e25ec9be7e3979bdbefae5ae799db",
+  "matched_cell_pairs": 78,
+  "minimal_product_selection": {
+    "other_paths": 0,
+    "patch_sha256": "7bb64087d18e0d2dcd88b66bba0a89639d37cda40a7910380fdbc1b54b997c01",
+    "publication_preimage_revision": "dca4d4fe2c8f45e72af236615292bb0b9c6a9749",
+    "selected_paths": {
+      "rust/crates/store/src/core_reads.rs": {
+        "publication_pre_sha256": "00bbb98180057eb8107bda08a817e97e0c775b878adaf0aebf70175f56232eca",
+        "tested_post_sha256": "fb77bbd85aaf2f187c10ccb72d21cbe888353ae164069feceeffd807edd24c0e"
+      },
+      "rust/crates/store/src/output_profile_writes.rs": {
+        "publication_pre_sha256": "8e516b3d6f53ec8cec6947f44755316396fad36f42b45896d97bc6132fca112c",
+        "tested_post_sha256": "2d259f86661581867e79b483e0e8ef6d39edbf4a78cc7d99960a9f3814a02702"
+      }
+    },
+    "tested_application_revision": "b2086fee47894d80a2cdb0fa334568cbc470b85d",
+    "tested_compound_parent": "5a15af2673f2f4c15ab1fd58f3589ccee5ae8917",
+    "zero_fuzz_apply_actual_exit": 0
+  },
+  "named_rust_tests_observed": [
+    "literal_decimal_suffixes_are_independent_of_canonical_routes",
+    "alias_extractor_does_not_change_the_canonical_path"
+  ],
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "outer_phase_execution_sha256": {
+    "core": "1d4b1deb06f72854dd1d65064d8a584154b716b9e79ea554ce2045d926fc18bb",
+    "core-package-gate": "214cc8cbd198c6c9ac283c40268a1749aea7b0fd4a7f8fb6227818bf3e8929b7",
+    "exact-package": "7ac61643f3abdd006908a1f435c2f5beb29529b6132e8025b02b77fcb2a58a63",
+    "rust-core-clippy": "ee79b3d53829f8a2194c914704ff20f39959d3b4a0dc564619211bf7ebfee9bb",
+    "rust-core-json": "eeb88452545eda617ba7c7625a042baa8fea4d37a273517c70cc2fe3a5d0b90b"
+  },
+  "outer_state_sha256": "0e3631880336ab61ec34e46ade89fd5491d966c702d24ea06f026d76e9f8db81",
+  "performance_verified": false,
+  "preserved_unrelated_state_after_fixture": true,
+  "reads_and_denials_left_sql_and_cache_unchanged": true,
+  "representative_operations": [
+    {
+      "method": "GET",
+      "path": "/api/core/useragents.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/core/useragents.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        403,
+        201,
+        201
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/core/useragents/{owned_pk}.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "method": "PATCH",
+      "path": "/api/core/useragents/{owned_pk}.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        403,
+        200,
+        200
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/core/useragents/{owned_pk}.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        403,
+        200,
+        200
+      ]
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/core/useragents/{owned_pk}.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        403,
+        204,
+        204
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/core/streamprofiles.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/core/streamprofiles.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        403,
+        201,
+        201
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/core/streamprofiles/{owned_pk}.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "method": "PUT",
+      "path": "/api/core/streamprofiles/{owned_pk}.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        403,
+        200,
+        200
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/core/outputprofiles.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        200,
+        200,
+        200
+      ]
+    },
+    {
+      "method": "POST",
+      "path": "/api/core/outputprofiles.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        403,
+        201,
+        201
+      ]
+    },
+    {
+      "method": "GET",
+      "path": "/api/core/outputprofiles/{owned_pk}.json",
+      "representative_role_statuses": [
+        401,
+        401,
+        403,
+        200,
+        200,
+        200
+      ]
+    }
+  ],
+  "role_order": [
+    "anonymous",
+    "inactive_admin",
+    "viewer",
+    "standard",
+    "admin_jwt",
+    "admin_api_key"
+  ],
+  "schema": 1,
+  "scope": "representative Core profile .json aliases",
+  "status_count_each_backend": {
+    "200": 24,
+    "201": 6,
+    "204": 2,
+    "401": 26,
+    "403": 20
+  },
+  "tested_image": "sha256:72797e110b647c5a9bf7f42a3cd5f8716517eed578d39287f8a13862581ff5ff",
+  "tested_manifest_sha256": "bb981a3cf2005ae9c5ae70a4645e2a86f794f53aee1998652a5837ef4d82f938",
+  "tested_revision": "b2086fee47894d80a2cdb0fa334568cbc470b85d",
+  "whole_milestone_accepted": false,
+  "whole_register_operations_verified": 0
+}

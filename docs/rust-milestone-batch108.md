@@ -20,3 +20,19 @@ The scoped project cleaned up. That attempt leaves malformed persisted
 backup schedule behavior unverified.
 
 [Functional receipts](../scripts/rust-integration/milestone-batch108/functional.json)
+
+## Core JSON-suffix routes
+
+The repaired Core package at `b2086fee47894d80a2cdb0fa334568cbc470b85d`
+passed the focused Store tests, strict lint and exact Docker build. The
+JSON aliases reuse the canonical validation and authorization, including the
+StreamProfile PUT JSON extractor.
+
+Both backends matched all 78 cells across 13 methods on OutputProfile,
+StreamProfile and UserAgent routes. The fixture checked six role and
+credential cases per method, selected SQL transitions, and unchanged
+state for denied and read-only calls. The controller exited 0 and both
+owned projects passed exact cleanup. The published product changes cover
+the two Core Store files qualified by this run.
+
+[Core JSON receipt](../scripts/rust-integration/milestone-batch108/core-json.json)

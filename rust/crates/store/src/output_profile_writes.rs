@@ -343,6 +343,7 @@ impl OutputProfileWrites {
     pub fn router(self) -> Router {
         Router::new()
             .route("/api/core/outputprofiles/", post(create))
+            .route("/api/core/outputprofiles.json", post(create))
             .route(
                 "/api/core/outputprofiles/{id}/",
                 axum::routing::put(put).patch(patch).delete(delete),
