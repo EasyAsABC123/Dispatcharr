@@ -1,0 +1,229 @@
+{
+  "Native_coverage_increased": false,
+  "credential_values_exported": false,
+  "credit": "Original Dispatcharr authors and contributors retain full application and behavior credit.",
+  "exact_owned_namespace_cleanup": true,
+  "full_operations_accepted": 0,
+  "historical_public_authorities": {
+    "profile_A": {
+      "path": "scripts/rust-integration/m4-credential-pool-source1/control/A-profile-save.json",
+      "sha256": "9980307751f7143cd7205eda45facd69944684bcc93d489798004e24d131297f"
+    },
+    "profile_B": {
+      "path": "scripts/rust-integration/m4-credential-pool-source1/control/B-profile-save.json",
+      "sha256": "8af64ef37156079fd6e7a8ffbfa2ddc7bf6bf4a973552da945916de47b1b0891"
+    },
+    "profile_C": {
+      "path": "scripts/rust-integration/m4-credential-pool-source1/control/C-profile-save.json",
+      "sha256": "b09d474197fd1affd0bab443e2d6963821ae7b7bb940b75a6b4dd6c66da3e941"
+    },
+    "profile_D": {
+      "path": "scripts/rust-integration/m4-credential-pool-source1/control/D-profile-save.json",
+      "sha256": "018554ee3556715b3fad0208ffdbf87d0b6a4a703069c811ec2600fe8a06b232"
+    },
+    "profile_cleanup": {
+      "path": "scripts/rust-integration/m4-credential-pool-source1/Root-independent-cleanup.json",
+      "sha256": "2107f6688a2c59ca11cc8356ed2f0b2ba1182aa22568adcb736733bf6a42d7e3"
+    },
+    "profile_identity": {
+      "path": "scripts/rust-integration/m4-credential-pool-source1/identity.json",
+      "sha256": "5b6471c881a597580ab52d03f3a61c2e6fc3a44d20ff2f6015be554245d0d957"
+    },
+    "profile_terminal": {
+      "path": "scripts/rust-integration/m4-credential-pool-source1/terminal.json",
+      "sha256": "e6a53c1da95a040a3c52186e1eddbac465fd4c7e0b7f67e5a4a9afafabfb7da8"
+    },
+    "tz_cleanup": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/cleanup/baseline-all.json",
+      "sha256": "a4937c8cd980262773634caa6caeffc0aacadd8ad594bb76d4d963800d9eef36"
+    },
+    "tz_controller": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/controllers/baseline-all.json",
+      "sha256": "37334783a1d7dcd5d10bb599c90f4b619d336d59a94803dca9b09f859fa3d7ed"
+    },
+    "tz_report": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/baseline-all/0-integration.json.json",
+      "sha256": "e90e3abb9dbff7a3ca42aead79d893328e6cab03b8d949d1fec57a9eee20de66"
+    },
+    "ua_checks": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/user-agent/1-packaged-checks.json.json",
+      "sha256": "966221199d49fde5a3ba91add7562ff05376bb8b27d61d6b56b651bd45ea2542"
+    },
+    "ua_cleanup": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/cleanup/user-agent.json",
+      "sha256": "5ed79f29ae4dc739074383305c93f9b76beaead8c9ff06a5008518ef03f00cbc"
+    },
+    "ua_controller": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/controllers/user-agent.json",
+      "sha256": "185bd7a2358923dfcba70d232b37d23194af2fdc4c1bc462f65552ba331191a4"
+    },
+    "ua_report": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/user-agent/0-integration.json.json",
+      "sha256": "dadd2b2356ac2f4a7b4b3af51f0d6f2b6d9478b785e8f5443c81188a772ec0b2"
+    }
+  },
+  "new_Source_executions": 0,
+  "private_capture_sha256": {
+    "profile_A": "9980307751f7143cd7205eda45facd69944684bcc93d489798004e24d131297f",
+    "profile_B": "8af64ef37156079fd6e7a8ffbfa2ddc7bf6bf4a973552da945916de47b1b0891",
+    "profile_C": "b09d474197fd1affd0bab443e2d6963821ae7b7bb940b75a6b4dd6c66da3e941",
+    "profile_D": "018554ee3556715b3fad0208ffdbf87d0b6a4a703069c811ec2600fe8a06b232",
+    "tz_report": "89f96307804b67f5af9c4f33b2eca5c0fd110b10f757ed469e989d232b69d576",
+    "ua_report": "dadd2b2356ac2f4a7b4b3af51f0d6f2b6d9478b785e8f5443c81188a772ec0b2",
+    "ua_source_fixture": "ae419efeddd1964cfed3682b29c6f0718ccb9793660f595a6914b5faa0b2347a"
+  },
+  "profile_older_composite_controller_exit": 1,
+  "selected_Original_observations": [
+    {
+      "method": "GET",
+      "name": "core-utilities:timezones:admin",
+      "path_template": "/api/core/timezones/",
+      "response_projection_sha256": "5c1e3b1f02b761e79fc1b900e61976d4789daee6f2020157ff9667f488665733",
+      "role": "admin",
+      "scope": "timezone",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "name": "core-utilities:timezones:standard",
+      "path_template": "/api/core/timezones/",
+      "response_projection_sha256": "5c1e3b1f02b761e79fc1b900e61976d4789daee6f2020157ff9667f488665733",
+      "role": "standard",
+      "scope": "timezone",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "name": "core-utilities:timezones:viewer",
+      "path_template": "/api/core/timezones/",
+      "response_projection_sha256": "5c1e3b1f02b761e79fc1b900e61976d4789daee6f2020157ff9667f488665733",
+      "role": "viewer",
+      "scope": "timezone",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "name": "core-utilities:timezones:inactive",
+      "path_template": "/api/core/timezones/",
+      "response_projection_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+      "role": "inactive",
+      "scope": "timezone",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "name": "core-utilities:timezones:None",
+      "path_template": "/api/core/timezones/",
+      "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "role": "anonymous",
+      "scope": "timezone",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "name": "core-utilities:timezones:query-ignored",
+      "path_template": "/api/core/timezones/?limit=1&search=invalid",
+      "response_projection_sha256": "5c1e3b1f02b761e79fc1b900e61976d4789daee6f2020157ff9667f488665733",
+      "role": "admin",
+      "scope": "timezone",
+      "status": 200
+    },
+    {
+      "cache_version_advanced": true,
+      "db_row_removed": true,
+      "method": "DELETE",
+      "name": "delete-default",
+      "owned_foreign_keys_cleared": true,
+      "path_template": "/api/core/useragents/{owned_pk}/",
+      "response_projection_sha256": "664cd4d246479eb390c195711ab5af4c16795c34608233e6190bade22709edf4",
+      "role": "admin",
+      "scope": "useragent",
+      "status": 204
+    },
+    {
+      "cache_version_advanced": true,
+      "db_row_removed": true,
+      "method": "DELETE",
+      "name": "delete-other",
+      "owned_foreign_keys_cleared": false,
+      "path_template": "/api/core/useragents/{owned_pk}/",
+      "response_projection_sha256": "664cd4d246479eb390c195711ab5af4c16795c34608233e6190bade22709edf4",
+      "role": "admin",
+      "scope": "useragent",
+      "status": 204
+    },
+    {
+      "cache_version_advanced": false,
+      "db_row_removed": false,
+      "method": "DELETE",
+      "name": "lookup-DELETE-61",
+      "owned_foreign_keys_cleared": false,
+      "path_template": "/api/core/useragents/{missing_pk}/",
+      "response_projection_sha256": "d53834400c78996ac02e1169f2be65bd2f6373ac50a3690658e4880bdd640265",
+      "role": "admin",
+      "scope": "useragent",
+      "status": 404
+    },
+    {
+      "account_and_profile_identity_preserved": true,
+      "method": "PUT",
+      "name": "A",
+      "path_template": "/api/m3u/accounts/{account_id}/profiles/{owned_pk}/",
+      "response_projection_sha256": "bd82af48d0dc0cf92c19aa44261980c7d0ce9eaf8c4e4289640cb0bfcbdb24dc",
+      "role": "admin",
+      "scope": "profile",
+      "status": 200
+    },
+    {
+      "account_and_profile_identity_preserved": true,
+      "method": "PUT",
+      "name": "B",
+      "path_template": "/api/m3u/accounts/{account_id}/profiles/{owned_pk}/",
+      "response_projection_sha256": "59d9595d4ea43cbd5c923257e18ff3fbc1d4ab525927c624c4c60b5aed0b7bf8",
+      "role": "admin",
+      "scope": "profile",
+      "status": 200
+    },
+    {
+      "account_and_profile_identity_preserved": true,
+      "method": "PUT",
+      "name": "C",
+      "path_template": "/api/m3u/accounts/{account_id}/profiles/{owned_pk}/",
+      "response_projection_sha256": "7cd3d8bb3d9fb95bd9ac356af4f7502f67e49867773114fd404593f00b99880f",
+      "role": "admin",
+      "scope": "profile",
+      "status": 200
+    },
+    {
+      "account_and_profile_identity_preserved": true,
+      "method": "PUT",
+      "name": "D",
+      "path_template": "/api/m3u/accounts/{account_id}/profiles/{owned_pk}/",
+      "response_projection_sha256": "72adec07b4f2f5c8a7eec7436ae0ba7b0c9a3e6a23498f82717b037f3a4757cb",
+      "role": "admin",
+      "scope": "profile",
+      "status": 200
+    }
+  ],
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "timezone_controller_exit": 0,
+  "tools_sha256": {
+    "tz:scripts/rust-account-contracts/core_utility_probes.py": {
+      "path": "scripts/rust-account-contracts/core_utility_probes.py",
+      "sha256": "69ea16101a76e49cfcc1ca4e9829e6df45c411e747f6db9bdc7b6c28c13d4ef9"
+    },
+    "ua:scripts/rust-integration/run.py": {
+      "path": "scripts/rust-integration/run.py",
+      "sha256": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66"
+    },
+    "ua:scripts/rust-integration/run_user_agent_contracts.py": {
+      "path": "scripts/rust-integration/run_user_agent_contracts.py",
+      "sha256": "11592f2e25a662ec62457ef310d1632f14fa3feb1c20c04a38bf932aabab4f6a"
+    },
+    "ua:scripts/rust-integration/user_agent_fixture.py": {
+      "path": "scripts/rust-integration/user_agent_fixture.py",
+      "sha256": "dfa052516d275ffc24f598f0aee7c738a20e81d5a678d48b424b9d0540dd024a"
+    }
+  },
+  "useragent_controller_exit": 0
+}

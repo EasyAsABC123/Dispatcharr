@@ -473,3 +473,17 @@ Dispatcharr's original authors and contributors retain full application credit.
 
 The register has 509 partial HTTP assignments and 289 unassigned operations.
 The eight role matrices remain incomplete.
+
+## Retained Original provider and core controls
+
+The [provider and core binding](../scripts/rust-contracts/retained-provider-admin/bindings.json)
+assigns 13 Original HTTP observations across three canonical declarations.
+They cover four owned nested M3U profile saves, six timezone list checks, and
+three UserAgent deletion checks with scoped database and cache effects. The
+[receipt](../scripts/rust-integration/retained-provider-admin/receipt.json)
+retains the profile fixture's actual exit 1 separately from its completed HTTP
+saves and exact cleanup. The timezone and UserAgent controllers exited 0.
+
+The register has 512 partial HTTP assignments and 286 unassigned operations.
+The timezone declaration remains method-unresolved with a witnessed GET request.
+Dispatcharr's original authors and contributors retain full credit.
