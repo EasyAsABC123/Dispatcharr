@@ -460,3 +460,16 @@ and contributors retain full credit for the application and its behavior.
 The register has 501 partial HTTP assignments and 297 unassigned operations.
 The selected observations provide Original authority for the recorded role
 cells only. All seven overall role matrices remain incomplete.
+
+## Retained Original Image57 M3U mutation controls
+
+The [M3U binding](../scripts/rust-contracts/retained-image57-m3u/bindings.json)
+assigns 37 retained Original observations across eight canonical filter and
+server-group mutations. The cases cover owned create, patch, replace and
+delete actions, missing rows, and the exact standard and viewer denials.
+The paired readbacks and server-group collector retain their own state
+witnesses in the [scoped receipt](../scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json).
+Dispatcharr's original authors and contributors retain full application credit.
+
+The register has 509 partial HTTP assignments and 289 unassigned operations.
+The eight role matrices remain incomplete.

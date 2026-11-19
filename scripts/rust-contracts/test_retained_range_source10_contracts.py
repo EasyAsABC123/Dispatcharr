@@ -24,6 +24,7 @@ import retained_ts_controls_contracts
 import retained_canonical_management_contracts
 import retained_exact_vod_contracts
 import retained_image57_accounts_contracts
+import retained_image57_m3u_contracts
 import retained_range_source10_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -54,6 +55,7 @@ class RangeSource10Controls(unittest.TestCase):
   retained_canonical_management_contracts.restore_pre_management(ROOT,register['runtime_routes'])
   retained_exact_vod_contracts.restore_pre_vod_split(ROOT,register['runtime_routes'])
   retained_image57_accounts_contracts.restore_pre_image57_accounts(ROOT,register['runtime_routes'])
+  retained_image57_m3u_contracts.restore_pre_image57_m3u(ROOT,register['runtime_routes'])
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,register['runtime_routes'])
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,register['runtime_routes'])
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,register['runtime_routes'])
@@ -87,7 +89,7 @@ class RangeSource10Controls(unittest.TestCase):
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],501)
+  self.assertEqual(mapping['operations'],509)
   retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,rows)
   retained_paired_read_contracts.restore_pre_paired_reads(ROOT,rows)
   retained_live_stop_contracts.restore_pre_live_stop(ROOT,rows)
@@ -95,6 +97,7 @@ class RangeSource10Controls(unittest.TestCase):
   retained_canonical_management_contracts.restore_pre_management(ROOT,rows)
   retained_exact_vod_contracts.restore_pre_vod_split(ROOT,rows)
   retained_image57_accounts_contracts.restore_pre_image57_accounts(ROOT,rows)
+  retained_image57_m3u_contracts.restore_pre_image57_m3u(ROOT,rows)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,rows)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,rows)
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)
@@ -121,6 +124,7 @@ class RangeSource10Controls(unittest.TestCase):
   retained_canonical_management_contracts.restore_pre_management(ROOT,rows)
   retained_exact_vod_contracts.restore_pre_vod_split(ROOT,rows)
   retained_image57_accounts_contracts.restore_pre_image57_accounts(ROOT,rows)
+  retained_image57_m3u_contracts.restore_pre_image57_m3u(ROOT,rows)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,rows)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,rows)
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)

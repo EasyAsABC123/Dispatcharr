@@ -90,6 +90,7 @@ COPY scripts/rust-integration/canonical-management-original/receipt.json ./scrip
 COPY scripts/rust-integration/exact-vod-original-c98/receipt.json ./scripts/rust-integration/exact-vod-original-c98/receipt.json
 COPY scripts/rust-integration/exact-vod-original-c98/request-driver.py ./scripts/rust-integration/exact-vod-original-c98/request-driver.py
 COPY scripts/rust-integration/image57-checkpoint/selected-accounts-Original.json ./scripts/rust-integration/image57-checkpoint/selected-accounts-Original.json
+COPY scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json ./scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json
 COPY scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/baseline-all/0-integration.json.json ./scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/baseline-all/0-integration.json.json
 COPY scripts/rust-integration/image57-checkpoint/evidence/matrix/controllers/baseline-all.json ./scripts/rust-integration/image57-checkpoint/evidence/matrix/controllers/baseline-all.json
 COPY scripts/rust-integration/image57-checkpoint/evidence/matrix/cleanup/baseline-all.json ./scripts/rust-integration/image57-checkpoint/evidence/matrix/cleanup/baseline-all.json

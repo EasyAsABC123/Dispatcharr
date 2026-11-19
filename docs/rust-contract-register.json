@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "8ac77cc920075f1101d5b9bef728cc145eac4ad8faed59b486af97db516d9a39",
+    "scripts/rust-contracts/executable-source-inputs.json": "a5d561cbf7d2a1a6f929717caf4277d14dd1a0a6595d2a74a05cc63f33ac4e43",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -61,11 +61,12 @@
     "scripts/rust-contracts/retained-ts-controls/bindings.json": "385a31ad93a053d81934b6dfd62b17dbcbf05042a70074795596f5bc5184a73e",
     "scripts/rust-contracts/retained-canonical-management/bindings.json": "a3d92e61c9a74e1ec76e31c48ab82c3b125dc2d991c5ab61edfa8006bb050ef5",
     "scripts/rust-contracts/retained-exact-vod/bindings.json": "c6b4deaf8aa0e070265bf6bc91a4abd718433c8396d648682a15099ae26bfde3",
-    "scripts/rust-contracts/retained-image57-accounts/bindings.json": "510a6d658af1a0be636be8e897d583661ad29074c0a522535cd3936505c835c8"
+    "scripts/rust-contracts/retained-image57-accounts/bindings.json": "510a6d658af1a0be636be8e897d583661ad29074c0a522535cd3936505c835c8",
+    "scripts/rust-contracts/retained-image57-m3u/bindings.json": "9f98e95b6af397845cfdc71412ca45419ae0d6a338fb5a517f653acb68a3d631"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 501,
+    "operations": 509,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -326,6 +327,11 @@
         "path": "scripts/rust-contracts/retained-image57-accounts/bindings.json",
         "sha256": "510a6d658af1a0be636be8e897d583661ad29074c0a522535cd3936505c835c8",
         "kind": "retained_original_Image57_accounts_canonical_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-image57-m3u/bindings.json",
+        "sha256": "9f98e95b6af397845cfdc71412ca45419ae0d6a338fb5a517f653acb68a3d631",
+        "kind": "retained_original_Image57_M3U_canonical_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -91147,15 +91153,134 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-Image57-canonical-M3U",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "credential_material_exported": false,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json",
+                "sha256": "e32c214563057bc585a28ab5b1bc96d13e13bbc3d1f5ac83579b6b3fb0f12a45"
+              }
+            ]
+          },
+          "assertions": [
+            "POST m3u-filters-list matches the selected Original owned-fixture role and status cases"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-1ccd60f397dc3d7124b9:POST",
+            "fixture_id": "retained-Original-Image57-canonical-M3U",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/$",
+            "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "resolver_ordinal": 202,
+            "resolver_name": "api:m3u:m3u-filters-list",
+            "owning_milestone": "M5",
+            "method": "POST",
+            "source_action": "create",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "POST m3u-filters-list matches the selected Original owned-fixture role and status cases"
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "POST",
+                "name": "filter-crud:create-invalid-regex-model-clean-not-called",
+                "ordinal": 202,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/",
+                "response_projection_sha256": "67c1ce808e9583f0bfc02efad2e0cb8ab0039852dfdcd51329b95f8294965d7a",
+                "role": "admin",
+                "status": 201
+              },
+              {
+                "method": "POST",
+                "name": "filter-crud:denied-create-standard",
+                "ordinal": 202,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "standard",
+                "status": 403
+              },
+              {
+                "method": "POST",
+                "name": "filter-crud:denied-create-viewer",
+                "ordinal": 202,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "viewer",
+                "status": 403
+              },
+              {
+                "method": "POST",
+                "name": "filter-crud:validation-required",
+                "ordinal": 202,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/",
+                "response_projection_sha256": "4347cba4c2b91485a55a55e6b36926860aa2d9bd606d6fd9838c3bc836542fc5",
+                "role": "admin",
+                "status": 400
+              }
+            ]
+          }
         }
       ]
     },
@@ -91298,15 +91423,143 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-Image57-canonical-M3U",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "credential_material_exported": false,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json",
+                "sha256": "e32c214563057bc585a28ab5b1bc96d13e13bbc3d1f5ac83579b6b3fb0f12a45"
+              }
+            ]
+          },
+          "assertions": [
+            "DELETE m3u-filters-detail matches the selected Original owned-fixture role and status cases"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 5,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-cf34164a8637e8777d48:DELETE",
+            "fixture_id": "retained-Original-Image57-canonical-M3U",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "resolver_ordinal": 204,
+            "resolver_name": "api:m3u:m3u-filters-detail",
+            "owning_milestone": "M5",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "observed_methods": [
+              "DELETE"
+            ],
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "DELETE m3u-filters-detail matches the selected Original owned-fixture role and status cases"
+            ],
+            "result": {
+              "Source_case_observations": 5,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "DELETE",
+                "name": "filter-crud:delete",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "20797e4c178039d4bdfb0243aaacaca086bcd4d41f279d797eade6d4584ec2aa",
+                "role": "admin",
+                "status": 204
+              },
+              {
+                "method": "DELETE",
+                "name": "filter-crud:delete-missing",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+                "role": "admin",
+                "status": 404
+              },
+              {
+                "method": "DELETE",
+                "name": "filter-crud:wrong-parent-delete",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{other_account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+                "role": "admin",
+                "status": 404
+              },
+              {
+                "method": "DELETE",
+                "name": "filter-crud:denied-delete-standard",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "standard",
+                "status": 403
+              },
+              {
+                "method": "DELETE",
+                "name": "filter-crud:denied-delete-viewer",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "viewer",
+                "status": 403
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-cf34164a8637e8777d48:GET",
@@ -91523,15 +91776,170 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-Image57-canonical-M3U",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "credential_material_exported": false,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json",
+                "sha256": "e32c214563057bc585a28ab5b1bc96d13e13bbc3d1f5ac83579b6b3fb0f12a45"
+              }
+            ]
+          },
+          "assertions": [
+            "PATCH m3u-filters-detail matches the selected Original owned-fixture role and status cases"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 8,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-cf34164a8637e8777d48:PATCH",
+            "fixture_id": "retained-Original-Image57-canonical-M3U",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "resolver_ordinal": 204,
+            "resolver_name": "api:m3u:m3u-filters-detail",
+            "owning_milestone": "M5",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "observed_methods": [
+              "PATCH"
+            ],
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "PATCH m3u-filters-detail matches the selected Original owned-fixture role and status cases"
+            ],
+            "result": {
+              "Source_case_observations": 8,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "PATCH",
+                "name": "filter-crud:patch-empty",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "71aba42997b320d738a5ab1d2753946c095a57d1e1d6c76903fe6533075a9a44",
+                "role": "admin",
+                "status": 200
+              },
+              {
+                "method": "PATCH",
+                "name": "filter-crud:wrong-parent-patch",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{other_account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+                "role": "admin",
+                "status": 404
+              },
+              {
+                "method": "PATCH",
+                "name": "filter-crud:denied-update-standard",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "standard",
+                "status": 403
+              },
+              {
+                "method": "PATCH",
+                "name": "filter-crud:denied-update-viewer",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "viewer",
+                "status": 403
+              },
+              {
+                "method": "PATCH",
+                "name": "filter-crud:coerced-numeric-order-and-bool",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "08ff8b1508c0fe43f99f352e09804302436103fb8df3eb92bcee1effe6ef1a69",
+                "role": "admin",
+                "status": 200
+              },
+              {
+                "method": "PATCH",
+                "name": "filter-crud:readonly-parent-and-id-ignored",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "71aba42997b320d738a5ab1d2753946c095a57d1e1d6c76903fe6533075a9a44",
+                "role": "admin",
+                "status": 200
+              },
+              {
+                "method": "PATCH",
+                "name": "filter-crud:nullable-json-scalar",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "6ec8916932381835dcba1047436b1a32aff86ac4b1e018ab846adb6c9e14b7f5",
+                "role": "admin",
+                "status": 200
+              },
+              {
+                "method": "PATCH",
+                "name": "filter-crud:json-scalar-false",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "f4143f55056b58b84cf2ba0dac63b088b612e2ac93695d6c6686ae204f83ad44",
+                "role": "admin",
+                "status": 200
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-cf34164a8637e8777d48:PUT",
@@ -91540,15 +91948,105 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-Image57-canonical-M3U",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "credential_material_exported": false,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json",
+                "sha256": "e32c214563057bc585a28ab5b1bc96d13e13bbc3d1f5ac83579b6b3fb0f12a45"
+              }
+            ]
+          },
+          "assertions": [
+            "PUT m3u-filters-detail matches the selected Original owned-fixture role and status cases"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-cf34164a8637e8777d48:PUT",
+            "fixture_id": "retained-Original-Image57-canonical-M3U",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "resolver_ordinal": 204,
+            "resolver_name": "api:m3u:m3u-filters-detail",
+            "owning_milestone": "M5",
+            "method": "PUT",
+            "source_action": "update",
+            "observed_methods": [
+              "PUT"
+            ],
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "PUT m3u-filters-detail matches the selected Original owned-fixture role and status cases"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "PUT",
+                "name": "filter-crud:put-regex-required",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "4347cba4c2b91485a55a55e6b36926860aa2d9bd606d6fd9838c3bc836542fc5",
+                "role": "admin",
+                "status": 400
+              },
+              {
+                "method": "PUT",
+                "name": "filter-crud:put-preserves-omitted-optionals",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "2c47d31d9c4cb34d8a5bf1e3b8aef2d6cb39d939d12b4140497f01aff869f57d",
+                "role": "admin",
+                "status": 200
+              },
+              {
+                "method": "PUT",
+                "name": "filter-crud:missing-before-validation",
+                "ordinal": 204,
+                "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+                "response_projection_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+                "role": "admin",
+                "status": 404
+              }
+            ]
+          }
         }
       ]
     },
@@ -91955,15 +92453,143 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-Image57-canonical-M3U",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "credential_material_exported": false,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json",
+                "sha256": "e32c214563057bc585a28ab5b1bc96d13e13bbc3d1f5ac83579b6b3fb0f12a45"
+              }
+            ]
+          },
+          "assertions": [
+            "POST server-group-list matches the selected Original owned-fixture role and status cases"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 5,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-6780933c22f5b89f1bf7:POST",
+            "fixture_id": "retained-Original-Image57-canonical-M3U",
+            "pattern_exact": "api/m3u/^server-groups/$",
+            "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "resolver_ordinal": 206,
+            "resolver_name": "api:m3u:server-group-list",
+            "owning_milestone": "M5",
+            "method": "POST",
+            "source_action": "create",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "POST server-group-list matches the selected Original owned-fixture role and status cases"
+            ],
+            "result": {
+              "Source_case_observations": 5,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "POST",
+                "name": "server-group-crud:create",
+                "ordinal": 206,
+                "path_template": "/api/m3u/server-groups/",
+                "response_projection_sha256": "edc598478027dfbec65c0056b4a9e51affbdc4cf2266865059912990413fa444",
+                "role": "admin",
+                "status": 201
+              },
+              {
+                "method": "POST",
+                "name": "server-group-crud:denied-create-standard",
+                "ordinal": 206,
+                "path_template": "/api/m3u/server-groups/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "standard",
+                "status": 403
+              },
+              {
+                "method": "POST",
+                "name": "server-group-crud:denied-create-viewer",
+                "ordinal": 206,
+                "path_template": "/api/m3u/server-groups/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "viewer",
+                "status": 403
+              },
+              {
+                "method": "POST",
+                "name": "server-group-crud:duplicate-create",
+                "ordinal": 206,
+                "path_template": "/api/m3u/server-groups/",
+                "response_projection_sha256": "431ab3af85f34fb27991dc83114294f0430662409d9c5a7a715bfed32aa72016",
+                "role": "admin",
+                "status": 400
+              },
+              {
+                "method": "POST",
+                "name": "server-group-crud:create-validation-missing-name",
+                "ordinal": 206,
+                "path_template": "/api/m3u/server-groups/",
+                "response_projection_sha256": "7f3f95c2161b0bc1fe7410331ef8df2c2c12f1f31d3d5268d23d76322c75109e",
+                "role": "admin",
+                "status": 400
+              }
+            ]
+          }
         }
       ]
     },
@@ -92106,15 +92732,134 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-Image57-canonical-M3U",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "credential_material_exported": false,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json",
+                "sha256": "e32c214563057bc585a28ab5b1bc96d13e13bbc3d1f5ac83579b6b3fb0f12a45"
+              }
+            ]
+          },
+          "assertions": [
+            "DELETE server-group-detail matches the selected Original owned-fixture role and status cases"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-fd4e8b363cc6b7a32d16:DELETE",
+            "fixture_id": "retained-Original-Image57-canonical-M3U",
+            "pattern_exact": "api/m3u/^server-groups/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "resolver_ordinal": 208,
+            "resolver_name": "api:m3u:server-group-detail",
+            "owning_milestone": "M5",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "observed_methods": [
+              "DELETE"
+            ],
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "DELETE server-group-detail matches the selected Original owned-fixture role and status cases"
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "DELETE",
+                "name": "server-group-crud:delete-linked-group",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "20797e4c178039d4bdfb0243aaacaca086bcd4d41f279d797eade6d4584ec2aa",
+                "role": "admin",
+                "status": 204
+              },
+              {
+                "method": "DELETE",
+                "name": "server-group-crud:delete-missing",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "100b598b70883e0508afc5badcbceca4bdcde8a1e9c23bc1ec737f230872cbbe",
+                "role": "admin",
+                "status": 404
+              },
+              {
+                "method": "DELETE",
+                "name": "server-group-crud:denied-delete-standard",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "standard",
+                "status": 403
+              },
+              {
+                "method": "DELETE",
+                "name": "server-group-crud:denied-delete-viewer",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "viewer",
+                "status": 403
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-fd4e8b363cc6b7a32d16:GET",
@@ -92301,15 +93046,143 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-Image57-canonical-M3U",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "credential_material_exported": false,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json",
+                "sha256": "e32c214563057bc585a28ab5b1bc96d13e13bbc3d1f5ac83579b6b3fb0f12a45"
+              }
+            ]
+          },
+          "assertions": [
+            "PATCH server-group-detail matches the selected Original owned-fixture role and status cases"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 5,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-fd4e8b363cc6b7a32d16:PATCH",
+            "fixture_id": "retained-Original-Image57-canonical-M3U",
+            "pattern_exact": "api/m3u/^server-groups/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "resolver_ordinal": 208,
+            "resolver_name": "api:m3u:server-group-detail",
+            "owning_milestone": "M5",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "observed_methods": [
+              "PATCH"
+            ],
+            "observed_roles": [
+              "admin",
+              "standard",
+              "viewer"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "PATCH server-group-detail matches the selected Original owned-fixture role and status cases"
+            ],
+            "result": {
+              "Source_case_observations": 5,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "PATCH",
+                "name": "server-group-crud:patch-empty",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "edc598478027dfbec65c0056b4a9e51affbdc4cf2266865059912990413fa444",
+                "role": "admin",
+                "status": 200
+              },
+              {
+                "method": "PATCH",
+                "name": "server-group-crud:denied-update-standard",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "standard",
+                "status": 403
+              },
+              {
+                "method": "PATCH",
+                "name": "server-group-crud:denied-update-viewer",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "role": "viewer",
+                "status": 403
+              },
+              {
+                "method": "PATCH",
+                "name": "server-group-crud:duplicate-update",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "431ab3af85f34fb27991dc83114294f0430662409d9c5a7a715bfed32aa72016",
+                "role": "admin",
+                "status": 400
+              },
+              {
+                "method": "PATCH",
+                "name": "server-group-crud:readonly-and-unknown-noop",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "edc598478027dfbec65c0056b4a9e51affbdc4cf2266865059912990413fa444",
+                "role": "admin",
+                "status": 200
+              }
+            ]
+          }
         },
         {
           "contract_id": "route-fd4e8b363cc6b7a32d16:PUT",
@@ -92318,15 +93191,105 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-Image57-canonical-M3U",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "credential_material_exported": false,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/image57-checkpoint/selected-m3u-Original.json",
+                "sha256": "e32c214563057bc585a28ab5b1bc96d13e13bbc3d1f5ac83579b6b3fb0f12a45"
+              }
+            ]
+          },
+          "assertions": [
+            "PUT server-group-detail matches the selected Original owned-fixture role and status cases"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-fd4e8b363cc6b7a32d16:PUT",
+            "fixture_id": "retained-Original-Image57-canonical-M3U",
+            "pattern_exact": "api/m3u/^server-groups/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "resolver_ordinal": 208,
+            "resolver_name": "api:m3u:server-group-detail",
+            "owning_milestone": "M5",
+            "method": "PUT",
+            "source_action": "update",
+            "observed_methods": [
+              "PUT"
+            ],
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "PUT server-group-detail matches the selected Original owned-fixture role and status cases"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "PUT",
+                "name": "server-group-crud:trimmed-put",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "22963b0c4cf2d3a0379cbd5feac76e5b260af04578ab9106424bfca35a1b3ed1",
+                "role": "admin",
+                "status": 200
+              },
+              {
+                "method": "PUT",
+                "name": "server-group-crud:put-required-name",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "7f3f95c2161b0bc1fe7410331ef8df2c2c12f1f31d3d5268d23d76322c75109e",
+                "role": "admin",
+                "status": 400
+              },
+              {
+                "method": "PUT",
+                "name": "server-group-crud:missing-before-validation",
+                "ordinal": 208,
+                "path_template": "/api/m3u/server-groups/{owned_pk}/",
+                "response_projection_sha256": "100b598b70883e0508afc5badcbceca4bdcde8a1e9c23bc1ec737f230872cbbe",
+                "role": "admin",
+                "status": 404
+              }
+            ]
+          }
         }
       ]
     },

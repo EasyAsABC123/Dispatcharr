@@ -1,0 +1,371 @@
+{
+  "Native_parity_assigned": false,
+  "actual_controller_exit": 0,
+  "controller_process_settled": true,
+  "credential_values_exported": false,
+  "credit": "Original Dispatcharr authors and contributors retain full application and behavior credit.",
+  "historical_public_authorities": {
+    "cleanup": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/cleanup/baseline-all.json",
+      "sha256": "a4937c8cd980262773634caa6caeffc0aacadd8ad594bb76d4d963800d9eef36"
+    },
+    "controller": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/controllers/baseline-all.json",
+      "sha256": "37334783a1d7dcd5d10bb599c90f4b619d336d59a94803dca9b09f859fa3d7ed"
+    },
+    "report": {
+      "path": "scripts/rust-integration/image57-checkpoint/evidence/matrix/reports/baseline-all/0-integration.json.json",
+      "sha256": "e90e3abb9dbff7a3ca42aead79d893328e6cab03b8d949d1fec57a9eee20de66"
+    }
+  },
+  "owned_namespace_cleanup_verified": true,
+  "private_report_sha256": "89f96307804b67f5af9c4f33b2eca5c0fd110b10f757ed469e989d232b69d576",
+  "related_stored_state_witnesses": [
+    "server-group-crud:set-null-preserves-account",
+    "server-group-crud:read-deleted",
+    "filter-crud:following-put-get",
+    "filter-crud:read-deleted"
+  ],
+  "selected_Original_observations": [
+    {
+      "method": "POST",
+      "name": "filter-crud:create-invalid-regex-model-clean-not-called",
+      "ordinal": 202,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/",
+      "response_projection_sha256": "67c1ce808e9583f0bfc02efad2e0cb8ab0039852dfdcd51329b95f8294965d7a",
+      "role": "admin",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "name": "filter-crud:denied-create-standard",
+      "ordinal": 202,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "standard",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "name": "filter-crud:denied-create-viewer",
+      "ordinal": 202,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "name": "filter-crud:validation-required",
+      "ordinal": 202,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/",
+      "response_projection_sha256": "4347cba4c2b91485a55a55e6b36926860aa2d9bd606d6fd9838c3bc836542fc5",
+      "role": "admin",
+      "status": 400
+    },
+    {
+      "method": "DELETE",
+      "name": "filter-crud:delete",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "20797e4c178039d4bdfb0243aaacaca086bcd4d41f279d797eade6d4584ec2aa",
+      "role": "admin",
+      "status": 204
+    },
+    {
+      "method": "DELETE",
+      "name": "filter-crud:delete-missing",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "method": "DELETE",
+      "name": "filter-crud:wrong-parent-delete",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{other_account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "method": "DELETE",
+      "name": "filter-crud:denied-delete-standard",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "standard",
+      "status": 403
+    },
+    {
+      "method": "DELETE",
+      "name": "filter-crud:denied-delete-viewer",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "method": "PATCH",
+      "name": "filter-crud:patch-empty",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "71aba42997b320d738a5ab1d2753946c095a57d1e1d6c76903fe6533075a9a44",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "name": "filter-crud:wrong-parent-patch",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{other_account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "method": "PATCH",
+      "name": "filter-crud:denied-update-standard",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "standard",
+      "status": 403
+    },
+    {
+      "method": "PATCH",
+      "name": "filter-crud:denied-update-viewer",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "method": "PATCH",
+      "name": "filter-crud:coerced-numeric-order-and-bool",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "08ff8b1508c0fe43f99f352e09804302436103fb8df3eb92bcee1effe6ef1a69",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "name": "filter-crud:readonly-parent-and-id-ignored",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "71aba42997b320d738a5ab1d2753946c095a57d1e1d6c76903fe6533075a9a44",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "name": "filter-crud:nullable-json-scalar",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "6ec8916932381835dcba1047436b1a32aff86ac4b1e018ab846adb6c9e14b7f5",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "name": "filter-crud:json-scalar-false",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "f4143f55056b58b84cf2ba0dac63b088b612e2ac93695d6c6686ae204f83ad44",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "name": "filter-crud:put-regex-required",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "4347cba4c2b91485a55a55e6b36926860aa2d9bd606d6fd9838c3bc836542fc5",
+      "role": "admin",
+      "status": 400
+    },
+    {
+      "method": "PUT",
+      "name": "filter-crud:put-preserves-omitted-optionals",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "2c47d31d9c4cb34d8a5bf1e3b8aef2d6cb39d939d12b4140497f01aff869f57d",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "name": "filter-crud:missing-before-validation",
+      "ordinal": 204,
+      "path_template": "/api/m3u/accounts/{account_id}/filters/{owned_pk}/",
+      "response_projection_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "method": "POST",
+      "name": "server-group-crud:create",
+      "ordinal": 206,
+      "path_template": "/api/m3u/server-groups/",
+      "response_projection_sha256": "edc598478027dfbec65c0056b4a9e51affbdc4cf2266865059912990413fa444",
+      "role": "admin",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "name": "server-group-crud:denied-create-standard",
+      "ordinal": 206,
+      "path_template": "/api/m3u/server-groups/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "standard",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "name": "server-group-crud:denied-create-viewer",
+      "ordinal": 206,
+      "path_template": "/api/m3u/server-groups/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "method": "POST",
+      "name": "server-group-crud:duplicate-create",
+      "ordinal": 206,
+      "path_template": "/api/m3u/server-groups/",
+      "response_projection_sha256": "431ab3af85f34fb27991dc83114294f0430662409d9c5a7a715bfed32aa72016",
+      "role": "admin",
+      "status": 400
+    },
+    {
+      "method": "POST",
+      "name": "server-group-crud:create-validation-missing-name",
+      "ordinal": 206,
+      "path_template": "/api/m3u/server-groups/",
+      "response_projection_sha256": "7f3f95c2161b0bc1fe7410331ef8df2c2c12f1f31d3d5268d23d76322c75109e",
+      "role": "admin",
+      "status": 400
+    },
+    {
+      "method": "DELETE",
+      "name": "server-group-crud:delete-linked-group",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "20797e4c178039d4bdfb0243aaacaca086bcd4d41f279d797eade6d4584ec2aa",
+      "role": "admin",
+      "status": 204
+    },
+    {
+      "method": "DELETE",
+      "name": "server-group-crud:delete-missing",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "100b598b70883e0508afc5badcbceca4bdcde8a1e9c23bc1ec737f230872cbbe",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "method": "DELETE",
+      "name": "server-group-crud:denied-delete-standard",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "standard",
+      "status": 403
+    },
+    {
+      "method": "DELETE",
+      "name": "server-group-crud:denied-delete-viewer",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "method": "PATCH",
+      "name": "server-group-crud:patch-empty",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "edc598478027dfbec65c0056b4a9e51affbdc4cf2266865059912990413fa444",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "method": "PATCH",
+      "name": "server-group-crud:denied-update-standard",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "standard",
+      "status": 403
+    },
+    {
+      "method": "PATCH",
+      "name": "server-group-crud:denied-update-viewer",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "method": "PATCH",
+      "name": "server-group-crud:duplicate-update",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "431ab3af85f34fb27991dc83114294f0430662409d9c5a7a715bfed32aa72016",
+      "role": "admin",
+      "status": 400
+    },
+    {
+      "method": "PATCH",
+      "name": "server-group-crud:readonly-and-unknown-noop",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "edc598478027dfbec65c0056b4a9e51affbdc4cf2266865059912990413fa444",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "name": "server-group-crud:trimmed-put",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "22963b0c4cf2d3a0379cbd5feac76e5b260af04578ab9106424bfca35a1b3ed1",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "method": "PUT",
+      "name": "server-group-crud:put-required-name",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "7f3f95c2161b0bc1fe7410331ef8df2c2c12f1f31d3d5268d23d76322c75109e",
+      "role": "admin",
+      "status": 400
+    },
+    {
+      "method": "PUT",
+      "name": "server-group-crud:missing-before-validation",
+      "ordinal": 208,
+      "path_template": "/api/m3u/server-groups/{owned_pk}/",
+      "response_projection_sha256": "100b598b70883e0508afc5badcbceca4bdcde8a1e9c23bc1ec737f230872cbbe",
+      "role": "admin",
+      "status": 404
+    }
+  ],
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "tools_sha256": {
+    "scripts/rust-account-contracts/filter_crud_probes.py": "aa9d59720b3ffa9fad5b06d94b5b7b9e1359072a26b07d0734d16f03222ceaa7",
+    "scripts/rust-account-contracts/server_group_probes.py": "b8360f98ac1fae3a77110598b97f72bd35b0aa02332c4461b2130a9d66489aa9"
+  },
+  "whole_operation_accepted": false
+}
