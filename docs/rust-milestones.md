@@ -12,6 +12,14 @@ alone does not establish application parity or an application performance gain.
 The [complete parity plan](rust-complete-parity-plan.md) assigns parallel work
 across M0–M9 and proposes M10/M11 as separate rollout stages.
 
+The [scoped PostgreSQL cutover and rollback](../scripts/rust-integration/cutover-candidate87-scoped.json)
+used copied data, the same loopback URL and authenticated session, and one
+fixture edit confined to the copy. The Original channel, media, schema and
+sequences matched after rollback. Its full SQL fingerprint matched immediately
+before restart and differed afterward. The first failed observer attempt
+and both cleanup receipts are retained. Whole-package soak and the release
+decision remain open.
+
 The [development and validation plan](rust-development-and-validation-plan.md) defines parallel implementation/acceptance/tooling lanes, affected-workflow batches and default-off fixture concurrency. Performance measurement remains exclusive.
 
 The [XC account lifecycle Source capture](../scripts/rust-integration/milestone-batch67/xc-source11-checkpoint.json)
@@ -675,13 +683,15 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 468 partial HTTP Source assignments, 330 HTTP assignments absent, and 18 typed non-HTTP assignments across 250 candidates; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
 | M1 | Shared bounded streaming core | M0 | In progress (technical core gates passed; M0 executable-contract prerequisite open) | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
 | M2 | Authenticated live TS vertical slice | M1 | In progress | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
-| M3 | Complete live playback formats and profiles | M2 | In progress (HLS component and gateway) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
-| M4 | VOD and timeshift parity | M2 | In progress (native VOD slice) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
+| M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
+| M4 | VOD and timeshift parity | M2 | In progress (ordinary DVR list, file, valid seeks and active HLS verified) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
 | M5 | Accounts, settings, and channel control APIs | M2 | In progress (independent account contracts) | API/permission/database/React workflow parity and API benchmarks |
-| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (bounded scanner, M3U and audit components) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
-| M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (realtime transport components) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
+| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (scoped refresh-only guide consumption and packaged selected-worker startup verified) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
+| M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (Connect lifecycle and saved webhook Test verified in scoped Compose runs) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (native schema/archive/operator slices; Original and Native backup normal16 qualified; physical/restore/admin/plugins gaps) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
-| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | Planned | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
+| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (owned PostgreSQL copied-data and rollback scenario passed; full restart fingerprint and final suite open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
+| M10 | Controlled rollout | M9 | Proposed | Scoped rollout plan, monitoring and rollback on the selected release image |
+| M11 | Default switch and operator handoff | M10 | Proposed | Released image and configuration, upgrade evidence, attribution and monitored fallback |
 
 The historical selected functional application checkpoint is [image57](rust-image57-validation.md), immutable `d77f25fa94ee128c79ade9176d8eb4a9d23bf498`:839 Rust inputs,495 unchanged React inputs and original credits. All28 package groups and three scoped Main gates pass. Its [portable checkpoint](../scripts/rust-integration/image57-checkpoint/README.md) passes Root's57 controls,487 exact private projections and app/support/SDK reconstruction. The additional26 Main catalogue responses qualify separately while their original controller exit1 remains literal; its failed backend observer is not relabeled by the separate successful stop-observer run. Full M0–M9 acceptance and default worker activation remain open.
 

@@ -1,0 +1,24 @@
+{
+  "scope": "local isolated PostgreSQL copied-data cutover and rollback",
+  "candidate_revision": "7aef18c76b911e44fef7e42e4211280190f70daf",
+  "candidate_image": "sha256:0627dc2e1ced29b669d8346a1c3f2645535db7a31183ab2342342de8b441e58d",
+  "stage_count": 4,
+  "actual_compose_down_exit": 0,
+  "scoped_rehearsal_passed": true,
+  "exact_five_container_absence": true,
+  "copy_sql_match": true,
+  "same_url_and_session_on_cutover_and_rollback": true,
+  "candidate_write_confined_to_copy": true,
+  "native_shutdown_exit": 0,
+  "rollback_original_fingerprint_before_restart_matched": true,
+  "rollback_original_full_fingerprint_after_restart_matched": false,
+  "first_attempt": {
+    "passed": false,
+    "cleanup_verified": true,
+    "reason": "observer included both the running Main container and completed restore job",
+    "receipt_sha256": "ee55b10297350837ef6d4c28f88c0559b640bebf7d2b77d16755e14077e7f81f"
+  },
+  "passing_receipt_sha256": "c4909ad5a0244f49594013ee965c52d62eed8d4163b3580cfd8418bbae9de71b",
+  "full_M9_accepted": false,
+  "production_rollout_performed": false
+}
