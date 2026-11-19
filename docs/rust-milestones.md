@@ -25,6 +25,11 @@ found zero Original row changes during Native use. A standalone Original
 restart reproduced the same four timestamp updates in the paired replay.
 The strict post-restart fingerprint still differed.
 
+The [120-second playback and guide diagnostic](rust-m9-playback-refresh-diagnostic.md)
+passed on Candidate91 with ten viewers sharing one owned upstream and
+20 decoded clips. It used the refresh-only worker with a finite MPEG-2 source.
+The two-hour soak remains open.
+
 The [completed DVR performance attempt](../scripts/rust-perf/candidate88-dvr/README.md)
 verified three one-viewer pairs. Median paired whole-stack CPU fell 45.05%
 and peak working set fell 62.99% with equal delivery. Native returned
