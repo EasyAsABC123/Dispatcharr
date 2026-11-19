@@ -263,7 +263,9 @@ async fn booking_row(
    let end = row.try_get("end_time").map_err(database)?;
    if end <= start {return Err(Error::Unsupported("booking recording window"));}
    let recurring_times = if recurring {
-       if properties["rule"]["type"] != "recurring" || !properties["rule"]["id"].as_i64().is_some_and(|id| id > 0) {
+       if properties["rule"]["type"] != "recurring"
+        || properties["rule"]["id"].as_i64().is_none_or(|id| id <= 0)
+    {
            return Err(Error::Unsupported("recurring booking persisted rule identity"));
        }
        Some((recurring_time(&properties, "start_time", start)?, recurring_time(&properties, "end_time", end)?))
