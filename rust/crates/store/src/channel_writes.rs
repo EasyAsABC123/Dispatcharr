@@ -361,15 +361,14 @@ async fn guide_target(
     auth: &AuthService,
     c: &mut PgConnection,
     epg: Option<i64>,
-    stock_override: bool,
+    allow_existing_profiles: bool,
 ) -> Result<GuideTarget, StoreError> {
     if auth.notification_cache.is_none() {
         return Err(guide_unsupported());
     }
-    // The stock edit updates an existing Channel and its existing-channel override.
-    // Neither UpdateModelMixin nor their post-save signals modify membership.
-    // Keep the earlier Source25 profile bound for other guide write paths.
-    if !stock_override
+    // Stock override edits and manual dummy-guide creation use the ordinary
+    // profile membership rules. Keep the Source25 bound for other guide writes.
+    if !allow_existing_profiles
         && sqlx::query_scalar::<_, bool>(
             "SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelprofile)",
         )
@@ -710,7 +709,16 @@ async fn create_owned(
             .overrides
             .as_ref()
             .is_some_and(|v| v.get("epg_data_id").is_some_and(|v| !v.is_null()));
+    // The React new-channel form always sends its stream list and may include
+    // the current profile. The dummy-guide signal invalidates the cache without
+    // publishing a job, before the ordinary stream and membership inserts.
+    let stock_manual_guide = data["auto_created"] == false
+        && data["auto_created_by_id"].is_null()
+        && data["epg_data_id"].is_i64()
+        && validated.streams.is_some()
+        && validated.overrides.is_none();
     if guide_coupled
+        && !stock_manual_guide
         && (body.contains_key("streams")
             || body.contains_key("channel_profile_ids")
             || body.contains_key("channel_group_id")
@@ -730,7 +738,22 @@ async fn create_owned(
     let work=async {
     use sqlx::Connection;
     let mut tx = connection.begin().await?;
-    let created_guide=if let Some(epg)=data["epg_data_id"].as_i64(){Some(guide_target(&auth,&mut tx,Some(epg),false).await?)}else{None};
+    let created_guide = if let Some(epg) = data["epg_data_id"].as_i64() {
+        let target = guide_target(&auth, &mut tx, Some(epg), stock_manual_guide).await?;
+        if stock_manual_guide {
+            if !matches!(target, GuideTarget::CacheOnly) {
+                return Err(guide_unsupported());
+            }
+            let triggers: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled <> 'D' AND tgrelid IN ('dispatcharr_channels_channelstream'::regclass,'dispatcharr_channels_channelprofilemembership'::regclass))")
+                .fetch_one(&mut *tx).await?;
+            if triggers {
+                return Err(guide_unsupported());
+            }
+        }
+        Some(target)
+    } else {
+        None
+    };
     if let Some(epg)=validated.overrides.as_ref().and_then(|v|v.get("epg_data_id")).and_then(Value::as_i64){guide_target(&auth,&mut tx,Some(epg),false).await?;}
     if !data.contains_key("channel_number") {
         data.insert("channel_number".into(), next_number(&mut tx).await?);
