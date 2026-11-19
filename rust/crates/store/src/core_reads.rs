@@ -2,8 +2,10 @@
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
 use crate::{AuthService, StoreError};
 use axum::{
-    extract::{ConnectInfo, Path, State},
-    http::HeaderMap,
+    body::Body,
+    extract::{ConnectInfo, FromRequestParts, Path, Request, State},
+    http::{request::Parts, HeaderMap},
+    response::Response,
     routing::get,
     Json, Router,
 };
@@ -167,6 +169,70 @@ endpoints!(settings, setting, Settings);
 endpoints!(useragents, useragent, UserAgents);
 endpoints!(streamprofiles, streamprofile, StreamProfiles);
 endpoints!(outputprofiles, outputprofile, OutputProfiles);
+struct JsonProfileId(String);
+
+fn literal_json_profile_id(path: &str) -> Option<&str> {
+    let (_, final_segment) = path.rsplit_once('/')?;
+    let key = final_segment.strip_suffix(".json")?;
+    (!key.is_empty() && key.bytes().all(|byte| byte.is_ascii_digit())).then_some(key)
+}
+
+impl<S: Send + Sync> FromRequestParts<S> for JsonProfileId {
+    type Rejection = StoreError;
+
+    async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
+        literal_json_profile_id(parts.uri.path())
+            .map(|id| Self(id.to_owned()))
+            .ok_or(StoreError::NotFound)
+    }
+}
+
+async fn omitted_json_method() -> StoreError {
+    StoreError::NotFound
+}
+
+macro_rules! json_reader {
+    ($alias:ident, $canonical:ident) => {
+        async fn $alias(
+            auth: State<AuthService>,
+            JsonProfileId(id): JsonProfileId,
+            peer: ConnectInfo<SocketAddr>,
+            headers: HeaderMap,
+        ) -> Result<Json<Value>, StoreError> {
+            $canonical(auth, Path(id), peer, headers).await
+        }
+    };
+}
+json_reader!(useragent_json, useragent);
+json_reader!(streamprofile_json, streamprofile);
+json_reader!(outputprofile_json, outputprofile);
+
+macro_rules! useragent_json_writer {
+    ($alias:ident, $canonical:ident, $payload:ty) => {
+        async fn $alias(
+            auth: State<AuthService>,
+            peer: ConnectInfo<SocketAddr>,
+            JsonProfileId(id): JsonProfileId,
+            payload: $payload,
+        ) -> Result<Response, StoreError> {
+            crate::user_agent_writes::$canonical(auth, peer, Path(id), payload).await
+        }
+    };
+}
+useragent_json_writer!(patch_useragent_json, patch, Request);
+useragent_json_writer!(put_useragent_json, put, Request);
+useragent_json_writer!(delete_useragent_json, delete, HeaderMap);
+
+async fn put_streamprofile_json(
+    auth: State<AuthService>,
+    JsonProfileId(id): JsonProfileId,
+    peer: ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    body: Body,
+) -> Result<Json<Value>, StoreError> {
+    crate::core_stream_writes::put(auth, Path(id), peer, headers, body).await
+}
+
 pub(crate) fn router(auth: AuthService) -> Router {
     router_with_settings_detail(auth, true)
 }
@@ -199,7 +265,49 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
                 .delete(crate::core_stream_writes::delete),
         )
         .route("/api/core/outputprofiles/", get(outputprofiles))
-        .route("/api/core/outputprofiles/{id}/", get(outputprofile));
+        .route("/api/core/outputprofiles/{id}/", get(outputprofile))
+        .route(
+            "/api/core/useragents.json",
+            get(useragents)
+                .post(crate::user_agent_writes::create)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/core/useragents/{json_id}",
+            get(useragent_json)
+                .patch(patch_useragent_json)
+                .put(put_useragent_json)
+                .delete(delete_useragent_json)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/core/streamprofiles.json",
+            get(streamprofiles)
+                .post(crate::core_stream_writes::create)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/core/streamprofiles/{json_id}",
+            get(streamprofile_json)
+                .put(put_streamprofile_json)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/core/outputprofiles.json",
+            get(outputprofiles)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/core/outputprofiles/{json_id}",
+            get(outputprofile_json)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        );
     if detail {
         router = router.route("/api/core/settings/{id}/", get(setting));
     }
@@ -241,5 +349,70 @@ mod special_source16_order_tests {
             case["response_body_sha256"].as_str().unwrap()
         );
         assert_eq!(raw.len(), 1147);
+    }
+}
+
+#[cfg(test)]
+mod json_profile_tests {
+    use super::*;
+    use axum::http::StatusCode;
+    use tower::ServiceExt;
+
+    #[test]
+    fn literal_decimal_suffixes_are_independent_of_canonical_routes() {
+        assert_eq!(
+            literal_json_profile_id("/api/core/useragents/0001.json"),
+            Some("0001")
+        );
+        for path in [
+            "/api/core/useragents/12/",
+            "/api/core/useragents/12",
+            "/api/core/useragents/12.json/",
+            "/api/core/useragents/12.csv",
+            "/api/core/useragents/%31.json",
+            "/api/core/useragents/12.2.json",
+            "/api/core/useragents/.json",
+        ] {
+            assert_eq!(literal_json_profile_id(path), None, "{path}");
+        }
+    }
+
+    #[tokio::test]
+    async fn alias_extractor_does_not_change_the_canonical_path() {
+        let app = Router::new()
+            .route(
+                "/api/core/useragents/{id}/",
+                get(|Path(id): Path<String>| async move {
+                    assert_eq!(id, "12");
+                    StatusCode::OK
+                }),
+            )
+            .route(
+                "/api/core/useragents/{json_id}",
+                get(|JsonProfileId(id): JsonProfileId| async move {
+                    assert_eq!(id, "12");
+                    StatusCode::ACCEPTED
+                })
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+            );
+        for (method, path, status) in [
+            ("GET", "/api/core/useragents/12.json", StatusCode::ACCEPTED),
+            ("GET", "/api/core/useragents/12/", StatusCode::OK),
+            ("GET", "/api/core/useragents/12.csv", StatusCode::NOT_FOUND),
+            ("GET", "/api/core/useragents/12", StatusCode::NOT_FOUND),
+            (
+                "HEAD",
+                "/api/core/useragents/12.json",
+                StatusCode::NOT_FOUND,
+            ),
+        ] {
+            let request = Request::builder()
+                .method(method)
+                .uri(path)
+                .body(Body::empty())
+                .unwrap();
+            assert_eq!(app.clone().oneshot(request).await.unwrap().status(), status);
+        }
     }
 }
