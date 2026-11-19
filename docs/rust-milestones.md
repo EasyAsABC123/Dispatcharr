@@ -41,6 +41,10 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The batch-guide and DVR writer checkpoint](rust-milestone-batch91.md)
+passes both exact paired Compose fixtures. The next completed-recording
+benchmark retains the earlier workload and budgets.
+
 [The saved Connect Test checkpoint](rust-milestone-batch89.md)
 records the Original webhook action and the tested Native port.
 
@@ -696,7 +700,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M2 | Authenticated live TS vertical slice | M1 | In progress | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
 | M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
 | M4 | VOD and timeshift parity | M2 | In progress (ordinary DVR functional slice and one-viewer performance verified; ten-viewer warmup failed) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
-| M5 | Accounts, settings, and channel control APIs | M2 | In progress (independent account contracts) | API/permission/database/React workflow parity and API benchmarks |
+| M5 | Accounts, settings, and channel control APIs | M2 | In progress (stock React batch dummy guide assignment and clear verified) | API/permission/database/React workflow parity and API benchmarks |
 | M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (scoped refresh-only guide consumption and packaged selected-worker startup verified) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (Connect lifecycle and saved webhook Test verified in scoped Compose runs) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (native schema/archive/operator slices; Original and Native backup normal16 qualified; physical/restore/admin/plugins gaps) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |

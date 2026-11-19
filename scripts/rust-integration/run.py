@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASELINE = '1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430'
 CONTRACT_SUITES=('accounts','account_crud','app_data','core','profiles','memberships',
                  'channel_reads','channel_crud','groups','channel_stops','group_cleanup','streams','provider_reads','server_group_crud','filter_crud','core_utilities','core_stream_crud','notifications')
-OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash','connect_reads','connect_logs','connect_create','connect_lifecycle','recording_read')
+OPTIONAL_CONTRACT_SUITES=('proxy_auth','environment_ip','auth_hash','connect_reads','connect_logs','connect_create','connect_lifecycle','recording_read','channel_batch_epg')
 
 
 def contract_suites(value):
@@ -133,6 +133,8 @@ def main():
     recording_read = 'recording_read' in selected_suites
     if recording_read and not (args.candidate_image and args.candidate_build_manifest):
         parser.error('recording_read requires --candidate-image and --candidate-build-manifest')
+    if 'channel_batch_epg' in selected_suites and not (args.candidate_image and args.candidate_build_manifest):
+        parser.error('channel_batch_epg requires --candidate-image and --candidate-build-manifest')
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     if any(output.iterdir()):
@@ -303,7 +305,8 @@ def main():
                                  ('proxy_auth','run_proxy_auth'),('environment_ip','run_environment_ip'),('auth_hash','run_auth_hash'),
                                  ('connect_reads','run_connect_reads'),('connect_logs','run_connect_logs'),
                                  ('connect_create','run_connect_create'),('connect_lifecycle','run_connect_lifecycle'),
-                                 ('recording_read','run_recording_read')]:
+                                 ('recording_read','run_recording_read'),
+                                 ('channel_batch_epg','run_channel_batch_epg')]:
                 if suite in selected_suites:
                     if suite=='core' and 'account_crud' in selected_suites:
                         # Both independent suites deliberately test password
@@ -314,7 +317,7 @@ def main():
                         report.setdefault('suite_isolation',[]).append({'before_suite':'core','reason':'independent login contracts share real per-IP 3/min budgets','wait_seconds':62})
                         for _ in range(2):time.sleep(31)
                     extra=(seed,) if suite=='channel_stops' else ()
-                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash','connect_reads','connect_logs','connect_create','connect_lifecycle','recording_read'):
+                    if suite in ('server_group_crud','core_stream_crud','notifications','environment_ip','auth_hash','connect_reads','connect_logs','connect_create','connect_lifecycle','recording_read','channel_batch_epg'):
                         extra=(metadata_fixture,)
                     getattr(account_probes,method)(http,baseline,candidate,accounts,record,*extra)
             if args.api_resource_matrix:

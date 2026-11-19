@@ -1,0 +1,110 @@
+{
+  "M4": {
+    "actual_exit": 0,
+    "cleanup_verified": true,
+    "contract": "ordinary DVR list, completed read/seek/HEAD and active HLS read",
+    "foundation_checks": 19,
+    "process_settled": true,
+    "requests_verified": 18,
+    "retired_container_generations": 4,
+    "sources_sha256": {
+      "binding.json": "c1ba6b4c7e3e7b4f67c05ebb926ca224787bde3ef76831e1b6be3e0d5a23b523",
+      "evidence/integration.json": "b195bee9b4703ba48b895573c51e13ec13e5e99e3a7bb24453ff8f793624349e",
+      "execution.json": "f69fecbac562d69da0ac383ac1949aa7c4050ed7b0792fc8a188d395a6896796",
+      "independent-cleanup.json": "f4d967f2a7488f826064f91d4743cd52452ed735ee67b1a0f48a88834a80102d",
+      "receipt.json": "f129c7a041dc5b84bf1abb0a942d9f86e596bcef0a4612330e0f14b7670e311a"
+    },
+    "status": "passed"
+  },
+  "M5": {
+    "actual_exit": 0,
+    "cleanup_verified": true,
+    "contract": "stock React batch dummy assignment and clear",
+    "foundation_checks": 18,
+    "matched_requests": 32,
+    "native_atomic_unsupported_batch_guard_status": 501,
+    "native_batch_guide_publication_verified": false,
+    "original_only_xmltv_publication_status": 200,
+    "process_settled": true,
+    "retired_container_generations": 4,
+    "sources_sha256": {
+      "binding.json": "6129be12da6849f8cc5f3cb31a510fce54e27f726ca851cdd673e50da5ebd26f",
+      "evidence/integration.json": "a6675faf678a79a6a4124d3d5a8710b4d42a49b39d13ecc6add1dc07889b572b",
+      "execution.json": "38b120dd59dc4362cd2a0cd784c17abbd418a4ff3cf3c09b3322301345ade55e",
+      "independent-cleanup.json": "e205c1db5e89a420853b26fecbf92a203b8b969b618a32af999abbd2fb191cd5",
+      "receipt.json": "9b707e858c7f969618dd3a8b189cc61fd220c74da7cd05c26f028873e67a084d"
+    },
+    "status": "passed"
+  },
+  "candidate_revision": "695779244a9dffb477ecb885ebbb19791d3a5021",
+  "credit": "Original Dispatcharr authors and contributors retain full application and algorithm credit.",
+  "focused_chronology": [
+    {
+      "actual_exits": {
+        "clippy": 101,
+        "fmt": 0,
+        "store": 101
+      },
+      "failure": "E0432 unresolved Connect module import",
+      "revision": "3a1b0f1cb8b86724037ee2840b089dbe3b9a5b6c",
+      "sources_sha256": {
+        "clippy.log": "ae3ca1fbb414c7210dac6f5c70aea6cf9bbcddde41d8f904f2dc34cc1ddd1fbb",
+        "exit.json": "916e0de8b700c77efbf3e1bfa3262cf9c286f6f02b0ffa5a36f9efb6469f8855",
+        "store.log": "235f5c7567a4442ef7d5c678c36e6e59a577d9c33e8664a7465ded2c43389275"
+      },
+      "stage": "initial compile"
+    },
+    {
+      "actual_exits": {
+        "clippy": 0,
+        "fmt": 0,
+        "store": 101
+      },
+      "failure": "Eight loopback socket operations refused by the sandbox",
+      "revision": "695779244a9dffb477ecb885ebbb19791d3a5021",
+      "sources_sha256": {
+        "clippy.log": "85a079ae13b458fef3d1770b1f9d81de674d9b990693dbe9cceb656636296957",
+        "exit.json": "8edbba5e8e71e5def12cd9e1a6920118db4234cef34c6c56120b12e923bbabb6",
+        "fmt.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "store.log": "0e5203b1b3fdfeb86a4d4610a44929679326250a85409fca17370a7f987b8702"
+      },
+      "stage": "sandbox Store tests",
+      "store": {
+        "failed": 8,
+        "ignored": 79,
+        "passed": 526
+      }
+    },
+    {
+      "actual_exits": {
+        "clippy": 0,
+        "fmt": 0,
+        "store": 0
+      },
+      "m4_writer_tests_passed": 2,
+      "m5_batch_assignment_tests_passed": 2,
+      "revision": "695779244a9dffb477ecb885ebbb19791d3a5021",
+      "sources_sha256": {
+        "qualified-exit.json": "6ba103c79558eacbe7b406099be9c8931c2236230736d00d05a26591bbdc4616",
+        "store-loopback.log": "ef6e3687c9ae9821795d84ed38bae48a554350861a945174cbeef7322d544e69"
+      },
+      "stage": "qualified loopback Store rerun",
+      "store": {
+        "failed": 0,
+        "ignored": 79,
+        "passed": 534
+      }
+    }
+  ],
+  "full_m4_accepted": false,
+  "full_m5_accepted": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "package": {
+    "actual_exit": 0,
+    "image_id": "sha256:4a287f12d9d0831ccb4b89eddcedcb8a037fa02930641356daa58713373d18fa",
+    "manifest_sha256": "c80e67de33c84d2b05846fbdeecf3282116705d22e3bdd15b5f4ad29ab15fa12",
+    "source_tree_sha256": "bb933517bb9e0f0c1fdffd0d00d13da4dc8535e36ff6b34971c803947ea88bbb",
+    "status": "passed"
+  },
+  "performance_accepted": false
+}

@@ -555,3 +555,12 @@ def run_connect_lifecycle(http, baseline, candidate, accounts, record, fixture):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     module.run(http, baseline, candidate, accounts, record, fixture, digest)
+
+
+def run_channel_batch_epg(http, baseline, candidate, accounts, record, fixture):
+    validate_fixture(baseline, candidate, accounts)
+    spec = importlib.util.spec_from_file_location(
+        'channel_batch_epg_probes', Path(__file__).with_name('epg_batch_probes.py'))
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    module.run(http, baseline, candidate, accounts, record, fixture, digest)
