@@ -29,6 +29,12 @@ recomputed the work and budgets, verified retirement of nine observed process
 generations, and found the owned Compose inventories empty. M7 resource
 acceptance remains open because pairs 2 and 3 exceeded the fixed p95 limit.
 
+The frozen protocol checks p95 total latency and time to first byte for
+each request class in every pair. Each ratio applies a 50 ms floor to both
+measurements and must be at most 1.10. The CPU, peak working set and
+throughput budgets are separate requirements. The full-scan class has 12
+requests per phase, so its nearest-rank p95 selects the slowest request.
+
 [Independent receipt](attempt1.json) · [Prior Candidate97 comparison](../candidate97-regex-preview/README.md)
 
 The verifier binds the exact Candidate102 build and uses the existing fixed
