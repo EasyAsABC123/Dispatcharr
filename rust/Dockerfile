@@ -75,6 +75,10 @@ COPY scripts/rust-integration/milestone-batch89/packaged.json ./scripts/rust-int
 COPY scripts/rust-integration/milestone-batch85/selected-guide-compose.json ./scripts/rust-integration/milestone-batch85/selected-guide-compose.json
 COPY scripts/rust-integration/milestone-batch91/acceptance.json ./scripts/rust-integration/milestone-batch91/acceptance.json
 
+# Exact public System Logs and stream regex preview register authorities.
+COPY scripts/rust-integration/milestone-batch92/acceptance.json ./scripts/rust-integration/milestone-batch92/acceptance.json
+COPY scripts/rust-integration/milestone-batch94/acceptance.json ./scripts/rust-integration/milestone-batch94/acceptance.json
+
 # Public Original Comskip task authorities for offline register verification.
 COPY scripts/rust-integration/comskip-positive-lifecycle-source1/ ./scripts/rust-integration/comskip-positive-lifecycle-source1/
 COPY scripts/rust-integration/comskip-positive-journal-fences1/ ./scripts/rust-integration/comskip-positive-journal-fences1/

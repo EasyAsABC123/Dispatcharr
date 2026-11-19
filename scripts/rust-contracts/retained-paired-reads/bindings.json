@@ -1,0 +1,842 @@
+{
+  "binding_kind": "retained_original_System_Logs_and_regex_preview_GET",
+  "credit": "Dispatcharr original authors and contributors retain full application and algorithm credit.",
+  "operation_count": 3,
+  "primary_count": 1,
+  "supplement_count": 2,
+  "fully_verified_operations": 0,
+  "new_Source_executions": 0,
+  "new_Native_executions": 0,
+  "Native_coverage_increased": false,
+  "performance_verified": false,
+  "fixtures": {
+    "C92": {
+      "id": "C92",
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "native_revision": "bae33e83801096c8037c0e41d05fa2b25f32dbc6",
+      "native_image": "sha256:c028b8ceb937cc4c59676f651bc340e2e11dcaeb0f481035b5e784c0c34c864e",
+      "reference": {
+        "path": "scripts/rust-integration/milestone-batch92/acceptance.json",
+        "sha256": "33ea5b927c529404d86a529627630c3760229a1b6bcc4d714b27417de480f755"
+      },
+      "raw_artifact_sha256": {
+        "execution": "5d7850de45359634ab72c70cf4c84c111a7469aa84897a1b623452db8eaebc78",
+        "cleanup": "d93bb97c6caa097737ee61997a34fe07c450d9d4cc0206d38502199d7153f31a",
+        "integration": "612689d21691b24fe2ddebb01d505f737c44b136e55cb48b2ec25be05eb54e94",
+        "receipt": "58ede0081742dfad0dfc7fce65e5193fa5a10b1603e8cf3531fd507ea73cfc9a"
+      },
+      "probe_sha256": "ce2363757593d4cf7f9a76ef2100c0f868a34cb32684b176955f21949c89ab98",
+      "actual_controller_exit": 0,
+      "both_pipes_and_process_group_settled": true,
+      "owned_resources_empty": true,
+      "exact_CIDs_and_generations_retired": 4,
+      "observed_methods": [
+        "GET"
+      ],
+      "Source_replayed": false
+    },
+    "C94": {
+      "id": "C94",
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "native_revision": "fc5562a37d91ed6673e6ee9a740be4e0dd6c7c5f",
+      "native_image": "sha256:b309daadc687ed0bb8f627373e4c34c202f995bb91ab782ae65ee2d32b712c74",
+      "reference": {
+        "path": "scripts/rust-integration/milestone-batch94/acceptance.json",
+        "sha256": "6d7705eff35855423e05d4066679a848420fdc6889a1892ff5a318fe63b734c0"
+      },
+      "raw_artifact_sha256": {
+        "execution": "7b0369f24b19b49d58ce4ee9ee4d47e8e090d20dd75a2a988c7fb6f842096030",
+        "cleanup": "175696c03398d26f7be1f4d190da8c138818126bae08b558b11c3cc9950fbbc3",
+        "integration": "f9ad616725b69672d767854f021e6ea3d1046425e6ac1ac912e66198a85857a3",
+        "receipt": "922594f565d23acd14f979d865cdb872d8e4fd31075e5876aae61d43cfff1e69"
+      },
+      "probe_sha256": "4f103a10edc720260d1cabfa6688c64e55b51711d1e72b24c2af582e8efd0cd3",
+      "actual_controller_exit": 0,
+      "both_pipes_and_process_group_settled": true,
+      "owned_resources_empty": true,
+      "exact_CIDs_and_generations_retired": 4,
+      "observed_methods": [
+        "GET"
+      ],
+      "Source_replayed": false
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-1e6515342e6335fab078:GET",
+      "pattern_exact": "api/channels/^streams/regex-preview/$",
+      "source_handler": "apps.channels.api_views.StreamViewSet",
+      "method": "GET",
+      "source_action": "regex_preview",
+      "owning_milestone": "M5",
+      "fixture_id": "C94",
+      "endpoint_authority": {
+        "resolver_ordinal": 55,
+        "name": "api:channels:stream-regex-preview",
+        "pattern_exact": "api/channels/^streams/regex-preview/$",
+        "source_handler": "apps.channels.api_views.StreamViewSet",
+        "declared_method": "GET",
+        "source_action": "regex_preview"
+      },
+      "binding": "primary",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "anonymous",
+        "streamer",
+        "standard",
+        "admin"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "streamer": {
+          "fixture_role_or_supplied_credential": "streamer",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "expected_body_match",
+        "literal_match",
+        "sql_broker_unchanged",
+        "wire_match"
+      ],
+      "fully_verified": false,
+      "cases": [
+        {
+          "case": "anonymous",
+          "role": "anonymous",
+          "method": "GET",
+          "status": 401,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:anonymous",
+          "Native_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:anonymous",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 58
+        },
+        {
+          "case": "viewer",
+          "role": "streamer",
+          "method": "GET",
+          "status": 403,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:viewer",
+          "Native_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:viewer",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 63
+        },
+        {
+          "case": "missing-group",
+          "role": "admin",
+          "method": "GET",
+          "status": 400,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "402d28d5eeb75f03361755069d56259b8ae272414d6810f1d781dc29b4810253",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:missing-group",
+          "Native_body_sha256": "402d28d5eeb75f03361755069d56259b8ae272414d6810f1d781dc29b4810253",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:missing-group",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 38
+        },
+        {
+          "case": "invalid-account",
+          "role": "admin",
+          "method": "GET",
+          "status": 400,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "11e699cf44d289c52039427721cf36d24cca9621ac8222eba9ecd516962e5437",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:invalid-account",
+          "Native_body_sha256": "11e699cf44d289c52039427721cf36d24cca9621ac8222eba9ecd516962e5437",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:invalid-account",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 46
+        },
+        {
+          "case": "pattern-length",
+          "role": "admin",
+          "method": "GET",
+          "status": 400,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "0c4711c69fda8737b029bcea04c9813bbbf7b1725fbf247ea9acb3f4b67460de",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:pattern-length",
+          "Native_body_sha256": "0c4711c69fda8737b029bcea04c9813bbbf7b1725fbf247ea9acb3f4b67460de",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:pattern-length",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 40
+        },
+        {
+          "case": "count-only",
+          "role": "standard",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "b21036da265b21039b6c97a13775ceea5231e9677e17d2dadc06b130d112fe23",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:count-only",
+          "Native_body_sha256": "b21036da265b21039b6c97a13775ceea5231e9677e17d2dadc06b130d112fe23",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:count-only",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 61
+        },
+        {
+          "case": "account-isolation",
+          "role": "standard",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "13739c6bdefbefc6f10562e87309b91bfa44345f25b269b00760670229a62038",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:account-isolation",
+          "Native_body_sha256": "13739c6bdefbefc6f10562e87309b91bfa44345f25b269b00760670229a62038",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:account-isolation",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 306
+        },
+        {
+          "case": "other-account",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "18f628bf702d3641727dcfbad1d3b3cfb384e85792685daeb2342e31683ed16c",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:other-account",
+          "Native_body_sha256": "18f628bf702d3641727dcfbad1d3b3cfb384e85792685daeb2342e31683ed16c",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:other-account",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 140
+        },
+        {
+          "case": "whole-group",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "42fc261a574423c20a5030d4b14362ed25dd8dbb776a66e6cd2ed5686abdc1bd",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:whole-group",
+          "Native_body_sha256": "42fc261a574423c20a5030d4b14362ed25dd8dbb776a66e6cd2ed5686abdc1bd",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:whole-group",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 213
+        },
+        {
+          "case": "empty-group",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "4adeed9085d244e7e18143f962f725ce3114de3d8c810a13817abd717eb729a4",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:empty-group",
+          "Native_body_sha256": "4adeed9085d244e7e18143f962f725ce3114de3d8c810a13817abd717eb729a4",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:empty-group",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 106
+        },
+        {
+          "case": "case-sensitive",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "27a33aa69e16d0099d94390db64b5993d39b761840f54bcca7436d677d57c00a",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:case-sensitive",
+          "Native_body_sha256": "27a33aa69e16d0099d94390db64b5993d39b761840f54bcca7436d677d57c00a",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:case-sensitive",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 104
+        },
+        {
+          "case": "invalid-pattern",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "38cbd4f8c4316ae1f930077ef7824cd96bac0c0558ecf3e6d2d734df69e31ec6",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:invalid-pattern",
+          "Native_body_sha256": "38cbd4f8c4316ae1f930077ef7824cd96bac0c0558ecf3e6d2d734df69e31ec6",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:invalid-pattern",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 234
+        },
+        {
+          "case": "name-length",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "fa4e8b8753904e414fdc8b2af22c23665709d5a72007eacac08182682ab2a024",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:name-length",
+          "Native_body_sha256": "fa4e8b8753904e414fdc8b2af22c23665709d5a72007eacac08182682ab2a024",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:name-length",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 1151
+        },
+        {
+          "case": "last-value-and-clamp",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "c5d4c73d0988aa9aa933159172d02bf85832eec8e9f23abb0a0caeb5f22df6db",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:last-value-and-clamp",
+          "Native_body_sha256": "c5d4c73d0988aa9aa933159172d02bf85832eec8e9f23abb0a0caeb5f22df6db",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:last-value-and-clamp",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 140
+        },
+        {
+          "case": "full-scan-cap",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/channels/streams/regex-preview/",
+          "Original_body_sha256": "532e93b04edede5da09b988010ac38d636635370aa9d1a7a16dbd9744877d2aa",
+          "Original_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-source:full-scan-cap",
+          "Native_body_sha256": "532e93b04edede5da09b988010ac38d636635370aa9d1a7a16dbd9744877d2aa",
+          "Native_evidence_pointer": "/scopes/regex_preview/cases/stream-regex-preview-native:full-scan-cap",
+          "scoped_observations": {
+            "expected_body_match": true,
+            "literal_match": true,
+            "sql_broker_unchanged": true,
+            "wire_match": true
+          },
+          "response_bytes": 389
+        }
+      ],
+      "result": {
+        "Source_case_observations": 15,
+        "Native_scoped_controls_matched": 15,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-209e806f3f1d6d576eec:METHOD_UNRESOLVED",
+      "pattern_exact": "api/core/logs/<str:name>/",
+      "source_handler": "core.log_files.WrappedAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M5",
+      "fixture_id": "C92",
+      "endpoint_authority": {
+        "resolver_ordinal": 219,
+        "name": "api:core:log_file",
+        "pattern_exact": "api/core/logs/<str:name>/",
+        "source_handler": "core.log_files.WrappedAPIView",
+        "declared_method": null,
+        "source_action": null
+      },
+      "binding": "supplemental",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "anonymous",
+        "standard",
+        "admin"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "exact_expected_body",
+        "role_and_representation_headers_match",
+        "same_read_only_input_set"
+      ],
+      "fully_verified": false,
+      "cases": [
+        {
+          "case": "tail-initial",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail/",
+          "Original_body_sha256": "b08a270344739808ac6220a54784cdcbd4f341617ca4b75d0f8f9e6259ea2fff",
+          "Original_evidence_pointer": "/checks/35/details",
+          "Native_body_sha256": "b08a270344739808ac6220a54784cdcbd4f341617ca4b75d0f8f9e6259ea2fff",
+          "Native_evidence_pointer": "/checks/36/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-no-complete-append",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail/",
+          "Original_body_sha256": "53488395ef566907915af282e362a4984a25ade6401eb9eaffd3c08bf6b4840b",
+          "Original_evidence_pointer": "/checks/37/details",
+          "Native_body_sha256": "53488395ef566907915af282e362a4984a25ade6401eb9eaffd3c08bf6b4840b",
+          "Native_evidence_pointer": "/checks/38/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-delta",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail/",
+          "Original_body_sha256": "b706b97619d59305dba2afbe9718b40ac4004d68c365f97be0947a444f4c504e",
+          "Original_evidence_pointer": "/checks/39/details",
+          "Native_body_sha256": "b706b97619d59305dba2afbe9718b40ac4004d68c365f97be0947a444f4c504e",
+          "Native_evidence_pointer": "/checks/40/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-reset-mid-line",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail/",
+          "Original_body_sha256": "141cf1812ae3192bc0089c64fa32b5749d9fd9776b93f37f169bafc46519ecdf",
+          "Original_evidence_pointer": "/checks/41/details",
+          "Native_body_sha256": "141cf1812ae3192bc0089c64fa32b5749d9fd9776b93f37f169bafc46519ecdf",
+          "Native_evidence_pointer": "/checks/42/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-reset-malformed",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail/",
+          "Original_body_sha256": "141cf1812ae3192bc0089c64fa32b5749d9fd9776b93f37f169bafc46519ecdf",
+          "Original_evidence_pointer": "/checks/43/details",
+          "Native_body_sha256": "141cf1812ae3192bc0089c64fa32b5749d9fd9776b93f37f169bafc46519ecdf",
+          "Native_evidence_pointer": "/checks/44/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-reset-past-end",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail/",
+          "Original_body_sha256": "141cf1812ae3192bc0089c64fa32b5749d9fd9776b93f37f169bafc46519ecdf",
+          "Original_evidence_pointer": "/checks/45/details",
+          "Native_body_sha256": "141cf1812ae3192bc0089c64fa32b5749d9fd9776b93f37f169bafc46519ecdf",
+          "Native_evidence_pointer": "/checks/46/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-reset-after-rotation",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail/",
+          "Original_body_sha256": "c42b1097ff72adddf7b5a0c18ffc4247df1a6737c17af0773bd8cbf17eeb842b",
+          "Original_evidence_pointer": "/checks/47/details",
+          "Native_body_sha256": "c42b1097ff72adddf7b5a0c18ffc4247df1a6737c17af0773bd8cbf17eeb842b",
+          "Native_evidence_pointer": "/checks/48/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-safe-alias",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail.2/",
+          "Original_body_sha256": "c42b1097ff72adddf7b5a0c18ffc4247df1a6737c17af0773bd8cbf17eeb842b",
+          "Original_evidence_pointer": "/checks/49/details",
+          "Native_body_sha256": "c42b1097ff72adddf7b5a0c18ffc4247df1a6737c17af0773bd8cbf17eeb842b",
+          "Native_evidence_pointer": "/checks/50/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-bounded",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail.3/",
+          "Original_body_sha256": "fbdd73e9e7dc267c7d460e3479e8b02a5338e4102b58d09e3b63d4f00a321347",
+          "Original_evidence_pointer": "/checks/51/details",
+          "Native_body_sha256": "fbdd73e9e7dc267c7d460e3479e8b02a5338e4102b58d09e3b63d4f00a321347",
+          "Native_evidence_pointer": "/checks/52/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-missing",
+          "role": "admin",
+          "method": "GET",
+          "status": 404,
+          "path": "/api/core/logs/dispatcharr.log-tail.404/",
+          "Original_body_sha256": "33dbdd7e3b0e1f65f989f7d8becf98725d7f8f64b595549364945e857393d001",
+          "Original_evidence_pointer": "/checks/53/details",
+          "Native_body_sha256": "33dbdd7e3b0e1f65f989f7d8becf98725d7f8f64b595549364945e857393d001",
+          "Native_evidence_pointer": "/checks/54/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-excluded-alias",
+          "role": "admin",
+          "method": "GET",
+          "status": 404,
+          "path": "/api/core/logs/dispatcharr.log.8/",
+          "Original_body_sha256": "33dbdd7e3b0e1f65f989f7d8becf98725d7f8f64b595549364945e857393d001",
+          "Original_evidence_pointer": "/checks/55/details",
+          "Native_body_sha256": "33dbdd7e3b0e1f65f989f7d8becf98725d7f8f64b595549364945e857393d001",
+          "Native_evidence_pointer": "/checks/56/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-anonymous",
+          "role": "anonymous",
+          "method": "GET",
+          "status": 401,
+          "path": "/api/core/logs/dispatcharr.log-tail/",
+          "Original_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "Original_evidence_pointer": "/checks/57/details",
+          "Native_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "Native_evidence_pointer": "/checks/58/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "tail-standard",
+          "role": "standard",
+          "method": "GET",
+          "status": 403,
+          "path": "/api/core/logs/dispatcharr.log-tail/",
+          "Original_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "Original_evidence_pointer": "/checks/59/details",
+          "Native_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "Native_evidence_pointer": "/checks/60/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        }
+      ],
+      "result": {
+        "Source_case_observations": 13,
+        "Native_scoped_controls_matched": 13,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-54a5519b46ae18bea548:METHOD_UNRESOLVED",
+      "pattern_exact": "api/core/logs/<str:name>/download/",
+      "source_handler": "core.log_files.WrappedAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M5",
+      "fixture_id": "C92",
+      "endpoint_authority": {
+        "resolver_ordinal": 218,
+        "name": "api:core:log_file_download",
+        "pattern_exact": "api/core/logs/<str:name>/download/",
+        "source_handler": "core.log_files.WrappedAPIView",
+        "declared_method": null,
+        "source_action": null
+      },
+      "binding": "supplemental",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "anonymous",
+        "standard",
+        "admin"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "exact_expected_body",
+        "role_and_representation_headers_match",
+        "same_read_only_input_set"
+      ],
+      "fully_verified": false,
+      "cases": [
+        {
+          "case": "download-attachment",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail/download/",
+          "Original_body_sha256": "6411130c33347e847ea2c15e7d285a1eb216f3b9d3d34b07a4e21a5eace6426b",
+          "Original_evidence_pointer": "/checks/61/details",
+          "Native_body_sha256": "6411130c33347e847ea2c15e7d285a1eb216f3b9d3d34b07a4e21a5eace6426b",
+          "Native_evidence_pointer": "/checks/62/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "download-empty",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail.5/download/",
+          "Original_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Original_evidence_pointer": "/checks/63/details",
+          "Native_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "Native_evidence_pointer": "/checks/64/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "download-safe-alias",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-tail.2/download/",
+          "Original_body_sha256": "6411130c33347e847ea2c15e7d285a1eb216f3b9d3d34b07a4e21a5eace6426b",
+          "Original_evidence_pointer": "/checks/65/details",
+          "Native_body_sha256": "6411130c33347e847ea2c15e7d285a1eb216f3b9d3d34b07a4e21a5eace6426b",
+          "Native_evidence_pointer": "/checks/66/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "download-unicode-base64",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log.%D9%A1/download/",
+          "Original_body_sha256": "6411130c33347e847ea2c15e7d285a1eb216f3b9d3d34b07a4e21a5eace6426b",
+          "Original_evidence_pointer": "/checks/67/details",
+          "Native_body_sha256": "6411130c33347e847ea2c15e7d285a1eb216f3b9d3d34b07a4e21a5eace6426b",
+          "Native_evidence_pointer": "/checks/68/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          },
+          "wire_content_disposition": "=?utf-8?b?YXR0YWNobWVudDsgZmlsZW5hbWU9ImRpc3BhdGNoYXJyLmxvZy7ZoSI=?="
+        },
+        {
+          "case": "download-unicode-quoted-printable",
+          "role": "admin",
+          "method": "GET",
+          "status": 200,
+          "path": "/api/core/logs/dispatcharr.log-web0123456789abc.%D9%A1/download/",
+          "Original_body_sha256": "6411130c33347e847ea2c15e7d285a1eb216f3b9d3d34b07a4e21a5eace6426b",
+          "Original_evidence_pointer": "/checks/69/details",
+          "Native_body_sha256": "6411130c33347e847ea2c15e7d285a1eb216f3b9d3d34b07a4e21a5eace6426b",
+          "Native_evidence_pointer": "/checks/70/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          },
+          "wire_content_disposition": "=?utf-8?q?attachment=3B_filename=3D=22dispatcharr=2Elog-web0123456789abc=2E=D9=A1=22?="
+        },
+        {
+          "case": "download-excluded-alias",
+          "role": "admin",
+          "method": "GET",
+          "status": 404,
+          "path": "/api/core/logs/dispatcharr.log.8/download/",
+          "Original_body_sha256": "33dbdd7e3b0e1f65f989f7d8becf98725d7f8f64b595549364945e857393d001",
+          "Original_evidence_pointer": "/checks/71/details",
+          "Native_body_sha256": "33dbdd7e3b0e1f65f989f7d8becf98725d7f8f64b595549364945e857393d001",
+          "Native_evidence_pointer": "/checks/72/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "download-anonymous",
+          "role": "anonymous",
+          "method": "GET",
+          "status": 401,
+          "path": "/api/core/logs/dispatcharr.log-tail/download/",
+          "Original_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "Original_evidence_pointer": "/checks/73/details",
+          "Native_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "Native_evidence_pointer": "/checks/74/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        },
+        {
+          "case": "download-standard",
+          "role": "standard",
+          "method": "GET",
+          "status": 403,
+          "path": "/api/core/logs/dispatcharr.log-tail/download/",
+          "Original_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "Original_evidence_pointer": "/checks/75/details",
+          "Native_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "Native_evidence_pointer": "/checks/76/details",
+          "scoped_observations": {
+            "exact_expected_body": true,
+            "role_and_representation_headers_match": true,
+            "same_read_only_input_set": true
+          }
+        }
+      ],
+      "result": {
+        "Source_case_observations": 8,
+        "Native_scoped_controls_matched": 8,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    }
+  ]
+}

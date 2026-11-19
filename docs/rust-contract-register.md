@@ -358,3 +358,16 @@ XMLTV publication. Native's atomic unsupported-batch response stays recorded
 as HTTP 501. Both format aliases remain unassigned. The network-disabled SDK
 reproduced the register and passed five focused tests, including 19 corruption
 controls. [Exact Set EPG SDK receipt](../scripts/rust-contracts/sdk-set-epg-latest.json)
+
+## Retained System Logs and stream regex preview
+
+The [paired read bindings](../scripts/rust-contracts/retained-paired-reads/bindings.json)
+attach 15 Original and matching Rust observations to the unformatted GET
+regex-preview operation. The Candidate92 System Logs receipt adds 13 tail and
+eight download GET observations to the existing partial Source contracts. The
+two log rows retain their unresolved declared methods and their historical
+framework assertions. The register now has 471 partial executable HTTP
+assignments and 327 unassigned operations. The role coverage stays partial.
+
+[Candidate92 System Logs](../scripts/rust-integration/milestone-batch92/acceptance.json)
+· [Candidate94 regex preview](../scripts/rust-integration/milestone-batch94/acceptance.json).

@@ -21,6 +21,7 @@ import retained_connect_detail_contracts
 import retained_alias_remainder_contracts
 import retained_connect_test_contracts
 import retained_set_epg_selected_contracts
+import retained_paired_read_contracts
 import retained_comskip_task_contracts
 import retained_clocked_recording_contracts
 import unittest
@@ -81,6 +82,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
         current_rows = copy.deepcopy(register['runtime_routes'])
         import retained_xc_refresh_contracts
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT, register['runtime_routes'])
+        retained_paired_read_contracts.restore_pre_paired_reads(ROOT, register['runtime_routes'])
         retained_connect_test_contracts.restore_pre_connect_test(ROOT, register['runtime_routes'])
         retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT, register['runtime_routes'])
         retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, register['runtime_routes'])
@@ -127,7 +129,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
         mapping = source_contracts.apply(ROOT, rows, json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes()))
         self.assertEqual(rows, current_rows)
         self.assertEqual([row for row in mapping['unmapped_method_Source_observations'] if row['route_id'] != 'route-7e6941c073eccaa2b6dd' and row.get('fixture_id') != retained_epg_reads_contracts.FIXTURE], self.value['unmapped_method_Source_observations'])
-        self.assertEqual(mapping['operations'], 470)
+        self.assertEqual(mapping['operations'], 471)
         self.assertEqual(sum(o['method'] is None for o in operations.values()), 322)
         self.assertTrue(all(o['fully_verified'] is False for o in operations.values()))
 

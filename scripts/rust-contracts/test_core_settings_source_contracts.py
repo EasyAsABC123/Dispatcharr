@@ -23,6 +23,7 @@ import retained_connect_detail_contracts
 import retained_alias_remainder_contracts
 import retained_connect_test_contracts
 import retained_set_epg_selected_contracts
+import retained_paired_read_contracts
 import retained_comskip_task_contracts
 import retained_clocked_recording_contracts
 import core_settings_source_contracts as subject
@@ -72,6 +73,7 @@ class CoreSettingsSourceControls(unittest.TestCase):
         original_rows = copy.deepcopy(register['runtime_routes'])
         import retained_xc_refresh_contracts
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT, register['runtime_routes'])
+        retained_paired_read_contracts.restore_pre_paired_reads(ROOT, register['runtime_routes'])
         retained_connect_test_contracts.restore_pre_connect_test(ROOT, register['runtime_routes'])
         retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT, register['runtime_routes'])
         retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, register['runtime_routes'])
