@@ -1,0 +1,226 @@
+{
+  "Native_verified": false,
+  "actual_launcher_exit": 0,
+  "capture_valid": true,
+  "channel": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+  "cleanup_fallback_used": false,
+  "controller_freeze_sha256": "a9bc5b4e2b0c808b05db6f40e68387695f01b89603ed7b9b312ac73b3f73ced6",
+  "credit": "Original Dispatcharr authors and contributors retain full application and behavior credit.",
+  "exact_cleanup": true,
+  "full_M3_passed": false,
+  "full_role_matrix": false,
+  "next_stream_verified": false,
+  "observations": [
+    {
+      "body": {
+        "detail": "Authentication credentials were not provided."
+      },
+      "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "body_size": 58,
+      "case": "detail_anonymous",
+      "content_type": "application/json",
+      "method": "GET",
+      "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "role": "anonymous",
+      "status": 401
+    },
+    {
+      "body": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "body_size": 63,
+      "case": "detail_standard",
+      "content_type": "application/json",
+      "method": "GET",
+      "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "role": "standard",
+      "status": 403
+    },
+    {
+      "body": {
+        "error": "Channel fb67be07-7323-4179-85de-ad24f471689c not found"
+      },
+      "body_sha256": "e4697032039bcf9f05e3d80d50c30fed762326c247baed783b6b5d766a68c40a",
+      "body_size": 67,
+      "case": "detail_missing",
+      "content_type": "application/json",
+      "method": "GET",
+      "path": "/proxy/ts/status/fb67be07-7323-4179-85de-ad24f471689c",
+      "role": "admin",
+      "status": 404
+    },
+    {
+      "body_projection": {
+        "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+        "client_count": 2,
+        "clients": {
+          "follower": {
+            "client_id": "client_1795098963554_2673",
+            "output_format": "mpegts",
+            "worker_sha256": "adeac748224afca36f3c03e4cfe8122ada2e06ae79bb4cdc06017f1666706134"
+          },
+          "owner": {
+            "client_id": "client_1795098956854_1226",
+            "output_format": "mpegts",
+            "worker_sha256": "6f22ff83d72d557f69493d3f1dfa7a0a46c419f31b2a7d814ecad10682cf770f"
+          }
+        },
+        "state": "active"
+      },
+      "body_sha256": "7db2027e19ecf26de6e57787676096bae8614c1b2a3e877b64ba5546b17226a1",
+      "body_size": 2097,
+      "case": "detail_active",
+      "content_type": "application/json",
+      "method": "GET",
+      "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "body": {
+        "detail": "You do not have permission to perform this action."
+      },
+      "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "body_size": 63,
+      "case": "stop_standard",
+      "content_type": "application/json",
+      "method": "POST",
+      "path": "/proxy/ts/stop_client/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "role": "standard",
+      "status": 403
+    },
+    {
+      "body": {
+        "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+        "client_id": "client_1795098963554_2673",
+        "locally_processed": false,
+        "message": "Client stop request processed"
+      },
+      "body_sha256": "a13ecc620da412b1707779fd42bf0b8bfc8b86309f25dcedb7bdfc878656dae6",
+      "body_size": 168,
+      "case": "stop_target",
+      "content_type": "application/json",
+      "method": "POST",
+      "path": "/proxy/ts/stop_client/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "body_projection": {
+        "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+        "client_count": 1,
+        "clients": {
+          "owner": {
+            "client_id": "client_1795098956854_1226",
+            "output_format": "mpegts",
+            "worker_sha256": "6f22ff83d72d557f69493d3f1dfa7a0a46c419f31b2a7d814ecad10682cf770f"
+          }
+        },
+        "state": "active"
+      },
+      "body_sha256": "b217e813b29c9b7fdecaff8fa63a43909d001a21c0f7093aeac5408da0b23ad3",
+      "body_size": 1716,
+      "case": "detail_survivor",
+      "content_type": "application/json",
+      "method": "GET",
+      "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+      "role": "admin",
+      "status": 200
+    }
+  ],
+  "performance_verified": false,
+  "prior_pre_Compose_failures": [
+    {
+      "Compose_started": false,
+      "actual_launcher_exit": 1,
+      "attempt": 1,
+      "gate": "output_path_preflight",
+      "interrupted_controller_terminal_state": "component-cohort-stopped",
+      "negative_fingerprints": {
+        "source-ts-controls.actual-exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "source-ts-controls.log": "46119b912a1ad9293d0dda4626b2fc629153e676ef4e88431f9d2920937d347b",
+        "state.json": "2520b189dd0cc01d0792606b0b9e44dc0903c6da4fe9fbd4c6fcde8533fc93b5"
+      }
+    },
+    {
+      "Compose_started": false,
+      "actual_launcher_exit": 1,
+      "attempt": 2,
+      "gate": "coordinator_dependency_import",
+      "interrupted_controller_terminal_state": "component-cohort-stopped",
+      "negative_fingerprints": {
+        "source-ts-controls.actual-exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "source-ts-controls.log": "57e0f9e9b7f6efe2ed1ae99982b8dcc4642c31dc9b7c4c4586f8a3a934a86c17",
+        "state.json": "538f7ea0659e85d6f62c2e06cd2863a2589a8be6a36de9325faaec9a001c6ad1"
+      }
+    }
+  ],
+  "process_group_settled": true,
+  "raw_characterization_passed": false,
+  "raw_fingerprints": {
+    "before-project-inventory.json": "1ad187a6487df270243fc4248f54fe993fb67520dfd51843dad5e76049969660",
+    "capture/shared-ts.json": "c1e45aaf25afea98435e34bc5a9a695319faeaceda80ebb4aaac774e00a580be",
+    "cleanup.json": "2e468a0c2b2831adea16d58c5e18d7634abcbd2daf5f45758572a13cd0a8cf9f",
+    "execution.json": "0c12f62e2169d9654ec33dff0209c6e1830a887fe147a9ee7f2e90586afd08e5",
+    "execution.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "execution.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "receipt.json": "cca48850cd8c0f8eba47869876603658aacfbb7fb3fb647891f81f3e47eaf58e"
+  },
+  "remaining_project_resources": {
+    "container": 0,
+    "network": 0,
+    "volume": 0
+  },
+  "request_driver_sha256": "f77ef1d5577db801b2bb5c3dd9a9263c9a824538dd455d54476303cf0aafd7a9",
+  "role_cleanup": {
+    "baseline": {
+      "exact_container_absence": true,
+      "exact_host_generation_absence": true
+    },
+    "origin": {
+      "exact_container_absence": true,
+      "exact_host_generation_absence": true
+    },
+    "python-replica": {
+      "exact_container_absence": true,
+      "exact_host_generation_absence": true
+    }
+  },
+  "scope": "Original two-replica detailed status and targeted viewer stop",
+  "scope_observations": {
+    "denied_stop_preserved_both_viewers": true,
+    "final_client_count": 1,
+    "one_upstream_connection_and_provider_slot": true,
+    "peer_non_padding_bytes_after_target_eof": 511736,
+    "peer_stop_marker_present": false,
+    "scope_teardown_and_both_decoders_passed": true,
+    "starting_client_count": 2,
+    "target_actual_eof": true,
+    "two_distinct_replica_clients": true
+  },
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_route_authority": {
+    "detail": {
+      "Source_URL_declaration_sha256": "08d48d586ac4fc180e07f8222d8efb16a830271d1b324dda5e56207c830d5da4",
+      "Source_decorator_line": 1238,
+      "Source_function": "channel_status",
+      "Source_view_declaration_sha256": "68d3b4097536742945fcb9eccd2d5f95f1cedc0774367d61ba21f33b42bd29c8",
+      "method": "GET",
+      "route": "proxy/ts/status/<str:channel_id>"
+    },
+    "target": {
+      "Source_URL_declaration_sha256": "08d48d586ac4fc180e07f8222d8efb16a830271d1b324dda5e56207c830d5da4",
+      "Source_decorator_line": 1317,
+      "Source_function": "stop_client",
+      "Source_view_declaration_sha256": "68d3b4097536742945fcb9eccd2d5f95f1cedc0774367d61ba21f33b42bd29c8",
+      "method": "POST",
+      "route": "proxy/ts/stop_client/<str:channel_id>"
+    }
+  },
+  "stderr_EOF": true,
+  "stdout_EOF": true
+}

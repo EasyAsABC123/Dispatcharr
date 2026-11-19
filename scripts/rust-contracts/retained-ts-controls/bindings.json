@@ -1,0 +1,235 @@
+{
+  "binding_kind": "retained_original_Live_TS_detail_and_targeted_stop_HTTP",
+  "operation_count": 2,
+  "new_Source_executions": 0,
+  "credit": "Original Dispatcharr authors and contributors retain full application and behavior credit.",
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "performance_verified": false,
+  "fixtures": {
+    "Original-two-replica-TS-owned-detail-and-targeted-stop": {
+      "id": "Original-two-replica-TS-owned-detail-and-targeted-stop",
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "request_driver_sha256": "f77ef1d5577db801b2bb5c3dd9a9263c9a824538dd455d54476303cf0aafd7a9",
+      "private_capture_sha256": "c1e45aaf25afea98435e34bc5a9a695319faeaceda80ebb4aaac774e00a580be",
+      "actual_source_controller_exit": 0,
+      "raw_controller_passed": false,
+      "native_execution_claimed": false,
+      "exact_source_compose_cleanup": true,
+      "host_generation_absence_verified": true,
+      "prior_pre_Compose_failures": 2,
+      "public_artifacts": [
+        {
+          "path": "scripts/rust-milestone-batches/m235/ts-controls/Original.json",
+          "sha256": "4e648d737c509e19edbf0783a7aa193cb6a7ee4934f5f356da43bf25185fecae"
+        }
+      ]
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-c5355f0ef3ea403e2a2f:METHOD_UNRESOLVED",
+      "source_handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "pattern_exact": "proxy/ts/status/<str:channel_id>",
+      "resolver_ordinal": 388,
+      "resolver_name": "proxy:live_proxy:channel_status_detail",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M3",
+      "fixture_id": "Original-two-replica-TS-owned-detail-and-targeted-stop",
+      "observed_roles": [
+        "anonymous",
+        "standard",
+        "admin"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "exact anonymous 401, standard 403 and admin unknown channel 404",
+        "admin 200 sees two replica clients before the targeted stop and the exact owned survivor afterward"
+      ],
+      "result": {
+        "Source_case_observations": 5,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "body": {
+            "detail": "Authentication credentials were not provided."
+          },
+          "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "body_size": 58,
+          "case": "detail_anonymous",
+          "content_type": "application/json",
+          "method": "GET",
+          "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "role": "anonymous",
+          "status": 401
+        },
+        {
+          "body": {
+            "detail": "You do not have permission to perform this action."
+          },
+          "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "body_size": 63,
+          "case": "detail_standard",
+          "content_type": "application/json",
+          "method": "GET",
+          "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "role": "standard",
+          "status": 403
+        },
+        {
+          "body": {
+            "error": "Channel fb67be07-7323-4179-85de-ad24f471689c not found"
+          },
+          "body_sha256": "e4697032039bcf9f05e3d80d50c30fed762326c247baed783b6b5d766a68c40a",
+          "body_size": 67,
+          "case": "detail_missing",
+          "content_type": "application/json",
+          "method": "GET",
+          "path": "/proxy/ts/status/fb67be07-7323-4179-85de-ad24f471689c",
+          "role": "admin",
+          "status": 404
+        },
+        {
+          "body_projection": {
+            "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "client_count": 2,
+            "clients": {
+              "follower": {
+                "client_id": "client_1795098963554_2673",
+                "output_format": "mpegts",
+                "worker_sha256": "adeac748224afca36f3c03e4cfe8122ada2e06ae79bb4cdc06017f1666706134"
+              },
+              "owner": {
+                "client_id": "client_1795098956854_1226",
+                "output_format": "mpegts",
+                "worker_sha256": "6f22ff83d72d557f69493d3f1dfa7a0a46c419f31b2a7d814ecad10682cf770f"
+              }
+            },
+            "state": "active"
+          },
+          "body_sha256": "7db2027e19ecf26de6e57787676096bae8614c1b2a3e877b64ba5546b17226a1",
+          "body_size": 2097,
+          "case": "detail_active",
+          "content_type": "application/json",
+          "method": "GET",
+          "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "body_projection": {
+            "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "client_count": 1,
+            "clients": {
+              "owner": {
+                "client_id": "client_1795098956854_1226",
+                "output_format": "mpegts",
+                "worker_sha256": "6f22ff83d72d557f69493d3f1dfa7a0a46c419f31b2a7d814ecad10682cf770f"
+              }
+            },
+            "state": "active"
+          },
+          "body_sha256": "b217e813b29c9b7fdecaff8fa63a43909d001a21c0f7093aeac5408da0b23ad3",
+          "body_size": 1716,
+          "case": "detail_survivor",
+          "content_type": "application/json",
+          "method": "GET",
+          "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "role": "admin",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "contract_id": "route-d11609e20f7f2969ef50:METHOD_UNRESOLVED",
+      "source_handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "pattern_exact": "proxy/ts/stop_client/<str:channel_id>",
+      "resolver_ordinal": 390,
+      "resolver_name": "proxy:live_proxy:stop_client",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M3",
+      "fixture_id": "Original-two-replica-TS-owned-detail-and-targeted-stop",
+      "observed_roles": [
+        "standard",
+        "admin"
+      ],
+      "observed_methods": [
+        "POST"
+      ],
+      "source_role_specs": {
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "standard POST 403 preserves both viewers and their accounting",
+        "admin POST 200 targets the other replica, which reaches actual EOF while the same peer continues media",
+        "one unchanged upstream/provider reservation and exact final scope retirement"
+      ],
+      "result": {
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false,
+      "cases": [
+        {
+          "body": {
+            "detail": "You do not have permission to perform this action."
+          },
+          "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "body_size": 63,
+          "case": "stop_standard",
+          "content_type": "application/json",
+          "method": "POST",
+          "path": "/proxy/ts/stop_client/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "role": "standard",
+          "status": 403
+        },
+        {
+          "body": {
+            "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+            "client_id": "client_1795098963554_2673",
+            "locally_processed": false,
+            "message": "Client stop request processed"
+          },
+          "body_sha256": "a13ecc620da412b1707779fd42bf0b8bfc8b86309f25dcedb7bdfc878656dae6",
+          "body_size": 168,
+          "case": "stop_target",
+          "content_type": "application/json",
+          "method": "POST",
+          "path": "/proxy/ts/stop_client/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+          "role": "admin",
+          "status": 200
+        }
+      ]
+    }
+  ]
+}

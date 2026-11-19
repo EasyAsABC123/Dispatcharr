@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "6d37b7786baebf3b6057b78a27d69ea48c601c6d4fc741bb2a3e17da3c923ccb",
+    "scripts/rust-contracts/executable-source-inputs.json": "3ad1c27af579600cbbe21bf75431e9e921293c260a55fa98b211a2ff2e90ac4b",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -57,11 +57,12 @@
     "scripts/rust-contracts/retained-set-epg-selected/bindings.json": "c88dc997a23bc1ee627afabd3c9a7f4ef532ca81b7d28575d23bed45261c06c3",
     "scripts/rust-contracts/retained-set-epg-batch/bindings.json": "eeb42868ab4b8c0d28461c21d2ddee560692a095051bb609e3270d809c39dca0",
     "scripts/rust-contracts/retained-paired-reads/bindings.json": "17304fa362b0b3a3cfb1728c66da71795441e6ac9526f7d6b71ac52c5721943d",
-    "scripts/rust-contracts/retained-live-stop/bindings.json": "019fadce530a36b430982ab8c6ab133fde2a42f6b6030a39320bdf4906c2ef2f"
+    "scripts/rust-contracts/retained-live-stop/bindings.json": "019fadce530a36b430982ab8c6ab133fde2a42f6b6030a39320bdf4906c2ef2f",
+    "scripts/rust-contracts/retained-ts-controls/bindings.json": "385a31ad93a053d81934b6dfd62b17dbcbf05042a70074795596f5bc5184a73e"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 472,
+    "operations": 474,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -302,6 +303,11 @@
         "path": "scripts/rust-contracts/retained-live-stop/bindings.json",
         "sha256": "019fadce530a36b430982ab8c6ab133fde2a42f6b6030a39320bdf4906c2ef2f",
         "kind": "retained_original_Live_TS_global_stop_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-ts-controls/bindings.json",
+        "sha256": "385a31ad93a053d81934b6dfd62b17dbcbf05042a70074795596f5bc5184a73e",
+        "kind": "retained_original_Live_TS_detail_and_targeted_stop_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -242481,15 +242487,193 @@
           "owning_milestone": "M3",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-two-replica-TS-owned-detail-and-targeted-stop",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "request_driver_sha256": "f77ef1d5577db801b2bb5c3dd9a9263c9a824538dd455d54476303cf0aafd7a9",
+            "private_capture_sha256": "c1e45aaf25afea98435e34bc5a9a695319faeaceda80ebb4aaac774e00a580be",
+            "actual_source_controller_exit": 0,
+            "raw_controller_passed": false,
+            "native_execution_claimed": false,
+            "exact_source_compose_cleanup": true,
+            "host_generation_absence_verified": true,
+            "prior_pre_Compose_failures": 2,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-milestone-batches/m235/ts-controls/Original.json",
+                "sha256": "4e648d737c509e19edbf0783a7aa193cb6a7ee4934f5f356da43bf25185fecae"
+              }
+            ]
+          },
+          "assertions": [
+            "exact anonymous 401, standard 403 and admin unknown channel 404",
+            "admin 200 sees two replica clients before the targeted stop and the exact owned survivor afterward"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 5,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-c5355f0ef3ea403e2a2f:METHOD_UNRESOLVED",
+            "source_handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+            "pattern_exact": "proxy/ts/status/<str:channel_id>",
+            "resolver_ordinal": 388,
+            "resolver_name": "proxy:live_proxy:channel_status_detail",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M3",
+            "fixture_id": "Original-two-replica-TS-owned-detail-and-targeted-stop",
+            "observed_roles": [
+              "anonymous",
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "GET"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "exact anonymous 401, standard 403 and admin unknown channel 404",
+              "admin 200 sees two replica clients before the targeted stop and the exact owned survivor afterward"
+            ],
+            "result": {
+              "Source_case_observations": 5,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "body": {
+                  "detail": "Authentication credentials were not provided."
+                },
+                "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "body_size": 58,
+                "case": "detail_anonymous",
+                "content_type": "application/json",
+                "method": "GET",
+                "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "role": "anonymous",
+                "status": 401
+              },
+              {
+                "body": {
+                  "detail": "You do not have permission to perform this action."
+                },
+                "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "body_size": 63,
+                "case": "detail_standard",
+                "content_type": "application/json",
+                "method": "GET",
+                "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "role": "standard",
+                "status": 403
+              },
+              {
+                "body": {
+                  "error": "Channel fb67be07-7323-4179-85de-ad24f471689c not found"
+                },
+                "body_sha256": "e4697032039bcf9f05e3d80d50c30fed762326c247baed783b6b5d766a68c40a",
+                "body_size": 67,
+                "case": "detail_missing",
+                "content_type": "application/json",
+                "method": "GET",
+                "path": "/proxy/ts/status/fb67be07-7323-4179-85de-ad24f471689c",
+                "role": "admin",
+                "status": 404
+              },
+              {
+                "body_projection": {
+                  "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                  "client_count": 2,
+                  "clients": {
+                    "follower": {
+                      "client_id": "client_1795098963554_2673",
+                      "output_format": "mpegts",
+                      "worker_sha256": "adeac748224afca36f3c03e4cfe8122ada2e06ae79bb4cdc06017f1666706134"
+                    },
+                    "owner": {
+                      "client_id": "client_1795098956854_1226",
+                      "output_format": "mpegts",
+                      "worker_sha256": "6f22ff83d72d557f69493d3f1dfa7a0a46c419f31b2a7d814ecad10682cf770f"
+                    }
+                  },
+                  "state": "active"
+                },
+                "body_sha256": "7db2027e19ecf26de6e57787676096bae8614c1b2a3e877b64ba5546b17226a1",
+                "body_size": 2097,
+                "case": "detail_active",
+                "content_type": "application/json",
+                "method": "GET",
+                "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "role": "admin",
+                "status": 200
+              },
+              {
+                "body_projection": {
+                  "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                  "client_count": 1,
+                  "clients": {
+                    "owner": {
+                      "client_id": "client_1795098956854_1226",
+                      "output_format": "mpegts",
+                      "worker_sha256": "6f22ff83d72d557f69493d3f1dfa7a0a46c419f31b2a7d814ecad10682cf770f"
+                    }
+                  },
+                  "state": "active"
+                },
+                "body_sha256": "b217e813b29c9b7fdecaff8fa63a43909d001a21c0f7093aeac5408da0b23ad3",
+                "body_size": 1716,
+                "case": "detail_survivor",
+                "content_type": "application/json",
+                "method": "GET",
+                "path": "/proxy/ts/status/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "role": "admin",
+                "status": 200
+              }
+            ]
+          }
         }
       ]
     },
@@ -242740,15 +242924,126 @@
           "owning_milestone": "M3",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-two-replica-TS-owned-detail-and-targeted-stop",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "request_driver_sha256": "f77ef1d5577db801b2bb5c3dd9a9263c9a824538dd455d54476303cf0aafd7a9",
+            "private_capture_sha256": "c1e45aaf25afea98435e34bc5a9a695319faeaceda80ebb4aaac774e00a580be",
+            "actual_source_controller_exit": 0,
+            "raw_controller_passed": false,
+            "native_execution_claimed": false,
+            "exact_source_compose_cleanup": true,
+            "host_generation_absence_verified": true,
+            "prior_pre_Compose_failures": 2,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-milestone-batches/m235/ts-controls/Original.json",
+                "sha256": "4e648d737c509e19edbf0783a7aa193cb6a7ee4934f5f356da43bf25185fecae"
+              }
+            ]
+          },
+          "assertions": [
+            "standard POST 403 preserves both viewers and their accounting",
+            "admin POST 200 targets the other replica, which reaches actual EOF while the same peer continues media",
+            "one unchanged upstream/provider reservation and exact final scope retirement"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 2,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-d11609e20f7f2969ef50:METHOD_UNRESOLVED",
+            "source_handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+            "pattern_exact": "proxy/ts/stop_client/<str:channel_id>",
+            "resolver_ordinal": 390,
+            "resolver_name": "proxy:live_proxy:stop_client",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M3",
+            "fixture_id": "Original-two-replica-TS-owned-detail-and-targeted-stop",
+            "observed_roles": [
+              "standard",
+              "admin"
+            ],
+            "observed_methods": [
+              "POST"
+            ],
+            "source_role_specs": {
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "standard POST 403 preserves both viewers and their accounting",
+              "admin POST 200 targets the other replica, which reaches actual EOF while the same peer continues media",
+              "one unchanged upstream/provider reservation and exact final scope retirement"
+            ],
+            "result": {
+              "Source_case_observations": 2,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "body": {
+                  "detail": "You do not have permission to perform this action."
+                },
+                "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "body_size": 63,
+                "case": "stop_standard",
+                "content_type": "application/json",
+                "method": "POST",
+                "path": "/proxy/ts/stop_client/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "role": "standard",
+                "status": 403
+              },
+              {
+                "body": {
+                  "channel_id": "11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                  "client_id": "client_1795098963554_2673",
+                  "locally_processed": false,
+                  "message": "Client stop request processed"
+                },
+                "body_sha256": "a13ecc620da412b1707779fd42bf0b8bfc8b86309f25dcedb7bdfc878656dae6",
+                "body_size": 168,
+                "case": "stop_target",
+                "content_type": "application/json",
+                "method": "POST",
+                "path": "/proxy/ts/stop_client/11ca0bac-7532-414a-9d5b-9790cb6784a1",
+                "role": "admin",
+                "status": 200
+              }
+            ]
+          }
         }
       ]
     },

@@ -84,6 +84,8 @@ COPY scripts/rust-milestone-batches/m235/profile-source-media/publication-summar
 COPY scripts/rust-milestone-batches/m235/profile-source-media/fresh-cleanup.json ./scripts/rust-milestone-batches/m235/profile-source-media/fresh-cleanup.json
 COPY scripts/rust-milestone-batches/m235/profile-source-media/shared_ts.py ./scripts/rust-milestone-batches/m235/profile-source-media/shared_ts.py
 COPY scripts/rust-milestone-batches/m235/profile-source-media/manifest.json ./scripts/rust-milestone-batches/m235/profile-source-media/manifest.json
+COPY scripts/rust-milestone-batches/m235/ts-controls/Original.json ./scripts/rust-milestone-batches/m235/ts-controls/Original.json
+COPY scripts/rust-milestone-batches/m235/ts-controls/request-driver.py ./scripts/rust-milestone-batches/m235/ts-controls/request-driver.py
 
 # Public Original Comskip task authorities for offline register verification.
 COPY scripts/rust-integration/comskip-positive-lifecycle-source1/ ./scripts/rust-integration/comskip-positive-lifecycle-source1/

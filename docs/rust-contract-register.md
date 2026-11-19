@@ -383,7 +383,7 @@ maps one exact Original admin POST to the existing method-unresolved stop
 operation. Two concurrent viewers shared one input and provider slot. The
 HTTP 200 stop request ended both readers and retired the input before the
 next context. The separate owner-crash result remains outside this binding.
-The register now has 472 partial executable HTTP assignments and 326
+That checkpoint recorded 472 partial executable HTTP assignments and 326
 unassigned operations.
 
 The network-disabled SDK regenerated the exact register and passed six tests,
@@ -394,3 +394,17 @@ independently reconciled. The original exits are preserved.
 [Exact live-stop SDK receipt](../scripts/rust-contracts/sdk-live-stop-latest.json)
 
 [Original two-replica media receipt](../scripts/rust-milestone-batches/m235/profile-source-media/publication-summary.json).
+
+## Retained live TS detail and targeted viewer stop
+
+The [TS controls binding](../scripts/rust-contracts/retained-ts-controls/bindings.json)
+assigns five exact Original channel-detail GET observations and two targeted
+stop-client POST observations to the respective method-unresolved rows.
+The admin target reached actual EOF while the same peer continued receiving
+non-padding MPEG-TS through one unchanged upstream connection. Anonymous
+and standard GET denials, the unknown-channel response, and standard POST
+denial have independent observations. The two pre-Compose failures and
+successful three-role generation cleanup remain in the
+[Original receipt](../scripts/rust-milestone-batches/m235/ts-controls/Original.json).
+These additions bring the register to 474 partial executable HTTP
+assignments and 324 unassigned operations.
