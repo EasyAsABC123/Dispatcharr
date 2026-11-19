@@ -87,3 +87,26 @@ migration still requires its own application fixture.
 The current Rust gap includes PostgreSQL-specific Store/SQLx types and schema, PostgreSQL backup tools, and PostgreSQL session/server fencing. SQLite requires coherent persistence, migration/history, connection/file/journal and task/Beat/plugin lifecycles across the actual Native application. Adding an archive member cannot establish that compatibility. Source uncertainty does not waive the requirement or authorize a speculative engine implementation.
 
 Static references and the original prepared gates remain in [authority](../scripts/rust-integration/sqlite-source-scope/authority.json), [source hashes](../scripts/rust-integration/sqlite-source-scope/source-hashes.json), and the [historical gated matrix](../scripts/rust-integration/sqlite-source-scope/gated-matrix.json). The actual CLI packet supersedes that matrix's unexecuted fresh-migration cell only. The next gate requires a legitimate complete Source SQLite application fixture with recorded version and migration history before dependent REST backup/restore acceptance. The captured archive supplies no such file. M9’s datastore scope gate remains open. Native equivalence and equivalent-work performance remain blocked; all full milestones remain open.
+
+
+## Verified historical Original SQLite database
+
+Original v0.11.2 at `d0ebfb57c4bde04d047a555f66b1da92104eea8f` ran its
+unmodified SQLite migrations against a disposable file. The official
+linux/amd64 image digest was
+`sha256:e7ed9a28f57c51ccedc2f113f4fd857eee22ff4d6b6be5dbea4e995ceeaf371c`.
+The fixture independently verified the exact 261-file Git source archive.
+
+The historical app completed ordinary ORM writes, administrator setup,
+password login and channel reads across a process restart. The closed
+database had 49 tables and 132 recorded migrations. Read-only inspection
+passed integrity and foreign-key checks, and no journal or WAL sidecars
+remained. The owner verified the container exited 0 and was removed.
+
+An independent inspector copied the resulting database and checked the
+copy in SQLite immutable mode. Both file hashes matched throughout. This
+qualifies the historical file as input for a future legacy import check.
+The Native SQLite runtime and import remain open, and the current pinned
+Original still has its separate fresh-schema migration failure.
+
+[Historical fixture and copy receipt](../scripts/rust-integration/legacy-sqlite-source-v0.11.2.json)
