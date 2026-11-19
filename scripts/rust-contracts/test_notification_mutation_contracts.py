@@ -96,7 +96,9 @@ class NotificationMutationControls(unittest.TestCase):
    'scripts/rust-contracts/retained-image57-m3u/bindings.json',
    'scripts/rust-contracts/retained-provider-admin/bindings.json',
    'scripts/rust-contracts/retained-c98-hdhr/bindings.json',
-   'scripts/rust-contracts/retained-core-profile-json/bindings.json'])
+   'scripts/rust-contracts/retained-core-profile-json/bindings.json',
+   'scripts/rust-contracts/retained-c105-guide-startup/bindings.json',
+   'scripts/rust-contracts/retained-hdhr-literal/bindings.json'])
   later_ids=[];supplemental_ids=[]
   import retained_management_contracts
   import retained_auth_plugin_contracts
@@ -114,6 +116,8 @@ class NotificationMutationControls(unittest.TestCase):
   import retained_provider_admin_contracts
   import retained_c98_hdhr_contracts
   import retained_core_profile_json_contracts
+  import retained_hdhr_literal_contracts
+  import retained_c105_guide_startup_contracts
   for ref in later:
    value=source_contracts.checked(ROOT,ref)
    if ref['kind']==retained_management_contracts.KIND:
@@ -170,6 +174,10 @@ class NotificationMutationControls(unittest.TestCase):
     retained_c98_hdhr_contracts.validate(ROOT,value)
    elif ref['kind']==retained_core_profile_json_contracts.KIND:
     retained_core_profile_json_contracts.validate(ROOT,value)
+   elif ref['kind']==retained_c105_guide_startup_contracts.KIND:
+    retained_c105_guide_startup_contracts.validate(ROOT,value)
+   elif ref['kind']==retained_hdhr_literal_contracts.KIND:
+    retained_hdhr_literal_contracts.validate(ROOT,value)
    else:later_ids.extend(c['contract_id']for c in value['contracts'])
   self.assertEqual(len(later_ids),282);self.assertEqual(len(set(later_ids)),282)
   self.assertEqual(len(supplemental_ids),11)
@@ -186,6 +194,7 @@ class NotificationMutationControls(unittest.TestCase):
   retained_provider_admin_contracts.restore_pre_provider_admin(ROOT,historical)
   retained_c98_hdhr_contracts.restore_pre_c98_hdhr(ROOT,historical)
   retained_core_profile_json_contracts.restore_pre_core_profiles(ROOT,historical)
+  retained_hdhr_literal_contracts.restore_pre_literal_hdhr(ROOT,historical)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,historical)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,historical)
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,historical)
@@ -228,6 +237,8 @@ class NotificationMutationControls(unittest.TestCase):
   import retained_comskip_task_contracts
   import retained_clocked_recording_contracts
   retained_clocked_recording_contracts.restore_pre_clocked_recording(ROOT,historical_non_HTTP)
+  import retained_c105_guide_startup_contracts
+  retained_c105_guide_startup_contracts.restore_pre_c105_startup(historical_non_HTTP)
   retained_comskip_task_contracts.restore_pre_comskip_task(ROOT,historical_non_HTTP)
   self.assertEqual(sum(row['candidate_id']not in retained_ids for row in historical_non_HTTP),243)
   for row in historical_non_HTTP:
@@ -241,7 +252,7 @@ class NotificationMutationControls(unittest.TestCase):
   non_HTTP_mapping=source_contracts.apply_non_HTTP(ROOT,historical_non_HTTP)
   self.assertEqual(historical_non_HTTP,new['non_HTTP_candidates'])
   self.assertEqual(non_HTTP_mapping,new['executable_Source_non_HTTP_mapping'])
-  self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+10)
+  self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+13)
   self.assertEqual(non_HTTP_mapping['fully_verified_added'],0)
   expected=old['base_HTTP_assignments']+len(selected)+len(later_ids)
   self.assertEqual(expected,402) # pre-XC preservation count
@@ -257,6 +268,7 @@ class NotificationMutationControls(unittest.TestCase):
   expected += retained_provider_admin_contracts.load(ROOT)['operation_count']
   expected += retained_c98_hdhr_contracts.load(ROOT)['operation_count']
   expected += retained_core_profile_json_contracts.load(ROOT)['operation_count']
+  expected += retained_hdhr_literal_contracts.load(ROOT)['operation_count']
   self.assertEqual(mapping['operations'],expected)
   self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)
   self.assertEqual({key for key,o in ops.items()if 'executable_Source_contract'in o and o['executable_Source_contract'].get('fixture_id')=='retained-Original-notification-mutations-Source2-48'},selected)

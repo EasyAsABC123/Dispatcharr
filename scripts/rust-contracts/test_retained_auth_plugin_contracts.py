@@ -31,6 +31,7 @@ import retained_image57_m3u_contracts
 import retained_provider_admin_contracts
 import retained_c98_hdhr_contracts
 import retained_core_profile_json_contracts
+import retained_hdhr_literal_contracts
 import retained_comskip_task_contracts
 import retained_clocked_recording_contracts
 import unittest
@@ -101,6 +102,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
         retained_provider_admin_contracts.restore_pre_provider_admin(ROOT, register['runtime_routes'])
         retained_c98_hdhr_contracts.restore_pre_c98_hdhr(ROOT, register['runtime_routes'])
         retained_core_profile_json_contracts.restore_pre_core_profiles(ROOT, register['runtime_routes'])
+        retained_hdhr_literal_contracts.restore_pre_literal_hdhr(ROOT, register['runtime_routes'])
         retained_connect_test_contracts.restore_pre_connect_test(ROOT, register['runtime_routes'])
         retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT, register['runtime_routes'])
         retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, register['runtime_routes'])
@@ -140,6 +142,8 @@ class RetainedAuthPluginControls(unittest.TestCase):
             self.assertEqual(subject.digest(operation), proof['selected_existing_primary_dict_sha256'][identifier])
         self.assertEqual(subject.digest([{k: v for k, v in row.items() if k != 'operations'} for row in register['runtime_routes']]), proof['route_structural_sha256'])
         retained_clocked_recording_contracts.restore_pre_clocked_recording(ROOT, register['non_HTTP_candidates'])
+        import retained_c105_guide_startup_contracts
+        retained_c105_guide_startup_contracts.restore_pre_c105_startup(register['non_HTTP_candidates'])
         retained_comskip_task_contracts.restore_pre_comskip_task(ROOT, register['non_HTTP_candidates'])
         for key, field in [('non_HTTP_candidates', 'non_HTTP_candidates_sha256'), ('openapi_operations', 'OpenAPI_operations_sha256'), ('observations_for_methods_not_declared_in_discovery', 'legacy_undeclared_method_observations_sha256')]:
             self.assertEqual(subject.digest(register[key]), proof[field])
@@ -147,7 +151,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
         mapping = source_contracts.apply(ROOT, rows, json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes()))
         self.assertEqual(rows, current_rows)
         self.assertEqual([row for row in mapping['unmapped_method_Source_observations'] if row['route_id'] != 'route-7e6941c073eccaa2b6dd' and row.get('fixture_id') != retained_epg_reads_contracts.FIXTURE], self.value['unmapped_method_Source_observations'])
-        self.assertEqual(mapping['operations'], 530)
+        self.assertEqual(mapping['operations'], 545)
         self.assertEqual(sum(o['method'] is None for o in operations.values()), 322)
         self.assertTrue(all(o['fully_verified'] is False for o in operations.values()))
 

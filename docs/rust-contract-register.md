@@ -529,3 +529,18 @@ repositories disabled, recording recovery returns its exact completion value,
 and the version check is fenced by the closed proxy. The worker and observer
 settled and the owned project was removed. The date-only output observations
 remain a separate scope. Dispatcharr's original authors retain full credit.
+
+## Retained Original literal HDHomeRun routes
+
+The [capture](../scripts/rust-integration/retained-hdhr-literal/receipt.json)
+qualifies 57 Original HTTP observations across twelve device mutations and
+three discovery declarations. The mutations cover canonical API and the two
+literal JSON-suffix device families, with Administrator, standard, viewer and
+anonymous controls. Discovery covers allowed and denied loopback policy,
+with the runtime declaration left unresolved and GET retained as observed.
+The outer launcher, startup, probe and cleanup exited zero. The two exact
+owned container and host process generations retired.
+
+The register now records 545 partial HTTP Source assignments and 253
+unassigned operations. Native and whole-operation verification remain open.
+Original Dispatcharr authors and contributors retain full credit.

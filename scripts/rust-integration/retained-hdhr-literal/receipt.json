@@ -1,0 +1,970 @@
+{
+  "Native_verified": false,
+  "actual_child_results": {
+    "cleanup": {
+      "actual_exit": 0,
+      "process_group_settled": true,
+      "stderr_EOF": true,
+      "stdout_EOF": true
+    },
+    "probe": {
+      "actual_exit": 0,
+      "process_group_settled": true,
+      "stderr_EOF": true,
+      "stdout_EOF": true
+    },
+    "startup": {
+      "actual_exit": 0,
+      "process_group_settled": true,
+      "stderr_EOF": true,
+      "stdout_EOF": true
+    }
+  },
+  "credit": "Original Dispatcharr authors and contributors retain full application, UI and behavior credit.",
+  "fixture_sha256": "6e0ae51cc877c22498eb795e172fc95416c93cdd62cc698930e248c2c658d606",
+  "full_role_matrix": false,
+  "fully_verified_operations": 0,
+  "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "outer_actual_exit": 0,
+  "owned_roles_retired": [
+    "baseline",
+    "origin"
+  ],
+  "performance_verified": false,
+  "physical_cleanup": true,
+  "raw_fingerprints": {
+    "cleanup-execution.json": "d3a5661f4dd256fe0818ebc5d4c3338e695325722880e0553e64d1f0034a0501",
+    "independent-cleanup.json": "66eb278344097d6fc95953110a1d4412ffa906f990daa5cb40780c01518def07",
+    "outer-hdhr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "outer-state.json": "f24d25bdf1fc491b819f566d985daa512198fb166dd6d5f7d7cbe1f6ed6b2ff4",
+    "owned-roles.json": "673407fc0f5c7b13927fe59cc44edb0d005f8464d8fcd21aaac831ece657297b",
+    "probe-execution.json": "342580fa4d1957f37b2e51712b68dc0ace91cec47829e85d476ae80539aa12cb",
+    "probe.stdout": "2c017a5b97c62ca17bb557dba34accd290345c59eafd223986ab6e77cca39d86",
+    "project-before.json": "1ad187a6487df270243fc4248f54fe993fb67520dfd51843dad5e76049969660",
+    "receipt.json": "ef60e2153202d53d62b114dd0620824a16e0c4636a7f826ef7a348715138f2c3",
+    "startup-execution.json": "013569a2aa9a04e9ee3bf9522a0734e03904e69da2654d5ef775c58cca95ec7a"
+  },
+  "rows": [
+    {
+      "actual_path": "/api/hdhr/devices/2/",
+      "cases": [
+        {
+          "actual_body_bytes": 0,
+          "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "actual_content_type": "",
+          "actual_status": 204,
+          "label": "admin",
+          "method": "DELETE",
+          "path": "/api/hdhr/devices/2/",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "DELETE",
+          "path": "/api/hdhr/devices/2/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "DELETE",
+          "path": "/api/hdhr/devices/2/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "DELETE",
+          "path": "/api/hdhr/devices/2/",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-f7e00cea4d0010ef9052:DELETE",
+      "declaration": "DELETE",
+      "literal_path_template": "/api/hdhr/devices/{pk}/",
+      "name": "api_canonical_delete",
+      "observed_method": "DELETE",
+      "proof": {
+        "after_sha256": "ba57aa89bd3476828da06708ed848e76c4be40e7921559b87b3b74186434ca09",
+        "before_sha256": "cc80f88a207186c7a3dd15ffe72f25e52b16001e3d8ea8318a9254820de45549",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "destroy",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 179,
+        "pattern": "api/hdhr/^devices/(?P<pk>[^/.]+)/$",
+        "view_name": "api:hdhr:hdhr-device-detail"
+      }
+    },
+    {
+      "actual_path": "/api/hdhr/devices/3/",
+      "cases": [
+        {
+          "actual_body_bytes": 85,
+          "actual_body_sha256": "b067f3810d42bc3c07f1d2eb677daed20cb006efaf20e36e66a8aed9047f1a29",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "admin",
+          "method": "PATCH",
+          "path": "/api/hdhr/devices/3/",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "PATCH",
+          "path": "/api/hdhr/devices/3/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "PATCH",
+          "path": "/api/hdhr/devices/3/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "PATCH",
+          "path": "/api/hdhr/devices/3/",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-f7e00cea4d0010ef9052:PATCH",
+      "declaration": "PATCH",
+      "literal_path_template": "/api/hdhr/devices/{pk}/",
+      "name": "api_canonical_patch",
+      "observed_method": "PATCH",
+      "proof": {
+        "after_sha256": "f3b275fc374291bdcf026cf03334247c65593f3ae42108e0a7cb479d6ac2ef8c",
+        "before_sha256": "ba57aa89bd3476828da06708ed848e76c4be40e7921559b87b3b74186434ca09",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "partial_update",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 179,
+        "pattern": "api/hdhr/^devices/(?P<pk>[^/.]+)/$",
+        "view_name": "api:hdhr:hdhr-device-detail"
+      }
+    },
+    {
+      "actual_path": "/api/hdhr/devices/",
+      "cases": [
+        {
+          "actual_body_bytes": 86,
+          "actual_body_sha256": "bf15b64665ce2e1d52b2e11b0b5ae51618d2ca66a3c1240bb1ae84ee2b7a98ee",
+          "actual_content_type": "application/json",
+          "actual_status": 201,
+          "label": "admin",
+          "method": "POST",
+          "path": "/api/hdhr/devices/",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "POST",
+          "path": "/api/hdhr/devices/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "POST",
+          "path": "/api/hdhr/devices/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "POST",
+          "path": "/api/hdhr/devices/",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-904bf410afa61f6f31f3:POST",
+      "declaration": "POST",
+      "literal_path_template": "/api/hdhr/devices/",
+      "name": "api_canonical_post",
+      "observed_method": "POST",
+      "proof": {
+        "after_sha256": "c5dba412afff4b73c92352e002e1e19478e01748bf93de277b8a9d1d579cee73",
+        "before_sha256": "f3b275fc374291bdcf026cf03334247c65593f3ae42108e0a7cb479d6ac2ef8c",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "create",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 177,
+        "pattern": "api/hdhr/^devices/$",
+        "view_name": "api:hdhr:hdhr-device-list"
+      }
+    },
+    {
+      "actual_path": "/api/hdhr/devices/4/",
+      "cases": [
+        {
+          "actual_body_bytes": 88,
+          "actual_body_sha256": "14f05fb7563dcb4ef8190ec055574ceca116d7568c71ee836bea179dcf8b9880",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "admin",
+          "method": "PUT",
+          "path": "/api/hdhr/devices/4/",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "PUT",
+          "path": "/api/hdhr/devices/4/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "PUT",
+          "path": "/api/hdhr/devices/4/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "PUT",
+          "path": "/api/hdhr/devices/4/",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-f7e00cea4d0010ef9052:PUT",
+      "declaration": "PUT",
+      "literal_path_template": "/api/hdhr/devices/{pk}/",
+      "name": "api_canonical_put",
+      "observed_method": "PUT",
+      "proof": {
+        "after_sha256": "46ff6b9707f7add31d0b8d2f366dee65618da126b560b4eb45ac49caa5854fcc",
+        "before_sha256": "c5dba412afff4b73c92352e002e1e19478e01748bf93de277b8a9d1d579cee73",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "update",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 179,
+        "pattern": "api/hdhr/^devices/(?P<pk>[^/.]+)/$",
+        "view_name": "api:hdhr:hdhr-device-detail"
+      }
+    },
+    {
+      "actual_path": "/api/hdhr/devices/5.json",
+      "cases": [
+        {
+          "actual_body_bytes": 0,
+          "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "actual_content_type": "",
+          "actual_status": 204,
+          "label": "admin",
+          "method": "DELETE",
+          "path": "/api/hdhr/devices/5.json",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "DELETE",
+          "path": "/api/hdhr/devices/5.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "DELETE",
+          "path": "/api/hdhr/devices/5.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "DELETE",
+          "path": "/api/hdhr/devices/5.json",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-4c0b549152c518526c4e:DELETE",
+      "declaration": "DELETE",
+      "literal_path_template": "/api/hdhr/devices/{pk}.json",
+      "name": "api_json_suffix_delete",
+      "observed_method": "DELETE",
+      "proof": {
+        "after_sha256": "f35017d1417dc96225ccb3e9e093a0ba1ec17754512c2a6fcb68450f24d119f1",
+        "before_sha256": "46ff6b9707f7add31d0b8d2f366dee65618da126b560b4eb45ac49caa5854fcc",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "destroy",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 180,
+        "pattern": "api/hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+        "view_name": "api:hdhr:hdhr-device-detail"
+      }
+    },
+    {
+      "actual_path": "/api/hdhr/devices/6.json",
+      "cases": [
+        {
+          "actual_body_bytes": 85,
+          "actual_body_sha256": "7290fe46d84a1296866fa884c54a7bf3f54e1d3fef81b9e846d65228b3ae01e8",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "admin",
+          "method": "PATCH",
+          "path": "/api/hdhr/devices/6.json",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "PATCH",
+          "path": "/api/hdhr/devices/6.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "PATCH",
+          "path": "/api/hdhr/devices/6.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "PATCH",
+          "path": "/api/hdhr/devices/6.json",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-4c0b549152c518526c4e:PATCH",
+      "declaration": "PATCH",
+      "literal_path_template": "/api/hdhr/devices/{pk}.json",
+      "name": "api_json_suffix_patch",
+      "observed_method": "PATCH",
+      "proof": {
+        "after_sha256": "77c818391e80c451e4d7dd9631313a43c4c3bfc8c35a87166ed41da20de1a749",
+        "before_sha256": "f35017d1417dc96225ccb3e9e093a0ba1ec17754512c2a6fcb68450f24d119f1",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "partial_update",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 180,
+        "pattern": "api/hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+        "view_name": "api:hdhr:hdhr-device-detail"
+      }
+    },
+    {
+      "actual_path": "/api/hdhr/devices.json",
+      "cases": [
+        {
+          "actual_body_bytes": 86,
+          "actual_body_sha256": "fdaa1a8a9e8fb7b12807d5792fc779b2ccbddc1c37b6fc460123785451008278",
+          "actual_content_type": "application/json",
+          "actual_status": 201,
+          "label": "admin",
+          "method": "POST",
+          "path": "/api/hdhr/devices.json",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "POST",
+          "path": "/api/hdhr/devices.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "POST",
+          "path": "/api/hdhr/devices.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "POST",
+          "path": "/api/hdhr/devices.json",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-189d9a32320fbe47702c:POST",
+      "declaration": "POST",
+      "literal_path_template": "/api/hdhr/devices.json",
+      "name": "api_json_suffix_post",
+      "observed_method": "POST",
+      "proof": {
+        "after_sha256": "7948aef173343fabec88f639d33f9adcda174f6edded93e9afdbc06a99cbcee5",
+        "before_sha256": "77c818391e80c451e4d7dd9631313a43c4c3bfc8c35a87166ed41da20de1a749",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "create",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 178,
+        "pattern": "api/hdhr/^devices\\.(?P<format>[a-z0-9]+)/?$",
+        "view_name": "api:hdhr:hdhr-device-list"
+      }
+    },
+    {
+      "actual_path": "/api/hdhr/devices/7.json",
+      "cases": [
+        {
+          "actual_body_bytes": 88,
+          "actual_body_sha256": "4cdfc052fc32cd489b8ca3f2335ba5fb561552626d2fea26d4b96585b679fd1a",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "admin",
+          "method": "PUT",
+          "path": "/api/hdhr/devices/7.json",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "PUT",
+          "path": "/api/hdhr/devices/7.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "PUT",
+          "path": "/api/hdhr/devices/7.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "PUT",
+          "path": "/api/hdhr/devices/7.json",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-4c0b549152c518526c4e:PUT",
+      "declaration": "PUT",
+      "literal_path_template": "/api/hdhr/devices/{pk}.json",
+      "name": "api_json_suffix_put",
+      "observed_method": "PUT",
+      "proof": {
+        "after_sha256": "4be7efc0957228a1fb4daedd4e3e5c801d075196cabddf5b4a7a8aa415c8218b",
+        "before_sha256": "7948aef173343fabec88f639d33f9adcda174f6edded93e9afdbc06a99cbcee5",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "update",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 180,
+        "pattern": "api/hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+        "view_name": "api:hdhr:hdhr-device-detail"
+      }
+    },
+    {
+      "actual_path": "/hdhr/output_profile/3/lineup_status.json",
+      "cases": [
+        {
+          "actual_body_bytes": 84,
+          "actual_body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "allowed_network",
+          "method": "GET",
+          "path": "/hdhr/output_profile/3/lineup_status.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 84,
+          "actual_body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "allowed_network_standard",
+          "method": "GET",
+          "path": "/hdhr/output_profile/3/lineup_status.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 22,
+          "actual_body_sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "denied_network",
+          "method": "GET",
+          "path": "/hdhr/output_profile/3/lineup_status.json",
+          "role": "anonymous"
+        }
+      ],
+      "contract_id": "route-0a17f9d2246f62ed48d7:METHOD_UNRESOLVED",
+      "declaration": null,
+      "literal_path_template": "/hdhr/output_profile/{output}/lineup_status.json",
+      "name": "output_lineup_status",
+      "observed_method": "GET",
+      "proof": {
+        "after_sha256": "4be7efc0957228a1fb4daedd4e3e5c801d075196cabddf5b4a7a8aa415c8218b",
+        "before_sha256": "4be7efc0957228a1fb4daedd4e3e5c801d075196cabddf5b4a7a8aa415c8218b",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": null,
+        "handler": "apps.hdhr.api_views.LineupStatusAPIView",
+        "ordinal": 370,
+        "pattern": "hdhr/output_profile/<int:output_profile_id>/lineup_status.json",
+        "view_name": "hdhr:lineup_status_with_output"
+      }
+    },
+    {
+      "actual_path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/discover.json",
+      "cases": [
+        {
+          "actual_body_bytes": 397,
+          "actual_body_sha256": "74419e6afc2e73463c50314d191831e08c88a421ecd6d554b3457c5eab2c8d31",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "allowed_network",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/discover.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 397,
+          "actual_body_sha256": "74419e6afc2e73463c50314d191831e08c88a421ecd6d554b3457c5eab2c8d31",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "allowed_network_standard",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/discover.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 22,
+          "actual_body_sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "denied_network",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/discover.json",
+          "role": "anonymous"
+        }
+      ],
+      "contract_id": "route-df81d30aae6627c5eaeb:METHOD_UNRESOLVED",
+      "declaration": null,
+      "literal_path_template": "/hdhr/{profile}/output_profile/{output}/discover.json",
+      "name": "profile_output_discovery",
+      "observed_method": "GET",
+      "proof": {
+        "after_sha256": "4be7efc0957228a1fb4daedd4e3e5c801d075196cabddf5b4a7a8aa415c8218b",
+        "before_sha256": "4be7efc0957228a1fb4daedd4e3e5c801d075196cabddf5b4a7a8aa415c8218b",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": null,
+        "handler": "apps.hdhr.api_views.DiscoverAPIView",
+        "ordinal": 365,
+        "pattern": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/discover.json",
+        "view_name": "hdhr:discover_with_profile_and_output"
+      }
+    },
+    {
+      "actual_path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/lineup_status.json",
+      "cases": [
+        {
+          "actual_body_bytes": 84,
+          "actual_body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "allowed_network",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/lineup_status.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 84,
+          "actual_body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "allowed_network_standard",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/lineup_status.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 22,
+          "actual_body_sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "denied_network",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/lineup_status.json",
+          "role": "anonymous"
+        }
+      ],
+      "contract_id": "route-297391598b8fe8aadca2:METHOD_UNRESOLVED",
+      "declaration": null,
+      "literal_path_template": "/hdhr/{profile}/output_profile/{output}/lineup_status.json",
+      "name": "profile_output_lineup_status",
+      "observed_method": "GET",
+      "proof": {
+        "after_sha256": "4be7efc0957228a1fb4daedd4e3e5c801d075196cabddf5b4a7a8aa415c8218b",
+        "before_sha256": "4be7efc0957228a1fb4daedd4e3e5c801d075196cabddf5b4a7a8aa415c8218b",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": null,
+        "handler": "apps.hdhr.api_views.LineupStatusAPIView",
+        "ordinal": 367,
+        "pattern": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/lineup_status.json",
+        "view_name": "hdhr:lineup_status_with_profile_and_output"
+      }
+    },
+    {
+      "actual_path": "/hdhr/devices/8.json",
+      "cases": [
+        {
+          "actual_body_bytes": 0,
+          "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "actual_content_type": "",
+          "actual_status": 204,
+          "label": "admin",
+          "method": "DELETE",
+          "path": "/hdhr/devices/8.json",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "DELETE",
+          "path": "/hdhr/devices/8.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "DELETE",
+          "path": "/hdhr/devices/8.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "DELETE",
+          "path": "/hdhr/devices/8.json",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-3d8f07733be09ee8a755:DELETE",
+      "declaration": "DELETE",
+      "literal_path_template": "/hdhr/devices/{pk}.json",
+      "name": "public_json_suffix_delete",
+      "observed_method": "DELETE",
+      "proof": {
+        "after_sha256": "86854bdbe4c72fc42f1af51f20da6598fa8d8bf5ca45adce5934e9af37ead7e7",
+        "before_sha256": "4be7efc0957228a1fb4daedd4e3e5c801d075196cabddf5b4a7a8aa415c8218b",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "destroy",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 381,
+        "pattern": "hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+        "view_name": "hdhr:hdhr-device-detail"
+      }
+    },
+    {
+      "actual_path": "/hdhr/devices/9.json",
+      "cases": [
+        {
+          "actual_body_bytes": 86,
+          "actual_body_sha256": "778479a56c9feac720b93dd890d5f6640d8f63cae8884f69540d67982411dc89",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "admin",
+          "method": "PATCH",
+          "path": "/hdhr/devices/9.json",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "PATCH",
+          "path": "/hdhr/devices/9.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "PATCH",
+          "path": "/hdhr/devices/9.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "PATCH",
+          "path": "/hdhr/devices/9.json",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-3d8f07733be09ee8a755:PATCH",
+      "declaration": "PATCH",
+      "literal_path_template": "/hdhr/devices/{pk}.json",
+      "name": "public_json_suffix_patch",
+      "observed_method": "PATCH",
+      "proof": {
+        "after_sha256": "d6c68d91b4d9073f085641f06c9fd9a33cfd1dbccb3c5f62090b1a8b1d10b55a",
+        "before_sha256": "86854bdbe4c72fc42f1af51f20da6598fa8d8bf5ca45adce5934e9af37ead7e7",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "partial_update",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 381,
+        "pattern": "hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+        "view_name": "hdhr:hdhr-device-detail"
+      }
+    },
+    {
+      "actual_path": "/hdhr/devices.json",
+      "cases": [
+        {
+          "actual_body_bytes": 87,
+          "actual_body_sha256": "fd7aa4eaf30980ec9a87916eda97c34af6882f9667133aa31931495ef7cd84aa",
+          "actual_content_type": "application/json",
+          "actual_status": 201,
+          "label": "admin",
+          "method": "POST",
+          "path": "/hdhr/devices.json",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "POST",
+          "path": "/hdhr/devices.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "POST",
+          "path": "/hdhr/devices.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "POST",
+          "path": "/hdhr/devices.json",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-529265bdb047246c9c78:POST",
+      "declaration": "POST",
+      "literal_path_template": "/hdhr/devices.json",
+      "name": "public_json_suffix_post",
+      "observed_method": "POST",
+      "proof": {
+        "after_sha256": "6ba810feb9fa6f938673c744820634777fb7fb6ccbe9d59d9fee12e9cddfa286",
+        "before_sha256": "d6c68d91b4d9073f085641f06c9fd9a33cfd1dbccb3c5f62090b1a8b1d10b55a",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "create",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 379,
+        "pattern": "hdhr/^devices\\.(?P<format>[a-z0-9]+)/?$",
+        "view_name": "hdhr:hdhr-device-list"
+      }
+    },
+    {
+      "actual_path": "/hdhr/devices/10.json",
+      "cases": [
+        {
+          "actual_body_bytes": 90,
+          "actual_body_sha256": "6b15f00889295b26d5ceaf0a5454dea1377cc6adc72244a6f79d2c0a8313da91",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "label": "admin",
+          "method": "PUT",
+          "path": "/hdhr/devices/10.json",
+          "role": "admin"
+        },
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "label": "anonymous",
+          "method": "PUT",
+          "path": "/hdhr/devices/10.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "standard",
+          "method": "PUT",
+          "path": "/hdhr/devices/10.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "label": "viewer",
+          "method": "PUT",
+          "path": "/hdhr/devices/10.json",
+          "role": "viewer"
+        }
+      ],
+      "contract_id": "route-3d8f07733be09ee8a755:PUT",
+      "declaration": "PUT",
+      "literal_path_template": "/hdhr/devices/{pk}.json",
+      "name": "public_json_suffix_put",
+      "observed_method": "PUT",
+      "proof": {
+        "after_sha256": "7defd75a69cf95fc48d4f599f6681e55e0d9c517c2cf70154e280583c57ba705",
+        "before_sha256": "6ba810feb9fa6f938673c744820634777fb7fb6ccbe9d59d9fee12e9cddfa286",
+        "role_denials_preserved_state": true,
+        "selected_sql_state_matches": true
+      },
+      "resolver": {
+        "action": "update",
+        "handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+        "ordinal": 381,
+        "pattern": "hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+        "view_name": "hdhr:hdhr-device-detail"
+      }
+    }
+  ],
+  "scope": "retained_Original_HDHomeRun_literal_device_and_discovery_HTTP",
+  "scope_base": "444bf248516606bda92230653c6ddc98a855cbb9",
+  "selected_cases": 57,
+  "selected_operations": 15,
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}

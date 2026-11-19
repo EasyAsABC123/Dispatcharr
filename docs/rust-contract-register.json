@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "a2c9dc52a8fe57c7476af060ab6f0311b4cbda8ae81dd0d2d806ff0b22e4a2b6",
+    "scripts/rust-contracts/executable-source-inputs.json": "7b99b6b8efc163053a0151affdf2015ebcd9248aa4d1d639efb73b5c3c0f3e1f",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -66,11 +66,12 @@
     "scripts/rust-contracts/retained-provider-admin/bindings.json": "e109934cd592947120aefc733ea6d3494554ba38baca45cd9740a4e2d0e067e1",
     "scripts/rust-contracts/retained-c98-hdhr/bindings.json": "fce9f713bc1d4176ca7b0329fbf2365483e694d93806aeff4f07b669f912698e",
     "scripts/rust-contracts/retained-core-profile-json/bindings.json": "1419d535cff3043830de20f24c953083ed86181f441b2c2d0f210657500b182c",
-    "scripts/rust-contracts/retained-c105-guide-startup/bindings.json": "432981ebc0f4dfe09ef60a382c4826056812c34906869fef20cd6b8b6c3711ab"
+    "scripts/rust-contracts/retained-c105-guide-startup/bindings.json": "432981ebc0f4dfe09ef60a382c4826056812c34906869fef20cd6b8b6c3711ab",
+    "scripts/rust-contracts/retained-hdhr-literal/bindings.json": "a0e02bb16edf8e189e8890c515e088e192412db7b42ea17f7d511ee574f46c0c"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 530,
+    "operations": 545,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -356,6 +357,11 @@
         "path": "scripts/rust-contracts/retained-c105-guide-startup/bindings.json",
         "sha256": "432981ebc0f4dfe09ef60a382c4826056812c34906869fef20cd6b8b6c3711ab",
         "kind": "retained_original_C105_guide_startup_tasks"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-hdhr-literal/bindings.json",
+        "sha256": "a0e02bb16edf8e189e8890c515e088e192412db7b42ea17f7d511ee574f46c0c",
+        "kind": "retained_original_HDHomeRun_literal_devices_and_discovery_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -83190,15 +83196,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-904bf410afa61f6f31f3:POST",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 177,
+            "resolver_name": "api:hdhr:hdhr-device-list",
+            "pattern_exact": "api/hdhr/^devices/$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "POST",
+            "source_action": "create",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "POST"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 86,
+                "actual_body_sha256": "bf15b64665ce2e1d52b2e11b0b5ae51618d2ca66a3c1240bb1ae84ee2b7a98ee",
+                "actual_content_type": "application/json",
+                "actual_status": 201,
+                "label": "admin",
+                "method": "POST",
+                "path": "/api/hdhr/devices/",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "POST",
+                "path": "/api/hdhr/devices/",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "POST",
+                "path": "/api/hdhr/devices/",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "POST",
+                "path": "/api/hdhr/devices/",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -83359,15 +83499,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-189d9a32320fbe47702c:POST",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 178,
+            "resolver_name": "api:hdhr:hdhr-device-list",
+            "pattern_exact": "api/hdhr/^devices\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "POST",
+            "source_action": "create",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "POST"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 86,
+                "actual_body_sha256": "fdaa1a8a9e8fb7b12807d5792fc779b2ccbddc1c37b6fc460123785451008278",
+                "actual_content_type": "application/json",
+                "actual_status": 201,
+                "label": "admin",
+                "method": "POST",
+                "path": "/api/hdhr/devices.json",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "POST",
+                "path": "/api/hdhr/devices.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "POST",
+                "path": "/api/hdhr/devices.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "POST",
+                "path": "/api/hdhr/devices.json",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -83397,15 +83671,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-f7e00cea4d0010ef9052:DELETE",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 179,
+            "resolver_name": "api:hdhr:hdhr-device-detail",
+            "pattern_exact": "api/hdhr/^devices/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "DELETE"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "actual_content_type": "",
+                "actual_status": 204,
+                "label": "admin",
+                "method": "DELETE",
+                "path": "/api/hdhr/devices/2/",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "DELETE",
+                "path": "/api/hdhr/devices/2/",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "DELETE",
+                "path": "/api/hdhr/devices/2/",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "DELETE",
+                "path": "/api/hdhr/devices/2/",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         },
         {
           "contract_id": "route-f7e00cea4d0010ef9052:GET",
@@ -83528,15 +83936,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-f7e00cea4d0010ef9052:PATCH",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 179,
+            "resolver_name": "api:hdhr:hdhr-device-detail",
+            "pattern_exact": "api/hdhr/^devices/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "PATCH"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 85,
+                "actual_body_sha256": "b067f3810d42bc3c07f1d2eb677daed20cb006efaf20e36e66a8aed9047f1a29",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "admin",
+                "method": "PATCH",
+                "path": "/api/hdhr/devices/3/",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "PATCH",
+                "path": "/api/hdhr/devices/3/",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "PATCH",
+                "path": "/api/hdhr/devices/3/",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "PATCH",
+                "path": "/api/hdhr/devices/3/",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         },
         {
           "contract_id": "route-f7e00cea4d0010ef9052:PUT",
@@ -83545,15 +84087,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-f7e00cea4d0010ef9052:PUT",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 179,
+            "resolver_name": "api:hdhr:hdhr-device-detail",
+            "pattern_exact": "api/hdhr/^devices/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "PUT",
+            "source_action": "update",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "PUT"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 88,
+                "actual_body_sha256": "14f05fb7563dcb4ef8190ec055574ceca116d7568c71ee836bea179dcf8b9880",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "admin",
+                "method": "PUT",
+                "path": "/api/hdhr/devices/4/",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "PUT",
+                "path": "/api/hdhr/devices/4/",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "PUT",
+                "path": "/api/hdhr/devices/4/",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "PUT",
+                "path": "/api/hdhr/devices/4/",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -83583,15 +84259,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-4c0b549152c518526c4e:DELETE",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 180,
+            "resolver_name": "api:hdhr:hdhr-device-detail",
+            "pattern_exact": "api/hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "DELETE"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "actual_content_type": "",
+                "actual_status": 204,
+                "label": "admin",
+                "method": "DELETE",
+                "path": "/api/hdhr/devices/5.json",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "DELETE",
+                "path": "/api/hdhr/devices/5.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "DELETE",
+                "path": "/api/hdhr/devices/5.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "DELETE",
+                "path": "/api/hdhr/devices/5.json",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         },
         {
           "contract_id": "route-4c0b549152c518526c4e:GET",
@@ -83698,15 +84508,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-4c0b549152c518526c4e:PATCH",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 180,
+            "resolver_name": "api:hdhr:hdhr-device-detail",
+            "pattern_exact": "api/hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "PATCH"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 85,
+                "actual_body_sha256": "7290fe46d84a1296866fa884c54a7bf3f54e1d3fef81b9e846d65228b3ae01e8",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "admin",
+                "method": "PATCH",
+                "path": "/api/hdhr/devices/6.json",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "PATCH",
+                "path": "/api/hdhr/devices/6.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "PATCH",
+                "path": "/api/hdhr/devices/6.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "PATCH",
+                "path": "/api/hdhr/devices/6.json",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         },
         {
           "contract_id": "route-4c0b549152c518526c4e:PUT",
@@ -83715,15 +84659,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-4c0b549152c518526c4e:PUT",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 180,
+            "resolver_name": "api:hdhr:hdhr-device-detail",
+            "pattern_exact": "api/hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "PUT",
+            "source_action": "update",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "PUT"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 88,
+                "actual_body_sha256": "4cdfc052fc32cd489b8ca3f2335ba5fb561552626d2fea26d4b96585b679fd1a",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "admin",
+                "method": "PUT",
+                "path": "/api/hdhr/devices/7.json",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "PUT",
+                "path": "/api/hdhr/devices/7.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "PUT",
+                "path": "/api/hdhr/devices/7.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "PUT",
+                "path": "/api/hdhr/devices/7.json",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -244901,15 +245979,119 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact owned device projection, tuner field and discovery URLs.",
+            "Anonymous and standard loopback allow, anonymous network denial, and restored scoped SQL."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-df81d30aae6627c5eaeb:METHOD_UNRESOLVED",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 365,
+            "resolver_name": "hdhr:discover_with_profile_and_output",
+            "pattern_exact": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/discover.json",
+            "source_handler": "apps.hdhr.api_views.DiscoverAPIView",
+            "owning_milestone": "M7",
+            "method": null,
+            "source_action": null,
+            "observed_roles": [
+              "anonymous",
+              "standard"
+            ],
+            "observed_methods": [
+              "GET"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact owned device projection, tuner field and discovery URLs.",
+              "Anonymous and standard loopback allow, anonymous network denial, and restored scoped SQL."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 397,
+                "actual_body_sha256": "74419e6afc2e73463c50314d191831e08c88a421ecd6d554b3457c5eab2c8d31",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "allowed_network",
+                "method": "GET",
+                "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/discover.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 397,
+                "actual_body_sha256": "74419e6afc2e73463c50314d191831e08c88a421ecd6d554b3457c5eab2c8d31",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "allowed_network_standard",
+                "method": "GET",
+                "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/discover.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 22,
+                "actual_body_sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "denied_network",
+                "method": "GET",
+                "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/discover.json",
+                "role": "anonymous"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -245102,15 +246284,119 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact owned lineup status response.",
+            "Anonymous and standard loopback allow, anonymous network denial, and restored scoped SQL."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-297391598b8fe8aadca2:METHOD_UNRESOLVED",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 367,
+            "resolver_name": "hdhr:lineup_status_with_profile_and_output",
+            "pattern_exact": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/lineup_status.json",
+            "source_handler": "apps.hdhr.api_views.LineupStatusAPIView",
+            "owning_milestone": "M7",
+            "method": null,
+            "source_action": null,
+            "observed_roles": [
+              "anonymous",
+              "standard"
+            ],
+            "observed_methods": [
+              "GET"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact owned lineup status response.",
+              "Anonymous and standard loopback allow, anonymous network denial, and restored scoped SQL."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 84,
+                "actual_body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "allowed_network",
+                "method": "GET",
+                "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/lineup_status.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 84,
+                "actual_body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "allowed_network_standard",
+                "method": "GET",
+                "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/lineup_status.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 22,
+                "actual_body_sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "denied_network",
+                "method": "GET",
+                "path": "/hdhr/owned-m0-hdhr-residual/output_profile/3/lineup_status.json",
+                "role": "anonymous"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -245509,15 +246795,119 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "standard"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact owned lineup status response.",
+            "Anonymous and standard loopback allow, anonymous network denial, and restored scoped SQL."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-0a17f9d2246f62ed48d7:METHOD_UNRESOLVED",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 370,
+            "resolver_name": "hdhr:lineup_status_with_output",
+            "pattern_exact": "hdhr/output_profile/<int:output_profile_id>/lineup_status.json",
+            "source_handler": "apps.hdhr.api_views.LineupStatusAPIView",
+            "owning_milestone": "M7",
+            "method": null,
+            "source_action": null,
+            "observed_roles": [
+              "anonymous",
+              "standard"
+            ],
+            "observed_methods": [
+              "GET"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact owned lineup status response.",
+              "Anonymous and standard loopback allow, anonymous network denial, and restored scoped SQL."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 84,
+                "actual_body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "allowed_network",
+                "method": "GET",
+                "path": "/hdhr/output_profile/3/lineup_status.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 84,
+                "actual_body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "allowed_network_standard",
+                "method": "GET",
+                "path": "/hdhr/output_profile/3/lineup_status.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 22,
+                "actual_body_sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "denied_network",
+                "method": "GET",
+                "path": "/hdhr/output_profile/3/lineup_status.json",
+                "role": "anonymous"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -247771,15 +249161,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-529265bdb047246c9c78:POST",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 379,
+            "resolver_name": "hdhr:hdhr-device-list",
+            "pattern_exact": "hdhr/^devices\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "POST",
+            "source_action": "create",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "POST"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 87,
+                "actual_body_sha256": "fd7aa4eaf30980ec9a87916eda97c34af6882f9667133aa31931495ef7cd84aa",
+                "actual_content_type": "application/json",
+                "actual_status": 201,
+                "label": "admin",
+                "method": "POST",
+                "path": "/hdhr/devices.json",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "POST",
+                "path": "/hdhr/devices.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "POST",
+                "path": "/hdhr/devices.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "POST",
+                "path": "/hdhr/devices.json",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
@@ -248489,15 +250013,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-3d8f07733be09ee8a755:DELETE",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 381,
+            "resolver_name": "hdhr:hdhr-device-detail",
+            "pattern_exact": "hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "DELETE"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "actual_content_type": "",
+                "actual_status": 204,
+                "label": "admin",
+                "method": "DELETE",
+                "path": "/hdhr/devices/8.json",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "DELETE",
+                "path": "/hdhr/devices/8.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "DELETE",
+                "path": "/hdhr/devices/8.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "DELETE",
+                "path": "/hdhr/devices/8.json",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         },
         {
           "contract_id": "route-3d8f07733be09ee8a755:GET",
@@ -248637,15 +250295,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-3d8f07733be09ee8a755:PATCH",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 381,
+            "resolver_name": "hdhr:hdhr-device-detail",
+            "pattern_exact": "hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "PATCH"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 86,
+                "actual_body_sha256": "778479a56c9feac720b93dd890d5f6640d8f63cae8884f69540d67982411dc89",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "admin",
+                "method": "PATCH",
+                "path": "/hdhr/devices/9.json",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "PATCH",
+                "path": "/hdhr/devices/9.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "PATCH",
+                "path": "/hdhr/devices/9.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "PATCH",
+                "path": "/hdhr/devices/9.json",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         },
         {
           "contract_id": "route-3d8f07733be09ee8a755:PUT",
@@ -248654,15 +250446,149 @@
           "owning_milestone": "M7",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-hdhr-literal/receipt.json",
+                "sha256": "4ed813daa6dce65d795888184883ec5bf6448577f8f2a0c9f048e7334e950115"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+            "Unauthenticated and lower-role requests preserved all scoped rows."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-3d8f07733be09ee8a755:PUT",
+            "fixture_id": "retained-Original-HDHomeRun-literal-devices-and-discovery",
+            "resolver_ordinal": 381,
+            "resolver_name": "hdhr:hdhr-device-detail",
+            "pattern_exact": "hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet",
+            "owning_milestone": "M7",
+            "method": "PUT",
+            "source_action": "update",
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "observed_methods": [
+              "PUT"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected Administrator response and owned HDHomeRun device SQL transition.",
+              "Unauthenticated and lower-role requests preserved all scoped rows."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 90,
+                "actual_body_sha256": "6b15f00889295b26d5ceaf0a5454dea1377cc6adc72244a6f79d2c0a8313da91",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "label": "admin",
+                "method": "PUT",
+                "path": "/hdhr/devices/10.json",
+                "role": "admin"
+              },
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "label": "anonymous",
+                "method": "PUT",
+                "path": "/hdhr/devices/10.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "standard",
+                "method": "PUT",
+                "path": "/hdhr/devices/10.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "label": "viewer",
+                "method": "PUT",
+                "path": "/hdhr/devices/10.json",
+                "role": "viewer"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            }
+          }
         }
       ]
     },
