@@ -97,3 +97,23 @@ controller exited 1 and exact Compose teardown passed. Separate owned
 reproductions compare the elapsed-time boundary with and without active
 viewers.
 [Second two-hour attempt receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/long-attempt2.json)
+
+
+## Five-minute authentication isolation
+
+Both repaired Candidate94 diagnostic runs completed and cleaned up their
+owned Compose resources. The ordinary Native password request returned
+HTTP 500 with `Authentication cache unavailable` after 300 seconds in two
+conditions. The stationary condition had zero viewers and zero upstream
+connections. In the viewing condition, all ten viewers continued through
+one upstream connection and one provider slot. Neither diagnostic submitted
+an XMLTV request.
+
+The auth throttle history key was absent before and after both requests.
+Redis recorded no increase in error replies across either request. These
+observations locate the failure in the shared auth throttle path. The exact
+Redis client error class still requires direct verification. The successor
+adds a single retry when the bounded history read observes a dropped Redis
+connection. The compare-and-set write still has one physical attempt.
+
+[Paired diagnostic evidence](../scripts/rust-integration/m9-playback-refresh-diagnostic/password-cache-diagnostic.json)
