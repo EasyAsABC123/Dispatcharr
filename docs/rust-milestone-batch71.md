@@ -7,7 +7,7 @@ credit. React, the original license and attribution remain part of the build.
 | --- | --- |
 | M4 · Timeshift | An established archive session becomes transferable after its worker releases the provider lease. One Redis operation checks the descriptor and rotates the fenced pool, client and metadata tokens. A late cleanup from the old owner leaves the new owner intact. Twelve real Redis pool tests and two cancellation tests passed. The explicit-session two-worker run matched the Source media and provider reservations. |
 | M5 and M6 · XC accounts | A group-only PATCH can change membership on inactive XC accounts and accounts with VOD enabled. The existing account-scoped write changes the selected membership. Six Rust account-validator tests and eight pinned Original controls passed. The paired Main PATCH and GET comparison passed after retaining the verified Original observations and rerunning only Native. |
-| M6 · XC refresh | A settled malformed account-info reply counts as one profile failure and the next profile still runs. The pinned Source controls verified partial failure, recovery and fallback user-agent use. Ten focused Rust account tests passed. The real Main task and its Profiles child still need paired verification. |
+| M6 · XC refresh | A settled malformed account-info reply counts as one profile failure and the next profile still runs. The pinned Source controls verified partial failure, recovery and fallback user-agent use. Ten focused Rust account tests passed. The packaged paired run matched provider request order, configured fallback user agent and both worker child outcomes. |
 | M7 · Guide | Custom dummy programmes without a time or date pattern use the Source timezone for the local date while retaining the UTC programme interval. Five pinned Python cases and the Rust controls agree. Localized time and date pattern schedules remain outside this check. |
 | M8 · Operations | Repeated explicit `--user` flags use the final value. The targeted CLI parser tests passed. The Source CLI cases passed on a copied database. Packaged Candidate70 matched all 12 signed-filename assertions, including downloads using three tokens issued by Rust. |
 | M8 and M9 · SQLite | The retained SQLite database stops at Channels0037. All six revisions of Channels0038 examined have PostgreSQL-specific SQL. Isolated SQLite checks also found two incompatible VOD0003 statements. The complete SQLite Source fixture and datastore acceptance remain open. [Datastore evidence](rust-sqlite-compatibility.md) |
@@ -57,6 +57,17 @@ Native-only continuation reused the verified Original result and passed the
 same HTTP and PostgreSQL checks. Independent cleanup passed for both
 projects.
 [Scoped comparison](../scripts/rust-integration/milestone-batch71/xc-group-patch.json)
+
+## Packaged XC refresh recovery
+
+The paired run used two real Main refresh requests on each backend. Both
+returned 202. The first Profiles child updated one profile and counted one
+malformed completed response as a failure. The second updated both profiles
+and counted zero failures. The parent and child terminals succeeded.
+Provider requests used the configured fallback agent in the expected
+order, and the persisted profile observations matched the fixture.
+Independent cleanup passed for both projects.
+[Paired worker evidence](../scripts/rust-integration/milestone-batch71/xc-profile-refresh.json)
 
 ## Candidate71 packaged archive and operator checks
 

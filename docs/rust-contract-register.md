@@ -164,3 +164,16 @@ self-route matches. Positive writes and current candidate parity remain open.
 
 The register now holds 211 partial executable Source assignments, with 587
 still unassigned. All 775 unrelated operation dictionaries remain exact.
+
+## Retained provider, channel producer and VOD format assignments
+
+The [HTTP binding input](../scripts/rust-contracts/retained-provider-channel-vod/bindings.json)
+adds 132 Original observations across 14 declared operations. This includes
+eight M3U list and retrieve GETs, three channel producer POSTs, and three VOD
+collection GETs with the JSON format suffix. The fixture definitions preserve
+the evidence for each scope. Channel observations cover the production HTTP
+request and producer frames. Task execution and current Native parity remain
+open.
+
+The register now holds 225 partial executable Source assignments, with 573
+still unassigned. All 784 unrelated operation dictionaries remain exact.

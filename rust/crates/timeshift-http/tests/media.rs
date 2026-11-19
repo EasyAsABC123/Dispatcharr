@@ -10,7 +10,7 @@ use axum::{
     Router,
 };
 use dispatcharr_contracts::{BoxFuture, PlaybackRequest};
-use dispatcharr_coordination::{Coordinator, LeaseConfig};
+use dispatcharr_coordination::{AcquireRequest, Coordinator, LeaseConfig};
 use dispatcharr_store::{ChannelIdentity, StoreError, User};
 use dispatcharr_timeshift_core::ProviderCredentials;
 use dispatcharr_timeshift_http::*;
@@ -103,13 +103,33 @@ impl ArchiveResolver for Resolver {
     }
     fn source(&self, binding: SessionBinding) -> BoxFuture<'_, Result<CatchupSource, StoreError>> {
         Box::pin(async move {
-            let paths = match self.mode.load(Ordering::SeqCst) {
+            let mode = self.mode.load(Ordering::SeqCst);
+            let paths = match mode {
                 1 => vec!["403"; 7],
                 2 => vec!["404"; 7],
                 3 => vec!["500"; 7],
                 4 => vec!["416"; 7],
-                5 => vec!["held"],
+                5 | 6 => vec!["held"],
                 _ => vec!["html", "media"],
+            };
+            let candidate = |profile_id| CatchupCandidate {
+                stream_id: 321,
+                account_id: self.profile,
+                profile_id,
+                max_streams: 1,
+                provider_stream_id: "fixture".into(),
+                provider_timestamp: "2026-11-09:11-00".into(),
+                provider_timezone: None,
+                credentials: ProviderCredentials {
+                    server_url: self.origin.clone(),
+                    username: "fixture".into(),
+                    password: "fixture".into(),
+                },
+                urls: paths
+                    .iter()
+                    .map(|path| format!("{}/{path}", self.origin))
+                    .collect(),
+                user_agent: "fixture-agent".into(),
             };
             Ok(CatchupSource {
                 user: binding.user,
@@ -121,25 +141,11 @@ impl ArchiveResolver for Resolver {
                     terminate_on_limit_exceeded: false,
                     ..Default::default()
                 },
-                candidates: vec![CatchupCandidate {
-                    stream_id: 321,
-                    account_id: self.profile,
-                    profile_id: self.profile,
-                    max_streams: 1,
-                    provider_stream_id: "fixture".into(),
-                    provider_timestamp: "2026-11-09:11-00".into(),
-                    provider_timezone: None,
-                    credentials: ProviderCredentials {
-                        server_url: self.origin.clone(),
-                        username: "fixture".into(),
-                        password: "fixture".into(),
-                    },
-                    urls: paths
-                        .into_iter()
-                        .map(|path| format!("{}/{path}", self.origin))
-                        .collect(),
-                    user_agent: "fixture-agent".into(),
-                }],
+                candidates: if mode == 6 {
+                    vec![candidate(self.profile), candidate(self.profile + 1)]
+                } else {
+                    vec![candidate(self.profile)]
+                },
             })
         })
     }
@@ -249,6 +255,7 @@ async fn origin(
 }
 struct Fixture {
     engine: CatchupMedia,
+    coordinator: Coordinator,
     sessions: CatchupSessions,
     resolver: Arc<Resolver>,
     base: String,
@@ -288,6 +295,10 @@ impl Fixture {
     }
 }
 async fn fixture() -> Fixture {
+    fixture_with_idle(Duration::from_millis(200)).await
+}
+
+async fn fixture_with_idle(startup_idle: Duration) -> Fixture {
     let url = std::env::var("REDIS_TEST_URL").expect("disposable Redis required");
     let hits = Arc::new(AtomicUsize::new(0));
     let router = Router::new()
@@ -321,7 +332,7 @@ async fn fixture() -> Fixture {
     let config = CatchupMediaConfig {
         pool: ArchivePoolConfig {
             max_sessions: 8,
-            startup_idle: Duration::from_millis(200),
+            startup_idle,
             disconnect_grace: Duration::from_millis(200),
             shutdown_timeout: Duration::from_secs(2),
             ..Default::default()
@@ -331,7 +342,7 @@ async fn fixture() -> Fixture {
     let engine = CatchupMedia::with_resolver(
         resolver.clone(),
         sessions.clone(),
-        coordinator,
+        coordinator.clone(),
         &url,
         config,
     )
@@ -355,6 +366,7 @@ async fn fixture() -> Fixture {
         .unwrap();
     Fixture {
         engine,
+        coordinator,
         sessions,
         resolver,
         base,
@@ -363,6 +375,123 @@ async fn fixture() -> Fixture {
         hits,
     }
 }
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback HTTP"]
+async fn idle_archive_keeps_its_stored_fallback_after_primary_capacity_recovers() {
+    let mut fixture = fixture_with_idle(Duration::from_secs(5)).await;
+    fixture.resolver.mode.store(6, Ordering::SeqCst);
+    let primary = fixture.resolver.profile;
+    let alternate = primary + 1;
+    let primary_counter = format!("profile_connections:{primary}");
+    let alternate_counter = format!("profile_connections:{alternate}");
+    let blocking_primary = fixture
+        .coordinator
+        .acquire_timeshift(AcquireRequest {
+            channel_id: format!("held-primary-{}", uuid::Uuid::new_v4()),
+            provider_profile_id: Some(primary),
+            provider_max_streams: 1,
+            credential_pool: None,
+        })
+        .await
+        .unwrap();
+    let session = fixture.mint().await;
+    let route = session.json()["playback_url"].as_str().unwrap().to_owned();
+    let url = format!("{}{}", fixture.base, route);
+    let pool = format!("timeshift:pool:{}", session.session_id);
+    let client = reqwest::Client::new();
+
+    let mut first = client.get(&url).send().await.unwrap();
+    assert_eq!(first.status(), 200);
+    let body = first.chunk().await.unwrap().unwrap();
+    assert_eq!(body[0], 0x47);
+    assert_eq!(
+        fixture
+            .redis
+            .hget::<_, _, i64>(&pool, "profile_id")
+            .await
+            .unwrap(),
+        alternate
+    );
+    assert_eq!(
+        fixture.redis.get::<_, i64>(&primary_counter).await.unwrap(),
+        1
+    );
+    assert_eq!(
+        fixture
+            .redis
+            .get::<_, i64>(&alternate_counter)
+            .await
+            .unwrap(),
+        1
+    );
+    let original_owner: String = fixture.redis.hget(&pool, "rust_owner_token").await.unwrap();
+    drop(first);
+
+    tokio::time::timeout(Duration::from_secs(3), async {
+        loop {
+            let ready: Option<String> = fixture.redis.hget(&pool, "rust_idle_ready").await.unwrap();
+            if ready.as_deref() == Some("1") {
+                break;
+            }
+            tokio::time::sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert_eq!(
+        fixture
+            .redis
+            .get::<_, i64>(&alternate_counter)
+            .await
+            .unwrap(),
+        0
+    );
+    assert!(blocking_primary.release().await.unwrap());
+
+    let mut second = client.get(&url).send().await.unwrap();
+    assert_eq!(second.status(), 200);
+    assert_eq!(second.chunk().await.unwrap().unwrap()[0], 0x47);
+    assert_eq!(
+        fixture
+            .redis
+            .hget::<_, _, i64>(&pool, "profile_id")
+            .await
+            .unwrap(),
+        alternate
+    );
+    assert_ne!(
+        fixture
+            .redis
+            .hget::<_, _, String>(&pool, "rust_owner_token")
+            .await
+            .unwrap(),
+        original_owner
+    );
+    assert_eq!(
+        fixture.redis.get::<_, i64>(&primary_counter).await.unwrap(),
+        0
+    );
+    assert_eq!(
+        fixture
+            .redis
+            .get::<_, i64>(&alternate_counter)
+            .await
+            .unwrap(),
+        1
+    );
+    drop(second);
+    fixture.cleanup().await;
+    assert_eq!(
+        fixture
+            .redis
+            .get::<_, i64>(&alternate_counter)
+            .await
+            .unwrap(),
+        0
+    );
+    let _: () = fixture.redis.del(alternate_counter).await.unwrap();
+}
+
 #[tokio::test]
 #[ignore = "requires disposable REDIS_TEST_URL and loopback HTTP"]
 async fn busy_tail_probe_preserves_active_quota_metadata_and_shutdown_cancels_held_probe_body() {

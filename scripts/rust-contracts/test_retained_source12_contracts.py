@@ -4,6 +4,7 @@ from pathlib import Path
 import retained_epg_reads_contracts
 import retained_core_read_contracts
 import retained_serializer_null_contracts
+import retained_provider_channel_vod_contracts
 import retained_source12_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -27,6 +28,7 @@ class RetainedSource12Controls(unittest.TestCase):
     p.write_bytes(raw)
  def test_previous173_and796_whole_rows_and_M3U_primary_preserved(self):
   register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,register['runtime_routes'])
   retained_serializer_null_contracts.restore_pre_serializer_null(ROOT,register['runtime_routes'])
   retained_core_read_contracts.restore_pre_core_reads(ROOT,register['runtime_routes'])
   retained_epg_reads_contracts.restore_pre_epg(ROOT,register['runtime_routes'])
@@ -44,7 +46,8 @@ class RetainedSource12Controls(unittest.TestCase):
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],211)
+  self.assertEqual(mapping['operations'],225)
+  retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,rows)
   retained_serializer_null_contracts.restore_pre_serializer_null(ROOT,rows)
   retained_core_read_contracts.restore_pre_core_reads(ROOT,rows)
   retained_epg_reads_contracts.restore_pre_epg(ROOT,rows)
@@ -52,6 +55,7 @@ class RetainedSource12Controls(unittest.TestCase):
   retained_range_source10_contracts.restore_pre_range(rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_provider_channel_vod_contracts.restore_pre_provider_channel_vod(ROOT,rows)
   retained_serializer_null_contracts.restore_pre_serializer_null(ROOT,rows)
   retained_core_read_contracts.restore_pre_core_reads(ROOT,rows)
   retained_epg_reads_contracts.restore_pre_epg(ROOT,rows)

@@ -115,6 +115,13 @@ struct Inner {
     cleanup_failed: AtomicBool,
     events: Mutex<Option<Producer>>,
 }
+pub(crate) struct StoredIdleRoute {
+    pub(crate) owner: String,
+    pub(crate) profile_id: i64,
+    pub(crate) account_id: i64,
+    pub(crate) stream_id: i64,
+}
+
 #[derive(Clone)]
 pub struct ArchivePool {
     inner: Arc<Inner>,
@@ -249,6 +256,49 @@ impl ArchivePool {
         ).await.map_err(|_|unavailable())?;
         Ok(state)
     }
+    /// A settled Native idle descriptor pins the previously selected route.
+    /// The caller must use an otherwise authorized candidate and the observed
+    /// generation in the normal fenced claim.
+    pub(crate) async fn stored_idle_route(
+        &self,
+        sid: &str,
+        user: i64,
+        media: &str,
+    ) -> Result<Option<StoredIdleRoute>, StoreError> {
+        let (stored, _): (Vec<String>, ()) = self
+            .inner
+            .transport
+            .command(
+                STORED_IDLE_ROUTE,
+                &[
+                    format!("timeshift:pool:{sid}"),
+                    self.inner.coordinator.timeshift_owner_key(sid),
+                ],
+                &[user.to_string().as_bytes(), media.as_bytes()],
+                (),
+            )
+            .await
+            .map_err(|_| unavailable())?;
+        let [owner, profile, account, stream] = stored.as_slice() else {
+            return Ok(None);
+        };
+        let parse_id = |value: &str| value.parse::<i64>().ok().filter(|id| *id > 0);
+        let (Some(profile_id), Some(account_id), Some(stream_id)) =
+            (parse_id(profile), parse_id(account), parse_id(stream))
+        else {
+            return Ok(None);
+        };
+        if !uuid::Uuid::parse_str(owner).is_ok_and(|token| token.to_string() == owner.as_str()) {
+            return Ok(None);
+        }
+        Ok(Some(StoredIdleRoute {
+            owner: owner.clone(),
+            profile_id,
+            account_id,
+            stream_id,
+        }))
+    }
+
     pub(crate) async fn matching_session(
         &self,
         user: i64,
@@ -524,7 +574,7 @@ impl ArchivePool {
         })
     }
     pub async fn open(&self, request: ArchivePoolRequest) -> Result<ArchiveTicket, StoreError> {
-        self.open_scoped(request, None).await
+        self.open_scoped(request, None, false).await
     }
 
     pub(crate) async fn open_idle_fingerprint(
@@ -532,13 +582,22 @@ impl ArchivePool {
         request: ArchivePoolRequest,
         expected_owner: &str,
     ) -> Result<ArchiveTicket, StoreError> {
-        self.open_scoped(request, Some(expected_owner)).await
+        self.open_scoped(request, Some(expected_owner), true).await
+    }
+
+    pub(crate) async fn open_stored_idle(
+        &self,
+        request: ArchivePoolRequest,
+        observed_owner: &str,
+    ) -> Result<ArchiveTicket, StoreError> {
+        self.open_scoped(request, Some(observed_owner), false).await
     }
 
     async fn open_scoped(
         &self,
         request: ArchivePoolRequest,
-        fingerprint_owner: Option<&str>,
+        observed_owner: Option<&str>,
+        verify_fingerprint: bool,
     ) -> Result<ArchiveTicket, StoreError> {
         if *self.inner.stopped.borrow() {
             return Err(unavailable());
@@ -595,12 +654,15 @@ impl ArchivePool {
             }
         };
         match reopen {
-            Some(_) if fingerprint_owner.is_some() => {
+            Some(_)
+                if verify_fingerprint
+                    || observed_owner.is_some_and(|owner| owner != entry.token.as_str()) =>
+            {
                 Err(StoreError::StatusBody(503, json!("Stream slot busy")))
             }
             Some(request) => self.reopen(entry, request).await,
             None => {
-                self.open_entry(entry, fingerprint_owner, fingerprint_owner.is_some())
+                self.open_entry(entry, observed_owner, verify_fingerprint)
                     .await
             }
         }
@@ -1394,6 +1456,19 @@ end
 local size=redis.call('HSTRLEN',KEYS[1],'rust_owner_token')
 if size==0 or size>128 then return nil end
 return redis.call('HGET',KEYS[1],'rust_owner_token')
+"#;
+
+const STORED_IDLE_ROUTE: &str = r#"
+if redis.call('TYPE',KEYS[1]).ok~='hash' or redis.call('EXISTS',KEYS[2])~=0 then return {} end
+local d=redis.call('HMGET',KEYS[1],'busy','rust_idle_ready','user_id','media_id')
+if d[1]~='0' or d[2]~='1' or d[3]~=ARGV[1] or d[4]~=ARGV[2] then return {} end
+local values={}
+for _,field in ipairs({'rust_owner_token','profile_id','account_id','dispatcharr_stream_id'}) do
+ local size=redis.call('HSTRLEN',KEYS[1],field)
+ if size==0 or size>128 then return {} end
+ table.insert(values,redis.call('HGET',KEYS[1],field))
+end
+return values
 "#;
 
 const CLAIM_IDLE: &str = r#"

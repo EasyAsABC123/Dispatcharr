@@ -22,7 +22,11 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
-The [latest Rust checkpoint](rust-milestone-batch72.md) covers archive
+The [latest Rust checkpoint](rust-milestone-batch73.md) covers the stored
+archive route and retained M3U, channel and VOD HTTP observations. The
+register has 225 partial Source assignments and 573 unassigned references.
+
+The [Candidate72 checkpoint](rust-milestone-batch72.md) covers archive
 fingerprint handoff, first-tick Beat readiness and new retained serializer
 contracts. M0 has 211 partial Source assignments and 587 unassigned HTTP
 references.

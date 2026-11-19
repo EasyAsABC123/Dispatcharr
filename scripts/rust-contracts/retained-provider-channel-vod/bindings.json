@@ -1,0 +1,2441 @@
+{
+  "binding_kind": "retained_original_provider_channel_vod_HTTP",
+  "operation_count": 14,
+  "unique_Source_cases": 132,
+  "fully_verified_operations": 0,
+  "new_Source_executions": 0,
+  "Native_coverage_increased": false,
+  "Original_author_credit": "Original Dispatcharr authors and contributors retain full application and algorithm credit and licensing.",
+  "fixtures": {
+    "Original-Image22-provider-reads": {
+      "source_reference": {
+        "path": "scripts/rust-integration/verified-integration-m5-auth-image22-1.json",
+        "sha256": "e7cb41ab0e72d66c705d254ebd416f3098dd2c4ed797305dcd012883fd0fc4e8"
+      },
+      "raw_capture": "artifacts/rust/m5-auth-full-integration-image22-2/integration.json",
+      "raw_sha256": "bc1b852bd233b03bff581d52349a9ee1d7e27e96664885f86e2be4b3c96c99ae",
+      "tool_source": "artifacts/rust/m5-auth-full-integration-image22-2/tool-source",
+      "tool_sha256": {
+        "scripts/rust-account-contracts/provider_read_probes.py": "4d0da14679943fe2b9f2b47e6c12dad7f3558aa2fe0e4554390e4dcc3f61a917",
+        "scripts/rust-account-contracts/probes.py": "fa235747e69860886ee534a1c4852bfce56f3340ff46304566d148d0cb4a29ad",
+        "scripts/rust-integration/run.py": "1d471fc77ba9a5c6f0b80be649316afdfb117b30cc9057251d39c70d88496d66",
+        "scripts/rust-integration/seed_accounts.py": "c1f4945a51084a2c83c747de77647fe6eeec9c6202bbf1eb1c13551973674e62",
+        "docker/compose.rust-playback.yml": "7155ec60ffec844c4e4df43fec70523d4a7d89404ae6dc4046086719fd2d80c9"
+      },
+      "roles": {
+        "admin": {
+          "user_level": 10,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "standard": {
+          "user_level": 1,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "viewer": {
+          "user_level": 0,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "inactive": {
+          "user_level": 10,
+          "is_active": false,
+          "credential": "fixture JWT"
+        },
+        "anonymous": {
+          "credential": "No Authorization header"
+        }
+      },
+      "setup": [
+        "Seed owned PostgreSQL provider accounts, profiles, filters and server groups through the pinned Original fixture.",
+        "Join ordered frozen label observations to concrete GET paths and recorded actor roles."
+      ],
+      "scope": "Actual Original TCP GET and canonical JSON digests. Provider and XC fixture parent IDs are the ordered first two captured admin account detail results."
+    },
+    "Original-channel-producer-TCP-98": {
+      "source_reference": {
+        "path": "scripts/rust-milestone-batches/m6/channel-http-source-v1/actual/source-report.json",
+        "sha256": "703ce237661a04f19409c24dd059810f13b764a58ad673408b3e381522389b55"
+      },
+      "roles": {
+        "admin": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization"
+            ],
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "admin_authorization_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "admin_spoof": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type",
+              "X-Forwarded-For",
+              "X-Real-IP"
+            ]
+          ]
+        },
+        "admin_x_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Content-Type",
+              "X-API-Key"
+            ]
+          ]
+        },
+        "anonymous": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Content-Type"
+            ]
+          ]
+        },
+        "bad_bearer": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "bad_bearer_with_valid_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type",
+              "X-API-Key"
+            ]
+          ]
+        },
+        "inactive": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "standard": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization"
+            ],
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        }
+      },
+      "setup": [
+        "Start the pinned Original production uWSGI/gevent web role with owned PostgreSQL/Redis.",
+        "Send actual POST requests with fixture credentials and observe HTTP and new producer family frames."
+      ],
+      "scope": "Actual Original TCP producer actions and queue publication occur; no task execution, backend result or Native proof."
+    },
+    "Original-VOD-wire-2-suffix": {
+      "source_reference": {
+        "path": "scripts/rust-vod-api-contracts/source-vod-http-wire-2.json",
+        "sha256": "82b35c4e6777aa26b6211f36639a516a3dbb42d776c3d1ba6501bb743a3bde33"
+      },
+      "roles": {
+        "standard": {
+          "role": "recorded Source standard fixture actor"
+        }
+      },
+      "setup": [
+        "Use the retained Original additive HTTP wire capture.",
+        "Replay only the observed standard-role paths whose suffix is literally .json or .json/."
+      ],
+      "scope": "Six exact Original network collection GET responses, no additional methods or Native qualification."
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-ab83774ea9ffdfb35ed4:GET",
+      "pattern_exact": "api/m3u/^accounts/$",
+      "source_handler": "apps.m3u.api_views.M3UAccountViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-Image22-provider-reads",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 655,
+          "label": "provider-read:accounts:admin",
+          "path": "/api/m3u/accounts/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "621c7612d1d580e70590a7a0a521b47c8aa41f419e552baa67eafadd25453619",
+          "record_sha256": "eb47cfdf27977bb5f864dd94fc95478bba539471333f78c6c17d9c7a2def0550"
+        },
+        {
+          "source_index": 658,
+          "label": "provider-read:accounts:standard",
+          "path": "/api/m3u/accounts/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "acdb533b2a2e0c577808b32dfabb4fae9ce51ff02b2ae60ea1c1fc1c0c3a3a11",
+          "record_sha256": "b4f9cb50665e78f4645ff84d4c0a6c3d068dd930ef411bb0d02d2d5f53afe5fa"
+        },
+        {
+          "source_index": 661,
+          "label": "provider-read:accounts:viewer",
+          "path": "/api/m3u/accounts/",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "record_sha256": "77a583802fb1e949fc73fe00a87883f7b77a19d2c4e595781e18b78c52f99362"
+        },
+        {
+          "source_index": 662,
+          "label": "provider-read:accounts:inactive",
+          "path": "/api/m3u/accounts/",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "response_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "record_sha256": "5cd549f425b3e11c8f0b2068927db38debbd6ac5ff35f87f5da5e736044af0d0"
+        },
+        {
+          "source_index": 663,
+          "label": "provider-read:accounts:None",
+          "path": "/api/m3u/accounts/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "record_sha256": "cd645d2b54763d3726bd80aea9ee5c21db38828caf6d62e30db5e80a7ef9cdca"
+        },
+        {
+          "source_index": 664,
+          "label": "provider-read:accounts:pagination-ignored",
+          "path": "/api/m3u/accounts/?page=bad&page_size=1",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "621c7612d1d580e70590a7a0a521b47c8aa41f419e552baa67eafadd25453619",
+          "record_sha256": "8e21a20495cd4bdfe0c04014c300729e814574ae8509e6b3fc371a9da7906da7"
+        },
+        {
+          "source_index": 665,
+          "label": "provider-read:accounts:filters-ignored",
+          "path": "/api/m3u/accounts/?search=no-such-row&name=missing&is_active=false&ordering=-id&epg_source=2147483647",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "621c7612d1d580e70590a7a0a521b47c8aa41f419e552baa67eafadd25453619",
+          "record_sha256": "4c51c3dde46100f22742a07787949b63555b3d45fb4a8d34c93e3a691f0798f2"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "user_level": 10,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "anonymous": {
+          "credential": "No Authorization header"
+        },
+        "inactive": {
+          "user_level": 10,
+          "is_active": false,
+          "credential": "fixture JWT"
+        },
+        "standard": {
+          "user_level": 1,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "viewer": {
+          "user_level": 0,
+          "is_active": true,
+          "credential": "fixture JWT"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 7,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-811ae7e4cfcd7e6efc16:GET",
+      "pattern_exact": "api/m3u/^accounts/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.m3u.api_views.M3UAccountViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-Image22-provider-reads",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 656,
+          "label": "provider-read:accounts:admin:detail:2",
+          "path": "/api/m3u/accounts/2/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "953a9733e50f56d3b22cab85c900e969c29e4c6dea3281d488a59b532dbdc8ea",
+          "record_sha256": "2c0a38291f6d8104201ad2d1e2c5b9416e5fe9eb6091db50aad5bbb254940792"
+        },
+        {
+          "source_index": 657,
+          "label": "provider-read:accounts:admin:detail:4",
+          "path": "/api/m3u/accounts/4/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "c7728af75b1311e0586a86300a35edc455d44916404e8e4b5090f971aadf2b7b",
+          "record_sha256": "77d39f2e7ec0df884d799c6b871928df1b549be3f7b722e7aee2cde49e646a17"
+        },
+        {
+          "source_index": 659,
+          "label": "provider-read:accounts:standard:detail:2",
+          "path": "/api/m3u/accounts/2/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "098d409c0fbfc6871a684381b1a5c599351c0922df9b95a75a321d92837d8b87",
+          "record_sha256": "1c728167130015989c36a499e2d659b33eaa054cc35fbf165f99bdc2c90bde77"
+        },
+        {
+          "source_index": 660,
+          "label": "provider-read:accounts:standard:detail:4",
+          "path": "/api/m3u/accounts/4/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "5a815f06cdc15c6e489fd6f49263b4ce1c3bf87ff3d1a725fe380cffbf1a261d",
+          "record_sha256": "66b3f4841eefb8792482bbd38d5b1c2e1a2eaf233302c35101e0c517623897a7"
+        },
+        {
+          "source_index": 666,
+          "label": "provider-read:accounts:missing-detail",
+          "path": "/api/m3u/accounts/2147483647/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "a4ffebbbfe4f7b25a84b7abddcf89973d9e121a34925851d38ace7c4566f8350",
+          "record_sha256": "0df947e2a9a925f862ddcea4c80bda6c62907f6065ea0aab507880a7b5787e40"
+        },
+        {
+          "source_index": 667,
+          "label": "provider-read:accounts:big-integer-missing-detail",
+          "path": "/api/m3u/accounts/9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "a4ffebbbfe4f7b25a84b7abddcf89973d9e121a34925851d38ace7c4566f8350",
+          "record_sha256": "91eb2ef2e1a45d27f290f4e629611357a1aa70581a277b4b8d67aa1f7161a683"
+        },
+        {
+          "source_index": 668,
+          "label": "provider-read:accounts:malformed-detail",
+          "path": "/api/m3u/accounts/not-a-number/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "record_sha256": "6556268b8ed319a7fc3d5de406604c273d1643781e229b89d919146a5dfbcdc1"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "user_level": 10,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "standard": {
+          "user_level": 1,
+          "is_active": true,
+          "credential": "fixture JWT"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 7,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-7a0b9757899ed1a1e1e4:GET",
+      "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/$",
+      "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-Image22-provider-reads",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 669,
+          "label": "provider-read:profiles:admin",
+          "path": "/api/m3u/accounts/2/profiles/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "31755315155f16c77cd7a5e1d1d5bfedd0ac90755f88f78457c3b5445c9838db",
+          "record_sha256": "c7766784dd4f477c33f56bf3ac5a1133ad0c67e20d3488187c1a866a133f208d"
+        },
+        {
+          "source_index": 673,
+          "label": "provider-read:profiles:standard",
+          "path": "/api/m3u/accounts/2/profiles/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "31755315155f16c77cd7a5e1d1d5bfedd0ac90755f88f78457c3b5445c9838db",
+          "record_sha256": "c05fcf3605b1f56e995d994803a8877195fd8d8e031d1da46476f7336bab0e81"
+        },
+        {
+          "source_index": 677,
+          "label": "provider-read:profiles:viewer",
+          "path": "/api/m3u/accounts/2/profiles/",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "record_sha256": "095b8a2633100d311aa5f46793413afd6683bc0821c787952db54b01ba297f88"
+        },
+        {
+          "source_index": 678,
+          "label": "provider-read:profiles:inactive",
+          "path": "/api/m3u/accounts/2/profiles/",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "response_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "record_sha256": "dec7c314729e3db3b42db9332d22b411d5201962faf26326532c8f77559e0740"
+        },
+        {
+          "source_index": 679,
+          "label": "provider-read:profiles:None",
+          "path": "/api/m3u/accounts/2/profiles/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "record_sha256": "f13146720dac266f249c8cd2f5e4f97000d6d75f4297f87c76494fe9de41b7e1"
+        },
+        {
+          "source_index": 680,
+          "label": "provider-read:profiles:pagination-ignored",
+          "path": "/api/m3u/accounts/2/profiles/?page=bad&page_size=1",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "31755315155f16c77cd7a5e1d1d5bfedd0ac90755f88f78457c3b5445c9838db",
+          "record_sha256": "cc878e65bd587f68cfcfc1c901ca8c5f936667eb608491ab27d9463f76bbeb7f"
+        },
+        {
+          "source_index": 681,
+          "label": "provider-read:profiles:filters-ignored",
+          "path": "/api/m3u/accounts/2/profiles/?search=no-such-row&name=missing&is_active=false&ordering=-id&epg_source=2147483647",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "31755315155f16c77cd7a5e1d1d5bfedd0ac90755f88f78457c3b5445c9838db",
+          "record_sha256": "5414aec6cec6917deeb8d7d9d2d861618a1025113517d7f49426103398cfc42d"
+        },
+        {
+          "source_index": 739,
+          "label": "provider-read:profiles:missing-parent-list",
+          "path": "/api/m3u/accounts/2147483647/profiles/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "record_sha256": "ee15651e15803936c24c9a2cbf6a800cd2c9f729d2d8bf4584a2a261753fab89"
+        },
+        {
+          "source_index": 740,
+          "label": "provider-read:profiles:big-integer-parent-list",
+          "path": "/api/m3u/accounts/9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999/profiles/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "record_sha256": "2cf76ac7cb59cb26c780a5d37f290ae40f9ca1dadc8fa7e1a942224bb0392e2b"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "user_level": 10,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "anonymous": {
+          "credential": "No Authorization header"
+        },
+        "inactive": {
+          "user_level": 10,
+          "is_active": false,
+          "credential": "fixture JWT"
+        },
+        "standard": {
+          "user_level": 1,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "viewer": {
+          "user_level": 0,
+          "is_active": true,
+          "credential": "fixture JWT"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 9,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-e9c29781d27744d30bd4:GET",
+      "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-Image22-provider-reads",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 670,
+          "label": "provider-read:profiles:admin:detail:2",
+          "path": "/api/m3u/accounts/2/profiles/2/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "9e6e2d9e25d4e9b12eb1aa918575af96f0b9cd33218e79d582a8022971930074",
+          "record_sha256": "4562f6ada9dfba66e7c629afb4dcba62036878657103e97faee76bf44b952802"
+        },
+        {
+          "source_index": 671,
+          "label": "provider-read:profiles:admin:detail:3",
+          "path": "/api/m3u/accounts/2/profiles/3/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "dd43e24d6993b8edfe492604194221107659e9a29526ba55a57b18ad115f94cc",
+          "record_sha256": "0b31100d5e327dc858a8af2ea2a1ffabd503e728727b7c2c9c8b763a958f56ea"
+        },
+        {
+          "source_index": 672,
+          "label": "provider-read:profiles:admin:detail:4",
+          "path": "/api/m3u/accounts/2/profiles/4/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "a12f7cc88d6e3d204c0b2c1aba5ba7a5439823522934e410a15feaf7ab91ad50",
+          "record_sha256": "1475521275df770760f845758d2351fcb8aff02ab2d3823d27752b5332dda07e"
+        },
+        {
+          "source_index": 674,
+          "label": "provider-read:profiles:standard:detail:2",
+          "path": "/api/m3u/accounts/2/profiles/2/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "9e6e2d9e25d4e9b12eb1aa918575af96f0b9cd33218e79d582a8022971930074",
+          "record_sha256": "044469c0093653db4a8b92090016008a629aab9a299e1319091c4d70fbbdb4fb"
+        },
+        {
+          "source_index": 675,
+          "label": "provider-read:profiles:standard:detail:3",
+          "path": "/api/m3u/accounts/2/profiles/3/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "dd43e24d6993b8edfe492604194221107659e9a29526ba55a57b18ad115f94cc",
+          "record_sha256": "b8242ecd2914b9b06a3dc458df203f1b60725656aeb3615caeaca81894414b61"
+        },
+        {
+          "source_index": 676,
+          "label": "provider-read:profiles:standard:detail:4",
+          "path": "/api/m3u/accounts/2/profiles/4/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "a12f7cc88d6e3d204c0b2c1aba5ba7a5439823522934e410a15feaf7ab91ad50",
+          "record_sha256": "bcc44f26abc64499e39a2246aea04388b800c3af227aa3bb1465e7c211f7ebd4"
+        },
+        {
+          "source_index": 682,
+          "label": "provider-read:profiles:missing-detail",
+          "path": "/api/m3u/accounts/2/profiles/2147483647/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "7a39f721434177882998be52d3f32085db4ce652f42804ea596ebb97f4abb5f8",
+          "record_sha256": "af1af2851d9639ae0f25417e0158e738a5944821eed29b33afa0cb6bf0ca4ad3"
+        },
+        {
+          "source_index": 683,
+          "label": "provider-read:profiles:big-integer-missing-detail",
+          "path": "/api/m3u/accounts/2/profiles/9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "7a39f721434177882998be52d3f32085db4ce652f42804ea596ebb97f4abb5f8",
+          "record_sha256": "efdcf3d4df4dc42fc2723c7a7c9d62e05dd570b6c9aca93e159dab7fba44792a"
+        },
+        {
+          "source_index": 684,
+          "label": "provider-read:profiles:malformed-detail",
+          "path": "/api/m3u/accounts/2/profiles/not-a-number/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "record_sha256": "64d90150263c9ad9eefb46b58e62f0e09394115bf60cec68650a0010ad8cb5e5"
+        },
+        {
+          "source_index": 741,
+          "label": "provider-read:profiles:wrong-parent-detail",
+          "path": "/api/m3u/accounts/4/profiles/2/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "7a39f721434177882998be52d3f32085db4ce652f42804ea596ebb97f4abb5f8",
+          "record_sha256": "1fe26a41d75d3d3e03cff2420b93810aa6ffae14c5b567011339b75c8b96219d"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "user_level": 10,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "standard": {
+          "user_level": 1,
+          "is_active": true,
+          "credential": "fixture JWT"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 10,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-1ccd60f397dc3d7124b9:GET",
+      "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/$",
+      "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-Image22-provider-reads",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 685,
+          "label": "provider-read:filters:admin",
+          "path": "/api/m3u/accounts/2/filters/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "80e038d44667c5c7eac253770eee0cf1060d2b4f2510033830a54df013f6fd5a",
+          "record_sha256": "efaa6bdeafdc9cb790cef74de4000e1875ed3a4bdceb2ba115badc008d9432b4"
+        },
+        {
+          "source_index": 688,
+          "label": "provider-read:filters:standard",
+          "path": "/api/m3u/accounts/2/filters/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "80e038d44667c5c7eac253770eee0cf1060d2b4f2510033830a54df013f6fd5a",
+          "record_sha256": "c6b6114643feac9fb87482af0ba67a6ebbee4c1a64ee9d82ac8f5d162d1ddca6"
+        },
+        {
+          "source_index": 691,
+          "label": "provider-read:filters:viewer",
+          "path": "/api/m3u/accounts/2/filters/",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "record_sha256": "c58381c4bc0cf9dac7d0d19b7dfca86ea20462f3010f0f889f37fd1e11dc4367"
+        },
+        {
+          "source_index": 692,
+          "label": "provider-read:filters:inactive",
+          "path": "/api/m3u/accounts/2/filters/",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "response_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "record_sha256": "92b7cb1969f118818a4f868a8f9b5540246ffddbc667a936583137eade3496f7"
+        },
+        {
+          "source_index": 693,
+          "label": "provider-read:filters:None",
+          "path": "/api/m3u/accounts/2/filters/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "record_sha256": "55959853fff7657cc90028ebbdf79227c2ad32d280dc914c8f3a75ec49b9d6b4"
+        },
+        {
+          "source_index": 694,
+          "label": "provider-read:filters:pagination-ignored",
+          "path": "/api/m3u/accounts/2/filters/?page=bad&page_size=1",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "80e038d44667c5c7eac253770eee0cf1060d2b4f2510033830a54df013f6fd5a",
+          "record_sha256": "63ff89b6f45c200f96525bb41cbf4e0750eddd1261cd2428cee2ccd0aeb57c87"
+        },
+        {
+          "source_index": 695,
+          "label": "provider-read:filters:filters-ignored",
+          "path": "/api/m3u/accounts/2/filters/?search=no-such-row&name=missing&is_active=false&ordering=-id&epg_source=2147483647",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "80e038d44667c5c7eac253770eee0cf1060d2b4f2510033830a54df013f6fd5a",
+          "record_sha256": "0843c3aabbe68c5f95e5cd09e00388a89daa8f784390eb37e3b385534dd5779b"
+        },
+        {
+          "source_index": 742,
+          "label": "provider-read:filters:missing-parent-list",
+          "path": "/api/m3u/accounts/2147483647/filters/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "record_sha256": "d9adae162c2d582e37f8807f9df7d38caaf80c6dbe8c5944c55cadaa96dc7a6c"
+        },
+        {
+          "source_index": 743,
+          "label": "provider-read:filters:big-integer-parent-list",
+          "path": "/api/m3u/accounts/9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999/filters/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "record_sha256": "6c308948e904de6d3bfbffbeb596a0459ae6400641996585dfcf2915dec78be7"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "user_level": 10,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "anonymous": {
+          "credential": "No Authorization header"
+        },
+        "inactive": {
+          "user_level": 10,
+          "is_active": false,
+          "credential": "fixture JWT"
+        },
+        "standard": {
+          "user_level": 1,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "viewer": {
+          "user_level": 0,
+          "is_active": true,
+          "credential": "fixture JWT"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 9,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-cf34164a8637e8777d48:GET",
+      "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-Image22-provider-reads",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 686,
+          "label": "provider-read:filters:admin:detail:1",
+          "path": "/api/m3u/accounts/2/filters/1/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "9a810faa86337b1c733d0f798c3a4f3bb3920550fcfb4f72e7bd29815bafa061",
+          "record_sha256": "68028360a07a0646d0b6fc9bce2774d82d79907d9d7a82ab0715371862a9ca67"
+        },
+        {
+          "source_index": 687,
+          "label": "provider-read:filters:admin:detail:2",
+          "path": "/api/m3u/accounts/2/filters/2/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "f4b73a774ab6a783485fecc3c978a9b2dac81ac1111c73939f397739c281bd83",
+          "record_sha256": "5ed1eb7a8577d9d019a5290d08ef93d14edb8145ab10c8e01977f0ecd8b54e8d"
+        },
+        {
+          "source_index": 689,
+          "label": "provider-read:filters:standard:detail:1",
+          "path": "/api/m3u/accounts/2/filters/1/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "9a810faa86337b1c733d0f798c3a4f3bb3920550fcfb4f72e7bd29815bafa061",
+          "record_sha256": "ffe000a475a7a369459e1b379f33ce3c16ac71ca82b98ce57b1679dfb8a158e7"
+        },
+        {
+          "source_index": 690,
+          "label": "provider-read:filters:standard:detail:2",
+          "path": "/api/m3u/accounts/2/filters/2/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "f4b73a774ab6a783485fecc3c978a9b2dac81ac1111c73939f397739c281bd83",
+          "record_sha256": "87a490ffe53f15d15261a24a29183abe1358601fabb488ad2a15474a7a7e8dd5"
+        },
+        {
+          "source_index": 696,
+          "label": "provider-read:filters:missing-detail",
+          "path": "/api/m3u/accounts/2/filters/2147483647/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+          "record_sha256": "d23beddfa2d916c225b5940bf08e9233e00c49a56a68bed4c458e90d6e5da25d"
+        },
+        {
+          "source_index": 697,
+          "label": "provider-read:filters:big-integer-missing-detail",
+          "path": "/api/m3u/accounts/2/filters/9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+          "record_sha256": "f9d8a05f403bb7caff127a8c708b6535f33eea7bd51503e5dbb9c1ce2a9b727e"
+        },
+        {
+          "source_index": 698,
+          "label": "provider-read:filters:malformed-detail",
+          "path": "/api/m3u/accounts/2/filters/not-a-number/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "record_sha256": "d26d267a8117268f0f9bb9ec7f83aea9f2d01019fb259d8dac66fba64ffa5d0d"
+        },
+        {
+          "source_index": 744,
+          "label": "provider-read:filters:wrong-parent-detail",
+          "path": "/api/m3u/accounts/4/filters/1/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "7b66d13ddf24625ee65ddd5488c3ca1c7e8668632d3adfb21a02c40808715ac9",
+          "record_sha256": "8ac2ed540232201ae25655932787568cee553f691345fa8c35974e77491afac3"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "user_level": 10,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "standard": {
+          "user_level": 1,
+          "is_active": true,
+          "credential": "fixture JWT"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 8,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-6780933c22f5b89f1bf7:GET",
+      "pattern_exact": "api/m3u/^server-groups/$",
+      "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-Image22-provider-reads",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 699,
+          "label": "provider-read:server-groups:admin",
+          "path": "/api/m3u/server-groups/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "797dd84969da268e5e02e43ddeb67f873506da5e401917349f06cd07b9be4009",
+          "record_sha256": "5441278f375f17c47a1a650db644464ad063c533271f469de1a5c21e767989c5"
+        },
+        {
+          "source_index": 701,
+          "label": "provider-read:server-groups:standard",
+          "path": "/api/m3u/server-groups/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "797dd84969da268e5e02e43ddeb67f873506da5e401917349f06cd07b9be4009",
+          "record_sha256": "98bfe21938863a0d801436b71313b70e09ec6686e06dbbc100ac69953a5b6358"
+        },
+        {
+          "source_index": 703,
+          "label": "provider-read:server-groups:viewer",
+          "path": "/api/m3u/server-groups/",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "record_sha256": "474828793dae7fc68b7fdae423fd8bbe64b63bd93475275cb97ddaac1ba86863"
+        },
+        {
+          "source_index": 704,
+          "label": "provider-read:server-groups:inactive",
+          "path": "/api/m3u/server-groups/",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "response_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "record_sha256": "2fb5a6937a5b7a7c84a6a1ca786850314071407ce9f96be10b6ae14b320e9273"
+        },
+        {
+          "source_index": 705,
+          "label": "provider-read:server-groups:None",
+          "path": "/api/m3u/server-groups/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "record_sha256": "d04458c192cf97b08f9e6789946a52be97e7ffd862469c650f85c4f2b94c0912"
+        },
+        {
+          "source_index": 706,
+          "label": "provider-read:server-groups:pagination-ignored",
+          "path": "/api/m3u/server-groups/?page=bad&page_size=1",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "797dd84969da268e5e02e43ddeb67f873506da5e401917349f06cd07b9be4009",
+          "record_sha256": "161953b0b02c5b81f23f9b10ed7ad14958c9a748bb958aacea774d5a62d49750"
+        },
+        {
+          "source_index": 707,
+          "label": "provider-read:server-groups:filters-ignored",
+          "path": "/api/m3u/server-groups/?search=no-such-row&name=missing&is_active=false&ordering=-id&epg_source=2147483647",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "797dd84969da268e5e02e43ddeb67f873506da5e401917349f06cd07b9be4009",
+          "record_sha256": "891137d98778182c9d6229645b46406eb59e79d595e0f0b2692ad0c9c5e3ab11"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive",
+        "standard",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "user_level": 10,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "anonymous": {
+          "credential": "No Authorization header"
+        },
+        "inactive": {
+          "user_level": 10,
+          "is_active": false,
+          "credential": "fixture JWT"
+        },
+        "standard": {
+          "user_level": 1,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "viewer": {
+          "user_level": 0,
+          "is_active": true,
+          "credential": "fixture JWT"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 7,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-fd4e8b363cc6b7a32d16:GET",
+      "pattern_exact": "api/m3u/^server-groups/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-Image22-provider-reads",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 700,
+          "label": "provider-read:server-groups:admin:detail:1",
+          "path": "/api/m3u/server-groups/1/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "8d63ca8ac42ce70844920831a47a26b09595d8dc10d5674a37c3177396e2b93f",
+          "record_sha256": "1664ef2a1fa3b0c8b0eb9838e92d05974670cb10a2f969dc15ee87e8c6001f20"
+        },
+        {
+          "source_index": 702,
+          "label": "provider-read:server-groups:standard:detail:1",
+          "path": "/api/m3u/server-groups/1/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "8d63ca8ac42ce70844920831a47a26b09595d8dc10d5674a37c3177396e2b93f",
+          "record_sha256": "a92085c0da77b311ffb02d4a5bcfbf88029f746f1a04a059d4bf0eedfd986680"
+        },
+        {
+          "source_index": 708,
+          "label": "provider-read:server-groups:missing-detail",
+          "path": "/api/m3u/server-groups/2147483647/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "100b598b70883e0508afc5badcbceca4bdcde8a1e9c23bc1ec737f230872cbbe",
+          "record_sha256": "41d77c5890723e79dd1e7c7b7d78312ad4bcb1be8c80695066b3c14c4808b24e"
+        },
+        {
+          "source_index": 709,
+          "label": "provider-read:server-groups:big-integer-missing-detail",
+          "path": "/api/m3u/server-groups/9999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "100b598b70883e0508afc5badcbceca4bdcde8a1e9c23bc1ec737f230872cbbe",
+          "record_sha256": "9c88de4ebad7c4296506afce265bacb861f9413dd5b3d344eae28da1ec40cfa8"
+        },
+        {
+          "source_index": 710,
+          "label": "provider-read:server-groups:malformed-detail",
+          "path": "/api/m3u/server-groups/not-a-number/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 404,
+          "response_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+          "record_sha256": "24d8a385ce5a38d18d24c21550b691688057e45e6490d79295da34776c0e2403"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "user_level": 10,
+          "is_active": true,
+          "credential": "fixture JWT"
+        },
+        "standard": {
+          "user_level": 1,
+          "is_active": true,
+          "credential": "fixture JWT"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 5,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-6aeecddec75ba31855cb:POST",
+      "pattern_exact": "api/channels/^channels/set-names-from-epg/$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "method": "POST",
+      "source_action": "set_names_from_epg",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-channel-producer-TCP-98",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 0,
+          "label": "names-admin",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "3989b97a6200f58d55b0a45694d1f06ac4f861bae07e1eb1a88da94e80da21c6",
+          "published_family_frame_count": 1,
+          "record_sha256": "ef454e561c0eed7853c52cde2354d27ed5cac0d73ef18c0fa32036410dc3ff50"
+        },
+        {
+          "source_index": 1,
+          "label": "names-anonymous",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "published_family_frame_count": 0,
+          "record_sha256": "555b63fd748e523cd0425b7ee7d501300afa47e309c7e681c3c609fcdd260d7a"
+        },
+        {
+          "source_index": 2,
+          "label": "names-standard",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "standard",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "b0e5ba3beee5da54041519d7b629c2fd21b99d0796b4da915d8f5b1427ef52a8"
+        },
+        {
+          "source_index": 3,
+          "label": "names-inactive",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "published_family_frame_count": 0,
+          "record_sha256": "2e6aa611e90a6ec0894edf083df6a1f662fc54f32748476559628393257c1fe7"
+        },
+        {
+          "source_index": 4,
+          "label": "names-bad_bearer",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "bad_bearer",
+          "HTTP_status": 401,
+          "response_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+          "published_family_frame_count": 0,
+          "record_sha256": "fda45d94113ed72d2a3b9fd0d6c7a0ad62db61fd499191a30bfdc1e5bfcf8900"
+        },
+        {
+          "source_index": 5,
+          "label": "names-admin_x_api_key",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin_x_api_key",
+          "HTTP_status": 200,
+          "response_sha256": "5f3bddce09e3b7aea3c9915027e74a14a8ddfc499df9fd1c56d109748e7b43cd",
+          "published_family_frame_count": 1,
+          "record_sha256": "47c4e487306a881d9b7799d53e22ba037cd6ee77d7fb449f4d757462cd9810f3"
+        },
+        {
+          "source_index": 6,
+          "label": "names-admin_authorization_api_key",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin_authorization_api_key",
+          "HTTP_status": 200,
+          "response_sha256": "f5344138196a863d208bb723e14e9638482ee7583e9f63ca78cda158a2c1b538",
+          "published_family_frame_count": 1,
+          "record_sha256": "9ff36c1ed34a1970c3238b7feb3b508cda60d74cab7af45d089bcd8e2a77fd59"
+        },
+        {
+          "source_index": 7,
+          "label": "names-bad-JWT-before-valid-key",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "bad_bearer_with_valid_api_key",
+          "HTTP_status": 401,
+          "response_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+          "published_family_frame_count": 0,
+          "record_sha256": "de327ff8fcd3c0604f0ae6fe42c1b164d3a76abe58c099b6b604f505b4a5114b"
+        },
+        {
+          "source_index": 11,
+          "label": "names-required-empty",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "26a40af193b6dfcc542313c851519598ac6bf18dc8b8d523093cd9800ca21a75",
+          "published_family_frame_count": 0,
+          "record_sha256": "c3a7277a406e866ad6c7d06ef474d74276824e3eeee3ee2a6b89b5cc4605e74a"
+        },
+        {
+          "source_index": 12,
+          "label": "names-body-list",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 500,
+          "response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+          "published_family_frame_count": 0,
+          "record_sha256": "07fb83c419cdc4822bc9a703b51444d7a0792e30375be008b3a3f03929f0e38d"
+        },
+        {
+          "source_index": 13,
+          "label": "names-malformed-JSON",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "7296180e50b7c166df96fb79798d4e59c77662be2bb30ce9f974eb380401619c",
+          "published_family_frame_count": 0,
+          "record_sha256": "c53261edd08790af7979b66d23e8c07d4135356f6f02866b326f016c87a21376"
+        },
+        {
+          "source_index": 14,
+          "label": "names-permission-before-JSON",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "standard",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "ed0052a2f70ffc573b0187b0d6fb968f75cbf3d47ba9cfb822e2513c200fb6db"
+        },
+        {
+          "source_index": 15,
+          "label": "names-noninteger-list-child-publishes",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "b514647c67b1f9d723fda5f094db341896300f96a7be7c9c27442647b5681a67",
+          "published_family_frame_count": 1,
+          "record_sha256": "af16adce34a7a71cb1f358ba3b9afbcbc77edce88895d2f32af47de9465e443c"
+        },
+        {
+          "source_index": 16,
+          "label": "names-duplicates-preserved",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "0af2c363cb59a4bfb74eab4758e908ff0ccabd0439b5e4c474d45ad63bbb1989",
+          "published_family_frame_count": 1,
+          "record_sha256": "c98c397f182b0fb87234a2ea63d67dda069eb2b856e626573e82241926e0275c"
+        },
+        {
+          "source_index": 17,
+          "label": "names-global-UI-denied",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "e2f7e98279fb33561fb44f132c5bfa507ee5cc78dec72182786d4953bb47a070"
+        },
+        {
+          "source_index": 18,
+          "label": "names-user-UI-denied",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "aab7bd711682daabb18b85d365422907be17fd2932f640cc3225ed82b8d1f8e4"
+        },
+        {
+          "source_index": 19,
+          "label": "names-untrusted-proxy-cannot-bypass",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin_spoof",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "bcdd7324458db02db1a7acaabb8d71e66c96ccdd2f8f774b3184c35a7f520855"
+        },
+        {
+          "source_index": 91,
+          "label": "names-4097-selected-ids-publishes",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "b2f2393378cc76d11a785bc1683d37ea76bc3b6f74a0742a75f65c7454857c74",
+          "published_family_frame_count": 1,
+          "record_sha256": "3ca2ce4a35af1ce85c82c9f580568526191fbe8783b8bc45370cf3e2e8a31a90"
+        },
+        {
+          "source_index": 92,
+          "label": "names-truthy-nonlist",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "a5ecac1a74439ce221132474165af501ed77dcfa089bd7c341cb4500bb7d5b10",
+          "published_family_frame_count": 0,
+          "record_sha256": "b1eea2bc275c345d39caf3ac32461dc293146641631eca729a60aeaf346e8225"
+        },
+        {
+          "source_index": 93,
+          "label": "names-falsy-zero-before-list-type",
+          "path": "/api/channels/channels/set-names-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "26a40af193b6dfcc542313c851519598ac6bf18dc8b8d523093cd9800ca21a75",
+          "published_family_frame_count": 0,
+          "record_sha256": "ae1699aa47ee3602c9275a285a71d31dcfa82c0a1b34e3560fc653783b2fe818"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "admin_authorization_api_key",
+        "admin_spoof",
+        "admin_x_api_key",
+        "anonymous",
+        "bad_bearer",
+        "bad_bearer_with_valid_api_key",
+        "inactive",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization"
+            ],
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "admin_authorization_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "admin_spoof": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type",
+              "X-Forwarded-For",
+              "X-Real-IP"
+            ]
+          ]
+        },
+        "admin_x_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Content-Type",
+              "X-API-Key"
+            ]
+          ]
+        },
+        "anonymous": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Content-Type"
+            ]
+          ]
+        },
+        "bad_bearer": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "bad_bearer_with_valid_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type",
+              "X-API-Key"
+            ]
+          ]
+        },
+        "inactive": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "standard": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization"
+            ],
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 20,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-a653dbbce1b6060871b0:POST",
+      "pattern_exact": "api/channels/^channels/set-tvg-ids-from-epg/$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "method": "POST",
+      "source_action": "set_tvg_ids_from_epg",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-channel-producer-TCP-98",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 40,
+          "label": "tvg-admin",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "24cfe12b6493ba33ced4ceae8e8b73c5d0fdb8f0c8ba7b31a6a9e60521d790c5",
+          "published_family_frame_count": 1,
+          "record_sha256": "13ff89befe57e47c239d133278427b5188531c0232936d0b416b6c2ee8a13f39"
+        },
+        {
+          "source_index": 41,
+          "label": "tvg-anonymous",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "published_family_frame_count": 0,
+          "record_sha256": "832468fd21590331e1b122de9a1addb131d569e724cd1f6c4c6d7357b7a68917"
+        },
+        {
+          "source_index": 42,
+          "label": "tvg-standard",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "standard",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "c0b149b42c3e7564ebe438ebbae291574338de9df83cb176e96e812603d4cea2"
+        },
+        {
+          "source_index": 43,
+          "label": "tvg-inactive",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "published_family_frame_count": 0,
+          "record_sha256": "00151dd0b931b2b79cff1f31d753d61090615a320fe2569ff475da94a1838f61"
+        },
+        {
+          "source_index": 44,
+          "label": "tvg-bad_bearer",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "bad_bearer",
+          "HTTP_status": 401,
+          "response_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+          "published_family_frame_count": 0,
+          "record_sha256": "4019e05024ab5881931b150d44d0bbd3e79c5f57536c1175e66a32f8ce80d36b"
+        },
+        {
+          "source_index": 45,
+          "label": "tvg-admin_x_api_key",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin_x_api_key",
+          "HTTP_status": 200,
+          "response_sha256": "8a58e0894422a1cd126faa92f353615507c1af2508d8d23ae43602081ac86791",
+          "published_family_frame_count": 1,
+          "record_sha256": "838315fe74adef6d5497e3948df2c71c19ba009274893c059834fb52828e5e9b"
+        },
+        {
+          "source_index": 46,
+          "label": "tvg-admin_authorization_api_key",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin_authorization_api_key",
+          "HTTP_status": 200,
+          "response_sha256": "8a93635033f062cd1d9f23cf4d459ec02eee9e7a64b5af041da56a9dd33a9739",
+          "published_family_frame_count": 1,
+          "record_sha256": "ac1aaa89ee7b5343990da924459f9a4502c537198e5108c7e60640365079c06f"
+        },
+        {
+          "source_index": 47,
+          "label": "tvg-bad-JWT-before-valid-key",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "bad_bearer_with_valid_api_key",
+          "HTTP_status": 401,
+          "response_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+          "published_family_frame_count": 0,
+          "record_sha256": "eae8461259e922e1c8197e6d0f97f9ca4715f73e03725f8bb5ce2735c8e66289"
+        },
+        {
+          "source_index": 51,
+          "label": "tvg-required-empty",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "26a40af193b6dfcc542313c851519598ac6bf18dc8b8d523093cd9800ca21a75",
+          "published_family_frame_count": 0,
+          "record_sha256": "9609fb0b6c2c20a21796b5d36e9ce6d0107ebf274ca46942f52db26e60cda6a2"
+        },
+        {
+          "source_index": 52,
+          "label": "tvg-body-list",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 500,
+          "response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+          "published_family_frame_count": 0,
+          "record_sha256": "eb09abc73febfecf10dbca9eb6be5b519847e19bf9a689a7dccd0c5932130349"
+        },
+        {
+          "source_index": 53,
+          "label": "tvg-malformed-JSON",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "7296180e50b7c166df96fb79798d4e59c77662be2bb30ce9f974eb380401619c",
+          "published_family_frame_count": 0,
+          "record_sha256": "1016d2bee46f180a5005a3e715dd6fa8a599fae4614ff4979c8b568898bb54e7"
+        },
+        {
+          "source_index": 54,
+          "label": "tvg-permission-before-JSON",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "standard",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "8338075de2ad4993ada6341f3c87a022f00c6181cc9c0fab6c0a54a846849afa"
+        },
+        {
+          "source_index": 55,
+          "label": "tvg-noninteger-list-child-publishes",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "b60802c07d1074230aef5a28baadcbdd5320b3073eb9b086b96730314adda1a1",
+          "published_family_frame_count": 1,
+          "record_sha256": "8635dd4fcfce3f11208cf1e127b6f7e49065655d84044748f0bfd168cfe4722e"
+        },
+        {
+          "source_index": 56,
+          "label": "tvg-duplicates-preserved",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_sha256": "326be437f656ffd86e697cf8c1187d00fffc12365cf2f44e7b13601def9d09ab",
+          "published_family_frame_count": 1,
+          "record_sha256": "7b6c143de9ab0a6e4f7382f70c9cb8f5d2823618078aaaffddf8d9cf0ac375bd"
+        },
+        {
+          "source_index": 57,
+          "label": "tvg-global-UI-denied",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "10946b4ad3a221fe951551eb260c9de7e46b16074d92b5449e75bc83f478a1af"
+        },
+        {
+          "source_index": 58,
+          "label": "tvg-user-UI-denied",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "667614c013ba5a6ca5bb7444d7073ffdd2e083e9d7a5f3729767c3363f0f57a9"
+        },
+        {
+          "source_index": 59,
+          "label": "tvg-untrusted-proxy-cannot-bypass",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin_spoof",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "d85c325c4f78e63522d61b7735d3afc8970b94859332409fdb258fc483c23098"
+        },
+        {
+          "source_index": 94,
+          "label": "tvg-truthy-nonlist",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "a5ecac1a74439ce221132474165af501ed77dcfa089bd7c341cb4500bb7d5b10",
+          "published_family_frame_count": 0,
+          "record_sha256": "79d2b12f1b3fa8ed77a08df776f2d908ca90c6716dcd55968b26e4b6a336b75b"
+        },
+        {
+          "source_index": 95,
+          "label": "tvg-falsy-zero-before-list-type",
+          "path": "/api/channels/channels/set-tvg-ids-from-epg/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "26a40af193b6dfcc542313c851519598ac6bf18dc8b8d523093cd9800ca21a75",
+          "published_family_frame_count": 0,
+          "record_sha256": "ea07181951cc6f19de817b10de2ce7f0f46cbbaf4ba6aa55c47ca5eb922378c6"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "admin_authorization_api_key",
+        "admin_spoof",
+        "admin_x_api_key",
+        "anonymous",
+        "bad_bearer",
+        "bad_bearer_with_valid_api_key",
+        "inactive",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization"
+            ],
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "admin_authorization_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "admin_spoof": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type",
+              "X-Forwarded-For",
+              "X-Real-IP"
+            ]
+          ]
+        },
+        "admin_x_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Content-Type",
+              "X-API-Key"
+            ]
+          ]
+        },
+        "anonymous": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Content-Type"
+            ]
+          ]
+        },
+        "bad_bearer": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "bad_bearer_with_valid_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type",
+              "X-API-Key"
+            ]
+          ]
+        },
+        "inactive": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "standard": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization"
+            ],
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 19,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-920b8485b762d07dbdd4:POST",
+      "pattern_exact": "api/channels/^channels/from-stream/bulk/$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "method": "POST",
+      "source_action": "from_stream_bulk",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-channel-producer-TCP-98",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 60,
+          "label": "bulk-admin",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 202,
+          "response_sha256": "1e9662084bb2ee4f5cffc8160e44c220e6c39d972a1cf5714c0c3042f9436024",
+          "published_family_frame_count": 1,
+          "record_sha256": "d05c428d37bc07db4692a59621f098818181c88ce354e091da57c1024d27cb26"
+        },
+        {
+          "source_index": 61,
+          "label": "bulk-anonymous",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "published_family_frame_count": 0,
+          "record_sha256": "73a3ff9b376b65ed12a3827a1e89c535b71c6fdeb8db5223aa6bab47f9326301"
+        },
+        {
+          "source_index": 62,
+          "label": "bulk-standard",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "standard",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "cd7b6a7f2bdfbcd9b189105e2a2b7c4e8cc8493e087ab48ba168fa7247995d28"
+        },
+        {
+          "source_index": 63,
+          "label": "bulk-inactive",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "inactive",
+          "HTTP_status": 401,
+          "response_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "published_family_frame_count": 0,
+          "record_sha256": "674a48b927d5b2159552100ffeb6364cda439c6bb64d5f95f82a68753e7d1d16"
+        },
+        {
+          "source_index": 64,
+          "label": "bulk-bad_bearer",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "bad_bearer",
+          "HTTP_status": 401,
+          "response_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+          "published_family_frame_count": 0,
+          "record_sha256": "53a228fd9ba9e14e2a4ea90b6833b006c0993be7db42a68ef9b7302107d7e416"
+        },
+        {
+          "source_index": 65,
+          "label": "bulk-admin_x_api_key",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin_x_api_key",
+          "HTTP_status": 202,
+          "response_sha256": "01fe74a1d1c484cbb97a7ef9afff4b6ade289be65fda3a70dcaef902fd765026",
+          "published_family_frame_count": 1,
+          "record_sha256": "2b1d6c495eba08a1d00936252c10dcc1544ef730019b98451cbb87ce77b90b95"
+        },
+        {
+          "source_index": 66,
+          "label": "bulk-admin_authorization_api_key",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin_authorization_api_key",
+          "HTTP_status": 202,
+          "response_sha256": "c06d5fdd5469c3233772d96ea18bf88510cc0063de23660e32081458615b3843",
+          "published_family_frame_count": 1,
+          "record_sha256": "bff3731e77a4ff8f39653799d651e8d17aa1814391cbdb9b19c076f17ac2e092"
+        },
+        {
+          "source_index": 67,
+          "label": "bulk-bad-JWT-before-valid-key",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "bad_bearer_with_valid_api_key",
+          "HTTP_status": 401,
+          "response_sha256": "1479e0ce739be0af72d5ed903252561a40cc119beba6b11f6a8626994d6c2b60",
+          "published_family_frame_count": 0,
+          "record_sha256": "02351a9de638ead2335ec743609764dfa852852bdee979e5f1fc5c55744e370d"
+        },
+        {
+          "source_index": 71,
+          "label": "bulk-required-empty",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "6d59d11597de8fcc74d25cb58b8c0273a9a751eb9162a6f267ebcc8c92370795",
+          "published_family_frame_count": 0,
+          "record_sha256": "7613fcce2e2ccc44efef02d30f7353d864dd7eb4068d2227779be2192ee174c3"
+        },
+        {
+          "source_index": 72,
+          "label": "bulk-body-list",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 500,
+          "response_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+          "published_family_frame_count": 0,
+          "record_sha256": "4ab13311d0c0592db0a97d33f787c62f8701c67888b6f3c3aecd06f3d66c7f44"
+        },
+        {
+          "source_index": 73,
+          "label": "bulk-malformed-JSON",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "7296180e50b7c166df96fb79798d4e59c77662be2bb30ce9f974eb380401619c",
+          "published_family_frame_count": 0,
+          "record_sha256": "f4d78cec3e60d1c8342c6120dcd3c48d8403ec5432252b27358a76e9b83afea0"
+        },
+        {
+          "source_index": 74,
+          "label": "bulk-permission-before-JSON",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "standard",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "779e80274f2fd718748e07fd1834868f456684b08dcff2c18dc941f79a9524e5"
+        },
+        {
+          "source_index": 75,
+          "label": "bulk-noninteger-list-child-publishes",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 202,
+          "response_sha256": "7cc98695c0e3c5b47d388b6fb72c4d620a5986e3a039a9ed412d52fefd3405ff",
+          "published_family_frame_count": 1,
+          "record_sha256": "68d851dec85a8d027b1e7265023fcdbb0ed02f4943214753ab24f4658119b378"
+        },
+        {
+          "source_index": 76,
+          "label": "bulk-duplicates-preserved",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 202,
+          "response_sha256": "79f3eb0cc42b858774a9a416af57baec6daccf5df37599592c5ecb04a3542f06",
+          "published_family_frame_count": 1,
+          "record_sha256": "6138164261c679296a6d14d7e828cec8388098300ca4e9a8b29dcade3a74b0a5"
+        },
+        {
+          "source_index": 77,
+          "label": "bulk-global-UI-denied",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "ebd551adea9e3b763157ecfd0a126648cd04ebf896d5aa51de054b6b9014a3c1"
+        },
+        {
+          "source_index": 78,
+          "label": "bulk-user-UI-denied",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "f4e1b131a98ee33e3a7ebabc668f19ef37e09bc28734077288beb6f99258dcf0"
+        },
+        {
+          "source_index": 79,
+          "label": "bulk-untrusted-proxy-cannot-bypass",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin_spoof",
+          "HTTP_status": 403,
+          "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "published_family_frame_count": 0,
+          "record_sha256": "a07926e288aabecc23586caff3738fc16d0957a312bcbeb63086fae70f1860b7"
+        },
+        {
+          "source_index": 85,
+          "label": "bulk-profile-[]",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 202,
+          "response_sha256": "4331d22a68bd82aeba32d83dfb0f0fce7c7126c7c027271c8132350c4d9f4d2f",
+          "published_family_frame_count": 1,
+          "record_sha256": "d7cf7a02f8777c41f6df4a66fe606c4f2cd94c4bbcab205da9b6621ecd5e78cd"
+        },
+        {
+          "source_index": 86,
+          "label": "bulk-profile-[0]",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 202,
+          "response_sha256": "defcf87fe120acca5327739868f1b6318f71d5ac3c43ccd1e7a70689b9d05d34",
+          "published_family_frame_count": 1,
+          "record_sha256": "2e2f2cef8904528c4499ce94afccca0cdd881b9094f49897fe5243f5c0e28f8e"
+        },
+        {
+          "source_index": 87,
+          "label": "bulk-profile-7",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 202,
+          "response_sha256": "6958ddefe0ef9c4b915870fb39e79d915ad9ae482b5be1d49b24b64232f361b7",
+          "published_family_frame_count": 1,
+          "record_sha256": "b4d27eda20952fc9d088dc11904f3a6388f2f6e6a59af48b5f7cc40b8e48b4aa"
+        },
+        {
+          "source_index": 88,
+          "label": "bulk-start-minus-one",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 202,
+          "response_sha256": "4117c9fa9b504c72f16087e0e02250fcc73cbee83073ff28cd470a18965e4f78",
+          "published_family_frame_count": 1,
+          "record_sha256": "77cff62e09b5318617a1c61959084a0c15b4233e78260624e889c522856b0291"
+        },
+        {
+          "source_index": 89,
+          "label": "bulk-start-fractional-publishes",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 202,
+          "response_sha256": "76bfe6d4276db696fb58e4cfad1d65299bf65c2e256ec26e23c0994dffcce5e2",
+          "published_family_frame_count": 1,
+          "record_sha256": "8ef62c31681afdf1b35ebc987a24973a681a59ddea1f463d31b7d316c4439d86"
+        },
+        {
+          "source_index": 90,
+          "label": "bulk-4097-selected-ids-publishes",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 202,
+          "response_sha256": "44d619578e458ee3f3cb2dd53a0cd5212313213b6c4b9883fd7be21204b03f7e",
+          "published_family_frame_count": 1,
+          "record_sha256": "97c0f86937f3ca2c77e174ceb89fe0e69de1cdb4c6dcbf6d0b0db8c9f490e18f"
+        },
+        {
+          "source_index": 96,
+          "label": "bulk-truthy-nonlist",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "8da0ecaf2194ac1e094db767b167ea4b45ae4a567ad49a0d7bcc5a6a59611f9c",
+          "published_family_frame_count": 0,
+          "record_sha256": "757c87e4942b36971272b0259d906b34b2f1d68765644cc8edde07960052b159"
+        },
+        {
+          "source_index": 97,
+          "label": "bulk-falsy-zero-before-list-type",
+          "path": "/api/channels/channels/from-stream/bulk/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 400,
+          "response_sha256": "6d59d11597de8fcc74d25cb58b8c0273a9a751eb9162a6f267ebcc8c92370795",
+          "published_family_frame_count": 0,
+          "record_sha256": "ce89cf0cd490bb67fc886b35bbe322165a7250405e70b4cb472f5fcf35ad6b59"
+        }
+      ],
+      "observed_roles": [
+        "admin",
+        "admin_authorization_api_key",
+        "admin_spoof",
+        "admin_x_api_key",
+        "anonymous",
+        "bad_bearer",
+        "bad_bearer_with_valid_api_key",
+        "inactive",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization"
+            ],
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "admin_authorization_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "admin_spoof": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type",
+              "X-Forwarded-For",
+              "X-Real-IP"
+            ]
+          ]
+        },
+        "admin_x_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Content-Type",
+              "X-API-Key"
+            ]
+          ]
+        },
+        "anonymous": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Content-Type"
+            ]
+          ]
+        },
+        "bad_bearer": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "bad_bearer_with_valid_api_key": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type",
+              "X-API-Key"
+            ]
+          ]
+        },
+        "inactive": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        },
+        "standard": {
+          "captured_header_name_sets": [
+            [
+              "Accept",
+              "Authorization"
+            ],
+            [
+              "Accept",
+              "Authorization",
+              "Content-Type"
+            ]
+          ]
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 25,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-f4b1b5340012e72e009b:GET",
+      "pattern_exact": "api/vod/^movies\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.vod.api_views.MovieViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-VOD-wire-2-suffix",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 23,
+          "label": "/api/vod/movies.json",
+          "path": "/api/vod/movies.json",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "45c0586274700562c4a07a95a1a76437f42a65b10662a7cd0efd6c3505c885c4",
+          "record_sha256": "132309d92dd4cd2fdd9eaaa2cb4ea33d98e4c72a3f3854f7744af2b042038b6d"
+        },
+        {
+          "source_index": 24,
+          "label": "/api/vod/movies.json/",
+          "path": "/api/vod/movies.json/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "5aa089b229f7da5d5dadc7b5340fca5a731fa300696ec48a8e000f0149e11a9d",
+          "record_sha256": "f9fe5cddaf4776fa096b59891fdac52107d2872d8a5d505b67120d8ee6d3cdfe"
+        }
+      ],
+      "observed_roles": [
+        "standard"
+      ],
+      "source_role_specs": {
+        "standard": {
+          "role": "recorded Source standard fixture actor"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-57f7a7d4c6f73597d98c:GET",
+      "pattern_exact": "api/vod/^series\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.vod.api_views.SeriesViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-VOD-wire-2-suffix",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 66,
+          "label": "/api/vod/series.json",
+          "path": "/api/vod/series.json",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "ff4afd33ff0e9fc62cfabe0f40b6187e2250d659040adcc3e832f75e1c2b92fe",
+          "record_sha256": "fee69e70f903c13491d3098a37d8de0caf705986717f2747d3bf1505b1ebc0af"
+        },
+        {
+          "source_index": 67,
+          "label": "/api/vod/series.json/",
+          "path": "/api/vod/series.json/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "ff4afd33ff0e9fc62cfabe0f40b6187e2250d659040adcc3e832f75e1c2b92fe",
+          "record_sha256": "e9529ba032dc6cae991884887d7245dda7a18e496addff686b8f70ab91e203c0"
+        }
+      ],
+      "observed_roles": [
+        "standard"
+      ],
+      "source_role_specs": {
+        "standard": {
+          "role": "recorded Source standard fixture actor"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-76389271aac612c84c53:GET",
+      "pattern_exact": "api/vod/^episodes\\.(?P<format>[a-z0-9]+)/?$",
+      "source_handler": "apps.vod.api_views.EpisodeViewSet",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "fixture_id": "Original-VOD-wire-2-suffix",
+      "fully_verified": false,
+      "assertions": [
+        "Retain actual Original path, method, actor, status and response evidence."
+      ],
+      "remaining": [
+        "Complete role and input matrix and current candidate verification."
+      ],
+      "cases": [
+        {
+          "source_index": 109,
+          "label": "/api/vod/episodes.json",
+          "path": "/api/vod/episodes.json",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "8aa2b22d7e2e7eac57812f8d40c501e6452b2915d13036244a9486e78134c53f",
+          "record_sha256": "f386b10a0117baab40564fa8a44ce1a8aeefe14a59811821f7454646fc96cedf"
+        },
+        {
+          "source_index": 110,
+          "label": "/api/vod/episodes.json/",
+          "path": "/api/vod/episodes.json/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_sha256": "8aa2b22d7e2e7eac57812f8d40c501e6452b2915d13036244a9486e78134c53f",
+          "record_sha256": "5c5c0d30ccc1eb9df8c466b780c7c2459b25f7dac363372cc7cc899b452c9432"
+        }
+      ],
+      "observed_roles": [
+        "standard"
+      ],
+      "source_role_specs": {
+        "standard": {
+          "role": "recorded Source standard fixture actor"
+        }
+      },
+      "result": {
+        "state": "retained_Original_TCP_observations",
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "Native_coverage_increased": false
+      }
+    }
+  ]
+}

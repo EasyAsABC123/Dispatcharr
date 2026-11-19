@@ -514,10 +514,34 @@ impl CatchupMedia {
             return crate::direct::mint_redirect_path(path, request);
         };
         let source = self.inner.resolver.source(binding).await?;
+        let stored = if provided == Some(sid) {
+            self.inner
+                .pool
+                .stored_idle_route(sid, source.user.id, &media_id)
+                .await?
+        } else {
+            None
+        };
+        let candidates = if let Some(route) = &stored {
+            let candidate = source
+                .candidates
+                .iter()
+                .find(|candidate| {
+                    candidate.profile_id == route.profile_id
+                        && candidate.account_id == route.account_id
+                        && candidate.stream_id == route.stream_id
+                })
+                .ok_or(StoreError::Unsupported(
+                    "stored idle archive route is no longer a supported candidate",
+                ))?;
+            std::slice::from_ref(candidate)
+        } else {
+            source.candidates.as_slice()
+        };
         let range = request.header("range").filter(|value| !value.is_empty());
         let mut last_failure = StoreError::StatusBody(503, json!("No available stream slot"));
         let mut rejected_account = None;
-        for candidate in &source.candidates {
+        for candidate in candidates {
             if rejected_account == Some(candidate.account_id) {
                 continue;
             }
@@ -532,6 +556,11 @@ impl CatchupMedia {
                 self.inner
                     .pool
                     .open_idle_fingerprint(pool_request, owner)
+                    .await
+            } else if let Some(route) = &stored {
+                self.inner
+                    .pool
+                    .open_stored_idle(pool_request, &route.owner)
                     .await
             } else {
                 if let Some(probe) = self.inner.pool.busy_probe(&pool_request, range).await? {

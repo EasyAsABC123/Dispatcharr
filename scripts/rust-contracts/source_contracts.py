@@ -232,6 +232,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_SD25_resolver_scoped_HTTP':
             import retained_sd_contracts
             retained_sd_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_provider_channel_vod_HTTP':
+            import retained_provider_channel_vod_contracts
+            retained_provider_channel_vod_contracts.validate(root, value)
         elif reference['kind'] == 'retained_original_image22_serializer_null_TCP':
             import retained_serializer_null_contracts
             retained_serializer_null_contracts.validate(root, value)
@@ -351,7 +354,7 @@ def apply(root, rows, bindings):
             if reference['kind'] in ['retained_original_notification_framework_capture', 'retained_original_notification_mutations_Source48_framework_capture', 'retained_original_notification_Source20_real_credentials_framework', 'retained_original_core_settings_Source32_framework', 'retained_original_stored_epg_104_framework']:
                 operation['role_matrix']['state'] = 'partial_Original_framework_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
-            if reference['kind'] in ['retained_original_xc_Source11_single_refresh_HTTP', 'retained_original_Source12_search_M3U_resolver_HTTP', 'captured_original_Source51_matching_admin_HTTP', 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP', 'retained_original_management12_channelguide25_HTTP', 'retained_original_auth51_plugin35_resolver_scoped_HTTP', 'retained_original_SD25_resolver_scoped_HTTP', 'retained_original_image22_core_reads_TCP', 'retained_original_image22_serializer_null_TCP']:
+            if reference['kind'] in ['retained_original_xc_Source11_single_refresh_HTTP', 'retained_original_Source12_search_M3U_resolver_HTTP', 'captured_original_Source51_matching_admin_HTTP', 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP', 'retained_original_management12_channelguide25_HTTP', 'retained_original_auth51_plugin35_resolver_scoped_HTTP', 'retained_original_SD25_resolver_scoped_HTTP', 'retained_original_image22_core_reads_TCP', 'retained_original_image22_serializer_null_TCP', 'retained_original_provider_channel_vod_HTTP']:
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'

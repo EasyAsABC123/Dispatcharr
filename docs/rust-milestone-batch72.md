@@ -10,7 +10,7 @@ The read-only lookup identifies the current owner, and the Redis claim
 rechecks that owner, fingerprint and stored provider descriptor before
 transferring the lease. A stale observation cannot create a replacement
 archive. Real Redis covered the new fingerprint predicate plus twelve pool
-and two cancellation regressions. Packaged no-ID playback is a separate check.
+and two cancellation regressions. The packaged no-ID comparison also passed.
 
 Main readiness for an explicitly enabled Beat now waits for its first
 settled scheduler tick. The focused test covers the observed, starting,
@@ -35,3 +35,13 @@ outcomes. There are 211 partial Source assignments and 587 unassigned HTTP
 references. Repeated generation produced identical bytes. All 26 focused
 checks passed, and the portable suite passed 365 checks with one skipped.
 [Register verification](../scripts/rust-integration/milestone-batch72/m0-serializer-checks.json)
+
+## Packaged no-session-ID handoff
+
+Candidate72 matched the pinned Original when the peer worker omitted the
+session ID. Both distinct Rust Main workers returned the same 8,192-byte
+prefix as Python. The peer reused the archive session and stored profile
+while the provider count followed zero, one, zero, one, zero. Independent
+checks verified cleanup of the owned project.
+[Build receipt](../scripts/rust-integration/milestone-batch72/candidate-build.json)
+· [Native no-ID result](../scripts/rust-integration/milestone-batch72/native-no-sid-idle.json)
