@@ -1,0 +1,187 @@
+{
+  "format_version": 1,
+  "kind": "retained_original_comskip_task_observations",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "credit": "Original Dispatcharr, Celery, Kombu, Comskip, FFmpeg and dependency authors retain full credit.",
+  "authorities": {
+    "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+    "scripts/rust-integration/comskip-positive-lifecycle-source1/index.json": "325f5f56fe112b850ce203905e9cff9a408cc0ebd54eb37aba4190bfd46f1772",
+    "scripts/rust-integration/comskip-positive-journal-fences1/index.json": "cb25f31228fa90c2553a50ce63781b7a4661d96b1246428989b03c772fed4b2b"
+  },
+  "contracts": [],
+  "non_HTTP_contracts": [
+    {
+      "candidate_id": "candidate-79333cd4d7e842b2d97b",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/channels/tasks.py",
+        "line": 3374,
+        "name": "comskip_process_recording",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M6",
+      "definition": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py",
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "start_line": 3374,
+        "end_line": 3650,
+        "ast_sha256": "8f66e211ad4d0d62a8b333b37441cb10dd190a422e010849f2c29bdf4c5cb2cf"
+      },
+      "task_name": "apps.channels.tasks.comskip_process_recording",
+      "fixture_ids": [
+        "retained-Original-Comskip-lifecycle-six"
+      ],
+      "observed_actor": {
+        "producer": "owned fixture admin HTTP and observed periodic recording workflow",
+        "executor": "actual Original Celery worker",
+        "complete_role_matrix": false
+      },
+      "assertions": [
+        "Exact retained broker task, root and parent identities, recording SQL argument and backend result",
+        "Both repeat outcomes preserve the complete recording row and emit zero Comskip events",
+        "Preserve the five actual Original controller exits and independent exact cleanup checks"
+      ],
+      "observations": [
+        {
+          "case": "positive-mark",
+          "controller": 1,
+          "queue": "celery",
+          "result": "ok",
+          "observed_task_relationship": "own root",
+          "recording_id_matches_SQL": true,
+          "repeat_preserves_full_recording_row": false,
+          "Comskip_websocket_events": 2,
+          "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/positive-mark"
+        },
+        {
+          "case": "mark-repeat",
+          "controller": 1,
+          "queue": "celery",
+          "result": "already_processed",
+          "observed_task_relationship": "own root",
+          "recording_id_matches_SQL": true,
+          "repeat_preserves_full_recording_row": true,
+          "Comskip_websocket_events": 0,
+          "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/mark-repeat"
+        },
+        {
+          "case": "positive-cut",
+          "controller": 2,
+          "queue": "celery",
+          "result": "ok",
+          "observed_task_relationship": "own root",
+          "recording_id_matches_SQL": true,
+          "repeat_preserves_full_recording_row": false,
+          "Comskip_websocket_events": 2,
+          "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/positive-cut"
+        },
+        {
+          "case": "cut-repeat",
+          "controller": 3,
+          "queue": "celery",
+          "result": "already_processed",
+          "observed_task_relationship": "own root",
+          "recording_id_matches_SQL": true,
+          "repeat_preserves_full_recording_row": true,
+          "Comskip_websocket_events": 0,
+          "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/cut-repeat"
+        },
+        {
+          "case": "natural-automatic-mark",
+          "controller": 5,
+          "queue": "celery",
+          "result": "ok",
+          "observed_task_relationship": "recording child",
+          "recording_id_matches_SQL": true,
+          "repeat_preserves_full_recording_row": false,
+          "Comskip_websocket_events": 2,
+          "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/natural-automatic-mark"
+        },
+        {
+          "case": "natural-automatic-cut",
+          "controller": 6,
+          "queue": "celery",
+          "result": "ok",
+          "observed_task_relationship": "recording child",
+          "recording_id_matches_SQL": true,
+          "repeat_preserves_full_recording_row": false,
+          "Comskip_websocket_events": 2,
+          "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/natural-automatic-cut"
+        }
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 6,
+        "received_signals": 0,
+        "raw_backend_wire_asserted": false,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "fixtures": {
+    "retained-Original-Comskip-lifecycle-six": {
+      "id": "retained-Original-Comskip-lifecycle-six",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "execution_kind": "historical_actual_Original_capture_offline_assertion_replay",
+      "observed_actor": {
+        "producer": "owned fixture admin HTTP and observed periodic recording workflow",
+        "executor": "actual Original Celery worker",
+        "complete_role_matrix": false
+      },
+      "literal_controller_receipts": {
+        "1": {
+          "actual_exit": 1,
+          "exact_cleanup_passed": true,
+          "receipt_paths": [
+            "runs/1/terminal.json",
+            "runs/1/Root-independent-cleanup.json"
+          ]
+        },
+        "2": {
+          "actual_exit": 1,
+          "exact_cleanup_passed": true,
+          "receipt_paths": [
+            "runs/2/terminal.json",
+            "runs/2/Root-independent-cleanup.json"
+          ]
+        },
+        "3": {
+          "actual_exit": 1,
+          "exact_cleanup_passed": true,
+          "receipt_paths": [
+            "runs/3/terminal.json",
+            "runs/3/Root-independent-cleanup.json"
+          ]
+        },
+        "5": {
+          "actual_exit": 1,
+          "exact_cleanup_passed": true,
+          "receipt_paths": [
+            "runs/5/terminal.json",
+            "runs/5/Root-independent-cleanup.json"
+          ]
+        },
+        "6": {
+          "actual_exit": 0,
+          "exact_cleanup_passed": true,
+          "receipt_paths": [
+            "runs/6/terminal.json",
+            "runs/6/Root-independent-cleanup.json"
+          ]
+        }
+      },
+      "Source_replayed_for_mapping": false,
+      "manual_global_producer_graph_qualified": false,
+      "natural_MARK_artwork_backend_observed": false,
+      "natural_whole_media_equivalence_qualified": false
+    }
+  },
+  "actual_Original_worker_observations": 6,
+  "new_Source_execution": false,
+  "Native_coverage_increased": false,
+  "fully_verified_added": 0
+}

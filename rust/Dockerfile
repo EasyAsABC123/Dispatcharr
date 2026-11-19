@@ -66,3 +66,7 @@ COPY scripts/rust-integration/channel-stations-source53/partial-actual-frame.jso
 COPY scripts/rust-integration/channel-stations-source53/partial-backend.json ./scripts/rust-integration/channel-stations-source53/partial-backend.json
 COPY scripts/rust-integration/channel-stations-source53/empty4102-actual-frame.json ./scripts/rust-integration/channel-stations-source53/empty4102-actual-frame.json
 COPY scripts/rust-integration/channel-stations-source53/empty4102-backend.json ./scripts/rust-integration/channel-stations-source53/empty4102-backend.json
+
+# Public Original Comskip task authorities for offline register verification.
+COPY scripts/rust-integration/comskip-positive-lifecycle-source1/ ./scripts/rust-integration/comskip-positive-lifecycle-source1/
+COPY scripts/rust-integration/comskip-positive-journal-fences1/ ./scripts/rust-integration/comskip-positive-journal-fences1/

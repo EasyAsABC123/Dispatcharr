@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "1451f160e298aa4d95ee3213306d5b799d4b510c977d33a0663a5aa1fe43659f",
+    "scripts/rust-contracts/executable-source-inputs.json": "0d20cbcc0de34cc9c34a46df1de4e3442101ff0a5cd081a96a48ab5617e1218c",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -49,7 +49,8 @@
     "scripts/rust-contracts/retained-connect/bindings.json": "2baed770de482644dd8a6aa5a65d98fe196c6210aecca292093dcecac4afef5b",
     "scripts/rust-contracts/retained-connect-actions/bindings.json": "b132c92fd411d9a6aa28afdb42972788ab84405f9062d105411856182e88f708",
     "scripts/rust-contracts/retained-alias19/bindings.json": "fd613f7113123c01f06f7be29e3c9499f050849eece39e2a16109924e49474f2",
-    "scripts/rust-contracts/retained-connect-detail/bindings.json": "6583922626cc3930a8c9f85fee85229c6d9bf1a1f290e34bb0a39b36ed4c9dbb"
+    "scripts/rust-contracts/retained-connect-detail/bindings.json": "6583922626cc3930a8c9f85fee85229c6d9bf1a1f290e34bb0a39b36ed4c9dbb",
+    "scripts/rust-contracts/retained-comskip-task/bindings.json": "4476defd7fafbbafd320e1570bab22d0b27258507e98f15b68ea4afcd7afd23e"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
@@ -254,6 +255,11 @@
         "path": "scripts/rust-contracts/retained-connect-detail/bindings.json",
         "sha256": "6583922626cc3930a8c9f85fee85229c6d9bf1a1f290e34bb0a39b36ed4c9dbb",
         "kind": "retained_original_Connect_detail_PUT_DELETE_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-comskip-task/bindings.json",
+        "sha256": "4476defd7fafbbafd320e1570bab22d0b27258507e98f15b68ea4afcd7afd23e",
+        "kind": "retained_original_comskip_task_observations"
       }
     ],
     "fully_verified_added": 0,
@@ -856,7 +862,7 @@
   },
   "executable_Source_non_HTTP_mapping": {
     "state": "typed partial Original model/task/management/synthetic-consumer assertions, not HTTP or Native verification",
-    "candidates": 15,
+    "candidates": 16,
     "fully_verified_added": 0
   },
   "runtime_discovery_metadata": {
@@ -265423,9 +265429,193 @@
         "name": "comskip_process_recording",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_task_observations",
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 6,
+        "received_signals": 0,
+        "raw_backend_wire_asserted": false,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "complete_role_matrix": false,
+        "fully_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "retained-Original-Comskip-lifecycle-six": {
+          "id": "retained-Original-Comskip-lifecycle-six",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "execution_kind": "historical_actual_Original_capture_offline_assertion_replay",
+          "observed_actor": {
+            "producer": "owned fixture admin HTTP and observed periodic recording workflow",
+            "executor": "actual Original Celery worker",
+            "complete_role_matrix": false
+          },
+          "literal_controller_receipts": {
+            "1": {
+              "actual_exit": 1,
+              "exact_cleanup_passed": true,
+              "receipt_paths": [
+                "runs/1/terminal.json",
+                "runs/1/Root-independent-cleanup.json"
+              ]
+            },
+            "2": {
+              "actual_exit": 1,
+              "exact_cleanup_passed": true,
+              "receipt_paths": [
+                "runs/2/terminal.json",
+                "runs/2/Root-independent-cleanup.json"
+              ]
+            },
+            "3": {
+              "actual_exit": 1,
+              "exact_cleanup_passed": true,
+              "receipt_paths": [
+                "runs/3/terminal.json",
+                "runs/3/Root-independent-cleanup.json"
+              ]
+            },
+            "5": {
+              "actual_exit": 1,
+              "exact_cleanup_passed": true,
+              "receipt_paths": [
+                "runs/5/terminal.json",
+                "runs/5/Root-independent-cleanup.json"
+              ]
+            },
+            "6": {
+              "actual_exit": 0,
+              "exact_cleanup_passed": true,
+              "receipt_paths": [
+                "runs/6/terminal.json",
+                "runs/6/Root-independent-cleanup.json"
+              ]
+            }
+          },
+          "Source_replayed_for_mapping": false,
+          "manual_global_producer_graph_qualified": false,
+          "natural_MARK_artwork_backend_observed": false,
+          "natural_whole_media_equivalence_qualified": false
+        }
+      },
+      "owning_milestone": "M6",
+      "assertions": [
+        "Exact retained broker task, root and parent identities, recording SQL argument and backend result",
+        "Both repeat outcomes preserve the complete recording row and emit zero Comskip events",
+        "Preserve the five actual Original controller exits and independent exact cleanup checks"
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-79333cd4d7e842b2d97b",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/channels/tasks.py",
+          "line": 3374,
+          "name": "comskip_process_recording",
+          "callable": "celery.shared_task"
+        },
+        "owning_milestone": "M6",
+        "definition": {
+          "path": "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py",
+          "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+          "start_line": 3374,
+          "end_line": 3650,
+          "ast_sha256": "8f66e211ad4d0d62a8b333b37441cb10dd190a422e010849f2c29bdf4c5cb2cf"
+        },
+        "task_name": "apps.channels.tasks.comskip_process_recording",
+        "fixture_ids": [
+          "retained-Original-Comskip-lifecycle-six"
+        ],
+        "observed_actor": {
+          "producer": "owned fixture admin HTTP and observed periodic recording workflow",
+          "executor": "actual Original Celery worker",
+          "complete_role_matrix": false
+        },
+        "assertions": [
+          "Exact retained broker task, root and parent identities, recording SQL argument and backend result",
+          "Both repeat outcomes preserve the complete recording row and emit zero Comskip events",
+          "Preserve the five actual Original controller exits and independent exact cleanup checks"
+        ],
+        "observations": [
+          {
+            "case": "positive-mark",
+            "controller": 1,
+            "queue": "celery",
+            "result": "ok",
+            "observed_task_relationship": "own root",
+            "recording_id_matches_SQL": true,
+            "repeat_preserves_full_recording_row": false,
+            "Comskip_websocket_events": 2,
+            "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/positive-mark"
+          },
+          {
+            "case": "mark-repeat",
+            "controller": 1,
+            "queue": "celery",
+            "result": "already_processed",
+            "observed_task_relationship": "own root",
+            "recording_id_matches_SQL": true,
+            "repeat_preserves_full_recording_row": true,
+            "Comskip_websocket_events": 0,
+            "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/mark-repeat"
+          },
+          {
+            "case": "positive-cut",
+            "controller": 2,
+            "queue": "celery",
+            "result": "ok",
+            "observed_task_relationship": "own root",
+            "recording_id_matches_SQL": true,
+            "repeat_preserves_full_recording_row": false,
+            "Comskip_websocket_events": 2,
+            "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/positive-cut"
+          },
+          {
+            "case": "cut-repeat",
+            "controller": 3,
+            "queue": "celery",
+            "result": "already_processed",
+            "observed_task_relationship": "own root",
+            "recording_id_matches_SQL": true,
+            "repeat_preserves_full_recording_row": true,
+            "Comskip_websocket_events": 0,
+            "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/cut-repeat"
+          },
+          {
+            "case": "natural-automatic-mark",
+            "controller": 5,
+            "queue": "celery",
+            "result": "ok",
+            "observed_task_relationship": "recording child",
+            "recording_id_matches_SQL": true,
+            "repeat_preserves_full_recording_row": false,
+            "Comskip_websocket_events": 2,
+            "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/natural-automatic-mark"
+          },
+          {
+            "case": "natural-automatic-cut",
+            "controller": 6,
+            "queue": "celery",
+            "result": "ok",
+            "observed_task_relationship": "recording child",
+            "recording_id_matches_SQL": true,
+            "repeat_preserves_full_recording_row": false,
+            "Comskip_websocket_events": 2,
+            "retained_artifact_directory": "scripts/rust-integration/comskip-positive-lifecycle-source1/cells/natural-automatic-cut"
+          }
+        ],
+        "result": {
+          "state": "partial_historical_Original_task_observations",
+          "actual_worker_observations": 6,
+          "received_signals": 0,
+          "raw_backend_wire_asserted": false,
+          "new_Source_cases_this_task": 0,
+          "Native_coverage_increased": false,
+          "complete_role_matrix": false,
+          "fully_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-390f50055508e3581055",

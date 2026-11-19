@@ -85,6 +85,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(r['path'] for r in additional['authorities'])
         import retained_task_operator_contracts
         refs.update(retained_task_operator_contracts.dependencies())
+        import retained_comskip_task_contracts
+        refs.update(retained_comskip_task_contracts.dependencies())
         import retained_management_contracts
         refs.update(retained_management_contracts.dependencies())
         import core_settings_source_contracts

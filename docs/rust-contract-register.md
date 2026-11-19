@@ -10,7 +10,10 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | Routes with unresolved method/action mapping | 322 | Explicit unknown-method items; no GET/POST guess |
 | Runtime operation work items | 798 | Includes those 322 placeholders; not 798 verified endpoints |
 | OpenAPI operations | 362 | Separate discovery view; do not add to route totals |
-| Static non-HTTP candidates | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
+| Executable Original HTTP assignments | 403 | Scoped Source definitions across 798 operation work items. 395 work items await assignment. |
+| Unresolved methods with an executable Original fixture | 200 | Observed under 322 unresolved method/action declarations |
+| Non-HTTP candidate identities | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
+| Typed executable Original non-HTTP assignments | 16 | Twelve tasks, two commands, one model and one synthetic consumer. 234 candidates await assignment. |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
 | Operations with partial case bindings | 11 | 403 scoped packaged observations; remaining role/input coverage stays open |
 | Fully audited register operation rows | 0 | Register-to-case mapping has not been completed; existing reports retain their actual passes |
@@ -291,3 +294,10 @@ their symbolic fixture paths and database assertions. Both fixtures passed
 exact cleanup and recorded zero requests at the owned webhook receiver.
 
 The register has 403 partial Source assignments and 395 unassigned operations.
+
+## Retained Original Comskip task
+
+The [Comskip task binding](../scripts/rust-contracts/retained-comskip-task/README.md)
+adds one typed non-HTTP assignment from six actual Original task outcomes.
+The five controller exits remain 1, 1, 1, 1 and 0 with exact cleanup recorded.
+The register has 16 partial non-HTTP assignments and 234 unassigned candidates.

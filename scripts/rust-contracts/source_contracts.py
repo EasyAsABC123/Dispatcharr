@@ -294,6 +294,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'captured_original_scanner_task_observations':
             import scanner_task_contracts
             scanner_task_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_comskip_task_observations':
+            import retained_comskip_task_contracts
+            retained_comskip_task_contracts.validate(root, value, bindings)
         elif reference['kind'] == 'retained_original_task_operator7_observations':
             import retained_task_operator_contracts
             retained_task_operator_contracts.validate(root, value, bindings)
@@ -412,7 +415,11 @@ def apply_non_HTTP(root, entries):
     index = {entry['candidate_id']: entry for entry in entries}
     seen = set()
     for reference in manifest['inputs']:
-        if reference['kind'] not in ['pinned_original_account_settings_tests', 'captured_original_scanner_task_observations', 'pinned_original_provider_output_consumer_tests', 'retained_original_task_operator7_observations']:
+        if reference['kind'] not in [
+            'pinned_original_account_settings_tests', 'captured_original_scanner_task_observations',
+            'pinned_original_provider_output_consumer_tests', 'retained_original_task_operator7_observations',
+            'retained_original_comskip_task_observations',
+        ]:
             continue
         value = checked(root, reference)
         if reference['kind'] == 'pinned_original_account_settings_tests':
@@ -427,6 +434,10 @@ def apply_non_HTTP(root, entries):
             import retained_task_operator_contracts
             retained_task_operator_contracts.validate(root, value)
             source_kind = None  # Only the seven validator-pinned task/command identities.
+        elif reference['kind'] == 'retained_original_comskip_task_observations':
+            import retained_comskip_task_contracts
+            retained_comskip_task_contracts.validate(root, value)
+            source_kind = 'task_candidate'
         else:
             import provider_output_contracts
             provider_output_contracts.validate(root, value)
@@ -444,7 +455,8 @@ def apply_non_HTTP(root, entries):
             assert entry['fully_verified'] is False and contract['fully_verified'] is False
             entry['setup_fixture'] = (copy.deepcopy(value['fixtures'][contract['fixture_id']]) if current_kind in ['model_candidate', 'websocket_consumer_candidate']
                                       else {key: copy.deepcopy(value['fixtures'][key]) for key in contract['fixture_ids']})
-            if reference['kind'] == 'retained_original_task_operator7_observations':
+            if reference['kind'] in ('retained_original_task_operator7_observations',
+                                     'retained_original_comskip_task_observations'):
                 entry['owning_milestone'] = contract['owning_milestone']
             entry['assertions'] = copy.deepcopy(contract['assertions'])
             entry['result'] = copy.deepcopy(contract['result'])

@@ -80,7 +80,8 @@ class NotificationMutationControls(unittest.TestCase):
    'scripts/rust-contracts/retained-connect/bindings.json',
    'scripts/rust-contracts/retained-connect-actions/bindings.json',
    'scripts/rust-contracts/retained-alias19/bindings.json',
-   'scripts/rust-contracts/retained-connect-detail/bindings.json'])
+   'scripts/rust-contracts/retained-connect-detail/bindings.json',
+   'scripts/rust-contracts/retained-comskip-task/bindings.json'])
   later_ids=[];supplemental_ids=[]
   import retained_management_contracts
   import retained_auth_plugin_contracts
@@ -155,6 +156,8 @@ class NotificationMutationControls(unittest.TestCase):
   self.assertEqual(retained_ids,{row['candidate_id']for row in retained_task_operator_contracts.IDENTITIES})
   self.assertEqual(len(retained_ids),7)
   historical_non_HTTP=copy.deepcopy(new['non_HTTP_candidates'])
+  import retained_comskip_task_contracts
+  retained_comskip_task_contracts.restore_pre_comskip_task(ROOT,historical_non_HTTP)
   self.assertEqual(sum(row['candidate_id']not in retained_ids for row in historical_non_HTTP),243)
   for row in historical_non_HTTP:
    if row['candidate_id']in retained_ids:
@@ -167,7 +170,7 @@ class NotificationMutationControls(unittest.TestCase):
   non_HTTP_mapping=source_contracts.apply_non_HTTP(ROOT,historical_non_HTTP)
   self.assertEqual(historical_non_HTTP,new['non_HTTP_candidates'])
   self.assertEqual(non_HTTP_mapping,new['executable_Source_non_HTTP_mapping'])
-  self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+7)
+  self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+8)
   self.assertEqual(non_HTTP_mapping['fully_verified_added'],0)
   expected=old['base_HTTP_assignments']+len(selected)+len(later_ids)
   self.assertEqual(expected,402) # pre-XC preservation count
