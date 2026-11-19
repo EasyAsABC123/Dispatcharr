@@ -324,3 +324,13 @@ Python. A host comparison matched 25,941 AST nodes from eight pinned Original
 source modules. Earlier Compose attempts retain the broad timeout and the two
 targeted failures that exposed the portability gaps. Full M0 remains open.
 [Compose receipt](../scripts/rust-contracts/sdk-portable-register.json)
+
+## Retained Original format alias remainder
+
+The [alias remainder binding](../scripts/rust-contracts/retained-alias-remainder/README.md)
+records 313 completed Original response observations across 83 exact operations.
+It adds 64 partial Source assignments and supplements the 19 preserved
+anonymous primaries. The controller exited 0 and passed exact cleanup.
+The captures include 75 HTTP 500 responses and preserve three unresolved
+method declarations. Role completeness and resource-effect semantics remain
+open. The register has 467 partial HTTP assignments and 331 unassigned operations.

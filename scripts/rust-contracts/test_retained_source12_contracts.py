@@ -15,6 +15,7 @@ import retained_connect_contracts
 import retained_connect_actions_contracts
 import retained_alias19_contracts
 import retained_connect_detail_contracts
+import retained_alias_remainder_contracts
 import retained_source12_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -38,6 +39,7 @@ class RetainedSource12Controls(unittest.TestCase):
     p.write_bytes(raw)
  def test_previous173_and796_whole_rows_and_M3U_primary_preserved(self):
   register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,register['runtime_routes'])
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,register['runtime_routes'])
   retained_alias19_contracts.restore_pre_alias19(ROOT,register['runtime_routes'])
   retained_connect_actions_contracts.restore_pre_connect_actions(ROOT,register['runtime_routes'])
@@ -70,7 +72,8 @@ class RetainedSource12Controls(unittest.TestCase):
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],403)
+  self.assertEqual(mapping['operations'],467)
+  retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,rows)
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)
   retained_alias19_contracts.restore_pre_alias19(ROOT,rows)
   retained_connect_actions_contracts.restore_pre_connect_actions(ROOT,rows)
@@ -89,6 +92,7 @@ class RetainedSource12Controls(unittest.TestCase):
   retained_range_source10_contracts.restore_pre_range(rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,rows)
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)
   retained_alias19_contracts.restore_pre_alias19(ROOT,rows)
   retained_connect_actions_contracts.restore_pre_connect_actions(ROOT,rows)

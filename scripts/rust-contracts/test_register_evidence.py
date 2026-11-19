@@ -133,6 +133,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(retained_alias19_contracts.dependencies())
         import retained_connect_detail_contracts
         refs.update(retained_connect_detail_contracts.dependencies())
+        import retained_alias_remainder_contracts
+        refs.update(retained_alias_remainder_contracts.dependencies())
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)

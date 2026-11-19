@@ -18,6 +18,9 @@ import retained_connect_contracts
 import retained_connect_actions_contracts
 import retained_alias19_contracts
 import retained_connect_detail_contracts
+import retained_alias_remainder_contracts
+import retained_comskip_task_contracts
+import retained_clocked_recording_contracts
 import unittest
 import retained_auth_plugin_contracts as subject
 import source_contracts
@@ -75,6 +78,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
         register = json.loads((ROOT / 'docs/rust-contract-register.json').read_bytes())
         current_rows = copy.deepcopy(register['runtime_routes'])
         import retained_xc_refresh_contracts
+        retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT, register['runtime_routes'])
         retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, register['runtime_routes'])
         retained_alias19_contracts.restore_pre_alias19(ROOT, register['runtime_routes'])
         retained_connect_actions_contracts.restore_pre_connect_actions(ROOT, register['runtime_routes'])
@@ -111,13 +115,15 @@ class RetainedAuthPluginControls(unittest.TestCase):
             self.assertEqual(additions[0]['input']['kind'], subject.KIND)
             self.assertEqual(subject.digest(operation), proof['selected_existing_primary_dict_sha256'][identifier])
         self.assertEqual(subject.digest([{k: v for k, v in row.items() if k != 'operations'} for row in register['runtime_routes']]), proof['route_structural_sha256'])
+        retained_clocked_recording_contracts.restore_pre_clocked_recording(ROOT, register['non_HTTP_candidates'])
+        retained_comskip_task_contracts.restore_pre_comskip_task(ROOT, register['non_HTTP_candidates'])
         for key, field in [('non_HTTP_candidates', 'non_HTTP_candidates_sha256'), ('openapi_operations', 'OpenAPI_operations_sha256'), ('observations_for_methods_not_declared_in_discovery', 'legacy_undeclared_method_observations_sha256')]:
             self.assertEqual(subject.digest(register[key]), proof[field])
         rows = copy.deepcopy(current_rows)
         mapping = source_contracts.apply(ROOT, rows, json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes()))
         self.assertEqual(rows, current_rows)
         self.assertEqual([row for row in mapping['unmapped_method_Source_observations'] if row['route_id'] != 'route-7e6941c073eccaa2b6dd' and row.get('fixture_id') != retained_epg_reads_contracts.FIXTURE], self.value['unmapped_method_Source_observations'])
-        self.assertEqual(mapping['operations'], 403)
+        self.assertEqual(mapping['operations'], 467)
         self.assertEqual(sum(o['method'] is None for o in operations.values()), 322)
         self.assertTrue(all(o['fully_verified'] is False for o in operations.values()))
 

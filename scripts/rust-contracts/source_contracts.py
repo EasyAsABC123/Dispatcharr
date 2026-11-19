@@ -235,6 +235,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_Connect_detail_PUT_DELETE_HTTP':
             import retained_connect_detail_contracts
             retained_connect_detail_contracts.validate(root, value)
+        elif reference['kind'] == 'retained_original_alias_remainder_HTTP':
+            import retained_alias_remainder_contracts
+            retained_alias_remainder_contracts.validate(root, value)
         elif reference['kind'] == 'retained_original_alias19_anonymous_HTTP':
             import retained_alias19_contracts
             retained_alias19_contracts.validate(root, value)
@@ -356,6 +359,14 @@ def apply(root, rows, bindings):
                             and identifier in seen
                             and primary_kinds[identifier] != reference['kind']
                             and identifier not in supplemented)
+            if reference['kind'] == 'retained_original_alias_remainder_HTTP':
+                supplemental = identifier in seen
+                decision = value['mapping_decisions'][identifier]
+                assert decision['binding'] == ('supplemental' if supplemental else 'primary')
+                resolver_ordinal = index[identifier][0]['resolver_ordinal']
+                assert all(case['resolver_ordinal'] == resolver_ordinal for case in contract['cases'])
+                if supplemental:
+                    assert primary_kinds[identifier] == 'retained_original_alias19_anonymous_HTTP'
             assert identifier not in seen or supplemental, 'conflicting Source contract inputs'
             seen.add(identifier)
             primary_kinds.setdefault(identifier, reference['kind'])
@@ -401,7 +412,7 @@ def apply(root, rows, bindings):
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             if reference['kind'] in ('retained_original_DVR_XC_playback_HTTP', 'retained_original_Connect_collection_HTTP',
                                      'retained_original_Connect_log_read_and_subscription_set_HTTP', 'retained_original_alias19_anonymous_HTTP',
-                                     'retained_original_Connect_detail_PUT_DELETE_HTTP'):
+                                     'retained_original_Connect_detail_PUT_DELETE_HTTP', 'retained_original_alias_remainder_HTTP'):
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'

@@ -20,6 +20,9 @@ import retained_connect_contracts
 import retained_connect_actions_contracts
 import retained_alias19_contracts
 import retained_connect_detail_contracts
+import retained_alias_remainder_contracts
+import retained_comskip_task_contracts
+import retained_clocked_recording_contracts
 import core_settings_source_contracts as subject
 import source_contracts
 
@@ -66,6 +69,7 @@ class CoreSettingsSourceControls(unittest.TestCase):
         auth_proof = json.loads((ROOT / 'scripts/rust-contracts/retained-auth-plugin/preservation.json').read_text())
         original_rows = copy.deepcopy(register['runtime_routes'])
         import retained_xc_refresh_contracts
+        retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT, register['runtime_routes'])
         retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, register['runtime_routes'])
         retained_alias19_contracts.restore_pre_alias19(ROOT, register['runtime_routes'])
         retained_connect_actions_contracts.restore_pre_connect_actions(ROOT, register['runtime_routes'])
@@ -113,6 +117,8 @@ class CoreSettingsSourceControls(unittest.TestCase):
         self.assertEqual(len(operations), 798)
         self.assertEqual(subject.digest({k: v for k, v in operations.items() if k not in selected}), proof['all_unselected_operation_dicts_sha256'])
         self.assertEqual(subject.digest([{k: v for k, v in r.items() if k != 'operations'} for r in register['runtime_routes']]), proof['routes_structural_sha256'])
+        retained_clocked_recording_contracts.restore_pre_clocked_recording(ROOT, register['non_HTTP_candidates'])
+        retained_comskip_task_contracts.restore_pre_comskip_task(ROOT, register['non_HTTP_candidates'])
         for field, name in [('non_HTTP_candidates', 'non_HTTP_candidates_sha256'), ('openapi_operations', 'OpenAPI_operations_sha256'), ('observations_for_methods_not_declared_in_discovery', 'observations_for_methods_not_declared_sha256')]:
             self.assertEqual(subject.digest(register[field]), proof[name])
         self.assertEqual(sum('executable_Source_contract' in o for o in operations.values()), 152)
