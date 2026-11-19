@@ -1,0 +1,957 @@
+{
+  "binding_kind": "retained_original_playback_VOD_XC_TCP",
+  "scope": "Retained Original playback request assignments",
+  "Original_author_credit": "All application and algorithm credit remains with original Dispatcharr authors.",
+  "based_on_revision": "8617a53fe37678ed13234abe7522b79130aa4a92",
+  "based_on_register_sha256": "b08682e6416a669341e9721251dba49c43b6a313b358808e61ba4057262f2039",
+  "existing_Source_assignments_unchanged": 250,
+  "operation_declarations_unchanged": 798,
+  "unrelated_operation_dictionaries_unchanged": 791,
+  "candidate_partial_assignments": 257,
+  "candidate_unassigned_operations": 541,
+  "fully_verified_operations": 0,
+  "new_Source_executions": 0,
+  "Native_coverage_increased": false,
+  "operation_count": 7,
+  "unique_Source_cases": 54,
+  "fixtures": {
+    "vod-retained": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "scope": "Retained actual Original HTTP execution, partial operation evidence",
+      "raw_capture": {
+        "path": "artifacts/rust/m4-vod-source-alias-built-react-1/vod-contracts.json",
+        "sha256": "212ddaa439069566886834a46ee1685efad2cf29986137d1e94ee644fda6f006"
+      },
+      "raw_seed": {
+        "path": "artifacts/rust/m4-vod-source-alias-built-react-1/vod-seed.json",
+        "sha256": "833fea99cf5671e401348bb6714a1b3574d69a9d64de2694bc4c387898d62311"
+      },
+      "published_alias_projection": {
+        "path": "scripts/rust-vod-contracts/profile-alias-characterization.json",
+        "sha256": "675a7e9e29b2d0b80c785538af6d865ec166333acc0a31e6fae79c88f0395508"
+      },
+      "request_plan": {
+        "path": "scripts/rust-vod-contracts/probe.py",
+        "sha256": "431c95e35c44a0b315d8ffa54a21d3b23c2ad0362f9c880c35dc1793812ae45a"
+      },
+      "captured_controller_passed": false,
+      "controller_scope": "Combined Original/Native comparison failed on Allow header ordering. Only retained Original responses are used.",
+      "excluded": {
+        "profile_follows": {
+          "case_count": 2,
+          "reason": "Both targets include an extra profile segment and do not bind to the VOD profile-session operation"
+        }
+      }
+    },
+    "xc-retained": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "scope": "Retained actual Original HTTP execution, partial operation evidence",
+      "raw_capture": {
+        "path": "artifacts/rust/m4-timeshift-xc-source-1/vod-contracts.json",
+        "sha256": "0c7e1fa493e0d3e0abfc05af8232d3023c0ed1904ab991c1a0816b5be8ea4a95"
+      },
+      "published_projection": {
+        "path": "scripts/rust-timeshift-contracts/python-xc-route-goldens.json",
+        "sha256": "ad2bd18076fdaba4b385dd351bda6aca7724f46434a90d98ec844ef6342446ab"
+      },
+      "request_plan": {
+        "path": "scripts/rust-timeshift-contracts/xc_probe.py",
+        "sha256": "b0406feba0dbc3f0d81e3248b29e422d491ecc201883c4876df4a14220bc8974"
+      },
+      "path_scope": "Credential and channel placeholders refer to fixture role and resolver path shape; raw credentials and opaque queries omitted."
+    },
+    "vod-stop-retained": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "scope": "Retained actual Original HTTP execution, partial operation evidence",
+      "raw_capture": {
+        "path": "artifacts/rust/m4-vod-admin-stop-entry-source-214/vod-contracts.json",
+        "sha256": "ab70b9fff814633b4b5a95bded2ecc0c6c392b9ed0f4d85fb5bd8419ef993c4c"
+      },
+      "frozen_request_plan": {
+        "path": "artifacts/rust/m4-vod-admin-stop-entry-source-214/tool-source/scripts/rust-vod-contracts/active_restart_http_source.py",
+        "sha256": "0e54b4fe817c4f996dcf04a597bcc9e63c452e22840a0fd5f7f27b1b5a43e78b"
+      },
+      "source_capture_transport": "actual HTTP"
+    },
+    "vod-category-retained": {
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "baseline_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "scope": "Retained actual Original HTTP execution, partial operation evidence",
+      "raw_capture": {
+        "path": "artifacts/rust/m5-vod-rest-source-1/http/source-corpus.json",
+        "sha256": "d3e3c16eb1f1350ba2fe9379fe703067a81b999a7a997eeccd49596c1c30a89b"
+      },
+      "published_projection": {
+        "path": "scripts/rust-vod-api-contracts/source-vod-rest-1.json",
+        "sha256": "70980c8e7b8935735bdd0c699202e106ae869becba833c864be8459cbf58a3b6"
+      },
+      "published_capture_receipt": {
+        "path": "scripts/rust-vod-api-contracts/verified-vod-rest-source-1.json",
+        "sha256": "6df1a9f16997b0f926383d6e5133641d0cbbb3261b6c0c6f666aee649d2b8d95"
+      }
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-3a8ec6e112801f3eefc1:METHOD_UNRESOLVED",
+      "fixture_id": "vod-retained",
+      "pattern_exact": "proxy/vod/<str:content_type>/<uuid:content_id>/<str:session_id>",
+      "source_handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M4",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role": "anonymous",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Existing exact resolver ID is consistent with retained request target shape",
+        "Status and method are retained Original HTTP observations"
+      ],
+      "cases": [
+        {
+          "contract_id": "route-3a8ec6e112801f3eefc1:METHOD_UNRESOLVED",
+          "source_index": 1,
+          "record_json_pointer": "/wire/events/1",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 200,
+          "response_projection_sha256": "eea82610af43a3810dea8236a1fb99621bf8c33486d748925b7700cb2be85fa5"
+        },
+        {
+          "contract_id": "route-3a8ec6e112801f3eefc1:METHOD_UNRESOLVED",
+          "source_index": 2,
+          "record_json_pointer": "/wire/events/2",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 206,
+          "response_projection_sha256": "9f708821db38d6b25c6258f6fa722a082d1dfc33a0d3789847c80c9db4e23ba2"
+        },
+        {
+          "contract_id": "route-3a8ec6e112801f3eefc1:METHOD_UNRESOLVED",
+          "source_index": 3,
+          "record_json_pointer": "/wire/events/3",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 206,
+          "response_projection_sha256": "cc3d2b540973c913f102d14d63ce7298cf8fc4bd38c362488b13ad983c46e2db"
+        },
+        {
+          "contract_id": "route-3a8ec6e112801f3eefc1:METHOD_UNRESOLVED",
+          "source_index": 4,
+          "record_json_pointer": "/wire/events/4",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 206,
+          "response_projection_sha256": "61972ca51bd0a01ca416417510103c0430c97f9d830860178a9fcfdb3d68b679"
+        },
+        {
+          "contract_id": "route-3a8ec6e112801f3eefc1:METHOD_UNRESOLVED",
+          "source_index": 5,
+          "record_json_pointer": "/wire/events/5",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 416,
+          "response_projection_sha256": "8542849560d55dce4e03b3c210fbe1396f1ebbceac71a6b610f8361cb4b8861d"
+        },
+        {
+          "contract_id": "route-3a8ec6e112801f3eefc1:METHOD_UNRESOLVED",
+          "source_index": 6,
+          "record_json_pointer": "/wire/events/6",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/<session>",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 206,
+          "response_projection_sha256": "0bfd76468bd018e9af5a987b4e6514f5a7da2a252a5913685bee293533e85ef9"
+        }
+      ],
+      "fully_verified": false,
+      "result": {
+        "Source_case_observations": 6,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-4d905eb7a7b8071e69a7:METHOD_UNRESOLVED",
+      "fixture_id": "vod-stop-retained",
+      "pattern_exact": "proxy/vod/stop_client/",
+      "source_handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M4",
+      "observed_methods": [
+        "POST"
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role": "admin",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Existing exact resolver ID is consistent with retained request target shape",
+        "Status and method are retained Original HTTP observations"
+      ],
+      "cases": [
+        {
+          "contract_id": "route-4d905eb7a7b8071e69a7:METHOD_UNRESOLVED",
+          "source_index": 0,
+          "record_json_pointer": "/active_vod_restart_source/admin_stop",
+          "path": "/proxy/vod/stop_client/",
+          "method": "POST",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "54a1f8f39f16eb078b3f36f80cc4616c6d20fe21f487b61b087877dc76a514a1"
+        }
+      ],
+      "fully_verified": false,
+      "result": {
+        "Source_case_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-65fd01892db0a2d662ac:METHOD_UNRESOLVED",
+      "fixture_id": "xc-retained",
+      "pattern_exact": "streaming/timeshift.php",
+      "source_handler": "apps.timeshift.views.timeshift_proxy_query",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M4",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "anonymous",
+        "owner"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role": "anonymous",
+          "complete": false
+        },
+        "owner": {
+          "fixture_role": "owner",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Existing exact resolver ID is consistent with retained request target shape",
+        "Status and method are retained Original HTTP observations"
+      ],
+      "cases": [
+        {
+          "contract_id": "route-65fd01892db0a2d662ac:METHOD_UNRESOLVED",
+          "source_index": 0,
+          "record_json_pointer": "/timeshift_xc_source/events/0",
+          "path": "/streaming/timeshift.php",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 400,
+          "response_projection_sha256": "860db3f4a75f25a6d74265cad6bf8f5245154cc9e2a738faf1e352d118a4cae5",
+          "request_case": "query-missing-required"
+        },
+        {
+          "contract_id": "route-65fd01892db0a2d662ac:METHOD_UNRESOLVED",
+          "source_index": 2,
+          "record_json_pointer": "/timeshift_xc_source/events/2",
+          "path": "/streaming/timeshift.php",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 401,
+          "response_projection_sha256": "3d99b37a3af9e02c35f865328abf8fa5e0268b56d26562d21a85f6bd588f69ca",
+          "request_case": "query-wrong-password"
+        },
+        {
+          "contract_id": "route-65fd01892db0a2d662ac:METHOD_UNRESOLVED",
+          "source_index": 9,
+          "record_json_pointer": "/timeshift_xc_source/events/9",
+          "path": "/streaming/timeshift.php",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 301,
+          "response_projection_sha256": "8bec0e2ba4889d34d6c270601abc4ad690b9f3b8d4618feebf8903948d7c4255",
+          "request_case": "query-mint-proxy"
+        },
+        {
+          "contract_id": "route-65fd01892db0a2d662ac:METHOD_UNRESOLVED",
+          "source_index": 10,
+          "record_json_pointer": "/timeshift_xc_source/events/10",
+          "path": "/streaming/timeshift.php",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 301,
+          "response_projection_sha256": "37d5dba7192c6c0b14a0d7dfe751ff83f4394afb95682370b5e710111149ea25",
+          "request_case": "query-utc-fallback"
+        },
+        {
+          "contract_id": "route-65fd01892db0a2d662ac:METHOD_UNRESOLVED",
+          "source_index": 13,
+          "record_json_pointer": "/timeshift_xc_source/events/13",
+          "path": "/streaming/timeshift.php",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 206,
+          "response_projection_sha256": "3e5eee7ed0c62438a8b475c6ba0443bd6befec3eb04030bbb70fa9e06f699207",
+          "request_case": "query-client-session"
+        },
+        {
+          "contract_id": "route-65fd01892db0a2d662ac:METHOD_UNRESOLVED",
+          "source_index": 19,
+          "record_json_pointer": "/timeshift_xc_source/events/19",
+          "path": "/streaming/timeshift.php",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 302,
+          "response_projection_sha256": "4512d421db68cd34e37f5c65271ffed97485f30fe303cca1d7b19583d0806217",
+          "request_case": "query-bare-redirect"
+        },
+        {
+          "contract_id": "route-65fd01892db0a2d662ac:METHOD_UNRESOLVED",
+          "source_index": 22,
+          "record_json_pointer": "/timeshift_xc_source/events/22",
+          "path": "/streaming/timeshift.php",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 400,
+          "response_projection_sha256": "a58d73d44f175896ee0b42f61c398e079b6ad4138853ee778b8c0494d52d5049",
+          "request_case": "query-required-before-system-network"
+        }
+      ],
+      "fully_verified": false,
+      "result": {
+        "Source_case_observations": 7,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-8b36b8a06cbc1772e58c:METHOD_UNRESOLVED",
+      "fixture_id": "vod-retained",
+      "pattern_exact": "proxy/vod/<str:content_type>/<uuid:content_id>",
+      "source_handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M4",
+      "observed_methods": [
+        "GET",
+        "HEAD"
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role": "anonymous",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Existing exact resolver ID is consistent with retained request target shape",
+        "Status and method are retained Original HTTP observations"
+      ],
+      "cases": [
+        {
+          "contract_id": "route-8b36b8a06cbc1772e58c:METHOD_UNRESOLVED",
+          "source_index": 0,
+          "record_json_pointer": "/wire/events/0/mint",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "method": "HEAD",
+          "role": "anonymous",
+          "HTTP_status": 405,
+          "response_projection_sha256": "52debcc21c9c47a300e39a18544246bd6c0cc46111f81860f857e0ac0d4284d9"
+        },
+        {
+          "contract_id": "route-8b36b8a06cbc1772e58c:METHOD_UNRESOLVED",
+          "source_index": 1,
+          "record_json_pointer": "/wire/events/1/mint",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 301,
+          "response_projection_sha256": "2da14c1580f9c1d77ba8dfdf2bbd61b7661d435e40b60e0ae64b532a0338c451"
+        },
+        {
+          "contract_id": "route-8b36b8a06cbc1772e58c:METHOD_UNRESOLVED",
+          "source_index": 2,
+          "record_json_pointer": "/wire/events/2/mint",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 301,
+          "response_projection_sha256": "2da14c1580f9c1d77ba8dfdf2bbd61b7661d435e40b60e0ae64b532a0338c451"
+        },
+        {
+          "contract_id": "route-8b36b8a06cbc1772e58c:METHOD_UNRESOLVED",
+          "source_index": 3,
+          "record_json_pointer": "/wire/events/3/mint",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 301,
+          "response_projection_sha256": "2da14c1580f9c1d77ba8dfdf2bbd61b7661d435e40b60e0ae64b532a0338c451"
+        },
+        {
+          "contract_id": "route-8b36b8a06cbc1772e58c:METHOD_UNRESOLVED",
+          "source_index": 4,
+          "record_json_pointer": "/wire/events/4/mint",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 301,
+          "response_projection_sha256": "2da14c1580f9c1d77ba8dfdf2bbd61b7661d435e40b60e0ae64b532a0338c451"
+        },
+        {
+          "contract_id": "route-8b36b8a06cbc1772e58c:METHOD_UNRESOLVED",
+          "source_index": 5,
+          "record_json_pointer": "/wire/events/5/mint",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 301,
+          "response_projection_sha256": "2da14c1580f9c1d77ba8dfdf2bbd61b7661d435e40b60e0ae64b532a0338c451"
+        },
+        {
+          "contract_id": "route-8b36b8a06cbc1772e58c:METHOD_UNRESOLVED",
+          "source_index": 6,
+          "record_json_pointer": "/wire/events/6/mint",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 301,
+          "response_projection_sha256": "2da14c1580f9c1d77ba8dfdf2bbd61b7661d435e40b60e0ae64b532a0338c451"
+        }
+      ],
+      "fully_verified": false,
+      "result": {
+        "Source_case_observations": 7,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+      "fixture_id": "xc-retained",
+      "pattern_exact": "timeshift/<str:username>/<str:password>/<str:duration>/<str:timestamp>/<str:channel_id>",
+      "source_handler": "apps.timeshift.views.timeshift_proxy",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M4",
+      "observed_methods": [
+        "GET",
+        "HEAD"
+      ],
+      "observed_roles": [
+        "disabled",
+        "inactive",
+        "owner",
+        "viewer"
+      ],
+      "source_role_specs": {
+        "disabled": {
+          "fixture_role": "disabled",
+          "complete": false
+        },
+        "inactive": {
+          "fixture_role": "inactive",
+          "complete": false
+        },
+        "owner": {
+          "fixture_role": "owner",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Existing exact resolver ID is consistent with retained request target shape",
+        "Status and method are retained Original HTTP observations"
+      ],
+      "cases": [
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 1,
+          "record_json_pointer": "/timeshift_xc_source/events/1",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 401,
+          "response_projection_sha256": "a09ab155a0dea11d2825dd296c4002dcb0774ef32efee012b0b077511fb7026d",
+          "request_case": "path-wrong-password"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 3,
+          "record_json_pointer": "/timeshift_xc_source/events/3",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/bad.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 404,
+          "response_projection_sha256": "7c3debe9baa0a693a60a174bc3cf906d242896537496a7b45c1f73045f1e7d14",
+          "request_case": "path-bad-channel"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 4,
+          "record_json_pointer": "/timeshift_xc_source/events/4",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/2147483647.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 404,
+          "response_projection_sha256": "e64d46fa4509a8430aa35f5c7ce15b380803b2b23b42b6350bb5316e7db03a3c",
+          "request_case": "path-missing-channel"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 5,
+          "record_json_pointer": "/timeshift_xc_source/events/5",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "viewer",
+          "HTTP_status": 404,
+          "response_projection_sha256": "17e05a0f05949f061148315e7d7e6c1871e664783c5857cb5e029feaeb916f4e",
+          "request_case": "path-hidden-channel"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 6,
+          "record_json_pointer": "/timeshift_xc_source/events/6",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "disabled",
+          "HTTP_status": 403,
+          "response_projection_sha256": "dc6c42238ccd606f34e59efee14c7e63a05ca40b70e0e55b2bdd223097c38108",
+          "request_case": "path-disabled-catchup"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 7,
+          "record_json_pointer": "/timeshift_xc_source/events/7",
+          "path": "/timeshift/<username>/<password>/30/bad/<channel>.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 400,
+          "response_projection_sha256": "6cba9c82355567c4d875b58a62483d5f89ebe7935aaec2062bb50af39a2a8c52",
+          "request_case": "path-invalid-timestamp"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 8,
+          "record_json_pointer": "/timeshift_xc_source/events/8",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 301,
+          "response_projection_sha256": "751ef61fb678897ed4b172da766843dc2c14423fc29f465ae742a7164c937837",
+          "request_case": "path-mint-proxy"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 11,
+          "record_json_pointer": "/timeshift_xc_source/events/11",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 301,
+          "response_projection_sha256": "f81735f90adae3efe27607e376e172212abe45fa20718476ce9e0e261aaac2ba",
+          "request_case": "path-ignores-bad-bearer"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 12,
+          "record_json_pointer": "/timeshift_xc_source/events/12",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 206,
+          "response_projection_sha256": "838f0c1e7f55e05c1f5adcc4e961c6127191289fad32ba1ca3ab52c79333282b",
+          "request_case": "path-client-session"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 14,
+          "record_json_pointer": "/timeshift_xc_source/events/14",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "inactive",
+          "HTTP_status": 206,
+          "response_projection_sha256": "7d0ac7c10109058f003832a33c9d612556e22b81c3c08deeaaaa3d7aafa3b477",
+          "request_case": "inactive-xc-user-still-streams"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 15,
+          "record_json_pointer": "/timeshift_xc_source/events/15",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "HEAD",
+          "role": "owner",
+          "HTTP_status": 301,
+          "response_projection_sha256": "51dc9941cc7aa68e4bf70c06ff86ed76f265aded2fd700b7e53d8cd159799376",
+          "request_case": "path-head-mint"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 16,
+          "record_json_pointer": "/timeshift_xc_source/events/16",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 301,
+          "response_projection_sha256": "0412e27c2077b4d9b35badb811a6369414f8a0225dbfb97338113134ee3c35e3",
+          "request_case": "xc-does-not-use-streams-network"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 17,
+          "record_json_pointer": "/timeshift_xc_source/events/17",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 403,
+          "response_projection_sha256": "4fbb027e371ad2c865457ddf8da42dca6c1c65732775ac23b0971a645e8671fa",
+          "request_case": "user-network-before-password"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 18,
+          "record_json_pointer": "/timeshift_xc_source/events/18",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 302,
+          "response_projection_sha256": "7c6e2c468ac2c8ec18778595dbf3dd980a2a08b4b66d3c649d003ae9ac44e560",
+          "request_case": "path-bare-redirect"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 20,
+          "record_json_pointer": "/timeshift_xc_source/events/20",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/<channel>.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 503,
+          "response_projection_sha256": "c5709a26aa2ab7025b7d114e45a17233f4b72b7a62a287cab201d45b06b36903",
+          "request_case": "bare-redirect-no-allowed-profile"
+        },
+        {
+          "contract_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+          "source_index": 21,
+          "record_json_pointer": "/timeshift_xc_source/events/21",
+          "path": "/timeshift/<username>/<password>/30/2026-11-09%3A11-00/bad.ts",
+          "method": "GET",
+          "role": "owner",
+          "HTTP_status": 403,
+          "response_projection_sha256": "33ac4611c5593a57ade223a65d716759e92750b3eac431fa059a9a3fccf67f22",
+          "request_case": "system-network-before-channel-password"
+        }
+      ],
+      "fully_verified": false,
+      "result": {
+        "Source_case_observations": 16,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-c0eb97456a3910a2d90a:METHOD_UNRESOLVED",
+      "fixture_id": "vod-retained",
+      "pattern_exact": "proxy/vod/<str:content_type>/<uuid:content_id>/<int:profile_id>/",
+      "source_handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "method": null,
+      "source_action": null,
+      "owning_milestone": "M4",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "anonymous"
+      ],
+      "source_role_specs": {
+        "anonymous": {
+          "fixture_role": "anonymous",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Existing exact resolver ID is consistent with retained request target shape",
+        "Status and method are retained Original HTTP observations"
+      ],
+      "cases": [
+        {
+          "contract_id": "route-c0eb97456a3910a2d90a:METHOD_UNRESOLVED",
+          "source_index": 0,
+          "record_json_pointer": "/profile_aliases/results/0",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/2/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 301,
+          "response_projection_sha256": "1981b3cfbbe70821710793e6fe1b18e510ee8918c9fa4c5cc9439b0e8466be42",
+          "response_phase": "mint"
+        },
+        {
+          "contract_id": "route-c0eb97456a3910a2d90a:METHOD_UNRESOLVED",
+          "source_index": 1,
+          "record_json_pointer": "/profile_aliases/results/1",
+          "path": "/proxy/vod/movie/a4d78cd1-bf9f-4a63-a746-f40566825cf9/0/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 301,
+          "response_projection_sha256": "f62d9f2c54794069af2527700946c1efdbb2175469f0c412340b517ad0a25ce4",
+          "response_phase": "mint"
+        }
+      ],
+      "fully_verified": false,
+      "result": {
+        "Source_case_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    },
+    {
+      "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+      "fixture_id": "vod-category-retained",
+      "pattern_exact": "api/vod/^categories/(?P<pk>[^/.]+)/$",
+      "source_handler": "apps.vod.api_views.VODCategoryViewSet",
+      "method": "GET",
+      "source_action": "retrieve",
+      "owning_milestone": "M5",
+      "observed_methods": [
+        "GET"
+      ],
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "basic",
+        "movies_off",
+        "series_off",
+        "standard"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role": "admin",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role": "anonymous",
+          "complete": false
+        },
+        "basic": {
+          "fixture_role": "basic",
+          "complete": false
+        },
+        "movies_off": {
+          "fixture_role": "movies_off",
+          "complete": false
+        },
+        "series_off": {
+          "fixture_role": "series_off",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role": "standard",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Existing exact resolver ID is consistent with retained request target shape",
+        "Status and method are retained Original HTTP observations"
+      ],
+      "cases": [
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 417,
+          "record_json_pointer": "/modes/http/cases/417",
+          "path": "/api/vod/categories/1/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "99dcea9b2cb073ec97c9ac3697ffbef6f0e9065847a6e8085da33d546dde56ea",
+          "response_body_sha256": "ba00916c4acef46972874a259058e17f3304525a0653a5e5f2e7a6c6a90e9ae8"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 418,
+          "record_json_pointer": "/modes/http/cases/418",
+          "path": "/api/vod/categories/1/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_projection_sha256": "99dcea9b2cb073ec97c9ac3697ffbef6f0e9065847a6e8085da33d546dde56ea",
+          "response_body_sha256": "ba00916c4acef46972874a259058e17f3304525a0653a5e5f2e7a6c6a90e9ae8"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 419,
+          "record_json_pointer": "/modes/http/cases/419",
+          "path": "/api/vod/categories/1/",
+          "method": "GET",
+          "role": "basic",
+          "HTTP_status": 403,
+          "response_projection_sha256": "573c1350b7d4c31b66dc2baa0c7718a14a4c4b03a41c63e49acb90f41f61038a",
+          "response_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 420,
+          "record_json_pointer": "/modes/http/cases/420",
+          "path": "/api/vod/categories/1/",
+          "method": "GET",
+          "role": "movies_off",
+          "HTTP_status": 404,
+          "response_projection_sha256": "22f8a8c2e9f85746a6b6d430f37e15d0e343204e7aaefcdb81915659dd2aa6a2",
+          "response_body_sha256": "01212c57fd8820526c9e73c7eaa9825f1978c644019b08db46d5f2ddc4b98628"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 421,
+          "record_json_pointer": "/modes/http/cases/421",
+          "path": "/api/vod/categories/1/",
+          "method": "GET",
+          "role": "series_off",
+          "HTTP_status": 200,
+          "response_projection_sha256": "99dcea9b2cb073ec97c9ac3697ffbef6f0e9065847a6e8085da33d546dde56ea",
+          "response_body_sha256": "ba00916c4acef46972874a259058e17f3304525a0653a5e5f2e7a6c6a90e9ae8"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 422,
+          "record_json_pointer": "/modes/http/cases/422",
+          "path": "/api/vod/categories/1/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "response_projection_sha256": "7f01aa388d723542e49c5c8f77b81d3697cb43c738815cab0cd1c41770aaf45d",
+          "response_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 423,
+          "record_json_pointer": "/modes/http/cases/423",
+          "path": "/api/vod/categories/3/",
+          "method": "GET",
+          "role": "admin",
+          "HTTP_status": 200,
+          "response_projection_sha256": "6998d28d3caca721949045b53e511d7e8608c348a200cfa8928a0a1f2b9936ad",
+          "response_body_sha256": "612bdbc374228f9d7f701bba989c6e97ed5b4c3f10eec102a10a932a44d2664f"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 424,
+          "record_json_pointer": "/modes/http/cases/424",
+          "path": "/api/vod/categories/3/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 200,
+          "response_projection_sha256": "6998d28d3caca721949045b53e511d7e8608c348a200cfa8928a0a1f2b9936ad",
+          "response_body_sha256": "612bdbc374228f9d7f701bba989c6e97ed5b4c3f10eec102a10a932a44d2664f"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 425,
+          "record_json_pointer": "/modes/http/cases/425",
+          "path": "/api/vod/categories/3/",
+          "method": "GET",
+          "role": "basic",
+          "HTTP_status": 403,
+          "response_projection_sha256": "573c1350b7d4c31b66dc2baa0c7718a14a4c4b03a41c63e49acb90f41f61038a",
+          "response_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 426,
+          "record_json_pointer": "/modes/http/cases/426",
+          "path": "/api/vod/categories/3/",
+          "method": "GET",
+          "role": "movies_off",
+          "HTTP_status": 404,
+          "response_projection_sha256": "22f8a8c2e9f85746a6b6d430f37e15d0e343204e7aaefcdb81915659dd2aa6a2",
+          "response_body_sha256": "01212c57fd8820526c9e73c7eaa9825f1978c644019b08db46d5f2ddc4b98628"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 427,
+          "record_json_pointer": "/modes/http/cases/427",
+          "path": "/api/vod/categories/3/",
+          "method": "GET",
+          "role": "series_off",
+          "HTTP_status": 200,
+          "response_projection_sha256": "6998d28d3caca721949045b53e511d7e8608c348a200cfa8928a0a1f2b9936ad",
+          "response_body_sha256": "612bdbc374228f9d7f701bba989c6e97ed5b4c3f10eec102a10a932a44d2664f"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 428,
+          "record_json_pointer": "/modes/http/cases/428",
+          "path": "/api/vod/categories/3/",
+          "method": "GET",
+          "role": "anonymous",
+          "HTTP_status": 401,
+          "response_projection_sha256": "7f01aa388d723542e49c5c8f77b81d3697cb43c738815cab0cd1c41770aaf45d",
+          "response_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 429,
+          "record_json_pointer": "/modes/http/cases/429",
+          "path": "/api/vod/categories/999999999/",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "22f8a8c2e9f85746a6b6d430f37e15d0e343204e7aaefcdb81915659dd2aa6a2",
+          "response_body_sha256": "01212c57fd8820526c9e73c7eaa9825f1978c644019b08db46d5f2ddc4b98628"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 430,
+          "record_json_pointer": "/modes/http/cases/430",
+          "path": "/api/vod/categories/1/?name=definitely-missing",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "22f8a8c2e9f85746a6b6d430f37e15d0e343204e7aaefcdb81915659dd2aa6a2",
+          "response_body_sha256": "01212c57fd8820526c9e73c7eaa9825f1978c644019b08db46d5f2ddc4b98628"
+        },
+        {
+          "contract_id": "route-d3e6d54d07a91cc0ad84:GET",
+          "source_index": 431,
+          "record_json_pointer": "/modes/http/cases/431",
+          "path": "/api/vod/categories/1/?search=definitely-missing",
+          "method": "GET",
+          "role": "standard",
+          "HTTP_status": 404,
+          "response_projection_sha256": "22f8a8c2e9f85746a6b6d430f37e15d0e343204e7aaefcdb81915659dd2aa6a2",
+          "response_body_sha256": "01212c57fd8820526c9e73c7eaa9825f1978c644019b08db46d5f2ddc4b98628"
+        }
+      ],
+      "fully_verified": false,
+      "result": {
+        "Source_case_observations": 15,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      }
+    }
+  ]
+}

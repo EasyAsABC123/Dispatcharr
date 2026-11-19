@@ -34,5 +34,14 @@ remain in place.
 · [Prior image archive](../scripts/rust-integration/milestone-batch75/prior-image-archive-concurrent.json)
 · [Focused Rust checks](../scripts/rust-integration/milestone-batch75/focused.json)
 
-Packaged replay of the new paths and final release performance remain separate
-gates in the [milestone ledger](rust-milestones.md).
+The packaged image built from `17fae6de0` matched all 75 guide responses
+and all three operator cases under `POSTGRES_*` configuration. The prior
+operator image exited 1 for each case using those variables. Two separate
+Main processes delivered the existing archive body and an exact 256-byte
+tail probe, with the provider counter returning to zero. The paired XC
+comparison matched the missing-group, duplicate-selection and account
+preference effects. All four controllers exited 0 and the owned fixtures
+were independently removed.
+
+[Exact-image Compose evidence](../scripts/rust-integration/milestone-batch75/packaged.json)
+· [Milestone ledger](rust-milestones.md)

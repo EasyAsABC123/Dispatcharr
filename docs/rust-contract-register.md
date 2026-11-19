@@ -190,3 +190,16 @@ actor without starting an application.
 
 The register now holds 250 partial executable Source assignments, with 548
 still unassigned. All 773 unrelated operation dictionaries remain exact.
+
+## Retained playback and VOD HTTP assignments
+
+The [playback binding](../scripts/rust-contracts/retained-playback/bindings.json)
+records 54 retained Original HTTP responses on seven existing operations.
+It covers bare VOD, session VOD, bare VOD profile, administrative VOD stop,
+VOD category detail, and both Xtream timeshift entry points. Six IDs retain
+their method-unresolved declaration. Both malformed profile follow-up URLs
+remain excluded. The Xtream paths describe fixture roles and omit credentials.
+
+The register has 257 partial Source assignments and 541 unassigned operations.
+All 791 unaffected operation dictionaries remain exact. Reproduce the evidence
+projection with the [receipt instructions](../scripts/rust-contracts/retained-playback/README.md).

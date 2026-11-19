@@ -22,8 +22,16 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
-[The guide, XC, archive and operator checkpoint](rust-milestone-batch75.md)
-records the new focused changes and the packaged missing-group regression.
+[The XC orphan cleanup and archive fault checkpoint](rust-milestone-batch76.md)
+records eleven Store tests and eight real-Redis media tests. The earlier
+[guide, XC, archive and operator checkpoint](rust-milestone-batch75.md)
+records the exact-image Compose results for those four workloads.
+
+The [retained Original playback packet](../scripts/rust-contracts/retained-playback/README.md)
+binds 54 observed HTTP responses to seven additional route-operation entries.
+M0 now has 257 partial Source assignments and 541 unassigned entries.
+The conservative method inventory and full acceptance requirements remain
+in the [contract register](rust-contract-register.md).
 
 The [previous Rust checkpoint](rust-milestone-batch74.md) covers concurrent
 archive setup, XC group validation, packaged multipart guide requests and
