@@ -450,16 +450,16 @@ async fn overrides(
     }
     merged.extend(changes.clone());
     let guide = if merged.get("epg_data_id") != Some(&previous) {
-        if OVERRIDABLE.iter().all(|field| merged[*field].is_null()) {
-            // Source25 cleared an EPG while retaining a name; the all-null
-            // save-then-delete variant needs its own causal observation.
-            return Err(guide_unsupported());
-        }
         Some(guide_target(auth, tx, merged["epg_data_id"].as_i64()).await?)
     } else {
         None
     };
-    if OVERRIDABLE.iter().all(|field| merged[*field].is_null()) {
+    let empty = OVERRIDABLE.iter().all(|field| merged[*field].is_null());
+    // Source saves the null guide before dropping an all-null override. A
+    // retry with no row still creates and deletes one, consuming its identity.
+    let save_empty =
+        guide.is_some() || (!existed && changes.get("epg_data_id").is_some_and(Value::is_null));
+    if empty && !save_empty {
         sqlx::query("DELETE FROM dispatcharr_channels_channeloverride WHERE channel_id=$1")
             .bind(id)
             .execute(&mut **tx)
@@ -505,6 +505,12 @@ async fn overrides(
     // Actual model post_save occurs inside the surrounding serializer atomic.
     if let Some(target) = guide {
         guide_after_save(auth, target, owner).await?;
+    }
+    if empty {
+        sqlx::query("DELETE FROM dispatcharr_channels_channeloverride WHERE channel_id=$1")
+            .bind(id)
+            .execute(&mut **tx)
+            .await?;
     }
     Ok(())
 }

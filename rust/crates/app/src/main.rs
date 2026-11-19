@@ -18,8 +18,9 @@ mod static_assets;
 mod statistics;
 mod vod_react_fallback;
 use axum::{
-    extract::State,
+    extract::{Request, State},
     http::{header, Method, StatusCode},
+    middleware::{self, Next},
     response::{IntoResponse, Response},
     routing::{any, get},
     Json, Router,
@@ -113,6 +114,30 @@ async fn api_not_found() -> (StatusCode, Json<serde_json::Value>) {
         StatusCode::NOT_FOUND,
         Json(serde_json::json!({"detail":"Not found."})),
     )
+}
+
+// A static /admin catch-all shadows the generic three-component XC route.
+// Keep admin paths reserved at the HTTP boundary without claiming that route.
+fn reserve_admin_path(path: &str, xc_live: bool) -> bool {
+    if path == "/admin" {
+        return true;
+    }
+    let Some(tail) = path.strip_prefix("/admin/") else {
+        return false;
+    };
+    let mut parts = tail.splitn(3, '/');
+    !xc_live
+        || !matches!(
+            (parts.next(), parts.next(), parts.next()),
+            (Some(password), Some(channel), None) if !password.is_empty() && !channel.is_empty()
+        )
+}
+
+async fn reserve_admin(State(xc_live): State<bool>, request: Request, next: Next) -> Response {
+    if reserve_admin_path(request.uri().path(), xc_live) {
+        return api_not_found().await.into_response();
+    }
+    next.run(request).await
 }
 
 async fn legacy_react_alias() -> Response {
@@ -1142,7 +1167,7 @@ async fn run() -> Result<(), String> {
         );
     // Backend paths must keep an HTTP error response rather than receiving
     // the React navigation fallback when a route has not been migrated yet.
-    for prefix in ["api", "proxy", "output", "admin"] {
+    for prefix in ["api", "proxy", "output"] {
         app = app
             .route(&format!("/{prefix}"), any(api_not_found))
             .route(&format!("/{prefix}/{{*path}}"), any(api_not_found));
@@ -1186,6 +1211,7 @@ async fn run() -> Result<(), String> {
         // Classify before the broad native VOD handlers can authenticate/resolve.
         app = vod_react_fallback::with_index(app, index);
     }
+    app = app.layer(middleware::from_fn_with_state(xc.is_some(), reserve_admin));
     app = app.layer(axum::middleware::from_fn(response_headers::apply));
     eprintln!("Dispatcharr Rust port listening on {bind}; migration parity is incomplete");
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
@@ -1657,6 +1683,41 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         return Err("Stream upload storage/SQL remains physically unsettled".into());
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod admin_routes {
+    use super::*;
+    use axum::body::Body;
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn reserves_admin_without_shadowing_literal_xc_username() {
+        let router = Router::new()
+            .route(
+                "/{username}/{password}/{channel}",
+                get(|| async { StatusCode::OK }),
+            )
+            .fallback(|| async { StatusCode::ACCEPTED })
+            .layer(middleware::from_fn_with_state(true, reserve_admin));
+        for (uri, expected) in [
+            ("/admin/owned/123.ts", StatusCode::OK),
+            ("/admin/owned/123.ts/", StatusCode::NOT_FOUND),
+            ("/admin", StatusCode::NOT_FOUND),
+            ("/admin/", StatusCode::NOT_FOUND),
+            ("/admin/login/", StatusCode::NOT_FOUND),
+            ("/admin/accounts/users/add/", StatusCode::NOT_FOUND),
+            ("/administrator", StatusCode::ACCEPTED),
+        ] {
+            let request = Request::builder().uri(uri).body(Body::empty()).unwrap();
+            assert_eq!(
+                router.clone().oneshot(request).await.unwrap().status(),
+                expected,
+                "{uri}"
+            );
+        }
+        assert!(reserve_admin_path("/admin/owned/123.ts", false));
+    }
 }
 
 #[tokio::main]

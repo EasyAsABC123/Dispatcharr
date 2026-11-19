@@ -1,4 +1,4 @@
-//! Pinned Django VOD converter nonmatches reach its final React TemplateView.
+//! Pinned Django VOD and HDHR route nonmatches reach its final React TemplateView.
 //! Source context and encoded-path limits are documented in the private proposal.
 use axum::{
     body::Body,
@@ -68,12 +68,27 @@ fn fallthrough(path: &str) -> bool {
         .is_some_and(|tail| !source_vod_match(tail))
 }
 
+fn hdhr_react_read(path: &str, method: &Method) -> bool {
+    if !matches!(*method, Method::GET | Method::HEAD) || !path.is_ascii() || path.contains('%') {
+        return false;
+    }
+    // These Original URL resolver misses reach TemplateView. A three-part
+    // route (including /api/hdhr/devices) can match the short XC credential
+    // alias instead. Dotted lookups can be DRF format-suffix routes.
+    matches!(path, "/api/hdhr" | "/hdhr/devices")
+        || path
+            .strip_prefix("/api/hdhr/devices/")
+            .is_some_and(|lookup| !lookup.is_empty() && !lookup.contains(['/', '.']))
+}
+
 pub fn with_index(router: Router, index: PathBuf) -> Router {
     router.layer(middleware::from_fn_with_state(Arc::new(index), apply))
 }
 
 async fn apply(State(index): State<Arc<PathBuf>>, mut request: Request, next: Next) -> Response {
-    if request.method() != Method::GET || !fallthrough(request.uri().path()) {
+    let path = request.uri().path();
+    let method = request.method();
+    if !hdhr_react_read(path, method) && (method != Method::GET || !fallthrough(path)) {
         return next.run(request).await;
     }
     // TemplateView ignores file ranges/validators. This does not rewrite the
@@ -164,6 +179,65 @@ mod tests {
             .route("/api/accounts/users/me/", any(handler.clone()))
             .fallback(handler);
         with_index(routes, index.path())
+    }
+
+    #[tokio::test]
+    async fn hdhr_slashless_reads_serve_the_bundled_page_before_api_authentication() {
+        let index = Index::new();
+        let calls = Arc::new(AtomicUsize::new(0));
+        let router = router(&index, calls.clone());
+        for (method, path) in [
+            (Method::GET, "/api/hdhr?format=missing"),
+            (Method::GET, "/hdhr/devices"),
+            (Method::GET, "/api/hdhr/devices/1"),
+            (Method::HEAD, "/api/hdhr/devices/unknown"),
+        ] {
+            let response = router
+                .clone()
+                .oneshot(
+                    Request::builder()
+                        .method(method.clone())
+                        .uri(path)
+                        .header(header::AUTHORIZATION, "Bearer invalid")
+                        .header(header::RANGE, "bytes=0-1")
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), StatusCode::OK);
+            assert_eq!(
+                response.headers()[header::CONTENT_TYPE],
+                "text/html; charset=utf-8"
+            );
+            let expected = if method == Method::HEAD {
+                &b""[..]
+            } else {
+                PAGE
+            };
+            assert_eq!(
+                to_bytes(response.into_body(), 1024).await.unwrap().as_ref(),
+                expected
+            );
+        }
+        assert_eq!(calls.load(Ordering::SeqCst), 0);
+    }
+
+    #[test]
+    fn hdhr_canonical_routes_xc_collision_and_encoded_paths_remain_dispatched() {
+        for path in [
+            "/hdhr",
+            "/api/hdhr/",
+            "/api/hdhr/devices",
+            "/hdhr/devices/1",
+            "/api/hdhr/devices/1/",
+            "/api/hdhr/devices/1.json",
+            "/api/hdhr/devices/%31",
+            "/hdhr/devices/discover.json",
+        ] {
+            assert!(!hdhr_react_read(path, &Method::GET));
+        }
+        assert!(!hdhr_react_read("/api/hdhr/devices/1", &Method::PATCH));
     }
 
     #[tokio::test]
