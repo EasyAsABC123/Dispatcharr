@@ -1196,6 +1196,9 @@ async fn run() -> Result<(), String> {
         },
         admin_ingress::apply,
     ));
+    if let (Some(gateway), Some(vod)) = (&xc, &vod) {
+        app = gateway.with_vod_playback(app, vod.clone());
+    }
     app = app.layer(axum::middleware::from_fn(response_headers::apply));
     eprintln!("Dispatcharr Rust port listening on {bind}; migration parity is incomplete");
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);

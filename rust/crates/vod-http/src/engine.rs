@@ -15,7 +15,7 @@ use axum::{
 use bytes::Bytes;
 use dispatcharr_contracts::PlaybackRequest;
 use dispatcharr_coordination::Coordinator;
-use dispatcharr_store::{AuthService, Store, StoreError};
+use dispatcharr_store::{AuthService, Store, StoreError, User};
 use futures_util::{stream, StreamExt};
 use serde_json::json;
 use std::{
@@ -185,14 +185,41 @@ impl VodEngine {
             Err(error) => error_response(error),
         }
     }
+    /// Trusted in-process entry for the XC gateway. That gateway checks XC_API
+    /// credentials and the per-kind VOD flag on every request, including follows.
+    pub async fn respond_xc(&self, mut request: VodRequest, user: User, path: &str) -> Response {
+        if let Err(error) = self.inner.resolver.authenticate_method(&request).await {
+            return error_response(error);
+        }
+        match self.prepare_entry(&mut request, Some((user, path))).await {
+            Ok(response) => response,
+            Err(error) => error_response(error),
+        }
+    }
+
     async fn prepare(&self, request: &mut VodRequest) -> Result<Response, StoreError> {
+        self.prepare_entry(request, None).await
+    }
+
+    async fn prepare_entry(
+        &self,
+        request: &mut VodRequest,
+        xc: Option<(User, &str)>,
+    ) -> Result<Response, StoreError> {
         if self.inner.sessions.stopped() {
             return Err(StoreError::StatusBody(
                 503,
                 json!({"error":"VOD is shutting down"}),
             ));
         }
-        let mut user = self.inner.resolver.authorize(request).await?;
+        let (mut user, xc_path) = match xc {
+            Some((user, path)) => (Some(user), Some(path)),
+            None => (self.inner.resolver.authorize(request).await?, None),
+        };
+        let redirect = |request: &VodRequest, session: &str| match xc_path {
+            Some(path) => xc_session_redirect(request, session, path),
+            None => session_redirect(request, session),
+        };
         request.resolved_client_ip = Some(self.inner.resolver.client_ip_text(&request.playback));
         request.playback.peer_ip = self.inner.resolver.client_ip(&request.playback);
         if let Some(id) = &request.session_id {
@@ -218,7 +245,7 @@ impl VodEngine {
             if let Some(user) = user {
                 self.inner.sessions.remember_user(&session, user.id).await?;
             }
-            return Ok(session_redirect(request, &session));
+            return Ok(redirect(request, &session));
         }
         let source = self.inner.resolver.resolve(request, user).await?;
         if source.redirect && request.session_id.is_none() {
@@ -226,7 +253,7 @@ impl VodEngine {
                 if let Some(user) = &source.user {
                     self.inner.sessions.remember_user(&id, user.id).await?;
                 }
-                return Ok(session_redirect(request, &id));
+                return Ok(redirect(request, &id));
             }
             // Source Redirect checks capacity without probing or reserving.
             // Existing remote idle-session adoption remains an explicit gate.
@@ -770,9 +797,42 @@ fn session_redirect(request: &VodRequest, session: &str) -> Response {
         location.push('?');
         location.push_str(&query);
     }
+    session_redirect_response(request, &location)
+}
+
+fn xc_session_redirect(request: &VodRequest, session: &str, path: &str) -> Response {
+    // Django QueryDict preserves the first key order and collects all values
+    // for each key before appending the new session. The XC path remains the
+    // credential-protected entry for every subsequent range request.
+    let mut keys = HashMap::new();
+    let mut values: Vec<(&str, Vec<&str>)> = Vec::new();
+    for (key, value) in &request.playback.query {
+        if matches!(key.as_str(), "token" | "session_id") {
+            continue;
+        }
+        let index = *keys.entry(key.as_str()).or_insert(values.len());
+        if index == values.len() {
+            values.push((key, Vec::new()));
+        }
+        values[index].1.push(value);
+    }
+    let query = url::form_urlencoded::Serializer::new(String::new())
+        .extend_pairs(
+            values
+                .into_iter()
+                .flat_map(|(key, values)| values.into_iter().map(move |value| (key, value))),
+        )
+        .append_pair("session_id", session)
+        .finish()
+        .replace('*', "%2A")
+        .replace("%7E", "~");
+    session_redirect_response(request, &format!("{path}?{query}"))
+}
+
+fn session_redirect_response(request: &VodRequest, location: &str) -> Response {
     Response::builder()
         .status(301)
-        .header("location", iri_location(&location))
+        .header("location", iri_location(location))
         .header(
             "cache-control",
             if request.playback.query.iter().any(|(key, _)| key == "token") {
@@ -999,6 +1059,39 @@ mod method_auth_tests {
     use dispatcharr_contracts::BoxFuture;
     use dispatcharr_store::User;
     use std::sync::atomic::{AtomicUsize, Ordering};
+
+    #[test]
+    fn xc_redirect_keeps_path_and_source_query_order() {
+        let request = VodRequest {
+            resolved_client_ip: None,
+            playback: PlaybackRequest {
+                channel_id: String::new(),
+                query: [
+                    ("extra", "~*"),
+                    ("profile_id", "4"),
+                    ("extra", "again"),
+                    ("token", ""),
+                    ("session_id", "old"),
+                ]
+                .into_iter()
+                .map(|(key, value)| (key.into(), value.into()))
+                .collect(),
+                headers: Vec::new(),
+                peer_ip: "127.0.0.1".parse().unwrap(),
+            },
+            kind: "episode".into(),
+            content_id: String::new(),
+            session_id: None,
+            profile_id: Some(4),
+        };
+        let response = xc_session_redirect(&request, "owned-session", "/series/u/p/42.mp4");
+        assert_eq!(response.status(), StatusCode::MOVED_PERMANENTLY);
+        assert_eq!(
+            response.headers()["location"],
+            "/series/u/p/42.mp4?extra=~%2A&extra=again&profile_id=4&session_id=owned-session"
+        );
+        assert_eq!(response.headers()["cache-control"], "no-store");
+    }
 
     struct AuthOnly {
         calls: AtomicUsize,

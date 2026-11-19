@@ -670,10 +670,15 @@ fn identity(request: &Request<Body>) -> PlaybackRequest {
 async fn dispatch(State(gateway): State<XcGateway>, request: Request<Body>) -> Response {
     match gateway.handle(request).await {
         Ok(response) => response,
-        Err(StoreError::XcDenied {
+        Err(error) => xc_entry_error(error),
+    }
+}
+fn xc_entry_error(error: StoreError) -> Response {
+    match error {
+        StoreError::XcDenied {
             status,
             retry_after,
-        }) => {
+        } => {
             // JsonResponse uses default JSON spaces; the generic Store error
             // adapter has compact JSON for its existing API consumers.
             let data: &'static [u8] = match status {
@@ -692,7 +697,7 @@ async fn dispatch(State(gateway): State<XcGateway>, request: Request<Body>) -> R
             }
             response
         }
-        Err(error) => error.into_response(),
+        error => error.into_response(),
     }
 }
 #[path = "live.rs"]
@@ -700,4 +705,6 @@ mod live;
 #[cfg(test)]
 #[path = "gateway_tests.rs"]
 mod tests;
+#[path = "vod_playback.rs"]
+mod vod_playback;
 pub use live::LiveDispatcher;
