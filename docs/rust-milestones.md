@@ -27,7 +27,8 @@ The strict post-restart fingerprint still differed.
 
 The [120-second playback and guide diagnostic](rust-m9-playback-refresh-diagnostic.md)
 passed on Candidate91 with ten viewers sharing one owned upstream and
-20 decoded clips. It used the refresh-only worker with a finite MPEG-2 source.
+20 decoded clips. A second trial on Candidate94 passed with the longer
+H.264/AAC origin and two distinct XMLTV jobs during ten-viewer playback.
 The two-hour soak remains open.
 
 The [completed DVR performance attempt](../scripts/rust-perf/candidate88-dvr/README.md)

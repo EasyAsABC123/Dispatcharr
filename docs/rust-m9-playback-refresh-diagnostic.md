@@ -29,3 +29,19 @@ remain open.
 
 - [Exact successful retry receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/candidate91.json)
 - [First-attempt result](../scripts/rust-integration/m9-playback-refresh-diagnostic/first-attempt.json)
+
+## Candidate94 H.264/AAC qualification
+
+The exact Candidate94 package ran a separate 120-second trial using the
+long-lived H.264/AAC origin and the pinned VLC input profile. It passed all
+24 Compose checks. Ten authenticated readers shared one upstream and one
+encoder generation through all 24 observations. The two XMLTV programme
+requests at +5 and +60 seconds returned HTTP 200 and reached distinct
+expected SQL rows and Redis results. All 20 bounded captures verified five
+complete seconds of both audio and video. The decoder and controller
+exited 0. All reader sockets, the encoder generation and four owned Compose
+container generations retired.
+
+The trial qualified the longer origin and the two-job sequence. The
+two-hour workload and its resource and retention budgets remain open.
+[Candidate94 qualification receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/candidate94.json)
