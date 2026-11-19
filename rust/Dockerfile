@@ -79,6 +79,12 @@ COPY scripts/rust-integration/milestone-batch91/acceptance.json ./scripts/rust-i
 COPY scripts/rust-integration/milestone-batch92/acceptance.json ./scripts/rust-integration/milestone-batch92/acceptance.json
 COPY scripts/rust-integration/milestone-batch94/acceptance.json ./scripts/rust-integration/milestone-batch94/acceptance.json
 
+# Exact public Original live TS channel-stop authorities.
+COPY scripts/rust-milestone-batches/m235/profile-source-media/publication-summary.json ./scripts/rust-milestone-batches/m235/profile-source-media/publication-summary.json
+COPY scripts/rust-milestone-batches/m235/profile-source-media/fresh-cleanup.json ./scripts/rust-milestone-batches/m235/profile-source-media/fresh-cleanup.json
+COPY scripts/rust-milestone-batches/m235/profile-source-media/shared_ts.py ./scripts/rust-milestone-batches/m235/profile-source-media/shared_ts.py
+COPY scripts/rust-milestone-batches/m235/profile-source-media/manifest.json ./scripts/rust-milestone-batches/m235/profile-source-media/manifest.json
+
 # Public Original Comskip task authorities for offline register verification.
 COPY scripts/rust-integration/comskip-positive-lifecycle-source1/ ./scripts/rust-integration/comskip-positive-lifecycle-source1/
 COPY scripts/rust-integration/comskip-positive-journal-fences1/ ./scripts/rust-integration/comskip-positive-journal-fences1/

@@ -375,3 +375,15 @@ five tests including the 19 corruption controls.
 
 [Candidate92 System Logs](../scripts/rust-integration/milestone-batch92/acceptance.json)
 · [Candidate94 regex preview](../scripts/rust-integration/milestone-batch94/acceptance.json).
+
+## Retained cross-replica live TS channel stop
+
+The [live stop binding](../scripts/rust-contracts/retained-live-stop/bindings.json)
+maps one exact Original admin POST to the existing method-unresolved stop
+operation. Two concurrent viewers shared one input and provider slot. The
+HTTP 200 stop request ended both readers and retired the input before the
+next context. The separate owner-crash result remains outside this binding.
+The register now has 472 partial executable HTTP assignments and 326
+unassigned operations.
+
+[Original two-replica media receipt](../scripts/rust-milestone-batches/m235/profile-source-media/publication-summary.json).

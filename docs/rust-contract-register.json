@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "9f3617ede3147284a48e38e152b572bb843a544ea6ca5fa1cc68172e05a347e8",
+    "scripts/rust-contracts/executable-source-inputs.json": "6d37b7786baebf3b6057b78a27d69ea48c601c6d4fc741bb2a3e17da3c923ccb",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -56,11 +56,12 @@
     "scripts/rust-contracts/retained-connect-test/bindings.json": "a6b410fd131bce638c0ce4e05f590173d293ddcafb52c68cc38e66b246e1ebbd",
     "scripts/rust-contracts/retained-set-epg-selected/bindings.json": "c88dc997a23bc1ee627afabd3c9a7f4ef532ca81b7d28575d23bed45261c06c3",
     "scripts/rust-contracts/retained-set-epg-batch/bindings.json": "eeb42868ab4b8c0d28461c21d2ddee560692a095051bb609e3270d809c39dca0",
-    "scripts/rust-contracts/retained-paired-reads/bindings.json": "17304fa362b0b3a3cfb1728c66da71795441e6ac9526f7d6b71ac52c5721943d"
+    "scripts/rust-contracts/retained-paired-reads/bindings.json": "17304fa362b0b3a3cfb1728c66da71795441e6ac9526f7d6b71ac52c5721943d",
+    "scripts/rust-contracts/retained-live-stop/bindings.json": "019fadce530a36b430982ab8c6ab133fde2a42f6b6030a39320bdf4906c2ef2f"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 471,
+    "operations": 472,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -296,6 +297,11 @@
         "path": "scripts/rust-contracts/retained-paired-reads/bindings.json",
         "sha256": "17304fa362b0b3a3cfb1728c66da71795441e6ac9526f7d6b71ac52c5721943d",
         "kind": "retained_original_System_Logs_and_regex_preview_GET"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-live-stop/bindings.json",
+        "sha256": "019fadce530a36b430982ab8c6ab133fde2a42f6b6030a39320bdf4906c2ef2f",
+        "kind": "retained_original_Live_TS_global_stop_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -242560,15 +242566,105 @@
           "owning_milestone": "M3",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-two-replica-TS-owned-admin-stop",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "request_driver_sha256": "edbc2050c3bb2fba7bc694150e607f17e82c3b9bd216e2aaf9c41cad930806b3",
+            "private_capture_sha256": "4a8b38d7996ac0a05e247683de886f82773e58bbdff8f327135a0f1c2c7250fa",
+            "private_seed_sha256": "e9324a549bfc8f29ff53dea3f98edffb7025d3aab6f1d6b4205b1a6d8ae0d490",
+            "actual_source_controller_exit": 0,
+            "raw_controller_passed": false,
+            "native_execution_claimed": false,
+            "exact_source_compose_cleanup": true,
+            "independent_absence_checks": 5,
+            "host_generation_absence_verified": false,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-milestone-batches/m235/profile-source-media/publication-summary.json",
+                "sha256": "2be48a2d9f0f7670fdaef83e0d30bfe79c660dc8ea15fe35305debaf5994cc44"
+              },
+              {
+                "path": "scripts/rust-milestone-batches/m235/profile-source-media/fresh-cleanup.json",
+                "sha256": "84474730de56e56f79cfe66677358d98c2c7d63514e5b46ef2d09947111e3ef5"
+              }
+            ],
+            "public_tool_manifest": {
+              "path": "scripts/rust-milestone-batches/m235/profile-source-media/manifest.json",
+              "sha256": "6f6d3df6ba6e2280d13e8270727f5cafb5a725a8597b65ab381bec30f37859c1"
+            }
+          },
+          "assertions": [
+            "actual owned admin POST returns HTTP 200 while active",
+            "both existing readers, one upstream, and the shared provider slot retire"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-085345eee60898a2f608:METHOD_UNRESOLVED",
+            "source_handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+            "pattern_exact": "proxy/ts/stop/<str:channel_id>",
+            "resolver_ordinal": 389,
+            "resolver_name": "proxy:live_proxy:stop_channel",
+            "method": null,
+            "source_action": null,
+            "owning_milestone": "M3",
+            "fixture_id": "Original-two-replica-TS-owned-admin-stop",
+            "observed_roles": [
+              "admin"
+            ],
+            "observed_methods": [
+              "POST"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "actual owned admin POST returns HTTP 200 while active",
+              "both existing readers, one upstream, and the shared provider slot retire"
+            ],
+            "result": {
+              "Source_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "POST",
+                "role": "admin",
+                "path": "/proxy/ts/stop/aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+                "owned_channel_uuid": "aea9ce40-ee4a-51c4-8fa9-7e322f72caf6",
+                "status": 200,
+                "json_response_sha256": "72b7b21582f255d25cbf03df761a9ea47a7eb90751752ee6d1d7e6e8eb1ff7d3",
+                "capture_pointer": "/cases/1/stop_response",
+                "path_authority": "exact_executed_driver_and_seeded_channel_matching_wire_response",
+                "both_readers_and_upstream_retired": true
+              }
+            ]
+          }
         }
       ]
     },
