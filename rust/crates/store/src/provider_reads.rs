@@ -498,7 +498,7 @@ pub(super) fn provider_reply<T: serde::Serialize + ?Sized>(
 
 /// Source EPGSourceSerializer field order, including transient cron before
 /// priority. The read projection's SQL join order is not serializer field order.
-pub(super) fn dummy_create_reply(value: &Value) -> Result<axum::response::Response, StoreError> {
+pub(super) fn epg_create_reply(value: &Value) -> Result<axum::response::Response, StoreError> {
     let mut ordered = Map::new();
     for name in [
         "id",
@@ -522,11 +522,11 @@ pub(super) fn dummy_create_reply(value: &Value) -> Result<axum::response::Respon
         ordered.insert(name.into(), value[name].clone());
     }
     let mut response = provider_reply(&Value::Object(ordered))?;
-    // This create domain admits only url=NULL. Pinned DRF CreateModelMixin
-    // still uses that serializer field for Location, calling str(None).
+    // The Source CreateModelMixin uses this serializer field for Location.
+    let location = value["url"].as_str().unwrap_or("None");
     response.headers_mut().insert(
         axum::http::header::LOCATION,
-        axum::http::HeaderValue::from_static("None"),
+        axum::http::HeaderValue::from_str(location).map_err(|_| StoreError::UnhandledRestFault)?,
     );
     Ok(response)
 }
@@ -896,7 +896,7 @@ mod create_wire_controls {
     }
     #[tokio::test]
     async fn new_dummy_wire_follows_original_serializer_order_not_read_projection_order() {
-        let response = dummy_create_reply(&json!({
+        let response = epg_create_reply(&json!({
             "name":"İ\u{2028}","id":3,"source_type":"dummy","is_active":false,
             "refresh_interval":2,"priority":5,"status":"idle","custom_properties":{},
             "epg_data_count":1,"has_channels":false,"cron_expression":""
@@ -911,5 +911,11 @@ mod create_wire_controls {
             "\"status\":\"idle\",\"last_message\":null,\"created_at\":null,",
             "\"updated_at\":null,\"custom_properties\":{},\"epg_data_count\":1,\"has_channels\":false}"
         ).as_bytes());
+    }
+    #[test]
+    fn remote_xmltv_create_location_uses_the_supplied_url() {
+        let url = "http://guide-host:8080/guide.xml?region=us";
+        let response = epg_create_reply(&json!({"url":url})).unwrap();
+        assert_eq!(response.headers()[axum::http::header::LOCATION], url);
     }
 }

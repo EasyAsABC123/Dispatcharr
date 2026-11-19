@@ -740,8 +740,14 @@ impl Lifecycle for Prepared {
 /// Construct the API from the actual prepared consumer, preserving its Auth /
 /// pool, shared Jobs, configured producer identity and drain admission.
 impl Prepared {
-    pub fn source_http(&self) -> dispatcharr_store::sd_source_http::SdSourceHttp {
-        dispatcharr_store::sd_source_http::SdSourceHttp::prepare(Arc::new(self.clone()))
+    pub fn source_http(
+        &self,
+        refresh: crate::refresh_application::RefreshApplication,
+    ) -> dispatcharr_store::sd_source_http::SdSourceHttp {
+        dispatcharr_store::sd_source_http::SdSourceHttp::prepare(
+            Arc::new(self.clone()),
+            Arc::new(refresh),
+        )
     }
 }
 impl dispatcharr_store::sd_source_http::Publisher for Prepared {

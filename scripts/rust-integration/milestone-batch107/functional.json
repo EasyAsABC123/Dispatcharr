@@ -1,0 +1,162 @@
+{
+  "build_manifest_sha256": "08acd1a0ce474b18d9ab04401b330869d9b344a8f0aaad2eb6d9bf8209691bb8",
+  "full_milestone_passed": false,
+  "image_id": "sha256:7e7059895df9f87554ce31bf235a760bd47a5649c1518efc87a63b61f0926d8c",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "outer_actual_exit": 1,
+  "performance_verified": false,
+  "phase_exits": {
+    "exact-package": {
+      "actual_exit": 0,
+      "execution_sha256": "a946c06a18a76478c873e2196c271db4130ee818ed2f593990f363b81380934c"
+    },
+    "m3": {
+      "actual_exit": 0,
+      "execution_sha256": "d1c779128e85ca40968bae608b1d8b2156445aa40e8be5570ad4bd79e7ed6313"
+    },
+    "m3-package-gate": {
+      "actual_exit": 0,
+      "execution_sha256": "bd6ec260dbaa14114a390f4f00fa281795943c51b393dfe7ca2346ed33248161"
+    },
+    "m4": {
+      "actual_exit": 1,
+      "execution_sha256": "f9ebd8e9ab074c6975f788809307857f21b00ed839000b06081612aac330bc18"
+    },
+    "m4-package-gate": {
+      "actual_exit": 0,
+      "execution_sha256": "42355cc5b5295641985697cc6ecc911680cbbf4b2a5d785aef2ec7fb7c03a472"
+    },
+    "m6": {
+      "actual_exit": 0,
+      "execution_sha256": "2a48ffc98a5a1368b012bf87424805550be9a36a08efabfddc0890ff215ec8b6"
+    },
+    "m6-package-gate": {
+      "actual_exit": 0,
+      "execution_sha256": "7cb0403d708506296bbf012da295b23941f7e9bc814b568f801cc8348b25faab"
+    },
+    "rust-check-bins": {
+      "actual_exit": 0,
+      "execution_sha256": "69de3bb38d9593baa175d208b4628cb8b88436f00f4dea604c41a977ef5356f1"
+    },
+    "rust-m3-redis-compile": {
+      "actual_exit": 0,
+      "execution_sha256": "4d52333e4bfca91e62f69e55f1cf0f056fe0ccb128af2b80e4113eb609e1bc63"
+    },
+    "rust-m3-tests": {
+      "actual_exit": 0,
+      "execution_sha256": "5091a6121382364e83888b0460040c249653004e50a484d0c18f1f2ad7273d9f"
+    },
+    "rust-m4-tests": {
+      "actual_exit": 0,
+      "execution_sha256": "008bbed1c81e5bb222564f8ed27a548c0d66ba581df4d5906c6dd525aaf4ef34"
+    },
+    "rust-m6-forms": {
+      "actual_exit": 0,
+      "execution_sha256": "f285f90f1505f69b4d898d6ce90ca97b1c5f334f930916952ce20decc7919d8b"
+    },
+    "rust-m6-location": {
+      "actual_exit": 0,
+      "execution_sha256": "116b54cebbf8b9e51084c10dfc5b5428456746506ea5f413bfa50ea485c52627"
+    },
+    "rust-strict-clippy": {
+      "actual_exit": 0,
+      "execution_sha256": "239c9ffb5d58cc5710dea5154eaec377702294a87385b0feecbd77d8c7c8eaf9"
+    },
+    "rustfmt": {
+      "actual_exit": 0,
+      "execution_sha256": "b4f16cf7a12cd032b97907a90f0dcb9f8337e902f69292b47aedcadcbfcb4e9d"
+    }
+  },
+  "plan_sha256": "75fd4ef002c0f739366663914a3497254f11dc5e73351f27cd4ef49d9988ca7f",
+  "revision": "1ea708bf321ec7348a9f04a7fa5d16668e4d072b",
+  "runner_sha256": "8ac6835ae53414e84ebd8bee22e201d9708d485290dcf392db91875cac6ea92c",
+  "runtime": {
+    "m3": {
+      "actual_exit": 0,
+      "backend_exits": {
+        "native": 0,
+        "source": 0
+      },
+      "cases": [
+        "rich",
+        "rich-utf8",
+        "rich-late-invalid"
+      ],
+      "exact_clean_roles_per_backend": {
+        "native": 5,
+        "source": 3
+      },
+      "observations_per_backend": {
+        "native": 6,
+        "source": 6
+      },
+      "passed": true,
+      "raw_evidence_sha256": {
+        "native/capture/shared-ts.json": "422ff66a8de3fd7e0be2dacb96a6de96fd967be2be2f95d978a5647e0f76af0e",
+        "native/cleanup.json": "ed05a684ca43efd85c426e96130495d1b65c1a57d500c50f2dffbf6733f5cebd",
+        "native/execution.json": "92de759e3839b05cc404073bb5a64148f07666fd0a1f80ee86553e32177bfd31",
+        "native/receipt.json": "5137ed1f3df6c1e06d18a1e92b9e9be6b7f50ad490a97df8d11883cf820372e0",
+        "paired.json": "28c632bcbfb7a15c3b63044aa55e6de6e0da7de6f806579616630827c70ddbbc",
+        "source/capture/shared-ts.json": "592af40acd57f5ea59ed1aecfa92bffe837b54523fda027f4d2379e2bc2429f8",
+        "source/cleanup.json": "c48121177169e7ac48c83285b550a941f1a4e17c3a304691c51445a31e9568cf",
+        "source/execution.json": "b2919a016c22cb69ffe759d4e19050e858d8db978c323af99cb3e4ec7da4dbf2",
+        "source/receipt.json": "b237064a9cbaa627c47e58f967f6e12dec0fc0e1169f2e72494548eff076696d"
+      }
+    },
+    "m4": {
+      "actual_exit": 1,
+      "exact_clean_roles": [
+        "baseline",
+        "origin"
+      ],
+      "first_guest_actual_exit": 1,
+      "first_guest_category": [
+        "validate-input",
+        "ValueError"
+      ],
+      "native_attempted": false,
+      "original_business_observations": 0,
+      "passed": false,
+      "receipt_sha256": "4642599e4d519b04d74e95017d24f7f873ecab28a08f8a3ff283fc5e98d0efc7"
+    },
+    "m6": {
+      "actual_exit": 0,
+      "backend_evidence": {
+        "Native": {
+          "actual_exit": 0,
+          "exact_clean_generations": 3,
+          "inner_report_sha256": "54d94550e98b6a7f62c0c1999d1cc3847bd9e936bbf2dca9ca56cb43efefe0e8",
+          "paired_case_sha256": "135e5ace78ecdc980888b5c06ea8da858981f7ef171235738ec09f8acc72f165",
+          "raw_execution_sha256": "58d24d1f4bb20765f3e5701e7bc2d5243fdc887f095ad12c6e506e1fae052abd"
+        },
+        "Original": {
+          "actual_exit": 0,
+          "exact_clean_generations": 2,
+          "inner_report_sha256": "44581f8470011136279a5050b4a8e596f10b37e05e71b6a4730573953022307d",
+          "paired_case_sha256": "893672ca712fb02b10cb63704e1a78c6cf9d2748139992a46f5035035ceed125",
+          "raw_execution_sha256": "2b772f157c7d0e09d00498a8c480ee0d7c02dab7c2d2a6ddad1ac3e298d4846e"
+        }
+      },
+      "created_at_runtime_variation": [
+        "active",
+        "inactive"
+      ],
+      "http_statuses": {
+        "active": 201,
+        "anonymous": 401,
+        "duplicate": 400,
+        "inactive": 201,
+        "standard": 403
+      },
+      "matching_root_and_children": true,
+      "native_uid_files_hashed": 116,
+      "one_matching_origin_response": true,
+      "passed": true,
+      "receipt_sha256": "a5b9d5ae38a16df24fb405808a75014b93e2365a276d89104d4eba26930a5964",
+      "same_immediate_and_committed_rows": true
+    }
+  },
+  "scoped_batch_passed": false,
+  "state": "complete",
+  "state_sha256": "ea500565a5be7c9b47c91461fbf794ef02eb7245fa5b5625db6c80eaa878c2ac"
+}

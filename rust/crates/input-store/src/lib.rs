@@ -70,6 +70,7 @@ struct Inner {
     transport: RedisTransport,
     config: InputConfig,
     bytes: Arc<Semaphore>,
+    diagnostic_slot: Arc<Semaphore>,
 }
 #[derive(Clone, Debug)]
 pub struct InputStamp {
@@ -182,6 +183,7 @@ impl InputStore {
             inner: Arc::new(Inner {
                 transport,
                 bytes: Arc::new(Semaphore::new(config.max_read_bytes)),
+                diagnostic_slot: Arc::new(Semaphore::new(1)),
                 config,
             }),
         };

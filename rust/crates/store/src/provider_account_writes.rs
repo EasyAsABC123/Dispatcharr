@@ -39,6 +39,17 @@ fn locked() -> StoreError {
 fn path_key(raw: String) -> Result<i64, StoreError> {
     raw.parse().map_err(|_| StoreError::NotFound)
 }
+/// Positive HTTP(S) subset of the Source flexible URL validator.
+pub(super) fn ordinary_provider_http_url(text: &str) -> bool {
+    url::Url::parse(text).is_ok_and(|parsed| {
+        matches!(parsed.scheme(), "http" | "https")
+            && parsed.host_str().is_some()
+            && parsed.username().is_empty()
+            && parsed.password().is_none()
+            && parsed.fragment().is_none()
+    })
+}
+
 fn defaults() -> Value {
     json!({"id":null,"name":"","server_url":null,"file_path":null,
         "server_group_id":null,"max_streams":0,"is_active":true,
@@ -276,13 +287,7 @@ fn validate(
                     if text.is_empty() {
                         Ok(Value::String(text))
                     } else {
-                        let parsed = url::Url::parse(&text).map_err(|_| unsupported())?;
-                        if !matches!(parsed.scheme(), "http" | "https")
-                            || parsed.host_str().is_none()
-                            || !parsed.username().is_empty()
-                            || parsed.password().is_some()
-                            || parsed.fragment().is_some()
-                        {
+                        if !ordinary_provider_http_url(&text) {
                             return Err(unsupported());
                         }
                         Ok(Value::String(text))

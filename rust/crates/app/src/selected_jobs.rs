@@ -382,7 +382,7 @@ impl SelectedJobs {
         sd_guide
             .bind_hook_runtime(plugin_runtime.clone())
             .map_err(|_| "Selected SD hook runtime binding failed")?;
-        let sd_source_http = sd_guide.source_http();
+        let sd_source_http = sd_guide.source_http(existing.refresh.clone());
         let scanner = jobs::normal_scanner::Prepared::connect_with_auto(
             shared_jobs.clone(),
             store.clone(),

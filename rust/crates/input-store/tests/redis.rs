@@ -46,8 +46,52 @@ async fn status_samples_real_shared_chunks_and_reports_expired_latest_key() {
     assert_eq!(stats["total_sample_bytes"], 752);
     assert_eq!(stats["avg_chunk_size"], 188.0);
     assert_eq!(stats["is_ts_aligned"], true);
-    assert_eq!(stats["diagnostics"]["first_chunk"]["first_byte"], 71);
+    assert_eq!(stats["diagnostics"]["first_chunk"]["first_byte"], "G");
     assert!(stats["latest_chunk_ttl"].as_i64().unwrap() > 0);
+    let sample = |sequence| format!("live:channel:{channel}:input:buffer:chunk:{sequence}");
+    let _: () = redis::cmd("SET")
+        .arg(sample(2))
+        .arg("å".to_string() + &"x".repeat(186))
+        .arg("KEEPTTL")
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    let unicode = store.buffer_diagnostics(&channel, 6).await.unwrap();
+    assert_eq!(unicode["diagnostics"]["first_chunk"]["first_byte"], "å");
+    assert_eq!(unicode["diagnostics"]["first_chunk"]["size"], 187);
+    assert_eq!(unicode["total_sample_bytes"], 751);
+    assert_eq!(unicode["is_ts_aligned"], false);
+
+    let _: () = redis::cmd("SET")
+        .arg(sample(3))
+        .arg(&b"G\x1f\xff\x10"[..])
+        .arg("KEEPTTL")
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    let binary = store.buffer_diagnostics(&channel, 6).await.unwrap();
+    let error = "'utf-8' codec can't decode byte 0xff in position 2: invalid start byte";
+    assert_eq!(binary["error"], error);
+    assert_eq!(binary["diagnostics"]["exception"], error);
+    assert_eq!(
+        binary["diagnostics"]["first_chunk"],
+        unicode["diagnostics"]["first_chunk"]
+    );
+    assert!(binary.get("keys_found").is_none());
+    assert!(binary["latest_chunk_ttl"].as_i64().unwrap() > 0);
+
+    let _: () = redis::cmd("SET")
+        .arg(sample(2))
+        .arg(vec![0u8; 1024 * 1024 + 1])
+        .arg("KEEPTTL")
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(
+        store.buffer_diagnostics(&channel, 6).await,
+        Err(Error::Capacity)
+    );
+
     for i in 1..=6 {
         let _: () = redis::cmd("DEL")
             .arg(format!("live:channel:{channel}:input:buffer:chunk:{i}"))
