@@ -33,11 +33,12 @@ in tests that bind local sockets. An earlier unshipped revision failed to
 compile due to a private parser module import. The acceptance projection
 retains both observations.
 
-The preceding [completed DVR benchmark](../scripts/rust-perf/candidate88-dvr/README.md)
-qualifies the three one-viewer pairs and records the ten-viewer warmup failure.
-The Candidate91 functional result admits a fresh benchmark with the same
-workload and budgets. The functional result alone does not establish a new
-resource comparison. Full M4 and M5 remain open.
+The [Candidate91 completed DVR benchmark](../scripts/rust-perf/candidate91-dvr/README.md)
+exited 0 with all 12 measured phases and six paired comparisons passing the
+unchanged workload and budgets. Median paired CPU and working-set reductions
+were 41.75% and 64.34% at one viewer, and 64.62% and 58.88% at ten viewers.
+Delivered bytes matched in every pair. The [Candidate88 attempt](../scripts/rust-perf/candidate88-dvr/README.md)
+retains its ten-viewer warmup failure. Full M4 and M5 remain open.
 
 [Exact Docker and test receipts](../scripts/rust-integration/milestone-batch91/acceptance.json)
 · [Milestone ledger](rust-milestones.md)

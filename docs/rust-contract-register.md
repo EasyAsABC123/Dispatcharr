@@ -355,4 +355,6 @@ and [retained batch Set EPG controls](../scripts/rust-contracts/retained-set-epg
 bring M0 to 470 partial HTTP assignments and 328 unassigned operations. The
 batch assignment uses the 16 matched HTTP cases and the separate Original
 XMLTV publication. Native's atomic unsupported-batch response stays recorded
-as HTTP 501. Both format aliases remain unassigned.
+as HTTP 501. Both format aliases remain unassigned. The network-disabled SDK
+reproduced the register and passed five focused tests, including 19 corruption
+controls. [Exact Set EPG SDK receipt](../scripts/rust-contracts/sdk-set-epg-latest.json)

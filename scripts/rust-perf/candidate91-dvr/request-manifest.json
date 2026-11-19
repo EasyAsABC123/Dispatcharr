@@ -1,0 +1,54 @@
+{
+  "backend_labels": [
+    "source",
+    "candidate"
+  ],
+  "media": {
+    "closed_seek": {
+      "bytes": 196608,
+      "headers": {
+        "Accept-Ranges": "bytes",
+        "Content-Disposition": "inline; filename=\"owned-completed.mkv\"",
+        "Content-Length": "196608",
+        "Content-Range": "bytes 262144-458751/3165955",
+        "Content-Type": "video/x-matroska"
+      },
+      "range": "bytes=262144-458751",
+      "sha256": "297e96d8d09f13aba87a349abab87b0ef1deece67394309e675fa127b3e62617",
+      "status": 206
+    },
+    "complete": {
+      "bytes": 3165955,
+      "headers": {
+        "Accept-Ranges": "bytes",
+        "Content-Disposition": "inline; filename=\"owned-completed.mkv\"",
+        "Content-Length": "3165955",
+        "Content-Type": "video/x-matroska"
+      },
+      "range": null,
+      "sha256": "3d8d21dfb6acb0af0f773b1026a78ee6501002c8e25d9711b43d53bc0050d888",
+      "status": 200
+    }
+  },
+  "method": "GET",
+  "operations_per_viewer_per_wave": [
+    "complete",
+    "closed_seek"
+  ],
+  "path_template": "/api/channels/recordings/{id}/file/",
+  "per_phase_requests": {
+    "1": {
+      "measured_bytes": 67251260,
+      "measured_requests": 40,
+      "warmup_requests": 10
+    },
+    "10": {
+      "measured_bytes": 672512600,
+      "measured_requests": 400,
+      "warmup_requests": 100
+    }
+  },
+  "plan_sha256": "9f9678bf56e4660925176ad6ca8fb40d0ed3051c0446c170457bf9472b3144db",
+  "query_authentication_parameter": "token",
+  "same_media_for_both_backends": true
+}
