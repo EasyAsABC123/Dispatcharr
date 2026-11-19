@@ -64,6 +64,11 @@ preview suites. The paired preview benchmark measured 20.45% lower CPU and
 56.05% lower peak working set with equal throughput. Two trials exceeded
 the full-scan p95 limit, keeping M7 performance acceptance open.
 
+The [enabled DVR rebuild checkpoint](rust-milestone-batch104.md) matched
+the selected non-UTC overnight edits and activation, scheduled rows and
+artwork children. The numeric VOD seek fixture stopped before an Original
+HTTP observation and awaits replay.
+
 [The viewing and client compatibility checkpoint](rust-milestone-batch100.md)
 records the exact Docker build, recurring DVR detail and VOD stats parity,
 and two-replica TS controls. Targeted client stop disconnected just the
