@@ -52,10 +52,10 @@ def evaluate(names, config):
             check_deadline()
             try:
                 if index == 0:
-                    renamed = pattern.sub(replacement, name, timeout=0.1)[:512]
+                    renamed = pattern.sub(replacement, name, timeout=0.1, concurrent=False)[:512]
                     sample = {"before": name, "after": renamed} if renamed != name else None
                 else:
-                    matched = pattern.search(name, timeout=0.1)
+                    matched = pattern.search(name, timeout=0.1, concurrent=False)
                     sample = {"name": name, "matches": True} if matched else None
             except (TimeoutError, regex.error) as error:
                 results[index]["error"] = f"Pattern timed out: {error}"
