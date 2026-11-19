@@ -47,6 +47,10 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+[The guide clear, HDHomeRun and XC alias checkpoint](rust-milestone-batch98.md)
+records three passed Compose scopes on one image. The Original public admin
+redirect was captured, and both backends served the literal `admin` XC alias.
+
 [The XC live-to-VOD checkpoint](rust-milestone-batch95.md)
 verifies three direct pairs and records the timed-out Candidate95 scheduled
 case. Candidate96 passed its focused tests and the exact scheduled Compose

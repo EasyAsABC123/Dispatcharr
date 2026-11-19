@@ -1,0 +1,99 @@
+{
+  "build_manifest_sha256": "14182eb2a545eaee57f3b964d5c830355e0efbb35bd80074d718a25d9ef24b23",
+  "candidate_revision": "452a7130dce1b96733dfcb06f04b7b7088688bbd",
+  "cohort_scopes_passed": true,
+  "image_id": "sha256:71ce0095c47bf00194eb1fa9e13b3e3ae65530b754d1be120b9f6683616f6cd8",
+  "initial_admin_fixture_failure": {
+    "Native_started": false,
+    "actual_exit": 1,
+    "evidence_sha256": {
+      "cleanup": "e1a12d043c1af65b762913d0f6a7d97e028481ebca5a026e51a596d9259c885e",
+      "execution": "97173e5d5e9db23ea3211bcfc7e7af9bb857e9351a9e20265252fe7f755b0130",
+      "report": "299c4673e59bf9f47df468b48d18430f945a48ab0339aa61084ec98870d1771c"
+    },
+    "failed_phase": "Original nginx startup",
+    "observed_roles_retired": [
+      "baseline",
+      "origin"
+    ],
+    "remaining_owned_resources": 0
+  },
+  "milestone_acceptance": false,
+  "performance_verified": false,
+  "react_license_attribution_inputs": 497,
+  "rust_test_actual_exits": {
+    "clippy": 0,
+    "fmt": 0,
+    "main": 0,
+    "revision": "452a7130dce1b96733dfcb06f04b7b7088688bbd",
+    "store": 0
+  },
+  "scope_results": {
+    "admin-xc": {
+      "actual_child_exit": 0,
+      "actual_exit": 0,
+      "actual_report_error_type": null,
+      "checks_observed": 21,
+      "evidence_sha256": {
+        "cleanup": "72f0cc5e9605ec9d2389fb2909f08308b9a25ca4bf5ce4f9158aea74aa782828",
+        "execution": "657e7d4b0f737a33ef3af53b1aec9de500f9266352ea8efdaf20ff410e9a419d",
+        "receipt": "369ae6b2a13bf83769df8d2e069734bbcbd30efb38ab62e17176cb8ba0df1796",
+        "report": "90f371d64b7b01e908f0b8ed5bb7cc95e5614372ec87f309de8f35eb27d9f332"
+      },
+      "exact_cleanup": true,
+      "failed_checks": [],
+      "foundation": {
+        "eligible_for_connect_scope": true,
+        "mismatches": [],
+        "passed": true
+      },
+      "native_public_redirect_verified": false,
+      "scope_passed": true,
+      "selected_scope": "original_redirect_wire_and_paired_native_xc_alias"
+    },
+    "channel-sole-guide": {
+      "actual_child_exit": 0,
+      "actual_exit": 0,
+      "actual_report_error_type": null,
+      "checks_observed": 28,
+      "evidence_sha256": {
+        "cleanup": "7290d959a3695a555a46e03c6c8a0b9db67ee99d05668938ff4f17cc4f646342",
+        "execution": "aff4b101d12f8e1a5890553ab9f72125c43a175936fb32d3bb4041ada246099a",
+        "receipt": "fc328bf2ed0bc0891e24dd267f46ebca7c688472e76d98a91365032c407deec8",
+        "report": "89dd1d5e40120d31858ee581f386261431b303cd2b27383c285cb297cc5febc2"
+      },
+      "exact_cleanup": true,
+      "failed_checks": [],
+      "foundation": {
+        "eligible_for_connect_scope": true,
+        "mismatches": [],
+        "passed": true
+      },
+      "native_public_redirect_verified": null,
+      "scope_passed": true,
+      "selected_scope": "paired_sole_guide_override_patch"
+    },
+    "hdhr-react": {
+      "actual_child_exit": 0,
+      "actual_exit": 0,
+      "actual_report_error_type": null,
+      "checks_observed": 42,
+      "evidence_sha256": {
+        "cleanup": "4df81ae7b4bcb98be50ac0e1ae5b260220c940e53e502bea88f351e8d5bd1cb1",
+        "execution": "87fbde678d52958beb5c5ed861e1806b36475c3dfe6f55794924ce7289023720",
+        "receipt": "83ee23759a2e704713fec437a467c07bff5940e88b68670bf555890e14605d6f",
+        "report": "ce3bf3653bde06cbb01738449bbe95c0dffbc33b10264f33d8f65035374edc19"
+      },
+      "exact_cleanup": true,
+      "failed_checks": [],
+      "foundation": {
+        "eligible_for_connect_scope": true,
+        "mismatches": [],
+        "passed": true
+      },
+      "native_public_redirect_verified": null,
+      "scope_passed": true,
+      "selected_scope": "paired_hdhr_stock_react_fallback"
+    }
+  }
+}
