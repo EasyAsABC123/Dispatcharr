@@ -23,7 +23,19 @@ from fixture_ports import write_port_overlay
 from interop import Peer
 from gateway_cases import exercise,INITIAL
 from profile_cases import exercise as exercise_profiles
+from profile_group_retirement import members, qualify, wait_for_members
 from ws_client import Client
+
+
+def materialize_fixture(out,profile_preview):
+    paths=[Path(__file__).resolve(),*[Path(__file__).with_name(name) for name in ['gateway_cases.py','gateway_control.py','ws_client.py','interop.py','browser_peer.js']],ROOT/'docker/compose.rust-playback.yml',ROOT/'docker/compose.rust-candidate.yml',ROOT/'docker/compose.rust-replicas.yml',ROOT/'scripts/rust-integration/fixture_ports.py',*[ROOT/'scripts/rust-playback-baseline'/name for name in ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']],ROOT/'scripts/rust-baseline/dependencies.py']
+    if profile_preview:
+        paths += [Path(__file__).parent/name for name in ['profile_cases.py','profile_source_inside.py','profile_group_retirement.py','datasets/source-preview.json']]
+    copies=out/'tools'
+    for path in paths:
+        target=copies/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
+    return {str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in paths}
+
 
 
 def main():
@@ -31,8 +43,14 @@ def main():
     parser.add_argument('--docker',default='docker');parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--live-stats',action='store_true');parser.add_argument('--candidate-image',required=True);parser.add_argument('--candidate-build-manifest',type=Path,required=True)
     parser.add_argument('--profile-preview',action='store_true',help='qualify the grouped Original and Native profile-editor WebSocket cases')
-    args=parser.parse_args();docker=shutil.which(args.docker)
-    if not docker:parser.error('Docker not found')
+    mode=parser.add_mutually_exclusive_group()
+    mode.add_argument('--materialize-only',action='store_true',
+                      help='Copy every frozen fixture input and exit before any Docker call')
+    mode.add_argument('--inspect-fence-only',action='store_true',
+                      help='Check image inspection with the owned offline test executable and exit')
+    args=parser.parse_args()
+    docker=None if args.materialize_only else shutil.which(args.docker)
+    if not args.materialize_only and not docker:parser.error('Docker not found')
     if not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._:/@-]{0,255}',args.candidate_image):parser.error('invalid image reference')
     manifest_bytes=args.candidate_build_manifest.read_bytes();manifest=json.loads(manifest_bytes)
     hashes=manifest.get('source_sha256',{})
@@ -49,15 +67,15 @@ def main():
     component=json.loads((ROOT/'scripts/rust-realtime-contracts/verified-native-gateway-fanout-1.json').read_text())
     matching={name:value==hashes.get(name) for name,value in component['tool_sha256'].items() if name.startswith('rust/crates/realtime/')}
     report['separate_component_source_match']=matching
-    paths=[Path(__file__).resolve(),*[Path(__file__).with_name(name) for name in ['gateway_cases.py','gateway_control.py','ws_client.py','interop.py','browser_peer.js']],ROOT/'docker/compose.rust-playback.yml',ROOT/'docker/compose.rust-candidate.yml',ROOT/'docker/compose.rust-replicas.yml',ROOT/'scripts/rust-integration/fixture_ports.py',*[ROOT/'scripts/rust-playback-baseline'/name for name in ['seed.py','origin.py','range_http.py','start.sh','supervisor.py','uwsgi.ini']],ROOT/'scripts/rust-baseline/dependencies.py']
-    if args.profile_preview:
-        paths += [Path(__file__).parent/name for name in ['profile_cases.py','profile_source_inside.py','datasets/source-preview.json']]
-    copies=out/'tools'
-    for path in paths:
-        target=copies/path.relative_to(ROOT);target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
-    report['tool_sha256']={str(path.relative_to(ROOT)):hashlib.sha256(path.read_bytes()).hexdigest() for path in paths}
+    report['tool_sha256']=materialize_fixture(out,args.profile_preview)
+    materialization={'engine_started':False,'tool_sha256':report['tool_sha256']}
+    (out/'materialized-inputs.json').write_text(json.dumps(materialization,sort_keys=True)+'\n')
+    if args.materialize_only:
+        print(json.dumps(materialization,sort_keys=True))
+        return 0
     project='dispatcharr-realtime-image-'+uuid.uuid4().hex[:12];report['project']=project
-    overlay=out/'overlay.json';overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[str(copies/'scripts/rust-realtime-contracts')+':/realtime:ro']},**{service:{'image':args.candidate_image} for service in ['candidate','candidate-replica']}}}))
+    tools_mount=out/'tools/scripts/rust-realtime-contracts'
+    overlay=out/'overlay.json';overlay.write_text(json.dumps({'services':{'baseline':{'volumes':[str(tools_mount)+':/realtime:ro']},**{service:{'image':args.candidate_image} for service in ['candidate','candidate-replica']}}}))
     native_services=['candidate'] if args.profile_preview else ['candidate','candidate-replica']
     port_services={'baseline':[5656],'origin':[8080],**{name:[9192] for name in native_services}}
     if not args.profile_preview:
@@ -75,11 +93,19 @@ def main():
             return subprocess.run(values,cwd=ROOT,env=environment,text=True,capture_output=True,check=True,timeout=timeout).stdout
         def endpoint(service,port):
             host,port=command(compose+['port',service,str(port)]).strip().rsplit(':',1);return host,int(port)
-        try:
+        with (out/'engine-started.json').open('x') as marker:
+            json.dump({'project':project,'candidate_image_id':manifest['image_id']},marker)
+        def inspect_candidate():
             inspected=json.loads(command([docker,'image','inspect',args.candidate_image]))[0]
             assert inspected['Id']==manifest['image_id']
             assert inspected['Config']['Labels']['org.opencontainers.image.source-tree-sha256']==manifest['source_tree_sha256']
             report['candidate_image_id']=inspected['Id']
+        if args.inspect_fence_only:
+            inspect_candidate()
+            report['inspect_fence_only']=True
+            return 0
+        try:
+            inspect_candidate()
             command(compose+['up','-d','--no-build','baseline','origin'],180)
             host,port=endpoint('baseline',5656);base='http://'+host+':'+str(port)
             wait(lambda:(out/'seed.json').exists() and http(base+'/proxy/ts/stream/missing')[0]==404,300,'Source fixture ready')
@@ -100,7 +126,17 @@ def main():
                     raise RuntimeError('Source profile preview failed')
                 source_profile=json.loads(source_result.stdout)
                 report['source_profile']=source_profile
-                report['wire']=exercise_profiles(*targets[0],access)
+                def observe():
+                    return control.call({'op':'group-members'})
+                report['source_group_after_process']=observe()
+                native_boundary={'before_open':observe()}
+                report['native_profile_group_boundary']=native_boundary
+                def observe_open():
+                    native_boundary['open']=observe()
+                report['wire']=exercise_profiles(*targets[0],access,observe_open=observe_open)
+                native_boundary['immediate_after_close']=observe()
+                native_boundary['after_close_wait']=wait_for_members(
+                    observe,members(native_boundary['before_open']))
                 assert all(source_profile[key]==value for key,value in report['wire'].items())
                 assert report['wire']['case_count']==267
                 native_exit_check=command(compose+['ps','-q','candidate']).strip()
@@ -114,11 +150,20 @@ def main():
             for host,port in targets:
                 client=Client(host,port,'/ws/?'+urlencode([('token',token)]));held.append(client)
                 assert client.status==101 and client.receive()=={'message':INITIAL}
+            if args.profile_preview:
+                report['group_with_held_native_socket']=observe()
             started=time.monotonic();command(compose+['stop','--timeout','15',*native_services],40)
             report['shutdown_seconds']=time.monotonic()-started
             report['held_socket_shutdown']=[client.receive() for client in held]
             assert report['held_socket_shutdown']==[{'closed':1001}]*len(native_services)
-            report['group_after_shutdown']=control.call({'op':'groups'});assert report['group_after_shutdown']['members']==0
+            if args.profile_preview:
+                report['group_after_shutdown']=observe()
+                report['group_retirement']=qualify(source_profile['source_group_boundary'],
+                    native_boundary,report['source_group_after_process'],
+                    report['group_with_held_native_socket'],report['group_after_shutdown'])
+            else:
+                report['group_after_shutdown']=control.call({'op':'groups'})
+                assert report['group_after_shutdown']['members']==0
             exits=[]
             for service in native_services:
                 container=command(compose+['ps','-a','-q',service]).strip();state=json.loads(command([docker,'inspect',container]))[0]['State']
@@ -126,7 +171,10 @@ def main():
                 assert state['ExitCode']==0 and not state['OOMKilled']
                 logs=command(compose+['logs','--no-color',service]);(out/(service+'-logs.txt')).write_text(logs)
                 assert 'Shutdown deadline reached' not in logs and 'Media drain deadline reached' not in logs
-            report['exit_states']=exits;report['passed']=True
+            report['exit_states']=exits
+            if args.profile_preview:
+                assert report['group_retirement']['passed'], 'Owned WebSocket memberships did not retire'
+            report['passed']=True
         except Exception as error:
             report['failure']=type(error).__name__;report['failure_message']=str(error)
             if hasattr(error,'partial_wire_cases'):report['partial_wire_cases']=error.partial_wire_cases

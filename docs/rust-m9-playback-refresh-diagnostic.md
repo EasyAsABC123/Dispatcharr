@@ -172,3 +172,18 @@ five-minute prefix will record the separate terminal conditions before
 another two-hour attempt.
 
 [Candidate103 two-hour attempt receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/long-candidate103-first.json)
+
+## Candidate103 first-refresh replay
+
+The exact five-minute replay reproduced the failure with ten viewers
+still active. Login and the guide POST both returned HTTP 200. At the
+terminal timeout the broker had one ready job, zero unacknowledged
+jobs and an empty claim index. Guide readiness returned HTTP 503.
+There was no result, owned refresh lock, or programme row.
+
+The controller exited 1 after the 330-second playback observation.
+Both output streams and the process group settled. Independent cleanup
+found no owned resources. The evidence narrows the next check to the
+worker path before a durable claim.
+
+[First-refresh diagnostic receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/candidate103-first-refresh-prefix.json)

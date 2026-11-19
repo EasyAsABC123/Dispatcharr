@@ -53,3 +53,14 @@ by the expected Index and Series work. Exact process and Compose cleanup
 passed. The Rust comparison uses this Original capture.
 
 [Original XMLTV creation receipt](../scripts/rust-integration/milestone-batch105/xmltv-create-original.json)
+
+## Profile WebSocket membership replay
+
+The same package matched all 267 wire cases again. This fixture waited for
+Original's three sockets to retire before stopping Daphne. It then tracked
+the three Native preview clients and the distinct held Native socket until
+each membership disappeared. The held socket closed with 1001, the shared
+Redis group was empty with TTL −2, and exact teardown passed. The controller
+exited 0.
+
+[WebSocket membership receipt](../scripts/rust-integration/milestone-batch105/websocket-membership-passed.json)

@@ -57,6 +57,16 @@ def command(request):
     if operation=='groups':
         redis=RedisClient.get_buffer()
         return {'members':redis.zcard('asgi:group:updates'),'ttl':redis.ttl('asgi:group:updates')}
+    if operation=='group-members':
+        redis=RedisClient.get_buffer()
+        key='asgi:group:updates'
+        with redis.pipeline(transaction=True) as reads:
+            count,ttl,rows=reads.zcard(key).ttl(key).zrange(key,0,15).execute()
+        if count>16 or len(rows)!=count:raise ValueError('owned group exceeds observer bound')
+        def fingerprint(member):
+            raw=member.encode('utf-8') if isinstance(member,str) else member
+            return hashlib.sha256(raw).hexdigest()
+        return {'members':count,'ttl':ttl,'member_sha256':sorted(map(fingerprint,rows))}
     if operation=='play_start':
         if playbacks:raise ValueError('playback already active')
         seed=json.loads(Path('/evidence/seed.json').read_text());path=seed['channels'][0]['path']

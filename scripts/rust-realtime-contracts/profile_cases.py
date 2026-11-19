@@ -20,7 +20,7 @@ ROLES = {0: "viewer", 1: "standard", 10: "admin"}
 DATASET = Path(__file__).with_name("datasets") / "source-preview.json"
 
 
-def exercise(host, port, accounts):
+def exercise(host, port, accounts, *, observe_open=None):
     rows = json.loads(DATASET.read_text())["cases"]
     clients = {}
     digest = hashlib.sha256()
@@ -29,6 +29,8 @@ def exercise(host, port, accounts):
             target = "/ws/?" + urlencode({"token": accounts[role]["access"]})
             clients[role] = client = Client(host, port, target)
             assert client.status == 101 and client.receive() == {"message": INITIAL}, role
+        if observe_open is not None:
+            observe_open()
 
         for row in rows:
             role = ROLES[row["role"]]
