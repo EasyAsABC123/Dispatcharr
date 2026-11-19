@@ -27,7 +27,15 @@ data. Close milestones only after their required gates pass.
    crate compilation and meaningful focused controls. Collect wire fixes before
    freezing the release candidate; avoid full workspace/build cycles per tiny fix.
 3. Freeze one source snapshot, run the release development gates, and build its
-   image once. Reuse the single Cargo target and Docker caches. Compilation can
+   image once. Reuse the single Cargo target and Docker caches. Before Cargo
+   opens a shared target, refresh the input modification times in the private
+   Git-archive snapshot and verify its file bytes still match the committed
+   inputs. Git archives inherit commit timestamps, which can predate artifacts
+   from a different candidate and cause Cargo to return stale results.
+   Candidate104's Docker build detected a missing constructor field after a
+   cached local run appeared to pass. Run the ordinary binaries with
+   `cargo check --locked -p dispatcharr-rs --bins` before the focused tests and
+   retain the actual Docker build as the packaging gate. Compilation can
    overlap one functional fixture when input independence and resource headroom
    are verified. It cannot overlap performance measurement.
 4. Run one acceptance batch selected by the dependency graph. Candidate67's
