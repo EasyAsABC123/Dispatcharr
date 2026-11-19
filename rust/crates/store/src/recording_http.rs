@@ -230,6 +230,14 @@ pub(super) fn reply(
     owner: Arc<dyn Send + Sync>,
 ) -> Result<Response, StoreError> {
     let bytes = serde_json::to_vec(&value).map_err(|_| StoreError::UnhandledRestFault)?;
+    reply_bytes(status, bytes, owner)
+}
+
+fn reply_bytes(
+    status: u16,
+    bytes: Vec<u8>,
+    owner: Arc<dyn Send + Sync>,
+) -> Result<Response, StoreError> {
     if bytes.len() > RESPONSE {
         return Err(StoreError::Unsupported("Recording response budget"));
     }
@@ -286,6 +294,10 @@ impl RecordingHttp {
         Router::new()
             .route("/api/channels/recordings/", any(handle))
             .route("/api/channels/recordings/{*tail}", any(handle))
+            .route(
+                recurring::COLLECTION,
+                axum::routing::get(recurring::collection),
+            )
             .route(recurring::PATH, any(recurring::handle))
             .with_state(self)
     }
@@ -298,6 +310,10 @@ impl RecordingHttp {
             .route(
                 "/api/channels/recordings/{*tail}",
                 any(handle_with_playback),
+            )
+            .route(
+                recurring::COLLECTION,
+                axum::routing::get(recurring::collection_with_playback),
             )
             .route(recurring::PATH, any(recurring::with_playback))
             .with_state((self, playback))

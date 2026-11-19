@@ -2,7 +2,7 @@
 //! Original Dispatcharr, Django and DRF contributors retain behavior credit.
 use super::{
     access, admit, delete_periodic_in_collector, effect, field, iso, publish, python_int, reply,
-    settle, Owner, RecordingEffectError, RecordingHttp, RAW, ROWS,
+    reply_bytes, settle, Owner, RecordingEffectError, RecordingHttp, RAW, RESPONSE, ROWS,
 };
 use crate::{
     admin_writes::{body_object, boolean, character},
@@ -21,16 +21,18 @@ use chrono::{
     Utc,
 };
 use chrono_tz::Tz;
+use futures_util::TryStreamExt;
 use serde_json::{json, Map, Value};
-use sqlx::{Connection, PgConnection, Postgres, QueryBuilder, Row};
+use sqlx::{postgres::PgRow, Connection, PgConnection, Postgres, QueryBuilder, Row};
 use std::{collections::BTreeSet, net::SocketAddr, sync::Arc, time::Duration};
 
 pub(crate) const PATH: &str = "/api/channels/recurring-rules/{id}/";
+pub(crate) const COLLECTION: &str = "/api/channels/recurring-rules/";
 const SELECT: &str = "SELECT r.id::bigint AS id,r.channel_id::bigint AS channel_id,r.name,
     CASE WHEN octet_length(r.days_of_week::text)<=65536 THEN r.days_of_week END AS days,
     r.start_time,r.end_time,r.start_date,r.end_date,r.created_at,r.updated_at,r.enabled
     FROM dispatcharr_channels_recurringrecordingrule r
-    JOIN dispatcharr_channels_channel c ON c.id=r.channel_id WHERE r.id=";
+    JOIN dispatcharr_channels_channel c ON c.id=r.channel_id WHERE true";
 
 #[derive(Clone)]
 struct Rule {
@@ -69,6 +71,26 @@ fn time_text(value: NaiveTime) -> String {
 }
 
 impl Rule {
+    fn decode(row: PgRow) -> Result<Self, StoreError> {
+        Ok(Self {
+            id: row.try_get("id")?,
+            channel: row.try_get("channel_id")?,
+            name: row.try_get("name")?,
+            days: row
+                .try_get::<Option<Value>, _>("days")?
+                .ok_or(StoreError::Unsupported(
+                    "Recurring rule weekdays exceed the response bound",
+                ))?,
+            start: row.try_get("start_time")?,
+            end: row.try_get("end_time")?,
+            start_date: row.try_get("start_date")?,
+            end_date: row.try_get("end_date")?,
+            enabled: row.try_get("enabled")?,
+            created: row.try_get("created_at")?,
+            updated: row.try_get("updated_at")?,
+        })
+    }
+
     fn project(&self) -> Value {
         json!({
             "id":self.id,"channel":self.channel,"name":self.name,"days_of_week":self.days,
@@ -115,6 +137,84 @@ pub(crate) async fn read_value(
     settle(connection, value).await
 }
 
+async fn collection_bytes(auth: &AuthService, user: &User) -> Result<Vec<u8>, StoreError> {
+    let mut connection = auth.store.pool().acquire().await?;
+    let result = async {
+        let mut tx = connection.begin().await?;
+        let result = async {
+            sqlx::query("SET TRANSACTION READ ONLY")
+                .execute(&mut *tx)
+                .await?;
+            sqlx::query("SET LOCAL statement_timeout = '5s'")
+                .execute(&mut *tx)
+                .await?;
+            let mut query = QueryBuilder::<Postgres>::new(SELECT);
+            channels::scope(&mut query, user);
+            query.push(" ORDER BY r.channel_id,r.start_time");
+            let mut rows = query.build().fetch(&mut *tx);
+            let mut body = vec![b'['];
+            while let Some(row) = rows.try_next().await? {
+                if body.len() > 1 {
+                    body.push(b',');
+                }
+                serde_json::to_writer(&mut body, &Rule::decode(row)?.project())
+                    .map_err(|_| StoreError::UnhandledRestFault)?;
+                if body.len() >= RESPONSE {
+                    return Err(StoreError::Unsupported("Recording response budget"));
+                }
+            }
+            body.push(b']');
+            Ok(body)
+        }
+        .await;
+        if result.is_ok() {
+            tx.commit().await?;
+        } else {
+            tx.rollback().await?;
+        }
+        result
+    }
+    .await;
+    settle(connection, result).await
+}
+
+pub(crate) async fn read_collection(
+    auth: AuthService,
+    owner: Arc<dyn Send + Sync>,
+    peer: SocketAddr,
+    request: Request,
+) -> Result<Response, StoreError> {
+    tokio::spawn(async move {
+        crate::epg_program_http::json_negotiation(request.headers(), request.uri())?;
+        let auth = auth.with_retained_scope(owner.clone());
+        let user = auth
+            .account_user(peer, request.headers().clone(), false)
+            .await?;
+        access(&user, true)?;
+        let body = collection_bytes(&auth, &user).await?;
+        reply_bytes(200, body, owner)
+    })
+    .await
+    .map_err(|_| StoreError::UnhandledRestFault)?
+}
+
+pub(super) async fn collection(
+    State(api): State<RecordingHttp>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    let owner = admit(&api)?;
+    read_collection(owner.state.auth.clone(), owner, peer, request).await
+}
+
+pub(super) async fn collection_with_playback(
+    State((_, playback)): State<(RecordingHttp, RecordingPlayback)>,
+    peer: ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    crate::recording_playback::recurring_rules(State(playback), peer, request).await
+}
+
 async fn lookup(
     connection: &mut PgConnection,
     user: &User,
@@ -122,7 +222,7 @@ async fn lookup(
     write: bool,
 ) -> Result<Rule, StoreError> {
     let mut query = QueryBuilder::<Postgres>::new(SELECT);
-    query.push_bind(id);
+    query.push(" AND r.id=").push_bind(id);
     channels::scope(&mut query, user);
     if write {
         query.push(" FOR UPDATE OF r");
@@ -132,23 +232,7 @@ async fn lookup(
         .fetch_optional(connection)
         .await?
         .ok_or_else(missing)?;
-    Ok(Rule {
-        id: row.try_get("id")?,
-        channel: row.try_get("channel_id")?,
-        name: row.try_get("name")?,
-        days: row
-            .try_get::<Option<Value>, _>("days")?
-            .ok_or(StoreError::Unsupported(
-                "Recurring rule weekdays exceed the response bound",
-            ))?,
-        start: row.try_get("start_time")?,
-        end: row.try_get("end_time")?,
-        start_date: row.try_get("start_date")?,
-        end_date: row.try_get("end_date")?,
-        enabled: row.try_get("enabled")?,
-        created: row.try_get("created_at")?,
-        updated: row.try_get("updated_at")?,
-    })
+    Rule::decode(row)
 }
 
 fn weekdays(value: &Value) -> Result<Value, StoreError> {

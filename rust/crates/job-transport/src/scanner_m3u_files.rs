@@ -1,6 +1,7 @@
 //! Bounded local standard-M3U file/cache work, called only under retained worker ownership.
 use crate::scanner_m3u::Error;
 use dispatcharr_ingest_core::{Entry, Limits, Parser};
+use flate2::read::MultiGzDecoder;
 use serde_json::{json, Value};
 use std::{
     fs,
@@ -133,12 +134,41 @@ pub(crate) fn probe_input(path: &Path) -> Result<InputProbe, Error> {
         Ok(_) => input(path).map(InputProbe::Present),
     }
 }
+pub(crate) enum InputFormat {
+    Plain,
+    Gzip,
+}
+
+pub(crate) fn input_format(path: &Path) -> Option<InputFormat> {
+    if path.extension().is_some_and(|extension| extension == "m3u") {
+        return Some(InputFormat::Plain);
+    }
+    path.file_name()
+        .and_then(|name| name.to_str())
+        .filter(|name| name.ends_with(".m3u.gz"))
+        .map(|_| InputFormat::Gzip)
+}
+
 pub(crate) fn input(path: &Path) -> Result<Catalog, Error> {
+    let format = input_format(path).ok_or(Error::Unsupported)?;
     let file = regular(path, INPUT_BYTES)?;
     let mut bytes = Vec::new();
     file.take(INPUT_BYTES + 1)
         .read_to_end(&mut bytes)
         .map_err(|_| Error::Operational)?;
+    if bytes.len() > INPUT_BYTES as usize {
+        return Err(Error::Unsupported);
+    }
+    if matches!(format, InputFormat::Gzip) {
+        // Like Source gzip.open, read all members before admitting the task.
+        // Bound encoded and decoded bytes independently, including error paths.
+        let mut decoded = Vec::new();
+        MultiGzDecoder::new(bytes.as_slice())
+            .take(INPUT_BYTES + 1)
+            .read_to_end(&mut decoded)
+            .map_err(|_| Error::Unsupported)?;
+        bytes = decoded;
+    }
     if bytes.len() > INPUT_BYTES as usize || !bytes.is_ascii() {
         return Err(Error::Unsupported);
     }
@@ -317,6 +347,49 @@ mod tests {
         fs::remove_dir_all(&root).unwrap();
         assert!(probe_input(&path).is_err());
     }
+    #[test]
+    fn bounded_gzip_uses_the_same_catalog_and_rejects_invalid_or_oversize_input() {
+        use flate2::{write::GzEncoder, Compression};
+
+        fn gz(text: &[u8]) -> Vec<u8> {
+            let mut encoder = GzEncoder::new(Vec::new(), Compression::default());
+            encoder.write_all(text).unwrap();
+            encoder.finish().unwrap()
+        }
+
+        let root =
+            std::env::temp_dir().join(format!("rust-owned-m3u-gzip-{}", uuid::Uuid::new_v4()));
+        fs::create_dir(&root).unwrap();
+        let plain = root.join("owned.m3u");
+        let zipped = root.join("owned.m3u.gz");
+        let header = b"#EXTM3U\n";
+        let body = b"#EXTINF:-1 group-title=\"Owned Group\",Owned stream\nhttp://127.0.0.1:9/owned-never-played.ts\n";
+        fs::write(&plain, [header.as_slice(), body].concat()).unwrap();
+        let mut archive = gz(header);
+        archive.extend(gz(body));
+        fs::write(&zipped, &archive).unwrap();
+        let source = input(&plain).unwrap();
+        let decoded = input(&zipped).unwrap();
+        assert_eq!(decoded.entries, source.entries);
+        assert_eq!(decoded.groups, source.groups);
+        assert_eq!(decoded.raw, source.raw);
+
+        fs::write(&zipped, &archive[..archive.len() - 1]).unwrap();
+        assert!(matches!(input(&zipped), Err(Error::Unsupported)));
+        let over = gz(&vec![b'x'; INPUT_BYTES as usize + 1]);
+        assert!(over.len() < INPUT_BYTES as usize);
+        fs::write(&zipped, &over).unwrap();
+        assert!(matches!(input(&zipped), Err(Error::Unsupported)));
+        fs::write(&zipped, vec![0; INPUT_BYTES as usize + 1]).unwrap();
+        assert!(matches!(input(&zipped), Err(Error::Unsupported)));
+
+        fs::remove_file(&zipped).unwrap();
+        std::os::unix::fs::symlink(&plain, &zipped).unwrap();
+        assert!(matches!(input(&zipped), Err(Error::Unsupported)));
+        assert!(input_format(&root.join("owned.m3u.xz")).is_none());
+        fs::remove_dir_all(root).unwrap();
+    }
+
     #[test]
     fn one_entry_exact_source_cache_bytes_and_domain_negatives() {
         let root =

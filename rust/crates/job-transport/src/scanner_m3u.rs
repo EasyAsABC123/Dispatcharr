@@ -659,7 +659,7 @@ impl Service {
         if !account.name.is_ascii()
             || !account.path.starts_with(&self.inner.roots.input)
             || account.path.parent() != Some(self.inner.roots.input.as_path())
-            || account.path.extension().and_then(|v| v.to_str()) != Some("m3u")
+            || files::input_format(&account.path).is_none()
             || account.days < 0
             || account.days > 3650
         {

@@ -55,6 +55,7 @@ impl RecordingPlayback {
     pub fn router(self) -> Router {
         Router::new()
             .route("/api/channels/recordings/", get(list_recordings))
+            .route(recording_http::recurring::COLLECTION, get(recurring_rules))
             .route(recording_http::recurring::PATH, get(recurring_rule))
             .route("/api/channels/recordings/{id}/file/", get(handle))
             .route("/api/channels/recordings/{id}/hls/{*segment}", get(handle))
@@ -110,6 +111,15 @@ fn capacity() -> StoreError {
         json!({"detail":"Recording playback capacity unavailable."}),
     )
 }
+pub(crate) async fn recurring_rules(
+    State(api): State<RecordingPlayback>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    let owner = api.admit()?;
+    recording_http::recurring::read_collection(api.inner.auth.clone(), owner, peer, request).await
+}
+
 async fn recurring_rule(
     State(api): State<RecordingPlayback>,
     Path(id): Path<String>,
