@@ -561,3 +561,20 @@ container and host process generations. The [first actual exit 1](../scripts/rus
 remains part of the record. The register has 565 partial HTTP Original assignments,
 233 unassigned operations and 216 methodless declarations with scoped observations.
 Original Dispatcharr authors and contributors retain full credit.
+
+## Retained Original channel logo and M3U child management
+
+The [two independent Original captures](../scripts/rust-integration/retained-logo-m3u/receipt.json)
+add 27 partial assignments from 108 HTTP observations. Logo covers eight
+operations and retains one scoped Original HTML 500 on authorized formatted
+upload, with unchanged SQL and files. The two stock logo bulk declarations keep
+their unresolved methods and record observed DELETE and POST separately. M3U
+covers 19 profile, filter and server-group declarations, preserving separate
+account scope, exact group and profile deletion effects and unchanged broker
+and scheduling observations.
+
+Both outer launchers, startup, probes and cleanup exited zero. Each retired its
+exact owned application and origin container and process generations. The
+register now has 592 partial HTTP Original assignments, 206 unassigned
+operations, and 218 methodless declarations with scoped observations. Original
+Dispatcharr authors and contributors retain full credit.

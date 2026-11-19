@@ -33,6 +33,7 @@ import retained_c98_hdhr_contracts
 import retained_core_profile_json_contracts
 import retained_hdhr_literal_contracts
 import retained_c106_connect_replay_contracts
+import retained_logo_m3u_contracts
 import retained_comskip_task_contracts
 import retained_clocked_recording_contracts
 import unittest
@@ -105,6 +106,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
         retained_core_profile_json_contracts.restore_pre_core_profiles(ROOT, register['runtime_routes'])
         retained_hdhr_literal_contracts.restore_pre_literal_hdhr(ROOT, register['runtime_routes'])
         retained_c106_connect_replay_contracts.restore_pre_c106_replay(ROOT, register['runtime_routes'])
+        retained_logo_m3u_contracts.restore_pre_logo_m3u(ROOT, register['runtime_routes'])
         retained_connect_test_contracts.restore_pre_connect_test(ROOT, register['runtime_routes'])
         retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT, register['runtime_routes'])
         retained_connect_detail_contracts.restore_pre_connect_detail(ROOT, register['runtime_routes'])
@@ -153,7 +155,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
         mapping = source_contracts.apply(ROOT, rows, json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes()))
         self.assertEqual(rows, current_rows)
         self.assertEqual([row for row in mapping['unmapped_method_Source_observations'] if row['route_id'] != 'route-7e6941c073eccaa2b6dd' and row.get('fixture_id') != retained_epg_reads_contracts.FIXTURE], self.value['unmapped_method_Source_observations'])
-        self.assertEqual(mapping['operations'], 565)
+        self.assertEqual(mapping['operations'], 592)
         self.assertEqual(sum(o['method'] is None for o in operations.values()), 322)
         self.assertTrue(all(o['fully_verified'] is False for o in operations.values()))
 

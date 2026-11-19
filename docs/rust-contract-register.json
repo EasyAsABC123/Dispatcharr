@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "fd66c4715570326fdbb96450e20aecfed86d1779bfb961a4c4102599808abecf",
+    "scripts/rust-contracts/executable-source-inputs.json": "c02694378b8c6440e9013eca36e4d960fa4f08bbef497968952240cdf3b0f6e2",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -68,11 +68,12 @@
     "scripts/rust-contracts/retained-core-profile-json/bindings.json": "1419d535cff3043830de20f24c953083ed86181f441b2c2d0f210657500b182c",
     "scripts/rust-contracts/retained-c105-guide-startup/bindings.json": "432981ebc0f4dfe09ef60a382c4826056812c34906869fef20cd6b8b6c3711ab",
     "scripts/rust-contracts/retained-hdhr-literal/bindings.json": "a0e02bb16edf8e189e8890c515e088e192412db7b42ea17f7d511ee574f46c0c",
-    "scripts/rust-contracts/retained-c106-connect-replay/bindings.json": "b71c2547db4de3ffd263b9733869f7d2eeed5acff0aac843232e96db8d9bb16a"
+    "scripts/rust-contracts/retained-c106-connect-replay/bindings.json": "b71c2547db4de3ffd263b9733869f7d2eeed5acff0aac843232e96db8d9bb16a",
+    "scripts/rust-contracts/retained-logo-m3u/bindings.json": "76190ae3b6ef921da514e9fdac5fee993d8622d125578dfb9a92b2f127026881"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 565,
+    "operations": 592,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -368,6 +369,11 @@
         "path": "scripts/rust-contracts/retained-c106-connect-replay/bindings.json",
         "sha256": "b71c2547db4de3ffd263b9733869f7d2eeed5acff0aac843232e96db8d9bb16a",
         "kind": "retained_original_C106_Connect_exact_canonical_and_JSON_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-logo-m3u/bindings.json",
+        "sha256": "76190ae3b6ef921da514e9fdac5fee993d8622d125578dfb9a92b2f127026881",
+        "kind": "retained_original_logo_library_and_M3U_child_literal_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -26440,15 +26446,152 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-channel-logo-library",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "40cd4acf782a3ffad3bbe7f9fab184220068c229",
+            "fixture_sha256": "b2a744d5a9c5e26e4bb9f23e30c388121aee3fb64aaa1be405f70a815dce9811",
+            "selected_Original_HTTP_cases": 32,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Selected logo rows and files were removed, the relevant channel link was cleared, and the owned survivor was preserved."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-d85cdff747a519071e0a:METHOD_UNRESOLVED",
+            "fixture_id": "retained-Original-channel-logo-library",
+            "resolver_ordinal": 31,
+            "resolver_name": "api:channels:bulk_delete_logos",
+            "pattern_exact": "api/channels/logos/bulk-delete/",
+            "source_handler": "apps.channels.api_views.BulkDeleteLogosAPIView",
+            "owning_milestone": "M5",
+            "method": null,
+            "source_action": null,
+            "observed_methods": [
+              "DELETE"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Selected logo rows and files were removed, the relevant channel link was cleared, and the owned survivor was preserved."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "DELETE",
+                "path": "/api/channels/logos/bulk-delete/",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/channels/logos/bulk-delete/",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/channels/logos/bulk-delete/",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "actual_content_type": "application/json",
+                "actual_status": 204,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/channels/logos/bulk-delete/",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         }
       ]
     },
@@ -26524,15 +26667,152 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-channel-logo-library",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "40cd4acf782a3ffad3bbe7f9fab184220068c229",
+            "fixture_sha256": "b2a744d5a9c5e26e4bb9f23e30c388121aee3fb64aaa1be405f70a815dce9811",
+            "selected_Original_HTTP_cases": 32,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Only the unused logo rows were removed. Their files and the linked logo were preserved."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-dba4ac27cbba42657db0:METHOD_UNRESOLVED",
+            "fixture_id": "retained-Original-channel-logo-library",
+            "resolver_ordinal": 32,
+            "resolver_name": "api:channels:cleanup_unused_logos",
+            "pattern_exact": "api/channels/logos/cleanup/",
+            "source_handler": "apps.channels.api_views.CleanupUnusedLogosAPIView",
+            "owning_milestone": "M5",
+            "method": null,
+            "source_action": null,
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Only the unused logo rows were removed. Their files and the linked logo were preserved."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "POST",
+                "path": "/api/channels/logos/cleanup/",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/channels/logos/cleanup/",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/channels/logos/cleanup/",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 155,
+                "actual_body_sha256": "80fa8dd04f1e2c8f7abcf4d2f9767fcc62878332640c64d3901b28578ecc5918",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/channels/logos/cleanup/",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         }
       ]
     },
@@ -55883,15 +56163,152 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-channel-logo-library",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "40cd4acf782a3ffad3bbe7f9fab184220068c229",
+            "fixture_sha256": "b2a744d5a9c5e26e4bb9f23e30c388121aee3fb64aaa1be405f70a815dce9811",
+            "selected_Original_HTTP_cases": 32,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected response, SQL and owned logo files, with lower-role denials preserving scoped state."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-61389ef3f0c6f374ece5:GET",
+            "fixture_id": "retained-Original-channel-logo-library",
+            "resolver_ordinal": 108,
+            "resolver_name": "api:channels:logo-list",
+            "pattern_exact": "api/channels/^logos\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.channels.api_views.LogoViewSet",
+            "owning_milestone": "M5",
+            "method": "GET",
+            "source_action": "list",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected response, SQL and owned logo files, with lower-role denials preserving scoped state."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "GET",
+                "path": "/api/channels/logos.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/channels/logos.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 793,
+                "actual_body_sha256": "56f9788e0765a93f9fbcef49ef0002a11183834af82df1c9eca5f2ac106fff3e",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/channels/logos.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 793,
+                "actual_body_sha256": "56f9788e0765a93f9fbcef49ef0002a11183834af82df1c9eca5f2ac106fff3e",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/channels/logos.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-61389ef3f0c6f374ece5:POST",
@@ -55900,15 +56317,152 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-channel-logo-library",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "40cd4acf782a3ffad3bbe7f9fab184220068c229",
+            "fixture_sha256": "b2a744d5a9c5e26e4bb9f23e30c388121aee3fb64aaa1be405f70a815dce9811",
+            "selected_Original_HTTP_cases": 32,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected response, SQL and owned logo files, with lower-role denials preserving scoped state."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-61389ef3f0c6f374ece5:POST",
+            "fixture_id": "retained-Original-channel-logo-library",
+            "resolver_ordinal": 108,
+            "resolver_name": "api:channels:logo-list",
+            "pattern_exact": "api/channels/^logos\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.channels.api_views.LogoViewSet",
+            "owning_milestone": "M5",
+            "method": "POST",
+            "source_action": "create",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected response, SQL and owned logo files, with lower-role denials preserving scoped state."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "POST",
+                "path": "/api/channels/logos.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/channels/logos.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/channels/logos.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 227,
+                "actual_body_sha256": "56ca62fa65e80d55f3b9cb1b643854d793577f8beffe723b4478a17e92d22791",
+                "actual_content_type": "application/json",
+                "actual_status": 201,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/channels/logos.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         }
       ]
     },
@@ -56210,15 +56764,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-channel-logo-library",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "40cd4acf782a3ffad3bbe7f9fab184220068c229",
+            "fixture_sha256": "b2a744d5a9c5e26e4bb9f23e30c388121aee3fb64aaa1be405f70a815dce9811",
+            "selected_Original_HTTP_cases": 32,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "The authorized formatted multipart upload returned the exact retained Original HTML 500.",
+            "Denied roles retained their selected authorization responses. The scoped SQL and owned files stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 1
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-a1f1b49728f2f731a96b:POST",
+            "fixture_id": "retained-Original-channel-logo-library",
+            "resolver_ordinal": 110,
+            "resolver_name": "api:channels:logo-upload",
+            "pattern_exact": "api/channels/^logos/upload\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.channels.api_views.LogoViewSet",
+            "owning_milestone": "M5",
+            "method": "POST",
+            "source_action": "upload",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "The authorized formatted multipart upload returned the exact retained Original HTML 500.",
+              "Denied roles retained their selected authorization responses. The scoped SQL and owned files stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "POST",
+                "path": "/api/channels/logos/upload.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/channels/logos/upload.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/channels/logos/upload.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 145,
+                "actual_body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+                "actual_content_type": "text/html",
+                "actual_status": 500,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/channels/logos/upload.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 1
+            }
+          }
         }
       ]
     },
@@ -57010,15 +57703,152 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-channel-logo-library",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "40cd4acf782a3ffad3bbe7f9fab184220068c229",
+            "fixture_sha256": "b2a744d5a9c5e26e4bb9f23e30c388121aee3fb64aaa1be405f70a815dce9811",
+            "selected_Original_HTTP_cases": 32,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected response, SQL and owned logo files, with lower-role denials preserving scoped state."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-8a8689edf806e68f0b39:DELETE",
+            "fixture_id": "retained-Original-channel-logo-library",
+            "resolver_ordinal": 112,
+            "resolver_name": "api:channels:logo-detail",
+            "pattern_exact": "api/channels/^logos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.channels.api_views.LogoViewSet",
+            "owning_milestone": "M5",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "observed_methods": [
+              "DELETE"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected response, SQL and owned logo files, with lower-role denials preserving scoped state."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "DELETE",
+                "path": "/api/channels/logos/11.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/channels/logos/11.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/channels/logos/11.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "actual_content_type": "",
+                "actual_status": 204,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/channels/logos/11.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-8a8689edf806e68f0b39:GET",
@@ -57266,15 +58096,152 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-channel-logo-library",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "40cd4acf782a3ffad3bbe7f9fab184220068c229",
+            "fixture_sha256": "b2a744d5a9c5e26e4bb9f23e30c388121aee3fb64aaa1be405f70a815dce9811",
+            "selected_Original_HTTP_cases": 32,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected response, SQL and owned logo files, with lower-role denials preserving scoped state."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-8a8689edf806e68f0b39:PATCH",
+            "fixture_id": "retained-Original-channel-logo-library",
+            "resolver_ordinal": 112,
+            "resolver_name": "api:channels:logo-detail",
+            "pattern_exact": "api/channels/^logos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.channels.api_views.LogoViewSet",
+            "owning_milestone": "M5",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "observed_methods": [
+              "PATCH"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected response, SQL and owned logo files, with lower-role denials preserving scoped state."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "PATCH",
+                "path": "/api/channels/logos/17.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/channels/logos/17.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/channels/logos/17.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 263,
+                "actual_body_sha256": "3c036bd43e2513ed0b671d447ae93eb44f991e2b305b4a6ee1fce98344f97317",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/channels/logos/17.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-8a8689edf806e68f0b39:PUT",
@@ -57283,15 +58250,152 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-channel-logo-library",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "40cd4acf782a3ffad3bbe7f9fab184220068c229",
+            "fixture_sha256": "b2a744d5a9c5e26e4bb9f23e30c388121aee3fb64aaa1be405f70a815dce9811",
+            "selected_Original_HTTP_cases": 32,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected response, SQL and owned logo files, with lower-role denials preserving scoped state."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-8a8689edf806e68f0b39:PUT",
+            "fixture_id": "retained-Original-channel-logo-library",
+            "resolver_ordinal": 112,
+            "resolver_name": "api:channels:logo-detail",
+            "pattern_exact": "api/channels/^logos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.channels.api_views.LogoViewSet",
+            "owning_milestone": "M5",
+            "method": "PUT",
+            "source_action": "update",
+            "observed_methods": [
+              "PUT"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected response, SQL and owned logo files, with lower-role denials preserving scoped state."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "PUT",
+                "path": "/api/channels/logos/20.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/channels/logos/20.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/channels/logos/20.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 274,
+                "actual_body_sha256": "10fcb1d7228a675c6d82e7d9570e8a9526268e9cfdf725f0e2a648a69d406231",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/channels/logos/20.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         }
       ]
     },
@@ -91610,15 +92714,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-cc5cd1cab88ac6c63e3c:GET",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 199,
+            "resolver_name": "api:m3u:m3u-account-profiles-list",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "owning_milestone": "M5",
+            "method": "GET",
+            "source_action": "list",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "GET",
+                "path": "/api/m3u/accounts/30/profiles.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/30/profiles.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 318,
+                "actual_body_sha256": "9af1ad83e6eea09f807ec0921e285e83d6b2fbef6f66803c4bea023a61442253",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/30/profiles.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 318,
+                "actual_body_sha256": "9af1ad83e6eea09f807ec0921e285e83d6b2fbef6f66803c4bea023a61442253",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/30/profiles.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-cc5cd1cab88ac6c63e3c:POST",
@@ -91627,15 +92870,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-cc5cd1cab88ac6c63e3c:POST",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 199,
+            "resolver_name": "api:m3u:m3u-account-profiles-list",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "owning_milestone": "M5",
+            "method": "POST",
+            "source_action": "create",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "POST",
+                "path": "/api/m3u/accounts/26/profiles.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/m3u/accounts/26/profiles.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/m3u/accounts/26/profiles.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 345,
+                "actual_body_sha256": "b4ba57597f0383444c01ca14ec1e56f2d0caf9b791f76e55f806e37b6f9c3d19",
+                "actual_content_type": "application/json",
+                "actual_status": 201,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/m3u/accounts/26/profiles.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         }
       ]
     },
@@ -92068,15 +93450,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-e9c29781d27744d30bd4:PATCH",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 200,
+            "resolver_name": "api:m3u:m3u-account-profiles-detail",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)/$",
+            "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "owning_milestone": "M5",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "observed_methods": [
+              "PATCH"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/32/profiles/33/",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/32/profiles/33/",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/32/profiles/33/",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 329,
+                "actual_body_sha256": "d66e390331a5527e6d773a910ce924c716a5890952a07625e16ba1dce9f97788",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/32/profiles/33/",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-e9c29781d27744d30bd4:PUT",
@@ -92255,15 +93776,156 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged.",
+            "Delete removed only the target profile ID from the owned viewer allowlist."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-51bd40ad29830856235b:DELETE",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 201,
+            "resolver_name": "api:m3u:m3u-account-profiles-detail",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "owning_milestone": "M5",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "observed_methods": [
+              "DELETE"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged.",
+              "Delete removed only the target profile ID from the owned viewer allowlist."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "DELETE",
+                "path": "/api/m3u/accounts/28/profiles/29.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/m3u/accounts/28/profiles/29.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/m3u/accounts/28/profiles/29.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "actual_content_type": "",
+                "actual_status": 204,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/m3u/accounts/28/profiles/29.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-51bd40ad29830856235b:GET",
@@ -92272,15 +93934,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-51bd40ad29830856235b:GET",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 201,
+            "resolver_name": "api:m3u:m3u-account-profiles-detail",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "owning_milestone": "M5",
+            "method": "GET",
+            "source_action": "retrieve",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "GET",
+                "path": "/api/m3u/accounts/36/profiles/37.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/36/profiles/37.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 316,
+                "actual_body_sha256": "76fa529f6b8dca7f79b584bbed3af1879b7241a7e1b2953c1417b0a3a45e9137",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/36/profiles/37.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 316,
+                "actual_body_sha256": "76fa529f6b8dca7f79b584bbed3af1879b7241a7e1b2953c1417b0a3a45e9137",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/36/profiles/37.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-51bd40ad29830856235b:PATCH",
@@ -92289,15 +94090,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-51bd40ad29830856235b:PATCH",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 201,
+            "resolver_name": "api:m3u:m3u-account-profiles-detail",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "owning_milestone": "M5",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "observed_methods": [
+              "PATCH"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/34/profiles/35.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/34/profiles/35.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/34/profiles/35.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 329,
+                "actual_body_sha256": "7916663143142f7341e673f31a9883a17f93c56729eb4ee189c74ee1258fe0e2",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/34/profiles/35.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-51bd40ad29830856235b:PUT",
@@ -92306,15 +94246,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-51bd40ad29830856235b:PUT",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 201,
+            "resolver_name": "api:m3u:m3u-account-profiles-detail",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "owning_milestone": "M5",
+            "method": "PUT",
+            "source_action": "update",
+            "observed_methods": [
+              "PUT"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "PUT",
+                "path": "/api/m3u/accounts/38/profiles/39.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/m3u/accounts/38/profiles/39.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/m3u/accounts/38/profiles/39.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 349,
+                "actual_body_sha256": "72342795da0c62acc61546b34cbc0585ea507571b6116f5fcc1b7d27eecd4627",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/m3u/accounts/38/profiles/39.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         }
       ]
     },
@@ -92809,15 +94888,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-7408613845d7507b9397:GET",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 203,
+            "resolver_name": "api:m3u:m3u-filters-list",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "owning_milestone": "M5",
+            "method": "GET",
+            "source_action": "list",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "GET",
+                "path": "/api/m3u/accounts/6/filters.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/6/filters.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 112,
+                "actual_body_sha256": "a95779c71860072af4ec3599890eda38c801f112f3da37040853acfa3e6720e0",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/6/filters.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 112,
+                "actual_body_sha256": "a95779c71860072af4ec3599890eda38c801f112f3da37040853acfa3e6720e0",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/6/filters.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-7408613845d7507b9397:POST",
@@ -92826,15 +95044,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-7408613845d7507b9397:POST",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 203,
+            "resolver_name": "api:m3u:m3u-filters-list",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "owning_milestone": "M5",
+            "method": "POST",
+            "source_action": "create",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "POST",
+                "path": "/api/m3u/accounts/2/filters.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/m3u/accounts/2/filters.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/m3u/accounts/2/filters.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 128,
+                "actual_body_sha256": "cf1e81bff271bb82a5e291fa2a9416f669bb8df987eba1381ed3e91790fc51eb",
+                "actual_content_type": "application/json",
+                "actual_status": 201,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/m3u/accounts/2/filters.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         }
       ]
     },
@@ -93575,15 +95932,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-b6aa1a81857f99141ca2:DELETE",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 205,
+            "resolver_name": "api:m3u:m3u-filters-detail",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "owning_milestone": "M5",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "observed_methods": [
+              "DELETE"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "DELETE",
+                "path": "/api/m3u/accounts/4/filters/4.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/m3u/accounts/4/filters/4.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/m3u/accounts/4/filters/4.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "actual_content_type": "",
+                "actual_status": 204,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/m3u/accounts/4/filters/4.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-b6aa1a81857f99141ca2:GET",
@@ -93592,15 +96088,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-b6aa1a81857f99141ca2:GET",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 205,
+            "resolver_name": "api:m3u:m3u-filters-detail",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "owning_milestone": "M5",
+            "method": "GET",
+            "source_action": "retrieve",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "GET",
+                "path": "/api/m3u/accounts/10/filters/10.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/10/filters/10.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 111,
+                "actual_body_sha256": "5bad0c937e2bc8f792d313ed515556a5e5ebb5158d221c9c076aaa91c35fa63d",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/10/filters/10.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 111,
+                "actual_body_sha256": "5bad0c937e2bc8f792d313ed515556a5e5ebb5158d221c9c076aaa91c35fa63d",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/accounts/10/filters/10.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-b6aa1a81857f99141ca2:PATCH",
@@ -93609,15 +96244,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-b6aa1a81857f99141ca2:PATCH",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 205,
+            "resolver_name": "api:m3u:m3u-filters-detail",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "owning_milestone": "M5",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "observed_methods": [
+              "PATCH"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/8/filters/8.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/8/filters/8.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/8/filters/8.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 111,
+                "actual_body_sha256": "a2101b94d3711036298c240717a6eb02be346ed2d09007d2e0e2dd2d09781853",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/accounts/8/filters/8.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-b6aa1a81857f99141ca2:PUT",
@@ -93626,15 +96400,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-b6aa1a81857f99141ca2:PUT",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 205,
+            "resolver_name": "api:m3u:m3u-filters-detail",
+            "pattern_exact": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "owning_milestone": "M5",
+            "method": "PUT",
+            "source_action": "update",
+            "observed_methods": [
+              "PUT"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "PUT",
+                "path": "/api/m3u/accounts/12/filters/12.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/m3u/accounts/12/filters/12.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/m3u/accounts/12/filters/12.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 131,
+                "actual_body_sha256": "77826f31ad7c117977cb6fa5e9404dedad1d375d41a37daf891341bdd51e3fa2",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/m3u/accounts/12/filters/12.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         }
       ]
     },
@@ -94118,15 +97031,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-ec0b8bd762480300bd02:GET",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 207,
+            "resolver_name": "api:m3u:server-group-list",
+            "pattern_exact": "api/m3u/^server-groups\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "owning_milestone": "M5",
+            "method": "GET",
+            "source_action": "list",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "GET",
+                "path": "/api/m3u/server-groups.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/server-groups.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 89,
+                "actual_body_sha256": "6f1857ded972d217503e3ab9f872b72b0dca60d388a176b0dc1fa3d9b1eb31b5",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/server-groups.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 89,
+                "actual_body_sha256": "6f1857ded972d217503e3ab9f872b72b0dca60d388a176b0dc1fa3d9b1eb31b5",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/server-groups.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-ec0b8bd762480300bd02:POST",
@@ -94135,15 +97187,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-ec0b8bd762480300bd02:POST",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 207,
+            "resolver_name": "api:m3u:server-group-list",
+            "pattern_exact": "api/m3u/^server-groups\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "owning_milestone": "M5",
+            "method": "POST",
+            "source_action": "create",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "POST",
+                "path": "/api/m3u/server-groups.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/m3u/server-groups.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/m3u/server-groups.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 45,
+                "actual_body_sha256": "249edfbe582c221b0074d0309235494b74c79af1a5108a2c58d2bc0c0ccacae7",
+                "actual_content_type": "application/json",
+                "actual_status": 201,
+                "authentication_challenge_present": false,
+                "method": "POST",
+                "path": "/api/m3u/server-groups.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         }
       ]
     },
@@ -94818,15 +98009,156 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged.",
+            "Delete cleared the account foreign key to the selected server group and preserved the peer link."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-a1f9956244b17a14f893:DELETE",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 209,
+            "resolver_name": "api:m3u:server-group-detail",
+            "pattern_exact": "api/m3u/^server-groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "owning_milestone": "M5",
+            "method": "DELETE",
+            "source_action": "destroy",
+            "observed_methods": [
+              "DELETE"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged.",
+              "Delete cleared the account foreign key to the selected server group and preserved the peer link."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "DELETE",
+                "path": "/api/m3u/server-groups/16.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/m3u/server-groups/16.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/m3u/server-groups/16.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 0,
+                "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "actual_content_type": "",
+                "actual_status": 204,
+                "authentication_challenge_present": false,
+                "method": "DELETE",
+                "path": "/api/m3u/server-groups/16.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-a1f9956244b17a14f893:GET",
@@ -94835,15 +98167,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-a1f9956244b17a14f893:GET",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 209,
+            "resolver_name": "api:m3u:server-group-detail",
+            "pattern_exact": "api/m3u/^server-groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "owning_milestone": "M5",
+            "method": "GET",
+            "source_action": "retrieve",
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "GET",
+                "path": "/api/m3u/server-groups/22.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/server-groups/22.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 44,
+                "actual_body_sha256": "41cca3b2d4d05b47a3cb5c831dc8bd8e381c49c7758ec52e6349432521e45883",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/server-groups/22.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 44,
+                "actual_body_sha256": "41cca3b2d4d05b47a3cb5c831dc8bd8e381c49c7758ec52e6349432521e45883",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "GET",
+                "path": "/api/m3u/server-groups/22.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-a1f9956244b17a14f893:PATCH",
@@ -94852,15 +98323,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-a1f9956244b17a14f893:PATCH",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 209,
+            "resolver_name": "api:m3u:server-group-detail",
+            "pattern_exact": "api/m3u/^server-groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "owning_milestone": "M5",
+            "method": "PATCH",
+            "source_action": "partial_update",
+            "observed_methods": [
+              "PATCH"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "PATCH",
+                "path": "/api/m3u/server-groups/20.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/server-groups/20.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/server-groups/20.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 45,
+                "actual_body_sha256": "4bc7f1a64c1e9beae248a6a413fe5dd4e011bd8561f81f5f0cd1038af29ad504",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "PATCH",
+                "path": "/api/m3u/server-groups/20.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         },
         {
           "contract_id": "route-a1f9956244b17a14f893:PUT",
@@ -94869,15 +98479,154 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "retained-Original-M3U-child-management",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "actual_controller_exit": 0,
+            "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+            "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+            "selected_Original_HTTP_cases": 76,
+            "exact_owned_namespace_cleanup": true,
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/retained-logo-m3u/receipt.json",
+                "sha256": "29232943ccb1a30b5e20edaac2aefdf4d43021bc590c812fa3a642157b8200f1"
+              }
+            ]
+          },
+          "assertions": [
+            "Exact selected JSON or empty-delete response and account-scoped rows.",
+            "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 4,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false,
+            "known_Original_legacy_error_cells": 0
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-a1f9956244b17a14f893:PUT",
+            "fixture_id": "retained-Original-M3U-child-management",
+            "resolver_ordinal": 209,
+            "resolver_name": "api:m3u:server-group-detail",
+            "pattern_exact": "api/m3u/^server-groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "source_handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "owning_milestone": "M5",
+            "method": "PUT",
+            "source_action": "update",
+            "observed_methods": [
+              "PUT"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "viewer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact selected JSON or empty-delete response and account-scoped rows.",
+              "Unrelated rows, notifications, periodic tasks and observed broker queue length stayed unchanged."
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_body_bytes": 58,
+                "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "actual_content_type": "application/json",
+                "actual_status": 401,
+                "authentication_challenge_present": true,
+                "method": "PUT",
+                "path": "/api/m3u/server-groups/24.json",
+                "role": "anonymous"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/m3u/server-groups/24.json",
+                "role": "viewer"
+              },
+              {
+                "actual_body_bytes": 63,
+                "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "actual_content_type": "application/json",
+                "actual_status": 403,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/m3u/server-groups/24.json",
+                "role": "standard"
+              },
+              {
+                "actual_body_bytes": 46,
+                "actual_body_sha256": "c47d2ba26c363825d296d79fe9e5b50657511d2167141cc2cf31f7cc5acafc5a",
+                "actual_content_type": "application/json",
+                "actual_status": 200,
+                "authentication_challenge_present": false,
+                "method": "PUT",
+                "path": "/api/m3u/server-groups/24.json",
+                "role": "admin"
+              }
+            ],
+            "result": {
+              "Source_case_observations": 4,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false,
+              "known_Original_legacy_error_cells": 0
+            }
+          }
         }
       ]
     },

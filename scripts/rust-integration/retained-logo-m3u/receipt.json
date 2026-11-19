@@ -1,0 +1,1842 @@
+{
+  "Native_verified": false,
+  "cohorts": {
+    "logo": {
+      "actual_child_results": {
+        "cleanup": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        },
+        "probe": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        },
+        "startup": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        }
+      },
+      "fixture_sha256": "b2a744d5a9c5e26e4bb9f23e30c388121aee3fb64aaa1be405f70a815dce9811",
+      "observations": [
+        {
+          "actual_path": "/api/channels/logos/bulk-delete/",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "DELETE",
+              "path": "/api/channels/logos/bulk-delete/",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/channels/logos/bulk-delete/",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/channels/logos/bulk-delete/",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "application/json",
+              "actual_status": 204,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/channels/logos/bulk-delete/",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-d85cdff747a519071e0a:METHOD_UNRESOLVED",
+          "declaration": null,
+          "name": "bulk_delete",
+          "observed_method": "DELETE",
+          "path_template": "/api/channels/logos/bulk-delete/",
+          "proof": {
+            "after_sha256": "ecd4ebefd2fa66512c37cccd3adeb3de1f7bb4c850c43ff387d87911dab3e5bd",
+            "before_sha256": "cb49dbdd83a7faacedf23b7e3b557d3bb66d2d7594f23764938384613d26e16b",
+            "known_legacy_error": false,
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": null,
+            "handler": "apps.channels.api_views.BulkDeleteLogosAPIView",
+            "ordinal": 31,
+            "pattern": "api/channels/logos/bulk-delete/",
+            "view_name": "api:channels:bulk_delete_logos"
+          }
+        },
+        {
+          "actual_path": "/api/channels/logos/cleanup/",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "POST",
+              "path": "/api/channels/logos/cleanup/",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/channels/logos/cleanup/",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/channels/logos/cleanup/",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 155,
+              "actual_body_sha256": "80fa8dd04f1e2c8f7abcf4d2f9767fcc62878332640c64d3901b28578ecc5918",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/channels/logos/cleanup/",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-dba4ac27cbba42657db0:METHOD_UNRESOLVED",
+          "declaration": null,
+          "name": "cleanup",
+          "observed_method": "POST",
+          "path_template": "/api/channels/logos/cleanup/",
+          "proof": {
+            "after_sha256": "cd5e5aa3301777ce249917d7505c2eae7a39440bafcb005a25719f9ecfa7dfc6",
+            "before_sha256": "48cd3eed20a95d0bb1c511fbc4e34d297c53b372e5c28b8318a016a581bd2dc3",
+            "known_legacy_error": false,
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": null,
+            "handler": "apps.channels.api_views.CleanupUnusedLogosAPIView",
+            "ordinal": 32,
+            "pattern": "api/channels/logos/cleanup/",
+            "view_name": "api:channels:cleanup_unused_logos"
+          }
+        },
+        {
+          "actual_path": "/api/channels/logos.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "POST",
+              "path": "/api/channels/logos.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/channels/logos.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/channels/logos.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 227,
+              "actual_body_sha256": "56ca62fa65e80d55f3b9cb1b643854d793577f8beffe723b4478a17e92d22791",
+              "actual_content_type": "application/json",
+              "actual_status": 201,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/channels/logos.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-61389ef3f0c6f374ece5:POST",
+          "declaration": "POST",
+          "name": "create_json",
+          "observed_method": "POST",
+          "path_template": "/api/channels/logos.json",
+          "proof": {
+            "after_sha256": "2182a5d2c2986893e68cbf074d042681c119cf425e6253917e750cfd6ba574a5",
+            "before_sha256": "3b3fbc47af5be59c37abc5ee1a79693ecc042bcb9a4f21e2dc63080d45e1e73c",
+            "known_legacy_error": false,
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "create",
+            "handler": "apps.channels.api_views.LogoViewSet",
+            "ordinal": 108,
+            "pattern": "api/channels/^logos\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:channels:logo-list"
+          }
+        },
+        {
+          "actual_path": "/api/channels/logos/11.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "DELETE",
+              "path": "/api/channels/logos/11.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/channels/logos/11.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/channels/logos/11.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 204,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/channels/logos/11.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-8a8689edf806e68f0b39:DELETE",
+          "declaration": "DELETE",
+          "name": "delete_json",
+          "observed_method": "DELETE",
+          "path_template": "/api/channels/logos/{pk}.json",
+          "proof": {
+            "after_sha256": "1a7432dff2bffea4b2bdc733b1daebef70bb9d8d9e252c87ed8f60c119333bfe",
+            "before_sha256": "6f3acb32c8e8a8dee2fd8515357417b4633a4cb020256323005aa03175f4eafc",
+            "known_legacy_error": false,
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "destroy",
+            "handler": "apps.channels.api_views.LogoViewSet",
+            "ordinal": 112,
+            "pattern": "api/channels/^logos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:channels:logo-detail"
+          }
+        },
+        {
+          "actual_path": "/api/channels/logos.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/channels/logos.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/channels/logos.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 793,
+              "actual_body_sha256": "56f9788e0765a93f9fbcef49ef0002a11183834af82df1c9eca5f2ac106fff3e",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/channels/logos.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 793,
+              "actual_body_sha256": "56f9788e0765a93f9fbcef49ef0002a11183834af82df1c9eca5f2ac106fff3e",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/channels/logos.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-61389ef3f0c6f374ece5:GET",
+          "declaration": "GET",
+          "name": "list_json",
+          "observed_method": "GET",
+          "path_template": "/api/channels/logos.json",
+          "proof": {
+            "after_sha256": "d14920a4fd82d336406c6f57b0a3bef08d09fa125077c70fca5db7db3f309533",
+            "before_sha256": "d14920a4fd82d336406c6f57b0a3bef08d09fa125077c70fca5db7db3f309533",
+            "known_legacy_error": false,
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "list",
+            "handler": "apps.channels.api_views.LogoViewSet",
+            "ordinal": 108,
+            "pattern": "api/channels/^logos\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:channels:logo-list"
+          }
+        },
+        {
+          "actual_path": "/api/channels/logos/17.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PATCH",
+              "path": "/api/channels/logos/17.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/channels/logos/17.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/channels/logos/17.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 263,
+              "actual_body_sha256": "3c036bd43e2513ed0b671d447ae93eb44f991e2b305b4a6ee1fce98344f97317",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/channels/logos/17.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-8a8689edf806e68f0b39:PATCH",
+          "declaration": "PATCH",
+          "name": "patch_json",
+          "observed_method": "PATCH",
+          "path_template": "/api/channels/logos/{pk}.json",
+          "proof": {
+            "after_sha256": "027486dd4e5b72d7b44ea5c9930a3d221866dcd81998b841c70dfab0cd12606f",
+            "before_sha256": "5653f75fdfe093c11f4baf3a37b29eebb7c1b2c77ad542e728070f7b2c95fafc",
+            "known_legacy_error": false,
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "partial_update",
+            "handler": "apps.channels.api_views.LogoViewSet",
+            "ordinal": 112,
+            "pattern": "api/channels/^logos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:channels:logo-detail"
+          }
+        },
+        {
+          "actual_path": "/api/channels/logos/20.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PUT",
+              "path": "/api/channels/logos/20.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/channels/logos/20.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/channels/logos/20.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 274,
+              "actual_body_sha256": "10fcb1d7228a675c6d82e7d9570e8a9526268e9cfdf725f0e2a648a69d406231",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/channels/logos/20.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-8a8689edf806e68f0b39:PUT",
+          "declaration": "PUT",
+          "name": "replace_json",
+          "observed_method": "PUT",
+          "path_template": "/api/channels/logos/{pk}.json",
+          "proof": {
+            "after_sha256": "c7b43f404c74179e1064d8975cb22b4c9ddae3ffe8f7db127256bce559de7e02",
+            "before_sha256": "dee53cd6608b45df7e1ab435c6134d0beae163db4b341c80d3369dbabf7928b8",
+            "known_legacy_error": false,
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "update",
+            "handler": "apps.channels.api_views.LogoViewSet",
+            "ordinal": 112,
+            "pattern": "api/channels/^logos/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:channels:logo-detail"
+          }
+        },
+        {
+          "actual_path": "/api/channels/logos/upload.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "POST",
+              "path": "/api/channels/logos/upload.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/channels/logos/upload.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/channels/logos/upload.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 145,
+              "actual_body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+              "actual_content_type": "text/html",
+              "actual_status": 500,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/channels/logos/upload.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-a1f1b49728f2f731a96b:POST",
+          "declaration": "POST",
+          "name": "upload_json",
+          "observed_method": "POST",
+          "path_template": "/api/channels/logos/upload.json",
+          "proof": {
+            "after_sha256": "fef15fabeeb0a490ff9e45354a672c0c87127a7f3a5747b6a6d05996eaa08242",
+            "before_sha256": "fef15fabeeb0a490ff9e45354a672c0c87127a7f3a5747b6a6d05996eaa08242",
+            "known_legacy_error": true,
+            "role_denials_preserved_state": true,
+            "selected_owned_files_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "upload",
+            "handler": "apps.channels.api_views.LogoViewSet",
+            "ordinal": 110,
+            "pattern": "api/channels/^logos/upload\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:channels:logo-upload"
+          }
+        }
+      ],
+      "outer_actual_exit": 0,
+      "owned_roles_retired": [
+        "baseline",
+        "origin"
+      ],
+      "physical_cleanup": true,
+      "raw_fingerprints": {
+        "cleanup-execution.json": "49f1327a062ec82fc297924255c6d1e4f3b1fc3d69feed4d90b0ea261ee2e273",
+        "independent-cleanup.json": "12b4b83831ed972cc7c2e3478435dd52791bd19696bd30829bfa4eb992fee4ab",
+        "outer-selection.json": "a23e65cd5b8e017d19e1aa5cc02878ec216008692b08604cf0982e9cd5866684",
+        "outer-state.json": "00ecf7db07f92ab7e3372ce784d867f776e8e1cfe69e6df37aded4799e1b9665",
+        "outer.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "owned-roles.json": "95a6512de2f98a8800a512e04cdf17b10f0595842b12bb91fff01d4a5aa3141b",
+        "probe-execution.json": "65c37cb89e921dd7d354f7c24cb230e4b2991fca012b53f3183087203a334951",
+        "probe.stdout": "d9c57b401222afbcbb599c11ad34f5068ab9869f2f4878916140c4b98662faf9",
+        "project-before.json": "1ad187a6487df270243fc4248f54fe993fb67520dfd51843dad5e76049969660",
+        "receipt.json": "22fb1132b6a99e5a1cde1b9093fe463171987cea615126fef8869f8be9dfac83",
+        "startup-execution.json": "22c3a91c8f67fb2219c0e8bd6efbb327b1b89d55550b6c1234e58c8a4ef4d815"
+      },
+      "scope_base": "40cd4acf782a3ffad3bbe7f9fab184220068c229",
+      "selected_cases": 32,
+      "selected_operations": 8
+    },
+    "m3u": {
+      "actual_child_results": {
+        "cleanup": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        },
+        "probe": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        },
+        "startup": {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stdout_EOF": true
+        }
+      },
+      "fixture_sha256": "3f51b84f56502616c32cce8c216efe42926a0eda0a9a8d6fdae7c148f6a6c3cd",
+      "observations": [
+        {
+          "actual_path": "/api/m3u/accounts/2/filters.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "POST",
+              "path": "/api/m3u/accounts/2/filters.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/m3u/accounts/2/filters.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/m3u/accounts/2/filters.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 128,
+              "actual_body_sha256": "cf1e81bff271bb82a5e291fa2a9416f669bb8df987eba1381ed3e91790fc51eb",
+              "actual_content_type": "application/json",
+              "actual_status": 201,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/m3u/accounts/2/filters.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-7408613845d7507b9397:POST",
+          "declaration": "POST",
+          "name": "filters_create_json",
+          "observed_method": "POST",
+          "path_template": "/api/m3u/accounts/{account}/filters.json",
+          "proof": {
+            "after_sha256": "7bf30d488f314888c0d7ea491184bc55a2e1ed225367b4565ce0a27d29e1f4f5",
+            "before_sha256": "f21546ff569dc2724cb5421bff8c9678b3170d2f64bbece4ac2483327ef6a304",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "create",
+            "handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "ordinal": 203,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/filters\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-filters-list"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/4/filters/4.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "DELETE",
+              "path": "/api/m3u/accounts/4/filters/4.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/m3u/accounts/4/filters/4.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/m3u/accounts/4/filters/4.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 204,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/m3u/accounts/4/filters/4.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-b6aa1a81857f99141ca2:DELETE",
+          "declaration": "DELETE",
+          "name": "filters_destroy_json",
+          "observed_method": "DELETE",
+          "path_template": "/api/m3u/accounts/{account}/filters/{pk}.json",
+          "proof": {
+            "after_sha256": "5f403a80ec55a498db5ad75d34cbc2f9f91e755bc7c9864c802af708cb76ca57",
+            "before_sha256": "84e412ff2fdd1854bd87f6203e4081bbf2692ad817224678c5bb6c6a915f1001",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "destroy",
+            "handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "ordinal": 205,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-filters-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/6/filters.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/m3u/accounts/6/filters.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/6/filters.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 112,
+              "actual_body_sha256": "a95779c71860072af4ec3599890eda38c801f112f3da37040853acfa3e6720e0",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/6/filters.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 112,
+              "actual_body_sha256": "a95779c71860072af4ec3599890eda38c801f112f3da37040853acfa3e6720e0",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/6/filters.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-7408613845d7507b9397:GET",
+          "declaration": "GET",
+          "name": "filters_list_json",
+          "observed_method": "GET",
+          "path_template": "/api/m3u/accounts/{account}/filters.json",
+          "proof": {
+            "after_sha256": "6618f245daa8f8c09812f5840de42770406a94213d03857198833074da0f556a",
+            "before_sha256": "6618f245daa8f8c09812f5840de42770406a94213d03857198833074da0f556a",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "list",
+            "handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "ordinal": 203,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/filters\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-filters-list"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/8/filters/8.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/8/filters/8.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/8/filters/8.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/8/filters/8.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 111,
+              "actual_body_sha256": "a2101b94d3711036298c240717a6eb02be346ed2d09007d2e0e2dd2d09781853",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/8/filters/8.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-b6aa1a81857f99141ca2:PATCH",
+          "declaration": "PATCH",
+          "name": "filters_partial_update_json",
+          "observed_method": "PATCH",
+          "path_template": "/api/m3u/accounts/{account}/filters/{pk}.json",
+          "proof": {
+            "after_sha256": "fd64336dbf925a38a24f9e2fedb7d9bbccb605be89fb00b04a057d77535076ca",
+            "before_sha256": "c47b6b3dab511fb212455929e54392f3d34a99ae4ea6fac5dbe20a996fc815b2",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "partial_update",
+            "handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "ordinal": 205,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-filters-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/10/filters/10.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/m3u/accounts/10/filters/10.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/10/filters/10.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 111,
+              "actual_body_sha256": "5bad0c937e2bc8f792d313ed515556a5e5ebb5158d221c9c076aaa91c35fa63d",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/10/filters/10.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 111,
+              "actual_body_sha256": "5bad0c937e2bc8f792d313ed515556a5e5ebb5158d221c9c076aaa91c35fa63d",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/10/filters/10.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-b6aa1a81857f99141ca2:GET",
+          "declaration": "GET",
+          "name": "filters_retrieve_json",
+          "observed_method": "GET",
+          "path_template": "/api/m3u/accounts/{account}/filters/{pk}.json",
+          "proof": {
+            "after_sha256": "c1c828e622a49ba163c873c4535926976636ecc825e4291c0171893a6f03440a",
+            "before_sha256": "c1c828e622a49ba163c873c4535926976636ecc825e4291c0171893a6f03440a",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "retrieve",
+            "handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "ordinal": 205,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-filters-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/12/filters/12.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PUT",
+              "path": "/api/m3u/accounts/12/filters/12.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/m3u/accounts/12/filters/12.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/m3u/accounts/12/filters/12.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 131,
+              "actual_body_sha256": "77826f31ad7c117977cb6fa5e9404dedad1d375d41a37daf891341bdd51e3fa2",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/m3u/accounts/12/filters/12.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-b6aa1a81857f99141ca2:PUT",
+          "declaration": "PUT",
+          "name": "filters_update_json",
+          "observed_method": "PUT",
+          "path_template": "/api/m3u/accounts/{account}/filters/{pk}.json",
+          "proof": {
+            "after_sha256": "c68e22555a6f7588a5bbbca6822273ff9fedab7a71f815a1576a2f4ea8a8822e",
+            "before_sha256": "654d47417c1a182427d9c182887e2eda3ce0f6e94e2f313de7df7d3639537e1c",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "update",
+            "handler": "apps.m3u.api_views.M3UFilterViewSet",
+            "ordinal": 205,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/filters/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-filters-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/server-groups.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "POST",
+              "path": "/api/m3u/server-groups.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/m3u/server-groups.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/m3u/server-groups.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 45,
+              "actual_body_sha256": "249edfbe582c221b0074d0309235494b74c79af1a5108a2c58d2bc0c0ccacae7",
+              "actual_content_type": "application/json",
+              "actual_status": 201,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/m3u/server-groups.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-ec0b8bd762480300bd02:POST",
+          "declaration": "POST",
+          "name": "groups_create_json",
+          "observed_method": "POST",
+          "path_template": "/api/m3u/server-groups.json",
+          "proof": {
+            "after_sha256": "6dee074ebbf61954495e6cd394ba1f70a15f5120cbad73a1f2f5b319ccf64133",
+            "before_sha256": "a8f738b8b3e525103f1a857530114547231618b344e8186f8fdf950ba2f54072",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "create",
+            "handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "ordinal": 207,
+            "pattern": "api/m3u/^server-groups\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:server-group-list"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/server-groups/16.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "DELETE",
+              "path": "/api/m3u/server-groups/16.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/m3u/server-groups/16.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/m3u/server-groups/16.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 204,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/m3u/server-groups/16.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-a1f9956244b17a14f893:DELETE",
+          "declaration": "DELETE",
+          "name": "groups_destroy_json",
+          "observed_method": "DELETE",
+          "path_template": "/api/m3u/server-groups/{pk}.json",
+          "proof": {
+            "after_sha256": "c1ec72e4a9c66b07da5e395b789f2a58ef3dddb4d6aff691b1f426ed89618596",
+            "before_sha256": "b9603c4d2231a7a87b5769749e4bbc2798dfd5fe8777cffe7747cbcfd0a53e0e",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "destroy",
+            "handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "ordinal": 209,
+            "pattern": "api/m3u/^server-groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:server-group-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/server-groups.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/m3u/server-groups.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/server-groups.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 89,
+              "actual_body_sha256": "6f1857ded972d217503e3ab9f872b72b0dca60d388a176b0dc1fa3d9b1eb31b5",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/server-groups.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 89,
+              "actual_body_sha256": "6f1857ded972d217503e3ab9f872b72b0dca60d388a176b0dc1fa3d9b1eb31b5",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/server-groups.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-ec0b8bd762480300bd02:GET",
+          "declaration": "GET",
+          "name": "groups_list_json",
+          "observed_method": "GET",
+          "path_template": "/api/m3u/server-groups.json",
+          "proof": {
+            "after_sha256": "d6a4eaf94af7c756f069822f9f3b70ec81fb9dd25fb9376494bffd974a436ddc",
+            "before_sha256": "d6a4eaf94af7c756f069822f9f3b70ec81fb9dd25fb9376494bffd974a436ddc",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "list",
+            "handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "ordinal": 207,
+            "pattern": "api/m3u/^server-groups\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:server-group-list"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/server-groups/20.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PATCH",
+              "path": "/api/m3u/server-groups/20.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/server-groups/20.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/server-groups/20.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 45,
+              "actual_body_sha256": "4bc7f1a64c1e9beae248a6a413fe5dd4e011bd8561f81f5f0cd1038af29ad504",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/server-groups/20.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-a1f9956244b17a14f893:PATCH",
+          "declaration": "PATCH",
+          "name": "groups_partial_update_json",
+          "observed_method": "PATCH",
+          "path_template": "/api/m3u/server-groups/{pk}.json",
+          "proof": {
+            "after_sha256": "529c70c34fc070d0315075f5602479833ab864ae785295783af1145e8e5a1086",
+            "before_sha256": "981b0f71a981711e371eaebef41d36677e664b72d2cf67d64b8c6caf7b15d699",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "partial_update",
+            "handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "ordinal": 209,
+            "pattern": "api/m3u/^server-groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:server-group-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/server-groups/22.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/m3u/server-groups/22.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/server-groups/22.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 44,
+              "actual_body_sha256": "41cca3b2d4d05b47a3cb5c831dc8bd8e381c49c7758ec52e6349432521e45883",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/server-groups/22.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 44,
+              "actual_body_sha256": "41cca3b2d4d05b47a3cb5c831dc8bd8e381c49c7758ec52e6349432521e45883",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/server-groups/22.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-a1f9956244b17a14f893:GET",
+          "declaration": "GET",
+          "name": "groups_retrieve_json",
+          "observed_method": "GET",
+          "path_template": "/api/m3u/server-groups/{pk}.json",
+          "proof": {
+            "after_sha256": "555c514bc122560cdec8a61688772864ae1b703c41798acc8a1027f57bed94c3",
+            "before_sha256": "555c514bc122560cdec8a61688772864ae1b703c41798acc8a1027f57bed94c3",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "retrieve",
+            "handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "ordinal": 209,
+            "pattern": "api/m3u/^server-groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:server-group-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/server-groups/24.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PUT",
+              "path": "/api/m3u/server-groups/24.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/m3u/server-groups/24.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/m3u/server-groups/24.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 46,
+              "actual_body_sha256": "c47d2ba26c363825d296d79fe9e5b50657511d2167141cc2cf31f7cc5acafc5a",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/m3u/server-groups/24.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-a1f9956244b17a14f893:PUT",
+          "declaration": "PUT",
+          "name": "groups_update_json",
+          "observed_method": "PUT",
+          "path_template": "/api/m3u/server-groups/{pk}.json",
+          "proof": {
+            "after_sha256": "1cf209bcd70b25f4274e36c3a7f3d8512bf2be3b7e3eb38885604d6e4555d8fe",
+            "before_sha256": "5ff334a3cf67f07274a8b471f4b3f5c5762be01abaf160aed98c9a2398f8787c",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "update",
+            "handler": "apps.m3u.api_views.ServerGroupViewSet",
+            "ordinal": 209,
+            "pattern": "api/m3u/^server-groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:server-group-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/26/profiles.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "POST",
+              "path": "/api/m3u/accounts/26/profiles.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/m3u/accounts/26/profiles.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/m3u/accounts/26/profiles.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 345,
+              "actual_body_sha256": "b4ba57597f0383444c01ca14ec1e56f2d0caf9b791f76e55f806e37b6f9c3d19",
+              "actual_content_type": "application/json",
+              "actual_status": 201,
+              "authentication_challenge_present": false,
+              "method": "POST",
+              "path": "/api/m3u/accounts/26/profiles.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-cc5cd1cab88ac6c63e3c:POST",
+          "declaration": "POST",
+          "name": "profiles_create_json",
+          "observed_method": "POST",
+          "path_template": "/api/m3u/accounts/{account}/profiles.json",
+          "proof": {
+            "after_sha256": "7d61afa7bed7498ba282bddf376670066e8497ea4f11627a5c95095b742da4d0",
+            "before_sha256": "9faa7cac63c750c1aa67d175e8b2fb4b42942644fa4b99d718c12cd041b6a636",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "create",
+            "handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "ordinal": 199,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-account-profiles-list"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/28/profiles/29.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "DELETE",
+              "path": "/api/m3u/accounts/28/profiles/29.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/m3u/accounts/28/profiles/29.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/m3u/accounts/28/profiles/29.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 0,
+              "actual_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "actual_content_type": "",
+              "actual_status": 204,
+              "authentication_challenge_present": false,
+              "method": "DELETE",
+              "path": "/api/m3u/accounts/28/profiles/29.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-51bd40ad29830856235b:DELETE",
+          "declaration": "DELETE",
+          "name": "profiles_destroy_json",
+          "observed_method": "DELETE",
+          "path_template": "/api/m3u/accounts/{account}/profiles/{pk}.json",
+          "proof": {
+            "after_sha256": "7e6b3f7fee7241a56f55b1e818cf533d08ec2a270ad6554fcf68c51fc00e8ca5",
+            "before_sha256": "0a66bdad6413877ca105a07862106e5f2a1d1cf2237b13c3e395693fb146ba7a",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "destroy",
+            "handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "ordinal": 201,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-account-profiles-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/30/profiles.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/m3u/accounts/30/profiles.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/30/profiles.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 318,
+              "actual_body_sha256": "9af1ad83e6eea09f807ec0921e285e83d6b2fbef6f66803c4bea023a61442253",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/30/profiles.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 318,
+              "actual_body_sha256": "9af1ad83e6eea09f807ec0921e285e83d6b2fbef6f66803c4bea023a61442253",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/30/profiles.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-cc5cd1cab88ac6c63e3c:GET",
+          "declaration": "GET",
+          "name": "profiles_list_json",
+          "observed_method": "GET",
+          "path_template": "/api/m3u/accounts/{account}/profiles.json",
+          "proof": {
+            "after_sha256": "b524015ac16a1078194948500a73ed530dba467d73d354379f0d60a814aafb27",
+            "before_sha256": "b524015ac16a1078194948500a73ed530dba467d73d354379f0d60a814aafb27",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "list",
+            "handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "ordinal": 199,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-account-profiles-list"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/32/profiles/33/",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/32/profiles/33/",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/32/profiles/33/",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/32/profiles/33/",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 329,
+              "actual_body_sha256": "d66e390331a5527e6d773a910ce924c716a5890952a07625e16ba1dce9f97788",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/32/profiles/33/",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-e9c29781d27744d30bd4:PATCH",
+          "declaration": "PATCH",
+          "name": "profiles_partial_update_canonical",
+          "observed_method": "PATCH",
+          "path_template": "/api/m3u/accounts/{account}/profiles/{pk}/",
+          "proof": {
+            "after_sha256": "11f15188f9f8cb73fbd7ed69d4bebaef59db888600672e67f10baa9a742f19ba",
+            "before_sha256": "7edcbea6af25ed7d8a58f466321a2ea70622b3038bef27e8c5a128786926245e",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "partial_update",
+            "handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "ordinal": 200,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)/$",
+            "view_name": "api:m3u:m3u-account-profiles-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/34/profiles/35.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/34/profiles/35.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/34/profiles/35.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/34/profiles/35.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 329,
+              "actual_body_sha256": "7916663143142f7341e673f31a9883a17f93c56729eb4ee189c74ee1258fe0e2",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PATCH",
+              "path": "/api/m3u/accounts/34/profiles/35.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-51bd40ad29830856235b:PATCH",
+          "declaration": "PATCH",
+          "name": "profiles_partial_update_json",
+          "observed_method": "PATCH",
+          "path_template": "/api/m3u/accounts/{account}/profiles/{pk}.json",
+          "proof": {
+            "after_sha256": "47ae3f89a8c71285caa8d2621f543a54aee6d251349fe3cc7ea7c48e72a22881",
+            "before_sha256": "3c3b05345be7b01344d4dca16e50ea3a4fbab448604f6d2b1618460b8d2aa4c3",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "partial_update",
+            "handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "ordinal": 201,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-account-profiles-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/36/profiles/37.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "GET",
+              "path": "/api/m3u/accounts/36/profiles/37.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/36/profiles/37.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 316,
+              "actual_body_sha256": "76fa529f6b8dca7f79b584bbed3af1879b7241a7e1b2953c1417b0a3a45e9137",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/36/profiles/37.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 316,
+              "actual_body_sha256": "76fa529f6b8dca7f79b584bbed3af1879b7241a7e1b2953c1417b0a3a45e9137",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "GET",
+              "path": "/api/m3u/accounts/36/profiles/37.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-51bd40ad29830856235b:GET",
+          "declaration": "GET",
+          "name": "profiles_retrieve_json",
+          "observed_method": "GET",
+          "path_template": "/api/m3u/accounts/{account}/profiles/{pk}.json",
+          "proof": {
+            "after_sha256": "ab2648fe015e600c33eb69e9f3cf41da1b6a2fadb80d4fee10a35c43f5482d90",
+            "before_sha256": "ab2648fe015e600c33eb69e9f3cf41da1b6a2fadb80d4fee10a35c43f5482d90",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "retrieve",
+            "handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "ordinal": 201,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-account-profiles-detail"
+          }
+        },
+        {
+          "actual_path": "/api/m3u/accounts/38/profiles/39.json",
+          "cases": [
+            {
+              "actual_body_bytes": 58,
+              "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+              "actual_content_type": "application/json",
+              "actual_status": 401,
+              "authentication_challenge_present": true,
+              "method": "PUT",
+              "path": "/api/m3u/accounts/38/profiles/39.json",
+              "role": "anonymous"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/m3u/accounts/38/profiles/39.json",
+              "role": "viewer"
+            },
+            {
+              "actual_body_bytes": 63,
+              "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "actual_content_type": "application/json",
+              "actual_status": 403,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/m3u/accounts/38/profiles/39.json",
+              "role": "standard"
+            },
+            {
+              "actual_body_bytes": 349,
+              "actual_body_sha256": "72342795da0c62acc61546b34cbc0585ea507571b6116f5fcc1b7d27eecd4627",
+              "actual_content_type": "application/json",
+              "actual_status": 200,
+              "authentication_challenge_present": false,
+              "method": "PUT",
+              "path": "/api/m3u/accounts/38/profiles/39.json",
+              "role": "admin"
+            }
+          ],
+          "contract_id": "route-51bd40ad29830856235b:PUT",
+          "declaration": "PUT",
+          "name": "profiles_update_json",
+          "observed_method": "PUT",
+          "path_template": "/api/m3u/accounts/{account}/profiles/{pk}.json",
+          "proof": {
+            "after_sha256": "ed7488b668395f68425afee1e095aefeee5d734a23440ff16565a4c5be8f8f8c",
+            "before_sha256": "34afde00f5eb41271b45cec56d1530ada4e640e24309d7703949df29b80a4103",
+            "role_denials_preserved_state": true,
+            "selected_broker_and_schedules_match": true,
+            "selected_sql_state_matches": true
+          },
+          "resolver": {
+            "action": "update",
+            "handler": "apps.m3u.api_views.M3UAccountProfileViewSet",
+            "ordinal": 201,
+            "pattern": "api/m3u/^accounts/(?P<account_id>\\d+)/profiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+            "view_name": "api:m3u:m3u-account-profiles-detail"
+          }
+        }
+      ],
+      "outer_actual_exit": 0,
+      "owned_roles_retired": [
+        "baseline",
+        "origin"
+      ],
+      "physical_cleanup": true,
+      "raw_fingerprints": {
+        "cleanup-execution.json": "fa9b966a69fb31bba7997c53cdf511ab3638b2546b483d5b4f44cbdcdb6bb4f4",
+        "independent-cleanup.json": "c3bea9e87b138b619f977064c7f2b93bc518cfbc62c2ee1eab3dc5ffe843aa2f",
+        "outer-selection.json": "a23e65cd5b8e017d19e1aa5cc02878ec216008692b08604cf0982e9cd5866684",
+        "outer-state.json": "00ecf7db07f92ab7e3372ce784d867f776e8e1cfe69e6df37aded4799e1b9665",
+        "outer.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "owned-roles.json": "eeb54dc780f445e8f376f0827ac8d2d8d68d3c46fd8ad6259ee03367cc319a71",
+        "probe-execution.json": "f63716ac792a1b97ac967cdd96ac328ba8237a1ecf8c7007f6b468ce9c5cc8dc",
+        "probe.stdout": "1fcb1633e00619835de64dd7a1f5d1f9767ccc2df83e92111294a775b93b0c18",
+        "project-before.json": "1ad187a6487df270243fc4248f54fe993fb67520dfd51843dad5e76049969660",
+        "receipt.json": "933ed150b4f44734d14d2924c7e889d02ca7a45f893343a60ff2f0e7d35c831d",
+        "startup-execution.json": "b9c0da75a9193d64600974862abd268a5eee12785dd92f4110026de6df8e8218"
+      },
+      "scope_base": "a2f4a0b1e055422b9cb373ccf5b435b53e8f83ef",
+      "selected_cases": 76,
+      "selected_operations": 19
+    }
+  },
+  "credit": "Original Dispatcharr authors and contributors retain full application, UI and behavior credit.",
+  "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "performance_verified": false,
+  "scope": "retained_Original_channel_logo_and_M3U_child_HTTP",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "whole_operation_verified": false
+}
