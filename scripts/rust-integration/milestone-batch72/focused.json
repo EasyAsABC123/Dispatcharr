@@ -1,0 +1,45 @@
+{
+  "base_git_revision": "c7d01a406cacaa370bad788dcc4c643f58289903",
+  "rust_sha256": {
+    "rust/crates/timeshift-http/src/media.rs": "d9276df3283072d557cebdff05acf768124aef89be6a46cb2b5cce7d1ca4608a",
+    "rust/crates/timeshift-http/src/media_pool.rs": "b1d8611c44940416d869796c5a2f099fb0ac8f207cdbf13e93582af9ccacb315",
+    "rust/crates/app/src/selected_jobs.rs": "8516fabe9f8ed7ab511a2172a5bbc084d547312e46b2105a8ee5b66655c79f6d"
+  },
+  "strict_Clippy_all_targets": [
+    "dispatcharr-rs",
+    "dispatcharr-timeshift-http"
+  ],
+  "format_check_passed": true,
+  "tests": {
+    "fingerprint-test": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "stdout_sha256": "41b2d6418f1e22cc7538392ea974b805d3d00a286f12616d6a1e19ed8dc9f90d"
+    },
+    "archive-pool-test": {
+      "passed": 12,
+      "failed": 0,
+      "ignored": 0,
+      "stdout_sha256": "41861ec8b94b75a8d1bc83b93b90826b1783c16e902792250cd3e4ab70bf93a1"
+    },
+    "archive-cancel-test": {
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "stdout_sha256": "00788298f290445fc67357537d00f982f12eaf81097f49c431dcbba7299b0716"
+    },
+    "beat-test": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "stdout_sha256": "0d573c90c2ed6c6eea9b3b95e7dbbcdb0ed2ae37c057959b9063036191c65f30"
+    }
+  },
+  "archive_test_tool_chunk": "7186ab",
+  "beat_test_tool_chunk": "232be7",
+  "archive_disposable_redis_absent": true,
+  "stock_workers_or_Beat_default_changed": false,
+  "performance_verified": false,
+  "full_milestone_accepted": false
+}

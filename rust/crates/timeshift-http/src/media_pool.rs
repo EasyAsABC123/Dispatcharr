@@ -283,6 +283,49 @@ impl ArchivePool {
             .map_err(|_| unavailable())?;
         Ok(matched)
     }
+    /// Confirm the narrow remote join without changing its pool or provider.
+    /// The observed token is required again by the actual ownership mutation.
+    pub(crate) async fn idle_fingerprint_owner(
+        &self,
+        sid: &str,
+        user: i64,
+        media: &str,
+        ip: &str,
+        agent: &str,
+    ) -> Result<Option<String>, StoreError> {
+        if sid.is_empty()
+            || sid.len() > 128
+            || !sid
+                .bytes()
+                .all(|byte| byte.is_ascii_alphanumeric() || byte == b'_' || byte == b'-')
+            || ip.is_empty()
+            || agent.is_empty()
+        {
+            return Ok(None);
+        }
+        let (owner, _): (Option<String>, ()) = self
+            .inner
+            .transport
+            .command(
+                IDLE_FINGERPRINT_OWNER,
+                &[
+                    format!("timeshift:pool:{sid}"),
+                    self.inner.coordinator.timeshift_owner_key(sid),
+                ],
+                &[
+                    user.to_string().as_bytes(),
+                    media.as_bytes(),
+                    ip.as_bytes(),
+                    agent.as_bytes(),
+                ],
+                (),
+            )
+            .await
+            .map_err(|_| unavailable())?;
+        Ok(owner
+            .filter(|token| uuid::Uuid::parse_str(token).is_ok_and(|id| id.to_string() == *token)))
+    }
+
     pub(crate) async fn redirect_capacity(
         &self,
         profile: i64,
@@ -481,6 +524,22 @@ impl ArchivePool {
         })
     }
     pub async fn open(&self, request: ArchivePoolRequest) -> Result<ArchiveTicket, StoreError> {
+        self.open_scoped(request, None).await
+    }
+
+    pub(crate) async fn open_idle_fingerprint(
+        &self,
+        request: ArchivePoolRequest,
+        expected_owner: &str,
+    ) -> Result<ArchiveTicket, StoreError> {
+        self.open_scoped(request, Some(expected_owner)).await
+    }
+
+    async fn open_scoped(
+        &self,
+        request: ArchivePoolRequest,
+        fingerprint_owner: Option<&str>,
+    ) -> Result<ArchiveTicket, StoreError> {
         if *self.inner.stopped.borrow() {
             return Err(unavailable());
         }
@@ -536,15 +595,22 @@ impl ArchivePool {
             }
         };
         match reopen {
+            Some(_) if fingerprint_owner.is_some() => {
+                Err(StoreError::StatusBody(503, json!("Stream slot busy")))
+            }
             Some(request) => self.reopen(entry, request).await,
-            None => self.open_entry(entry, None).await,
+            None => {
+                self.open_entry(entry, fingerprint_owner, fingerprint_owner.is_some())
+                    .await
+            }
         }
     }
 
     async fn open_entry(
         &self,
         entry: Arc<Entry>,
-        prior_local_token: Option<&str>,
+        expected_idle_owner: Option<&str>,
+        verify_fingerprint: bool,
     ) -> Result<ArchiveTicket, StoreError> {
         let rollback = Rollback {
             inner: self.inner.clone(),
@@ -571,11 +637,12 @@ impl ArchivePool {
                 &claim_keys,
                 &[
                     entry.token.as_bytes(),
-                    prior_local_token.unwrap_or("").as_bytes(),
+                    expected_idle_owner.unwrap_or("").as_bytes(),
                     &fields,
                     entry.request.virtual_channel_id.as_bytes(),
                     entry.request.session_id.as_bytes(),
                     timestamp().as_bytes(),
+                    if verify_fingerprint { b"1" } else { b"0" },
                 ],
                 rollback,
             )
@@ -595,7 +662,7 @@ impl ArchivePool {
                     rollback: Some(rollback),
                 });
             }
-            0 if prior_local_token.is_none() => {}
+            0 if expected_idle_owner.is_none() => {}
             2 => return Err(StoreError::StatusBody(503, json!("Stream slot busy"))),
             _ => {
                 return Err(StoreError::Unsupported(
@@ -765,7 +832,7 @@ impl ArchivePool {
                 let mut entries = self.inner.entries.lock().unwrap();
                 entries.insert(successor.request.session_id.clone(), successor.clone());
             }
-            return self.open_entry(successor, Some(&entry.token)).await;
+            return self.open_entry(successor, Some(&entry.token), false).await;
         }
         if was_handoff && !*self.inner.stopped.borrow() {
             entry.stop.send_replace(false);
@@ -1318,6 +1385,17 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
         entries.remove(&entry.request.session_id);
     }
 }
+const IDLE_FINGERPRINT_OWNER: &str = r#"
+if redis.call('TYPE',KEYS[1]).ok~='hash' or redis.call('EXISTS',KEYS[2])~=0 then return nil end
+local d=redis.call('HMGET',KEYS[1],'busy','rust_idle_ready','user_id','media_id','client_ip','client_user_agent')
+if d[1]~='0' or d[2]~='1' or d[3]~=ARGV[1] or d[4]~=ARGV[2] or d[5]~=ARGV[3] or d[6]~=ARGV[4] then
+ return nil
+end
+local size=redis.call('HSTRLEN',KEYS[1],'rust_owner_token')
+if size==0 or size>128 then return nil end
+return redis.call('HGET',KEYS[1],'rust_owner_token')
+"#;
+
 const CLAIM_IDLE: &str = r#"
 local function kind(key)
  local result=redis.call('TYPE',key);if type(result)=='table' then return result.ok end return result
@@ -1334,6 +1412,11 @@ if redis.call('HGET',KEYS[2],'rust_owner_token')~=owner or redis.call('HGET',KEY
 local fields=cjson.decode(ARGV[3])
 for _,field in ipairs({'user_id','media_id','profile_id','account_id','stream_id','dispatcharr_stream_id','provider_timestamp','rust_duration_secs'}) do
  if (redis.call('HGET',KEYS[1],field) or '')~=(fields[field] or '') then return 3 end
+end
+if ARGV[7]=='1' then
+ for _,field in ipairs({'client_ip','client_user_agent'}) do
+  if not fields[field] or fields[field]=='' or redis.call('HGET',KEYS[1],field)~=fields[field] then return 3 end
+ end
 end
 if redis.call('HGET',KEYS[2],'user_id')~=fields.user_id then return 3 end
 local programme=redis.call('HGET',KEYS[2],'programme_vid')
@@ -1470,6 +1553,94 @@ return best
 mod direct_tests {
     use super::*;
     use redis::AsyncCommands;
+    #[tokio::test]
+    #[ignore = "requires disposable REDIS_TEST_URL"]
+    async fn remote_idle_fingerprint_requires_current_native_generation_and_exact_identity() {
+        let url = std::env::var("REDIS_TEST_URL").unwrap();
+        let coordinator = Coordinator::connect(
+            &url,
+            dispatcharr_coordination::LeaseConfig {
+                namespace: format!("test:remote-idle-fingerprint:{}", uuid::Uuid::new_v4()),
+                ..Default::default()
+            },
+        )
+        .await
+        .unwrap();
+        let sid = uuid::Uuid::new_v4().to_string();
+        let owner_key = coordinator.timeshift_owner_key(&sid);
+        let pool = ArchivePool::connect(&url, coordinator, Default::default())
+            .await
+            .unwrap();
+        let mut redis = redis::Client::open(url.as_str())
+            .unwrap()
+            .get_multiplexed_async_connection()
+            .await
+            .unwrap();
+        let key = format!("timeshift:pool:{sid}");
+        let token = uuid::Uuid::new_v4().to_string();
+        let _: () = redis
+            .hset_multiple(
+                &key,
+                &[
+                    ("user_id", "123"),
+                    ("media_id", "7_programme"),
+                    ("client_ip", "192.0.2.1"),
+                    ("client_user_agent", "fingerprint-agent"),
+                    ("busy", "0"),
+                ],
+            )
+            .await
+            .unwrap();
+        let lookup = async || {
+            pool.idle_fingerprint_owner(&sid, 123, "7_programme", "192.0.2.1", "fingerprint-agent")
+                .await
+                .unwrap()
+        };
+        assert!(
+            lookup().await.is_none(),
+            "legacy entry lacks a settled owner"
+        );
+        let _: () = redis
+            .hset_multiple(
+                &key,
+                &[
+                    ("rust_idle_ready", "1"),
+                    ("rust_owner_token", token.as_str()),
+                ],
+            )
+            .await
+            .unwrap();
+        assert_eq!(lookup().await.as_deref(), Some(token.as_str()));
+        for (user, media, ip, agent) in [
+            (124, "7_programme", "192.0.2.1", "fingerprint-agent"),
+            (123, "7_other", "192.0.2.1", "fingerprint-agent"),
+            (123, "7_programme", "192.0.2.2", "fingerprint-agent"),
+            (123, "7_programme", "192.0.2.1", "other-agent"),
+        ] {
+            assert!(pool
+                .idle_fingerprint_owner(&sid, user, media, ip, agent)
+                .await
+                .unwrap()
+                .is_none());
+        }
+        let _: () = redis.set(&owner_key, token.as_str()).await.unwrap();
+        assert!(lookup().await.is_none(), "a physical owner still exists");
+        let _: () = redis.del(&owner_key).await.unwrap();
+        let _: () = redis.hset(&key, "busy", "1").await.unwrap();
+        assert!(lookup().await.is_none(), "busy lookup remains guarded");
+        let _: () = redis
+            .hset_multiple(&key, &[("busy", "0"), ("rust_owner_token", "malformed")])
+            .await
+            .unwrap();
+        assert!(
+            lookup().await.is_none(),
+            "malformed owner cannot be forwarded"
+        );
+        let _: () = redis.del(&key).await.unwrap();
+        assert!(lookup().await.is_none(), "idle pool disappeared");
+        assert!(pool.shutdown().await);
+    }
+
     #[tokio::test]
     #[ignore = "requires disposable REDIS_TEST_URL; source-derived readonly helper contracts"]
     async fn fingerprint_exact_recency_fresh_probe_and_redirect_capacity_are_readonly() {

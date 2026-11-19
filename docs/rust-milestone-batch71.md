@@ -5,7 +5,7 @@ credit. React, the original license and attribution remain part of the build.
 
 | Milestone | Change and focused evidence |
 | --- | --- |
-| M4 · Timeshift | An established archive session becomes transferable after its worker releases the provider lease. One Redis operation checks the descriptor and rotates the fenced pool, client and metadata tokens. A late cleanup from the old owner leaves the new owner intact. Twelve real Redis pool tests and two cancellation tests passed. The packaged two-worker playback comparison still needs to run. |
+| M4 · Timeshift | An established archive session becomes transferable after its worker releases the provider lease. One Redis operation checks the descriptor and rotates the fenced pool, client and metadata tokens. A late cleanup from the old owner leaves the new owner intact. Twelve real Redis pool tests and two cancellation tests passed. The explicit-session two-worker run matched the Source media and provider reservations. |
 | M5 and M6 · XC accounts | A group-only PATCH can change membership on inactive XC accounts and accounts with VOD enabled. The existing account-scoped write changes the selected membership. Six Rust account-validator tests and eight pinned Original controls passed. The paired Main PATCH and GET fixture is ready. |
 | M6 · XC refresh | A settled malformed account-info reply counts as one profile failure and the next profile still runs. The pinned Source controls verified partial failure, recovery and fallback user-agent use. Ten focused Rust account tests passed. The real Main task and its Profiles child still need paired verification. |
 | M7 · Guide | Custom dummy programmes without a time or date pattern use the Source timezone for the local date while retaining the UTC programme interval. Five pinned Python cases and the Rust controls agree. Localized time and date pattern schedules remain outside this check. |
@@ -43,9 +43,25 @@ The original CLI reference used three cases on a copied database. It exited
 malformed final option. The first fixture attempt expected the startup
 notification sequence to stay constant. Source created the developer notice
 during startup. The corrected fixture checked the inserted row and its exact
-sequence, then completed all three cases. Packaged Native CLI acceptance is
-still pending. Independent inventories found the three fixture projects absent.
+sequence, then completed all three cases. Packaged Candidate71 matched all three cases, including the captured SQL,
+Redis and ordered Channels effects. Independent inventories verified cleanup.
 [Runtime receipts](../scripts/rust-integration/milestone-batch71/operator-source-backup-candidate70.json)
+
+## Candidate71 packaged archive and operator checks
+
+The exact Candidate71 image built with the same React, license and attribution
+inputs as Candidate70. In the explicit-session archive case, two separate
+Rust Main listeners each returned HTTP 200 with 8,192 bytes identical to the
+pinned Python capture. Both requests used the same stored primary profile.
+The provider count changed from one to zero after the first body closed,
+returned to one on the second worker and ended at zero. The origin reported
+two connections, with up to two handlers overlapping, and no active handler
+after retirement. The independent cleanup check confirmed the owned
+containers, network and volumes were absent.
+
+[Build receipt](../scripts/rust-integration/milestone-batch71/candidate-build.json)
+· [Archive result](../scripts/rust-integration/milestone-batch71/native-cross-worker-idle.json)
+· [Packaged operator result](../scripts/rust-integration/milestone-batch71/operator-native.json)
 
 ## M0 retained Core coverage
 

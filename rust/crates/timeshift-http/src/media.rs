@@ -440,6 +440,7 @@ impl CatchupMedia {
         let agent = request.header("user-agent").unwrap_or("");
         let mut effective = provided.map(str::to_owned);
         let mut find = provided.is_none();
+        let mut fingerprint_owner = None;
         if let Some(sid) = provided {
             match self.inner.pool.owner_state(sid, binding.user.id).await? {
                 1 => return crate::direct::mint_redirect_path(path, request),
@@ -462,9 +463,24 @@ impl CatchupMedia {
                 .await?
             {
                 if !self.inner.pool.is_local(&matched) {
-                    return Err(StoreError::Unsupported(
-                        "remote archive fingerprint adoption is not yet implemented",
-                    ));
+                    if provided.is_none() {
+                        fingerprint_owner = self
+                            .inner
+                            .pool
+                            .idle_fingerprint_owner(
+                                &matched,
+                                binding.user.id,
+                                &media_id,
+                                &ip,
+                                agent,
+                            )
+                            .await?;
+                    }
+                    if fingerprint_owner.is_none() {
+                        return Err(StoreError::Unsupported(
+                            "remote archive fingerprint adoption is not yet implemented",
+                        ));
+                    }
                 }
                 effective = Some(matched);
             }
@@ -512,16 +528,24 @@ impl CatchupMedia {
                 request,
                 &self.inner.resolver.client_ip_text(request),
             );
-            if let Some(probe) = self.inner.pool.busy_probe(&pool_request, range).await? {
-                return self
-                    .probe_response(
-                        probe,
-                        &candidate.user_agent,
-                        range.expect("validated probe range"),
-                    )
-                    .await;
-            }
-            let ticket = match self.inner.pool.open_playback(pool_request, range).await {
+            let opened = if let Some(owner) = fingerprint_owner.as_deref() {
+                self.inner
+                    .pool
+                    .open_idle_fingerprint(pool_request, owner)
+                    .await
+            } else {
+                if let Some(probe) = self.inner.pool.busy_probe(&pool_request, range).await? {
+                    return self
+                        .probe_response(
+                            probe,
+                            &candidate.user_agent,
+                            range.expect("validated probe range"),
+                        )
+                        .await;
+                }
+                self.inner.pool.open_playback(pool_request, range).await
+            };
+            let ticket = match opened {
                 Ok(ticket) => ticket,
                 Err(StoreError::StatusBody(503, message))
                     if message == json!("No available stream") =>

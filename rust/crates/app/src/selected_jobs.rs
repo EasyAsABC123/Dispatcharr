@@ -90,6 +90,12 @@ fn flag(name: &str) -> Result<bool, String> {
         _ => Err(format!("{name} must be 0 or 1")),
     }
 }
+fn scheduler_ready(enabled: bool, status: &jobs::normal_beat::Status) -> bool {
+    // Running is announced when the scheduler is spawned. Observed means its
+    // first tick returned after the SQL and publication work settled.
+    !enabled || matches!(status, jobs::normal_beat::Status::Observed(_))
+}
+
 fn loopback(actual: SocketAddr) -> Result<SocketAddr, String> {
     if actual.port() == 0 {
         return Err("Selected jobs require the actual bound HTTP port".into());
@@ -625,11 +631,7 @@ impl SelectedJobs {
             && matches!(startup, Startup::Started)
             && control == jobs::normal_control::State::Subscribed
             && queue.ready
-            && (!self.inner.beat_enabled
-                || matches!(
-                    scheduler,
-                    jobs::normal_beat::Status::Running | jobs::normal_beat::Status::Observed(_)
-                ));
+            && scheduler_ready(self.inner.beat_enabled, &scheduler);
         (
             ready,
             serde_json::json!({"scope":"experimental selected normal families plus startup recovery; not Source47 parity","ready":ready,"startup":format!("{startup:?}"),"startup_error":startup_error,"control":format!("{control:?}"),"celery":format!("{:?}",queue.celery),"dvr":format!("{:?}",queue.dvr),"clocked_scheduler":format!("{scheduler:?}"),"clocked_scheduler_enabled":self.inner.beat_enabled,"dvr_plugin_domain":self.inner.dvr.plugin_domain_capability(),"startup_recovery_deferred_unsupported_domain":self.inner.recovery.startup_recovery_deferred(),"parity_complete":false}),
@@ -980,4 +982,27 @@ fn probe(local: SocketAddr, closed: &AtomicBool) -> bool {
         std::thread::sleep(Duration::from_millis(50));
     }
     false
+}
+
+#[cfg(test)]
+mod readiness_tests {
+    use super::*;
+
+    #[test]
+    fn configured_beat_waits_for_a_settled_tick() {
+        use jobs::normal_beat::{Error, Status, Tick};
+
+        for status in [
+            Status::Prepared,
+            Status::Running,
+            Status::Stopped,
+            Status::Fault(Arc::new(Error::Drain)),
+        ] {
+            assert!(!scheduler_ready(true, &status));
+            assert!(scheduler_ready(false, &status));
+        }
+        let observed = Status::Observed(Tick::default());
+        assert!(scheduler_ready(true, &observed));
+        assert!(scheduler_ready(false, &observed));
+    }
 }
