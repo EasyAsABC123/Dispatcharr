@@ -22,8 +22,12 @@ and the 50-case pair with wide-Unicode checks passed. The wide case exercises
 application results. SQL order between identical update timestamps remains
 unspecified by the Original query.
 
-The six-phase paired performance run is in progress. Functional parity in
-these scopes leaves the complete M5 and M7 matrices open.
+The six measured phases completed equivalent work. Median paired CPU fell
+20.45% and peak simultaneous working set fell 56.05%. Throughput matched.
+Two full-scan trials exceeded the fixed p95 budget, so the benchmark
+exited 1 and M7 performance acceptance remains open.
+
+[Performance report](../scripts/rust-perf/candidate102-regex-preview/README.md)
 
 [Packaged functional evidence](../scripts/rust-integration/milestone-batch102/functional.json) ·
 [Candidate100 replay](rust-milestone-batch100.md)

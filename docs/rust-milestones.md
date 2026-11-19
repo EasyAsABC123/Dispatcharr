@@ -53,6 +53,12 @@ responses, real profile task lineage and the category rows retained on account
 deletion. The Source business review passes all eleven cases. Rust parity
 remains in progress.
 
+The [channel rename and Auto Sync checkpoint](rust-milestone-batch102.md)
+matched the long-name PostgreSQL cast and both ordinary and wide regex
+preview suites. The paired preview benchmark measured 20.45% lower CPU and
+56.05% lower peak working set with equal throughput. Two trials exceeded
+the full-scan p95 limit, keeping M7 performance acceptance open.
+
 [The viewing and client compatibility checkpoint](rust-milestone-batch100.md)
 records the exact Docker build, recurring DVR detail and VOD stats parity,
 and two-replica TS controls. Targeted client stop disconnected just the
