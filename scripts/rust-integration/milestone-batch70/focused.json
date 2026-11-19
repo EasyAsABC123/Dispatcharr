@@ -1,0 +1,67 @@
+{
+  "scope": "Shared Rust workspace review. Packaged positive, whole milestone and performance verification pending.",
+  "base_git_revision": "209baf2c8ff9f79c0504c6bf2cad2114d9638b48",
+  "workspace_rust_patch_sha256": "0993bb4080138ba214a193f58d5ae91df51289d99436f473674f2d1c7b2bdf21",
+  "workspace_format_passed": true,
+  "strict_clippy_all_targets": [
+    "dispatcharr-hls-http",
+    "dispatcharr-output-store",
+    "dispatcharr-store",
+    "dispatcharr-xc-http"
+  ],
+  "rust_tests": {
+    "guide-test": {
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "stdout_sha256": "fe1f89c890384bf9e1a17c09238e3963f1d4220508593c718c82af0418044ebc"
+    },
+    "hls-owner": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "stdout_sha256": "1e911ec94ded63f01fcf82d9efee4a06091770776a555c0ef1907e472d5053ab"
+    },
+    "hls-mint": {
+      "passed": 1,
+      "failed": 0,
+      "ignored": 0,
+      "stdout_sha256": "9869bde1f886f81cb071a16b7d4b5dcb15a7153aede2d77e806ffe21ddbe3a5f"
+    },
+    "epg-seeds-test": {
+      "passed": 2,
+      "failed": 0,
+      "ignored": 0,
+      "stdout_sha256": "4e11169222756fad0d55e1a3f6420c32e0d121e6f9e25d5c9ba98175feda33b6"
+    },
+    "operator-argv-fixed": {
+      "passed": 3,
+      "failed": 0,
+      "ignored": 0,
+      "stdout_sha256": "cdecdbd33afefa4cb318c661da8719fe4fbf31bfb061d501467b90ed8dabe925"
+    },
+    "backup-unit": {
+      "passed": 6,
+      "failed": 0,
+      "ignored": 1,
+      "stdout_sha256": "9baef7ba06d7b584384f386a24b93945dde90388245b74e007dbb00b0c74f590"
+    }
+  },
+  "isolated_HLS_test_Redis_absent_after_cleanup": true,
+  "additional_original_oracles": {
+    "guide_pinned_Django_DRF": {
+      "cases": 6,
+      "stdout_sha256": "308bfd74046fdcb0ed1bdc73ba73058dc2015641f130f2613752a0a9970302db"
+    },
+    "XC_EPG_local_CPython_3_14_9": {
+      "seeds": 40,
+      "input_strings": 42,
+      "stdout_sha256": "6f6dc4e2908bb9e5b78b401f9bfde65259995767a77eaa4001532e040aa03f9b"
+    },
+    "operator_pinned_Source_argparse_receipt_sha256": "ddfa814b23459276371f9a4f3938770581ebbc6b6dcca4b83a41eeb22f03e214",
+    "backup_pinned_Source_HMAC_receipt_sha256": "ed5734a5b11c52b2a523bdc4bc4b5f6554f4e0190a899e7bfe0c369b3cdfddd6"
+  },
+  "packaged_candidate_verified": false,
+  "full_milestone_accepted": false,
+  "performance_verified": false
+}

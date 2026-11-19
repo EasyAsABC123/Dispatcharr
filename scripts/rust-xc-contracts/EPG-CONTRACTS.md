@@ -90,3 +90,11 @@ needed its cached statistics snapshot cleared before each monitoring poll. No
 application change or image rebuild was used for either correction. XMLTV's
 47-case/cache/audit regression also passed on the same frozen image. These are
 scoped functional/resource gates, not a whole-application or performance claim.
+
+The current packaged verifier sets `PYTHONHASHSEED=42` in both services by
+default and compares generated IDs literally in both the HTTP and helper
+corpora. Use `--fixed-hash-seed` to select another nonzero seed. The playback
+fixture starts the Original uWSGI worker through its fixture supervisor, and
+the verifier also passes the seed explicitly to the Original helper process.
+Use `--legacy-nonzero-hash-guard` to rerun the historical 501 check on a
+candidate from before fixed-seed support.

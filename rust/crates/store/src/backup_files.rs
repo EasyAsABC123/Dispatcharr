@@ -310,6 +310,13 @@ impl BackupFiles {
             }
             return Ok(response);
         }
+        // A filename is signed as the route value, which is also used for lookup.
+        // Decode once so literal percent sequences stay part of the filename.
+        let filename = if kind == "status" {
+            filename
+        } else {
+            filename.map(|raw| decode_filename(&raw))
+        };
         if manual {
             let token = url::form_urlencoded::parse(request.uri().query().unwrap_or("").as_bytes())
                 .filter(|(key, _)| key == "token")
@@ -422,7 +429,6 @@ impl BackupFiles {
         let Some(filename) = filename else {
             return Ok(reply(404, "Not found."));
         };
-        let filename = decode_filename(&filename);
         if invalid(&filename) {
             return Ok(reply(
                 if kind == "delete" { 500 } else { 404 },

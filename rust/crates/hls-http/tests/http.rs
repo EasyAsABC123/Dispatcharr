@@ -258,6 +258,43 @@ where
 
 #[tokio::test]
 #[ignore = "requires isolated real Redis: REDIS_TEST_URL"]
+async fn profile_start_failure_returns_error_before_minting_capability() {
+    // The real engine has no transform worker configured. A typed profile
+    // therefore fails on startup, after registration and before delivery.
+    let (gateway, engine, clients, origin, count, server) =
+        setup(GatewayConfig::default(), true).await;
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let output = dispatcharr_output_store::OutputStore::connect(&redis_url, Default::default())
+        .await
+        .unwrap();
+    let gateway = gateway.with_output_store(output).unwrap();
+    let channel = channel();
+    let mut request = source(channel.clone(), origin);
+    request.output_profile = Some(dispatcharr_contracts::PlaybackOutputProfile {
+        id: 17,
+        command: dispatcharr_contracts::StreamCommand::build_output(
+            "ffmpeg",
+            "-i pipe:0 -c copy -f mpegts pipe:1",
+        )
+        .unwrap(),
+    });
+    let outcome = gateway.mint(request).await;
+    let error = outcome.expect_err("profile start failure must not return a token");
+    assert_eq!(error.status, 500);
+    assert_eq!(
+        error.body["error"],
+        "Failed to start output profile transcode"
+    );
+    assert_eq!(count.load(Ordering::SeqCst), 0);
+    until(|| async { clients.channel_clients(&channel).await.unwrap().is_empty() }).await;
+    gateway.shutdown().await;
+    engine.shutdown();
+    clients.shutdown().await;
+    server.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis: REDIS_TEST_URL"]
 async fn shared_manager_token_scope_and_exact_owner_delete() {
     let (gateway, engine, clients, url, counts, server) =
         setup(GatewayConfig::default(), true).await;

@@ -1,0 +1,279 @@
+{
+  "state": "pinned_Original_AIO_PostgreSQL_selection_observed",
+  "source_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "dependency_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "application_binding": "Pinned Source archive copied over trimmed dependency image and checked in container. No Original files edited. The Source Dockerfile’s executable mode was applied to entrypoint scripts.",
+  "source_file_sha256": {
+    "docker/entrypoint.sh": "deec0dda1b8e8ff16c44c842aba8c02047fe332a38df6603f6a3e6dfc5decbf0",
+    "dispatcharr/settings.py": "a3dd1adffa96abe3e498f3855c24c42d4d94015be930da1b6ac79a20b4d55c06",
+    "docker/init/01-user-setup.sh": "c702e2355ae35f8b8b973efed459bb67672dd7982cc34b34fb2f1e9357436f7b",
+    "docker/init/02-postgres.sh": "290eeb71c2b60d1773854942f48de337733ae91b4bec30881b1d8900ac2496ac",
+    "docker/init/03-init-dispatcharr.sh": "32992aa55d728f72334d23cee18a598ef26fc34a451b3e8baf89458ec1844710",
+    "docker/uwsgi.ini": "2e9fe2643141b14d31ee2625c4fa312e3c45c636cda200c40f29c08306844992",
+    "manage.py": "be4e1ab2ea3e081c2c83d8d5a7888921d8b954a3c07038207fb3bd53b8bacabe"
+  },
+  "isolation": {
+    "primary_dispatcher_lock": true,
+    "fresh_tmpfs_data": true,
+    "network_mode": "none",
+    "published_ports": []
+  },
+  "first_attempt": {
+    "state": "AIO_EXITED_BEFORE_WEB_READINESS",
+    "start_actual_exit": 1,
+    "start_actual_wait_completed": true,
+    "container_terminal": {
+      "ExitCode": 1,
+      "OOMKilled": false,
+      "Running": false,
+      "Pid": 0,
+      "Status": "exited"
+    },
+    "exact_label_absence": true,
+    "elapsed_seconds": 3.902257468999778,
+    "tool_receipt": "deeceb",
+    "precondition": "Original trimmed dependency image login locale. PostgreSQL initialized SQL_ASCII and could not create the UTF-8 application database. No HTTP readiness.",
+    "commands": [
+      {
+        "label": "dependency-image",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "create",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "copy-exact-source",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "copy-exact-nginx",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "stop",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "terminal",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "remove",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "exact-inventory",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "observe",
+        "actual_exit": 1,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      }
+    ]
+  },
+  "qualified_selection_attempt": {
+    "state": "AIO_WEB_STARTED_SELECTION_OBSERVED",
+    "start_actual_exit": 0,
+    "start_actual_wait_completed": true,
+    "container_terminal": {
+      "ExitCode": 0,
+      "OOMKilled": false,
+      "Running": false,
+      "Pid": 0,
+      "Status": "exited"
+    },
+    "exact_label_absence": true,
+    "elapsed_seconds": 77.76964871899963,
+    "tool_receipt": "7503d4",
+    "precondition": "Set standard login-shell LANG=C.UTF-8 in the disposable dependency image; Source entrypoint and DB_ENGINE flow unchanged.",
+    "locale_environment_original_sha256": "3d88795b8d42b87bbbf91f8d30dae43b6db9ecd4b1eb93a883062352c902ff5d",
+    "locale_environment_fixture_sha256": "a1e4b29183cf1e30cbe2c457f15c50b3f5260518ec9a23d7fb7325cd38a5fd09",
+    "commands": [
+      {
+        "label": "dependency-image",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "create",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "copy-exact-source",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "copy-exact-nginx",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "stop",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "terminal",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "remove",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "exact-inventory",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      },
+      {
+        "label": "observe",
+        "actual_exit": 0,
+        "actual_wait_completed": true,
+        "pipe_EOF": true
+      }
+    ],
+    "pid1_DB_ENGINE_sqlite": true,
+    "application_login_shell_DB_ENGINE_set": false,
+    "uwsgi_generations_observed": 6,
+    "uwsgi_generations_with_DB_ENGINE": 0,
+    "loopback_get": {
+      "path": "/api/accounts/initialize-superuser/",
+      "status": 200
+    },
+    "effective_Django_backend": "dispatcharr.db.backends.postgresql_psycopg3",
+    "physical_PostgreSQL": {
+      "read_query_passed": true,
+      "fixture_database_matched": true,
+      "server_encoding": "UTF8",
+      "applied_migration_rows": 184,
+      "PG_VERSION_exists": true
+    },
+    "data_dispatcharr_db_exists": false,
+    "observer_note": "The initial read-only observer could report HTTP readiness and process generations but its Django cursor probe raised AttributeError. The corrected observer used psql for the physical query during the same application process generations and did not edit Source or restart the app."
+  },
+  "direct_cli": {
+    "receipt": {
+      "path": "scripts/rust-integration/sqlite-source-cli-1/result.json",
+      "sha256": "aa4b5fd039b3e7b378eeb9739b85626c081261ef8166d02effb6c0bf6c3a2ef6"
+    },
+    "effective_backend": "django.db.backends.sqlite3",
+    "file": "/data/dispatcharr.db",
+    "actual_exit": 1,
+    "physical_quick_check": "ok",
+    "applied_migration_rows": 158,
+    "first_failed_migration": "dispatcharr_channels.0038_add_catchup_fields",
+    "error": "near \"~\": syntax error"
+  },
+  "SQLite_application_baseline": "blocked; requires a complete legitimate Original SQLite application fixture with recorded version and history",
+  "Native_SQLite": "open",
+  "REST_backup_restore_on_SQLite": "blocked",
+  "M9_datastore_scope_gate_passed": false,
+  "performance_measured": false,
+  "raw_evidence_private_references": [
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-1/result.json",
+      "sha256": "8714774872d52884ad12f09ce59610c7cef0707937c1f4fbc2c8ff926e4639aa"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-1/commands.json",
+      "sha256": "70464222cbac1f3341c23958dcfd7c148b23d281de17c09996a1772d96599a2a"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-1/start.stdout",
+      "sha256": "f789713f474c75b1ba039433abba294ff5604f14605c3642fa43ad103f58c352"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-1/start.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-1/probe.py",
+      "sha256": "72c9aa0818f7edf55f44e6e4e02890a52e2a22d8575479f4e9de1991d1e31285"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-1/observe.py",
+      "sha256": "f046c14acf7eca11b0f669c8023a758545eeb8d5a85bfcee698ebcbaaf48eb04"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/result.json",
+      "sha256": "806fea437a6b782c3f65aa1d501e4c72c3f6fcf211565376987f0006c6856e44"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/commands.json",
+      "sha256": "fcea9d8f6d8ee12c3c45b4c80a0193236ddbf272d70cef8291bcea4ac576da14"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/start.stdout",
+      "sha256": "c53c9609276082bc636212f097b4c99cdc7d669ebda96851902311d0dce00b4e"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/start.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/probe.py",
+      "sha256": "17e3f91c729fe4218b697ba4bec64902fc567fe7469245ce0433e35e3e50ddf1"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/observe.py",
+      "sha256": "9b3a35c92b10edbcafa3206823b37fab75b673441677d263d09d9cf3de94dabe"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/observe1-preserved.py",
+      "sha256": "f6a1d6230e332648e7cee6edc5b0706cd1ea0652b40db9c94b25a5ef6f88bcf2"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/observer-correction.txt",
+      "sha256": "e2dd29623c61234bb9ece379c01ea57a112a7668de70ff755c0692c83f32c7af"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/selection-source-hashes.json",
+      "sha256": "794f34643fde28522b9ae575a3e6cf4cb7f7139e30d4f5afc9d2b8a9e6c4ccad"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/029-observe.stdout",
+      "sha256": "64da67a93681f0a0c9f794fb623316f607d7835720445be1a397fd3b2de8d398"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/031-terminal.stdout",
+      "sha256": "4407dacc7a1a3bc82752a470038f072d4fa304781ab6ce630bf8772e63fa2a4a"
+    },
+    {
+      "path": "artifacts/rust/m8-sqlite-source-aio-2/033-exact-inventory.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "credits": "Original Dispatcharr authors and contributors retain full application and algorithm credit. Dependency authors retain their credit and licenses."
+}

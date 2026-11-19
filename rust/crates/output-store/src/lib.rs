@@ -321,12 +321,26 @@ impl OutputStore {
             self.inner.config.owner_ttl
         };
         let ttl = owner_ttl.as_millis().to_string();
-        let mut claim_keys = vec![keys[0].clone()];
+        let profiled_hls = format.starts_with("hls:p");
+        let mut claim_keys = vec![keys[0].clone(), keys[6].clone()];
         if raw_owner.is_some() {
             claim_keys.push(format!("live:channel:{channel}:owner"));
         }
         let raw = raw_owner.unwrap_or("");
-        let (result, guard):(i64,G)=self.command("if ARGV[3]~='' and redis.call('GET',KEYS[2])~=ARGV[3] then return 0 end local old=redis.call('GET',KEYS[1]); if old and old~=ARGV[1] then return 0 end redis.call('SET',KEYS[1],ARGV[1],'PX',ARGV[2]); return 1",&claim_keys,&[token.as_bytes(),ttl.as_bytes(),raw.as_bytes()],guard).await?;
+        let reset_state = if profiled_hls { b"1" } else { b"0" };
+        let (result, guard): (i64, G) = self
+            .command(
+                CLAIM,
+                &claim_keys,
+                &[
+                    token.as_bytes(),
+                    ttl.as_bytes(),
+                    raw.as_bytes(),
+                    reset_state,
+                ],
+                guard,
+            )
+            .await?;
         Ok((
             (result == 1).then(|| OutputLease {
                 store: self.clone(),
@@ -409,6 +423,18 @@ impl OutputStore {
     pub async fn state(&self, channel: &str, format: &str) -> Result<Option<String>, Error> {
         let keys = keys(channel, format)?;
         self.invoke("if redis.call('STRLEN',KEYS[1])>128 then return redis.error_reply('CORRUPT output state') end return redis.call('GET',KEYS[1])",&[keys[6].clone()],&[]).await
+    }
+    /// Read readiness and the live ownership key in one operation.
+    pub async fn is_active(&self, channel: &str, format: &str) -> Result<bool, Error> {
+        let keys = keys(channel, format)?;
+        let active: i64 = self
+            .invoke(
+                "if redis.call('EXISTS',KEYS[1])~=0 and redis.call('GET',KEYS[2])=='active' then return 1 end return 0",
+                &[keys[0].clone(), keys[6].clone()],
+                &[],
+            )
+            .await?;
+        Ok(active == 1)
     }
     pub async fn get(
         &self,
@@ -696,6 +722,14 @@ if redis.call('EXISTS',chunk)==1 then return redis.error_reply('CORRUPT index co
 for _,member in ipairs(expired) do redis.call('ZREM',KEYS[4],member) end
 redis.call('SET',chunk,ARGV[2],'PX',ARGV[4]);redis.call('SET',KEYS[2],string.format('%.0f',next))
 redis.call('ZADD',KEYS[4],ARGV[3],string.format('%.0f',next));redis.call('PEXPIRE',KEYS[4],ARGV[4]);return next
+"#;
+const CLAIM: &str = r#"
+if ARGV[3]~='' and redis.call('GET',KEYS[3])~=ARGV[3] then return 0 end
+local old=redis.call('GET',KEYS[1])
+if old and old~=ARGV[1] then return 0 end
+redis.call('SET',KEYS[1],ARGV[1],'PX',ARGV[2])
+if not old and ARGV[4]=='1' then redis.call('SET',KEYS[2],'initializing','EX',3600) end
+return 1
 "#;
 const RELEASE: &str = r#"
 if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end

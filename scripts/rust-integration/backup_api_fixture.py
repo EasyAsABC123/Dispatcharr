@@ -3,6 +3,7 @@ Original Dispatcharr authors retain full application credit. Raw JWTs stay ignor
 """
 import hashlib,hmac,json,os,sys
 from pathlib import Path
+from urllib.parse import quote
 if os.environ.get('POSTGRES_PASSWORD')!='playback-fixture-only'or os.environ.get('BACKUP_API_DISPOSABLE_FIXTURE')!='playback-fixture-only':raise RuntimeError('Explicit disposable backup API fixture required')
 sys.path.insert(0,'/app');sys.argv.append('shell');os.environ.setdefault('DJANGO_SETTINGS_MODULE','dispatcharr.settings')
 import django
@@ -19,7 +20,7 @@ for name,level,active in [('admin',10,True),('standard',1,True),('basic',0,True)
  props={'allowed_networks':{'UI':'203.0.113.0/24'}}if name=='blocked'else{}
  user=User.objects.create(username=PREFIX+name,password='!',user_level=level,is_active=active,custom_properties=props)
  roles[name]=str(RefreshToken.for_user(user).access_token)
-checks=[];seed=[('dispatcharr-backup-rust-probe-a.zip',b'fixture ZIP bytes\x00\xff',1700000000),('dispatcharr-backup-rust-probe-b.zip',b'other fixture bytes',1700000100),('arbitrary-upload.txt',b'not ZIP validated',1700000200),('caf\xe9.zip',b'latin filename',1700000300),('amp&plus+=.zip',b'path punctuation',1700000400)]
+checks=[];seed=[('dispatcharr-backup-rust-probe-a.zip',b'fixture ZIP bytes\x00\xff',1700000000),('dispatcharr-backup-rust-probe-b.zip',b'other fixture bytes',1700000100),('arbitrary-upload.txt',b'not ZIP validated',1700000200),('caf\xe9.zip',b'latin filename',1700000300),('amp&plus+=.zip',b'path punctuation',1700000400),('literal%2F.zip',b'literal percent filename',1700000500)]
 def reset():
  for path in ROOT.iterdir():
   if path.is_dir():path.rmdir()
@@ -65,6 +66,17 @@ for role in [None,'standard','blocked','inactive','invalid']:
  for supplied in ['valid','bad','empty']:
   value=token('dispatcharr-backup-rust-probe-a.zip')if supplied=='valid'else('bad'if supplied=='bad'else'')
   case('token-download-'+str(role)+'-'+supplied,'dispatcharr-backup-rust-probe-a.zip/download/',role=role,query={'token':value})
+for label,filename in [('utf8','caf\xe9.zip'),('punctuation','amp&plus+=.zip'),('literal-percent','literal%2F.zip')]:
+ encoded=quote(filename,safe='')
+ case('signed-name-token-'+label,encoded+'/download-token/')
+ issued=checks[-1]['expected']['json']['token']
+ assert issued==token(filename)
+ case('signed-name-download-'+label,encoded+'/download/',role=None,query={'token':issued})
+ assert checks[-1]['expected']['status']==200
+ case('signed-name-no-token-'+label,encoded+'/download/',role=None)
+ assert checks[-1]['expected']['status']==401
+ case('signed-name-invalid-token-'+label,encoded+'/download/',role=None,query={'token':token(encoded)})
+ assert checks[-1]['expected']['status']==403
 for role in [None,'admin','invalid']:
  case('nonascii-token-'+str(role),'dispatcharr-backup-rust-probe-a.zip/download/',role=role,query={'token':'é'})
 case('nul-token','dispatcharr-backup-rust-probe-a.zip/download/',role=None,query={'token':'\x00'})

@@ -1,0 +1,65 @@
+{
+  "scope": "Candidate69 scoped application execution against retained pinned Original. No Source replay or milestone acceptance.",
+  "candidate_git_revision": "209baf2c8ff9f79c0504c6bf2cad2114d9638b48",
+  "candidate_image_id": "sha256:22b71e78a0959625a1b3c2b76307c1cea8fb00384879a4d802c3f3a7015392be",
+  "candidate_source_tree_sha256": "2a3410f61235ecd7ac0c7dfdea7658b27583396fefd549af178b43904a323be4",
+  "baseline_git_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "initial_wrapper": {
+    "actual_exit": 1,
+    "target_HTTP_completed": 0,
+    "failure": "Stale runner path selected an already existing Candidate68 output directory."
+  },
+  "retry": {
+    "invocation": "6b3deeca42cd497fa4759b83013bb302",
+    "actual_exit": 0,
+    "actual_terminal_consumed": true,
+    "target_HTTP_attempted": 12,
+    "target_HTTP_completed": 12,
+    "target_statuses_equal": 12,
+    "inputs_unchanged": true,
+    "exact_CIDs_absent": 4,
+    "host_generations_absent": 3,
+    "independent_cleanup_passed": true
+  },
+  "regressions": {
+    "actual_offline_review_exit": 0,
+    "pre_fix_control_passed_checks": 0,
+    "post_fix_checks": {
+      "configured_UA_avoids_two_unrelated_cache_writes": true,
+      "error_event_key_order_matches": true,
+      "Native_reports_elapsed_beyond_hundredths": true
+    }
+  },
+  "task_terminals": {
+    "literal_direct_write_observer_exit": 1,
+    "qualified_staged_write_observer_exit": 0,
+    "original_successes": 5,
+    "native_successes": 5,
+    "all_five_result_values_match": true,
+    "staged_child_lineage_verified": true
+  },
+  "literal_comparison": {
+    "actual_exit": 1,
+    "unqualified_difference_counts": {
+      "header_fields": 12,
+      "cache_inventory": 12,
+      "raw_response_body": 6,
+      "SQL_table_changes": 9,
+      "SQL_sequence_changes": 5,
+      "new_WebSocket_events": 6
+    }
+  },
+  "raw_artifact_sha256": {
+    "terminal.json": "3e7cb6744efa9bf3a63b5995cd650bc1cd93a6d75d47310c28086379aa79394e",
+    "independent-cleanup.json": "8184e67e52ba2acbc9fb319d5a251881481415bcae6df36de6058f28eaaacc96",
+    "xc11-targeted-regression.json": "4889343d8e01208f1689461f91ebdb073e1ee3c2589a5fea8c13a14521011c90",
+    "xc11-literal-comparison.json": "3dc090c7aae10e67edaa9460485dc4e20bcc0b23626f807bc615590e59f242e5",
+    "xc11-literal-task-terminals.json": "11fd09553acbbbede89ab01f867c4b576c89468e8ce18fabe5cffa4d776917d7",
+    "xc11-qualified-task-terminals.json": "e3f91b556a46d648176be292d6d84c23a7635faf6f6a7f14110db2833d5fb174"
+  },
+  "original_full_journal_sha256": "8a5c30a051f926f9c6bb39ace9e85f105463aec640e3331b7b0c735032f36acd",
+  "rust_full_journal_sha256": "9efaba4cc38a58dd50b50e1ab857af20404f85898d4ab62e42c03e4f9799c50f",
+  "fallback_UA_and_multi_profile_recovery_proved_through_Main": false,
+  "full_milestone_accepted": false,
+  "performance_verified": false
+}

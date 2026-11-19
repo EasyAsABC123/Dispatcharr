@@ -80,6 +80,11 @@ impl OperatorCommand {
             }
             [name] if name == "reset_network_access" => Ok(Self::ResetNetwork),
             [name] if name == "reset_user_network" => Ok(Self::ResetUser(None)),
+            [name, argument] if name == "reset_user_network" => argument
+                .strip_prefix("--user=")
+                .filter(|user| user.len() <= 1024)
+                .map(|user| Self::ResetUser(Some(user.to_owned())))
+                .ok_or(OperatorError::Arguments),
             [name, flag, user]
                 if name == "reset_user_network" && flag == "--user" && user.len() <= 1024 =>
             {
@@ -419,6 +424,31 @@ mod tests {
         assert!(remove_allowed(&mut v).unwrap());
         assert_eq!(v, json!({"keep":[true,1,null]}));
     }
+    #[test]
+    fn attached_user_argument() {
+        let parse =
+            |argument: String| OperatorCommand::parse(&["reset_user_network".into(), argument]);
+        for username in ["sample", "", "--help", "name=value", "é"] {
+            assert_eq!(
+                parse(format!("--user={username}")).unwrap(),
+                OperatorCommand::ResetUser(Some(username.into()))
+            );
+        }
+        assert!(parse(format!("--user={}", "é".repeat(512))).is_ok());
+        assert!(matches!(
+            parse(format!("--user={}", "é".repeat(513))),
+            Err(OperatorError::Arguments)
+        ));
+        assert!(matches!(
+            parse("--user".into()),
+            Err(OperatorError::Arguments)
+        ));
+        assert_eq!(
+            parse("--help".into()).unwrap(),
+            OperatorCommand::Help("reset_user_network")
+        );
+    }
+
     #[test]
     fn grammar() {
         assert_eq!(

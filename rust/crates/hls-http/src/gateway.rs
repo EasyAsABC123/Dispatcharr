@@ -83,6 +83,19 @@ pub(crate) struct Session {
     pub touched: Mutex<Instant>,
     _admission: OwnedSemaphorePermit,
 }
+/// Own the pre-registered client until a profiled mint sends its capability.
+struct PendingProfileMint {
+    inner: Arc<Inner>,
+    session: Option<Arc<Session>>,
+}
+impl Drop for PendingProfileMint {
+    fn drop(&mut self) {
+        if let Some(session) = self.session.take() {
+            let inner = self.inner.clone();
+            tokio::spawn(async move { inner.expire(&session).await });
+        }
+    }
+}
 pub(crate) struct Manager {
     pub channel: String,
     key: String,
@@ -93,6 +106,7 @@ pub(crate) struct Manager {
     pub notify: Notify,
     pub stop: watch::Sender<bool>,
     done: watch::Sender<bool>,
+    profile_start: watch::Sender<Option<bool>>,
     demand: AtomicUsize,
     admission: Arc<OwnedSemaphorePermit>,
     behind: f64,
@@ -217,6 +231,7 @@ impl HlsGateway {
         {
             return Err(failure(501, "HLS output profiles are not migrated"));
         }
+        let profiled = source.output_profile.is_some();
         let viewer = source
             .viewer
             .as_ref()
@@ -243,7 +258,8 @@ impl HlsGateway {
                 dispatcharr_clients::Error::Stopped => failure(410, "Stream stopped"),
                 _ => failure(503, "Client registration failed"),
             })?;
-        if client.bind_hls_token(&token, viewer.user_id).await.is_err() {
+        let user_id = viewer.user_id;
+        if !profiled && client.bind_hls_token(&token, user_id).await.is_err() {
             let _ = client.release().await;
             return Err(failure(503, "Session unavailable"));
         }
@@ -271,6 +287,32 @@ impl HlsGateway {
             tokio::spawn(async move {
                 inner.run_manager(manager, source).await;
             });
+        }
+        if profiled {
+            let mut pending = PendingProfileMint {
+                inner: self.inner.clone(),
+                session: Some(session.clone()),
+            };
+            let mut startup = session.manager.profile_start.subscribe();
+            let started = tokio::time::timeout(
+                self.inner.config.initialization_timeout,
+                startup.wait_for(Option::is_some),
+            )
+            .await
+            .is_ok_and(|state| state.is_ok_and(|state| *state == Some(true)));
+            if !started {
+                return Err(failure(500, "Failed to start output profile transcode"));
+            }
+            if session
+                .client
+                .bind_hls_token(&token, user_id)
+                .await
+                .is_err()
+            {
+                return Err(failure(500, "Failed to create HLS session"));
+            }
+            *lock(&session.touched) = Instant::now();
+            pending.session = None;
         }
         let inner = self.inner.clone();
         tokio::spawn(async move {
@@ -365,6 +407,7 @@ impl Inner {
         );
         let (stop, _) = watch::channel(false);
         let (done, _) = watch::channel(false);
+        let (profile_start, _) = watch::channel(None);
         let manager = Arc::new(Manager {
             channel: source.channel_id.clone(),
             key: key.clone(),
@@ -374,6 +417,7 @@ impl Inner {
             notify: Notify::new(),
             stop,
             done,
+            profile_start,
             demand: AtomicUsize::new(0),
             admission,
             behind: source.startup_behind.as_secs_f64(),
@@ -483,8 +527,34 @@ impl Inner {
         manager: &Arc<Manager>,
         cancelled: &mut watch::Receiver<bool>,
     ) -> Result<(), PlaybackError> {
-        // Capability reads fetch the shared descriptor directly. A follower needs
-        // no media cache or polling loop; retain only its real client leases.
+        // A profiled mint also needs the actual remote output to start.
+        // Poll once per follower manager, independent of its viewer count.
+        if manager.profile.is_some() {
+            let outputs = self
+                .outputs
+                .as_ref()
+                .ok_or_else(|| failure(503, "HLS state unavailable"))?;
+            let ready = async {
+                loop {
+                    if outputs
+                        .is_active(&manager.channel, &manager.format)
+                        .await
+                        .map_err(|_| failure(503, "HLS state unavailable"))?
+                    {
+                        return Ok::<_, PlaybackError>(());
+                    }
+                    tokio::time::sleep(Duration::from_millis(100)).await;
+                }
+            };
+            tokio::select! {
+                outcome = tokio::time::timeout(self.config.initialization_timeout, ready) =>
+                    outcome.map_err(|_| failure(503, "HLS profile startup timed out"))??,
+                _ = cancelled.changed() => return Ok(()),
+            }
+            manager.profile_start.send_replace(Some(true));
+        }
+        // Capability reads fetch the shared descriptor directly. A follower
+        // retains only its real client leases.
         let mut idle = 0;
         loop {
             tokio::select! {_=cancelled.changed()=>return Ok(()),_=tokio::time::sleep(Duration::from_secs(10))=>{}}
@@ -517,9 +587,10 @@ impl Inner {
             let mut input=tokio::select! {result=self.engine.open_input(source)=>result?,_=cancelled.changed()=>return Ok(())};
             if self.outputs.is_none()&&!self.clients.claim_output_owner(&manager.channel,&manager.format,&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS output is owned by another worker"));}
             lock(&manager.state).ready=Some(Instant::now());manager.notify.notify_waiters();
-            let lease=lock(&manager.output_lease).clone();if let Some(lease)=lease {lease.set_state("active").await.map_err(|_|failure(503,"HLS state unavailable"))?;}
             let mut segmenter=TSSegmenter::new(SegmenterConfig {target_duration:3.9,max_segment_duration:Some(6.45),max_segment_bytes:self.config.max_segment_bytes,..Default::default()}).map_err(|_|failure(500,"Segmenter unavailable"))?;
             if lock(&manager.state).seq>1 {segmenter.flag_discontinuity();}
+            let lease=lock(&manager.output_lease).clone();if let Some(lease)=lease {lease.set_state("active").await.map_err(|_|failure(503,"HLS state unavailable"))?;}
+            if manager.profile.is_some() {manager.profile_start.send_replace(Some(true));}
             let mut tick=tokio::time::interval(Duration::from_secs(1));let mut renew=Instant::now();let mut idle_checks=0;
             loop {tokio::select! {
                 _=cancelled.changed()=>break,
@@ -552,6 +623,9 @@ impl Inner {
             state.window.clear();
         }
         manager.notify.notify_waiters();
+        if manager.profile.is_some() {
+            manager.profile_start.send_replace(Some(false));
+        }
         let lease = lock(&manager.output_lease).take();
         if let Some(lease) = lease {
             let _ = lease.release().await;

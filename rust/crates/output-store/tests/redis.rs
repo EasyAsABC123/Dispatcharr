@@ -73,6 +73,59 @@ async fn shared_binary_chunks_publish_and_fencing_after_takeover() {
     assert!(first.get(&channel, "hls", 1).await.unwrap().is_none());
 }
 #[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn profiled_hls_readiness_follows_the_current_output_owner() {
+    let first = OutputStore::connect(
+        &url(),
+        OutputConfig {
+            owner_ttl: Duration::from_millis(300),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let second = OutputStore::connect(&url(), Default::default())
+        .await
+        .unwrap();
+    let channel = channel();
+    let format = "hls:p17";
+    let owner = first
+        .claim(&channel, format, "owner1")
+        .await
+        .unwrap()
+        .unwrap();
+    owner.set_state("active").await.unwrap();
+    assert!(second.is_active(&channel, format).await.unwrap());
+
+    tokio::time::timeout(Duration::from_secs(5), async {
+        while second.is_active(&channel, format).await.unwrap() {
+            tokio::time::sleep(Duration::from_millis(10)).await;
+        }
+    })
+    .await
+    .unwrap();
+    assert_eq!(
+        second.state(&channel, format).await.unwrap().as_deref(),
+        Some("active")
+    );
+
+    let successor = second
+        .claim(&channel, format, "owner2")
+        .await
+        .unwrap()
+        .unwrap();
+    assert!(!first.is_active(&channel, format).await.unwrap());
+    assert_eq!(
+        first.state(&channel, format).await.unwrap().as_deref(),
+        Some("initializing")
+    );
+    assert_eq!(owner.set_state("active").await, Err(Error::LostOwnership));
+    successor.set_state("active").await.unwrap();
+    assert!(first.is_active(&channel, format).await.unwrap());
+    assert!(successor.release().await.unwrap());
+}
+
+#[tokio::test]
 #[ignore = "requires real Redis"]
 async fn retained_read_owner_and_channel_capacity_survive_clones_and_ttl() {
     let store = OutputStore::connect(

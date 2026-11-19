@@ -2,7 +2,7 @@
 import hashlib,http.client,json
 from urllib.parse import urlencode
 
-def exercise(base,control):
+def exercise(base,control,*,normalize_synthetic_ids=True):
     seed=control.call({'op':'seed'});rows=[];stored={str(pk)for pk in seed['programs']}
     def request(name,pairs=(),role='standard',method='GET',headers=None):
         parameters=list(pairs)
@@ -15,7 +15,7 @@ def exercise(base,control):
             try:parsed=json.loads(body)
             except (ValueError,UnicodeError):result['body_text']=body.decode('utf-8')
             else:
-                if isinstance(parsed,dict)and'epg_listings'in parsed:
+                if normalize_synthetic_ids and isinstance(parsed,dict) and 'epg_listings' in parsed:
                     synthetic=False
                     for row in parsed['epg_listings']:
                         if row['id']not in stored:row['id']='<process-random-synthetic>';synthetic=True
