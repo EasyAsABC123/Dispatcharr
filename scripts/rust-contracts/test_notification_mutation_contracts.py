@@ -84,13 +84,16 @@ class NotificationMutationControls(unittest.TestCase):
    'scripts/rust-contracts/retained-comskip-task/bindings.json',
    'scripts/rust-contracts/retained-clocked-recording/bindings.json',
    'scripts/rust-contracts/retained-alias-remainder/bindings.json',
-   'scripts/rust-contracts/retained-connect-test/bindings.json'])
+   'scripts/rust-contracts/retained-connect-test/bindings.json',
+   'scripts/rust-contracts/retained-set-epg-selected/bindings.json',
+   'scripts/rust-contracts/retained-set-epg-batch/bindings.json'])
   later_ids=[];supplemental_ids=[]
   import retained_management_contracts
   import retained_auth_plugin_contracts
   import retained_xc_refresh_contracts
   import retained_alias_remainder_contracts
   import retained_connect_test_contracts
+  import retained_set_epg_selected_contracts
   for ref in later:
    value=source_contracts.checked(ROOT,ref)
    if ref['kind']==retained_management_contracts.KIND:
@@ -123,11 +126,16 @@ class NotificationMutationControls(unittest.TestCase):
     retained_alias_remainder_contracts.validate(ROOT,value)
    elif ref['kind']==retained_connect_test_contracts.KIND:
     retained_connect_test_contracts.validate(ROOT,value)
+   elif ref['kind']==retained_set_epg_selected_contracts.KIND:
+    retained_set_epg_selected_contracts.validate(ROOT,value)
+   elif ref['kind']==retained_set_epg_selected_contracts.BATCH_KIND:
+    retained_set_epg_selected_contracts.validate_batch(ROOT,value)
    else:later_ids.extend(c['contract_id']for c in value['contracts'])
   self.assertEqual(len(later_ids),282);self.assertEqual(len(set(later_ids)),282)
   self.assertEqual(len(supplemental_ids),11)
   self.assertFalse(selected.intersection(later_ids))
   historical=copy.deepcopy(new['runtime_routes'])
+  retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,historical)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,historical)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,historical)
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,historical)
@@ -187,7 +195,7 @@ class NotificationMutationControls(unittest.TestCase):
   self.assertEqual(non_HTTP_mapping['fully_verified_added'],0)
   expected=old['base_HTTP_assignments']+len(selected)+len(later_ids)
   self.assertEqual(expected,402) # pre-XC preservation count
-  expected += 2 + sum(row['binding']=='primary' for row in
+  expected += 4 + sum(row['binding']=='primary' for row in
                       retained_alias_remainder_contracts.load(ROOT)['mapping_decisions'].values())
   self.assertEqual(mapping['operations'],expected)
   self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)

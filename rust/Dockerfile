@@ -71,6 +71,10 @@ COPY scripts/rust-integration/channel-stations-source53/empty4102-backend.json .
 COPY scripts/rust-integration/milestone-batch84/packaged.json ./scripts/rust-integration/milestone-batch84/packaged.json
 COPY scripts/rust-integration/milestone-batch89/packaged.json ./scripts/rust-integration/milestone-batch89/packaged.json
 
+# Exact public authorities for the selected and batch Set EPG register checks.
+COPY scripts/rust-integration/milestone-batch85/selected-guide-compose.json ./scripts/rust-integration/milestone-batch85/selected-guide-compose.json
+COPY scripts/rust-integration/milestone-batch91/acceptance.json ./scripts/rust-integration/milestone-batch91/acceptance.json
+
 # Public Original Comskip task authorities for offline register verification.
 COPY scripts/rust-integration/comskip-positive-lifecycle-source1/ ./scripts/rust-integration/comskip-positive-lifecycle-source1/
 COPY scripts/rust-integration/comskip-positive-journal-fences1/ ./scripts/rust-integration/comskip-positive-journal-fences1/

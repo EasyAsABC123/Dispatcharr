@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "a1b309e6738f341748e62a1277596a692cefccb57faa45e0ba85eaa02c0b0543",
+    "scripts/rust-contracts/executable-source-inputs.json": "f16cfa9a8998f2e7afb47de6c1ea4146cd1c05883100b2719611fe2a074a84d8",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -53,11 +53,13 @@
     "scripts/rust-contracts/retained-comskip-task/bindings.json": "4476defd7fafbbafd320e1570bab22d0b27258507e98f15b68ea4afcd7afd23e",
     "scripts/rust-contracts/retained-clocked-recording/bindings.json": "fc84075f1f13f1ff74753efa9ade04c7b5caa00123282eeda811700b05699eec",
     "scripts/rust-contracts/retained-alias-remainder/bindings.json": "08f261fb927efdb917f61d2ba277ab1dcf2f408186d30456722b85daebd1233c",
-    "scripts/rust-contracts/retained-connect-test/bindings.json": "a6b410fd131bce638c0ce4e05f590173d293ddcafb52c68cc38e66b246e1ebbd"
+    "scripts/rust-contracts/retained-connect-test/bindings.json": "a6b410fd131bce638c0ce4e05f590173d293ddcafb52c68cc38e66b246e1ebbd",
+    "scripts/rust-contracts/retained-set-epg-selected/bindings.json": "c88dc997a23bc1ee627afabd3c9a7f4ef532ca81b7d28575d23bed45261c06c3",
+    "scripts/rust-contracts/retained-set-epg-batch/bindings.json": "eeb42868ab4b8c0d28461c21d2ddee560692a095051bb609e3270d809c39dca0"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 468,
+    "operations": 470,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -278,6 +280,16 @@
         "path": "scripts/rust-contracts/retained-connect-test/bindings.json",
         "sha256": "a6b410fd131bce638c0ce4e05f590173d293ddcafb52c68cc38e66b246e1ebbd",
         "kind": "retained_original_Connect_saved_webhook_test_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-set-epg-selected/bindings.json",
+        "sha256": "c88dc997a23bc1ee627afabd3c9a7f4ef532ca81b7d28575d23bed45261c06c3",
+        "kind": "retained_original_selected_single_Set_EPG_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-set-epg-batch/bindings.json",
+        "sha256": "eeb42868ab4b8c0d28461c21d2ddee560692a095051bb609e3270d809c39dca0",
+        "kind": "retained_original_batch_Set_EPG_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -41837,15 +41849,321 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "streamer": {
+                "fixture_role_or_supplied_credential": "streamer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous",
+              "streamer",
+              "standard",
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "Native_revision": "695779244a9dffb477ecb885ebbb19791d3a5021",
+            "Native_image": "sha256:4a287f12d9d0831ccb4b89eddcedcb8a037fa02930641356daa58713373d18fa",
+            "exact_build_sha256": "c80e67de33c84d2b05846fbdeecf3282116705d22e3bdd15b5f4ad29ab15fa12",
+            "exact_fixture_inputs_sha256": "dda49fb898fbe337881c6df9f0b2cf6af2b80b0c94a5d9afa5ce72ce5dc8e1bb",
+            "receipt_sha256": "9b707e858c7f969618dd3a8b189cc61fd220c74da7cd05c26f028873e67a084d",
+            "binding_sha256": "6129be12da6849f8cc5f3cb31a510fce54e27f726ca851cdd673e50da5ebd26f",
+            "execution_sha256": "38b120dd59dc4362cd2a0cd784c17abbd418a4ff3cf3c09b3322301345ade55e",
+            "integration_report_sha256": "a6675faf678a79a6a4124d3d5a8710b4d42a49b39d13ecc6add1dc07889b572b",
+            "cleanup_sha256": "e205c1db5e89a420853b26fecbf92a203b8b969b618a32af999abbd2fb191cd5",
+            "actual_runner_exit": 0,
+            "both_pipes_closed": true,
+            "process_group_settled": true,
+            "exact_cleanup_passed": true,
+            "exact_owned_containers_absent": 4,
+            "foundation_checks_excluded": 18,
+            "endpoint_authority": {
+              "actual_probe_sha256": "a82d7093d62e731cdc9676f4f7e4f2b1a2e01acf515502f21730e6512125d607",
+              "resolver_ordinal": 73,
+              "method": "POST"
+            },
+            "Native_publisher_absent_guard": {
+              "case": "publisher-absent-atomic-guard",
+              "role": "admin",
+              "method": "POST",
+              "status": 501,
+              "path": "/api/channels/channels/batch-set-epg/",
+              "Native_body_sha256": "9f02c47071158d003b52eab709741e0f2027b5a9843eab01bf39c78cf5a712eb",
+              "Native_evidence_pointer": "/checks/51/details",
+              "sql_cache_broker_unchanged": true,
+              "Native_guide_publication_verified": false
+            },
+            "exact_published_acceptance": {
+              "path": "scripts/rust-integration/milestone-batch91/acceptance.json",
+              "sha256": "cacee0fe01f7ad54773e1e1bc62ab21c104ca0d89978f53cf7b0844dcccba3ea"
+            }
+          },
+          "assertions": [
+            "Preserve the ordinary Batch Set EPG route, role and association outcomes",
+            "Retain SQL, cache and broker effects, and the Native publisher-absent atomic guard separately"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 17,
+            "Native_scoped_controls_matched": 16,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-d76a10f6c622ba6fa4ad:POST",
+            "method": "POST",
+            "source_action": "batch_set_epg",
+            "owning_milestone": "M5",
+            "pattern_exact": "api/channels/^channels/batch-set-epg/$",
+            "source_handler": "apps.channels.api_views.ChannelViewSet",
+            "fixture_id": "Original-Native-Candidate91-batch-Set-EPG",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "anonymous",
+              "streamer",
+              "standard",
+              "admin"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              },
+              "streamer": {
+                "fixture_role_or_supplied_credential": "streamer",
+                "complete": false
+              },
+              "standard": {
+                "fixture_role_or_supplied_credential": "standard",
+                "complete": false
+              },
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Preserve the ordinary Batch Set EPG route, role and association outcomes",
+              "Retain SQL, cache and broker effects, and the Native publisher-absent atomic guard separately"
+            ],
+            "cases": [
+              {
+                "case": "anonymous-before-parse",
+                "role": "anonymous",
+                "method": "POST",
+                "status": 401,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "Original_evidence_pointer": "/checks/18/details",
+                "Native_evidence_pointer": "/checks/35/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "standard",
+                "role": "standard",
+                "method": "POST",
+                "status": 403,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "Original_evidence_pointer": "/checks/19/details",
+                "Native_evidence_pointer": "/checks/36/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "viewer",
+                "role": "streamer",
+                "method": "POST",
+                "status": 403,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "Original_evidence_pointer": "/checks/20/details",
+                "Native_evidence_pointer": "/checks/37/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "inactive-admin",
+                "role": "admin",
+                "method": "POST",
+                "status": 401,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+                "Original_evidence_pointer": "/checks/21/details",
+                "Native_evidence_pointer": "/checks/38/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "malformed-json",
+                "role": "admin",
+                "method": "POST",
+                "status": 400,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "c80851c8ba52b294853884d11a7435e2d5034b17fcabbe8782f5b08b973716cf",
+                "Original_evidence_pointer": "/checks/22/details",
+                "Native_evidence_pointer": "/checks/39/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "missing-associations",
+                "role": "admin",
+                "method": "POST",
+                "status": 400,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "a276038b6ee00468113723d1dff996980bafa6f842b07a8bf7968eed47b78082",
+                "Original_evidence_pointer": "/checks/23/details",
+                "Native_evidence_pointer": "/checks/40/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "empty-associations",
+                "role": "admin",
+                "method": "POST",
+                "status": 400,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "a276038b6ee00468113723d1dff996980bafa6f842b07a8bf7968eed47b78082",
+                "Original_evidence_pointer": "/checks/24/details",
+                "Native_evidence_pointer": "/checks/41/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "null-associations",
+                "role": "admin",
+                "method": "POST",
+                "status": 400,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "a276038b6ee00468113723d1dff996980bafa6f842b07a8bf7968eed47b78082",
+                "Original_evidence_pointer": "/checks/25/details",
+                "Native_evidence_pointer": "/checks/42/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "ignore-unknown",
+                "role": "admin",
+                "method": "POST",
+                "status": 200,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "27abbdb473087aa02976b4dd391cbc6b1db031061b24a3abbc6542260985c493",
+                "Original_evidence_pointer": "/checks/26/details",
+                "Native_evidence_pointer": "/checks/43/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "assign-two-with-unknown",
+                "role": "admin",
+                "method": "POST",
+                "status": 200,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "b8d1eaa51a544c4675d48a7a986072470425b48f9e5884cbf8950fc3519d67bd",
+                "Original_evidence_pointer": "/checks/27/details",
+                "Native_evidence_pointer": "/checks/44/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "repeat-assignment",
+                "role": "admin",
+                "method": "POST",
+                "status": 200,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "27abbdb473087aa02976b4dd391cbc6b1db031061b24a3abbc6542260985c493",
+                "Original_evidence_pointer": "/checks/28/details",
+                "Native_evidence_pointer": "/checks/45/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "last-association-wins",
+                "role": "admin",
+                "method": "POST",
+                "status": 200,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "828afaedcefc4b41563a7b3b6a9cd516f9ade7ebc57f339e3fc392bc3a5e1c41",
+                "Original_evidence_pointer": "/checks/29/details",
+                "Native_evidence_pointer": "/checks/46/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "missing-guide-clears",
+                "role": "admin",
+                "method": "POST",
+                "status": 200,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "828afaedcefc4b41563a7b3b6a9cd516f9ade7ebc57f339e3fc392bc3a5e1c41",
+                "Original_evidence_pointer": "/checks/30/details",
+                "Native_evidence_pointer": "/checks/47/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "collection-ignores-filter",
+                "role": "admin",
+                "method": "POST",
+                "status": 200,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "828afaedcefc4b41563a7b3b6a9cd516f9ade7ebc57f339e3fc392bc3a5e1c41",
+                "Original_evidence_pointer": "/checks/31/details",
+                "Native_evidence_pointer": "/checks/48/details",
+                "sql_cache_broker_match": true,
+                "request_query_template": "channel_profile_id={fixture_profile_id}"
+              },
+              {
+                "case": "assign-across-original-batches",
+                "role": "admin",
+                "method": "POST",
+                "status": 200,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "c68170257e24d9eb7d27357d00d67c68f042545fa6c0092f22539ed30a363be4",
+                "Original_evidence_pointer": "/checks/32/details",
+                "Native_evidence_pointer": "/checks/49/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "clear-across-original-batches",
+                "role": "admin",
+                "method": "POST",
+                "status": 200,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_response_and_Native_response_sha256": "ea55e35f33b4927aed2637e4e65aea4504ae9b72c63a4af092c87e6a4284a7de",
+                "Original_evidence_pointer": "/checks/33/details",
+                "Native_evidence_pointer": "/checks/50/details",
+                "sql_cache_broker_match": true
+              },
+              {
+                "case": "source-xmltv-publication",
+                "role": "admin",
+                "method": "POST",
+                "status": 200,
+                "path": "/api/channels/channels/batch-set-epg/",
+                "Original_body_sha256": "e50698604f597cbadbeb8a3fbe8a30211dafb839a4a4f01c14edd22243266b34",
+                "Original_evidence_pointer": "/checks/34/details",
+                "Original_exact_FK_changes_and_single_task_checked": true
+              }
+            ],
+            "result": {
+              "Source_case_observations": 17,
+              "Native_scoped_controls_matched": 16,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false
+          }
         }
       ]
     },
@@ -53253,15 +53571,134 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "Native_revision": "85d7db9b316bb2ad5de79014a9e5321f77579c96",
+            "Native_image": "sha256:5ff38d1002aa58ee18ca7dad36aeaa42dd17bdec36af5fc77e0c6fe4fc5c885f",
+            "exact_packaged_receipt": {
+              "path": "scripts/rust-integration/milestone-batch85/selected-guide-compose.json",
+              "sha256": "f7c2ef65086dcbfc03f6f8b42973408870aa3ad60b5e2ecce27405f0800f5630",
+              "retained_receipt_sha256": "d38fc2273505aab515c7baffb23b3bafe299421101225777a3931b664bf0e8a3"
+            },
+            "integration_report_sha256": "6f144f0e7a5a8f8495fcae795586ca689e5a0dc39ad0c7cce5e7f72fcb8a8aaa",
+            "execution_sha256": "aee0d80135d7f7804f6507a612cc7f74057133026743fa0bb3c4ef5d9930b5bc",
+            "independent_cleanup_sha256": "bcf836073c3ab16b72d317f7a3b6255c0809a29689266d45ffa8bf24dff65564",
+            "endpoint_authority": {
+              "actual_monitor_sha256": "39a686ce270e89113db9f68e9faf687714d58f1c0a019d4f123a79f5145c9ac0",
+              "resolver_ordinal": 105,
+              "method": "POST"
+            },
+            "actual_runner_exit": 0,
+            "both_pipes_closed": true,
+            "process_group_settled": true,
+            "exact_cleanup_passed": true,
+            "exact_owned_containers_absent": 5,
+            "selected_producer_scope": true
+          },
+          "assertions": [
+            "Preserve the unformatted single Set EPG request under selected producer settings",
+            "Retain XMLTV and source-less outcomes, exact one-task publication, cache ordering and SQL effects"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 2,
+            "Native_scoped_controls_matched": 2,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-d52bb764a9f93bf486e8:POST",
+            "method": "POST",
+            "source_action": "set_epg",
+            "owning_milestone": "M5",
+            "pattern_exact": "api/channels/^channels/(?P<pk>[^/.]+)/set-epg/$",
+            "source_handler": "apps.channels.api_views.ChannelViewSet",
+            "fixture_id": "Original-Native-Candidate85-selected-single-Set-EPG",
+            "observed_methods": [
+              "POST"
+            ],
+            "observed_roles": [
+              "admin"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Preserve the unformatted single Set EPG request under selected producer settings",
+              "Retain XMLTV and source-less outcomes, exact one-task publication, cache ordering and SQL effects"
+            ],
+            "cases": [
+              {
+                "case": "xmltv",
+                "role": "admin",
+                "method": "POST",
+                "status": 200,
+                "path_template": "/api/channels/channels/{fixture_channel_id}/set-epg/",
+                "literal_numeric_path_recorded": false,
+                "Original_body_sha256": "62d18ae7e2503e1e5a7789f74860dd3f5bd9d3eab812b34eb82eee128cae315f",
+                "Native_body_sha256": "e8fdacfa15958c3aad0e800744b1b4317b412336a5f148ac137758296ba1801c",
+                "Original_publication_frame_sha256": "6636d072ccfdc9f0c637320ed5ea269365da8ac4c0056f5703279cef57f7d5bc",
+                "Native_publication_frame_sha256": "5a0ec830aa9d4939052551ba1e57d587f3d44567b7ba5f84a50c7632e2cf5561",
+                "Original_evidence_pointer": "/checks/18/details",
+                "Native_evidence_pointer": "/checks/20/details",
+                "scoped_observations": {
+                  "only_target_fk_changed_and_sequences_preserved": true,
+                  "exact_redis_publication": true,
+                  "cache_increment_precedes_publication": true,
+                  "monitor_fences_and_thread_verified": true,
+                  "response_matches_normal_contract": true,
+                  "publication_observed_count": 1
+                }
+              },
+              {
+                "case": "orphan",
+                "role": "admin",
+                "method": "POST",
+                "status": 400,
+                "path_template": "/api/channels/channels/{fixture_channel_id}/set-epg/",
+                "literal_numeric_path_recorded": false,
+                "Original_body_sha256": "0f9abc1a47091ea904406697111ac2df250dbb9a60795d464cc93f42788c57f8",
+                "Native_body_sha256": "0f9abc1a47091ea904406697111ac2df250dbb9a60795d464cc93f42788c57f8",
+                "Original_publication_frame_sha256": "85879ef38933e3b214fc6d306344d0a458cf7b840f2eaaae3bfccb89da7614c5",
+                "Native_publication_frame_sha256": "e2fcaa3faaa73aff5a410c0fa82af01136c80a7b53874c46977ed1833694c04e",
+                "Original_evidence_pointer": "/checks/19/details",
+                "Native_evidence_pointer": "/checks/21/details",
+                "scoped_observations": {
+                  "only_target_fk_changed_and_sequences_preserved": true,
+                  "exact_redis_publication": true,
+                  "cache_increment_precedes_publication": true,
+                  "monitor_fences_and_thread_verified": true,
+                  "response_matches_normal_contract": true,
+                  "publication_observed_count": 1
+                }
+              }
+            ],
+            "result": {
+              "Source_case_observations": 2,
+              "Native_scoped_controls_matched": 2,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false
+          }
         }
       ]
     },

@@ -17,6 +17,7 @@ import retained_alias19_contracts
 import retained_connect_detail_contracts
 import retained_alias_remainder_contracts
 import retained_connect_test_contracts
+import retained_set_epg_selected_contracts
 import retained_range_source10_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -40,6 +41,7 @@ class RangeSource10Controls(unittest.TestCase):
     p.write_bytes(raw)
  def test_all174_definitions_797_whole_rows_and_selected_primary_unchanged(self):
   register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,register['runtime_routes'])
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,register['runtime_routes'])
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,register['runtime_routes'])
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,register['runtime_routes'])
@@ -73,7 +75,8 @@ class RangeSource10Controls(unittest.TestCase):
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],468)
+  self.assertEqual(mapping['operations'],470)
+  retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,rows)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,rows)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,rows)
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)
@@ -93,6 +96,7 @@ class RangeSource10Controls(unittest.TestCase):
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,rows)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,rows)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,rows)
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)

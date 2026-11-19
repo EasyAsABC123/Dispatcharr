@@ -1,0 +1,116 @@
+{
+  "binding_kind": "retained_original_selected_single_Set_EPG_HTTP",
+  "operation_count": 1,
+  "new_Source_executions": 0,
+  "new_Native_executions": 0,
+  "Native_coverage_increased": false,
+  "fully_verified_operations": 0,
+  "performance_verified": false,
+  "fixtures": {
+    "Original-Native-Candidate85-selected-single-Set-EPG": {
+      "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "Native_revision": "85d7db9b316bb2ad5de79014a9e5321f77579c96",
+      "Native_image": "sha256:5ff38d1002aa58ee18ca7dad36aeaa42dd17bdec36af5fc77e0c6fe4fc5c885f",
+      "exact_packaged_receipt": {
+        "path": "scripts/rust-integration/milestone-batch85/selected-guide-compose.json",
+        "sha256": "f7c2ef65086dcbfc03f6f8b42973408870aa3ad60b5e2ecce27405f0800f5630",
+        "retained_receipt_sha256": "d38fc2273505aab515c7baffb23b3bafe299421101225777a3931b664bf0e8a3"
+      },
+      "integration_report_sha256": "6f144f0e7a5a8f8495fcae795586ca689e5a0dc39ad0c7cce5e7f72fcb8a8aaa",
+      "execution_sha256": "aee0d80135d7f7804f6507a612cc7f74057133026743fa0bb3c4ef5d9930b5bc",
+      "independent_cleanup_sha256": "bcf836073c3ab16b72d317f7a3b6255c0809a29689266d45ffa8bf24dff65564",
+      "endpoint_authority": {
+        "actual_monitor_sha256": "39a686ce270e89113db9f68e9faf687714d58f1c0a019d4f123a79f5145c9ac0",
+        "resolver_ordinal": 105,
+        "method": "POST"
+      },
+      "actual_runner_exit": 0,
+      "both_pipes_closed": true,
+      "process_group_settled": true,
+      "exact_cleanup_passed": true,
+      "exact_owned_containers_absent": 5,
+      "selected_producer_scope": true
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-d52bb764a9f93bf486e8:POST",
+      "method": "POST",
+      "source_action": "set_epg",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^channels/(?P<pk>[^/.]+)/set-epg/$",
+      "source_handler": "apps.channels.api_views.ChannelViewSet",
+      "fixture_id": "Original-Native-Candidate85-selected-single-Set-EPG",
+      "observed_methods": [
+        "POST"
+      ],
+      "observed_roles": [
+        "admin"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Preserve the unformatted single Set EPG request under selected producer settings",
+        "Retain XMLTV and source-less outcomes, exact one-task publication, cache ordering and SQL effects"
+      ],
+      "cases": [
+        {
+          "case": "xmltv",
+          "role": "admin",
+          "method": "POST",
+          "status": 200,
+          "path_template": "/api/channels/channels/{fixture_channel_id}/set-epg/",
+          "literal_numeric_path_recorded": false,
+          "Original_body_sha256": "62d18ae7e2503e1e5a7789f74860dd3f5bd9d3eab812b34eb82eee128cae315f",
+          "Native_body_sha256": "e8fdacfa15958c3aad0e800744b1b4317b412336a5f148ac137758296ba1801c",
+          "Original_publication_frame_sha256": "6636d072ccfdc9f0c637320ed5ea269365da8ac4c0056f5703279cef57f7d5bc",
+          "Native_publication_frame_sha256": "5a0ec830aa9d4939052551ba1e57d587f3d44567b7ba5f84a50c7632e2cf5561",
+          "Original_evidence_pointer": "/checks/18/details",
+          "Native_evidence_pointer": "/checks/20/details",
+          "scoped_observations": {
+            "only_target_fk_changed_and_sequences_preserved": true,
+            "exact_redis_publication": true,
+            "cache_increment_precedes_publication": true,
+            "monitor_fences_and_thread_verified": true,
+            "response_matches_normal_contract": true,
+            "publication_observed_count": 1
+          }
+        },
+        {
+          "case": "orphan",
+          "role": "admin",
+          "method": "POST",
+          "status": 400,
+          "path_template": "/api/channels/channels/{fixture_channel_id}/set-epg/",
+          "literal_numeric_path_recorded": false,
+          "Original_body_sha256": "0f9abc1a47091ea904406697111ac2df250dbb9a60795d464cc93f42788c57f8",
+          "Native_body_sha256": "0f9abc1a47091ea904406697111ac2df250dbb9a60795d464cc93f42788c57f8",
+          "Original_publication_frame_sha256": "85879ef38933e3b214fc6d306344d0a458cf7b840f2eaaae3bfccb89da7614c5",
+          "Native_publication_frame_sha256": "e2fcaa3faaa73aff5a410c0fa82af01136c80a7b53874c46977ed1833694c04e",
+          "Original_evidence_pointer": "/checks/19/details",
+          "Native_evidence_pointer": "/checks/21/details",
+          "scoped_observations": {
+            "only_target_fk_changed_and_sequences_preserved": true,
+            "exact_redis_publication": true,
+            "cache_increment_precedes_publication": true,
+            "monitor_fences_and_thread_verified": true,
+            "response_matches_normal_contract": true,
+            "publication_observed_count": 1
+          }
+        }
+      ],
+      "result": {
+        "Source_case_observations": 2,
+        "Native_scoped_controls_matched": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "credit": "Original Dispatcharr and dependency authors retain all application and algorithm credit."
+}
