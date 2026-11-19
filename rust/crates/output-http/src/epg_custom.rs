@@ -1,4 +1,4 @@
-//! Native custom guide timeline without a time pattern; regex is a pinned dependency only.
+//! Native custom guide timelines with scoped regex dependency operations.
 //! Original Dispatcharr authors retain all application/formatting credit.
 use crate::{
     epg_custom_scope::{capacity, unsupported, Scope},
@@ -9,9 +9,12 @@ use chrono_tz::Tz;
 use dispatcharr_store::{RegexNamedGroupRow, StoreError};
 use serde_json::{json, Value};
 use std::{collections::HashMap, sync::Arc};
+
+mod timed;
 #[derive(Clone, Copy)]
 pub struct Window {
     pub start: DateTime<Utc>,
+    pub clock: DateTime<Utc>,
     pub days: u32,
     pub lookback: Option<DateTime<Utc>>,
     pub cutoff: Option<DateTime<Utc>>,
@@ -23,6 +26,7 @@ impl Window {
         };
         Ok(Self {
             start: exact(self.start)?,
+            clock: exact(self.clock)?,
             days: self.days,
             lookback: self.lookback.map(exact).transpose()?,
             cutoff: self.cutoff.map(exact).transpose()?,
@@ -81,6 +85,7 @@ pub struct Programme {
 pub enum Programmes {
     Legacy(epg_dummy::ConfiguredDummy),
     Custom(NoTime),
+    Timed(Box<timed::Timed>),
 }
 pub struct Plan {
     pub logo: Option<String>,
@@ -136,7 +141,7 @@ fn source_timezone(properties: &Value) -> Result<Tz, StoreError> {
     }))
 }
 /// Title and optional date captures use the existing no-time timeline.
-/// The timed timelines require their own implementation and acceptance.
+/// UTC time-only captures produce one event on the request's UTC day.
 pub fn supported(properties: &Value) -> bool {
     validate(properties).is_ok()
 }
@@ -144,12 +149,17 @@ fn validate(properties: &Value) -> Result<Tz, StoreError> {
     if !properties.is_object() || string(properties, "title_pattern")?.is_empty() {
         return Err(unsupported());
     }
-    if truthy(properties.get("time_pattern")) {
-        return Err(unsupported());
-    }
-    string(properties, "date_pattern")?;
+    let time = string(properties, "time_pattern")?;
+    let date = string(properties, "date_pattern")?;
     let timezone = source_timezone(properties)?;
-    string(properties, "output_timezone")?;
+    let display_timezone = string(properties, "output_timezone")?;
+    if !time.is_empty() {
+        let zone = string(properties, "timezone")?;
+        let utc_or_default = |value: &str| value.is_empty() || value.eq_ignore_ascii_case("UTC");
+        if !date.is_empty() || !utc_or_default(zone) || !utc_or_default(display_timezone) {
+            return Err(unsupported());
+        }
+    }
     duration(properties)?;
     for key in [
         "title_template",
@@ -364,16 +374,25 @@ pub async fn prepare(
             bytes: channel.len() + name.len() + properties.to_string().len() + 512,
         });
     };
-    // Source's channel element gets a separate title-only logo projection.
-    // Programme templates merge the raw date groups before adding aliases.
-    let date_pattern = string(properties, "date_pattern")?;
-    let date = if date_pattern.is_empty() {
+    // Output XML's channel element uses only title captures. Programme
+    // templates use time/date captures, then computed aliases and clock fields.
+    let time_pattern = string(properties, "time_pattern")?;
+    let pattern = if time_pattern.is_empty() {
+        string(properties, "date_pattern")?
+    } else {
+        time_pattern
+    };
+    let extra_groups = if pattern.is_empty() {
         None
     } else {
-        captures(scope, date_pattern, name).await?
+        captures(scope, pattern, name).await?
+    };
+    let kickoff = match extra_groups.as_ref().filter(|_| !time_pattern.is_empty()) {
+        Some(groups) => timed::time_info(groups)?,
+        None => None,
     };
     let logo_template = string(properties, "channel_logo_url")?;
-    let logo = if date.is_some() && !logo_template.is_empty() && !groups.is_empty() {
+    let title_logo = if extra_groups.is_some() && !logo_template.is_empty() && !groups.is_empty() {
         let mut logo_groups = groups.clone();
         aliases(scope, &mut logo_groups).await?;
         Some(template(logo_template, &logo_groups, true, limit)?)
@@ -381,20 +400,31 @@ pub async fn prepare(
         None
     };
 
-    let date_matches = date.is_some();
-    if let Some(date) = date {
-        merge_groups(&mut groups, date);
+    let extra_matches = extra_groups.is_some();
+    if let Some(extra) = extra_groups {
+        merge_groups(&mut groups, extra);
     }
     aliases(scope, &mut groups).await?;
 
-    let logo = if date_matches {
-        logo
+    let logo = if extra_matches {
+        title_logo
     } else {
         (!logo_template.is_empty() && !groups.is_empty())
             .then(|| template(logo_template, &groups, true, limit))
             .transpose()?
     }
     .filter(|value| !value.is_empty());
+    // Source resolves the poster before adding derived time fields.
+    let poster_template = string(properties, "program_poster_url")?;
+    let poster = (!poster_template.is_empty())
+        .then(|| template(poster_template, &groups, true, limit))
+        .transpose()?
+        .filter(|v| !v.is_empty());
+    let duration = duration(properties)?;
+    let runtime = Duration::try_minutes(duration).ok_or_else(capacity)?;
+    if let Some(kickoff) = kickoff {
+        timed::clock_fields(&mut groups, window.clock, kickoff, runtime);
+    }
     let title_text = string(properties, "title_template")?;
     let title = if title_text.is_empty() {
         default_title(name, &groups)
@@ -411,11 +441,29 @@ pub async fn prepare(
     let subtitle = (!text.is_empty())
         .then(|| template(text, &groups, false, limit))
         .transpose()?;
-    let text = string(properties, "program_poster_url")?;
-    let poster = (!text.is_empty())
-        .then(|| template(text, &groups, true, limit))
-        .transpose()?
-        .filter(|v| !v.is_empty());
+    let fillers = kickoff
+        .map(|_| {
+            let upcoming = timed::Labels::for_filler(
+                properties,
+                "upcoming",
+                "Upcoming: ",
+                &title,
+                &description,
+                &groups,
+                limit,
+            )?;
+            let ended = timed::Labels::for_filler(
+                properties,
+                "ended",
+                "Ended: ",
+                &title,
+                &description,
+                &groups,
+                limit,
+            )?;
+            Ok::<_, StoreError>((upcoming, ended))
+        })
+        .transpose()?;
     let category = string(properties, "category")?;
     let charge = category
         .split(',')
@@ -461,31 +509,42 @@ pub async fn prepare(
         .and_then(|v| v.checked_add(poster.as_ref().map_or(0, String::capacity)))
         .and_then(|v| v.checked_add(props_bytes))
         .and_then(|v| v.checked_add(channel.len() + 512))
+        .and_then(|v| match &fillers {
+            Some((upcoming, ended)) => v.checked_add(upcoming.bytes())?.checked_add(ended.bytes()),
+            None => Some(v),
+        })
         .ok_or_else(capacity)?;
     if bytes > limit {
         return Err(capacity());
     }
-    let duration = duration(properties)?;
+    let shared = NoTime {
+        channel: channel.to_owned(),
+        title,
+        description,
+        subtitle,
+        props,
+        poster,
+        include_date,
+        source_timezone,
+        window,
+        duration,
+        per_day: ((24.0 / (duration as f64 / 60.0)).trunc() as u32).max(1),
+        day: 0,
+        index: 0,
+    };
+    let programmes = match (kickoff, fillers) {
+        (Some(start), Some((upcoming, ended))) => Programmes::Timed(Box::new(timed::Timed::new(
+            shared, start, runtime, upcoming, ended,
+        )?)),
+        _ => Programmes::Custom(shared),
+    };
     Ok(Plan {
         logo,
         bytes,
-        programmes: Programmes::Custom(NoTime {
-            channel: channel.to_owned(),
-            title,
-            description,
-            subtitle,
-            props,
-            poster,
-            include_date,
-            source_timezone,
-            window,
-            duration,
-            per_day: ((24.0 / (duration as f64 / 60.0)).trunc() as u32).max(1),
-            day: 0,
-            index: 0,
-        }),
+        programmes,
     })
 }
+
 pub struct NoTime {
     channel: String,
     title: String,
@@ -500,6 +559,48 @@ pub struct NoTime {
     per_day: u32,
     day: u32,
     index: u32,
+}
+impl NoTime {
+    fn programme(
+        &self,
+        start: DateTime<Utc>,
+        stop: DateTime<Utc>,
+        filler: Option<&timed::Labels>,
+    ) -> Result<Programme, StoreError> {
+        if !(1..=9999).contains(&start.year()) || !(1..=9999).contains(&stop.year()) {
+            return Err(capacity());
+        }
+        let (title, description, sub_title, mut props) = match filler {
+            Some(filler) => (
+                filler.title.clone(),
+                filler.description.clone(),
+                None,
+                serde_json::Map::new(),
+            ),
+            None => (
+                self.title.clone(),
+                self.description.clone(),
+                self.subtitle.clone(),
+                self.props.clone(),
+            ),
+        };
+        if self.include_date {
+            let local = start.with_timezone(&self.source_timezone);
+            props.insert("date".into(), json!(local.format("%Y-%m-%d").to_string()));
+        }
+        if let Some(poster) = &self.poster {
+            props.insert("icon".into(), json!(poster));
+        }
+        Ok(Programme {
+            channel_id: self.channel.clone(),
+            start_time: start,
+            end_time: stop,
+            title,
+            description,
+            sub_title,
+            properties: Value::Object(props),
+        })
+    }
 }
 impl Iterator for NoTime {
     type Item = Result<Programme, StoreError>;
@@ -545,26 +646,7 @@ impl Iterator for NoTime {
                 if start >= end {
                     return Ok(None);
                 }
-                if !(1..=9999).contains(&start.year()) || !(1..=9999).contains(&stop.year()) {
-                    return Err(capacity());
-                }
-                let mut props = self.props.clone();
-                if self.include_date {
-                    let local = start.with_timezone(&self.source_timezone);
-                    props.insert("date".into(), json!(local.format("%Y-%m-%d").to_string()));
-                }
-                if let Some(poster) = &self.poster {
-                    props.insert("icon".into(), json!(poster));
-                }
-                Ok(Some(Programme {
-                    channel_id: self.channel.clone(),
-                    start_time: start,
-                    end_time: stop,
-                    title: self.title.clone(),
-                    description: self.description.clone(),
-                    sub_title: self.subtitle.clone(),
-                    properties: Value::Object(props),
-                }))
+                self.programme(start, stop, None).map(Some)
             })();
             match result {
                 Ok(None) => continue,
@@ -594,6 +676,7 @@ impl Iterator for Programmes {
                 })
             }),
             Self::Custom(source) => source.next(),
+            Self::Timed(source) => source.next(),
         }
     }
 }
@@ -615,6 +698,7 @@ mod tests {
             source_timezone: chrono_tz::UTC,
             window: Window {
                 start,
+                clock: start,
                 days: 1,
                 lookback: Some(lookback),
                 cutoff: Some(lookback + Duration::hours(8)),
@@ -664,6 +748,7 @@ mod tests {
                 source_timezone: source_timezone(&props).unwrap(),
                 window: Window {
                     start,
+                    clock: start,
                     days: 1,
                     lookback: None,
                     cutoff: None,

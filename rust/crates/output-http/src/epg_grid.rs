@@ -110,6 +110,7 @@ pub async fn stored_scoped_entity(
                 custom.then_some(&channel.source_properties),
                 crate::epg_custom::Window {
                     start: base,
+                    clock: now,
                     days,
                     lookback: Some(start),
                     cutoff: Some(end),

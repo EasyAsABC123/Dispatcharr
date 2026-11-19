@@ -38,21 +38,25 @@ def date_specs():
 
 def prepare_date_context(fixture, account):
     seeds = [(item[0], item[1]) for item in date_specs()]
+    return prepare_pattern_context(fixture, account, seeds, "Owned date-only custom guide", "owned-date-guide-", 91850)
+
+
+def prepare_pattern_context(fixture, account, seeds, profile_name, tvg_prefix, base_number):
     script = """
 from apps.accounts.models import User
 from apps.channels.models import Channel, ChannelProfile, ChannelProfileMembership
 from apps.epg.models import EPGSource, EPGData
-profile = ChannelProfile.objects.create(name='Owned date-only custom guide')
+profile = ChannelProfile.objects.create(name=PROFILE_NAME)
 ChannelProfileMembership.objects.filter(channel_profile=profile).update(enabled=False)
 channels = []
 for index, (name, custom) in enumerate(SEEDS):
-    tvg_id = 'owned-date-guide-' + str(index)
+    tvg_id = TVG_PREFIX + str(index)
     source = EPGSource.objects.bulk_create([EPGSource(
         name=tvg_id, source_type='dummy', is_active=False, custom_properties=custom,
     )])[0]
     epg = EPGData.objects.bulk_create([EPGData(epg_source=source, tvg_id=tvg_id, name=name)])[0]
     channel = Channel.objects.bulk_create([Channel(
-        name=name, channel_number=91850+index, epg_data=epg, tvg_id=tvg_id,
+        name=name, channel_number=BASE_NUMBER+index, epg_data=epg, tvg_id=tvg_id,
     )])[0]
     ChannelProfileMembership.objects.update_or_create(
         channel_profile=profile, channel=channel, defaults={'enabled': True},
@@ -63,7 +67,9 @@ assert set(actual.values_list('channel_id', flat=True)) == {row['id'] for row in
 User.objects.get(username=ACCOUNT).channel_profiles.add(profile)
 print(json.dumps({'profile': {'id': profile.pk, 'name': profile.name}, 'channels': channels}))
 """
-    script = "SEEDS = " + repr(seeds) + "\nACCOUNT = " + repr(account) + "\n" + script
+    setup = {"SEEDS": seeds, "ACCOUNT": account, "PROFILE_NAME": profile_name,
+             "TVG_PREFIX": tvg_prefix, "BASE_NUMBER": base_number}
+    script = "".join(f"{key} = {value!r}\n" for key, value in setup.items()) + script
     return fixture.sql(script, secret=True)
 
 
@@ -143,6 +149,10 @@ def prepare_context(fixture):
  setup=fixture.sql(script,secret=True);setup['xc_password']=fixture._dummy_fallback['xc_password'];fixture._custom_guide=setup
  if fixture.binding.get('custom_guide_date_acceptance'):
   setup['date']=prepare_date_context(fixture,setup['xc_username'])
+ if fixture.binding.get('custom_guide_time_acceptance'):
+  import custom_guide_time_cases as timed
+  seeds=[(case[0],timed.CONFIG)for case in timed.CASES]
+  setup['time']=prepare_pattern_context(fixture,setup['xc_username'],seeds,'Owned UTC time-only guide','owned-time-guide-',91860)
  fixture._plugin_environment={**getattr(fixture,'_plugin_environment',{}),'RUST_EPG_REGEX_DIAGNOSTICS':'1'}
  save(Path(fixture.output)/'declared-custom-guide-inputs.json',{'profile':setup['profile'],'channels':setup['channels'],'new_Source_and_Native_required':True,'regex_engine':'actual pinned dependency; no per-search timeout','timezone_scope':'UTC only','timelines':'positive integral no-time duration;181minute non-divisor plus default180','new_Origin_or_workers':False,'diagnostic_bound':'64 retirement records per view registry; metadata only','held_gate':'optional Native-only final controlledMain stop, physically held search; no Source shutdown-equivalence claim','unqualified':['time patterns','non-UTC/fractional durations','EPG-download Connect/plugin sideeffects','large expansion/guide stress','Source held HTTP cold-stop counterpart']})
 def request(fixture,path,label,out,auth=True):
@@ -251,7 +261,26 @@ def run(fixture):
   except Exception as error:
    row.update(status='failed',error_type=type(error).__name__)
    file=private/'date-guide-failure.txt';file.write_text(traceback.format_exc()[-8192:]);file.chmod(0o600)
- report={'status':'passed'if all(c['status']=='passed'for c in cells)else'failed','cases':cells,'full_M7_or_resource_gain':False,'unqualified':['time patterns, timed date schedules and non-UTC/fractional durations','metadata/template beyond explicit budget','malformed Source rendering','EPG-download integration sideeffects','Source held HTTP cold termination counterpart','held Native shutdown unless separately invoked LAST']};save(out/'report.json',report);return report
+ if 'time' in setup:
+  import custom_guide_time_cases as timed
+  row={'name':'actual-UTC-time-only-XMLTV-grid-XC','status':'running'};cells.append(row)
+  try:
+   time_prior={(r['pid'],r['generation'])for r in retirements(fixture)}
+   actual=timed.run(fixture,setup,private,request)
+   if fixture.backend=='Native':
+    def time_retired():
+     rows=[r for r in retirements(fixture)if(r['pid'],r['generation'])not in time_prior]
+     return rows if len(rows)>=4 else False
+    rows=fixture.wait(time_retired,15,'actual-time-guide-regex-retirement-receipts')
+    save(private/'actual-time-retirements.json',rows)
+    assert len(rows)==4 and all(r['actual_exit']==0 and r['wait_observed']and r['stdout_eof']and r['stderr_eof']and r['group_absent']and r['callbacks_settled']and not r['forced']and not r['operation_fault']for r in rows)
+    assert not process_snapshot(fixture,{(r['pid'],r['generation'])for r in rows})
+    actual['actual_exit0_wait_EOF_group_absence_receipts']=len(rows)
+   row.update(status='passed',actual=actual)
+  except Exception as error:
+   row.update(status='failed',error_type=type(error).__name__)
+   file=private/'time-guide-failure.txt';file.write_text(traceback.format_exc()[-8192:]);file.chmod(0o600)
+ report={'status':'passed'if all(c['status']=='passed'for c in cells)else'failed','cases':cells,'full_M7_or_resource_gain':False,'unqualified':['timed date schedules, non-UTC timed settings and fractional durations','metadata/template beyond explicit budget','malformed Source rendering','EPG-download integration sideeffects','Source held HTTP cold termination counterpart','held Native shutdown unless separately invoked LAST']};save(out/'report.json',report);return report
 
 def prepare_held_context(fixture):
  if fixture.case!=HELD_CASE or fixture.backend!='Native':raise ValueError('DedicatedFinalNativeGuideContextRequired')

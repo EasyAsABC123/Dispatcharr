@@ -298,6 +298,7 @@ pub(crate) async fn write_scoped(
             channel.properties.as_ref(),
             dispatcharr_output_http::epg_custom::Window {
                 start,
+                clock: ctx.now,
                 days: if window.forward_days > 0 {
                     window.forward_days as u32
                 } else {

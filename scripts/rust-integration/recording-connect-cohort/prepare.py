@@ -163,12 +163,13 @@ def prepare(args):
   p=HERE/'cohort'/name;binding['restore_callbacks'][context]={'path':str(p),'sha256':sha(p),'backends':backends}
  contexts=NATIVE if args.all_native else[EVENT]
  plan={'state':'UNQUALIFIED_PUBLIC_EXPORT_PREPARED','repo':str(repo),'output':str(out),'base_binding':binding,'source_contexts':[EVENT],'native_contexts':contexts,'Docker_host':args.docker_host,'source_seconds':1200,'native_seconds':3600 if args.all_native else 600,'cleanup_seconds':90,'qualification':'Portable export still requires actual affected Source/Native validation. This is not byte-exact reproduction of historical private helpers.','credit':'Original Dispatcharr and dependencies retain application/model/task/protocol/algorithm credit.'}
- if args.workflow=='custom-guide-dates':
+ if args.workflow in ('custom-guide-dates','custom-guide-times'):
   assert not args.all_native,'all-native applies only to the recording Connect workflow'
   contexts=['schedules-direct']
-  binding['custom_guide_date_acceptance']=True
+  variant='date'if args.workflow=='custom-guide-dates'else'time'
+  binding[f'custom_guide_{variant}_acceptance']=True
   plan.update(workflow=args.workflow,source_contexts=contexts,native_contexts=contexts,native_seconds=1200,
-              qualification='Fresh Original and Native schedules-direct fixtures with the date-only custom guide XMLTV, grid and XC cases.')
+              qualification=f'Fresh Original and Native schedules-direct fixtures with the {variant}-only custom guide XMLTV, grid and XC cases.')
  save(out/'plan.json',plan);print(json.dumps({'plan':str(out/'plan.json'),'state':plan['state'],'applications_started':0,'native_contexts':contexts}))
 
 def uid_probe(plan,coordinator):
@@ -256,7 +257,7 @@ def run(args):
 
 def main():
  parser=argparse.ArgumentParser(description=__doc__);sub=parser.add_subparsers(dest='command',required=True)
- p=sub.add_parser('prepare');p.add_argument('--repo',type=Path,default=HERE.parents[2]);p.add_argument('--output',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--source-archive',type=Path);p.add_argument('--docker',default='docker');p.add_argument('--docker-host');p.add_argument('--all-native',action='store_true',help='Run all seven affected Native contexts; strict restart remains a known open failure.');p.add_argument('--workflow',choices=['recording-connect','custom-guide-dates','catalogue-series-comskip-vlc','catalogue-six','catalogue-seven','catalogue-eight','catalogue-nine','catalogue-twelve','catalogue-thirteen','catalogue-fourteen'],default='recording-connect',help='Select the Connect pair, paired date-only custom guides or retained-Source Native catalogue/comskip/VLC cohort.')
+ p=sub.add_parser('prepare');p.add_argument('--repo',type=Path,default=HERE.parents[2]);p.add_argument('--output',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--source-archive',type=Path);p.add_argument('--docker',default='docker');p.add_argument('--docker-host');p.add_argument('--all-native',action='store_true',help='Run all seven affected Native contexts; strict restart remains a known open failure.');p.add_argument('--workflow',choices=['recording-connect','custom-guide-dates','custom-guide-times','catalogue-series-comskip-vlc','catalogue-six','catalogue-seven','catalogue-eight','catalogue-nine','catalogue-twelve','catalogue-thirteen','catalogue-fourteen'],default='recording-connect',help='Select the Connect pair, paired date-only or UTC time-only custom guides or retained-Source Native catalogue/comskip/VLC cohort.')
  p=sub.add_parser('run');p.add_argument('--plan',type=Path,required=True)
  args=parser.parse_args()
  if args.command=='prepare':prepare(args);return 0
