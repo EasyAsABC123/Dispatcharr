@@ -47,8 +47,9 @@ def evaluate(names, config):
         if result == name or not result.strip():
             changed.append(None)
             continue
-        if len(result) > 512 or '\0' in result:
-            # Original's bulk SQL write rejects the entire set on this constraint.
+        if '\0' in result:
+            # PostgreSQL rejects embedded zero bytes before it can cast the field.
             return {'error': None, 'overflow': True, 'names': []}
-        changed.append(result)
+        # Django's PostgreSQL bulk_update casts the CASE result to varchar(512).
+        changed.append(result[:512])
     return {'error': None, 'overflow': False, 'names': changed}
