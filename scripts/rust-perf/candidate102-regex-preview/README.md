@@ -111,3 +111,25 @@ The independent reducer confirmed these results. The experiment leaves
 Auto Sync resource acceptance open.
 
 [Sample allocation experiment receipt](allocation-experiment.json)
+
+## Dedicated worker concurrency experiment
+
+The separate candidate ran the same regex operations with Python's
+`concurrent=False` in its dedicated worker. The pinned environment
+produced identical results and timeout errors, and the packaged image
+passed the ordinary and wide-Unicode suites. The six measured phases
+matched all 216 responses at equal throughput.
+
+| Pair | Original full-scan p95 | Rust full-scan p95 |
+| --- | ---: | ---: |
+| 1 | 52.15 ms | 50.32 ms |
+| 2 | 60.46 ms | 60.88 ms |
+| 3 | 55.25 ms | 62.53 ms |
+
+A low-priority contract test overlapped about 24.5 seconds of Original's
+second measured phase. The relative CPU and memory observations in this
+capture remain diagnostic. The third pair missed the latency limit and
+the launcher exited 1 with verified cleanup. The same assembled image
+is queued for a clean repeat under the unchanged request plan.
+
+[Concurrency experiment receipt](concurrency-experiment-first.json)
