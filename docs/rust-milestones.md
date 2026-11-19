@@ -60,9 +60,11 @@ remains in progress.
 
 The [channel rename and Auto Sync checkpoint](rust-milestone-batch102.md)
 matched the long-name PostgreSQL cast and both ordinary and wide regex
-preview suites. The paired preview benchmark measured 20.45% lower CPU and
-56.05% lower peak working set with equal throughput. Two trials exceeded
-the full-scan p95 limit, keeping M7 performance acceptance open.
+preview suites. The [release benchmark and repeat](../scripts/rust-perf/candidate102-regex-preview/README.md)
+measured lower CPU and peak working set at equal throughput. The same
+two full-scan p95 pairs missed the limit in both attempts. The shifted
+timing experiment did not reproduce the spikes, and the isolated sample
+allocation change still missed the release limit.
 
 The [enabled DVR rebuild checkpoint](rust-milestone-batch104.md) matched
 the selected non-UTC overnight edits and activation, scheduled rows and
@@ -74,13 +76,13 @@ records the exact Docker build, recurring DVR detail and VOD stats parity,
 and two-replica TS controls. Targeted client stop disconnected just the
 selected viewer while its peer continued through the shared upstream.
 
-The [network-disabled SDK](../scripts/rust-contracts/sdk-image57-ingress-517.json)
-reproduced the 517-assignment contract register and passed all 20 tests,
-including the separate 19 corruption controls. Container inspection
-confirmed network mode `none` and exact teardown. There are 281 unassigned
-HTTP operations and no fully verified HTTP assignments in this register.
-The [494-assignment run](../scripts/rust-contracts/sdk-exact-vod-494.json)
-retains the earlier evidence.
+The [network-disabled SDK](../scripts/rust-contracts/sdk-image57-core-json-530.json)
+reproduced the 530-assignment HTTP register and passed all 22 tests,
+including separate validation of the 19 corruption controls. The owned
+container ran with network mode `none` and exact teardown. The register
+has 268 unassigned HTTP operations and zero fully verified HTTP operations.
+The [earlier run](../scripts/rust-contracts/sdk-image57-ingress-517.json)
+preserves the 517-assignment result.
 
 [The programme mutation and admin redirect checkpoint](rust-milestone-batch99.md)
 records the configured admin Compose pass, paired gzip guide recovery, and
