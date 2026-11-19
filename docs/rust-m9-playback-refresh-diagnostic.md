@@ -57,3 +57,13 @@ resources. The corrected fixture keeps the existing 15-second client deadline
 and allows 16 seconds of relay inactivity. A local delayed-response test passed.
 A full resource window and the two-hour soak remain open.
 [First resource trial receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/resource-short-attempt1.json)
+
+The second short trial passed the relay startup and recorded twelve
+five-second observations. All ten viewers delivered MPEG-TS from the same
+upstream through the 60-second observation and retired cleanly. At 60 seconds
+the infrastructure process census returned an incomplete inventory. Rust,
+origin and relay censuses completed at that point. The controller exited 1
+and exact Compose cleanup passed. The next observer retries a full census
+within the same sampling deadline when process membership races. Rejected
+attempts remain in its journal, and permission failures still fail the census.
+[Second resource trial receipt](../scripts/rust-integration/m9-playback-refresh-diagnostic/resource-short-attempt2.json)
