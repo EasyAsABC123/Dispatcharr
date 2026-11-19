@@ -544,3 +544,20 @@ owned container and host process generations retired.
 The register now records 545 partial HTTP Source assignments and 253
 unassigned operations. Native and whole-operation verification remain open.
 Original Dispatcharr authors and contributors retain full credit.
+
+## Retained Original Connect management replay
+
+The [exact-image replay](../scripts/rust-integration/milestone-batch106/connect-replay-register.json)
+adds 20 partial assignments for the existing canonical and literal JSON-suffix
+integration, nested subscription, subscription and delivery-log declarations.
+The six selected credential states include anonymous, inactive Administrator,
+viewer, standard, Administrator JWT and Administrator API key. All 120 paired
+comparisons match their scoped wire, role and SQL assertions. Both application
+images returned the same pinned HTML 500 for the two authorized formatted nested
+reads. The four denial responses keep their original statuses.
+
+The replay exited zero and independently verified retirement of four owned
+container and host process generations. The [first actual exit 1](../scripts/rust-integration/milestone-batch106/connect-observed-pairs.json)
+remains part of the record. The register has 565 partial HTTP Original assignments,
+233 unassigned operations and 216 methodless declarations with scoped observations.
+Original Dispatcharr authors and contributors retain full credit.

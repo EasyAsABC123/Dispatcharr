@@ -95,6 +95,7 @@ COPY scripts/rust-integration/retained-provider-admin/receipt.json ./scripts/rus
 COPY scripts/rust-integration/retained-c98-hdhr/receipt.json ./scripts/rust-integration/retained-c98-hdhr/receipt.json
 COPY scripts/rust-integration/retained-core-profile-json/receipt.json ./scripts/rust-integration/retained-core-profile-json/receipt.json
 COPY scripts/rust-integration/retained-hdhr-literal/receipt.json ./scripts/rust-integration/retained-hdhr-literal/receipt.json
+COPY scripts/rust-integration/milestone-batch106/connect-replay-register.json ./scripts/rust-integration/milestone-batch106/connect-replay-register.json
 COPY scripts/rust-integration/retained-c105-guide-startup/receipt.json ./scripts/rust-integration/retained-c105-guide-startup/receipt.json
 COPY scripts/rust-pluginrepo-contracts/metadata-component/authority/Original/apps/plugins/tasks.py ./scripts/rust-pluginrepo-contracts/metadata-component/authority/Original/apps/plugins/tasks.py
 COPY scripts/rust-integration/milestone-batch98/acceptance.json ./scripts/rust-integration/milestone-batch98/acceptance.json
