@@ -34,10 +34,13 @@ Both predecessor and both missing-client-certificate cases exited 1 as
 expected. Storage and cleanup checks passed.
 
 The first selected-worker fixture exited 1 before any business check.
-The candidate rejected its configured version endpoint at startup. The
-fixture needs the same owned loopback version endpoint as the existing
-selected worker bootstrap. Cleanup passed. Selected EPG publication and
-performance remain open.
+The candidate rejected its configured version endpoint at startup. Cleanup passed. The successful retry below covers the selected producer scope.
+
+The selected-worker retry used an owned loopback version server and a newly
+migrated scratch database. Both backends matched the four XML and source-less
+guide publication cases with one task per request, the cache update before
+publication, and unchanged unrelated SQL. Its runner exited 0 with exact
+teardown. [Selected-guide receipt](../scripts/rust-integration/milestone-batch85/selected-guide-compose.json)
 
 [Focused results](../scripts/rust-integration/milestone-batch85/focused.json)
 · [Docker build and image binding](../scripts/rust-integration/milestone-batch85/packaging.json)

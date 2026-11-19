@@ -32,8 +32,15 @@ The shipped operator passed all nine PostgreSQL cases with the expected
 actual exits, including the Original-compatible defaults and explicit URL
 precedence. Schema bootstrap and exact project cleanup passed. The first
 refresh fixture stopped at the data initializer’s media mount permissions
-before any business check. Its owned fixture was removed. The refresh
-comparison awaits a corrected media setup.
+before any business check. Its owned fixture was removed. The successful refresh run below followed the fixture repairs.
+
+The corrected Candidate87 fixture passed its refresh-only comparison.
+Original and Native both returned 200 for the XMLTV link and 400 after the
+source-less assignment. Both published once after cache invalidation.
+Native consumed the work on its explicit broker, placed the task result in
+the configured result database, and produced the exact cached programme.
+The first two fixture failures and independent recovery remain retained.
+[Refresh-only Compose receipt](../scripts/rust-integration/milestone-batch87/refresh-guide-compose.json)
 
 [Focused results](../scripts/rust-integration/milestone-batch87/focused.json)
 · [Docker build and fixture bindings](../scripts/rust-integration/milestone-batch87/packaging.json)

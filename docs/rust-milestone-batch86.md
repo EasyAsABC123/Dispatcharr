@@ -13,8 +13,13 @@ The locked job-transport suite passed 284 tests, including the two new
 readiness regressions. The suite ignored 113 external-fixture cases. Formatting
 and strict all-target job-transport Clippy passed. The exact `a1e2231b1` Docker
 build preserved all 497 React, license and attribution inputs. The startup
-fixture accepted that image and rejected Candidate85. Packaged readiness
-execution, deployment activation and performance remain open.
+fixture accepted that image and rejected Candidate85. The successful startup run below covers packaged selected-worker readiness.
+Deployment activation and performance remain open.
+
+The repaired packaged fixture reached typed readiness after both the Celery
+and DVR lanes showed real work or an observed queue. It used the owned
+loopback version source and kept Beat disabled. All six typed checks and
+exact five-role teardown passed. [Selected-readiness receipt](../scripts/rust-integration/milestone-batch86/selected-readiness-compose.json)
 
 [Focused results](../scripts/rust-integration/milestone-batch86/focused.json)
 · [Docker build and image binding](../scripts/rust-integration/milestone-batch86/packaging.json)

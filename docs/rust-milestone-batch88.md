@@ -77,6 +77,12 @@ recomputed all budgets from the captured samples. Full M3 performance and
 milestone acceptance remain open, including the complete viewing campaign
 and workloads with active recording, failover or other output formats.
 
+The exact ordinary DVR Compose pair passed 18 recording checks and 19
+foundation checks. The list, completed file reads, valid seeks, active HLS
+media and heartbeat matched the fixture, with unchanged recording rows
+and sequences and exact four-container teardown.
+[Ordinary DVR receipt](../scripts/rust-integration/milestone-batch88/dvr-compose.json)
+
 [Focused results](../scripts/rust-integration/milestone-batch88/focused.json)
 · [Docker build and workspace checks](../scripts/rust-integration/milestone-batch88/packaging-and-workspace.json)
 · [Packaged HLS comparison](../scripts/rust-integration/milestone-batch88/legacy-hls-compose.json)
