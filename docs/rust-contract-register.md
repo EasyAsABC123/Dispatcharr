@@ -421,3 +421,20 @@ no committed row, and a separate serializer-required-fields request returned
 observations remain partial, including the DVR-manager role on recurring rules.
 The register now records 490 partial HTTP assignments and 308 unassigned
 operations.
+
+## Retained Original exact VOD route controls
+
+The [exact VOD binding](../scripts/rust-contracts/retained-exact-vod/bindings.json)
+adds six Original GET observations to four method-unresolved declarations.
+They cover idle stats and the two role denials, a movie session/profile
+range, and the movie and series XC MP4 redirects. One same-service
+movie follow returned the owned media prefix. The receipt publishes only
+the parameterized route shape and safe response projections.
+
+The initial launcher exited 1 during Native bootstrap after completing the
+six Original requests. The fresh Candidate98 retry exited 0 with completed
+capture and cleanup. Five of its primary statuses differed, and the exact
+movie profile range matched. The [split receipt](../scripts/rust-integration/exact-vod-original-c98/receipt.json)
+retains both real exits, the per-role observations and scoped cleanup as
+separate facts. The register now has 494 partial HTTP assignments and 304
+unassigned operations.

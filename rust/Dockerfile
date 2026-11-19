@@ -87,6 +87,8 @@ COPY scripts/rust-milestone-batches/m235/profile-source-media/manifest.json ./sc
 COPY scripts/rust-milestone-batches/m235/ts-controls/Original.json ./scripts/rust-milestone-batches/m235/ts-controls/Original.json
 COPY scripts/rust-milestone-batches/m235/ts-controls/request-driver.py ./scripts/rust-milestone-batches/m235/ts-controls/request-driver.py
 COPY scripts/rust-integration/canonical-management-original/receipt.json ./scripts/rust-integration/canonical-management-original/receipt.json
+COPY scripts/rust-integration/exact-vod-original-c98/receipt.json ./scripts/rust-integration/exact-vod-original-c98/receipt.json
+COPY scripts/rust-integration/exact-vod-original-c98/request-driver.py ./scripts/rust-integration/exact-vod-original-c98/request-driver.py
 
 # Public Original Comskip task authorities for offline register verification.
 COPY scripts/rust-integration/comskip-positive-lifecycle-source1/ ./scripts/rust-integration/comskip-positive-lifecycle-source1/

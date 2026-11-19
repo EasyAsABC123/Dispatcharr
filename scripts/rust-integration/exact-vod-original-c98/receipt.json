@@ -1,0 +1,293 @@
+{
+  "Native_http_present_in_initial_pair": false,
+  "Native_retry_resampled_Original_HTTP": false,
+  "Native_verified": false,
+  "actual_exits": {
+    "native_retry": 0,
+    "original_pair": 1
+  },
+  "cleanup": {
+    "native_retry": {
+      "compose_down_passed": true,
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "original_pair": {
+      "compose_down_passed": true,
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    }
+  },
+  "completed_Original_HTTP_capture_before_later_launcher_failure": true,
+  "credit": "Original Dispatcharr authors and contributors retain full application and behavior credit.",
+  "exact_inputs": {
+    "candidate_image": "sha256:71ce0095c47bf00194eb1fa9e13b3e3ae65530b754d1be120b9f6683616f6cd8",
+    "candidate_revision": "452a7130dce1b96733dfcb06f04b7b7088688bbd",
+    "candidate_source_tree_sha256": "685355cef20b347ade739702f6957888c1ecdd4dc778a0bd054116a54a91385a",
+    "origin": {
+      "bytes": 4299455,
+      "prefix_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd"
+    },
+    "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "record_sha256": {
+      "candidate_build": "14182eb2a545eaee57f3b964d5c830355e0efbb35bd80074d718a25d9ef24b23",
+      "native": "a5e69dd1db76d6bb303fa7cfc7151a6ff4de30d39289791ccaf27b2bbccca3b5",
+      "native_exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "original": "5ef2aace72bf5de070906c2232e97ec6596317200703543f9bf12ceaffcb8113",
+      "original_exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    }
+  },
+  "exact_owned_project_cleanup_verified": true,
+  "exact_source_route_authorities": {
+    "vod-session-with-profile": {
+      "Original_handler": "stream_vod",
+      "observed_method": "GET",
+      "pattern_exact": "proxy/vod/<str:content_type>/<uuid:content_id>/<str:session_id>/<int:profile_id>/",
+      "pinned_URL_module_sha256": "8fee6b6403ba88ab80097a0e31ad33928990fa28be668e041b4efb84e4ca56e4",
+      "pinned_views_sha256": "6ede6aedcf0182780978c156051ab80562a5c726ceabfd40149f0f0a34b5080e",
+      "resolver_name": "proxy:vod_proxy:vod_stream_with_session_and_profile",
+      "resolver_ordinal": 399
+    },
+    "vod-stats": {
+      "Original_handler": "vod_stats",
+      "observed_method": "GET",
+      "pattern_exact": "proxy/vod/stats/",
+      "pinned_URL_module_sha256": "8fee6b6403ba88ab80097a0e31ad33928990fa28be668e041b4efb84e4ca56e4",
+      "pinned_views_sha256": "6ede6aedcf0182780978c156051ab80562a5c726ceabfd40149f0f0a34b5080e",
+      "resolver_name": "proxy:vod_proxy:vod_stats",
+      "resolver_ordinal": 402
+    },
+    "xc-movie-ext": {
+      "Original_handler": "stream_xc_movie",
+      "observed_method": "GET",
+      "pattern_exact": "movie/<str:username>/<str:password>/<str:stream_id>.<str:extension>",
+      "pinned_URL_module_sha256": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f",
+      "pinned_views_sha256": "6ede6aedcf0182780978c156051ab80562a5c726ceabfd40149f0f0a34b5080e",
+      "resolver_name": "stream_xc_movie",
+      "resolver_ordinal": 413
+    },
+    "xc-series-ext": {
+      "Original_handler": "stream_xc_episode",
+      "observed_method": "GET",
+      "pattern_exact": "series/<str:username>/<str:password>/<str:stream_id>.<str:extension>",
+      "pinned_URL_module_sha256": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f",
+      "pinned_views_sha256": "6ede6aedcf0182780978c156051ab80562a5c726ceabfd40149f0f0a34b5080e",
+      "resolver_name": "stream_xc_episode",
+      "resolver_ordinal": 414
+    }
+  },
+  "full_M4_accepted": false,
+  "full_role_matrix": false,
+  "host_generation_absence_claimed": false,
+  "native_process": {
+    "data_only_mount": true,
+    "default_command_absent": true,
+    "normal_entrypoint": true,
+    "uid": "65532:65532"
+  },
+  "performance_verified": false,
+  "pinned_original_image_ref": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "primary_status_and_selected_body_match": 1,
+  "primary_status_differences": 5,
+  "prior_independent_projection_sha256": "65539b590ea259ac3afbed8dca6bba7139bc4266eb10084f6eb565c522bad622",
+  "redaction": "Owned session/credential path segments and Location values remain private. Public paths are parameterized.",
+  "request_driver_sha256": "c275eb63f5234044961fdbed735246c3203cfe8b4f2ecd3b59be2b8b4c06ec06",
+  "retained_original_pair_failure": {
+    "phase": "native-compose-bootstrap",
+    "type": "KeyError"
+  },
+  "routes": [
+    {
+      "native": {
+        "body_truncated": false,
+        "cache_control": null,
+        "content_range": null,
+        "content_type": "application/json",
+        "idle_stats_shape_matches": false,
+        "response_bytes": 23,
+        "response_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+        "status": 404,
+        "www_authenticate": null
+      },
+      "native_owned_follow": null,
+      "operation": "vod-stats",
+      "original": {
+        "body_truncated": false,
+        "cache_control": null,
+        "content_range": null,
+        "content_type": "application/json",
+        "idle_stats_shape_matches": true,
+        "response_bytes": 80,
+        "response_sha256": "84ea5b8e9c8187dc710f87539eab5b92d07c1220e31542da5d3fadbee35830f1",
+        "status": 200,
+        "value": {
+          "finite_timestamp": true,
+          "total_connections": 0,
+          "vod_connections": []
+        },
+        "www_authenticate": null
+      },
+      "original_owned_follow": null,
+      "role": "admin"
+    },
+    {
+      "native": {
+        "body_truncated": false,
+        "cache_control": null,
+        "content_range": null,
+        "content_type": "application/json",
+        "response_bytes": 23,
+        "response_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+        "status": 404,
+        "www_authenticate": null
+      },
+      "native_owned_follow": null,
+      "operation": "vod-stats",
+      "original": {
+        "body_truncated": false,
+        "cache_control": null,
+        "content_range": null,
+        "content_type": "application/json",
+        "response_bytes": 63,
+        "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "status": 403,
+        "www_authenticate": null
+      },
+      "original_owned_follow": null,
+      "role": "viewer"
+    },
+    {
+      "native": {
+        "body_truncated": false,
+        "cache_control": null,
+        "content_range": null,
+        "content_type": "application/json",
+        "response_bytes": 23,
+        "response_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+        "status": 404,
+        "www_authenticate": null
+      },
+      "native_owned_follow": null,
+      "operation": "vod-stats",
+      "original": {
+        "body_truncated": false,
+        "cache_control": null,
+        "content_range": null,
+        "content_type": "application/json",
+        "response_bytes": 58,
+        "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "status": 401,
+        "www_authenticate": "Bearer realm=\"api\""
+      },
+      "original_owned_follow": null,
+      "role": "anonymous"
+    },
+    {
+      "native": {
+        "body_truncated": false,
+        "cache_control": "no-cache",
+        "content_range": "bytes 0-65535/4299455",
+        "content_type": "video/mp4",
+        "owned_prefix_matched": true,
+        "response_bytes": 65536,
+        "response_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+        "status": 206,
+        "www_authenticate": null
+      },
+      "native_owned_follow": null,
+      "operation": "vod-session-with-profile",
+      "original": {
+        "body_truncated": false,
+        "cache_control": "no-cache",
+        "content_range": "bytes 0-65535/4299455",
+        "content_type": "video/mp4",
+        "owned_prefix_matched": true,
+        "response_bytes": 65536,
+        "response_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+        "status": 206,
+        "www_authenticate": null
+      },
+      "original_owned_follow": null,
+      "role": "anonymous"
+    },
+    {
+      "native": {
+        "body_truncated": false,
+        "cache_control": null,
+        "content_range": null,
+        "content_type": "text/html; charset=utf-8",
+        "location_present": false,
+        "redirect_kind": null,
+        "response_bytes": 858,
+        "response_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200,
+        "www_authenticate": null
+      },
+      "native_owned_follow": null,
+      "operation": "xc-movie-ext",
+      "original": {
+        "body_truncated": false,
+        "cache_control": "private, max-age=21600",
+        "content_range": null,
+        "content_type": "text/html; charset=utf-8",
+        "location_present": true,
+        "redirect_kind": "same XC path with session_id query",
+        "response_bytes": 0,
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": 301,
+        "www_authenticate": null
+      },
+      "original_owned_follow": {
+        "body_truncated": false,
+        "cache_control": "no-cache",
+        "content_range": "bytes 0-65535/4299455",
+        "content_type": "video/mp4",
+        "owned_prefix_matched": true,
+        "response_bytes": 65536,
+        "response_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+        "status": 206,
+        "www_authenticate": null
+      },
+      "role": "xc-disposable-user"
+    },
+    {
+      "native": {
+        "body_truncated": false,
+        "cache_control": null,
+        "content_range": null,
+        "content_type": "text/html; charset=utf-8",
+        "location_present": false,
+        "redirect_kind": null,
+        "response_bytes": 858,
+        "response_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200,
+        "www_authenticate": null
+      },
+      "native_owned_follow": null,
+      "operation": "xc-series-ext",
+      "original": {
+        "body_truncated": false,
+        "cache_control": "private, max-age=21600",
+        "content_range": null,
+        "content_type": "text/html; charset=utf-8",
+        "location_present": true,
+        "redirect_kind": "same XC path with session_id query",
+        "response_bytes": 0,
+        "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "status": 301,
+        "www_authenticate": null
+      },
+      "original_owned_follow": null,
+      "role": "xc-disposable-user"
+    }
+  ],
+  "scope": "six exact registered VOD HTTP GETs across the retained Original and exact Candidate98 retry"
+}

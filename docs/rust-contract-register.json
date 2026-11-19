@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "629a975fed299ae99c6f83ae811ea42e9295b0ea2b12439f0000bd04547753bd",
+    "scripts/rust-contracts/executable-source-inputs.json": "30b8c2e34cd85ac66ca037b3fc82cc0048ba40c35f0ad495ada258089b35ee5d",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -59,11 +59,12 @@
     "scripts/rust-contracts/retained-paired-reads/bindings.json": "17304fa362b0b3a3cfb1728c66da71795441e6ac9526f7d6b71ac52c5721943d",
     "scripts/rust-contracts/retained-live-stop/bindings.json": "019fadce530a36b430982ab8c6ab133fde2a42f6b6030a39320bdf4906c2ef2f",
     "scripts/rust-contracts/retained-ts-controls/bindings.json": "385a31ad93a053d81934b6dfd62b17dbcbf05042a70074795596f5bc5184a73e",
-    "scripts/rust-contracts/retained-canonical-management/bindings.json": "a3d92e61c9a74e1ec76e31c48ab82c3b125dc2d991c5ab61edfa8006bb050ef5"
+    "scripts/rust-contracts/retained-canonical-management/bindings.json": "a3d92e61c9a74e1ec76e31c48ab82c3b125dc2d991c5ab61edfa8006bb050ef5",
+    "scripts/rust-contracts/retained-exact-vod/bindings.json": "c6b4deaf8aa0e070265bf6bc91a4abd718433c8396d648682a15099ae26bfde3"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 490,
+    "operations": 494,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -314,6 +315,11 @@
         "path": "scripts/rust-contracts/retained-canonical-management/bindings.json",
         "sha256": "a3d92e61c9a74e1ec76e31c48ab82c3b125dc2d991c5ab61edfa8006bb050ef5",
         "kind": "retained_original_canonical_management_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-exact-vod/bindings.json",
+        "sha256": "c6b4deaf8aa0e070265bf6bc91a4abd718433c8396d648682a15099ae26bfde3",
+        "kind": "retained_original_exact_VOD_split_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -249659,15 +249665,102 @@
           "owning_milestone": "M4",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-C98-split-exact-VOD-HTTP",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "private_capture_sha256": "5ef2aace72bf5de070906c2232e97ec6596317200703543f9bf12ceaffcb8113",
+            "private_Original_phase_launcher_exit_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+            "request_driver_sha256": "c275eb63f5234044961fdbed735246c3203cfe8b4f2ecd3b59be2b8b4c06ec06",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/exact-vod-original-c98/receipt.json",
+                "sha256": "709aa1ddd26e3910a28094d0ac15adc9bbc248848af9630a2d17d873bbe1bc0c"
+              }
+            ],
+            "Original_observations_completed": true,
+            "actual_initial_paired_launcher_exit": 1,
+            "initial_pair_later_failure_phase": "native-compose-bootstrap",
+            "physical_Original_namespace_cleanup": true,
+            "actual_native_retry_launcher_exit": 0,
+            "candidate98_scoped_primary_status_mismatches": 5,
+            "native_execution_claimed": true,
+            "Native_parity_claimed": false,
+            "performance_verified": false
+          },
+          "assertions": [
+            "anonymous movie range reaches the exact session plus profile route and returns 65,536 owned MP4 bytes"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-96391910b341255d0479:METHOD_UNRESOLVED",
+            "fixture_id": "Original-C98-split-exact-VOD-HTTP",
+            "pattern_exact": "proxy/vod/<str:content_type>/<uuid:content_id>/<str:session_id>/<int:profile_id>/",
+            "source_handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+            "resolver_ordinal": 399,
+            "resolver_name": "proxy:vod_proxy:vod_stream_with_session_and_profile",
+            "owning_milestone": "M4",
+            "method": null,
+            "source_action": null,
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "anonymous movie range reaches the exact session plus profile route and returns 65,536 owned MP4 bytes"
+            ],
+            "result": {
+              "Source_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "role": "anonymous",
+                "method": "GET",
+                "path_template": "/proxy/vod/movie/{movie_uuid}/{private_session}/{profile_id}/",
+                "path_authority": "exact executed frozen request with secret segments preserved privately",
+                "body_truncated": false,
+                "cache_control": "no-cache",
+                "content_range": "bytes 0-65535/4299455",
+                "content_type": "video/mp4",
+                "owned_prefix_matched": true,
+                "response_bytes": 65536,
+                "response_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+                "status": 206,
+                "www_authenticate": null
+              }
+            ]
+          }
         }
       ]
     },
@@ -250160,15 +250253,157 @@
           "owning_milestone": "M4",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin",
+              "viewer",
+              "anonymous"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-C98-split-exact-VOD-HTTP",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "private_capture_sha256": "5ef2aace72bf5de070906c2232e97ec6596317200703543f9bf12ceaffcb8113",
+            "private_Original_phase_launcher_exit_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+            "request_driver_sha256": "c275eb63f5234044961fdbed735246c3203cfe8b4f2ecd3b59be2b8b4c06ec06",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/exact-vod-original-c98/receipt.json",
+                "sha256": "709aa1ddd26e3910a28094d0ac15adc9bbc248848af9630a2d17d873bbe1bc0c"
+              }
+            ],
+            "Original_observations_completed": true,
+            "actual_initial_paired_launcher_exit": 1,
+            "initial_pair_later_failure_phase": "native-compose-bootstrap",
+            "physical_Original_namespace_cleanup": true,
+            "actual_native_retry_launcher_exit": 0,
+            "candidate98_scoped_primary_status_mismatches": 5,
+            "native_execution_claimed": true,
+            "Native_parity_claimed": false,
+            "performance_verified": false
+          },
+          "assertions": [
+            "idle admin GET returns Original VOD stats JSON",
+            "standard viewer and anonymous receive the separately observed denials"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 3,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-3f97315e0a8b4d4e4e58:METHOD_UNRESOLVED",
+            "fixture_id": "Original-C98-split-exact-VOD-HTTP",
+            "pattern_exact": "proxy/vod/stats/",
+            "source_handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+            "resolver_ordinal": 402,
+            "resolver_name": "proxy:vod_proxy:vod_stats",
+            "owning_milestone": "M4",
+            "method": null,
+            "source_action": null,
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "admin",
+              "viewer",
+              "anonymous"
+            ],
+            "source_role_specs": {
+              "admin": {
+                "fixture_role_or_supplied_credential": "admin",
+                "complete": false
+              },
+              "viewer": {
+                "fixture_role_or_supplied_credential": "viewer",
+                "complete": false
+              },
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "idle admin GET returns Original VOD stats JSON",
+              "standard viewer and anonymous receive the separately observed denials"
+            ],
+            "result": {
+              "Source_case_observations": 3,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "role": "admin",
+                "method": "GET",
+                "path_template": "/proxy/vod/stats/",
+                "path_authority": "exact executed frozen request with secret segments preserved privately",
+                "body_truncated": false,
+                "cache_control": null,
+                "content_range": null,
+                "content_type": "application/json",
+                "idle_stats_shape_matches": true,
+                "response_bytes": 80,
+                "response_sha256": "84ea5b8e9c8187dc710f87539eab5b92d07c1220e31542da5d3fadbee35830f1",
+                "status": 200,
+                "value": {
+                  "finite_timestamp": true,
+                  "total_connections": 0,
+                  "vod_connections": []
+                },
+                "www_authenticate": null
+              },
+              {
+                "role": "viewer",
+                "method": "GET",
+                "path_template": "/proxy/vod/stats/",
+                "path_authority": "exact executed frozen request with secret segments preserved privately",
+                "body_truncated": false,
+                "cache_control": null,
+                "content_range": null,
+                "content_type": "application/json",
+                "response_bytes": 63,
+                "response_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+                "status": 403,
+                "www_authenticate": null
+              },
+              {
+                "role": "anonymous",
+                "method": "GET",
+                "path_template": "/proxy/vod/stats/",
+                "path_authority": "exact executed frozen request with secret segments preserved privately",
+                "body_truncated": false,
+                "cache_control": null,
+                "content_range": null,
+                "content_type": "application/json",
+                "response_bytes": 58,
+                "response_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                "status": 401,
+                "www_authenticate": "Bearer realm=\"api\""
+              }
+            ]
+          }
         }
       ]
     },
@@ -253102,15 +253337,116 @@
           "owning_milestone": "M4",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "xc-disposable-user": {
+                "fixture_role_or_supplied_credential": "xc-disposable-user",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "xc-disposable-user"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-C98-split-exact-VOD-HTTP",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "private_capture_sha256": "5ef2aace72bf5de070906c2232e97ec6596317200703543f9bf12ceaffcb8113",
+            "private_Original_phase_launcher_exit_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+            "request_driver_sha256": "c275eb63f5234044961fdbed735246c3203cfe8b4f2ecd3b59be2b8b4c06ec06",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/exact-vod-original-c98/receipt.json",
+                "sha256": "709aa1ddd26e3910a28094d0ac15adc9bbc248848af9630a2d17d873bbe1bc0c"
+              }
+            ],
+            "Original_observations_completed": true,
+            "actual_initial_paired_launcher_exit": 1,
+            "initial_pair_later_failure_phase": "native-compose-bootstrap",
+            "physical_Original_namespace_cleanup": true,
+            "actual_native_retry_launcher_exit": 0,
+            "candidate98_scoped_primary_status_mismatches": 5,
+            "native_execution_claimed": true,
+            "Native_parity_claimed": false,
+            "performance_verified": false
+          },
+          "assertions": [
+            "owned XC Movie PK and literal .mp4 GET receive a same-XC-path 301 with an opaque session query",
+            "one validated same-service movie follow returns the owned 64 KiB range"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-003ffce2bb702836db0a:METHOD_UNRESOLVED",
+            "fixture_id": "Original-C98-split-exact-VOD-HTTP",
+            "pattern_exact": "movie/<str:username>/<str:password>/<str:stream_id>.<str:extension>",
+            "source_handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+            "resolver_ordinal": 413,
+            "resolver_name": "stream_xc_movie",
+            "owning_milestone": "M4",
+            "method": null,
+            "source_action": null,
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "xc-disposable-user"
+            ],
+            "source_role_specs": {
+              "xc-disposable-user": {
+                "fixture_role_or_supplied_credential": "xc-disposable-user",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "owned XC Movie PK and literal .mp4 GET receive a same-XC-path 301 with an opaque session query",
+              "one validated same-service movie follow returns the owned 64 KiB range"
+            ],
+            "result": {
+              "Source_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "role": "xc-disposable-user",
+                "method": "GET",
+                "path_template": "/movie/{private_xc_username}/{private_xc_password}/{movie_pk}.mp4",
+                "path_authority": "exact executed frozen request with secret segments preserved privately",
+                "body_truncated": false,
+                "cache_control": "private, max-age=21600",
+                "content_range": null,
+                "content_type": "text/html; charset=utf-8",
+                "location_present": true,
+                "redirect_kind": "same XC path with session_id query",
+                "response_bytes": 0,
+                "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "status": 301,
+                "www_authenticate": null,
+                "same_service_movie_follow": {
+                  "body_truncated": false,
+                  "cache_control": "no-cache",
+                  "content_range": "bytes 0-65535/4299455",
+                  "content_type": "video/mp4",
+                  "owned_prefix_matched": true,
+                  "response_bytes": 65536,
+                  "response_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+                  "status": 206,
+                  "www_authenticate": null
+                }
+              }
+            ]
+          }
         }
       ]
     },
@@ -253186,15 +253522,105 @@
           "owning_milestone": "M4",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "xc-disposable-user": {
+                "fixture_role_or_supplied_credential": "xc-disposable-user",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "xc-disposable-user"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-C98-split-exact-VOD-HTTP",
+            "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "private_capture_sha256": "5ef2aace72bf5de070906c2232e97ec6596317200703543f9bf12ceaffcb8113",
+            "private_Original_phase_launcher_exit_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+            "request_driver_sha256": "c275eb63f5234044961fdbed735246c3203cfe8b4f2ecd3b59be2b8b4c06ec06",
+            "public_artifacts": [
+              {
+                "path": "scripts/rust-integration/exact-vod-original-c98/receipt.json",
+                "sha256": "709aa1ddd26e3910a28094d0ac15adc9bbc248848af9630a2d17d873bbe1bc0c"
+              }
+            ],
+            "Original_observations_completed": true,
+            "actual_initial_paired_launcher_exit": 1,
+            "initial_pair_later_failure_phase": "native-compose-bootstrap",
+            "physical_Original_namespace_cleanup": true,
+            "actual_native_retry_launcher_exit": 0,
+            "candidate98_scoped_primary_status_mismatches": 5,
+            "native_execution_claimed": true,
+            "Native_parity_claimed": false,
+            "performance_verified": false
+          },
+          "assertions": [
+            "owned XC Episode PK and literal .mp4 GET receive a same-XC-path 301 with an opaque session query",
+            "redirect is observed without requesting series media"
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Source_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-607c7709efce75e5591a:METHOD_UNRESOLVED",
+            "fixture_id": "Original-C98-split-exact-VOD-HTTP",
+            "pattern_exact": "series/<str:username>/<str:password>/<str:stream_id>.<str:extension>",
+            "source_handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+            "resolver_ordinal": 414,
+            "resolver_name": "stream_xc_episode",
+            "owning_milestone": "M4",
+            "method": null,
+            "source_action": null,
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "xc-disposable-user"
+            ],
+            "source_role_specs": {
+              "xc-disposable-user": {
+                "fixture_role_or_supplied_credential": "xc-disposable-user",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "owned XC Episode PK and literal .mp4 GET receive a same-XC-path 301 with an opaque session query",
+              "redirect is observed without requesting series media"
+            ],
+            "result": {
+              "Source_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "role": "xc-disposable-user",
+                "method": "GET",
+                "path_template": "/series/{private_xc_username}/{private_xc_password}/{episode_pk}.mp4",
+                "path_authority": "exact executed frozen request with secret segments preserved privately",
+                "body_truncated": false,
+                "cache_control": "private, max-age=21600",
+                "content_range": null,
+                "content_type": "text/html; charset=utf-8",
+                "location_present": true,
+                "redirect_kind": "same XC path with session_id query",
+                "response_bytes": 0,
+                "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                "status": 301,
+                "www_authenticate": null
+              }
+            ]
+          }
         }
       ]
     },

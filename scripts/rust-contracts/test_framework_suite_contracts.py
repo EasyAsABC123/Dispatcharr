@@ -24,6 +24,7 @@ import retained_paired_read_contracts
 import retained_live_stop_contracts
 import retained_ts_controls_contracts
 import retained_canonical_management_contracts
+import retained_exact_vod_contracts
 import framework_suite_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -56,6 +57,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   retained_live_stop_contracts.restore_pre_live_stop(ROOT,r['runtime_routes'])
   retained_ts_controls_contracts.restore_pre_ts_controls(ROOT,r['runtime_routes'])
   retained_canonical_management_contracts.restore_pre_management(ROOT,r['runtime_routes'])
+  retained_exact_vod_contracts.restore_pre_vod_split(ROOT,r['runtime_routes'])
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,r['runtime_routes'])
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,r['runtime_routes'])
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,r['runtime_routes'])
@@ -97,12 +99,13 @@ class FrameworkSuiteControls(unittest.TestCase):
   self.assertEqual(subject.digest(r['openapi_operations']),proof['OpenAPI_sha256'])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],490)
+  self.assertEqual(mapping['operations'],494)
   retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,rows)
   retained_paired_read_contracts.restore_pre_paired_reads(ROOT,rows)
   retained_live_stop_contracts.restore_pre_live_stop(ROOT,rows)
   retained_ts_controls_contracts.restore_pre_ts_controls(ROOT,rows)
   retained_canonical_management_contracts.restore_pre_management(ROOT,rows)
+  retained_exact_vod_contracts.restore_pre_vod_split(ROOT,rows)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,rows)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,rows)
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)
@@ -129,6 +132,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   retained_live_stop_contracts.restore_pre_live_stop(ROOT,rows)
   retained_ts_controls_contracts.restore_pre_ts_controls(ROOT,rows)
   retained_canonical_management_contracts.restore_pre_management(ROOT,rows)
+  retained_exact_vod_contracts.restore_pre_vod_split(ROOT,rows)
   retained_connect_test_contracts.restore_pre_connect_test(ROOT,rows)
   retained_alias_remainder_contracts.restore_pre_alias_remainder(ROOT,rows)
   retained_connect_detail_contracts.restore_pre_connect_detail(ROOT,rows)

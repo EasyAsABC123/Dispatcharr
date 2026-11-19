@@ -250,6 +250,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_canonical_management_HTTP':
             import retained_canonical_management_contracts
             retained_canonical_management_contracts.validate(root, value)
+        elif reference['kind'] == 'retained_original_exact_VOD_split_HTTP':
+            import retained_exact_vod_contracts
+            retained_exact_vod_contracts.validate(root, value)
         elif reference['kind'] == 'retained_original_Connect_saved_webhook_test_HTTP':
             import retained_connect_test_contracts
             retained_connect_test_contracts.validate(root, value)
@@ -398,7 +401,7 @@ def apply(root, rows, bindings):
             if supplemental:
                 supplemented.add(identifier)
             route, operation = index[identifier]
-            if reference['kind'] in ('retained_original_Live_TS_global_stop_HTTP', 'retained_original_Live_TS_detail_and_targeted_stop_HTTP', 'retained_original_canonical_management_HTTP'):
+            if reference['kind'] in ('retained_original_Live_TS_global_stop_HTTP', 'retained_original_Live_TS_detail_and_targeted_stop_HTTP', 'retained_original_canonical_management_HTTP', 'retained_original_exact_VOD_split_HTTP'):
                 assert route['resolver_ordinal'] == contract['resolver_ordinal']
                 assert route['name'] == contract['resolver_name']
             if reference['kind'] == 'retained_original_System_Logs_and_regex_preview_GET':
@@ -449,7 +452,7 @@ def apply(root, rows, bindings):
             if reference['kind'] in ('retained_original_DVR_XC_playback_HTTP', 'retained_original_Connect_collection_HTTP',
                                      'retained_original_Connect_log_read_and_subscription_set_HTTP', 'retained_original_alias19_anonymous_HTTP',
                                      'retained_original_Connect_detail_PUT_DELETE_HTTP', 'retained_original_alias_remainder_HTTP',
-                                     'retained_original_Connect_saved_webhook_test_HTTP', 'retained_original_selected_single_Set_EPG_HTTP', 'retained_original_batch_Set_EPG_HTTP', 'retained_original_System_Logs_and_regex_preview_GET', 'retained_original_Live_TS_global_stop_HTTP', 'retained_original_Live_TS_detail_and_targeted_stop_HTTP', 'retained_original_canonical_management_HTTP'):
+                                     'retained_original_Connect_saved_webhook_test_HTTP', 'retained_original_selected_single_Set_EPG_HTTP', 'retained_original_batch_Set_EPG_HTTP', 'retained_original_System_Logs_and_regex_preview_GET', 'retained_original_Live_TS_global_stop_HTTP', 'retained_original_Live_TS_detail_and_targeted_stop_HTTP', 'retained_original_canonical_management_HTTP', 'retained_original_exact_VOD_split_HTTP'):
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'
