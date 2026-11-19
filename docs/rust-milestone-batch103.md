@@ -21,10 +21,19 @@ the Original's two synchronous enabled rebuild cases for the next candidate.
 Both projects verified owned cleanup.
 
 The first scheduled XMLTV invocation exited 1 during argument validation
-because it omitted the local Original image ID. The worker path still awaits
-a packaged replay with that exact image ID. The two ordinary five-minute
-authentication runs are ongoing. These targeted checks leave the milestone
+because it omitted the local Original image ID. Both repaired invocations
+then stopped at the startup barrier. The active XMLTV seed triggered an
+immediate refresh whose two child jobs entered the startup observer
+alongside the three expected startup tasks. Both lanes verified cleanup
+and recorded zero scheduled business cases. The next fixture uses an
+inactive seed, then enables and arms its existing schedule after startup.
+
+Both ordinary five-minute password cases and the controlled Redis
+disconnect have passed. The [auth diagnostic report](rust-m9-playback-refresh-diagnostic.md)
+records their exact scope. These targeted checks leave the full milestone
 acceptance and performance gates open.
+
+[Scheduled XMLTV setup evidence](../scripts/rust-integration/milestone-batch103/scheduled-guide-first-pair.json)
 
 [Functional receipts](../scripts/rust-integration/milestone-batch103/functional.json) ·
 [Preceding XC comparison](rust-milestone-batch101.md)
