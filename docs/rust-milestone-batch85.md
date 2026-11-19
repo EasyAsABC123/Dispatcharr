@@ -22,5 +22,11 @@ Formatting and strict all-target Store and application Clippy passed. The
 Store suite passed all 530 default cases, with 79 external-fixture cases
 ignored. Main and the operator each passed seven configuration tests.
 
+The exact Docker build for `85d7db9b3` succeeded with frozen runtime packages
+and all 497 React, license and attribution inputs matching Candidate84. The
+default and selected-worker Set EPG fixtures and the modular TLS comparison
+passed their image-binding checks. Their Compose execution remains pending.
+
 [Focused results](../scripts/rust-integration/milestone-batch85/focused.json)
+· [Docker build and image binding](../scripts/rust-integration/milestone-batch85/packaging.json)
 · [Milestone ledger](rust-milestones.md)
