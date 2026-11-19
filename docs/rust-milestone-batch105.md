@@ -30,9 +30,15 @@ or read-only database changes. The controller exited 1 with exact teardown.
 These Original captures expand the executable contract evidence without
 accepting the Rust routes.
 
-The date-only custom guide matched on the XMLTV, grid and XC endpoints.
-Both Original and Native exited 0 and their owned resources were removed.
-The Native fixture verified six worker retirements. The separate UTC
-time-only guide workflow remains in validation.
+The date-only and UTC time-only custom guide workflows matched on the
+XMLTV, grid and XC endpoints. Both backends exited 0 in both workflows
+with exact cleanup. Native recorded six worker retirements in the date
+case and four in the UTC time case.
+
+The cross-replica TS stop and retune passed on both backends. Each side
+retired the original viewers and opened the same channel on the opposite
+replica with fresh client identities, one new upstream connection, and
+one provider slot. The surviving viewer continued after its peer closed,
+the media decoded, and all five owned process generations retired.
 
 [Functional receipts](../scripts/rust-integration/milestone-batch105/functional.json)
