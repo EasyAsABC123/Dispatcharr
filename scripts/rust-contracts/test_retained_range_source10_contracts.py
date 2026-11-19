@@ -12,6 +12,7 @@ import retained_repository_socket_switch_contracts
 import retained_admin_model_contracts
 import retained_dvr_xc_contracts
 import retained_connect_contracts
+import retained_connect_actions_contracts
 import retained_range_source10_contracts as subject
 import source_contracts
 import retained_xc_refresh_contracts
@@ -35,6 +36,7 @@ class RangeSource10Controls(unittest.TestCase):
     p.write_bytes(raw)
  def test_all174_definitions_797_whole_rows_and_selected_primary_unchanged(self):
   register=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  retained_connect_actions_contracts.restore_pre_connect_actions(ROOT,register['runtime_routes'])
   retained_connect_contracts.restore_pre_connect(ROOT,register['runtime_routes'])
   retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT,register['runtime_routes'])
   retained_admin_model_contracts.restore_pre_admin_models(ROOT,register['runtime_routes'])
@@ -59,7 +61,8 @@ class RangeSource10Controls(unittest.TestCase):
   for field,name in [('non_HTTP_candidates','non_HTTP_sha256'),('openapi_operations','OpenAPI_sha256'),('observations_for_methods_not_declared_in_discovery','legacy_undeclared_observations_sha256')]:self.assertEqual(subject.digest(register[field]),proof[name])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
   mapping=source_contracts.apply(ROOT,rows,bindings)
-  self.assertEqual(mapping['operations'],380)
+  self.assertEqual(mapping['operations'],382)
+  retained_connect_actions_contracts.restore_pre_connect_actions(ROOT,rows)
   retained_connect_contracts.restore_pre_connect(ROOT,rows)
   retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT,rows)
   retained_admin_model_contracts.restore_pre_admin_models(ROOT,rows)
@@ -74,6 +77,7 @@ class RangeSource10Controls(unittest.TestCase):
   retained_xc_refresh_contracts.restore_pre_xc(ROOT,rows)
   self.assertEqual(rows,current)
   source_contracts.apply(ROOT,rows,bindings)
+  retained_connect_actions_contracts.restore_pre_connect_actions(ROOT,rows)
   retained_connect_contracts.restore_pre_connect(ROOT,rows)
   retained_dvr_xc_contracts.restore_pre_dvr_xc(ROOT,rows)
   retained_admin_model_contracts.restore_pre_admin_models(ROOT,rows)

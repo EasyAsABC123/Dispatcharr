@@ -261,3 +261,13 @@ creations with observable SQL effects, and thirteen rejections preserving SQL
 state. Both underlying packaged runner exits and cleanup results stay attached.
 
 The register has 380 partial Source assignments and 418 unassigned operations.
+
+## Retained Connect delivery log and subscription observations
+
+The [Connect action binding](../scripts/rust-contracts/retained-connect-actions/bindings.json)
+associates 14 delivery log GET responses and 13 subscription-set PUT responses
+with their exact declared operations. Four additional Source PUT success cases
+retain their SQL results and symbolic fixture IDs. Both controllers exited 0
+and passed independent exact cleanup.
+
+The register has 382 partial Source assignments and 416 unassigned operations.

@@ -1,0 +1,549 @@
+{
+  "binding_kind": "retained_original_Connect_log_read_and_subscription_set_HTTP",
+  "operation_count": 2,
+  "retained_Source_responses_with_literal_route_path": 27,
+  "additional_symbolic_fixture_path_responses": 4,
+  "fully_verified_operations": 0,
+  "new_Source_executions": 0,
+  "Native_coverage_increased": false,
+  "fixtures": {
+    "m7-connect-combined-candidate79-1": {
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "actual_runner_exit": 0,
+      "exact_cleanup_passed": true,
+      "candidate_revision": "ba7ef483d2b6783e4ea31d041043f1ef6efc6bac",
+      "input_sha256": {
+        "artifacts/rust/m7-connect-combined-candidate79-1/receipt.json": "ff82c917f58d3dc0b204894dd74c140d5ab774897033573a696617c56dbbafcb",
+        "artifacts/rust/m7-connect-combined-candidate79-1/execution.json": "e052d5306cd4f178f7597c9204805b8f28d106769bf3654580e842c24470e738",
+        "artifacts/rust/m7-connect-combined-candidate79-1/independent-cleanup.json": "a0b056996138ab48894fab58cb3601fcb5be3a6e6ca06b310666644eb5c84ccb",
+        "artifacts/rust/m7-connect-combined-candidate79-1/evidence/integration.json": "3cee444821deac7b208378694615d8358ef9c873522c6136ad990c85cbf8f6ac",
+        "artifacts/rust/m7-connect-combined-candidate79-1/evidence/tool-source/scripts/rust-account-contracts/probes.py": "b7bf402ff535d9e3f12916d0404b96fa3d45524aa73003728e73b06d73aac8ff",
+        "artifacts/rust/m7-connect-combined-candidate79-1/evidence/tool-source/scripts/rust-integration/run.py": "f2f712cdebb27ef0b7f9808a37a9cfa74484b4199fb34bd148827642daf1f8b7"
+      }
+    },
+    "m7-connect-replace-candidate79-source-1": {
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "actual_runner_exit": 0,
+      "exact_cleanup_passed": true,
+      "candidate_revision": "ba7ef483d2b6783e4ea31d041043f1ef6efc6bac",
+      "input_sha256": {
+        "artifacts/rust/m7-connect-replace-candidate79-source-1/receipt.json": "f821ae46b9ff70338e7368f3064be3b445c22904eb18f08940765335dc23da4a",
+        "artifacts/rust/m7-connect-replace-candidate79-source-1/execution.json": "c994db0a9907cf081d3dd4611f07d4f446b29e15429f0c23ae39857f73d0b310",
+        "artifacts/rust/m7-connect-replace-candidate79-source-1/independent-cleanup.json": "8bcbf8e454e5217ac986490ca49f3a53659151a77655b736d3e73d6364f806cb",
+        "artifacts/rust/m7-connect-replace-candidate79-source-1/evidence/integration.json": "4d3593d1e34cd3b8e35f8957ebba062c6f66d0a10971f294baf1aec9a995f966",
+        "artifacts/rust/m7-connect-replace-candidate79-source-1/evidence/tool-source/scripts/rust-account-contracts/probes.py": "6fe21e69bd9ba89e7fe053549c371c58976ab25e8a8f962abadbb47425741a15",
+        "artifacts/rust/m7-connect-replace-candidate79-source-1/evidence/tool-source/scripts/rust-integration/metadata_fixture.py": "97d2270abfc4872f6b332a67e96de069b8c2e13c14fc45ea0088070a2f492ef4",
+        "artifacts/rust/m7-connect-replace-candidate79-source-1/evidence/compose.log": "23fc43a7a1bf67d6eb27b9e69640d231226480fc80fa443e1ebdcdc0622e322b"
+      },
+      "native_replace_exercised": false,
+      "owned_receiver_guard": {
+        "only_owned_subscription_put": true,
+        "put_count": 17,
+        "owned_receiver_before": 0,
+        "owned_receiver_after": 0
+      },
+      "actual_successes_with_symbolic_ID": [
+        {
+          "case": "stock-react-replacement",
+          "method": "PUT",
+          "path_or_template": "/api/connect/integrations/{fixture_webhook_id}/subscriptions/set/",
+          "literal_path_verified": false,
+          "original_log_line": null,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "b39d86bbf59fd5cedf01c5d7284ff7227df80805b0836fb8f4f7bd125fd2fe43",
+          "observed_effects": {
+            "exact_subscription_log_and_sequence_state": true,
+            "expected_response_rows": 20
+          },
+          "observation_pointer": "/checks/30"
+        },
+        {
+          "case": "duplicate-request-event",
+          "method": "PUT",
+          "path_or_template": "/api/connect/integrations/{fixture_webhook_id}/subscriptions/set/",
+          "literal_path_verified": false,
+          "original_log_line": null,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "78e69e906bb1f2905737cd46089b255a145ee7d43622301969cb6aab94691353",
+          "observed_effects": {
+            "exact_subscription_log_and_sequence_state": true,
+            "expected_response_rows": 3
+          },
+          "observation_pointer": "/checks/31"
+        },
+        {
+          "case": "script-ignores-templates",
+          "method": "PUT",
+          "path_or_template": "/api/connect/integrations/{fixture_script_id}/subscriptions/set/",
+          "literal_path_verified": false,
+          "original_log_line": null,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "c81654897355658a8596b6f8199cb4c684519690307ce5a88de33bbffd1aa0d9",
+          "observed_effects": {
+            "exact_subscription_log_and_sequence_state": true,
+            "expected_response_rows": 2
+          },
+          "observation_pointer": "/checks/32"
+        },
+        {
+          "case": "empty-replacement",
+          "method": "PUT",
+          "path_or_template": "/api/connect/integrations/{fixture_script_id}/subscriptions/set/",
+          "literal_path_verified": false,
+          "original_log_line": null,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+          "observed_effects": {
+            "exact_subscription_log_and_sequence_state": true,
+            "expected_response_rows": 0
+          },
+          "observation_pointer": "/checks/33"
+        }
+      ]
+    }
+  },
+  "contracts": [
+    {
+      "contract_id": "route-de258e62c08a0966ba7f:GET",
+      "method": "GET",
+      "source_action": "list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/connect/^logs/$",
+      "source_handler": "apps.connect.api_views.DeliveryLogViewSet",
+      "fixture_id": "m7-connect-combined-candidate79-1",
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "standard",
+        "viewer"
+      ],
+      "observed_methods": [
+        "GET"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match retained Original method, role and literal request path against the stable route declaration",
+        "Preserve the observed HTTP outcome, scoped SQL assertions and exact process cleanup"
+      ],
+      "result": {
+        "Source_case_observations": 14,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "case": "empty-react-query",
+          "method": "GET",
+          "query_scope": "?page=1&page_size=50",
+          "generated_query_values_are_symbolic": false,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "observation_pointer": "/checks/26",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "populated-react-query",
+          "method": "GET",
+          "query_scope": "?page=1&page_size=50",
+          "generated_query_values_are_symbolic": false,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "f036838b3a0fc71566cfb77842847de47a3c40bf16bf52a520a69951fa1978e2",
+          "observation_pointer": "/checks/28",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "first-page",
+          "method": "GET",
+          "query_scope": "?page_size=2",
+          "generated_query_values_are_symbolic": false,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "b3b4a224c1b487c49e218f4180753912cf37d4c46c26d2eb2dd0f549b2201d40",
+          "observation_pointer": "/checks/29",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "second-page",
+          "method": "GET",
+          "query_scope": "?page=2&page_size=2",
+          "generated_query_values_are_symbolic": false,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "ed4b0b3bb746a9c6ad8e35b5fa891ebc5f769f85b33def191613f59b159fbadd",
+          "observation_pointer": "/checks/30",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "last-page",
+          "method": "GET",
+          "query_scope": "?page=last&page_size=2",
+          "generated_query_values_are_symbolic": false,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "ed4b0b3bb746a9c6ad8e35b5fa891ebc5f769f85b33def191613f59b159fbadd",
+          "observation_pointer": "/checks/31",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "type-filter",
+          "method": "GET",
+          "query_scope": "?type=webhook",
+          "generated_query_values_are_symbolic": false,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "20bd5260e489038ba79a06c01d803dd33cf8601cd17e60b3000e56e3d5554b43",
+          "observation_pointer": "/checks/32",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "disabled-integration-filter",
+          "method": "GET",
+          "query_scope": "?integration={fixture_script_id}",
+          "generated_query_values_are_symbolic": true,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "c1999e7dd033d65e4a923633a69bf93effb64a498e10299a5ecc857321c104e1",
+          "observation_pointer": "/checks/33",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "combined-filters",
+          "method": "GET",
+          "query_scope": "?integration={fixture_webhook_id}&type=webhook",
+          "generated_query_values_are_symbolic": true,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "20bd5260e489038ba79a06c01d803dd33cf8601cd17e60b3000e56e3d5554b43",
+          "observation_pointer": "/checks/34",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "conflicting-filters",
+          "method": "GET",
+          "query_scope": "?integration={fixture_script_id}&type=webhook",
+          "generated_query_values_are_symbolic": true,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+          "observation_pointer": "/checks/35",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "filtered-page",
+          "method": "GET",
+          "query_scope": "?type=webhook&page_size=1&integration={fixture_webhook_id}",
+          "generated_query_values_are_symbolic": true,
+          "role": "admin",
+          "status": 200,
+          "response_projection_sha256": "f387a688d9bf6375bf311fb0e979d84c76cb5fa15fbb3e23f03d6e90858f1ccb",
+          "observation_pointer": "/checks/36",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "invalid-page",
+          "method": "GET",
+          "query_scope": "?page=3&page_size=2",
+          "generated_query_values_are_symbolic": false,
+          "role": "admin",
+          "status": 404,
+          "response_projection_sha256": "d91ab099ba1857e73a44b4c9167dc6d84b670fa489a0fccd393f1dd406f135a9",
+          "observation_pointer": "/checks/37",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "anonymous",
+          "method": "GET",
+          "query_scope": "",
+          "generated_query_values_are_symbolic": false,
+          "role": "anonymous",
+          "status": 401,
+          "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "observation_pointer": "/checks/38",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "standard",
+          "method": "GET",
+          "query_scope": "?page=1&page_size=50",
+          "generated_query_values_are_symbolic": false,
+          "role": "standard",
+          "status": 403,
+          "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observation_pointer": "/checks/39",
+          "path": "/api/connect/logs/"
+        },
+        {
+          "case": "viewer",
+          "method": "GET",
+          "query_scope": "?page=1&page_size=50",
+          "generated_query_values_are_symbolic": false,
+          "role": "viewer",
+          "status": 403,
+          "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observation_pointer": "/checks/40",
+          "path": "/api/connect/logs/"
+        }
+      ],
+      "fully_verified": false
+    },
+    {
+      "contract_id": "route-97c801e89fbcca3b37ea:PUT",
+      "method": "PUT",
+      "source_action": "set_subscriptions",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/connect/^integrations/(?P<pk>[^/.]+)/subscriptions/set/$",
+      "source_handler": "apps.connect.api_views.IntegrationViewSet",
+      "fixture_id": "m7-connect-replace-candidate79-source-1",
+      "observed_roles": [
+        "admin",
+        "anonymous",
+        "inactive admin",
+        "standard",
+        "viewer"
+      ],
+      "observed_methods": [
+        "PUT"
+      ],
+      "source_role_specs": {
+        "admin": {
+          "fixture_role_or_supplied_credential": "admin",
+          "complete": false
+        },
+        "anonymous": {
+          "fixture_role_or_supplied_credential": "anonymous",
+          "complete": false
+        },
+        "inactive admin": {
+          "fixture_role_or_supplied_credential": "inactive admin",
+          "complete": false
+        },
+        "standard": {
+          "fixture_role_or_supplied_credential": "standard",
+          "complete": false
+        },
+        "viewer": {
+          "fixture_role_or_supplied_credential": "viewer",
+          "complete": false
+        }
+      },
+      "assertions": [
+        "Match retained Original method, role and literal request path against the stable route declaration",
+        "Preserve the observed HTTP outcome, scoped SQL assertions and exact process cleanup"
+      ],
+      "result": {
+        "Source_case_observations": 13,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false
+      },
+      "cases": [
+        {
+          "case": "anonymous",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 312,
+          "role": "anonymous",
+          "status": 401,
+          "response_projection_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/18",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "standard",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 313,
+          "role": "standard",
+          "status": 403,
+          "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/19",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "viewer",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 314,
+          "role": "viewer",
+          "status": 403,
+          "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/20",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "inactive-admin",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 315,
+          "role": "inactive admin",
+          "status": 401,
+          "response_projection_sha256": "8007bf361f6e979fbc0f994db8ad740f5dc502af57652310061e5d6f8f18f23f",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/21",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "role-before-parser",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 316,
+          "role": "standard",
+          "status": 403,
+          "response_projection_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/22",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "lookup-before-parser",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 317,
+          "role": "admin",
+          "status": 404,
+          "response_projection_sha256": "674e9a8b4621be9db79f896d7e642362a7c6e205a9f9115a1b5fe3209bb026e2",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/23",
+          "path": "/api/connect/integrations/9223372036854775806/subscriptions/set/"
+        },
+        {
+          "case": "admin-malformed-body",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 318,
+          "role": "admin",
+          "status": 400,
+          "response_projection_sha256": "c80851c8ba52b294853884d11a7435e2d5034b17fcabbe8782f5b08b973716cf",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/24",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "wrong-top-level",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 319,
+          "role": "admin",
+          "status": 400,
+          "response_projection_sha256": "f6fe532d3dc8037523ea42c9b21a2442ba0405fcc65f46e8bab937d31969b3e9",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/25",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "later-nondictionary",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 320,
+          "role": "admin",
+          "status": 400,
+          "response_projection_sha256": "977fbec5750f2fc269114926e3b6840c8d4b6f7d49426d23196e3bf0bbacd894",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/26",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "later-invalid-event",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 321,
+          "role": "admin",
+          "status": 400,
+          "response_projection_sha256": "98f2362b48bdda60469bb1adcd5979665a9998dce3a1dcc85fb5ca557c8490b7",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/27",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "missing-event",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 322,
+          "role": "admin",
+          "status": 400,
+          "response_projection_sha256": "84b04cfbb81a772c92dfcbbc95a5a62839e3e214c9d10ed93b607cfe4aad640e",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/28",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "unhashable-event",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 323,
+          "role": "admin",
+          "status": 500,
+          "response_projection_sha256": "9c385c929210268f9848741be8af170c9a83d6c9e1bc655563cab2af3637cb99",
+          "observed_effects": {
+            "database_and_subscription_sequence_unchanged": true
+          },
+          "observation_pointer": "/checks/29",
+          "path": "/api/connect/integrations/1/subscriptions/set/"
+        },
+        {
+          "case": "stored-duplicate-partial-failure",
+          "method": "PUT",
+          "literal_path_verified": true,
+          "original_log_line": 347,
+          "role": "admin",
+          "status": 500,
+          "response_projection_sha256": "9c385c929210268f9848741be8af170c9a83d6c9e1bc655563cab2af3637cb99",
+          "observed_effects": {
+            "stale_log_and_subscription_removed_with_earlier_upserts_committed": true
+          },
+          "observation_pointer": "/checks/34",
+          "path": "/api/connect/integrations/3/subscriptions/set/"
+        }
+      ],
+      "fully_verified": false
+    }
+  ],
+  "credit": "Original Dispatcharr and dependency authors retain all application and algorithm credit."
+}

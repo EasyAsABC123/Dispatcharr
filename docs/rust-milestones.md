@@ -57,7 +57,11 @@ assignments and 425 unassigned entries after the admin capture. The
 adds 49 responses across five operations. The
 [retained Connect collection packet](../scripts/rust-contracts/retained-connect/README.md)
 adds 24 Original responses across the separate GET and POST operations.
-M0 now has 380 partial assignments and 418 unassigned entries.
+The [retained Connect actions](../scripts/rust-contracts/retained-connect-actions/README.md)
+add 14 delivery-log GET observations and 13 literal subscription replacement
+PUT observations. Four additional successful PUT responses are preserved
+using their fixture symbols. M0 now has 382 partial assignments and
+416 unassigned entries.
 The conservative method inventory and full acceptance requirements remain
 in the [contract register](rust-contract-register.md).
 
