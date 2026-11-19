@@ -20,8 +20,12 @@ The separate denial checks matched.
 
 The independent reducer verified all 120 observed pairs against that
 narrow Source behavior. The literal first fixture exits remain 1. The
-corrected fixture checks the authorized legacy error in those two exact
-cells and will replay the same image. This covers the representative
-Connect matrix. Broader route coverage and performance remain open.
+corrected fixture checked the authorized legacy error in those two exact
+cells and replayed the same image. All 120 pairs passed with exact SQL
+transitions, exit 0 and independent teardown. This covers the selected
+representative Connect matrix. Broader route coverage and performance
+remain open.
+
+[Corrected fixture receipt](../scripts/rust-integration/milestone-batch106/connect-corrected-fixture.json)
 
 [Independent Connect receipt](../scripts/rust-integration/milestone-batch106/connect-observed-pairs.json)
