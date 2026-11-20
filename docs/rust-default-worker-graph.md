@@ -3,13 +3,25 @@
 Original Dispatcharr/Celery/django-celery-beat and dependency authors retain all
 application, algorithm and protocol credit.
 
-Candidate41 source `c0031d640d61cd21ff9b2a12fbc74cc0ab6aadf1` assembles the
-current graph in [SelectedJobs](../rust/crates/app/src/selected_jobs.rs).
-The literal task mapping now covers 36 of the 47 static application declarations,
-plus framework backend cleanup and dynamic plugin registration. The
+[SelectedJobs](../rust/crates/app/src/selected_jobs.rs) assembles the
+selected Main worker graph. The Candidate41 mapping covered 36 of the 47
+static application declarations, plus framework backend cleanup and dynamic
+plugin registration. The
 [Source-task reconciliation](rust-source-task-coverage.md) separates those
 registrations from actual natural producers, executable evidence and remaining
-unmapped workflows. Neither a family count nor compilation closes M6.
+unmapped workflows.
+
+Three recent paired Compose scopes exercise the selected Main workers with
+`RUST_EXPERIMENTAL_SELECTED_JOBS=1` and
+`RUST_EXPERIMENTAL_SELECTED_BEAT=1`. On `c2a35f9d`, the Core
+compatibility Beat task produced its Stats event, scanner state and linked
+M3U group result. On `82414407`, the enabled hourly recurring rule created
+one future recording and completed its linked artwork job. The authenticated
+Series import completed Refresh, Index, Series and two artwork tasks with
+one artwork update. All three verified teardown.
+[Compatibility Beat](rust-m6-c2a3-compat-beat.md)
+[Recurring rule](rust-m6-c2a3-enabled-recurring.md)
+[Series artwork](rust-m6-82414407-series-artwork.md)
 
 | Family group | Current Main composition | Actual acceptance and remaining scope |
 | --- | --- | --- |

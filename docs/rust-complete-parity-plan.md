@@ -12,6 +12,13 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Latest packaged checks
 
+The exact `82414407` package passed **9 of 127 required coordinator
+nodes** in fresh scoped runs. Each counted node passed its complete
+workload, semantic evaluation and independent cleanup. The other 118
+required nodes lack qualifying evidence in this report. Full release
+workflow, soak, rollback and equivalent-work performance remain open.
+[Current 82414407 coordinator coverage](rust-m9-8241-coordinator-coverage.md)
+
 The exact `82414407` package matched four Guide detail GET profiles and
 both Standard detail HEAD representations. Its selected workers also matched
 Original's enabled hourly recurring maintenance and authenticated XMLTV
@@ -27,7 +34,7 @@ packaged Main passed 1,024 checks across 18 suites and decoded 75 MPEG-TS
 frames. The two browser arms verified live playback, Stats and 112 shipped React
 assets. The remaining 116 required nodes lack passing evidence
 on this image. Release workflow, soak, rollback, and equivalent-work
-performance remain open. [Current coordinator coverage](rust-m9-c2a3-coordinator-coverage.md)
+performance remain open. [c2a3 coordinator coverage](rust-m9-c2a3-coordinator-coverage.md)
 
 The exact `c6061adb` image passed the 18-suite Main baseline with
 1,024 checks and 75 decoded
