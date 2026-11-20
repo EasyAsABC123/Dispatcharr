@@ -46,3 +46,21 @@ four real upstream requests matched. The full-capacity request made no upstream
 connection. The controller exited 0 and exact teardown passed.
 
 [VOD range receipts](../scripts/rust-integration/milestone-batch107/vod-ranges.json)
+
+## Numeric seek and calendar on ordinary Main
+
+Pinned Original and exact Rust `735a0299` completed five numeric seek
+and five calendar range pairs in two isolated Compose projects. All 20
+clients received HTTP 206 and the complete matching 65,536-byte range.
+Each case made exactly one upstream request on each backend. The expected
+provider path and query, and the live offset or calendar metadata for
+each session, matched across both backends.
+
+The grouped controller and both plans exited 0. It verified the
+retirement of four roles in each project and recorded empty container,
+network and volume inventories. Rust ran packaged Main without selected
+worker or manual backup flags. The earlier numeric and calendar results
+remain scoped to their own exact packages. Full M4 and performance retain
+separate acceptance checks.
+
+[Redacted seek and calendar receipt](../scripts/rust-integration/milestone-batch113/ordinary-seek-calendar-735.json)

@@ -1,0 +1,151 @@
+{
+  "actual_exit": 0,
+  "candidate_image": "sha256:f9ab4d5bd5585cc36f3e117a13dddf3ed617a0a9d195127b7e37ef585cda3e6f",
+  "candidate_manifest_sha256": "0639e20c76a7891b386dcb97586636646b4b940682b0fe06de15e3d49d4115f8",
+  "candidate_revision": "735a0299c2cbb705fa8f70112a64582f1bcb106d",
+  "exact_roles_retired": 8,
+  "full_M4_accepted": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "paired_cases": 10,
+  "performance_verified": false,
+  "plans": [
+    {
+      "actual_exit": 0,
+      "cases": [
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "offset-wins",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "seek-wins",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "timestamp-shadows-time",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "fallback-time",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "invalid-ignored",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        }
+      ],
+      "changed_route_sources_since_prior": [
+        "rust/crates/vod-http/src/offset.rs",
+        "rust/crates/vod-http/src/resolver.rs",
+        "rust/crates/vod-http/src/sessions.rs"
+      ],
+      "exact_empty_project": true,
+      "paired_cases": 5,
+      "raw_compose_receipt_sha256": "bf51937f4640a5bdc50582ccdb34e2a91af7300dda5baa9b59092bcd0982b372",
+      "raw_previous_context_sha256": "fd62c3a5086aa441991b29824f203e9d75dac38b113156bf6ea3450fb89b06a9",
+      "roles_retired": 4,
+      "scope": "numeric",
+      "source_Rust_total_HTTP_206": 10
+    },
+    {
+      "actual_exit": 0,
+      "cases": [
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "primary-wins",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "duplicate-start-and-local-clock",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "invalid-start-keeps-provider-path",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "week-date-and-empty-seek",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "end-only-and-time-fallback",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        }
+      ],
+      "changed_route_sources_since_prior": [
+        "rust/Cargo.lock",
+        "rust/crates/store/src/lib.rs",
+        "rust/crates/vod-http/src/sessions.rs"
+      ],
+      "exact_empty_project": true,
+      "paired_cases": 5,
+      "raw_compose_receipt_sha256": "c8d876c0ef44e5e8c05f69aecfbcc004e93d7cb07dd3047b130332e51261303e",
+      "raw_previous_context_sha256": "9ae222462b18931146eb220e03d42a6e319be81bae58932c61b62738f1859f9c",
+      "roles_retired": 4,
+      "scope": "calendar",
+      "source_Rust_total_HTTP_206": 10
+    }
+  ],
+  "raw_group_receipt_sha256": "b02cf8c8a5f13a36af7db2d7c900e90b08501833032825a6c85fede74dbf8eca",
+  "scope": "ordinary packaged direct VOD numeric seek and calendar byte ranges",
+  "total_actual_HTTP_206": 20,
+  "total_actual_owned_origin_requests": 20
+}
