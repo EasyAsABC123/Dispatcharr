@@ -116,6 +116,11 @@ across 18 suites with verified cleanup. It matched the exact HTTP 404
 body for the malformed settings ID. The coordinator recorded one passing
 node on 735.
 
+The [735 MPEG-TS functional checks](rust-m9-735-functional-streaming.md) passed
+all three required nodes with verified cleanup. The run covered 24 two-worker
+checks, 14 delayed restart checks and 100 retained-history readers with 20
+audio and video decodes in the history fixture.
+
 The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
 ordinary Native login, cancel and both cleanup modes with exact SQL and
 teardown. The paired Original HTTP reference was retained.
