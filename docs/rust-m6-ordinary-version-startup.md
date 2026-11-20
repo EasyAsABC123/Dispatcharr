@@ -69,3 +69,41 @@ The result qualifies one daily update in selected Rust Main. The
 ordinary Rust scheduler entry point, formal M6 cell and performance
 remain open.
 [Redacted selected daily receipt](../scripts/rust-integration/milestone-batch113/selected-daily-version.json)
+
+## Stable release checks in the ordinary Version worker
+
+Pinned Original and the exact c74 Rust package matched the Version startup
+warm-up and five subsequent consumer cases. Rust ran ordinary Main with
+`RUST_VERSION_TASKS_ENABLED=1` and `RUST_VERSION_STARTUP_OWNER=rust`.
+The fixture used the pinned Original task producer for the five explicit
+jobs on both backends. Each backend consumed six unparented Version roots in
+total, made six requests to the owned release endpoint, and returned
+`SUCCESS/null` through the configured result backend and Original AsyncResult
+reader.
+
+| Release case after warm-up | Observed result on both backends |
+| --- | --- |
+| No newer release | Deleted the obsolete notice and sent one typed clear event |
+| Newer release | Created one active, high-priority administrator notice and sent one typed creation event |
+| Repeat release | Preserved notice identity and all fields except the advancing update timestamp |
+| Malformed release tag | Preserved every notice field |
+| HTTP 503 | Preserved every notice field |
+
+Repeat, malformed-tag and HTTP 503 cases emitted no Version notice event.
+Native also emitted a separate developer-notification startup event before
+the warm-up Version notice. That event contained only the
+`notifications_cleared` type, and the fixture preserved its exact fields
+and order. Whole startup parity remains open.
+
+The first attempt exited 1 because the Original result reader could not
+import the mounted application. The second attempt's Original phase passed
+all six checks. Its Native phase exited 1 when the observer attributed the
+developer startup event to Version. The Native-only continuation reused the
+verified physical Original phase and exited 0. Both successful phases
+normally stopped their workers and retired five owned generations each,
+leaving no project resources.
+
+This qualifies the five ordinary stable-release consumer cases. The
+ordinary daily scheduler, shared default worker graph, formal M6 acceptance
+and performance remain open.
+[Redacted consumer receipt](../scripts/rust-integration/milestone-batch113/ordinary-version-consumers-c74.json)

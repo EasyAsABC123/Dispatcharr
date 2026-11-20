@@ -110,3 +110,19 @@ owned containers and observed process generations. The scoped file and
 console effects matched. Size-triggered rotation, live replica behavior,
 performance and full M8 remain open.
 [Re-enabled file persistence receipt](../scripts/rust-integration/milestone-batch113/reenabled-log-persistence.json)
+
+## Size-triggered rotation
+
+Original appends the batch, then rotates once the live file exceeds the
+configured cap. The batch that crosses the cap therefore moves into
+archive one. C74 rotates before an append that would exceed the cap, so
+the triggering batch goes into the new live file. The two collectors place
+the boundary batch in different files.
+[Original collector](../dispatcharr/log_collector.py) · [Native writer](../rust/crates/app/src/managed_logs.rs)
+
+Both implementations archive a prior nonempty live log during startup
+independently of the size cap. The persistence restart checks cover that
+boot behavior. A physical size-triggered check still needs an ordinary
+post-start event that produces enough log bytes while the same collector
+owns the live file.
+[Original entrypoint](../docker/entrypoint.sh) · [Native file acquisition](../rust/crates/app/src/managed_logs.rs)

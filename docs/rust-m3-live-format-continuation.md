@@ -15,3 +15,21 @@ This gives the Native owner-loss test its Original behavior. A fresh
 admission was outside this fixture's scope.
 
 [Scoped live-format receipts](../scripts/rust-integration/milestone-batch111/live-format-continuation.json)
+
+## Two ordinary FFmpeg output-profile viewers
+
+Pinned Original and the exact f3b8 Rust package each served two authenticated
+fMP4 readers through the stock stream route. On each backend the readers
+shared one origin connection, one FFmpeg profile transform, and one remux.
+After the lead reader closed, the surviving reader received 826,598 fresh
+bytes on Original and 854,025 on Rust with the same process generations.
+
+Both captures on each backend shared the init and six complete fragments.
+All four captures decoded H.264 and AAC with no decoder errors.
+Rust Main ran with selected jobs and Beat disabled and exited zero.
+Both runs retired the exact media processes and left empty owned container,
+network, and volume inventories.
+
+The ordinary FFmpeg input profile, broader M3, and comparative performance
+remain open.
+[Ordinary FFmpeg output-profile receipt](../scripts/rust-integration/milestone-batch113/f3b8-ordinary-ffmpeg-output-profile.json)
