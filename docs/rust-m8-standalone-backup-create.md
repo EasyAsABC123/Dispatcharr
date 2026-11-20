@@ -280,3 +280,19 @@ package. This comparison verifies request input and persistence for the
 listed cases on `e7651a6d`. It carries no performance or full M8 result.
 
 [Redacted backup schedule request receipt](../scripts/rust-integration/m8-backup-schedule-inputs-e7651a6d.json)
+
+## e765 selected UTC scheduled backup and retention
+
+Pinned Original and packaged e7651a6d each accepted a daily UTC backup
+schedule through the stock admin API. The same schedule survived a normal
+worker and scheduler restart before the due minute. Each scheduler then
+published one backup, and the stock admin status agreed with the actual
+Redis SUCCESS result. The persisted scheduler row advanced once.
+
+Retention removed one earlier archive on each backend and kept the new
+PostgreSQL format-2 archive. The scoped database rows stayed unchanged.
+Both arms exited 0 and their owned container, process and Compose
+inventories were empty after cleanup. Rust used selected Jobs and Beat
+with both standalone backup owners absent.
+
+[Redacted scheduled backup receipt](../scripts/rust-integration/m8-selected-scheduled-backup-e765.json)
