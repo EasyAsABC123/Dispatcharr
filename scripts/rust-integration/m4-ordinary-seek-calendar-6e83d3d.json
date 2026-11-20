@@ -1,0 +1,156 @@
+{
+  "actual_exit": 0,
+  "candidate_image": "sha256:df5863196a5c627e8234c17a3d61d62d948ff93be6103a78f56663f0e68bbe24",
+  "candidate_manifest_sha256": "4207e4ca9754a88a2ac84dc47587478a0dc6cb4caa8b3583bf8a0e31bb2721fe",
+  "candidate_revision": "6e83d3dba83932fe77420dbfcb3c83f42a2ce88e",
+  "credits": "The original Dispatcharr authors retain full application and protocol credit.",
+  "exact_roles_retired": 8,
+  "full_M4_accepted": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "paired_cases": 10,
+  "performance_verified": false,
+  "plans": [
+    {
+      "actual_exit": 0,
+      "cases": [
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "offset-wins",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "seek-wins",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "timestamp-shadows-time",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "fallback-time",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "invalid-ignored",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        }
+      ],
+      "changed_route_sources_since_prior": [
+        "rust/crates/vod-http/src/engine.rs",
+        "rust/crates/vod-http/src/offset.rs",
+        "rust/crates/vod-http/src/resolver.rs",
+        "rust/crates/vod-http/src/sessions.rs"
+      ],
+      "exact_empty_project": true,
+      "paired_cases": 5,
+      "raw_compose_receipt_sha256": "ca87c49b8d03d0cb228e12c45540881f54478797341e1e7bd3b8329468add887",
+      "raw_previous_context_sha256": "fd62c3a5086aa441991b29824f203e9d75dac38b113156bf6ea3450fb89b06a9",
+      "roles_retired": 4,
+      "scope": "numeric",
+      "source_Rust_total_HTTP_206": 10
+    },
+    {
+      "actual_exit": 0,
+      "cases": [
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "primary-wins",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "duplicate-start-and-local-clock",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "invalid-start-keeps-provider-path",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "week-date-and-empty-seek",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "end-only-and-time-fallback",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        }
+      ],
+      "changed_route_sources_since_prior": [
+        "rust/Cargo.lock",
+        "rust/crates/store/src/lib.rs",
+        "rust/crates/vod-http/src/engine.rs",
+        "rust/crates/vod-http/src/sessions.rs"
+      ],
+      "exact_empty_project": true,
+      "paired_cases": 5,
+      "raw_compose_receipt_sha256": "e92adad6180542433b948b41ffed1cebebb2d4c1719096f2acaf5dc9742aa665",
+      "raw_previous_context_sha256": "9ae222462b18931146eb220e03d42a6e319be81bae58932c61b62738f1859f9c",
+      "roles_retired": 4,
+      "scope": "calendar",
+      "source_Rust_total_HTTP_206": 10
+    }
+  ],
+  "prior_outcomes_carried": false,
+  "raw_group_receipt_sha256": "32a9ae70b3210b61002b53022401185de8b0a2ad4a62cb6cf2bffb76e7960a5c",
+  "reviewed_source_path_memberships": 14,
+  "scope": "ordinary packaged direct VOD numeric seek and calendar byte ranges",
+  "total_actual_HTTP_206": 20,
+  "total_actual_owned_origin_requests": 20
+}
