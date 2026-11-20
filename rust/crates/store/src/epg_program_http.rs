@@ -10,8 +10,13 @@ use axum::{
     Router,
 };
 use bytes::Bytes;
-use futures_util::TryStreamExt;
-use serde_json::json;
+use futures_util::{StreamExt, TryStream, TryStreamExt};
+use serde::{ser::SerializeSeq, Serialize};
+use serde_json::{
+    json,
+    ser::{CompactFormatter, Formatter, PrettyFormatter, Serializer},
+    Value,
+};
 use sqlx::{Acquire, Row};
 use std::{
     io::{self, Write},
@@ -97,6 +102,41 @@ impl Write for BoundedJson {
         Ok(())
     }
 }
+async fn write_programmes<S, F>(
+    out: &mut BoundedJson,
+    mut rows: S,
+    detail: bool,
+    formatter: F,
+) -> Result<(), StoreError>
+where
+    S: TryStream<Ok = Value, Error = StoreError> + Unpin,
+    F: Formatter,
+{
+    let mut serializer = Serializer::with_formatter(out, formatter);
+    if detail {
+        let value = rows
+            .try_next()
+            .await?
+            .ok_or_else(|| EpgReadResource::Programs.missing())?;
+        value
+            .serialize(&mut serializer)
+            .map_err(|_| unavailable())?;
+        if rows.try_next().await?.is_some() {
+            return Err(unavailable());
+        }
+    } else {
+        let mut sequence =
+            serde::Serializer::serialize_seq(&mut serializer, None).map_err(|_| unavailable())?;
+        while let Some(value) = rows.try_next().await? {
+            sequence
+                .serialize_element(&value)
+                .map_err(|_| unavailable())?;
+        }
+        sequence.end().map_err(|_| unavailable())?;
+    }
+    Ok(())
+}
+
 impl EpgProgramReads {
     /// Current-programme DB-only component using the same physical admission
     /// and retained response allocation as ordinary programme reads. HTTP and
@@ -231,17 +271,30 @@ impl EpgProgramReads {
         raw_id: Option<&str>,
         origin: String,
     ) -> Result<Bytes, StoreError> {
+        self.read_with_indentation(peer, headers, raw_id, origin, 0)
+            .await
+    }
+
+    async fn read_with_indentation(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        raw_id: Option<&str>,
+        origin: String,
+        indentation: u8,
+    ) -> Result<Bytes, StoreError> {
         let user = self.auth.account_user(peer, headers, false).await?;
         if user.user_level < 1 {
             return Err(StoreError::PermissionDenied);
         }
-        self.read_authorized(raw_id, origin).await
+        self.read_authorized(raw_id, origin, indentation).await
     }
 
     async fn read_authorized(
         &self,
         raw_id: Option<&str>,
         origin: String,
+        indentation: u8,
     ) -> Result<Bytes, StoreError> {
         let id = raw_id.map(program_id).transpose()?;
         let lease = Arc::new(
@@ -253,7 +306,7 @@ impl EpgProgramReads {
         let state = self.clone();
         let (sender, receiver) = oneshot::channel();
         tokio::spawn(async move {
-            let result = state.query(id, &origin, lease).await;
+            let result = state.query(id, &origin, lease, indentation).await;
             let _ = sender.send(result);
         });
         tokio::time::timeout(self.limits.deadline, receiver)
@@ -266,6 +319,7 @@ impl EpgProgramReads {
         id: Option<i64>,
         origin: &str,
         lease: Arc<OwnedSemaphorePermit>,
+        indentation: u8,
     ) -> Result<Bytes, StoreError> {
         let mut conn = self.auth.store.pool().acquire().await?;
         let mut tx = conn.begin().await?;
@@ -279,36 +333,27 @@ impl EpgProgramReads {
         let relation = "FROM epg_programdata p JOIN epg_epgdata e ON e.id=p.epg_id";
         let sql=format!("SELECT {fields} {relation} WHERE $1::bigint IS NULL UNION ALL SELECT {fields} {relation} WHERE p.id=$1::bigint");
         let result = async {
-            let mut rows = sqlx::query(&sql)
+            let detail = id.is_some();
+            let rows = sqlx::query(&sql)
                 .bind(id)
                 .bind(self.limits.row_bytes as i64)
-                .fetch(&mut *tx);
-            let mut out = BoundedJson {
-                data: Vec::new(),
-                maximum: self.limits.response_bytes,
-            };
-            let mut count = 0;
-            if id.is_none() {
-                out.write_all(b"[").map_err(|_| unavailable())?;
+                .fetch(&mut *tx)
+                .map(|row| {
+                    let row = row?;
+                    if row.try_get::<bool, _>("oversized")? {
+                        return Err(unavailable());
+                    }
+                    EpgReadResource::Programs.project(row, detail, origin)
+                });
+            let mut out = BoundedJson::new(self.limits.response_bytes);
+            if indentation == 0 {
+                write_programmes(&mut out, rows, detail, CompactFormatter).await?;
+            } else {
+                let spaces = &b"        "[..usize::from(indentation)];
+                write_programmes(&mut out, rows, detail, PrettyFormatter::with_indent(spaces))
+                    .await?;
             }
-            while let Some(row) = rows.try_next().await? {
-                if row.try_get::<bool, _>("oversized")? {
-                    return Err(unavailable());
-                }
-                let value = EpgReadResource::Programs.project(row, id.is_some(), origin)?;
-                if count > 0 {
-                    out.write_all(b",").map_err(|_| unavailable())?;
-                }
-                serde_json::to_writer(&mut out, &value).map_err(|_| unavailable())?;
-                count += 1;
-            }
-            if id.is_some() && count == 0 {
-                return Err(EpgReadResource::Programs.missing());
-            }
-            if id.is_none() {
-                out.write_all(b"]").map_err(|_| unavailable())?;
-            }
-            Ok(out.data)
+            Ok(out.into_data())
         }
         .await;
         // Drain rollback before the worker releases SQL admission. A detached
@@ -434,6 +479,90 @@ pub(crate) fn json_negotiation(headers: &HeaderMap, uri: &Uri) -> Result<(), Sto
 const PROGRAMME_LIST_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
 const PROGRAMME_DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum ProgrammeMedia {
+    Html { format_alias: bool },
+    ExplicitJson { indentation: u8 },
+}
+
+fn accept_quality(value: &str) -> bool {
+    let (whole, fraction) = value.split_once('.').unwrap_or((value, ""));
+    fraction.len() <= 3
+        && match whole {
+            "0" => fraction.bytes().all(|byte| byte.is_ascii_digit()),
+            "1" => fraction.bytes().all(|byte| byte == b'0'),
+            _ => false,
+        }
+}
+
+fn programme_media(method: &Method, uri: &Uri, headers: &HeaderMap) -> Option<ProgrammeMedia> {
+    let accept = headers.get("accept")?.to_str().ok()?;
+    let format_alias = uri.query() == Some("format=api");
+    if method == Method::HEAD {
+        return (uri.query().is_none() && accept == "text/html").then_some(ProgrammeMedia::Html {
+            format_alias: false,
+        });
+    }
+    if method != Method::GET || (uri.query().is_some() && !format_alias) {
+        return None;
+    }
+
+    // For these ordinary media ranges DRF selects by specificity, then by
+    // renderer order with JSON first. The quality parameter is not a weight.
+    let mut html = 0;
+    let mut json = 0;
+    let mut selected_indentation = 0;
+    for range in accept.split(',') {
+        let (media_type, parameters) = range.split_once(';').unwrap_or((range, ""));
+        let media_type = media_type.trim();
+        let is_json = media_type.eq_ignore_ascii_case("application/json");
+        let mut indentation = None;
+        if !parameters.is_empty()
+            && !parameters.split(';').all(|parameter| {
+                let Some((name, value)) = parameter.trim().split_once('=') else {
+                    return false;
+                };
+                if name.eq_ignore_ascii_case("q") {
+                    return accept_quality(value);
+                }
+                if is_json && name.eq_ignore_ascii_case("indent") {
+                    indentation = Some(value.parse::<i32>().unwrap_or(0).clamp(0, 8) as u8);
+                    return true;
+                }
+                false
+            })
+        {
+            continue;
+        }
+        match media_type {
+            "*/*" => {
+                html = html.max(1);
+                json = json.max(1);
+            }
+            media if media.eq_ignore_ascii_case("text/*") => html = html.max(2),
+            media if media.eq_ignore_ascii_case("application/*") => json = json.max(2),
+            media if media.eq_ignore_ascii_case("text/html") => html = 3,
+            _ if is_json => {
+                let rank = if indentation.is_some() { 4 } else { 3 };
+                if rank > json {
+                    json = rank;
+                    selected_indentation = indentation.unwrap_or(0);
+                }
+            }
+            _ => {}
+        }
+    }
+    if html != 0 && (format_alias || html > json) {
+        Some(ProgrammeMedia::Html { format_alias })
+    } else if !format_alias && json >= 3 {
+        Some(ProgrammeMedia::ExplicitJson {
+            indentation: selected_indentation,
+        })
+    } else {
+        None
+    }
+}
+
 async fn respond(
     state: EpgProgramReads,
     peer: SocketAddr,
@@ -441,15 +570,24 @@ async fn respond(
     method: Method,
     id: Option<String>,
     uri: Uri,
+    media: Option<ProgrammeMedia>,
 ) -> Result<Response, StoreError> {
-    json_negotiation(&headers, &uri)?;
-    let explicit_json = matches!(method, Method::GET | Method::HEAD)
-        && uri.query().is_none()
-        && headers
-            .get("accept")
-            .is_some_and(|value| value == "application/json");
+    let (explicit_json, indentation) = match media {
+        Some(ProgrammeMedia::ExplicitJson { indentation }) => (true, indentation),
+        _ => {
+            json_negotiation(&headers, &uri)?;
+            let exact_head = method == Method::HEAD
+                && uri.query().is_none()
+                && headers
+                    .get("accept")
+                    .is_some_and(|value| value == "application/json");
+            (exact_head, 0)
+        }
+    };
     let origin = origin(&state.auth, peer, &headers);
-    let data = state.read(peer, headers, id.as_deref(), origin).await?;
+    let data = state
+        .read_with_indentation(peer, headers, id.as_deref(), origin, indentation)
+        .await?;
     let mut response = Response::builder().header("content-type", "application/json");
     if explicit_json {
         response = response
@@ -478,12 +616,8 @@ async fn list(
     method: Method,
     uri: Uri,
 ) -> Result<Response, StoreError> {
-    let accept = headers.get("accept");
-    let bare_html = uri.query().is_none() && accept.is_some_and(|value| value == "text/html");
-    let format_alias = method == Method::GET
-        && uri.query() == Some("format=api")
-        && accept.is_some_and(|value| value == "*/*");
-    if (matches!(method, Method::GET | Method::HEAD) && bare_html) || format_alias {
+    let media = programme_media(&method, &uri, &headers);
+    if let Some(ProgrammeMedia::Html { format_alias }) = media {
         let user = state
             .auth
             .account_user(peer, headers.clone(), false)
@@ -498,7 +632,7 @@ async fn list(
             (false, false) => programme_html::Template::Standard,
         };
         let origin = origin(&state.auth, peer, &headers);
-        let programmes = state.read_authorized(None, origin.clone()).await?;
+        let programmes = state.read_authorized(None, origin.clone(), 0).await?;
         return programme_html::response(
             &headers,
             method,
@@ -508,7 +642,7 @@ async fn list(
             programmes,
         );
     }
-    respond(state, peer, headers, method, None, uri).await
+    respond(state, peer, headers, method, None, uri, media).await
 }
 async fn detail(
     State(state): State<EpgProgramReads>,
@@ -518,12 +652,8 @@ async fn detail(
     method: Method,
     uri: Uri,
 ) -> Result<Response, StoreError> {
-    let accept = headers.get("accept");
-    let bare_html = uri.query().is_none() && accept.is_some_and(|value| value == "text/html");
-    let format_alias = method == Method::GET
-        && uri.query() == Some("format=api")
-        && accept.is_some_and(|value| value == "*/*" || value == "text/html");
-    if (matches!(method, Method::GET | Method::HEAD) && bare_html) || format_alias {
+    let media = programme_media(&method, &uri, &headers);
+    if let Some(ProgrammeMedia::Html { format_alias }) = media {
         let user = state
             .auth
             .account_user(peer, headers.clone(), false)
@@ -539,7 +669,7 @@ async fn detail(
             (false, false) => programme_html::Template::StandardDetail(path),
         };
         let origin = origin(&state.auth, peer, &headers);
-        let programme = state.read_authorized(Some(&id), origin.clone()).await?;
+        let programme = state.read_authorized(Some(&id), origin.clone(), 0).await?;
         return programme_html::response(
             &headers,
             method,
@@ -549,12 +679,139 @@ async fn detail(
             programme,
         );
     }
-    respond(state, peer, headers, method, Some(id), uri).await
+    respond(state, peer, headers, method, Some(id), uri, media).await
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    use axum::http::HeaderValue;
+
+    const BROWSER: &str = concat!(
+        "text/html,application/xhtml+xml,application/xml;q=0.9,",
+        "image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+    );
+
+    #[test]
+    fn ordinary_programme_get_media_matches_captured_representations() {
+        let html = Some(ProgrammeMedia::Html {
+            format_alias: false,
+        });
+        let alias = Some(ProgrammeMedia::Html { format_alias: true });
+        for base in ["/api/epg/programs/", "/api/epg/programs/7/"] {
+            for (accept, suffix, expected) in [
+                (BROWSER, "", html),
+                ("text/*", "", html),
+                (BROWSER, "?format=api", alias),
+                (
+                    "application/json;q=0.9, text/html;q=0.5",
+                    "",
+                    Some(ProgrammeMedia::ExplicitJson { indentation: 0 }),
+                ),
+                (
+                    "application/json",
+                    "",
+                    Some(ProgrammeMedia::ExplicitJson { indentation: 0 }),
+                ),
+                ("TEXT/HTML, */*;Q=0.8", "", html),
+                (
+                    "APPLICATION/JSON;Q=0.9, text/html;q=0.5",
+                    "",
+                    Some(ProgrammeMedia::ExplicitJson { indentation: 0 }),
+                ),
+                (
+                    "application/json; indent=4, text/html",
+                    "",
+                    Some(ProgrammeMedia::ExplicitJson { indentation: 4 }),
+                ),
+                ("*/*", "?format=api", alias),
+            ] {
+                let uri = format!("{base}{suffix}").parse().unwrap();
+                let mut headers = HeaderMap::new();
+                headers.insert("accept", HeaderValue::from_static(accept));
+                assert_eq!(programme_media(&Method::GET, &uri, &headers), expected);
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn indented_programme_rows_keep_source_bytes_and_the_output_budget() {
+        let value = json!({"id":7,"title":"Guide é","nested":[1,{"key":true}]});
+        let detail = r#"{
+    "id": 7,
+    "title": "Guide é",
+    "nested": [
+        1,
+        {
+            "key": true
+        }
+    ]
+}"#;
+        let sequence = r#"[
+    {
+        "id": 7,
+        "title": "Guide é",
+        "nested": [
+            1,
+            {
+                "key": true
+            }
+        ]
+    }
+]"#;
+        for (is_detail, expected) in [(true, detail), (false, sequence)] {
+            let rows = || futures_util::stream::iter([Ok(value.clone())]);
+            let mut out = BoundedJson::new(expected.len());
+            write_programmes(
+                &mut out,
+                rows(),
+                is_detail,
+                PrettyFormatter::with_indent(b"    "),
+            )
+            .await
+            .unwrap();
+            assert_eq!(out.into_data(), expected.as_bytes());
+            let mut limited = BoundedJson::new(expected.len() - 1);
+            assert!(write_programmes(
+                &mut limited,
+                rows(),
+                is_detail,
+                PrettyFormatter::with_indent(b"    ")
+            )
+            .await
+            .is_err());
+        }
+        let mut list = BoundedJson::new(16);
+        write_programmes(
+            &mut list,
+            futures_util::stream::empty(),
+            false,
+            PrettyFormatter::with_indent(b"    "),
+        )
+        .await
+        .unwrap();
+        assert_eq!(list.into_data(), b"[]");
+    }
+
+    #[test]
+    fn programme_media_leaves_other_query_shapes_and_head_negotiation_in_place() {
+        let uri: Uri = "/api/epg/programs/7/".parse().unwrap();
+        let alias: Uri = "/api/epg/programs/7/?format=api".parse().unwrap();
+        let json: Uri = "/api/epg/programs/7/?format=json".parse().unwrap();
+        let mut headers = HeaderMap::new();
+        headers.insert("accept", HeaderValue::from_static(BROWSER));
+        assert_eq!(programme_media(&Method::HEAD, &uri, &headers), None);
+        assert_eq!(programme_media(&Method::GET, &json, &headers), None);
+        headers.insert("accept", HeaderValue::from_static("text/html"));
+        assert_eq!(programme_media(&Method::HEAD, &alias, &headers), None);
+        assert_eq!(
+            programme_media(&Method::HEAD, &uri, &headers),
+            Some(ProgrammeMedia::Html {
+                format_alias: false
+            }),
+        );
+    }
+
     #[test]
     fn cloned_response_bytes_retain_admission_until_last_allocation_reference() {
         let workers = Arc::new(Semaphore::new(1));

@@ -1,6 +1,7 @@
 //! Ordinary operator migration inspection on the pinned Original migration graph.
 //! Original Dispatcharr and Django authors retain full credit.
 use crate::{operator_commands::OperatorError, Store};
+use chrono::{DateTime, Utc};
 use std::{collections::BTreeSet, fmt::Write as _};
 
 const PLAN: [(&str, &str); 184] = include!("../datasets/showmigrations-plan-order.in");
@@ -9,7 +10,14 @@ const APP_WITHOUT_MIGRATIONS: &str = "backups";
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Inspection {
     List(Option<&'static str>),
+    ListWithDates(Option<&'static str>),
     Plan,
+}
+
+#[derive(Clone, Copy, Default)]
+struct AppliedMigration {
+    present: bool,
+    timestamp: Option<DateTime<Utc>>,
 }
 
 impl Inspection {
@@ -21,15 +29,24 @@ impl Inspection {
         let mode = head
             .strip_suffix(&["--database", "default", "--no-color"])
             .unwrap_or(head);
+        let (mode, verbose) = match mode {
+            [args @ .., "--verbosity=2"] | [args @ .., "--verbosity", "2"] => (args, true),
+            _ => (mode, false),
+        };
+        let list = if verbose {
+            Self::ListWithDates
+        } else {
+            Self::List
+        };
         match mode {
-            [] | ["--list"] => Ok(Self::List(None)),
-            ["--plan"] => Ok(Self::Plan),
+            [] | ["--list"] => Ok(list(None)),
+            ["--plan"] if !verbose => Ok(Self::Plan),
             [app] | [app, "--list"] => PLAN
                 .iter()
                 .map(|(label, _)| *label)
                 .chain([APP_WITHOUT_MIGRATIONS])
                 .find(|label| label == app)
-                .map(|label| Self::List(Some(label)))
+                .map(|label| list(Some(label)))
                 .ok_or(OperatorError::Arguments),
             _ => Err(OperatorError::Arguments),
         }
@@ -37,41 +54,52 @@ impl Inspection {
 
     pub(crate) async fn execute(self, store: &Store) -> Result<String, OperatorError> {
         let (apps, names): (Vec<_>, Vec<_>) = PLAN.iter().copied().unzip();
-        let rows = sqlx::query_as::<_, (i64, bool)>(
+        let sql = if matches!(self, Self::ListWithDates(_)) {
+            "SELECT n.ordinal, applied.id IS NOT NULL, applied.applied
+             FROM unnest($1::text[], $2::text[]) WITH ORDINALITY AS n(app, migration, ordinal)
+             LEFT JOIN LATERAL (
+                 SELECT id, applied FROM public.django_migrations
+                 WHERE app = n.app AND name = n.migration
+                 ORDER BY id DESC LIMIT 1
+             ) AS applied ON true
+             ORDER BY n.ordinal"
+        } else {
             "SELECT n.ordinal, EXISTS (
                  SELECT FROM public.django_migrations AS applied
                  WHERE applied.app = n.app AND applied.name = n.migration
-             )
+             ), NULL::timestamptz
              FROM unnest($1::text[], $2::text[]) WITH ORDINALITY AS n(app, migration, ordinal)
-             ORDER BY n.ordinal",
-        )
-        .bind(apps)
-        .bind(names)
-        .fetch_all(store.pool())
-        .await?;
-        let mut applied = [false; PLAN.len()];
+             ORDER BY n.ordinal"
+        };
+        let rows = sqlx::query_as::<_, (i64, bool, Option<DateTime<Utc>>)>(sql)
+            .bind(apps)
+            .bind(names)
+            .fetch_all(store.pool())
+            .await?;
+        let mut applied = [AppliedMigration::default(); PLAN.len()];
         if rows.len() != applied.len() {
             return Err(OperatorError::Unavailable);
         }
-        for (index, (ordinal, present)) in rows.into_iter().enumerate() {
+        for (index, (ordinal, present, timestamp)) in rows.into_iter().enumerate() {
             if ordinal != index as i64 + 1 {
                 return Err(OperatorError::Unavailable);
             }
-            applied[index] = present;
+            applied[index] = AppliedMigration { present, timestamp };
         }
         Ok(self.render(&applied))
     }
 
-    fn render(self, applied: &[bool; PLAN.len()]) -> String {
+    fn render(self, applied: &[AppliedMigration; PLAN.len()]) -> String {
         let mut text = String::new();
-        let mark = |ordinal| if applied[ordinal] { 'X' } else { ' ' };
+        let mark = |ordinal: usize| if applied[ordinal].present { 'X' } else { ' ' };
         match self {
             Self::Plan => {
                 for (index, (app, name)) in PLAN.iter().enumerate() {
                     writeln!(text, "[{}]  {app}.{name}", mark(index)).unwrap();
                 }
             }
-            Self::List(selected) => {
+            Self::List(selected) | Self::ListWithDates(selected) => {
+                let verbose = matches!(self, Self::ListWithDates(_));
                 let applications = match selected {
                     Some(app) => BTreeSet::from([app]),
                     None => PLAN
@@ -87,7 +115,18 @@ impl Inspection {
                     }
                     for (index, (app, name)) in PLAN.iter().enumerate() {
                         if *app == application {
-                            writeln!(text, " [{}] {name}", mark(index)).unwrap();
+                            write!(text, " [{}] {name}", mark(index)).unwrap();
+                            if verbose {
+                                if let Some(timestamp) = applied[index].timestamp {
+                                    write!(
+                                        text,
+                                        " (applied at {})",
+                                        timestamp.format("%Y-%m-%d %H:%M:%S")
+                                    )
+                                    .unwrap();
+                                }
+                            }
+                            text.push('\n');
                         }
                     }
                 }
@@ -101,6 +140,11 @@ impl Inspection {
 mod tests {
     use super::*;
     use sha2::{Digest, Sha256};
+
+    const PRESENT: AppliedMigration = AppliedMigration {
+        present: true,
+        timestamp: None,
+    };
 
     #[test]
     fn checked_plan_is_the_current_schema_inventory_in_original_order() {
@@ -119,8 +163,8 @@ mod tests {
         assert_eq!(&PLAN[..91], &graph[..91]);
         assert_ne!(PLAN, graph.as_slice());
 
-        let list = Inspection::List(Some("core")).render(&[true; PLAN.len()]);
-        let plan = Inspection::Plan.render(&[true; PLAN.len()]);
+        let list = Inspection::List(Some("core")).render(&[PRESENT; PLAN.len()]);
+        let plan = Inspection::Plan.render(&[PRESENT; PLAN.len()]);
         assert_eq!(list.lines().count(), 33);
         assert!(list.starts_with("core\n [X] 0001_initial\n"));
         assert_eq!(plan.lines().count(), 184);
@@ -138,7 +182,7 @@ mod tests {
 
     #[test]
     fn default_and_accounts_lists_match_the_original_bytes() {
-        let applied = [true; PLAN.len()];
+        let applied = [PRESENT; PLAN.len()];
         let list = Inspection::List(None).render(&applied);
         let accounts = Inspection::List(Some("accounts")).render(&applied);
         assert_eq!(
@@ -161,14 +205,44 @@ mod tests {
             .iter()
             .position(|key| *key == ("core", "0032_limit_default_interleave_delta"))
             .unwrap();
-        let mut applied = [true; PLAN.len()];
-        applied[position] = false;
+        let mut applied = [PRESENT; PLAN.len()];
+        applied[position] = AppliedMigration::default();
         let list = Inspection::List(Some("core")).render(&applied);
         let plan = Inspection::Plan.render(&applied);
         assert_eq!(list.matches(" [ ] ").count(), 1);
         assert_eq!(plan.matches("[ ]  ").count(), 1);
         assert!(list.contains(" [ ] 0032_limit_default_interleave_delta\n"));
         assert!(plan.contains("[ ]  core.0032_limit_default_interleave_delta\n"));
+    }
+
+    #[test]
+    fn verbose_inventory_formats_actual_applied_times_to_whole_utc_seconds() {
+        let first = PLAN
+            .iter()
+            .position(|key| *key == ("accounts", "0001_initial"))
+            .unwrap();
+        let mut applied = [AppliedMigration::default(); PLAN.len()];
+        applied[first] = AppliedMigration {
+            present: true,
+            timestamp: Some(
+                DateTime::parse_from_rfc3339("2026-11-20T12:01:02.999999+01:00")
+                    .unwrap()
+                    .with_timezone(&Utc),
+            ),
+        };
+        let accounts = Inspection::ListWithDates(Some("accounts")).render(&applied);
+        assert!(
+            accounts.starts_with("accounts\n [X] 0001_initial (applied at 2026-11-20 11:01:02)\n")
+        );
+        assert_eq!(accounts.matches(" (applied at ").count(), 1);
+        assert_eq!(accounts.matches(" [ ] ").count(), 7);
+        let all = Inspection::ListWithDates(None).render(&applied);
+        assert_eq!(all.matches(" (applied at ").count(), 1);
+        assert_eq!(all.matches(" [ ] ").count(), 183);
+        assert_eq!(
+            all.replace(" (applied at 2026-11-20 11:01:02)", ""),
+            Inspection::List(None).render(&applied)
+        );
     }
 
     #[test]
@@ -196,6 +270,42 @@ mod tests {
             .unwrap(),
             Inspection::Plan
         );
+        assert_eq!(
+            parse(&[
+                "showmigrations",
+                "--verbosity=2",
+                "--database",
+                "default",
+                "--no-color"
+            ])
+            .unwrap(),
+            Inspection::ListWithDates(None)
+        );
+        assert_eq!(
+            parse(&[
+                "showmigrations",
+                "accounts",
+                "--list",
+                "--verbosity",
+                "2",
+                "--database",
+                "default",
+                "--no-color"
+            ])
+            .unwrap(),
+            Inspection::ListWithDates(Some("accounts"))
+        );
+        assert!(parse(&["showmigrations", "--plan", "--verbosity=2"]).is_err());
+        assert!(parse(&[
+            "showmigrations",
+            "--plan",
+            "--verbosity",
+            "2",
+            "--database",
+            "default",
+            "--no-color"
+        ])
+        .is_err());
         assert!(parse(&["showmigrations", "--plan", "--database", "other"]).is_err());
         assert!(parse(&["showmigrations", "unknown_app", "--list"]).is_err());
     }
