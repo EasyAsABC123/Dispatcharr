@@ -11,6 +11,9 @@ nodes. The prior 735 image has a separate acceptance record. The standalone
 backup HTTP routes have separate [default-off evidence](rust-m8-standalone-backup-create.md).
 Full M9 and comparative performance remain open.
 
+The [fresh a785 MPEG-TS functional checks](rust-m9-a785-functional-streaming.md) passed
+all three selected nodes with independently verified cleanup.
+
 The original Dispatcharr authors and contributors retain full application and workflow credit.
 
 [Redacted receipt](../scripts/rust-integration/milestone-batch113/a785-baseline-acceptance.json)
