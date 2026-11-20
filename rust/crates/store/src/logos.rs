@@ -345,6 +345,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
             get(list).post(crate::logo_writes::create),
         )
         .route(
+            "/api/channels/logos/bulk-delete/",
+            axum::routing::delete(crate::logo_writes::bulk_delete),
+        )
+        .route(
             "/api/channels/logos/{id}/",
             get(retrieve)
                 .patch(crate::logo_writes::patch)
