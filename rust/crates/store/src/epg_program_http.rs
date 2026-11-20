@@ -4,7 +4,7 @@ use crate::{AuthService, EpgReadResource, StoreError};
 use axum::{
     body::Body,
     extract::{ConnectInfo, Path, State},
-    http::{HeaderMap, Uri},
+    http::{HeaderMap, Method, Uri},
     response::Response,
     routing::get,
     Router,
@@ -22,6 +22,7 @@ use std::{
 use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
 
 mod mutations;
+mod programme_html;
 
 #[derive(Clone, Copy, Debug)]
 pub struct EpgProgramReadLimits {
@@ -234,6 +235,14 @@ impl EpgProgramReads {
         if user.user_level < 1 {
             return Err(StoreError::PermissionDenied);
         }
+        self.read_authorized(raw_id, origin).await
+    }
+
+    async fn read_authorized(
+        &self,
+        raw_id: Option<&str>,
+        origin: String,
+    ) -> Result<Bytes, StoreError> {
         let id = raw_id.map(program_id).transpose()?;
         let lease = Arc::new(
             self.workers
@@ -441,8 +450,20 @@ async fn list(
     State(state): State<EpgProgramReads>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
+    method: Method,
     uri: Uri,
 ) -> Result<Response, StoreError> {
+    if method == Method::GET
+        && uri.query().is_none()
+        && headers
+            .get("accept")
+            .is_some_and(|value| value == "text/html")
+    {
+        let user = state.auth.account_user(peer, headers.clone(), true).await?;
+        let origin = origin(&state.auth, peer, &headers);
+        let programmes = state.read_authorized(None, origin.clone()).await?;
+        return programme_html::response(&headers, &user.username, &origin, programmes);
+    }
     respond(state, peer, headers, None, uri).await
 }
 async fn detail(

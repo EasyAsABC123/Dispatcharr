@@ -29,7 +29,12 @@ mod vod_api_sql;
 mod vod_api_http;
 
 pub use vod_api_http::VodReads;
+pub(crate) use vod_api_owned_read::ReadError;
 pub use vod_api_owned_read::ReadLimits as VodReadLimits;
+pub(crate) use vod_api_unified_html::{
+    content as source_browsable_content, cookie as source_browsable_cookie,
+    escape as source_browsable_escape,
+};
 
 /// Existing captured Django/DRF CSRF masking/cookie algorithm, reusable by a
 /// bounded browsable renderer. This does not authenticate or register a route.

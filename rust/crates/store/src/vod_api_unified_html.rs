@@ -29,11 +29,11 @@ impl Kind {
         }
     }
 }
-fn write(out: &mut Document, text: &str) -> Result<(), ReadError> {
+fn write(out: &mut impl Write, text: &str) -> Result<(), ReadError> {
     out.write_all(text.as_bytes())
         .map_err(|_| ReadError::Capacity)
 }
-fn escape(out: &mut Document, text: &str) -> Result<(), ReadError> {
+pub(crate) fn escape(out: &mut impl Write, text: &str) -> Result<(), ReadError> {
     for c in text.chars() {
         match c {
             '&' => write(out, "&amp;")?,
@@ -113,7 +113,7 @@ impl Csrf {
         )
     }
 }
-fn url_word(out: &mut Document, word: &str) -> Result<(), ReadError> {
+fn url_word(out: &mut impl Write, word: &str) -> Result<(), ReadError> {
     // Captured Django6 URL families: ASCII HTTP(S) URLs, including query &,
     // path/query percent encoding and parentheses/brackets. Other linking
     // families remain explicit unaccepted, never called full urlize parity.
@@ -175,7 +175,7 @@ fn url_word(out: &mut Document, word: &str) -> Result<(), ReadError> {
         escape(out, word)
     }
 }
-fn content(out: &mut Document, pretty_json: &str) -> Result<(), ReadError> {
+pub(crate) fn content(out: &mut impl Write, pretty_json: &str) -> Result<(), ReadError> {
     let mut word = 0;
     for (index, c) in pretty_json.char_indices() {
         if c.is_whitespace() || matches!(c, '<' | '>' | '"' | '\'') {
@@ -228,7 +228,7 @@ pub(super) struct ReplyHeaders {
 pub(super) fn requested(headers: &axum::http::HeaderMap) -> bool {
     headers.get("accept").is_some_and(|value|value.as_bytes()==b"text/html" || value.as_bytes()=="text/html,application/xhtml+xml,application/xml;q=0.9,image/jxl,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7".as_bytes())
 }
-pub(super) fn cookie(headers: &axum::http::HeaderMap) -> Option<String> {
+pub(crate) fn cookie(headers: &axum::http::HeaderMap) -> Option<String> {
     let raw = headers
         .get("cookie")
         .map(|v| dispatcharr_contracts::source_header_value(v.as_bytes()))?;
