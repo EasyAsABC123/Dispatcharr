@@ -11,6 +11,7 @@ dispatcharr-contracts = {path="../contracts"}
 dispatcharr-ingest-core = {path="../ingest-core"}
 dispatcharr-store = {path="../store"}
 futures-util = "0.3"
+serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 sqlx = {version="0.8",features=["runtime-tokio-rustls","postgres","json"]}
 tokio = {version="1",features=["rt-multi-thread","net","sync","time","macros"]}

@@ -34,3 +34,20 @@ with zero Compose containers, volumes and networks remaining. Broader M7
 protocol coverage and performance remain open.
 
 [Exact scoped receipt](../scripts/rust-integration/milestone-batch113/hdhr-discovery-lineup-c74.json)
+
+## Exact discovery and lineup JSON bytes
+
+The successor image matched pinned Original on all 14 discovery and lineup
+GETs. Each pair matched HTTP 200, the selected headers, byte length and
+body SHA-256. The same comparison had matched 14 parsed bodies and one
+body hash on C74. The Rust responses now use Django's field order, separators,
+and ASCII escaping within the existing response caps.
+
+Both phases matched the retained positive shapes and left the selected
+PostgreSQL rows unchanged. The probe used the owned internal Compose network.
+All four owned generations retired, with no remaining containers, networks,
+or volumes. Three focused Rust tests and strict Clippy passed, and 497 React
+and attribution inputs matched the prior package. Lineup Status, device XML,
+broader M7 coverage, and performance retain separate validation scopes.
+
+[Exact wire receipt](../scripts/rust-integration/milestone-batch113/hdhr-discovery-lineup-exact-wire.json)
