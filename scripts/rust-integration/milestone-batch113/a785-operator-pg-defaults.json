@@ -1,0 +1,70 @@
+{
+  "before": {
+    "archive": "a102af85a452edf699272e93becc7dac7da5c085a8f970a3263eafbcb864b16f",
+    "image": "sha256:3f9fe2ca088ae21997dc817b2d9e16b416b976230b1522bcb8ac9437dc92a9c2",
+    "manifest": "8faae53fbe4c4456baca14685e0fe3f517fa9cc2cfd11ec1b5a7b988afc088df",
+    "revision": "a1e2231b176508355e4b1afd29a0b82a3e74fb57",
+    "source_tree": "380a98a99667b81c126400ec474214fbf027886fffb9142146a6f6475ade2881"
+  },
+  "candidate": {
+    "archive": "dd5e9ba5ebd7bd4c2ea9161acafbc4379cb3033615e9c0e60b39534ab0f87f31",
+    "image": "sha256:94dbaa2c371511f85e9d7a420a3d0049a6bd695b0382319b0bf477275ee6d941",
+    "manifest": "88064eab5e75131fdd8a9ecf411f33f979748f72c32128b5bb04c61da7e1682a",
+    "revision": "a785a2b713b70d9d3e86328f94f02b891c7e4702",
+    "source_tree": "9714cdb9e5888e974bbe80e3eb6e8b44a6a0fc52f9148ee69deeb0fd08032d65"
+  },
+  "case_count": 9,
+  "cases": [
+    {
+      "name": "before-configured",
+      "operator_actual_exit": 0
+    },
+    {
+      "name": "before-blank-user",
+      "operator_actual_exit": 1
+    },
+    {
+      "name": "before-blank-database",
+      "operator_actual_exit": 1
+    },
+    {
+      "name": "before-blank-port",
+      "operator_actual_exit": 1
+    },
+    {
+      "name": "after-blank-user",
+      "operator_actual_exit": 0
+    },
+    {
+      "name": "after-blank-database",
+      "operator_actual_exit": 0
+    },
+    {
+      "name": "after-blank-port",
+      "operator_actual_exit": 0
+    },
+    {
+      "name": "after-all-blank",
+      "operator_actual_exit": 0
+    },
+    {
+      "name": "after-explicit-wins",
+      "operator_actual_exit": 0
+    }
+  ],
+  "controller_exit": 0,
+  "credit": "The original Dispatcharr authors and contributors retain full credit.",
+  "exact_container_absence": true,
+  "exact_non_secret_environment_and_operator_output_verified": true,
+  "fixture_launcher_sha256": "270470969b6d7e832edd0cc62f3d1f567ceb271d2a0dcea6a1587acbe8dc04b4",
+  "full_M8_accepted": false,
+  "historical_paired_receipt_sha256": "821d995383088727d20096cde40abbf8bc097bc687930556d32d3472bd524ee6",
+  "historical_statuses_admitted": false,
+  "owned_inventory_empty": true,
+  "performance_verified": false,
+  "raw_receipt_sha256": "664c572a0d75bb07b8d749a3f74ad8fa1621626a3d4c85573ae5a38b5c91035f",
+  "required_operator_node_closed": false,
+  "retired_operator_and_dependency_containers": 11,
+  "schema_sha256": "35d78338081e2d6fe3149c58d9a041e8d8570a410fa7f49aad36e4b9f858e9a9",
+  "scope": "Shipped operator PostgreSQL configuration within the M8 operator workflow"
+}

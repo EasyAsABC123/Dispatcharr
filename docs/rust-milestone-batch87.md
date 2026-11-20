@@ -42,6 +42,18 @@ the configured result database, and produced the exact cached programme.
 The first two fixture failures and independent recovery remain retained.
 [Refresh-only Compose receipt](../scripts/rust-integration/milestone-batch87/refresh-guide-compose.json)
 
+## a785 operator configuration check
+
+A fresh Compose run repeated nine SQL-backed operator cases. The exact
+`a785a2b7` package resolved each separately blank PostgreSQL field, resolved
+all three blank fields together, and honored an explicit `DATABASE_URL`.
+The retained Candidate86 package provided a successful configured control
+and three expected exit-1 controls. The controller verified the shipped
+operator, effective non-secret settings, command output and all eleven
+owned container removals. The broader operator workflow and full M8 remain open.
+
+[Redacted a785 operator receipt](../scripts/rust-integration/milestone-batch113/a785-operator-pg-defaults.json)
+
 [Focused results](../scripts/rust-integration/milestone-batch87/focused.json)
 · [Docker build and fixture bindings](../scripts/rust-integration/milestone-batch87/packaging.json)
 · [Compose results](../scripts/rust-integration/milestone-batch87/packaged.json)
