@@ -1,0 +1,94 @@
+{
+  "credit": "Original Dispatcharr authors and contributors",
+  "full_M9_accepted": false,
+  "performance_verified": false,
+  "production_rollback_accepted": false,
+  "scoped_rehearsals": [
+    {
+      "all_four_changes_match_original_only_control": true,
+      "controller_actual_exit": 1,
+      "exact_transactional_copy_and_rollback": true,
+      "native_mutation_stayed_in_copy": true,
+      "original_full_fingerprint_equal_before_restart": true,
+      "original_only_control_sha256": "e14e558fafa3e9e79beb484b7f35a7793036374b2c8c7cb4001d42c5b09e6cba",
+      "original_read_added_no_changes": true,
+      "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "raw_report_sha256": "fd44f068e1b69c3d54c08fa01f99c18d51ff3f09d20fb7f41baa23ebea0c2705",
+      "retired_owned_containers": 5,
+      "rust_image": "sha256:871ef32edb0cbaae81d905f8821f76cdeeb3422d93cea28a1965fff1ba914fd2",
+      "same_front_door_and_session": true,
+      "schema_and_sequences_preserved": true,
+      "scope": "Candidate110",
+      "startup_changes": [
+        [
+          "core_systemnotification",
+          "updated",
+          [
+            "updated_at"
+          ],
+          1
+        ],
+        [
+          "django_celery_beat_periodictask",
+          "updated",
+          [
+            "date_changed"
+          ],
+          2
+        ],
+        [
+          "django_celery_beat_periodictasks",
+          "updated",
+          [
+            "last_update"
+          ],
+          1
+        ]
+      ],
+      "strict_postrestart_full_fingerprint_equal": false
+    },
+    {
+      "all_four_changes_match_original_only_control": true,
+      "controller_actual_exit": 1,
+      "exact_transactional_copy_and_rollback": true,
+      "native_mutation_stayed_in_copy": true,
+      "original_full_fingerprint_equal_before_restart": true,
+      "original_only_control_sha256": "e14e558fafa3e9e79beb484b7f35a7793036374b2c8c7cb4001d42c5b09e6cba",
+      "original_read_added_no_changes": true,
+      "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "raw_report_sha256": "dc2266f7de572e9c22c064691b85f3cfe2295956481e0041b035a462b6512f15",
+      "retired_owned_containers": 5,
+      "rust_image": "sha256:c1ada4a0fbb3bec3b5995a45c5e7a7f2d36e862774b8375a1d73aa0924534e02",
+      "same_front_door_and_session": true,
+      "schema_and_sequences_preserved": true,
+      "scope": "Candidate111",
+      "startup_changes": [
+        [
+          "core_systemnotification",
+          "updated",
+          [
+            "updated_at"
+          ],
+          1
+        ],
+        [
+          "django_celery_beat_periodictask",
+          "updated",
+          [
+            "date_changed"
+          ],
+          2
+        ],
+        [
+          "django_celery_beat_periodictasks",
+          "updated",
+          [
+            "last_update"
+          ],
+          1
+        ]
+      ],
+      "strict_postrestart_full_fingerprint_equal": false
+    }
+  ]
+}
