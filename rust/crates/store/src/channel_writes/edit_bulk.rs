@@ -101,13 +101,18 @@ struct Edit {
     level: Option<i32>,
     references: References,
     override_references: References,
+    clear_override: bool,
 }
 
 impl Edit {
-    fn changes_override(&self) -> bool {
+    fn has_override_values(&self) -> bool {
         self.override_group.is_some()
             || self.override_radio.is_some()
             || self.override_references.present()
+    }
+
+    fn changes_override(&self) -> bool {
+        self.clear_override || self.has_override_values()
     }
 }
 
@@ -181,8 +186,9 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
             }) {
                 return Err(unsupported());
             }
-            let (override_group, override_radio, override_references) = match overrides.get(&id) {
-                None => (None, None, References::default()),
+            let override_intent = overrides.get(&id);
+            let (override_group, override_radio, override_references) = match override_intent {
+                None | Some(Value::Null) => (None, None, References::default()),
                 Some(Value::Object(values))
                     if values.keys().all(|key| {
                         matches!(
@@ -208,6 +214,7 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                 override_group,
                 override_radio,
                 override_references,
+                clear_override: override_intent == Some(&Value::Null),
                 references: References::parse(row)?,
                 radio: row
                     .get("is_radio")
@@ -340,7 +347,7 @@ async fn validate_and_lock(
             errors.push(json!({"channel_id":edit.id,"error":"Channel not found"}));
             continue;
         };
-        if !managed && edit.changes_override() {
+        if !managed && edit.has_override_values() {
             return Err(unsupported());
         }
         let mut fields = reference_errors(edit.group, edit.references, &groups, &profiles, &logos);
@@ -378,6 +385,7 @@ async fn apply(
     let mut manual_groups = BTreeSet::new();
     let mut scalar_edits = Vec::new();
     let mut override_edits = Vec::new();
+    let mut clear_ids = Vec::new();
     for edit in edits {
         if edit.group.is_some()
             || edit.mature.is_some()
@@ -390,7 +398,9 @@ async fn apply(
         if !selected[&edit.id] {
             manual_groups.extend(edit.group);
         }
-        if edit.changes_override() {
+        if edit.clear_override {
+            clear_ids.push(edit.id);
+        } else if edit.has_override_values() {
             override_edits.push(edit);
         }
     }
@@ -429,6 +439,14 @@ async fn apply(
     }
     for group in manual_groups {
         mark_group(tx, &json!(group)).await?;
+    }
+    // Source applies whole-row clear to every selected ID, including
+    // manual channels. A missing overlay is an ordinary no-op.
+    for chunk in clear_ids.chunks(OVERRIDE_BATCH_SIZE) {
+        sqlx::query("DELETE FROM dispatcharr_channels_channeloverride WHERE channel_id = ANY($1)")
+            .bind(chunk)
+            .execute(&mut **tx)
+            .await?;
     }
     for chunk in override_edits.chunks(OVERRIDE_BATCH_SIZE) {
         let ids: Vec<_> = chunk.iter().map(|edit| edit.id).collect();
@@ -732,10 +750,54 @@ mod tests {
     }
 
     #[test]
+    fn whole_overlay_clear_is_not_an_upsert_and_stays_in_logo_child_lock_order() {
+        let rows = edits(json!([
+            {"id":1,"override":null},
+            {"id":2,"logo_id":5},
+            {"id":3,"override":{"logo_id":5}},
+            {"id":4,"override":{}}
+        ]))
+        .unwrap();
+        assert!(rows[0].clear_override && rows[0].changes_override());
+        assert!(!rows[0].has_override_values());
+        assert!(!rows[1].changes_override());
+        assert!(rows[2].has_override_values() && rows[2].changes_override());
+        assert!(!rows[3].changes_override());
+    }
+
+    #[test]
+    fn repeated_rows_preserve_last_explicit_whole_overlay_intent() {
+        let rows = edits(json!([
+            {"id":1,"override":null},
+            {"id":2,"override":{"logo_id":5}},
+            {"id":3,"override":null},
+            {"id":4,"override":null},
+            {"id":1,"is_adult":true},
+            {"id":2,"override":null},
+            {"id":3,"override":{}},
+            {"id":4,"override":{"logo_id":7}},
+        ]))
+        .unwrap();
+        assert_eq!(
+            rows.iter().map(|row| row.id).collect::<Vec<_>>(),
+            [1, 2, 3, 4]
+        );
+        assert_eq!(
+            rows.iter()
+                .map(|row| row.clear_override)
+                .collect::<Vec<_>>(),
+            [true, true, false, false]
+        );
+        assert_eq!(rows[0].mature, Some(true));
+        assert!(!rows[1].has_override_values());
+        assert!(!rows[2].changes_override());
+        assert_eq!(rows[3].override_references.logo, Reference::Set(7));
+    }
+
+    #[test]
     fn unrelated_mutations_cannot_be_silently_accepted() {
         for request in [
             json!([{"id":1,"streams":[4]}]),
-            json!([{"id":1,"override":null}]),
             json!([{"id":1,"override":{"channel_group_id":3,"epg_data_id":7}}]),
         ] {
             assert!(matches!(edits(request), Err(StoreError::Unsupported(_))));
