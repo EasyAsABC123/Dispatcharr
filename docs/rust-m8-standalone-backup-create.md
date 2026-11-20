@@ -37,6 +37,17 @@ run used the option enabled and verified a normal stop after completion.
 Live timezone changes, a shutdown deadline with work still active, restore,
 scheduled jobs, cancellation, full M8 and performance remain open.
 
+A separate Compose run on the same image omitted the owner flag from the
+actual Rust Main environment. Authenticated archive listing and schedule
+reads returned HTTP 200, with an empty listing and a disabled schedule.
+Create and authenticated task status returned HTTP 501. Anonymous task
+status returned HTTP 401. The broker queue and result database were empty
+before and after these calls, and the representative SQL snapshot and
+independent control matched. Rust Main exited 0 and all four owned Compose
+generations retired.
+
+[Redacted default-off receipt](../scripts/rust-integration/milestone-batch113/standalone-backup-default-off-a785.json)
+
 [Redacted paired receipt](../scripts/rust-integration/milestone-batch113/standalone-backup-create-a785.json)
 
 ## Rows inside the downloaded archives
