@@ -29,6 +29,7 @@ pub struct BackupFiles {
     secret: Arc<Vec<u8>>,
     workers: Arc<Semaphore>,
     jobs: Option<Arc<dyn BackupJobApi>>,
+    schedule_disable: Option<Arc<dyn BackupScheduleDisableApi>>,
 }
 /// Explicit adapter avoids a Store -> job-transport dependency cycle. No default
 /// constructor, background worker or unrestricted restore authority is implied.
@@ -61,6 +62,15 @@ pub trait BackupJobApi: Send + Sync {
         })
     }
     fn shutdown(&self, grace: Duration) -> dispatcharr_contracts::BoxFuture<'_, bool>;
+}
+/// A stored schedule disable requires SQL and cache ownership only.
+pub trait BackupScheduleDisableApi: Send + Sync {
+    fn disable<'a>(
+        &'a self,
+        data: Value,
+        auth: &'a AuthService,
+        caller: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'a, Result<Value, StoreError>>;
 }
 type Lease = Arc<OwnedSemaphorePermit>;
 fn reply(status: u16, detail: impl Into<String>) -> Response {
@@ -208,11 +218,17 @@ impl BackupFiles {
             secret: Arc::new(signing_key.into_bytes()),
             workers: Arc::new(Semaphore::new(4)),
             jobs: None,
+            schedule_disable: None,
         })
     }
     /// Attach only a prepared, reviewed adapter. This starts no worker.
     pub fn with_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
         self.jobs = Some(jobs);
+        self
+    }
+    /// Attach schedule-only behavior through the existing request executor.
+    pub fn with_schedule_disable(mut self, adapter: Arc<dyn BackupScheduleDisableApi>) -> Self {
+        self.schedule_disable = Some(adapter);
         self
     }
     pub fn router(self) -> Router {
@@ -419,9 +435,9 @@ impl BackupFiles {
             return Ok((status, Json(value)).into_response());
         }
         if kind == "schedule-update" {
-            let Some(jobs) = &self.jobs else {
+            if self.jobs.is_none() && self.schedule_disable.is_none() {
                 return Ok(reply(501, "Backup schedule consumer is not prepared"));
-            };
+            }
             let raw =
                 axum::body::to_bytes(std::mem::replace(request.body_mut(), Body::empty()), 65536)
                     .await
@@ -430,7 +446,14 @@ impl BackupFiles {
                     })?;
             let value: Value = serde_json::from_slice(&raw)
                 .map_err(|_| StoreError::StatusBody(400, json!({"detail":"JSON parse error"})))?;
-            return Ok(Json(jobs.update_schedule(value, lease.clone()).await?).into_response());
+            let updated = if let Some(jobs) = &self.jobs {
+                jobs.update_schedule(value, lease.clone()).await?
+            } else if let Some(adapter) = &self.schedule_disable {
+                adapter.disable(value, &self.auth, lease.clone()).await?
+            } else {
+                return Ok(reply(501, "Backup schedule consumer is not prepared"));
+            };
+            return Ok(Json(updated).into_response());
         }
         if kind == "schedule" {
             return self.schedule().await;

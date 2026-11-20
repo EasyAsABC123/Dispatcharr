@@ -283,6 +283,7 @@ mod normal_backup_archive;
 mod normal_backup_protocol;
 
 mod normal_backup_schedule;
+pub use normal_backup_schedule::BackupScheduleDisable;
 pub mod normal_channel_tasks;
 
 pub mod core_settings_broker;

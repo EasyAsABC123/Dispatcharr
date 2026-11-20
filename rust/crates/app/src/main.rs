@@ -1054,10 +1054,17 @@ async fn run() -> Result<(), String> {
         None => plugin_actions,
     };
 
-    let backup_files = selected_jobs
-        .as_ref()
-        .map(|selected| selected.backup_files())
-        .unwrap_or(backup_files);
+    let backup_files = match (&selected_jobs, cache_url.as_deref()) {
+        (Some(selected), _) => selected.backup_files(),
+        (None, Some(cache)) => backup_files.with_schedule_disable(Arc::new(
+            dispatcharr_job_transport::BackupScheduleDisable::new(
+                store.clone(),
+                cache.to_owned(),
+                auth.producer_identity_source(),
+            ),
+        )),
+        (None, None) => backup_files,
+    };
     let ordinary_recording_playback = selected_jobs.is_none().then(|| {
         dispatcharr_store::RecordingPlayback::prepare(
             auth.clone(),

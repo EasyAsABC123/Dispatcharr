@@ -798,6 +798,13 @@ fn checked_network(
         Ok(json!({"error":true,"message":"Invalid CIDR(s)","data":invalid}))
     }
 }
+impl AuthService {
+    /// Complete the Original CoreSettings post-save invalidation after a
+    /// committed ordinary backup-settings write using the retained request.
+    pub async fn backup_schedule_settings_saved(&self) -> Result<(), StoreError> {
+        invalidate(self, "backup_settings").await
+    }
+}
 async fn invalidate(auth: &AuthService, key: &str) -> Result<(), StoreError> {
     let cache = auth
         .notification_cache
