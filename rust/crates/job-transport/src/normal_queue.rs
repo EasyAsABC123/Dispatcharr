@@ -14,7 +14,7 @@ use std::{
     collections::{BTreeMap, BTreeSet},
     sync::{
         atomic::{AtomicBool, Ordering},
-        Arc, Mutex,
+        Arc, Mutex, Weak,
     },
     time::Duration,
 };
@@ -231,6 +231,80 @@ pub struct Application {
     inner: Arc<Inner>,
     lifetime: Arc<Lifetime>,
 }
+/// Read-only witness for the observed taskless restore periodic domain.
+#[derive(Clone)]
+pub struct TasklessBuiltins {
+    selected: Weak<Inner>,
+    plugins: Weak<crate::normal_registered_plugins::Prepared>,
+    backup: Weak<crate::normal_backup::Application>,
+}
+
+fn taskless_builtin_family(task: &str) -> Option<Family> {
+    let family = milestone_dispatch::builtin_family(task)?;
+    // These are the three prepared builtin families observed in the ordinary
+    // disabled periodic inventory of the trusted taskless Source reference.
+    matches!(
+        family,
+        Family::M3uSingle | Family::BackupScheduled | Family::PluginRefresh
+    )
+    .then_some(family)
+}
+
+impl TasklessBuiltins {
+    pub(crate) fn belongs_to_backup(&self, backup: &crate::normal_backup::Application) -> bool {
+        self.backup
+            .upgrade()
+            .is_some_and(|bound| bound.same_instance(backup))
+    }
+
+    fn selected_owner(
+        &self,
+        reservation: &dispatcharr_store::TasklessRestoreReservation,
+    ) -> Result<Arc<Inner>, Error> {
+        let selected = self.selected.upgrade().ok_or(Error::Closed)?;
+        let plugins = self.plugins.upgrade().ok_or(Error::Closed)?;
+        if !reservation.belongs_to_runtime(plugins.runtime()) {
+            return Err(Error::Configuration);
+        }
+        Ok(selected)
+    }
+
+    pub(crate) fn matches_owner(
+        &self,
+        reservation: &dispatcharr_store::TasklessRestoreReservation,
+    ) -> bool {
+        self.selected_owner(reservation).is_ok()
+    }
+
+    pub(crate) fn qualify(
+        &self,
+        reservation: &dispatcharr_store::TasklessRestoreReservation,
+        rows: &[serde_json::Value],
+    ) -> Result<BTreeSet<String>, Error> {
+        let selected = self.selected_owner(reservation)?;
+        if rows.len() > 256 {
+            return Err(Error::Configuration);
+        }
+        rows.iter()
+            .map(|row| {
+                if row["enabled"] != false {
+                    return Err(Error::Configuration);
+                }
+                let task = row["task"].as_str().ok_or(Error::Configuration)?;
+                let family = taskless_builtin_family(task).ok_or(Error::Configuration)?;
+                let actual = selected
+                    .families
+                    .get(&family)
+                    .ok_or(Error::MissingFamily(family))?;
+                if !actual.inner.supports_selected_head() || actual.closed.load(Ordering::Acquire) {
+                    return Err(Error::Closed);
+                }
+                Ok(task.to_owned())
+            })
+            .collect()
+    }
+}
+
 #[derive(Debug)]
 pub struct Drain {
     pub pollers_settled: bool,
@@ -257,6 +331,36 @@ impl Application {
             .get(&family)
             .is_some_and(|prepared| Arc::ptr_eq(&prepared.inner, expected))
     }
+    /// Only actual Selected family pointers may bind this read-only authority.
+    pub fn taskless_builtin_authority(
+        &self,
+        plugins: &Arc<crate::normal_registered_plugins::Prepared>,
+        backup: &Arc<crate::normal_backup::Application>,
+    ) -> Result<TasklessBuiltins, Error> {
+        let plugin_handler: Arc<dyn Handler> = plugins.clone();
+        let backup_handler: Arc<dyn Handler> = backup.clone();
+        if !self.registered_plugin_prepared()
+            || !self.contains_actual_handler(Family::RegisteredPlugin, &plugin_handler)
+            || !self.contains_actual_handler(Family::BackupCreate, &backup_handler)
+            || !self.contains_actual_handler(Family::BackupScheduled, &backup_handler)
+            || [Family::M3uSingle, Family::PluginRefresh]
+                .iter()
+                .any(|family| {
+                    self.inner
+                        .families
+                        .get(family)
+                        .is_none_or(|entry| !entry.inner.supports_selected_head())
+                })
+        {
+            return Err(Error::Configuration);
+        }
+        Ok(TasklessBuiltins {
+            selected: Arc::downgrade(&self.inner),
+            plugins: Arc::downgrade(plugins),
+            backup: Arc::downgrade(backup),
+        })
+    }
+
     pub async fn prepare(
         broker: &str,
         backend: &str,
@@ -1422,5 +1526,39 @@ mod sd_registry_controls {
         }
         assert!(validate_family_admission(Family::SdGuide, maximum, false).is_err());
         assert!(validate_family_admission(Family::TvgProgrammes, maximum, true).is_err());
+    }
+}
+
+#[cfg(test)]
+mod taskless_builtin_controls {
+    use super::*;
+
+    #[test]
+    fn taskless_builtin_authority_uses_only_the_observed_selected_families() {
+        for (task, expected) in [
+            (
+                "apps.m3u.tasks.refresh_single_m3u_account",
+                Family::M3uSingle,
+            ),
+            (
+                "apps.backups.tasks.scheduled_backup_task",
+                Family::BackupScheduled,
+            ),
+            (
+                "apps.plugins.tasks.refresh_plugin_repos",
+                Family::PluginRefresh,
+            ),
+        ] {
+            assert_eq!(milestone_dispatch::builtin_family(task), Some(expected));
+            assert_eq!(taskless_builtin_family(task), Some(expected));
+        }
+        for task in [
+            "apps.backups.tasks.restore_backup_task",
+            "apps.plugins.tasks.fixture_task",
+            "fixture.plugin.tasks.refresh_plugin_repos",
+            "",
+        ] {
+            assert_eq!(taskless_builtin_family(task), None);
+        }
     }
 }

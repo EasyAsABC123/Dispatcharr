@@ -280,6 +280,7 @@ pub mod normal_core_tasks;
 pub mod normal_beat;
 
 pub mod normal_backup;
+pub mod normal_backup_taskless;
 mod normal_backup_archive;
 mod normal_backup_protocol;
 

@@ -6,6 +6,46 @@ pub(crate) struct BackupCandidate {
     raw: Vec<u8>,
     pub message: Message,
 }
+/// A successful compare-and-pop of the exact owned broker head. Keep
+/// distinct from a parsed message when composing side-effect authority.
+pub struct ClaimedBackup(Message, std::sync::Weak<Inner>);
+impl ClaimedBackup {
+    #[cfg(target_os = "linux")]
+    pub(crate) fn message_for(&self, jobs: &Jobs) -> Option<&Message> {
+        self.1
+            .upgrade()
+            .filter(|actual| Arc::ptr_eq(actual, &jobs.inner))?;
+        Some(&self.0)
+    }
+
+    pub(crate) fn matches_restore(&self, id: Uuid, filename: &str) -> bool {
+        self.0.id == id
+            && self.0.parent.is_none()
+            && matches!(&self.0.kind, Kind::Restore(file) if file == filename)
+    }
+    pub(crate) fn into_message(self) -> Message {
+        self.0
+    }
+}
+#[cfg(test)]
+mod taskless_claim_identity {
+    use super::*;
+
+    #[test]
+    fn only_the_exact_root_restore_claim_matches_the_prepared_archive() {
+        let id = Uuid::new_v4();
+        let archive = "ordinary-backup.zip";
+        let scope =
+            |parent, kind| ClaimedBackup(Message { id, parent, kind }, std::sync::Weak::new());
+        let actual = scope(None, Kind::Restore(archive.into()));
+        assert!(actual.matches_restore(id, archive));
+        assert!(!actual.matches_restore(id, "another-backup.zip"));
+        assert!(!actual.matches_restore(Uuid::new_v4(), archive));
+        assert!(!scope(None, Kind::Create).matches_restore(id, archive));
+        assert!(!scope(Some(Uuid::new_v4()), Kind::Restore(archive.into()))
+            .matches_restore(id, archive));
+    }
+}
 fn backup_kind_allowed(authority: Authority, kind: &Kind) -> bool {
     matches!(authority, Authority::Fixture | Authority::DefaultServices)
         || (authority == Authority::Backup && matches!(kind, Kind::Create))
@@ -59,7 +99,7 @@ impl Jobs {
         &self,
         candidate: BackupCandidate,
         owner: Arc<dyn Send + Sync>,
-    ) -> Result<Message, Error> {
+    ) -> Result<ClaimedBackup, Error> {
         if !backup_kind_allowed(self.inner.authority, &candidate.message.kind) {
             return Err(Error::UnsupportedTask);
         }
@@ -74,7 +114,10 @@ impl Jobs {
             )
             .await
         {
-            Ok((1, _)) => Ok(candidate.message),
+            Ok((1, _)) => Ok(ClaimedBackup(
+                candidate.message,
+                Arc::downgrade(&self.inner),
+            )),
             Ok((0, _)) => Err(Error::ClaimRace),
             Ok(_) => Err(Error::Corrupt),
             Err(ClassifiedError::Backend) => Err(Error::AmbiguousClaim(candidate.message.id)),

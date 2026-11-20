@@ -240,6 +240,13 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let admin_location = admin_ingress::configured_location()?;
     let selected_jobs_enabled = selected_jobs::enabled()?;
     let cache_url = redis_config::url()?;
+    #[cfg(target_os = "linux")]
+    let taskless_restore_helper =
+        backup_config::taskless_selected(selected_jobs_enabled, cache_url.as_deref())?;
+    #[cfg(not(target_os = "linux"))]
+    if env::var_os("RUST_BACKUP_TASKLESS_RESTORE_OWNER").is_some() {
+        return Err("Taskless restore is only packaged for Linux".into());
+    }
     let bind: SocketAddr = env::var("RUST_BIND")
         .unwrap_or_else(|_| "127.0.0.1:9192".into())
         .parse()
@@ -1107,6 +1114,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
                     .map_err(|_| "Actual Main listener address unavailable")?,
                 existing,
                 plugin_actions.clone(),
+                #[cfg(target_os = "linux")]
+                taskless_restore_helper,
                 cache_url
                     .as_deref()
                     .ok_or("Selected jobs require Redis configuration")?,
@@ -1585,7 +1594,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     let selected_mode = selected_jobs.is_some();
     if let Some(selected) = selected_jobs {
         selected.stop_producers();
-        if !selected.shutdown(Duration::from_secs(12)).await {
+        if !selected.shutdown(selected.shutdown_budget()).await {
             return Err("Selected worker drain is incomplete; process termination may close outstanding resources".into());
         }
         // The normal graph owned these actual family lifecycles/ports. Legacy

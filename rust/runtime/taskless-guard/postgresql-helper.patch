@@ -1,0 +1,419 @@
+diff --git a/src/bin/pg_dump/pg_backup.h b/src/bin/pg_dump/pg_backup.h
+--- a/src/bin/pg_dump/pg_backup.h
++++ b/src/bin/pg_dump/pg_backup.h
+@@ -150,6 +150,8 @@
+ 	int			suppressDumpWarnings;	/* Suppress output of WARNING entries
+ 										 * to stderr */
+ 
++	bool		dispatcharr_guarded; /* private serial direct restore mode */
++	int			dispatcharr_control_fd; /* private owner channel */
+ 	bool		single_txn;		/* restore all TOCs in one transaction */
+ 	int			txn_size;		/* restore this many TOCs per txn, if > 0 */
+ 
+diff --git a/src/bin/pg_dump/pg_restore.c b/src/bin/pg_dump/pg_restore.c
+--- a/src/bin/pg_dump/pg_restore.c
++++ b/src/bin/pg_dump/pg_restore.c
+@@ -41,6 +41,9 @@
+ #include "postgres_fe.h"
+ 
+ #include <ctype.h>
++#include <fcntl.h>
++#include <sys/stat.h>
++#include <unistd.h>
+ #ifdef HAVE_TERMIOS_H
+ #include <termios.h>
+ #endif
+@@ -62,8 +65,10 @@
+ 	int			c;
+ 	int			exit_code;
+ 	int			numWorkers = 1;
++	int			dispatcharr_archive_fd = -1;
+ 	Archive    *AH;
+ 	char	   *inputFileSpec;
++	char		dispatcharr_archive_spec[64];
+ 	static int	disable_triggers = 0;
+ 	static int	enable_row_security = 0;
+ 	static int	if_exists = 0;
+@@ -128,6 +133,9 @@
+ 		{"no-subscriptions", no_argument, &no_subscriptions, 1},
+ 		{"filter", required_argument, NULL, 4},
+ 		{"restrict-key", required_argument, NULL, 6},
++		{"dispatcharr-guard", no_argument, NULL, 7},
++		{"dispatcharr-control-fd", required_argument, NULL, 8},
++		{"dispatcharr-archive-fd", required_argument, NULL, 9},
+ 
+ 		{NULL, 0, NULL, 0}
+ 	};
+@@ -139,6 +147,8 @@
+ 	init_parallel_dump_utils();
+ 
+ 	opts = NewRestoreOptions();
++	opts->dispatcharr_control_fd = -1;
++	opts->dispatcharr_guarded = argc > 1 && strcmp(argv[1], "--dispatcharr-guard") == 0;
+ 
+ 	progname = get_progname(argv[0]);
+ 
+@@ -159,6 +169,9 @@
+ 	while ((c = getopt_long(argc, argv, "acCd:ef:F:h:I:j:lL:n:N:Op:P:RsS:t:T:U:vwWx1",
+ 							cmdopts, NULL)) != -1)
+ 	{
++		if (opts->dispatcharr_guarded && c != 7 && c != 8 && c != 9 && c != 'h' && c != 'p' &&
++			c != 'U' && c != 'd')
++			pg_fatal("invalid option for guarded restore");
+ 		switch (c)
+ 		{
+ 			case 'a':			/* Dump data only */
+@@ -307,6 +320,25 @@
+ 				opts->restrict_key = pg_strdup(optarg);
+ 				break;
+ 
++			case 7:
++				if (!opts->dispatcharr_guarded)
++					pg_fatal("guarded restore must be specified first");
++				break;
++
++			case 8:
++				if (!opts->dispatcharr_guarded ||
++					!option_parse_int(optarg, "--dispatcharr-control-fd", 3, INT_MAX,
++									  &opts->dispatcharr_control_fd))
++					pg_fatal("invalid guarded restore control descriptor");
++				break;
++
++			case 9:
++				if (!opts->dispatcharr_guarded ||
++					!option_parse_int(optarg, "--dispatcharr-archive-fd", 3, INT_MAX,
++									  &dispatcharr_archive_fd))
++					pg_fatal("invalid guarded restore archive descriptor");
++				break;
++
+ 			default:
+ 				/* getopt_long already emitted a complaint */
+ 				pg_log_error_hint("Try \"%s --help\" for more information.", progname);
+@@ -327,6 +359,30 @@
+ 					 argv[optind]);
+ 		pg_log_error_hint("Try \"%s --help\" for more information.", progname);
+ 		exit_nicely(1);
++	}
++
++	if (opts->dispatcharr_guarded)
++	{
++		struct stat info;
++		const int archive_fd = dispatcharr_archive_fd;
++		const int archive_flags = fcntl(archive_fd, F_GETFL);
++
++		if (inputFileSpec || opts->dispatcharr_control_fd < 3 || archive_fd < 3 ||
++			opts->dispatcharr_control_fd == archive_fd ||
++			!opts->cparams.dbname || !opts->cparams.pghost ||
++			!opts->cparams.pgport || !opts->cparams.username || archive_flags < 0 ||
++			(archive_flags & O_ACCMODE) != O_RDONLY || fstat(archive_fd, &info) != 0 ||
++			!S_ISREG(info.st_mode) || info.st_size <= 0 || info.st_uid != geteuid() ||
++			info.st_nlink != 1 || (info.st_mode & (S_IRWXG | S_IRWXO)) != 0)
++			pg_fatal("guarded restore requires its private prepared archive descriptor");
++		snprintf(dispatcharr_archive_spec, sizeof(dispatcharr_archive_spec),
++				 "/proc/self/fd/%d", archive_fd);
++		inputFileSpec = dispatcharr_archive_spec;
++		opts->format = archCustom;
++		opts->single_txn = true;
++		opts->exit_on_error = true;
++		opts->noOwner = true;
++		opts->cparams.promptPassword = TRI_NO;
+ 	}
+ 
+ 	/* Complain if neither -f nor -d was specified (except if dumping TOC) */
+diff --git a/src/bin/pg_dump/pg_backup_archiver.c b/src/bin/pg_dump/pg_backup_archiver.c
+--- a/src/bin/pg_dump/pg_backup_archiver.c
++++ b/src/bin/pg_dump/pg_backup_archiver.c
+@@ -42,6 +42,7 @@
+ #include "pg_backup_archiver.h"
+ #include "pg_backup_db.h"
+ #include "pg_backup_utils.h"
++#include "dispatcharr_guarded_restore.h"
+ 
+ #define TEXT_DUMP_HEADER "--\n-- PostgreSQL database dump\n--\n\n"
+ #define TEXT_DUMPALL_HEADER "--\n-- PostgreSQL database cluster dump\n--\n\n"
+@@ -338,6 +339,7 @@
+ 	bool		parallel_mode;
+ 	TocEntry   *te;
+ 	CompressFileHandle *sav;
++	DispatcharrRestoreGuard guard = {0};
+ 
+ 	AH->stage = STAGE_INITIALIZING;
+ 
+@@ -406,6 +408,8 @@
+ 		AHX->minRemoteVersion = 0;
+ 		AHX->maxRemoteVersion = 9999999;
+ 
++		if (ropt->dispatcharr_guarded)
++			dispatcharr_read_guard(&guard, ropt->dispatcharr_control_fd);
+ 		ConnectDatabase(AHX, &ropt->cparams, false);
+ 
+ 		/*
+@@ -486,6 +490,15 @@
+ 	/*
+ 	 * Establish important parameter values right away.
+ 	 */
++	if (ropt->dispatcharr_guarded)
++	{
++		if (parallel_mode || ropt->dataOnly || !AH->connection || !ropt->single_txn)
++			pg_fatal("guarded restore requires serial direct schema and data");
++		dispatcharr_verify_generation(AH->connection, &guard);
++		dispatcharr_barrier(&guard, "READY\n", "APPLY");
++		dispatcharr_verify_generation(AH->connection, &guard);
++		dispatcharr_reset_schema(AH->connection);
++	}
+ 	_doSetFixedOutputState(AH);
+ 
+ 	AH->stage = STAGE_PROCESSING;
+@@ -792,7 +805,14 @@
+ 	 */
+ 	if (ropt->single_txn || ropt->txn_size > 0)
+ 	{
+-		if (AH->connection)
++		if (ropt->dispatcharr_guarded)
++		{
++			dispatcharr_verify_generation(AH->connection, &guard);
++			dispatcharr_barrier(&guard, "PRECOMMIT\n", "COMMIT");
++			dispatcharr_verify_generation(AH->connection, &guard);
++			dispatcharr_commit(AH->connection, &guard);
++		}
++		else if (AH->connection)
+ 			CommitTransaction(AHX);
+ 		else
+ 			ahprintf(AH, "COMMIT;\n\n");
+diff --git a/src/bin/pg_dump/dispatcharr_guarded_restore.h b/src/bin/pg_dump/dispatcharr_guarded_restore.h
+new file mode 100644
+--- /dev/null
++++ b/src/bin/pg_dump/dispatcharr_guarded_restore.h
+@@ -0,0 +1,232 @@
++/*
++ * Private Dispatcharr direct-restore guard prototype for PostgreSQL 17.11.
++ * PostgreSQL Global Development Group, Regents of the University of
++ * California, and original Dispatcharr contributors retain full credit.
++ * Distributed under the PostgreSQL terms in COPYRIGHT.
++ */
++#ifndef DISPATCHARR_GUARDED_RESTORE_H
++#define DISPATCHARR_GUARDED_RESTORE_H
++
++#include <poll.h>
++#include <sys/socket.h>
++
++#include "libpq-fe.h"
++#include "portability/instr_time.h"
++
++#define DISPATCHARR_GUARD_TIMEOUT_MS 30000
++
++typedef struct DispatcharrRestoreGuard
++{
++	int			control_fd;
++	char		database[NAMEDATALEN];
++	char		database_oid[11];
++	char		postmaster_us[20];
++	char		fence_pid[11];
++	char		fence_us[20];
++	char		apply_pid[11];
++	char		apply_us[20];
++	char		xid[21];
++} DispatcharrRestoreGuard;
++
++static uint64
++dispatcharr_milliseconds(void)
++{
++	instr_time	now;
++
++	INSTR_TIME_SET_CURRENT(now);
++	return (uint64) INSTR_TIME_GET_MILLISEC(now);
++}
++
++static void
++dispatcharr_wait(int control_fd, short events, uint64 deadline)
++{
++	struct pollfd fd = {control_fd, events, 0};
++
++	for (;;)
++	{
++		uint64		now = dispatcharr_milliseconds();
++		int			available;
++
++		if (now >= deadline)
++			pg_fatal("guarded restore owner deadline expired");
++		available = poll(&fd, 1, (int) (deadline - now));
++		if (available > 0 && (fd.revents & events))
++			return;
++		if (available < 0 && errno == EINTR)
++			continue;
++		pg_fatal("guarded restore owner unavailable");
++	}
++}
++
++static void
++dispatcharr_read_line(int control_fd, char *line, size_t capacity, uint64 deadline)
++{
++	size_t		length = 0;
++
++	for (;;)
++	{
++		unsigned char c;
++		ssize_t		count;
++
++		dispatcharr_wait(control_fd, POLLIN, deadline);
++		count = recv(control_fd, &c, 1, MSG_DONTWAIT);
++		if (count < 0 && (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK))
++			continue;
++		if (count != 1)
++			pg_fatal("guarded restore owner frame unavailable");
++		if (c == '\n')
++		{
++			line[length] = '\0';
++			return;
++		}
++		if (c < 32 || c == 127)
++			pg_fatal("invalid guarded restore owner frame");
++		if (length + 1 == capacity)
++			pg_fatal("guarded restore owner frame exceeds limit");
++		line[length++] = (char) c;
++	}
++}
++
++static void
++dispatcharr_send(int control_fd, const char *message, uint64 deadline)
++{
++	size_t		left = strlen(message);
++
++	while (left > 0)
++	{
++		ssize_t		count;
++
++		dispatcharr_wait(control_fd, POLLOUT, deadline);
++		count = send(control_fd, message, left,
++					 MSG_DONTWAIT | MSG_NOSIGNAL);
++		if (count < 0 && (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK))
++			continue;
++		if (count <= 0)
++			pg_fatal("guarded restore owner reply unavailable");
++		message += count;
++		left -= count;
++	}
++}
++
++static void
++dispatcharr_read_guard(DispatcharrRestoreGuard *guard, int control_fd)
++{
++	const uint64 deadline = dispatcharr_milliseconds() + DISPATCHARR_GUARD_TIMEOUT_MS;
++	char		version[5];
++	struct sockaddr_storage peer;
++	socklen_t	peer_length = sizeof(peer);
++
++	guard->control_fd = control_fd;
++	if (getpeername(control_fd, (struct sockaddr *) &peer,
++					&peer_length) != 0 || peer.ss_family != AF_UNIX)
++		pg_fatal("guarded restore requires a private owner socket");
++	dispatcharr_read_line(control_fd, version, sizeof(version), deadline);
++	if (strcmp(version, "DPR1") != 0)
++		pg_fatal("unsupported guarded restore owner protocol");
++	dispatcharr_read_line(control_fd, guard->database, sizeof(guard->database), deadline);
++	dispatcharr_read_line(control_fd, guard->database_oid, sizeof(guard->database_oid), deadline);
++	dispatcharr_read_line(control_fd, guard->postmaster_us, sizeof(guard->postmaster_us), deadline);
++	dispatcharr_read_line(control_fd, guard->fence_pid, sizeof(guard->fence_pid), deadline);
++	dispatcharr_read_line(control_fd, guard->fence_us, sizeof(guard->fence_us), deadline);
++	if (guard->database[0] == '\0')
++		pg_fatal("guarded restore expected database is empty");
++}
++
++static void
++dispatcharr_barrier(const DispatcharrRestoreGuard *guard, const char *notification, const char *grant)
++{
++	const uint64 deadline = dispatcharr_milliseconds() + DISPATCHARR_GUARD_TIMEOUT_MS;
++	char		ack[16];
++
++	dispatcharr_send(guard->control_fd, notification, deadline);
++	dispatcharr_read_line(guard->control_fd, ack, sizeof(ack), deadline);
++	if (strcmp(ack, grant) != 0)
++		pg_fatal("guarded restore owner grant unavailable");
++}
++
++static void
++dispatcharr_copy_identity(char *destination, size_t size, const char *value)
++{
++	if (value[0] == '\0' || strlen(value) >= size)
++		pg_fatal("guarded restore effect identity unavailable");
++	strlcpy(destination, value, size);
++}
++
++static void
++dispatcharr_verify_generation(PGconn *connection, DispatcharrRestoreGuard *guard)
++{
++	const char *values[] = {
++		guard->database, guard->database_oid, guard->postmaster_us,
++		guard->fence_pid, guard->fence_us
++	};
++	PGresult   *result;
++	const char *pid;
++	const char *started;
++	const char *xid;
++
++	if (PQtransactionStatus(connection) != PQTRANS_INTRANS)
++		pg_fatal("guarded restore transaction unavailable");
++	result = PQexec(connection, "SELECT pg_catalog.pg_stat_clear_snapshot()");
++	if (PQresultStatus(result) != PGRES_TUPLES_OK)
++		pg_fatal("guarded restore activity snapshot unavailable");
++	PQclear(result);
++	result = PQexecParams(connection,
++						  "SELECT own.pid::text, "
++						  "(extract(epoch FROM own.backend_start)*1000000)::bigint::text, "
++						  "pg_catalog.pg_current_xact_id()::text "
++						  "FROM pg_catalog.pg_stat_activity AS own "
++						  "JOIN pg_catalog.pg_stat_activity AS held "
++						  "ON held.datid=own.datid AND held.usesysid=own.usesysid "
++						  "WHERE own.pid=pg_catalog.pg_backend_pid() "
++						  "AND held.pid<>own.pid AND held.pid=$4::integer "
++						  "AND own.datname=$1 AND own.datid::bigint=$2::bigint "
++						  "AND (extract(epoch FROM pg_catalog.pg_postmaster_start_time())"
++						  "*1000000)::bigint=$3::bigint "
++						  "AND (extract(epoch FROM held.backend_start)*1000000)::bigint=$5::bigint",
++						  lengthof(values), NULL, values, NULL, NULL, 0);
++	if (PQresultStatus(result) != PGRES_TUPLES_OK || PQntuples(result) != 1 ||
++		PQnfields(result) != 3 || PQgetisnull(result, 0, 0) ||
++		PQgetisnull(result, 0, 1) || PQgetisnull(result, 0, 2))
++		pg_fatal("guarded restore target generation unavailable");
++	pid = PQgetvalue(result, 0, 0);
++	started = PQgetvalue(result, 0, 1);
++	xid = PQgetvalue(result, 0, 2);
++	if (guard->apply_pid[0] == '\0')
++	{
++		dispatcharr_copy_identity(guard->apply_pid, sizeof(guard->apply_pid), pid);
++		dispatcharr_copy_identity(guard->apply_us, sizeof(guard->apply_us), started);
++		dispatcharr_copy_identity(guard->xid, sizeof(guard->xid), xid);
++	}
++	else if (strcmp(guard->apply_pid, pid) != 0 ||
++			 strcmp(guard->apply_us, started) != 0 || strcmp(guard->xid, xid) != 0)
++		pg_fatal("guarded restore effect connection or transaction changed");
++	PQclear(result);
++}
++
++static void
++dispatcharr_reset_schema(PGconn *connection)
++{
++	PGresult   *result;
++
++	result = PQexec(connection, "DROP SCHEMA IF EXISTS public CASCADE; "
++					"CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO public;");
++	if (PQresultStatus(result) != PGRES_COMMAND_OK ||
++		PQtransactionStatus(connection) != PQTRANS_INTRANS)
++		pg_fatal("guarded restore schema reset failed");
++	PQclear(result);
++}
++
++static void
++dispatcharr_commit(PGconn *connection, const DispatcharrRestoreGuard *guard)
++{
++	PGresult   *result = PQexec(connection, "COMMIT");
++
++	if (PQresultStatus(result) != PGRES_COMMAND_OK ||
++		strcmp(PQcmdStatus(result), "COMMIT") != 0 ||
++		PQtransactionStatus(connection) != PQTRANS_IDLE)
++		pg_fatal("guarded restore commit unsettled");
++	PQclear(result);
++	dispatcharr_send(guard->control_fd, "DONE\n", dispatcharr_milliseconds() + DISPATCHARR_GUARD_TIMEOUT_MS);
++}
++
++#endif

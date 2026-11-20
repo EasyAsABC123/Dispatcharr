@@ -85,6 +85,10 @@ impl Prepared {
             }),
         })
     }
+    pub(crate) fn runtime(&self) -> &PluginRuntime {
+        &self.inner.runtime
+    }
+
     pub fn entry(&self) -> (Family, Arc<dyn Handler>) {
         (Family::RegisteredPlugin, Arc::new(self.clone()))
     }

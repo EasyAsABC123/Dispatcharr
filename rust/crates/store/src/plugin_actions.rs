@@ -32,6 +32,11 @@ mod managed;
 mod manifest_fields;
 #[path = "plugin_registry.rs"]
 mod registry;
+#[path = "plugin_restore_lifetime.rs"]
+mod restore_lifetime;
+pub use restore_lifetime::{
+    TasklessRegistryObservation, TasklessRestoreReservation, TasklessRestoreTarget,
+};
 const UPLOAD: usize = 200 * 1024 * 1024;
 fn guard() -> StoreError {
     StoreError::Unsupported(

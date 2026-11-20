@@ -115,6 +115,9 @@ impl BackupRestoreAdmission {
     pub fn expected_migrations(&self) -> &BTreeSet<(String, String)> {
         &self.expected
     }
+    pub(crate) fn is_open(&self) -> bool {
+        self.fence.is_open()
+    }
     pub fn session(&self) -> TaskSqlSession {
         self.fence.primary().clone()
     }

@@ -50,6 +50,8 @@ struct Inner {
     xc_http: dispatcharr_store::xc_account_http::Http,
     recording_playback: dispatcharr_store::RecordingPlayback,
     beat_enabled: bool,
+    #[cfg(target_os = "linux")]
+    taskless_shutdown: Option<Duration>,
     backups: dispatcharr_store::BackupFiles,
     backup_jobs: jobs::normal_backup::Application,
     channel_http: dispatcharr_store::channel_maintenance_http::ChannelMaintenanceHttp,
@@ -122,6 +124,9 @@ impl SelectedJobs {
         actual: SocketAddr,
         existing: Existing,
         restore_plugins: dispatcharr_store::PluginActions,
+        #[cfg(target_os = "linux")] taskless_helper: Option<
+            jobs::normal_backup::VerifiedGuardedHelper,
+        >,
         cache: &str,
     ) -> Result<Self, String> {
         let local = loopback(actual)?;
@@ -231,12 +236,14 @@ impl SelectedJobs {
         .map_err(|_| "Plugin lazy runtime preparation failed")?;
         dvr.bind_recording_connect(auth.clone(), plugin_runtime.clone())
             .map_err(|_| "Selected recording Connect runtime binding failed")?;
-        let plugin_tasks = jobs::normal_registered_plugins::Prepared::prepare(
-            shared_jobs.clone(),
-            plugin_runtime.clone(),
-            revoked.clone(),
-        )
-        .map_err(|_| "Plugin selected-family preparation failed")?;
+        let plugin_tasks = Arc::new(
+            jobs::normal_registered_plugins::Prepared::prepare(
+                shared_jobs.clone(),
+                plugin_runtime.clone(),
+                revoked.clone(),
+            )
+            .map_err(|_| "Plugin selected-family preparation failed")?,
+        );
         control
             .bind_backend(shared_jobs.clone())
             .map_err(|_| "Selected pidbox backend binding failed")?;
@@ -262,6 +269,7 @@ impl SelectedJobs {
         if backup_jobs.initialize_schedule(Arc::new(())).await.is_err() {
             eprintln!("Normal backup scheduler startup sync failed");
         }
+        let backup_handler = Arc::new(backup_jobs.clone());
         let backups = existing
             .backups
             .clone()
@@ -483,8 +491,8 @@ impl SelectedJobs {
                     .into_normal_handler()
                     .map_err(|_| "Selected version lifecycle unavailable")?,
             ),
-            (Family::BackupCreate, Arc::new(backup_jobs.clone())),
-            (Family::BackupScheduled, Arc::new(backup_jobs.clone())),
+            (Family::BackupCreate, backup_handler.clone()),
+            (Family::BackupScheduled, backup_handler.clone()),
             (Family::ProxyStats, stats),
             (Family::Recording, dvr.clone()),
             (Family::StartupRecovery, Arc::new(recovery.clone())),
@@ -507,7 +515,7 @@ impl SelectedJobs {
         ]);
         entries.push((Family::ComskipManual, comskip.handler()));
         entries.push(plugin_refresh.entry());
-        entries.push(plugin_tasks.entry());
+        entries.push((Family::RegisteredPlugin, plugin_tasks.clone()));
         entries.extend(xc.entries());
         entries.push(sd_guide.entry());
         entries.extend(defaults.entries());
@@ -523,6 +531,24 @@ impl SelectedJobs {
         plugin_jobs
             .attach_prepared(&queue)
             .map_err(|_| "Plugin actual shared worker registry unavailable")?;
+        #[cfg(target_os = "linux")]
+        let taskless_shutdown = taskless_helper
+            .as_ref()
+            .map(|helper| helper.timeout() + Duration::from_secs(4));
+        #[cfg(target_os = "linux")]
+        if let Some(helper) = taskless_helper {
+            if beat_enabled {
+                return Err(
+                    "Taskless restore requires the independent Selected scheduler disabled".into(),
+                );
+            }
+            let authority = queue
+                .taskless_builtin_authority(&plugin_tasks, &backup_handler)
+                .map_err(|_| "Selected taskless builtin authority unavailable")?;
+            backup_jobs
+                .bind_taskless_restore(authority, helper)
+                .map_err(|_| "Selected taskless restore authority binding failed")?;
+        }
         // Discover actual enabled callables using the same Auth4/pool8 ports.
         // No Python child exists when there are no enabled plugin configurations.
         plugin_runtime
@@ -591,6 +617,8 @@ impl SelectedJobs {
                 xc_http,
                 recording_playback,
                 beat_enabled,
+                #[cfg(target_os = "linux")]
+                taskless_shutdown,
                 backups,
                 backup_jobs,
                 channel_http,
@@ -746,6 +774,14 @@ impl SelectedJobs {
         self.inner.dvr.request_shutdown();
         self.inner.queue.stop_admission();
     }
+    pub fn shutdown_budget(&self) -> Duration {
+        #[cfg(target_os = "linux")]
+        if let Some(budget) = self.inner.taskless_shutdown {
+            return budget;
+        }
+        Duration::from_secs(12)
+    }
+
     pub async fn shutdown(&self, budget: Duration) -> bool {
         self.stop_producers();
         let deadline = tokio::time::Instant::now() + budget;

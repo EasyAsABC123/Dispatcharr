@@ -24,13 +24,15 @@ type RestoreUncertain = Arc<std::sync::Mutex<Vec<RestoreScope>>>;
 pub struct Executor {
     store: Store,
     auth: AuthService,
-    restore_plugins: Arc<std::sync::OnceLock<PluginActions>>,
+    pub(super) restore_plugins: Arc<std::sync::OnceLock<PluginActions>>,
+    #[cfg(target_os = "linux")]
+    pub(super) taskless: Arc<std::sync::OnceLock<super::normal_backup::SelectedTaskless>>,
     uncertain_restore: RestoreUncertain,
     cache: String,
-    config: PgConfig,
-    runtime: Runtime,
-    root: PathBuf,
-    scratch: PathBuf,
+    pub(super) config: PgConfig,
+    pub(super) runtime: Runtime,
+    pub(super) root: PathBuf,
+    pub(super) scratch: PathBuf,
 }
 struct Clock {
     timezone: chrono_tz::Tz,
@@ -93,6 +95,8 @@ impl Executor {
             store,
             auth,
             restore_plugins: Arc::new(std::sync::OnceLock::new()),
+            #[cfg(target_os = "linux")]
+            taskless: Arc::new(std::sync::OnceLock::new()),
             uncertain_restore: Arc::new(std::sync::Mutex::new(Vec::with_capacity(1))),
             cache,
             config,

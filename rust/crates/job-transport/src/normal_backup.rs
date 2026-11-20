@@ -6,6 +6,8 @@ use crate::{
     normal_backup_protocol::Kind,
     transport::{Error as TransportError, Jobs},
 };
+#[cfg(target_os = "linux")]
+pub use dispatcharr_backups::VerifiedGuardedHelper;
 pub use dispatcharr_backups::{PgConfig, Runtime};
 use dispatcharr_contracts::BoxFuture;
 use dispatcharr_store::{
@@ -25,6 +27,15 @@ use uuid::Uuid;
 #[path = "normal_backup_manual.rs"]
 mod manual;
 pub use manual::ManualApplication;
+#[cfg(target_os = "linux")]
+#[path = "normal_backup_selected_taskless.rs"]
+mod selected_taskless;
+#[cfg(target_os = "linux")]
+pub(super) struct SelectedTaskless {
+    authority: crate::normal_queue::TasklessBuiltins,
+    helper: VerifiedGuardedHelper,
+}
+
 #[derive(Debug)]
 pub enum Error {
     Configuration,
@@ -46,6 +57,8 @@ struct Inner {
     closed: AtomicBool,
     advanced: Arc<Notify>,
     uncertain: Mutex<Vec<Arc<dyn Send + Sync>>>,
+    #[cfg(target_os = "linux")]
+    taskless_pending: Mutex<Option<selected_taskless::Held>>,
 }
 #[derive(Clone)]
 pub struct Application {
@@ -85,9 +98,43 @@ impl Application {
                 closed: AtomicBool::new(false),
                 advanced: Arc::new(Notify::new()),
                 uncertain: Mutex::new(Vec::with_capacity(1)),
+                #[cfg(target_os = "linux")]
+                taskless_pending: Mutex::new(None),
             }),
         })
     }
+    #[cfg(target_os = "linux")]
+    pub fn bind_taskless_restore(
+        &self,
+        authority: crate::normal_queue::TasklessBuiltins,
+        helper: VerifiedGuardedHelper,
+    ) -> Result<(), Error> {
+        if !self.inner.jobs.allows_defaults() || !authority.belongs_to_backup(self) {
+            return Err(Error::Configuration);
+        }
+        self.inner
+            .executor
+            .taskless
+            .set(SelectedTaskless { authority, helper })
+            .map_err(|_| Error::Configuration)
+    }
+
+    pub(crate) fn same_instance(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.inner, &other.inner)
+    }
+
+    #[cfg(target_os = "linux")]
+    pub fn retained_taskless_stage(
+        &self,
+    ) -> Result<Option<crate::normal_backup_taskless::SettlementStage>, Error> {
+        let pending = self
+            .inner
+            .taskless_pending
+            .lock()
+            .map_err(|_| Error::Configuration)?;
+        Ok(pending.as_ref().map(selected_taskless::Held::stage))
+    }
+
     pub fn bind_restore_plugins(&self, plugins: PluginActions) -> Result<(), Error> {
         if !self.inner.jobs.allows_normal_restore() {
             return Err(Error::Configuration);
@@ -183,7 +230,13 @@ impl Application {
                     Ok(scope)=>restore_scope=Some(scope),
                     Err(dispatcharr_store::BackupRestoreError::Capacity)=>return Ok(Disposition::Capacity),
                     Err(dispatcharr_store::BackupRestoreError::UnsupportedSchema)=>restore_preflight_result=Some(json!({"status":"failed","error":"Native restore requires the current schema migration graph"})),
-                    Err(dispatcharr_store::BackupRestoreError::UnsupportedPlugins)=>restore_preflight_result=Some(json!({"status":"failed","error":"Native restore plugin modules require an actual restore-task context"})),
+                    Err(dispatcharr_store::BackupRestoreError::UnsupportedPlugins)=>{
+                        #[cfg(target_os = "linux")]
+                        if inner.executor.taskless.get().is_some() && candidate.message.parent.is_none() {
+                            return selected_taskless::run(&inner, candidate, owner).await;
+                        }
+                        restore_preflight_result=Some(json!({"status":"failed","error":"Native restore plugin modules require an actual restore-task context"}));
+                    },
                     Err(_)=>{retain(&inner,owner.clone());return Err(Disposition::Operational("restore SQL admission unsettled".into()));}
                 }
             }
@@ -202,7 +255,7 @@ impl Application {
                 .claim_normal_backup(candidate, owner.clone())
                 .await
             {
-                Ok(value) => value,
+                Ok(value) => value.into_message(),
                 Err(TransportError::ClaimRace) => {
                     if let Some(scope)=restore_scope.take() { inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore race drain unsettled".into()))?; }
                     return Ok(Disposition::HeadChanged);

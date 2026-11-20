@@ -1794,6 +1794,9 @@ mod normal_beat_transport;
 mod channel_tasks_transport;
 #[path = "normal_backup_transport.rs"]
 mod normal_backup_transport;
+#[cfg(target_os = "linux")]
+pub(crate) use normal_backup_transport::BackupCandidate;
+pub use normal_backup_transport::ClaimedBackup;
 
 #[path = "core_settings_broker_transport.rs"]
 mod core_settings_broker_transport;

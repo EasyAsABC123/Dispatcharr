@@ -3,7 +3,7 @@
 //! still guarded by actual prepared Jobs capabilities; full parity is unproved.
 //! Original Dispatcharr/CPython/Celery authors retain full algorithm credit.
 use super::{
-    plugin_execution_host::{Config, Error as HostError, Host, Invocation, Mode},
+    plugin_execution_host::{Config, Error as HostError, Host, Invocation, Mode, TasklessHostHold},
     plugin_execution_ports::{NativePluginJobs, NativePorts},
     plugin_process_guard::GuardedPluginProcesses,
     plugin_publication_owners::PluginPublicationOwners,
@@ -22,6 +22,9 @@ use std::{
     time::Duration,
 };
 use uuid::Uuid;
+#[path = "plugin_loaded_module.rs"]
+mod loaded_module;
+pub use loaded_module::LoadedTasklessModule;
 type Owner = Arc<dyn Send + Sync>;
 struct TaskActor {
     host: Host,
@@ -40,6 +43,8 @@ impl Drop for Busy {
 struct Inner {
     auth: AuthService,
     actions: Host,
+    action_ports: Arc<NativePorts>,
+    plugin_root: PathBuf,
     tasks: Vec<Arc<TaskActor>>,
     registry: PluginTaskRegistry,
     publications: PluginPublicationOwners,
@@ -67,6 +72,10 @@ fn host_error(_: HostError) -> StoreError {
     unavailable()
 }
 impl PluginRuntime {
+    pub(crate) fn same_instance(&self, other: &Self) -> bool {
+        Arc::ptr_eq(&self.inner, &other.inner)
+    }
+
     pub(crate) fn shares_recording_auth(&self, auth: &AuthService) -> bool {
         std::ptr::eq(
             self.inner.auth.store.pool().options(),
@@ -116,7 +125,7 @@ impl PluginRuntime {
             );
             (host, ports)
         };
-        let (actions, _) = actor(HostRole::Actions);
+        let (actions, action_ports) = actor(HostRole::Actions);
         // Existing global Celery6 selects one physical interpreter per active task.
         // These are inert actors; prepare starts ZERO Python children/SQL clients.
         let tasks = (0..6)
@@ -134,6 +143,8 @@ impl PluginRuntime {
             inner: Arc::new(Inner {
                 auth,
                 actions,
+                action_ports,
+                plugin_root: plugins,
                 tasks,
                 registry,
                 publications,
@@ -211,6 +222,97 @@ impl PluginRuntime {
             .await
             .map_err(host_error)
     }
+    /// Observe one already-configured and already-running single-file module.
+    /// This internal Rust capability neither invokes a plugin nor alters SQL.
+    pub async fn witness_taskless_module(
+        &self,
+        session: TaskSqlSession,
+        owner: Owner,
+    ) -> Result<LoadedTasklessModule, StoreError> {
+        self.witness_with_hold(session, owner, None).await
+    }
+    pub(crate) fn try_hold_taskless_host(&self) -> Result<Option<TasklessHostHold>, StoreError> {
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(unavailable());
+        }
+        let identity = self.inner.action_ports.identity().map_err(host_error)?;
+        match self.inner.actions.try_hold_taskless_child(identity) {
+            Ok(hold) => Ok(Some(hold)),
+            Err(HostError::Capacity) => Ok(None),
+            Err(error) => Err(host_error(error)),
+        }
+    }
+    pub(crate) async fn witness_with_hold(
+        &self,
+        session: TaskSqlSession,
+        owner: Owner,
+        hold: Option<&TasklessHostHold>,
+    ) -> Result<LoadedTasklessModule, StoreError> {
+        if self.inner.closed.load(Ordering::Acquire)
+            || !session.shares_auth_writer(&self.inner.auth)
+            || !self.inner.registry.registered_names()?.is_empty()
+        {
+            return Err(unavailable());
+        }
+        let (key, enabled, ever_enabled, unmanaged, no_tasks, no_suspended) = {
+            let rows =
+                session
+                    .run(|c| {
+                        Box::pin(async move {
+                            sqlx::query_as::<_, (String, bool, bool, bool, bool, bool)>(
+                    "SELECT key,enabled,ever_enabled,source_repo_id IS NULL AND slug='', \
+                     owned_tasks='[]'::jsonb,suspended_schedules='[]'::jsonb \
+                     FROM plugins_pluginconfig WHERE enabled OR ever_enabled ORDER BY key LIMIT 2",
+                ).fetch_all(c).await
+                        })
+                    })
+                    .await??;
+            let [row] = rows.try_into().map_err(|_| unavailable())?;
+            row
+        };
+        if !(enabled && ever_enabled && unmanaged && no_tasks && no_suspended) {
+            return Err(unavailable());
+        }
+        // Probe only the existing action host. Do not instantiate an idle host.
+        let identity = self.inner.action_ports.identity().map_err(host_error)?;
+        if !super::plugin_python_registry::live(&identity) {
+            return Err(unavailable());
+        }
+        let inspect = |physical: Owner| {
+            let root = self.inner.plugin_root.clone();
+            let key = key.clone();
+            tokio::task::spawn_blocking(move || {
+                let _owned = physical;
+                loaded_module::InstalledModule::inspect(&root, &key)
+            })
+        };
+        let before = inspect(owner.clone()).await.map_err(|_| unavailable())??;
+        let output = self
+            .inner
+            .actions
+            .observe_taskless_module(
+                key.clone(),
+                identity.clone(),
+                Invocation {
+                    owner: owner.clone(),
+                    sql: Some(session),
+                },
+                hold,
+            )
+            .await
+            .map_err(host_error)?;
+        let current = inspect(owner).await.map_err(|_| unavailable())??;
+        let after = self.inner.action_ports.identity().map_err(host_error)?;
+        if !super::plugin_python_registry::same(&identity, &after)
+            || self.inner.closed.load(Ordering::Acquire)
+            || !self.inner.registry.registered_names()?.is_empty()
+        {
+            return Err(unavailable());
+        }
+        let result = serde_json::from_value(output).map_err(|_| unavailable())?;
+        before.attest(current, identity, result)
+    }
+
     pub async fn run_action(
         &self,
         key: String,

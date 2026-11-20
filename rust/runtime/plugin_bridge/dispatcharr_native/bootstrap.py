@@ -32,7 +32,11 @@ def main():
  import django
  django.setup()
  from django.db import connections
+ from apps.plugins import loader as plugin_loader
  from apps.plugins.loader import PluginManager
+ if args.role=='actions':
+  from dispatcharr_native import loaded_module_witness
+  loaded_module_witness.instrument(plugin_loader)
  from dispatcharr_native.builtin_tasks import install as guard_builtin_tasks
  guard_builtin_tasks(args.plugins)
  # Startup callbacks borrow the actual admitted startup session. A worker
@@ -47,6 +51,9 @@ def main():
    if method=='run_action':
     if args.role!='actions':raise CompatibilityUnavailable('Task host cannot execute web action')
     result=run_action(value)
+   elif method=='observe_taskless_module':
+    if args.role!='actions':raise CompatibilityUnavailable('Only the existing action host can attest a loaded module')
+    result=loaded_module_witness.observe(PluginManager.get(),value['key'])
    elif method=='execute_plugin_task':
     if args.role!='tasks':raise CompatibilityUnavailable('Action host cannot consume its queued task')
     from dispatcharr_native.task_registry import execute

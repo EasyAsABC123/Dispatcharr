@@ -103,10 +103,10 @@ pub struct PluginTaskRegistry {
 fn unavailable() -> StoreError {
     StoreError::Unsupported("Actual loaded plugin task witness unavailable")
 }
-fn same(a: &Identity, b: &Identity) -> bool {
+pub(super) fn same(a: &Identity, b: &Identity) -> bool {
     a.pid == b.pid && a.start_generation == b.start_generation && a.pid_namespace == b.pid_namespace
 }
-fn live(identity: &Identity) -> bool {
+pub(super) fn live(identity: &Identity) -> bool {
     let Ok(raw) = std::fs::read_to_string(format!("/proc/{}/stat", identity.pid)) else {
         return false;
     };

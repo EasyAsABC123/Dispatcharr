@@ -154,6 +154,18 @@ struct Request {
     args: Value,
     scope: Invocation,
     reply: oneshot::Sender<Result<Value, Error>>,
+    required_child: Option<Identity>,
+    _activity: Option<Owner>,
+}
+impl Request {
+    fn may_use(&self, running: Option<&Running>) -> bool {
+        self.required_child.as_ref().is_none_or(|expected| {
+            running.is_some_and(|actual| {
+                super::plugin_python_registry::same(&actual.identity, expected)
+                    && super::plugin_python_registry::live(&actual.identity)
+            })
+        })
+    }
 }
 enum Command {
     Call(Request),
@@ -164,6 +176,19 @@ struct Inner {
     closed: Arc<AtomicBool>,
     receipt: Arc<Mutex<Option<Receipt>>>,
     stop: watch::Sender<Option<tokio::time::Instant>>,
+    activity: Arc<tokio::sync::RwLock<()>>,
+}
+/// Exclusive process-generation reservation for the existing action host only.
+pub(crate) struct TasklessHostHold {
+    host: Arc<Inner>,
+    identity: Identity,
+    permit: Arc<tokio::sync::OwnedRwLockWriteGuard<()>>,
+}
+impl TasklessHostHold {
+    pub(crate) fn is_live(&self) -> bool {
+        !self.host.closed.load(Ordering::Acquire)
+            && super::plugin_python_registry::live(&self.identity)
+    }
 }
 #[derive(Clone)]
 pub struct Host {
@@ -638,6 +663,7 @@ impl Host {
             closed: Arc::new(AtomicBool::new(false)),
             receipt: Arc::new(Mutex::new(None)),
             stop,
+            activity: Arc::new(tokio::sync::RwLock::new(())),
         });
         let closed = inner.closed.clone();
         let receipts = inner.receipt.clone();
@@ -670,6 +696,10 @@ impl Host {
                 };
                 match command {
                     Some(Command::Call(request)) => {
+                        if !request.may_use(running.as_ref()) {
+                            let _ = request.reply.send(Err(Error::Closed));
+                            continue;
+                        }
                         if running.is_none() {
                             match Running::spawn(
                                 &config,
@@ -743,9 +773,73 @@ impl Host {
         args: Value,
         scope: Invocation,
     ) -> Result<Value, Error> {
+        self.call_bound(method, args, scope, None, None).await
+    }
+    pub(crate) fn try_hold_taskless_child(
+        &self,
+        identity: Identity,
+    ) -> Result<TasklessHostHold, Error> {
+        let permit = self
+            .inner
+            .activity
+            .clone()
+            .try_write_owned()
+            .map_err(|_| Error::Capacity)?;
+        let hold = TasklessHostHold {
+            host: self.inner.clone(),
+            identity,
+            permit: Arc::new(permit),
+        };
+        if !hold.is_live() {
+            return Err(Error::Closed);
+        }
+        Ok(hold)
+    }
+    pub(crate) async fn observe_taskless_module(
+        &self,
+        key: String,
+        identity: Identity,
+        scope: Invocation,
+        hold: Option<&TasklessHostHold>,
+    ) -> Result<Value, Error> {
+        if let Some(hold) = hold {
+            if !Arc::ptr_eq(&self.inner, &hold.host)
+                || !hold.is_live()
+                || !super::plugin_python_registry::same(&identity, &hold.identity)
+            {
+                return Err(Error::Closed);
+            }
+        }
+        self.call_bound(
+            "observe_taskless_module".into(),
+            json!({"key": key}),
+            scope,
+            Some(identity),
+            hold.map(|hold| hold.permit.clone() as Owner),
+        )
+        .await
+    }
+    async fn call_bound(
+        &self,
+        method: String,
+        args: Value,
+        scope: Invocation,
+        required_child: Option<Identity>,
+        held: Option<Owner>,
+    ) -> Result<Value, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
+        let activity = match held {
+            Some(hold) => hold,
+            None => Arc::new(
+                self.inner
+                    .activity
+                    .clone()
+                    .try_read_owned()
+                    .map_err(|_| Error::Capacity)?,
+            ),
+        };
         let (reply, receive) = oneshot::channel();
         self.inner
             .sender
@@ -754,6 +848,8 @@ impl Host {
                 args,
                 scope,
                 reply,
+                required_child,
+                _activity: Some(activity),
             }))
             .map_err(|_| Error::Capacity)?;
         // Losing this observer does not abort the actor, callback or child.
@@ -902,6 +998,10 @@ async fn drive_actions(
                 }
             }
             ActionEvent::Command(Some(Command::Call(request))) => {
+                if !request.may_use(running.as_ref()) {
+                    let _ = request.reply.send(Err(Error::Closed));
+                    continue;
+                }
                 if stop_reply.is_some() {
                     let _ = request.reply.send(Err(Error::Closed));
                     continue;
@@ -1084,6 +1184,94 @@ async fn drive_actions(
 #[cfg(test)]
 mod deadline_tests {
     use super::*;
+    #[cfg(target_os = "linux")]
+    #[tokio::test]
+    async fn exclusive_child_gate_retains_active_request_after_observer_drops() {
+        let (sender, mut commands) = mpsc::channel(2);
+        let (stop, _) = watch::channel(None);
+        let host = Host {
+            inner: Arc::new(Inner {
+                sender,
+                closed: Arc::new(AtomicBool::new(false)),
+                receipt: Arc::new(Mutex::new(None)),
+                stop,
+                activity: Arc::new(tokio::sync::RwLock::new(())),
+            }),
+        };
+        let proc = std::fs::read_to_string("/proc/self/stat").unwrap();
+        let identity = Identity {
+            pid: std::process::id(),
+            start_generation: proc
+                .rsplit_once(')')
+                .unwrap()
+                .1
+                .split_whitespace()
+                .nth(19)
+                .unwrap()
+                .into(),
+            pid_namespace: std::fs::read_link("/proc/self/ns/pid").unwrap(),
+        };
+        let scope = Invocation {
+            owner: Arc::new(()),
+            sql: None,
+        };
+        let prior = host.inner.activity.clone().try_read_owned().unwrap();
+        assert!(matches!(
+            host.try_hold_taskless_child(identity.clone()),
+            Err(Error::Capacity)
+        ));
+        drop(prior);
+        let guard = host.try_hold_taskless_child(identity.clone()).unwrap();
+        assert!(matches!(
+            host.call("discover".into(), Value::Null, scope.clone())
+                .await,
+            Err(Error::Capacity)
+        ));
+        let keep = guard.permit.clone();
+        let owned = host.clone();
+        let observer = tokio::spawn(async move {
+            owned
+                .call_bound(
+                    "observe_taskless_module".into(),
+                    Value::Null,
+                    scope,
+                    Some(identity),
+                    Some(keep),
+                )
+                .await
+        });
+        let pending = commands.recv().await.unwrap();
+        observer.abort();
+        let _ = observer.await;
+        drop(guard);
+        assert!(host.inner.activity.try_read().is_err());
+        drop(pending);
+        assert!(host.inner.activity.try_read().is_ok());
+    }
+
+    #[test]
+    fn observation_requires_an_existing_pinned_child() {
+        let (reply, _observe) = oneshot::channel();
+        let mut request = Request {
+            method: "observe_taskless_module".into(),
+            args: Value::Null,
+            scope: Invocation {
+                owner: Arc::new(()),
+                sql: None,
+            },
+            reply,
+            _activity: None,
+            required_child: Some(Identity {
+                pid: 1,
+                start_generation: String::new(),
+                pid_namespace: PathBuf::new(),
+            }),
+        };
+        assert!(!request.may_use(None));
+        request.required_child = None;
+        assert!(request.may_use(None));
+    }
+
     #[tokio::test(start_paused = true)]
     async fn owned_deadline_shortening_wakes_current_physical_wait() {
         let (sender, mut receiver) =
@@ -1106,6 +1294,7 @@ mod deadline_tests {
                 closed: Arc::new(AtomicBool::new(false)),
                 receipt: Arc::new(Mutex::new(None)),
                 stop,
+                activity: Arc::new(tokio::sync::RwLock::new(())),
             }),
         };
         let deadline = tokio::time::Instant::now() + Duration::from_secs(2);

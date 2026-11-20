@@ -236,7 +236,10 @@ pub fn classify(raw: &[u8]) -> Option<Family> {
         return None;
     }
     let frame: serde_json::Value = serde_json::from_slice(raw).ok()?;
-    let task = frame.get("headers")?.get("task")?.as_str()?;
+    builtin_family(frame.get("headers")?.get("task")?.as_str()?)
+}
+
+pub(crate) fn builtin_family(task: &str) -> Option<Family> {
     Some(match task {
         "apps.plugins.tasks.refresh_plugin_repos" => Family::PluginRefresh,
         "apps.backups.tasks.create_backup_task" | "apps.backups.tasks.restore_backup_task" => {

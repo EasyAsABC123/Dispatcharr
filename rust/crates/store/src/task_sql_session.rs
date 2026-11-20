@@ -358,6 +358,13 @@ pub(crate) struct BackupPoolFence {
     sessions: Vec<TaskSqlSession>,
 }
 impl BackupPoolFence {
+    pub(crate) fn is_open(&self) -> bool {
+        !self.sessions.is_empty()
+            && self
+                .sessions
+                .iter()
+                .all(|session| session.state.phase.load(Ordering::Acquire) == 0)
+    }
     pub(crate) fn primary(&self) -> &TaskSqlSession {
         &self.sessions[0]
     }

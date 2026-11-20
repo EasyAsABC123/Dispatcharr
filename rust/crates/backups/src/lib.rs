@@ -19,7 +19,14 @@ use std::{
 };
 use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
+#[cfg(target_os = "linux")]
+mod guarded_ready;
 mod restore_plugin_copy;
+mod taskless_archive_rows;
+#[cfg(target_os = "linux")]
+pub use guarded_ready::{
+    GuardedRestoreIdentity, PendingGuardedCommit, ReadyGuardedRestore, VerifiedGuardedHelper,
+};
 
 #[derive(Clone)]
 pub struct Limits {
@@ -661,15 +668,16 @@ pub fn restore_fixture(
     }
     restore_archive(config, runtime, archive, scratch_root, limits, cancel, None)
 }
-fn restore_archive(
-    config: &PgConfig,
-    runtime: &Runtime,
+struct PreparedDump {
+    scratch: OwnedDirectory,
+    dump: PathBuf,
+}
+fn stage_restore_dump(
     archive: &Path,
     scratch_root: &Path,
     limits: &Limits,
     cancel: &Cancellation,
-    authority: Option<&dyn CurrentSchemaRestoreAuthority>,
-) -> Result<(), Error> {
+) -> Result<PreparedDump, Error> {
     limits.validate()?;
     cancel.check()?;
     let scratch = OwnedDirectory::new(scratch_root)?;
@@ -718,32 +726,29 @@ fn restore_archive(
     if kind != "postgresql" {
         return Err(Error::WrongDatabaseType);
     }
+    Ok(PreparedDump { scratch, dump })
+}
+
+fn restore_archive(
+    config: &PgConfig,
+    runtime: &Runtime,
+    archive: &Path,
+    scratch_root: &Path,
+    limits: &Limits,
+    cancel: &Cancellation,
+    authority: Option<&dyn CurrentSchemaRestoreAuthority>,
+) -> Result<(), Error> {
+    let PreparedDump { scratch, dump } = stage_restore_dump(archive, scratch_root, limits, cancel)?;
     if let Some(authority) = authority {
-        let expected = authority.expected_migrations();
-        let migration_sql = scratch.0.join("migration-graph.sql");
-        let args = vec![
-            "--data-only".into(),
-            "--schema=public".into(),
-            "--table=django_migrations".into(),
-            "--file".into(),
-            migration_sql.to_string_lossy().into_owned(),
-            dump.to_string_lossy().into_owned(),
-        ];
-        checked(
-            run(
-                prepare_command(&runtime.pg_restore, config, &args, 1 << 20),
-                limits,
-                cancel,
-            )?,
-            "inspect restore migration graph",
+        inspect_current_migrations(
+            config,
+            runtime,
+            &scratch,
+            InspectedDump::Path(&dump),
+            limits,
+            cancel,
+            authority.expected_migrations(),
         )?;
-        let mut bytes = Vec::new();
-        File::open(migration_sql)?
-            .take((1 << 20) + 1)
-            .read_to_end(&mut bytes)?;
-        if bytes.len() > 1 << 20 || &parse_migration_copy(&bytes, expected.len())? != expected {
-            return Err(Error::Metadata);
-        }
         let plugin_sql = scratch.0.join("restore-plugin-policy.sql");
         let args = vec![
             "--data-only".into(),
@@ -824,6 +829,196 @@ fn restore_archive(
     // Other nonzero pg_restore exits are Source-compatible warnings, not proof
     // of a complete DB restore. Real copied-data manifests remain mandatory.
     Ok(())
+}
+
+fn inspect_current_migrations(
+    config: &PgConfig,
+    runtime: &Runtime,
+    scratch: &OwnedDirectory,
+    dump: InspectedDump<'_>,
+    limits: &Limits,
+    cancel: &Cancellation,
+    expected: &std::collections::BTreeSet<(String, String)>,
+) -> Result<(), Error> {
+    let bytes = inspect_copy(
+        config,
+        runtime,
+        scratch,
+        dump,
+        limits,
+        cancel,
+        "django_migrations",
+        "inspect restore migration graph",
+    )?;
+    if &parse_migration_copy(&bytes, expected.len())? != expected {
+        return Err(Error::Metadata);
+    }
+    Ok(())
+}
+
+enum InspectedDump<'a> {
+    Path(&'a Path),
+    #[cfg(target_os = "linux")]
+    Descriptor(&'a File),
+}
+
+#[allow(clippy::too_many_arguments)]
+fn inspect_copy(
+    config: &PgConfig,
+    runtime: &Runtime,
+    scratch: &OwnedDirectory,
+    dump: InspectedDump<'_>,
+    limits: &Limits,
+    cancel: &Cancellation,
+    table: &'static str,
+    step: &'static str,
+) -> Result<Vec<u8>, Error> {
+    let output = scratch.0.join(format!("{table}.sql"));
+    #[cfg(target_os = "linux")]
+    let inherited = match &dump {
+        InspectedDump::Path(_) => None,
+        InspectedDump::Descriptor(file) => {
+            use std::os::fd::AsRawFd;
+            Some(guarded_ready::duplicate(file.as_raw_fd())?)
+        }
+    };
+    let file_argument = match &dump {
+        InspectedDump::Path(path) => path.to_string_lossy().into_owned(),
+        #[cfg(target_os = "linux")]
+        InspectedDump::Descriptor(_) => {
+            use std::os::fd::AsRawFd;
+            format!(
+                "/proc/self/fd/{}",
+                inherited.as_ref().ok_or(Error::Io)?.as_raw_fd()
+            )
+        }
+    };
+    let args = vec![
+        "--data-only".into(),
+        "--schema=public".into(),
+        format!("--table={table}"),
+        "--file".into(),
+        output.to_string_lossy().into_owned(),
+        file_argument,
+    ];
+    let mut command = prepare_command(&runtime.pg_restore, config, &args, 1 << 20);
+    #[cfg(target_os = "linux")]
+    if let Some(fd) = inherited {
+        guarded_ready::inherit(&mut command, fd);
+    }
+    checked(run(command, limits, cancel)?, step)?;
+    let mut bytes = Vec::new();
+    File::open(output)?
+        .take((1 << 20) + 1)
+        .read_to_end(&mut bytes)?;
+    if bytes.len() > 1 << 20 {
+        return Err(Error::Metadata);
+    }
+    Ok(bytes)
+}
+
+/// Read-only staged projection for the taskless restore worker. Keeping this
+/// object alive keeps the exact dump that was inspected alive as well.
+pub struct PreparedTasklessArchive {
+    _dump: PreparedDump,
+    #[cfg(target_os = "linux")]
+    descriptor: File,
+    plugin: serde_json::Value,
+    periodic: Vec<serde_json::Value>,
+}
+impl PreparedTasklessArchive {
+    /// Park the private helper at the validated bound connection without
+    /// sending schema apply permission.
+    #[cfg(target_os = "linux")]
+    pub fn wait_guarded_ready(
+        &self,
+        helper: &Path,
+        config: &PgConfig,
+        target: GuardedRestoreIdentity<'_>,
+        timeout: Duration,
+    ) -> Result<ReadyGuardedRestore, Error> {
+        guarded_ready::wait(helper, config, target, &self.descriptor, timeout)
+    }
+
+    pub fn matches_post_restore(
+        &self,
+        plugin: &serde_json::Value,
+        periodic: &[serde_json::Value],
+    ) -> bool {
+        taskless_archive_rows::matches_post_restore(&self.plugin, &self.periodic, plugin, periodic)
+    }
+}
+/// Inspect only. It neither connects to the database nor applies the staged dump.
+#[allow(clippy::too_many_arguments)]
+pub fn prepare_taskless_archive(
+    config: &PgConfig,
+    runtime: &Runtime,
+    archive: &Path,
+    scratch_root: &Path,
+    limits: &Limits,
+    cancel: &Cancellation,
+    expected: &std::collections::BTreeSet<(String, String)>,
+    current_plugin: &serde_json::Value,
+    current_periodic: &[serde_json::Value],
+    builtin_tasks: &std::collections::BTreeSet<String>,
+) -> Result<PreparedTasklessArchive, Error> {
+    let owned = stage_restore_dump(archive, scratch_root, limits, cancel)?;
+    #[cfg(target_os = "linux")]
+    let descriptor = guarded_ready::open_prepared(&owned.dump)?;
+    let inspection = || {
+        #[cfg(target_os = "linux")]
+        {
+            InspectedDump::Descriptor(&descriptor)
+        }
+        #[cfg(not(target_os = "linux"))]
+        {
+            InspectedDump::Path(&owned.dump)
+        }
+    };
+    inspect_current_migrations(
+        config,
+        runtime,
+        &owned.scratch,
+        inspection(),
+        limits,
+        cancel,
+        expected,
+    )?;
+    let plugin = inspect_copy(
+        config,
+        runtime,
+        &owned.scratch,
+        inspection(),
+        limits,
+        cancel,
+        "plugins_pluginconfig",
+        "inspect taskless restore registry",
+    )?;
+    let periodic = inspect_copy(
+        config,
+        runtime,
+        &owned.scratch,
+        inspection(),
+        limits,
+        cancel,
+        "django_celery_beat_periodictask",
+        "inspect taskless restore schedules",
+    )?;
+    let (plugin, periodic) = taskless_archive_rows::taskless_projection(
+        &plugin,
+        &periodic,
+        current_plugin,
+        current_periodic,
+        builtin_tasks,
+    )
+    .map_err(|_| Error::Metadata)?;
+    Ok(PreparedTasklessArchive {
+        _dump: owned,
+        #[cfg(target_os = "linux")]
+        descriptor,
+        plugin,
+        periodic,
+    })
 }
 
 /// Parse only the real pg_restore COPY projection, never execute its SQL output.

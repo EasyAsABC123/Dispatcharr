@@ -12,6 +12,7 @@ use std::{
 const FILES: usize = 2000;
 const BYTES: u64 = 200 * 1024 * 1024;
 const MANIFEST: usize = 65536;
+const MUTATION_LOCK: &str = ".plugin-mutation.lock";
 fn unsupported() -> StoreError {
     StoreError::Unsupported("Plugin filesystem outside bounded Source domain")
 }
@@ -137,12 +138,65 @@ impl MutationLock {
         let file = std::fs::OpenOptions::new()
             .create(true)
             .append(true)
-            .open(root.join(".plugin-mutation.lock"))
+            .open(root.join(MUTATION_LOCK))
             .map_err(io)?;
         file.lock().map_err(io)?;
         Ok(Self { _file: file })
     }
 }
+/// The same cooperating filesystem lock as normal plugin mutations, with a
+/// nonblocking acquire and a stable-name recheck under an existing SQL fence.
+pub(super) struct PinnedMutationLock {
+    _file: File,
+    path: PathBuf,
+}
+impl PinnedMutationLock {
+    #[cfg(unix)]
+    pub(super) fn try_acquire(root: &Path) -> Result<Option<Self>, StoreError> {
+        use std::os::unix::fs::OpenOptionsExt;
+        let root = root.canonicalize().map_err(io)?;
+        let path = root.join(MUTATION_LOCK);
+        let file = fs::OpenOptions::new()
+            .create(true)
+            .append(true)
+            .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+            .open(&path)
+            .map_err(io)?;
+        if !file.metadata().map_err(io)?.is_file() {
+            return Err(unsupported());
+        }
+        match file.try_lock() {
+            Ok(()) => {
+                let result = Self { _file: file, path };
+                result.validate()?;
+                Ok(Some(result))
+            }
+            Err(std::fs::TryLockError::WouldBlock) => Ok(None),
+            Err(std::fs::TryLockError::Error(error)) => Err(io(error)),
+        }
+    }
+    #[cfg(not(unix))]
+    pub(super) fn try_acquire(_: &Path) -> Result<Option<Self>, StoreError> {
+        Err(unsupported())
+    }
+    pub(super) fn validate(&self) -> Result<(), StoreError> {
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::MetadataExt;
+            let actual = self._file.metadata().map_err(io)?;
+            let named = fs::symlink_metadata(&self.path).map_err(io)?;
+            if named.is_file()
+                && named.ino() == actual.ino()
+                && named.dev() == actual.dev()
+                && self.path.canonicalize().map_err(io)? == self.path
+            {
+                return Ok(());
+            }
+        }
+        Err(unsupported())
+    }
+}
+
 pub(super) fn install_managed(
     archive: &Path,
     root: &Path,
@@ -396,7 +450,7 @@ pub(super) fn delete(root: &Path, key: &str, folder: Option<&str>) -> Result<(),
     let lock = std::fs::OpenOptions::new()
         .create(true)
         .append(true)
-        .open(root.join(".plugin-mutation.lock"))
+        .open(root.join(MUTATION_LOCK))
         .map_err(io)?;
     lock.lock().map_err(io)?;
     if fs::symlink_metadata(&target).is_ok_and(|m| m.file_type().is_symlink()) {
@@ -411,6 +465,29 @@ pub(super) fn delete(root: &Path, key: &str, folder: Option<&str>) -> Result<(),
 #[cfg(test)]
 #[path = "plugin_files_tests.rs"]
 mod tests;
+
+#[cfg(all(test, unix))]
+mod restore_lock_lifetime_tests {
+    use super::*;
+    #[test]
+    fn reserved_lock_excludes_the_canonical_mutator_and_rejects_replaced_name() {
+        let root =
+            std::env::temp_dir().join(format!("dispatcharr-restore-lock-{}", uuid::Uuid::new_v4()));
+        fs::create_dir(&root).unwrap();
+        let mutator = MutationLock::acquire(&root).unwrap();
+        assert!(PinnedMutationLock::try_acquire(&root).unwrap().is_none());
+        drop(mutator);
+        let held = PinnedMutationLock::try_acquire(&root).unwrap().unwrap();
+        assert!(PinnedMutationLock::try_acquire(&root).unwrap().is_none());
+        assert!(held.validate().is_ok());
+        let path = root.join(MUTATION_LOCK);
+        fs::rename(&path, root.join("known-old-lock")).unwrap();
+        fs::write(&path, []).unwrap();
+        assert!(held.validate().is_err());
+        drop(held);
+        fs::remove_dir_all(root).unwrap();
+    }
+}
 
 fn nonfinite_literal(raw: &[u8]) -> bool {
     let (mut quoted, mut escaped) = (false, false);
