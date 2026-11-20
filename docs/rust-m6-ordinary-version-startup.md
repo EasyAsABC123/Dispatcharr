@@ -107,3 +107,25 @@ This qualifies the five ordinary stable-release consumer cases. The
 ordinary daily scheduler, shared default worker graph, formal M6 acceptance
 and performance remain open.
 [Redacted consumer receipt](../scripts/rust-integration/milestone-batch113/ordinary-version-consumers-c74.json)
+
+## Daily Version with Original scheduling and ordinary Rust intake
+
+Pinned Original Celery DatabaseScheduler and exact Rust Main package
+`735a0299` shared a disposable database and declared broker. Rust ran its
+ordinary Version consumer with `RUST_VERSION_TASKS_ENABLED=1`. Selected
+jobs, selected Beat and the Rust worker-ready Version publisher were off.
+
+The stock 86,400-second row produced one due Version job after the fixture
+enabled it and backdated its last run. The job originated from the exact
+Original scheduler and the Rust consumer recorded SUCCESS with JSON null.
+One owned HTTP release request returned 200, one active administrator notice
+was written and one Version Channels event was observed. The same periodic
+row advanced its last-run time and persisted one run. Its guard, result
+and notice remained stable through the normal scheduler and worker stops.
+
+The controller exited 0. It verified retirement of all six owned Compose
+roles and process generations, and empty project inventories. This
+qualifies the declared mixed deployment. An ordinary Rust scheduler, full
+M6 acceptance and comparative performance retain separate checks.
+
+[Redacted mixed daily receipt](../scripts/rust-integration/milestone-batch113/mixed-ordinary-daily-version-735.json)
