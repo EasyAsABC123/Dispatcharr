@@ -913,9 +913,13 @@ fn ordinary_name_only(input: &Map<String, Value>) -> bool {
     input.len() == 1 && input.get("name").is_some_and(Value::is_string)
 }
 
-fn existing_inactive_std(old: &Value, previous_cron: &str) -> bool {
+fn existing_std_interval_account(old: &Value, previous_cron: &str) -> bool {
+    let eligible_activity = old["is_active"] == false
+        || (old["is_active"] == true
+            && old["status"] == "idle"
+            && old["refresh_interval"].as_i64().is_some_and(|hours| hours > 0));
     old["account_type"] == "STD"
-        && old["is_active"] == false
+        && eligible_activity
         && old["locked"] == false
         && old["refresh_task_id"].as_i64().is_some_and(|id| id > 0)
         && previous_cron.is_empty()
@@ -942,6 +946,7 @@ async fn rename_without_broker(
         .ok_or_else(unsupported)?
         .to_owned();
     let task = old["refresh_task_id"].as_i64().ok_or_else(unsupported)?;
+    let active = old["is_active"].as_bool().ok_or_else(unsupported)?;
     let interval = old["refresh_interval"]
         .as_i64()
         .and_then(|value| i32::try_from(value).ok())
@@ -958,14 +963,15 @@ async fn rename_without_broker(
                 let mut tx = c.begin().await?;
                 let account: Option<i64> = sqlx::query_scalar(
                     "UPDATE m3u_m3uaccount SET name=$2 WHERE id=$1 AND account_type='STD' \
-                     AND NOT locked AND NOT is_active AND refresh_interval=$3 AND refresh_task_id=$4 \
-                     AND max_streams=$5 RETURNING id::bigint",
+                     AND NOT locked AND is_active=$6 AND (NOT $6 OR status='idle') \
+                     AND refresh_interval=$3 AND refresh_task_id=$4 AND max_streams=$5 RETURNING id::bigint",
                 )
                 .bind(id)
                 .bind(name)
                 .bind(interval)
                 .bind(task)
                 .bind(max)
+                .bind(active)
                 .fetch_optional(&mut *tx)
                 .await?;
                 let account = account.ok_or_else(unsupported)?;
@@ -973,13 +979,14 @@ async fn rename_without_broker(
                 let present: Option<i64> = sqlx::query_scalar(
                     "SELECT t.id::bigint FROM django_celery_beat_periodictask t \
                      JOIN django_celery_beat_intervalschedule i ON i.id=t.interval_id \
-                     WHERE t.id=$1 AND t.name=$2 AND t.task=$3 AND NOT t.enabled \
+                     WHERE t.id=$1 AND t.name=$2 AND t.task=$3 AND t.enabled=$5 \
                      AND i.every=$4 AND i.period='hours' FOR UPDATE OF t",
                 )
                 .bind(task)
                 .bind(&task_name)
                 .bind("apps.m3u.tasks.refresh_single_m3u_account")
                 .bind(interval.max(1))
+                .bind(active)
                 .fetch_optional(&mut *tx)
                 .await?;
                 if present.is_none() {
@@ -995,7 +1002,7 @@ async fn rename_without_broker(
                         kwargs: &kwargs,
                         interval_hours: interval,
                         cron: "",
-                        active: false,
+                        active,
                         timezone: "UTC",
                     },
                 )
@@ -1069,7 +1076,7 @@ async fn change(
                 let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT CASE WHEN octet_length(to_jsonb(a)::text)<=1048576 THEN to_jsonb(a) END AS raw,COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week),'') AS cron FROM m3u_m3uaccount a LEFT JOIN django_celery_beat_periodictask t ON t.id=a.refresh_task_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=t.crontab_id WHERE a.id=$1").bind(id).fetch_optional(c).await})).await??.ok_or_else(|| if queue_free_name { unsupported() } else { missing() })?;
                 let raw:Option<Value>=row.try_get("raw")?;let old=raw.ok_or_else(unsupported)?;
                 let cron:String=row.try_get("cron")?;
-                if queue_free_name && !existing_inactive_std(&old, &cron) { return Err(unsupported()); }
+                if queue_free_name && !existing_std_interval_account(&old, &cron) { return Err(unsupported()); }
                 if old["locked"]==true{return Err(locked())}
                 (old,cron)
             }else{(defaults(),String::new())};
@@ -1372,25 +1379,33 @@ mod tests {
         assert_eq!(put.cron, "");
     }
     #[test]
-    fn flags_off_name_edit_has_only_the_validated_name_effect() {
+    fn flags_off_name_edit_preserves_active_and_inactive_std_account_state() {
         let mut old = defaults();
         old["name"] = json!("Owned rehash provider target");
-        old["is_active"] = json!(false);
+        old["status"] = json!("idle");
         old["refresh_task_id"] = json!(7);
         old["refresh_interval"] = json!(4);
         old["custom_properties"] = json!({"hash_key":"name,url","owned_fixture_marker":"preserve"});
         let input = Map::from_iter([("name".into(), json!("Owned renamed standard provider"))]);
-        assert!(ordinary_name_only(&input) && existing_inactive_std(&old, ""));
-        let validated = validate(input, &old, "", true, false).unwrap();
-        let mut expected = old.clone();
-        expected["name"] = json!("Owned renamed standard provider");
-        assert_eq!(validated.saved, expected);
-        assert!(!validated.hash_changed && validated.expiration.is_none());
-        assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
+        assert!(ordinary_name_only(&input));
+        for active in [false, true] {
+            old["is_active"] = json!(active);
+            assert!(existing_std_interval_account(&old, ""));
+            let validated = validate(input.clone(), &old, "", true, false).unwrap();
+            let mut expected = old.clone();
+            expected["name"] = json!("Owned renamed standard provider");
+            assert_eq!(validated.saved, expected);
+            assert!(!validated.hash_changed && validated.expiration.is_none());
+            assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
+        }
         let extra = Map::from_iter([("name".into(), json!("Owned name")), ("hash_key".into(), json!("name"))]);
         assert!(!ordinary_name_only(&extra));
-        old["is_active"] = json!(true);
-        assert!(!existing_inactive_std(&old, ""));
+        assert!(!existing_std_interval_account(&old, "0 7 * * *"));
+        old["refresh_interval"] = json!(0);
+        assert!(!existing_std_interval_account(&old, ""));
+        old["refresh_interval"] = json!(4);
+        old["status"] = json!("fetching");
+        assert!(!existing_std_interval_account(&old, ""));
     }
 
     #[test]

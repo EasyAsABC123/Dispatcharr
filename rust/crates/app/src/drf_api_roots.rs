@@ -3,7 +3,7 @@
 use super::combined_statistics_wire::{self as wire, Output};
 use axum::{
     extract::{ConnectInfo, OriginalUri, State},
-    http::{header, HeaderMap, HeaderValue, Method},
+    http::{header, HeaderMap, HeaderValue, Method, StatusCode, Uri},
     response::{Html, IntoResponse, Response},
     routing::get,
     Json, Router,
@@ -101,14 +101,14 @@ const DIRECTORIES: &[Directory] = &[
 
 pub(super) fn router(auth: AuthService) -> Router {
     let mut router = Router::new();
+    let methods = get(directory_response)
+        .options(directory_options)
+        .fallback(|| async { prior_method_not_allowed() });
     for directory in DIRECTORIES {
         if directory.bare {
-            router = router.route(directory.prefix, get(directory_response));
+            router = router.route(directory.prefix, methods.clone());
         }
-        router = router.route(
-            &format!("{}.json", directory.prefix),
-            get(directory_response),
-        );
+        router = router.route(&format!("{}.json", directory.prefix), methods.clone());
     }
     router.with_state(auth)
 }
@@ -204,6 +204,63 @@ fn directory_html(
         HeaderValue::from_str(&set_cookie).map_err(|_| ())?,
     );
     Ok(response)
+}
+
+fn ordinary_json_options(uri: &Uri, headers: &HeaderMap) -> bool {
+    if uri.query().is_some()
+        || [
+            header::ORIGIN,
+            header::ACCESS_CONTROL_REQUEST_METHOD,
+            header::ACCESS_CONTROL_REQUEST_HEADERS,
+        ]
+        .iter()
+        .any(|name| headers.contains_key(name))
+    {
+        return false;
+    }
+    let mut accepts = headers.get_all(header::ACCEPT).iter();
+    accepts
+        .next()
+        .is_some_and(|value| value == "application/json")
+        && accepts.next().is_none()
+}
+
+fn prior_method_not_allowed() -> Response {
+    (
+        StatusCode::METHOD_NOT_ALLOWED,
+        [(header::ALLOW, "GET,HEAD")],
+    )
+        .into_response()
+}
+
+fn options_metadata() -> Response {
+    Json(serde_json::json!({
+        "name": "Api Root",
+        "description": "The default basic root view for DefaultRouter",
+        "renders": ["application/json", "text/html"],
+        "parses": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"],
+    }))
+    .into_response()
+}
+
+async fn directory_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    OriginalUri(uri): OriginalUri,
+    headers: HeaderMap,
+) -> Response {
+    if !ordinary_json_options(&uri, &headers) {
+        return prior_method_not_allowed();
+    }
+    let mut response = match auth.account_user(peer, headers, true).await {
+        Ok(_) => options_metadata(),
+        Err(error) => error.into_response(),
+    };
+    response.headers_mut().insert(header::ALLOW, ALLOW);
+    response
+        .headers_mut()
+        .append(header::VARY, HeaderValue::from_static("Accept"));
+    response
 }
 
 async fn directory_response(
@@ -387,5 +444,49 @@ mod tests {
             );
             assert!(!escaped.contains("http://https://"));
         }
+    }
+
+    #[tokio::test]
+    async fn ordinary_options_metadata_has_pinned_order_and_no_dynamic_fields() {
+        let response = options_metadata();
+        assert_eq!(response.status(), StatusCode::OK);
+        assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+        assert!(!response.headers().contains_key(header::SET_COOKIE));
+        let raw = axum::body::to_bytes(response.into_body(), 8192)
+            .await
+            .unwrap();
+        assert_eq!(
+            &raw[..],
+            br#"{"name":"Api Root","description":"The default basic root view for DefaultRouter","renders":["application/json","text/html"],"parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]}"#,
+        );
+    }
+
+    #[test]
+    fn only_the_ordinary_json_options_profile_is_admitted() {
+        let uri = "/api/channels/".parse().unwrap();
+        let mut headers = HeaderMap::new();
+        assert!(!ordinary_json_options(&uri, &headers));
+        headers.insert(header::ACCEPT, HeaderValue::from_static("application/json"));
+        assert!(ordinary_json_options(&uri, &headers));
+        let reply = prior_method_not_allowed();
+        assert_eq!(reply.status(), StatusCode::METHOD_NOT_ALLOWED);
+        assert_eq!(reply.headers()[header::ALLOW], "GET,HEAD");
+        for name in [
+            header::ORIGIN,
+            header::ACCESS_CONTROL_REQUEST_METHOD,
+            header::ACCESS_CONTROL_REQUEST_HEADERS,
+        ] {
+            headers.insert(&name, HeaderValue::from_static("fixture"));
+            assert!(!ordinary_json_options(&uri, &headers));
+            headers.remove(name);
+        }
+        assert!(!ordinary_json_options(
+            &"/api/channels/?format=json".parse().unwrap(),
+            &headers,
+        ));
+        headers.append(header::ACCEPT, HeaderValue::from_static("text/html"));
+        assert!(!ordinary_json_options(&uri, &headers));
+        headers.insert(header::ACCEPT, HeaderValue::from_static("text/html"));
+        assert!(!ordinary_json_options(&uri, &headers));
     }
 }
