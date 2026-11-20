@@ -1,0 +1,54 @@
+{
+  "format_version": 1,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "named_original_cells_passed": 5,
+  "whole_controller_exit": 1,
+  "EOF_group_settled": true,
+  "exact_cleanup": true,
+  "owned_CIDs_absent": 2,
+  "raw_sha256": {
+    "report": "94d53138f717b8db6997b0e2318a0153606be303520a401d9e71b666e86950e2",
+    "execution": "3537144082f0668a111841617bbd55bb470f87ed535fedc6ad77fd0ee05261a3",
+    "cleanup": "68ccaead9df4caa66507f4735d1b73d35d4dc628d6691c00d0265a17313a555d",
+    "producer": "eb4830ad2928df3c72aabeaa1980fb4683725c8c2e30e8a04df74cc691b6feb4",
+    "broker_observer": "f922c6e98be1e649360c9f98ba40fd8eec30470e3db488aa6c769530fda718e6",
+    "backend": "0d924f75fcbfd12e34a46d50f899c03a4ce978fa5bd6221591406337793de5b0",
+    "inline_publication_chain": "7dc7ef537b62ac46e8a10b8b8e937e0a272cb5fa917b321abf4829d7a201a694",
+    "SQL_before": "daad9701358084c4c3a023fa9008eaf58385cc8ad6ef6ec75341ebe743488262",
+    "SQL_after": "daad9701358084c4c3a023fa9008eaf58385cc8ad6ef6ec75341ebe743488262"
+  },
+  "standalone": {
+    "producer": "pinned Original Celery/Kombu management fixture",
+    "executor": "Original worker",
+    "task": "apps.m3u.tasks.sync_auto_channels",
+    "args": [
+      5,
+      "2026-11-15T22:51:43.194979+00:00"
+    ],
+    "kwargs": {},
+    "raw_frame_sha256": "7b03ae88ab55ba23e5fc597c083af0080729cc4089603f2dd69b50d5197e3dcb",
+    "task_id_sha256": "26ffc50c6ef18f984805232638c55838f8244cdfa1b381fc8d5ec01dde6bf586",
+    "queue": "celery",
+    "own_root_no_parent": true,
+    "backend_state": "SUCCESS",
+    "backend_result": {
+      "status": "ok",
+      "channels_created": 0,
+      "channels_updated": 0,
+      "channels_deleted": 0,
+      "channels_failed": 0,
+      "failed_stream_details": []
+    },
+    "SQL_no_change": true,
+    "production_HTTP_or_Beat_created_standalone_root": false,
+    "reexecution_or_restart_observed": false
+  },
+  "inline": {
+    "production_refresh_root_observed": true,
+    "channels_after": 6001,
+    "children_after": 3,
+    "separate_auto_sync_frame_observed": false,
+    "parent_id_sha256": "d934dbb2f951e403f8780b832f81ee936191e1830fa8ae51a80d11028e213b94",
+    "normalized_SQL_sha256": "e6819b9235d796d4b1d25627fa7965c532c7b13cf46873c59a20ee714e835267"
+  }
+}

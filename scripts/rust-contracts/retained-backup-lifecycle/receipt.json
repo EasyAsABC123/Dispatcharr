@@ -1,0 +1,95 @@
+{
+  "format_version": 1,
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "scope": "Existing Original backup lifecycle observations; no new execution",
+  "scheduled": {
+    "whole_controller_exit": 1,
+    "whole_run_accepted": false,
+    "EOF_and_process_group_settled": true,
+    "exact_cleanup": true,
+    "owned_CIDs_absent": 3,
+    "cleanup_sha256": "3abb30da0495ee2ac5cb50957f581772a1e91de7bf53e59e5fe449d76f5d5bca",
+    "execution_sha256": "7af1f54bd5d7c435be2b804211f77152bb3f7b69e06de4f35a841e3d31115ab3",
+    "source_named_contexts_passed": 12,
+    "report_sha256": "298a25a6132a8ead7cf50d86e622d45f657643b9e3de21aadb1bf0a8fb9b4d55",
+    "schedule_disabled_after": true,
+    "observations": [
+      {
+        "timezone": "UTC",
+        "args": [],
+        "kwargs": {
+          "retention_count": 1
+        },
+        "queue": "celery",
+        "periodic_task_name": "backup-scheduled-task",
+        "own_root": true,
+        "task_id_sha256": "36dc69bbc2f1a8838c70a6c6e58a94ce0e6311ba10fde30d6cd0200162c4b827",
+        "publication_sha256": "0af3fb8ebc64851d7f85e01e792bbe1be513f63fba8900dcaea8b46f9c2246c6",
+        "actual_authenticated_terminal_status": "completed",
+        "terminal_body_sha256": "9eac0cb3ff5c19009f0dafeda7833c43d8fb15cad416585e8514dda2b67bb414",
+        "archive": {
+          "database_signature": "PGDMP",
+          "members": [
+            "database.dump",
+            "metadata.json"
+          ],
+          "archive_bytes": 50602,
+          "archive_sha256": "c42d3b42910015465ab7476f873b980ab53ea6adbb6bb268118d96c571e09947"
+        },
+        "deleted_count": 1
+      },
+      {
+        "timezone": "Pacific/Honolulu",
+        "args": [],
+        "kwargs": {
+          "retention_count": 1
+        },
+        "queue": "celery",
+        "periodic_task_name": "backup-scheduled-task",
+        "own_root": true,
+        "task_id_sha256": "f39d72cb6960f7eb3a4e74a037e8166dd083873035ddcd662f783ee1dc0c0ea0",
+        "publication_sha256": "0a22d0b0e5d53209b1c8d098d5139aad7bcb82145479c0b3055de664dcc53c94",
+        "actual_authenticated_terminal_status": "failed",
+        "terminal_body_sha256": "c66ddeb4e3327654aa3b58d1a2a291bae590d1a9a27368b156fb8c037195c3e8",
+        "fresh_scheduled_file_deleted": true,
+        "prior_UTC_archive_preserved": true,
+        "raw_backend_status_observed": false
+      }
+    ]
+  },
+  "restore": {
+    "whole_controller_exit": 1,
+    "whole_run_accepted": false,
+    "EOF_and_process_group_settled": true,
+    "exact_cleanup": true,
+    "owned_CIDs_absent": 2,
+    "cleanup_sha256": "5dc6687d9eb3054ef16cb423e3bb1d8bd703113fd7cd81d94dddbabeb8d841e9",
+    "execution_sha256": "c46f9cfd9835babd9f0ff119b0b9c68c9347eb3dcfcce9b8227c76236ce6a17c",
+    "source_named_contexts_passed": 5,
+    "report_sha256": "118341951b1fa09d2c82a86eee76eeb0989dab3b48e5f0160a4d45e1759e2827",
+    "observations": [
+      {
+        "task_id_sha256": "5e69b99d94272fa9afbd605707798714452d877689929a07e50a1851d992a487",
+        "producer_method": "POST",
+        "producer_status": 202,
+        "producer_body_sha256": "d1137503304d69f0097d63d463d59e5bb9b85713e6cbfffb45e844d06b288893",
+        "backend_state": "SUCCESS",
+        "task_result_state": "completed",
+        "broker_frame_captured": false
+      },
+      {
+        "task_id_sha256": "f40e23d066ae74bc62a44f3cb8a1fbed1098976d445f50551b8d961d683a6b7d",
+        "producer_method": "POST",
+        "producer_status": 202,
+        "producer_body_sha256": "46c0eec0fbd87cfc36b0a08314d38d864ce5247c204dea4e192b07f6472d40fa",
+        "backend_state": "SUCCESS",
+        "task_result_state": "failed",
+        "broker_frame_captured": false
+      }
+    ],
+    "actual_SQL_lock_and_retirement": true,
+    "restored_migrated_builtin_permissions": 4,
+    "restored_same_Main_login_settings_channel": true,
+    "invalid_owned_archive_SQL_unchanged": true
+  }
+}

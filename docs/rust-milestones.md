@@ -12,10 +12,10 @@ alone does not establish application parity or an application performance gain.
 The [complete parity plan](rust-complete-parity-plan.md) assigns parallel work
 across M0–M9 and proposes M10/M11 as separate rollout stages.
 
-The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-epg-vod-logo-619.json)
-passed all 30 tests with verified cleanup. The register has 619 partial Original
-assignments and 179 unassigned HTTP operations. The Original EPG and VOD-logo
-captures qualified another 108 role checks across 27 operations.
+The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-final-wave-796.json)
+passed all 33 tests, reproduced the register byte-for-byte, and verified cleanup.
+The register has partial Original coverage for 796 of 798 HTTP declarations
+and 32 of 250 typed declarations. Full role and Native parity remain open.
 
 The [Redis write retry and shared playback checks](rust-migration-shared-playback-checks.md)
 verified the same-writer retry after a rejected write, the joined transport
@@ -81,8 +81,7 @@ exited 1 after exact cleanup.
 
 The [HDHomeRun JSON-suffix checks](rust-m7-hdhr-json-writes.md) verified 32
 ordinary Native device writes and denials on the pinned Candidate111 image.
-The 16 newly captured [Original DRF root operations](rust-m0-original-drf-roots.md)
-await the next register and SDK validation.
+The register now includes the 16 [Original DRF root operations](rust-m0-original-drf-roots.md).
 
 The [development and validation plan](rust-development-and-validation-plan.md) defines parallel implementation/acceptance/tooling lanes, affected-workflow batches and default-off fixture concurrency. Performance measurement remains exclusive.
 

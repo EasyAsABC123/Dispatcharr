@@ -1,0 +1,105 @@
+{
+  "format_version": 1,
+  "kind": "retained_original_Source28_autosync_standalone_task",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "credit": "Original Dispatcharr, Celery, Kombu and dependency authors retain full credit.",
+  "fixtures": {
+    "Original-batch28-auto-sync": {
+      "id": "Original-batch28-auto-sync",
+      "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "receipt_path": "scripts/rust-contracts/retained-autosync28-task/receipt.json",
+      "receipt_sha256": "ba3d269f503d2f981d46e9e2eb93ff2fc378d518b3d70e21225aee608bc3e348",
+      "whole_controller_actual_exit": 1,
+      "all_five_named_cells_passed": true,
+      "exact_cleanup": true,
+      "standalone_after_prune_policy_noop": true
+    }
+  },
+  "contracts": [],
+  "non_HTTP_contracts": [
+    {
+      "candidate_id": "candidate-9a57d4d8a58c627531e8",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/m3u/tasks.py",
+        "line": 2187,
+        "name": "sync_auto_channels",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M6",
+      "task_name": "apps.m3u.tasks.sync_auto_channels",
+      "fixture_ids": [
+        "Original-batch28-auto-sync"
+      ],
+      "observed_actor": {
+        "producer": "pinned Original Celery/Kombu management fixture",
+        "executor": "Original worker",
+        "complete_role_matrix": false
+      },
+      "definition": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/apps/m3u/tasks.py",
+        "start_line": 2187,
+        "ast_sha256": "1ffce324ca2e27c42b26d0d2a6e20a7759288ead189efe8c05b6a76f761526a3"
+      },
+      "inline_source_call": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/apps/m3u/tasks.py",
+        "line": 3958,
+        "call": "sync_auto_channels(account_id, scan_start_time=str(refresh_start_timestamp))"
+      },
+      "observations": [
+        {
+          "producer": "pinned Original Celery/Kombu management fixture",
+          "executor": "Original worker",
+          "task": "apps.m3u.tasks.sync_auto_channels",
+          "args": [
+            5,
+            "2026-11-15T22:51:43.194979+00:00"
+          ],
+          "kwargs": {},
+          "raw_frame_sha256": "7b03ae88ab55ba23e5fc597c083af0080729cc4089603f2dd69b50d5197e3dcb",
+          "task_id_sha256": "26ffc50c6ef18f984805232638c55838f8244cdfa1b381fc8d5ec01dde6bf586",
+          "queue": "celery",
+          "own_root_no_parent": true,
+          "backend_state": "SUCCESS",
+          "backend_result": {
+            "status": "ok",
+            "channels_created": 0,
+            "channels_updated": 0,
+            "channels_deleted": 0,
+            "channels_failed": 0,
+            "failed_stream_details": []
+          },
+          "SQL_no_change": true,
+          "production_HTTP_or_Beat_created_standalone_root": false,
+          "reexecution_or_restart_observed": false
+        }
+      ],
+      "separate_inline_workflow_scope": {
+        "production_refresh_root_observed": true,
+        "channels_after": 6001,
+        "children_after": 3,
+        "separate_auto_sync_frame_observed": false,
+        "parent_id_sha256": "d934dbb2f951e403f8780b832f81ee936191e1830fa8ae51a80d11028e213b94",
+        "normalized_SQL_sha256": "e6819b9235d796d4b1d25627fa7965c532c7b13cf46873c59a20ee714e835267"
+      },
+      "assertions": [
+        "Actual two positional arguments and own-root broker/frame/backend identities join.",
+        "SUCCESS and exact no-change task result with byte-identical owned SQL snapshot.",
+        "The normal refresh workflow calls the same task body inline and publishes guide children.",
+        "The standalone root came from an owned management fixture; no restart evidence is inferred."
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_task_terminal_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "new_Source_executions": 0,
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "performance_verified": false
+}

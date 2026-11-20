@@ -38,6 +38,9 @@ class NotificationMutationControls(unittest.TestCase):
  def test_nonHTTP_not_invented(self):self.reject(lambda v:v['non_HTTP_contracts'].append({'candidate_id':'invented'}))
  def assert_preserved_register(self,new):
   import source_contracts
+  import test_final_residual_wave as final_wave
+  historical_register=copy.deepcopy(new)
+  final_wave.restore_pre_final_wave(ROOT,historical_register)
   old=json.loads((ROOT/'scripts/rust-contracts/notification-mutation-preservation.json').read_text())
   ops={o['contract_id']:o for r in new['runtime_routes']for o in r['operations']}
   selected=set(old['new_selected_contract_ids'])
@@ -50,7 +53,7 @@ class NotificationMutationControls(unittest.TestCase):
   # Reverse ONLY their Source assignment fields to the register.py defaults,
   # then require every original row SHA. Identity, required roles, unrelated
   # evidence and all other fields retain the historical protection.
-  later=inputs[len(prior)+1:]
+  later=inputs[len(prior)+1:-(len(final_wave.TYPED)+1)]
   self.assertEqual([r['path']for r in later],[
    'scripts/rust-contracts/schema-cache/bindings.json',
    'scripts/rust-contracts/notification-credential-bindings.json',
@@ -194,7 +197,7 @@ class NotificationMutationControls(unittest.TestCase):
   self.assertEqual(len(later_ids),282);self.assertEqual(len(set(later_ids)),282)
   self.assertEqual(len(supplemental_ids),11)
   self.assertFalse(selected.intersection(later_ids))
-  historical=copy.deepcopy(new['runtime_routes'])
+  historical=historical_register['runtime_routes']
   retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,historical)
   retained_paired_read_contracts.restore_pre_paired_reads(ROOT,historical)
   retained_live_stop_contracts.restore_pre_live_stop(ROOT,historical)
@@ -248,7 +251,7 @@ class NotificationMutationControls(unittest.TestCase):
   retained_ids={row['candidate_id']for row in retained['non_HTTP_contracts']}
   self.assertEqual(retained_ids,{row['candidate_id']for row in retained_task_operator_contracts.IDENTITIES})
   self.assertEqual(len(retained_ids),7)
-  historical_non_HTTP=copy.deepcopy(new['non_HTTP_candidates'])
+  historical_non_HTTP=historical_register['non_HTTP_candidates']
   import retained_comskip_task_contracts
   import retained_clocked_recording_contracts
   retained_clocked_recording_contracts.restore_pre_clocked_recording(ROOT,historical_non_HTTP)
@@ -267,7 +270,7 @@ class NotificationMutationControls(unittest.TestCase):
   non_HTTP_mapping=source_contracts.apply_non_HTTP(ROOT,historical_non_HTTP)
   self.assertEqual(historical_non_HTTP,new['non_HTTP_candidates'])
   self.assertEqual(non_HTTP_mapping,new['executable_Source_non_HTTP_mapping'])
-  self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+13)
+  self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+13+final_wave.TYPED_COUNT)
   self.assertEqual(non_HTTP_mapping['fully_verified_added'],0)
   expected=old['base_HTTP_assignments']+len(selected)+len(later_ids)
   self.assertEqual(expected,402) # pre-XC preservation count
@@ -287,6 +290,7 @@ class NotificationMutationControls(unittest.TestCase):
   expected += retained_c106_connect_replay_contracts.load(ROOT)['operation_count']
   expected += retained_logo_m3u_contracts.load(ROOT)['operation_count']
   expected += retained_epg_vod_logo_contracts.load(ROOT)['operation_count']
+  expected += final_wave.HTTP_COUNT
   self.assertEqual(mapping['operations'],expected)
   self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)
   self.assertEqual({key for key,o in ops.items()if 'executable_Source_contract'in o and o['executable_Source_contract'].get('fixture_id')=='retained-Original-notification-mutations-Source2-48'},selected)

@@ -84,6 +84,8 @@ class CoreSettingsSourceControls(unittest.TestCase):
         retained_auth_plugin_contracts.validate(ROOT, auth)
         auth_proof = json.loads((ROOT / 'scripts/rust-contracts/retained-auth-plugin/preservation.json').read_text())
         original_rows = copy.deepcopy(register['runtime_routes'])
+        import test_final_residual_wave
+        test_final_residual_wave.restore_pre_final_wave(ROOT, register)
         import retained_xc_refresh_contracts
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT, register['runtime_routes'])
         retained_paired_read_contracts.restore_pre_paired_reads(ROOT, register['runtime_routes'])

@@ -217,7 +217,10 @@ def apply(root, rows, bindings):
     loaded = []
     for reference in manifest['inputs']:
         value = checked(root, reference)
-        if reference['kind'] == 'retained_original_range_Source10_resolver_HTTP':
+        if reference['kind'] == 'retained_original_residual_frozen_HTTP':
+            import retained_residual_source_contracts
+            retained_residual_source_contracts.validate(root, value)
+        elif reference['kind'] == 'retained_original_range_Source10_resolver_HTTP':
             import retained_range_source10_contracts
             retained_range_source10_contracts.validate(root, value, bindings)
         elif reference['kind'] == 'retained_original_xc_Source11_single_refresh_HTTP':
@@ -348,9 +351,15 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'captured_original_scanner_task_observations':
             import scanner_task_contracts
             scanner_task_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_worker_wire_non_HTTP':
+            import retained_worker_wire_contracts
+            retained_worker_wire_contracts.validate(root, value, bindings)
         elif reference['kind'] == 'retained_original_C105_guide_startup_tasks':
             import retained_c105_guide_startup_contracts
             retained_c105_guide_startup_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_Source16_backup_create_task':
+            import retained_backup_create_task
+            retained_backup_create_task.validate(root, value, bindings)
         elif reference['kind'] == 'retained_original_clocked_recording_tasks':
             import retained_clocked_recording_contracts
             retained_clocked_recording_contracts.validate(root, value, bindings)
@@ -360,6 +369,15 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_task_operator7_observations':
             import retained_task_operator_contracts
             retained_task_operator_contracts.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_Backup_Source12_and_41_lifecycle_tasks':
+            import retained_backup_lifecycle_tasks
+            retained_backup_lifecycle_tasks.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_Source51_all_match_and_guide_children_tasks':
+            import retained_matching51_tasks
+            retained_matching51_tasks.validate(root, value, bindings)
+        elif reference['kind'] == 'retained_original_Source28_autosync_standalone_task':
+            import retained_autosync28_task
+            retained_autosync28_task.validate(root, value, bindings)
         elif reference['kind'] == 'pinned_original_channel_guide_tests':
             import channel_guide_contracts
             channel_guide_contracts.validate(root, value, bindings)
@@ -431,6 +449,9 @@ def apply(root, rows, bindings):
             if supplemental:
                 supplemented.add(identifier)
             route, operation = index[identifier]
+            if reference['kind'] == 'retained_original_residual_frozen_HTTP':
+                assert route['resolver_ordinal'] == contract['resolver_ordinal']
+                assert route['name'] == contract['resolver_name']
             if reference['kind'] in ('retained_original_Live_TS_global_stop_HTTP', 'retained_original_Live_TS_detail_and_targeted_stop_HTTP', 'retained_original_canonical_management_HTTP', 'retained_original_exact_VOD_split_HTTP', 'retained_original_Image57_accounts_canonical_HTTP', 'retained_original_Image57_M3U_canonical_HTTP', 'retained_original_provider_and_core_admin_HTTP', 'retained_original_C98_HDHomeRun_ingress_HTTP', 'retained_original_Core_profile_literal_JSON_HTTP', 'retained_original_HDHomeRun_literal_devices_and_discovery_HTTP', 'retained_original_C106_Connect_exact_canonical_and_JSON_HTTP', 'retained_original_logo_library_and_M3U_child_literal_HTTP', 'retained_original_EPG_library_and_VOD_logo_literal_HTTP'):
                 assert route['resolver_ordinal'] == contract['resolver_ordinal']
                 assert route['name'] == contract['resolver_name']
@@ -485,6 +506,9 @@ def apply(root, rows, bindings):
                                      'retained_original_Connect_saved_webhook_test_HTTP', 'retained_original_selected_single_Set_EPG_HTTP', 'retained_original_batch_Set_EPG_HTTP', 'retained_original_System_Logs_and_regex_preview_GET', 'retained_original_Live_TS_global_stop_HTTP', 'retained_original_Live_TS_detail_and_targeted_stop_HTTP', 'retained_original_canonical_management_HTTP', 'retained_original_exact_VOD_split_HTTP', 'retained_original_Image57_accounts_canonical_HTTP', 'retained_original_Image57_M3U_canonical_HTTP', 'retained_original_provider_and_core_admin_HTTP', 'retained_original_C98_HDHomeRun_ingress_HTTP', 'retained_original_Core_profile_literal_JSON_HTTP', 'retained_original_HDHomeRun_literal_devices_and_discovery_HTTP', 'retained_original_C106_Connect_exact_canonical_and_JSON_HTTP', 'retained_original_logo_library_and_M3U_child_literal_HTTP', 'retained_original_EPG_library_and_VOD_logo_literal_HTTP'):
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
+            if reference['kind'] == 'retained_original_residual_frozen_HTTP':
+                operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
+                operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'
         loaded.append({'path': reference['path'], 'sha256': reference['sha256'], 'kind': reference['kind']})
     return {'state': 'partial executable Source definitions, not endpoint verification',
@@ -503,6 +527,9 @@ def apply_non_HTTP(root, entries):
             'pinned_original_account_settings_tests', 'captured_original_scanner_task_observations',
             'pinned_original_provider_output_consumer_tests', 'retained_original_task_operator7_observations',
             'retained_original_comskip_task_observations', 'retained_original_clocked_recording_tasks', 'retained_original_C105_guide_startup_tasks',
+            'retained_original_Source16_backup_create_task', 'retained_original_Backup_Source12_and_41_lifecycle_tasks',
+            'retained_original_Source51_all_match_and_guide_children_tasks', 'retained_original_Source28_autosync_standalone_task',
+            'retained_original_worker_wire_non_HTTP',
         ]:
             continue
         value = checked(root, reference)
@@ -522,9 +549,29 @@ def apply_non_HTTP(root, entries):
             import retained_comskip_task_contracts
             retained_comskip_task_contracts.validate(root, value)
             source_kind = 'task_candidate'
+        elif reference['kind'] == 'retained_original_worker_wire_non_HTTP':
+            import retained_worker_wire_contracts
+            retained_worker_wire_contracts.validate(root, value)
+            source_kind = None
         elif reference['kind'] == 'retained_original_C105_guide_startup_tasks':
             import retained_c105_guide_startup_contracts
             retained_c105_guide_startup_contracts.validate(root, value)
+            source_kind = 'task_candidate'
+        elif reference['kind'] == 'retained_original_Source16_backup_create_task':
+            import retained_backup_create_task
+            retained_backup_create_task.validate(root, value)
+            source_kind = 'task_candidate'
+        elif reference['kind'] == 'retained_original_Backup_Source12_and_41_lifecycle_tasks':
+            import retained_backup_lifecycle_tasks
+            retained_backup_lifecycle_tasks.validate(root, value)
+            source_kind = 'task_candidate'
+        elif reference['kind'] == 'retained_original_Source51_all_match_and_guide_children_tasks':
+            import retained_matching51_tasks
+            retained_matching51_tasks.validate(root, value)
+            source_kind = 'task_candidate'
+        elif reference['kind'] == 'retained_original_Source28_autosync_standalone_task':
+            import retained_autosync28_task
+            retained_autosync28_task.validate(root, value)
             source_kind = 'task_candidate'
         elif reference['kind'] == 'retained_original_clocked_recording_tasks':
             import retained_clocked_recording_contracts
@@ -542,13 +589,22 @@ def apply_non_HTTP(root, entries):
             assert entry['source'] == contract['source'], 'exact nonHTTP source identity'
             current_kind = contract['source']['kind'] if source_kind is None else source_kind
             if source_kind is None:
-                assert current_kind in ['task_candidate', 'management_command']
+                allowed = ['task_candidate', 'management_command']
+                if reference['kind'] == 'retained_original_worker_wire_non_HTTP':
+                    allowed = ['task_candidate', 'websocket_route']
+                assert current_kind in allowed
             assert entry['source']['kind'] == current_kind
             assert entry['fully_verified'] is False and contract['fully_verified'] is False
             entry['setup_fixture'] = (copy.deepcopy(value['fixtures'][contract['fixture_id']]) if current_kind in ['model_candidate', 'websocket_consumer_candidate']
                                       else {key: copy.deepcopy(value['fixtures'][key]) for key in contract['fixture_ids']})
             if reference['kind'] in ('retained_original_task_operator7_observations',
-                                     'retained_original_comskip_task_observations', 'retained_original_clocked_recording_tasks', 'retained_original_C105_guide_startup_tasks'):
+                                     'retained_original_comskip_task_observations', 'retained_original_clocked_recording_tasks', 'retained_original_C105_guide_startup_tasks',
+                                     'retained_original_Source16_backup_create_task',
+                                     'retained_original_Backup_Source12_and_41_lifecycle_tasks',
+                                     'retained_original_Source51_all_match_and_guide_children_tasks',
+                                     'retained_original_Source28_autosync_standalone_task'):
+                entry['owning_milestone'] = contract['owning_milestone']
+            elif reference['kind'] == 'retained_original_worker_wire_non_HTTP':
                 entry['owning_milestone'] = contract['owning_milestone']
             entry['assertions'] = copy.deepcopy(contract['assertions'])
             entry['result'] = copy.deepcopy(contract['result'])
@@ -556,6 +612,7 @@ def apply_non_HTTP(root, entries):
             entry['state'] = ('partial_executable_Original_model_tests' if current_kind == 'model_candidate'
                               else 'partial_executable_Original_task_observations' if current_kind == 'task_candidate'
                               else 'partial_executable_Original_management_subprocess_observations' if current_kind == 'management_command'
+                              else 'partial_executable_Original_websocket_route_observations' if current_kind == 'websocket_route'
                               else 'partial_executable_Original_synthetic_consumer_method_tests')
     return {'state': 'typed partial Original model/task/management/synthetic-consumer assertions, not HTTP or Native verification',
             'candidates': len(seen), 'fully_verified_added': 0}

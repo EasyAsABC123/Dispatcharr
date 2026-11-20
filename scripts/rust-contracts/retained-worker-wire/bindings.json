@@ -1,0 +1,554 @@
+{
+  "format_version": 1,
+  "kind": "retained_original_worker_wire_non_HTTP",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "credit": "Original Dispatcharr, Celery, Django Channels, Daphne and dependency authors retain full application and behavior credit.",
+  "contracts": [],
+  "fixtures": {
+    "retained-Original-prefork-default-task-effects": {
+      "id": "retained-Original-prefork-default-task-effects",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "execution_kind": "historical_actual_Original_Celery_prefork_signals",
+      "observed_actor": {
+        "producer": "owned manually published no-argument task",
+        "executor": "actual Original Celery prefork worker",
+        "complete_role_matrix": false
+      },
+      "cleanup": "project removed",
+      "independent_outer_group_claimed": false,
+      "default_scheduler_execution": false
+    },
+    "retained-Original-Daphne-ws-wire55": {
+      "id": "retained-Original-Daphne-ws-wire55",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "execution_kind": "historical_actual_Original_Daphne_tcp_wire",
+      "observed_actor": {
+        "executor": "actual Original Daphne and Django Channels",
+        "complete_role_matrix": false
+      },
+      "observed_wire_path": "/ws/",
+      "guest_actual_exit": 0,
+      "project_cleanup_recorded": true,
+      "exceptional_source_members_left_before_compose_down": 4,
+      "exceptional_source_member_cleanup_claimed": false
+    }
+  },
+  "non_HTTP_contracts": [
+    {
+      "candidate_id": "candidate-28e73dbbafb9d9b259a3",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/channels/tasks.py",
+        "line": 1157,
+        "name": "maintain_recurring_recordings",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M6",
+      "definition": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py",
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "start_line": 1158,
+        "end_line": 1167,
+        "ast_sha256": "bc2cc5845c3118d6846c1403824793bd4e3c5f5bd1f9dda227d196c47b84ddbb",
+        "decorator_line": 1157
+      },
+      "task_name": "apps.channels.tasks.maintain_recurring_recordings",
+      "fixture_ids": [
+        "retained-Original-prefork-default-task-effects"
+      ],
+      "observed_actor": {
+        "producer": "owned manually published no-argument task",
+        "executor": "actual Original Celery prefork worker",
+        "complete_role_matrix": false
+      },
+      "assertions": [
+        "Actual no-argument Original prefork task completed with integer zero for the disabled rules fixture.",
+        "The selected recording rows and owned broker reservations remained unchanged."
+      ],
+      "observations": [
+        {
+          "actual_prerun_postrun_joined": true,
+          "args": [],
+          "backend_children": 0,
+          "backend_result": 0,
+          "case": "recurring-disabled",
+          "event_count": 0,
+          "kwargs": {},
+          "recording_rows_unchanged": true,
+          "root_without_parent": true,
+          "worker_terminal": "SUCCESS"
+        }
+      ],
+      "result": {
+        "Native_coverage_increased": false,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "fully_verified": false,
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 1
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-8699da637444094159da",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/m3u/tasks.py",
+        "line": 4248,
+        "name": "check_account_expirations",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M6",
+      "definition": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/apps/m3u/tasks.py",
+        "original_file_sha256": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+        "start_line": 4249,
+        "end_line": 4291,
+        "ast_sha256": "bc8bd07b107086b133978746e786a88459ae92e5c3457ccac59f7fc2bd300ab8",
+        "decorator_line": 4248
+      },
+      "task_name": "apps.m3u.tasks.check_account_expirations",
+      "fixture_ids": [
+        "retained-Original-prefork-default-task-effects"
+      ],
+      "observed_actor": {
+        "producer": "owned manually published no-argument task",
+        "executor": "actual Original Celery prefork worker",
+        "complete_role_matrix": false
+      },
+      "assertions": [
+        "Actual no-argument Original worker returned null with the exact stale notification row removed.",
+        "A real ChannelsRedis dismissal event matched the removed row on the owned fixture."
+      ],
+      "observations": [
+        {
+          "actual_prerun_postrun_joined": true,
+          "args": [],
+          "backend_children": 0,
+          "backend_result": null,
+          "case": "expiration-stale",
+          "event_count": 1,
+          "kwargs": {},
+          "owned_ChannelsRedis_notification_dismissal": true,
+          "root_without_parent": true,
+          "stale_notification_row_deleted": true,
+          "worker_terminal": "SUCCESS"
+        }
+      ],
+      "result": {
+        "Native_coverage_increased": false,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "fully_verified": false,
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 1
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-ca631f742f76c9d0b508",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/proxy/tasks.py",
+        "line": 14,
+        "name": "fetch_channel_stats",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M6",
+      "definition": {
+        "path": "scripts/rust-contracts/retained-worker-wire/original/apps/proxy/tasks.py",
+        "original_file_sha256": "a4c5e88138ca21424208ff79de398b9345dc76681440c518423e6134678b3326",
+        "start_line": 15,
+        "end_line": 35,
+        "ast_sha256": "4a65ae52065a3ee9d9158ca5169ceea2dbab9f3c7221c7fb22cc95ea4d8c4c16",
+        "decorator_line": 14
+      },
+      "task_name": "apps.proxy.tasks.fetch_channel_stats",
+      "fixture_ids": [
+        "retained-Original-prefork-default-task-effects"
+      ],
+      "observed_actor": {
+        "producer": "owned manually published no-argument task",
+        "executor": "actual Original Celery prefork worker",
+        "complete_role_matrix": false
+      },
+      "assertions": [
+        "Six real Original prefork roots returned null with exact prerun/postrun and backend joins.",
+        "Existing live metadata retains one client and the ghost case removes the stale client.",
+        "Five cases emit the scoped statistics event and the group-send error case emits zero."
+      ],
+      "observations": [
+        {
+          "actual_prerun_postrun_joined": true,
+          "args": [],
+          "backend_children": 0,
+          "backend_result": null,
+          "broker_queue_and_unacked_empty": true,
+          "case": "empty",
+          "event_count": 1,
+          "kwargs": {},
+          "root_without_parent": true,
+          "stats_channel_count": 0,
+          "worker_terminal": "SUCCESS"
+        },
+        {
+          "actual_prerun_postrun_joined": true,
+          "args": [],
+          "backend_children": 0,
+          "backend_result": null,
+          "broker_queue_and_unacked_empty": true,
+          "case": "static-live-client",
+          "event_count": 1,
+          "kwargs": {},
+          "observed_client_count": 1,
+          "root_without_parent": true,
+          "stats_channel_count": 1,
+          "worker_terminal": "SUCCESS"
+        },
+        {
+          "actual_prerun_postrun_joined": true,
+          "args": [],
+          "backend_children": 0,
+          "backend_result": null,
+          "broker_queue_and_unacked_empty": true,
+          "case": "ghost-client",
+          "event_count": 1,
+          "kwargs": {},
+          "observed_client_count": 0,
+          "root_without_parent": true,
+          "stats_channel_count": 1,
+          "worker_terminal": "SUCCESS"
+        },
+        {
+          "actual_prerun_postrun_joined": true,
+          "args": [],
+          "backend_children": 0,
+          "backend_result": null,
+          "broker_queue_and_unacked_empty": true,
+          "case": "wrongtype-metadata",
+          "event_count": 1,
+          "kwargs": {},
+          "root_without_parent": true,
+          "stats_channel_count": 0,
+          "worker_terminal": "SUCCESS"
+        },
+        {
+          "actual_prerun_postrun_joined": true,
+          "args": [],
+          "backend_children": 0,
+          "backend_result": null,
+          "broker_queue_and_unacked_empty": true,
+          "case": "invalid-buffer-index",
+          "event_count": 1,
+          "kwargs": {},
+          "root_without_parent": true,
+          "stats_channel_count": 0,
+          "worker_terminal": "SUCCESS"
+        },
+        {
+          "actual_prerun_postrun_joined": true,
+          "args": [],
+          "backend_children": 0,
+          "backend_result": null,
+          "broker_queue_and_unacked_empty": true,
+          "case": "group-send-wrongtype",
+          "event_count": 0,
+          "kwargs": {},
+          "root_without_parent": true,
+          "stats_channel_count": null,
+          "worker_terminal": "SUCCESS"
+        }
+      ],
+      "result": {
+        "Native_coverage_increased": false,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "fully_verified": false,
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 6
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-d094f56b97e7c1053e60",
+      "source": {
+        "kind": "websocket_route",
+        "path": "dispatcharr/routing.py",
+        "line": 5,
+        "callable": "django.urls.path"
+      },
+      "owning_milestone": "M7",
+      "definition": {
+        "path": "scripts/rust-contracts/retained-worker-wire/original/dispatcharr/routing.py",
+        "original_file_sha256": "567b99437a8292e60913193d47bdf7d4855b40f07f02425eb16611f4097c8b15",
+        "start_line": 5,
+        "end_line": 5,
+        "ast_sha256": "bfc149977ad3eac34c9bb6bd5eef77224fc6a26ae62fb3e7edb50b578d60d5ee"
+      },
+      "fixture_ids": [
+        "retained-Original-Daphne-ws-wire55"
+      ],
+      "observed_actor": {
+        "executor": "actual Original Daphne and Django Channels",
+        "complete_role_matrix": false
+      },
+      "assertions": [
+        "Actual pinned Daphne admits or denies the selected /ws/ handshakes and reports literal close statuses.",
+        "Preserve the observed four exceptional stale memberships separately from Compose removal."
+      ],
+      "observations": [
+        {
+          "case": "auth-absent",
+          "close": null,
+          "status": 403
+        },
+        {
+          "case": "auth-invalid",
+          "close": null,
+          "status": 403
+        },
+        {
+          "case": "auth-refresh",
+          "close": null,
+          "status": 403
+        },
+        {
+          "case": "auth-inactive",
+          "close": null,
+          "status": 403
+        },
+        {
+          "case": "auth-missing-user",
+          "close": null,
+          "status": 403
+        },
+        {
+          "case": "auth-apikey-query",
+          "close": null,
+          "status": 403
+        },
+        {
+          "case": "auth-header-only",
+          "close": null,
+          "status": 403
+        },
+        {
+          "case": "auth-wrong-case",
+          "close": null,
+          "status": 403
+        },
+        {
+          "case": "auth-invalid-first",
+          "close": null,
+          "status": 403
+        },
+        {
+          "case": "auth-blank-first",
+          "close": {
+            "closed": 1000
+          },
+          "status": 101
+        },
+        {
+          "case": "auth-valid-first",
+          "close": {
+            "closed": 1000
+          },
+          "status": 101
+        },
+        {
+          "case": "role-admin",
+          "close": {
+            "closed": 1000
+          },
+          "status": 101
+        },
+        {
+          "case": "role-standard",
+          "close": {
+            "closed": 1000
+          },
+          "status": 101
+        },
+        {
+          "case": "role-viewer",
+          "close": {
+            "closed": 1000
+          },
+          "status": 101
+        },
+        {
+          "case": "origin",
+          "close": {
+            "closed": 1000
+          },
+          "status": 101
+        },
+        {
+          "case": "origin",
+          "close": {
+            "closed": 1000
+          },
+          "status": 101
+        },
+        {
+          "case": "origin",
+          "close": {
+            "closed": 1000
+          },
+          "status": 101
+        },
+        {
+          "case": "cached-ip",
+          "close": {
+            "closed": 1000
+          }
+        },
+        {
+          "case": "cached-ip",
+          "close": {
+            "closed": 1000
+          }
+        },
+        {
+          "case": "cached-ip",
+          "close": {
+            "closed": 1000
+          }
+        },
+        {
+          "case": "cached-ip",
+          "close": {
+            "closed": 1000
+          }
+        },
+        {
+          "case": "cached-ip",
+          "close": {
+            "closed": 1000
+          }
+        },
+        {
+          "case": "cached-ip",
+          "close": {
+            "closed": 1000
+          }
+        },
+        {
+          "case": "cached-ip",
+          "close": {
+            "closed": 1000
+          }
+        },
+        {
+          "case": "cached-ip",
+          "close": {
+            "closed": 1000
+          }
+        },
+        {
+          "case": "event-filter"
+        },
+        {
+          "case": "event-filter"
+        },
+        {
+          "case": "event-filter"
+        },
+        {
+          "case": "event-filter"
+        },
+        {
+          "case": "event-filter"
+        },
+        {
+          "case": "event-filter"
+        },
+        {
+          "case": "event-filter"
+        },
+        {
+          "case": "notification-filter"
+        },
+        {
+          "case": "notification-filter"
+        },
+        {
+          "case": "notification-filter"
+        },
+        {
+          "case": "notification-filter"
+        },
+        {
+          "case": "notification-filter"
+        },
+        {
+          "case": "notification-filter"
+        },
+        {
+          "case": "notification-filter"
+        },
+        {
+          "case": "notification-filter"
+        },
+        {
+          "case": "notification-filter"
+        },
+        {
+          "case": "falsy-update"
+        },
+        {
+          "case": "falsy-update"
+        },
+        {
+          "case": "falsy-update"
+        },
+        {
+          "case": "falsy-update"
+        },
+        {
+          "case": "falsy-update"
+        },
+        {
+          "case": "falsy-update"
+        },
+        {
+          "case": "captured-role-and-active"
+        },
+        {
+          "case": "token-expiry-after-handshake"
+        },
+        {
+          "case": "inbound-invalid-json"
+        },
+        {
+          "case": "inbound-missing-type"
+        },
+        {
+          "case": "inbound-array"
+        },
+        {
+          "case": "inbound-binary"
+        },
+        {
+          "case": "standard-preview-ignored"
+        },
+        {
+          "case": "ping-pong"
+        }
+      ],
+      "result": {
+        "Native_coverage_increased": false,
+        "new_Source_cases_this_task": 0,
+        "complete_role_matrix": false,
+        "fully_verified": false,
+        "state": "partial_historical_Original_websocket_route_observations",
+        "actual_wire_cases": 55
+      },
+      "fully_verified": false
+    }
+  ],
+  "fully_verified_added": 0,
+  "new_Source_execution": false,
+  "Native_coverage_increased": false
+}
