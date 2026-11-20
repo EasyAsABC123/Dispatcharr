@@ -41,7 +41,7 @@ struct ImageLifecycle {
     closing: bool,
     physical: usize,
 }
-struct ImageWork {
+pub(crate) struct ImageWork {
     lifecycle: Arc<Mutex<ImageLifecycle>>,
     drained: Arc<Notify>,
 }
@@ -80,7 +80,7 @@ impl ImageRuntime {
             .map_err(|_| busy())
     }
 
-    fn begin(&self) -> Result<Arc<ImageWork>, StoreError> {
+    pub(crate) fn begin(&self) -> Result<Arc<ImageWork>, StoreError> {
         let mut state = self
             .lifecycle
             .lock()

@@ -368,7 +368,178 @@ pub(crate) async fn delete(
     )
         .into_response())
 }
+fn bulk_delete_json_error(raw: &[u8], error: serde_json::Error) -> StoreError {
+    // serde_json reports the last byte for an absent value. DRF reports the
+    // next character, including whitespace after the separator.
+    if error.is_eof() {
+        if let Ok(text) = std::str::from_utf8(raw) {
+            let last = text
+                .trim_end_matches([' ', '\t', '\n', '\r'])
+                .chars()
+                .next_back();
+            let detail = error.to_string();
+            let missing_value = match last {
+                Some(':') => detail.starts_with("EOF while parsing a value"),
+                Some('[') => detail.starts_with("EOF while parsing a list"),
+                _ => false,
+            };
+            if missing_value {
+                let position = text.chars().count();
+                let line = text.bytes().filter(|byte| *byte == b'\n').count() + 1;
+                let column = text.rsplit('\n').next().unwrap_or_default().chars().count() + 1;
+                return parser(&format!(
+                    "JSON parse error - Expecting value: line {line} column {column} (char {position})"
+                ));
+            }
+        }
+    }
+    parser(&format!(
+        "JSON parse error - {}",
+        crate::source_json_error(raw, error)
+    ))
+}
+
+async fn bulk_delete_body(request: Request) -> Result<Map<String, Value>, StoreError> {
+    let media = request
+        .headers()
+        .get(axum::http::header::CONTENT_TYPE)
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or_default()
+        .to_owned();
+    let raw = axum::body::to_bytes(request.into_body(), REQUEST_LIMIT)
+        .await
+        .map_err(|_| StoreError::StatusBody(413, json!({"detail":"Request body too large."})))?;
+    if raw.is_empty() {
+        return Ok(Map::new());
+    }
+    if media.split(';').next().map(str::trim) != Some("application/json") {
+        return Err(StoreError::StatusBody(
+            415,
+            json!({"detail":format!("Unsupported media type \"{media}\" in request.")}),
+        ));
+    }
+    match serde_json::from_slice::<Value>(&raw)
+        .map_err(|error| bulk_delete_json_error(&raw, error))?
+    {
+        Value::Object(fields) => Ok(fields),
+        _ => Err(StoreError::UnhandledRestFault),
+    }
+}
+
+fn bulk_logo_ids(values: Option<&Value>) -> Result<Vec<i64>, StoreError> {
+    let mut ids = Vec::new();
+    let mut add = |value: &Value| {
+        let id = match value {
+            Value::Null => None,
+            Value::Bool(value) => Some(i64::from(*value)),
+            _ => crate::channel_memberships::primary_key(value)
+                .map_err(|_| StoreError::UnhandledRestFault)?,
+        };
+        ids.extend(id);
+        Ok::<_, StoreError>(())
+    };
+    match values {
+        None => {}
+        Some(Value::Array(values)) => {
+            for value in values {
+                add(value)?;
+            }
+        }
+        Some(Value::String(value)) => {
+            for item in value.chars() {
+                add(&Value::String(item.to_string()))?;
+            }
+        }
+        Some(Value::Object(value)) => {
+            for key in value.keys() {
+                add(&Value::String(key.clone()))?;
+            }
+        }
+        Some(_) => return Err(StoreError::UnhandledRestFault),
+    }
+    Ok(ids)
+}
+
+pub(crate) async fn bulk_delete(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    auth.account_user(peer, request.headers().clone(), true)
+        .await?;
+    let body = bulk_delete_body(request).await?;
+    let ids = bulk_logo_ids(body.get("logo_ids"))?;
+    let delete_files = crate::channels::truthy(body.get("delete_files"));
+    let permit = auth.images.reserve().await?;
+    let work = auth.images.begin()?;
+    tokio::spawn(async move {
+        let (_permit, _work) = (permit, work);
+        bulk_delete_owned(&auth, &ids, delete_files).await
+    })
+    .await
+    .map_err(|_| StoreError::UnhandledRestFault)??;
+    Ok((
+        StatusCode::NO_CONTENT,
+        [
+            (axum::http::header::CONTENT_LENGTH, "0"),
+            (axum::http::header::CONTENT_TYPE, "application/json"),
+        ],
+        axum::body::Body::from_stream(futures_util::stream::empty::<
+            Result<bytes::Bytes, std::convert::Infallible>,
+        >()),
+    )
+        .into_response())
+}
+
+async fn bulk_delete_owned(
+    auth: &AuthService,
+    ids: &[i64],
+    delete_files: bool,
+) -> Result<(), StoreError> {
+    if ids.is_empty() {
+        return Ok(());
+    }
+    let pool = auth.store.pool();
+    let logos: Vec<(i64, Option<String>)> = sqlx::query_as(
+        "SELECT id::bigint, CASE WHEN $2 THEN url END          FROM dispatcharr_channels_logo WHERE id=ANY($1)",
+    )
+    .bind(ids)
+    .bind(delete_files)
+    .fetch_all(pool)
+    .await?;
+    let mut selected = Vec::with_capacity(logos.len());
+    for (id, url) in logos {
+        if let Some(url) = url.filter(|url| url.starts_with("/data/logos")) {
+            tokio::task::spawn_blocking(move || delete_local_logo(&url, true))
+                .await
+                .map_err(|_| StoreError::UnhandledRestFault)??;
+        }
+        // Original clears the direct links for this logo before proceeding to
+        // the next file. Only the final Collector delete is transactional.
+        sqlx::query("UPDATE dispatcharr_channels_channel SET logo_id=NULL WHERE logo_id=$1")
+            .bind(id)
+            .execute(pool)
+            .await?;
+        selected.push(id);
+    }
+    let mut tx = pool.begin().await?;
+    // Recheck direct links like Django's Collector does before deleting rows.
+    for query in [
+        "UPDATE dispatcharr_channels_channel SET logo_id=NULL WHERE logo_id=ANY($1)",
+        "UPDATE dispatcharr_channels_channeloverride SET logo_id=NULL WHERE logo_id=ANY($1)",
+        "DELETE FROM dispatcharr_channels_logo WHERE id=ANY($1)",
+    ] {
+        sqlx::query(query).bind(&selected).execute(&mut *tx).await?;
+    }
+    tx.commit().await?;
+    Ok(())
+}
+
 fn safe_file_delete(url: &str) -> Result<(), StoreError> {
+    delete_local_logo(url, false)
+}
+
+fn delete_local_logo(url: &str, bulk: bool) -> Result<(), StoreError> {
     if !FsPath::new(url).exists() {
         return Ok(());
     }
@@ -397,9 +568,14 @@ fn safe_file_delete(url: &str) -> Result<(), StoreError> {
             }
             _ => error.to_string(),
         };
+        let path = if bulk {
+            format!(" {url}")
+        } else {
+            String::new()
+        };
         StoreError::StatusBody(
             500,
-            json!({"error":format!("Failed to delete logo file: {message}")}),
+            json!({"error":format!("Failed to delete logo file{path}: {message}")}),
         )
     })
 }
@@ -504,4 +680,71 @@ pub(crate) async fn upload(
         Json(crate::logos::serialized(&auth, id, peer.ip(), &headers).await?),
     )
         .into_response())
+}
+
+#[cfg(test)]
+mod bulk_tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn missing_json_values_follow_original_character_offsets() {
+        for (body, line, column, position) in [
+            (r#"{"logo_ids":"#, 1, 13, 12),
+            ("{\"logo_ids\": \t", 1, 15, 14),
+            ("{\"x\":\n ", 2, 2, 7),
+            (r#"{"é":"#, 1, 6, 5),
+            (r#"{"x":["#, 1, 7, 6),
+        ] {
+            let request = Request::builder()
+                .header("Content-Type", "application/json")
+                .body(axum::body::Body::from(body))
+                .unwrap();
+            let result = bulk_delete_body(request).await;
+            let detail = format!(
+                "JSON parse error - Expecting value: line {line} column {column} (char {position})"
+            );
+            assert!(
+                matches!(result, Err(StoreError::InvalidInput(value)) if value == json!({"detail": detail}))
+            );
+        }
+    }
+
+    #[test]
+    fn unrelated_json_errors_keep_the_shared_formatter() {
+        for body in [
+            b"{".as_slice(),
+            br#"{"logo_ids":"incomplete:"#,
+            br#"{"logo_ids":1,"#,
+        ] {
+            let error = serde_json::from_slice::<Value>(body).unwrap_err();
+            let expected = format!(
+                "JSON parse error - {}",
+                crate::source_json_error(body, error)
+            );
+            let error = serde_json::from_slice::<Value>(body).unwrap_err();
+            let actual = bulk_delete_json_error(body, error);
+            assert!(
+                matches!(actual, StoreError::InvalidInput(value) if value == json!({"detail": expected}))
+            );
+        }
+    }
+
+    #[test]
+    fn prepares_integer_ids_and_ignores_null_members() {
+        for body in [None, Some(&json!([]))] {
+            assert!(bulk_logo_ids(body).unwrap().is_empty());
+        }
+        assert_eq!(
+            bulk_logo_ids(Some(&json!([41, "42", true, null, 41]))).unwrap(),
+            [41, 42, 1, 41]
+        );
+        assert!(matches!(
+            bulk_logo_ids(Some(&Value::Null)),
+            Err(StoreError::UnhandledRestFault)
+        ));
+        assert!(matches!(
+            bulk_logo_ids(Some(&json!([1, "invalid"]))),
+            Err(StoreError::UnhandledRestFault)
+        ));
+    }
 }
