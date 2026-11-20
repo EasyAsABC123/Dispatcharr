@@ -1,7 +1,10 @@
 //! Source backups.scheduler over actual settings/Beat rows; no timer starts here.
 //! Original Dispatcharr/django-celery-beat authors retain application credit.
 use crate::recording_settings::Settings;
-use dispatcharr_store::{ProducerIdentitySource, Store, StoreError};
+use dispatcharr_contracts::BoxFuture;
+use dispatcharr_store::{
+    AuthService, BackupScheduleDisableApi, ProducerIdentitySource, Store, StoreError,
+};
 use serde_json::{json, Value};
 use sqlx::{Connection, Row};
 use std::sync::Arc;
@@ -70,19 +73,20 @@ impl Schedule {
         }
     }
     pub(crate) async fn initialize(&self, owner: Arc<dyn Send + Sync>) -> Result<(), StoreError> {
-        self.apply(None, owner).await.map(|_| ())
+        self.apply(None, owner, None).await.map(|_| ())
     }
     pub(crate) async fn update(
         &self,
         data: Value,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Value, StoreError> {
-        self.apply(Some(data), owner).await
+        self.apply(Some(data), owner, None).await
     }
     async fn apply(
         &self,
         data: Option<Value>,
         owner: Arc<dyn Send + Sync>,
+        backup_cache_after_save: Option<&AuthService>,
     ) -> Result<Value, StoreError> {
         // Source reads malformed stored values as DEFAULTS, but PUT merges
         // updates into an empty object. Preserve that distinction before data moves.
@@ -91,7 +95,7 @@ impl Schedule {
         let mut connection = self.store.pool().acquire().await?;
         let observed=async{
    let row=sqlx::query("SELECT CASE WHEN value IS NULL OR octet_length(value::text)<=65536 THEN value ELSE NULL END AS value,value IS NULL OR octet_length(value::text)<=65536 AS bounded FROM core_coresettings WHERE key='backup_settings' LIMIT 1").fetch_optional(&mut *connection).await?;
-   let mut value=match row{Some(row)=>{if !row.try_get::<bool,_>("bounded")?{return Err(failed("Backup settings capacity unavailable"))}row.try_get::<Option<Value>,_>("value")?.filter(Value::is_object).unwrap_or_else(||if updating{json!({})}else{defaults()})},None=>{let d=defaults();sqlx::query("INSERT INTO core_coresettings(key,name,value) VALUES('backup_settings','Backup Settings',$1) ON CONFLICT(key) DO NOTHING").bind(&d).execute(&mut *connection).await?;d}};
+   let mut value=match row{Some(row)=>{if !row.try_get::<bool,_>("bounded")?{return Err(failed("Backup settings capacity unavailable"))}row.try_get::<Option<Value>,_>("value")?.filter(Value::is_object).unwrap_or_else(||if updating{json!({})}else{defaults()})},None if backup_cache_after_save.is_some()=>return Err(disable_unavailable()),None=>{let d=defaults();sqlx::query("INSERT INTO core_coresettings(key,name,value) VALUES('backup_settings','Backup Settings',$1) ON CONFLICT(key) DO NOTHING").bind(&d).execute(&mut *connection).await?;d}};
    if let Some(data)=data{
     let fields=data.as_object().ok_or_else(||invalid("Expected an object"))?;
     if let Some(v)=fields.get("frequency"){if !matches!(v.as_str(),Some("daily"|"weekly")){return Err(invalid("frequency must be 'daily' or 'weekly'"))}}
@@ -107,16 +111,20 @@ impl Schedule {
     }
     // Source commits the setting before periodic sync; a later invalid cron is
     // not grounds to fabricate rollback of the already committed setting.
-    sqlx::query("UPDATE core_coresettings SET value=$1 WHERE key='backup_settings'").bind(&value).execute(&mut *connection).await?;
+    let changed=sqlx::query("UPDATE core_coresettings SET value=$1 WHERE key='backup_settings'").bind(&value).execute(&mut *connection).await?;
+    if backup_cache_after_save.is_some() && changed.rows_affected()!=1 { return Err(disable_unavailable()); }
    }
-   let config=normalized(&value,&self.identity)?;
-   Ok(config)
+   Ok::<_,StoreError>(value)
   }.await;
         let ready = connection.ping().await;
         let close = connection.close().await;
         ready?;
         close?;
-        let config = observed?;
+        let value = observed?;
+        if let Some(auth) = backup_cache_after_save {
+            auth.backup_schedule_settings_saved().await?;
+        }
+        let config = normalized(&value, &self.identity)?;
         let canonical = if config["enabled"] == json!(false) {
             "UTC"
         } else {
@@ -162,5 +170,89 @@ impl Schedule {
         ready?;
         close?;
         observed
+    }
+}
+
+fn disable_unavailable() -> StoreError {
+    StoreError::StatusBody(
+        501,
+        json!({"detail":"Backup schedule consumer is not prepared"}),
+    )
+}
+
+fn ordinary_disable_request(data: &Value) -> bool {
+    let Some(fields) = data.as_object() else {
+        return false;
+    };
+    if fields.get("enabled") != Some(&Value::Bool(false)) {
+        return false;
+    }
+    if fields.len() == 1 {
+        return true;
+    }
+    fields.len() == 6
+        && matches!(data["frequency"].as_str(), Some("daily" | "weekly"))
+        && data["time"].as_str().is_some_and(|time| {
+            time.len() == 5 && chrono::NaiveTime::parse_from_str(time, "%H:%M").is_ok()
+        })
+        && data["day_of_week"]
+            .as_i64()
+            .is_some_and(|day| (0..=6).contains(&day))
+        && data["retention_count"]
+            .as_i64()
+            .is_some_and(|count| count >= 0)
+        && data["cron_expression"].is_string()
+}
+
+/// Owned settings-only adapter. Its constructor does not start a worker or
+/// synchronize schedules on startup.
+pub struct BackupScheduleDisable(Schedule);
+
+impl BackupScheduleDisable {
+    pub fn new(store: Store, cache: String, identity: ProducerIdentitySource) -> Self {
+        Self(Schedule::new(store, cache, identity))
+    }
+}
+
+impl BackupScheduleDisableApi for BackupScheduleDisable {
+    fn disable<'a>(
+        &'a self,
+        data: Value,
+        auth: &'a AuthService,
+        caller: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'a, Result<Value, StoreError>> {
+        Box::pin(async move {
+            if !ordinary_disable_request(&data) {
+                return Err(disable_unavailable());
+            }
+            self.0.apply(Some(data), caller, Some(auth)).await
+        })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn ordinary_scope_only_admits_a_stock_disabled_save() {
+        let mut full = json!({"enabled":false, "frequency":"weekly", "time":"04:10",
+                              "day_of_week":2, "retention_count":3, "cron_expression":""});
+        assert!(ordinary_disable_request(&full));
+        assert!(ordinary_disable_request(&json!({"enabled":false})));
+        for (key, value) in [
+            ("enabled", json!(true)),
+            ("enabled", json!("false")),
+            ("time", json!("27:15")),
+            ("day_of_week", json!(7)),
+            ("retention_count", json!(-1)),
+        ] {
+            let old = std::mem::replace(&mut full[key], value);
+            assert!(!ordinary_disable_request(&full));
+            full[key] = old;
+        }
+        assert!(!ordinary_disable_request(
+            &json!({"enabled":false,"unknown":1})
+        ));
     }
 }
