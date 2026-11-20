@@ -71,6 +71,9 @@ recorded two passing nodes and verified cleanup.
 The [a785 createsuperuser and typed comparisons](rust-a785-cli-acceptance.md)
 passed 22 shipped CLI cases and 154 typed comparisons with verified cleanup.
 
+The [976f createsuperuser and typed comparisons](rust-976f-cli-acceptance.md)
+passed 22 shipped cases and 154 typed comparisons, with verified cleanup.
+
 The [735 operator and guide acceptance](rust-735-group-acceptance.md) passed four required nodes
 on 735. It verified 11 clean-install checks, 17 safe CLI cases, 64 current
 programme cases and 43 guide grid cases with verified cleanup.
