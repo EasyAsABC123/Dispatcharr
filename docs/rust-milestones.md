@@ -194,6 +194,8 @@ The [Original compatibility Beat wrapper](rust-m6-original-compat-beat.md) verif
 
 The [paired compatibility Beat wrapper](rust-m6-c2a3-compat-beat.md) matched the Original Stats, scanner and linked group child effects on the exact packaged Rust Main.
 
+The [enabled recurring recording pair](rust-m6-c2a3-enabled-recurring.md) verified the hourly UTC rule, future clocked recording, notification and completed artwork child.
+
 The [735 MPEG-TS functional checks](rust-m9-735-functional-streaming.md) passed
 all three required nodes with verified cleanup. The run covered 24 two-worker
 checks, 14 delayed restart checks and 100 retained-history readers with 20

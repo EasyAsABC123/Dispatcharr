@@ -1,0 +1,241 @@
+{
+  "candidate": {
+    "git": "c2a35f9da453fc88d8c56e88d0df31b4ace4b9c0",
+    "image_id": "sha256:e6f570f3489513905451691df33d3dc16e113d7a7c834aa7310aa2dd360ac166",
+    "manifest_sha256": "de6e740ccbe0261030f6d86859f4d5b96d3f2d5051cfe38b4d54a1ad5f6c4382",
+    "source_archive_sha256": "e66a3060eb128da40fe440b6a6d235bc91b162804d3a1fb9b30bd6767ac744c1"
+  },
+  "fresh_passed_count": 9,
+  "fresh_passed_nodes": [
+    "package/auth-hash",
+    "package/clean-install",
+    "package/current-packaged",
+    "package/guide-grid-packaged",
+    "package/proxy-auth",
+    "package/retention100",
+    "package/sharedTS18",
+    "package/sharedTS6-all-down",
+    "package/shipped-safe17"
+  ],
+  "groups": {
+    "mpeg-ts": {
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/retention100": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "6ec5b0dd2b4cba9334f5dae657f600f1a1713863292625c6453d34fc1ff15f73",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "active_channels": 10,
+            "late_readers": 100,
+            "matched_av_decoders": 20,
+            "retention_samples": 4
+          },
+          "proofs": {
+            "integration_sha256": "709d2d1f9734cdfbc1c5831a137531f90410c3ba6fd66800e191625b9327cd1f"
+          },
+          "qualification_receipt_sha256": "bd32c3891f06c0cfb3527650b468ab6c19bbdb62e0787b68d8709b98a8fd9e88"
+        },
+        "package/sharedTS18": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "1475952f07e73820f9772a1a4e9e9fe52c7bf91427ed3db101810bdc8c6b54cc",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "actual_checks": 24,
+            "matched_av_decoders": 6,
+            "required_cases": 3
+          },
+          "proofs": {
+            "integration_sha256": "7603cce2e4493b6a1cf90e0cafcce990a8290293adf2ab7a25a399a48be41761"
+          },
+          "qualification_receipt_sha256": "f00a3c9c462246f5ab95d26a6707ebccf48ab6abbf6bb2fa698493ec58f0aac7"
+        },
+        "package/sharedTS6-all-down": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "b745aff9c3fad0c34689a17a122ba64e0b3e0a45224c8144ac16e37b0895a590",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "actual_checks": 14,
+            "matched_av_decoders": 2
+          },
+          "proofs": {
+            "integration_sha256": "eed1c6ddaf2c2bd4b79562d36eeea6e5943f2e7f8f5ffb279646be539536b02a"
+          },
+          "qualification_receipt_sha256": "d18421c9a0a0bdf77ecf70d3cf3231dd8037dcf211905d851651d07f773aed32"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "c7c9d9519d5ede0e249b8382173cf186a870687a5b55a9eeae4a8702e72238c9",
+      "sealed_binding_sha256": "dacac9f20fbc343e71b93c2cb94767d4b566aae05ccac542882f8db8b31a6bbb",
+      "stage_seal_sha256": "d0a72abc7ac28d3ec1249a55fc48ff42dc4d3ef5a6b9518cba9d252ac37545bc",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/retention100",
+        "package/sharedTS18",
+        "package/sharedTS6-all-down"
+      ],
+      "terminal_node_statuses": {
+        "package/retention100": "passed",
+        "package/sharedTS18": "passed",
+        "package/sharedTS6-all-down": "passed"
+      }
+    },
+    "operator-guide-auth": {
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/auth-hash": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "1b00cb4c2eb48e9d6f875d835cfde22ef8b27a938268397baf7cf12e440c1c07",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "checks": 34,
+            "credential_variants": 8,
+            "ordinary_decoded_frames": 75,
+            "owned_credential_rows_retired": 8
+          },
+          "proofs": {
+            "integration_sha256": "3a2c25dbf31b2cfad7c2e03c1c4e07797acd64853e74b3464e4055ec64a9566d"
+          },
+          "qualification_receipt_sha256": "2428fd7862b9c6fd4bd4a764d4810c0921708e541339328eacac9f928a270892"
+        },
+        "package/clean-install": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "f3f05f5901883e1ab56017af90a0a7ddab938d7105aeb00ce5b902dcf7bb9ae7",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "checks": 11,
+            "no_Original_or_Django_service": true
+          },
+          "proofs": {
+            "integration_sha256": "902fc1a088d4c9aa5da316d17287084f11cb02e87c69507c71d5df8c961b80f2"
+          },
+          "qualification_receipt_sha256": "27483b64f0e9c5243d77a1e0084fd762c062a4677d07e39850daf41a7dc42452"
+        },
+        "package/current-packaged": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "0a3a7c7e1db3fca47cbf5c2dc1cda68c9a067c8f3c9cc533d3ba88a9b09b1f4c",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "required_wire_cases": 64
+          },
+          "proofs": {
+            "exact_native_wire_sha256": "14a53aed06c45fa3801ac4934586e4900b7f0ece275908b2c40d28a419910c4a",
+            "exact_original_wire_sha256": "7e49fd3bf041465c9f329d648f608ed4c6d4ad10f753f212d88b6462483af5b1",
+            "integration_sha256": "55054ce34fdb90923f944f76520863aaed5a495e9f01d54df64d17a814c9df58"
+          },
+          "qualification_receipt_sha256": "b1fac2d937df400581360ee81b0fda4ba2c3f81e0927ef93c0ab659e7a8edbdd"
+        },
+        "package/guide-grid-packaged": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "d4b87d1035e2b11cef2194492d0c2d38534fe8c4c8179c29e72f1e553c45d9af",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "required_wire_cases": 43
+          },
+          "proofs": {
+            "exact_native_wire_sha256": "5363a1f8ea077c5a990a24a9b5442ec353ab51a35189e9001fd34eec6ad6ba9d",
+            "exact_original_wire_sha256": "e877e10658a23328bf0a4194fa2abc1be030b49265cc0de2c1bff996a47eea81",
+            "integration_sha256": "c01d0ae46c32a6ab14846ddd3d947ddf0c72f6a9cd716956008e8fd1ad7f51b1"
+          },
+          "qualification_receipt_sha256": "59bdc1a001a92a7b1048cad9eacc1dab151c93c8b48f3c0fbb1b69b9ff5a308f"
+        },
+        "package/proxy-auth": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "9011452ba2f721053c1bde01f43c7e8837592a537d88aa14d51fe3b6035129c8",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "checks": 38,
+            "configured_proxy_auth_checks": 20,
+            "ordinary_decoded_frames": 75
+          },
+          "proofs": {
+            "integration_sha256": "675b9f15f9ea0995cee82bb63679c21a9604c46e55682a820ae2f697ae54d532"
+          },
+          "qualification_receipt_sha256": "d26dc0f2008d8c0f7972bd3b354e7dcafa3a57fda9df77055b0b896722e47384"
+        },
+        "package/shipped-safe17": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "50ef34e9a55e8bd06df4f659fe79c14a241fdae3f283c03c6552324cad4a7595",
+          "cleanup_verified": true,
+          "entrypoint": "production-CLI",
+          "metrics": {
+            "cases": 17
+          },
+          "proofs": {
+            "proof_sha256": "fb9945171d28f2475214d542bb1ce2b85ff636e12ca9a284edf386d3815069e3",
+            "retained_Source17_sha256": "680db805e72ac605030de02dea7ae4470cd5b3cb7857a21e1409df44d1091fca"
+          },
+          "qualification_receipt_sha256": "4174e3d9528142031f5d84ba1068d53ba42f6a67585ee0f1e1e6fe4bb3434a2a"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "aead88e7b65b89393be39036b5112ea606647c51bb5ba34441628ff95e0d33f5",
+      "sealed_binding_sha256": "081ef436757ff00ddbedae3593a12a20e964b026926db4e7cdc8a216c80e8a4f",
+      "stage_seal_sha256": "6dd8ad9dfc9be2869bf5b8896a6437749d0755ed050eaa2b9ec2e66be6b77437",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/auth-hash",
+        "package/clean-install",
+        "package/current-packaged",
+        "package/guide-grid-packaged",
+        "package/proxy-auth",
+        "package/shipped-safe17"
+      ],
+      "terminal_node_statuses": {
+        "package/auth-hash": "passed",
+        "package/clean-install": "passed",
+        "package/current-packaged": "passed",
+        "package/guide-grid-packaged": "passed",
+        "package/proxy-auth": "passed",
+        "package/shipped-safe17": "passed"
+      }
+    }
+  },
+  "pinned_coordinator_revision": "b01cb4d68c31c493c3b605ea075d7c4020d30329",
+  "remaining_unqualified_count": 118,
+  "required_count": 127
+}

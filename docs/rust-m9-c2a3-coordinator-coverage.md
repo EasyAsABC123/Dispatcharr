@@ -1,0 +1,28 @@
+# c2a35f9d required coordinator coverage
+
+Two separate Docker Compose runs verified nine distinct required nodes on
+the exact `c2a35f9d` production package. All nine passed execution,
+semantic evaluation and independent cleanup. Both scoped coordinators
+returned exit 2. The six-node run used a retained Original reference
+for the 17 CLI cases, and executed the packaged Rust checks fresh.
+
+| Required node | Observed work |
+| --- | --- |
+| Clean install | 11 checks without an Original or Django service |
+| Safe operator CLI | 17 cases |
+| Current programmes | 64 compared wire cases |
+| Guide Grid | 43 compared wire cases |
+| Credential hashes | 34 checks, 8 credential variants, 75 decoded frames, and 8 owned credential rows retired |
+| Proxy authentication | 38 checks including 20 configured proxy checks, with 75 decoded frames |
+| Shared MPEG-TS | 24 checks in three cases, with six audio/video decodes |
+| Shared MPEG-TS after all replicas stopped | 14 checks and two audio/video decodes |
+| Bounded MPEG-TS retention | Four samples across ten channels, 100 late readers, and 20 audio/video decodes |
+
+These are nine of the 127 required coordinator nodes. The other 118 lack
+passing coordinator evidence on this image. The results leave the release
+workflow, soak, rollback, and comparative CPU, memory and latency gates
+open. [Redacted receipt](../scripts/rust-integration/milestone-batch113/c2a3-nine-required-nodes.json)
+[Detailed MPEG-TS evidence](rust-m9-c2a3-functional-streaming.md)
+
+The original Dispatcharr authors and contributors retain application and
+workflow credit. [Dispatcharr upstream](https://github.com/Dispatcharr/Dispatcharr)
