@@ -101,6 +101,12 @@ integrated package and resource gates remain open.
 The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
 ordinary Native login, cancel and both cleanup modes with exact SQL and
 teardown. The paired Original HTTP reference was retained.
+The [stock React provider modal replay](rust-provider-modal-browser.md)
+matched all 12 scoped image requests and decodes across both Chromium phases.
+
+The [trusted plugin action replay](rust-m8-selected-trusted-plugin-actions.md)
+matched the decoded results and selected headers for echo and scalar with
+selected workers and verified exact compatibility-host retirement.
 
 [The late Redis commit replay](../scripts/rust-core-contracts/late-commit-replay/receipt.json)
 preserved all 23 paired streaming core cases. A fresh Rust writer recovered
@@ -876,15 +882,15 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 
 | ID | Deliverable | Depends on | Current status | Evidence required to pass |
 | --- | --- | --- | --- | --- |
-| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 797 partial HTTP Original assignments, one unassigned HTTP declaration, and 177 partial typed assignments across 250 candidates; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
+| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 797 partial HTTP Original assignments, one unassigned HTTP declaration, and 250 partial typed Original assignments; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
 | M1 | Shared bounded streaming core | M0 | In progress (technical core gates passed; M0 executable-contract prerequisite open) | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
-| M2 | Authenticated live TS vertical slice | M1 | In progress | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
+| M2 | Authenticated live TS vertical slice | M1 | In progress (three scoped 100-viewer pairs passed with one upstream per side) | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
 | M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
 | M4 | VOD and timeshift parity | M2 | In progress (ordinary DVR functional slice and one- and ten-viewer completed playback budgets passed) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
-| M5 | Accounts, settings, and channel control APIs | M2 | In progress (stock React batch dummy guide assignment and clear verified) | API/permission/database/React workflow parity and API benchmarks |
+| M5 | Accounts, settings, and channel control APIs | M2 | In progress (stock React provider modals, group cleanup and prior guide edits verified) | API/permission/database/React workflow parity and API benchmarks |
 | M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (selected batch guide worker terminals and scoped startup verified) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (Auto Sync regex preview and Connect workflows verified in scoped Compose runs) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
-| M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (packaged System Logs reads and scoped schema/archive/operator checks passed; restore, active collection, admin and plugin gaps) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
+| M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (trusted selected actions, managed logs and scoped operator checks passed. Default plugin attachment and wider restore and admin coverage remain open.) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
 | M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (copied PostgreSQL rollback passed with four matched Original restart timestamp updates; strict fingerprint and final suite open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 | M10 | Controlled rollout | M9 | Proposed ([ARM64 donor identity verified offline](rust-m10-amd64-pg-vlc-portability.md#arm64-donor-provenance), native package checks pending) | Scoped rollout plan, monitoring and rollback on the selected release image |
 | M11 | Default switch and operator handoff | M10 | Proposed | Released image and configuration, upgrade evidence, attribution and monitored fallback |
