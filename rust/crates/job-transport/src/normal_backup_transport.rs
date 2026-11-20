@@ -1,18 +1,23 @@
 //! Same prepared Main Jobs ports; actual head/CAS and result replies retain caller.
 use super::*;
-use crate::normal_backup_protocol::{self, Message};
+use crate::normal_backup_protocol::{self, Kind, Message};
 use base64::{engine::general_purpose::STANDARD, Engine};
 pub(crate) struct BackupCandidate {
     raw: Vec<u8>,
     pub message: Message,
 }
+fn backup_kind_allowed(authority: Authority, kind: &Kind) -> bool {
+    matches!(authority, Authority::Fixture | Authority::DefaultServices)
+        || (authority == Authority::Backup && matches!(kind, Kind::Create))
+}
+
 impl Jobs {
     pub(crate) async fn peek_normal_backup(
         &self,
         expected: Option<&[u8]>,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Option<BackupCandidate>, Error> {
-        if !self.allows_defaults() {
+        if !self.allows_defaults() && !self.allows_backup() {
             return Err(Error::UnsupportedTask);
         }
         let (reply, _held) = self
@@ -41,6 +46,9 @@ impl Jobs {
         }
         let message =
             normal_backup_protocol::parse(&reply.1).map_err(|_| Error::UnsupportedTask)?;
+        if !backup_kind_allowed(self.inner.authority, &message.kind) {
+            return Err(Error::UnsupportedTask);
+        }
         Ok(Some(BackupCandidate {
             raw: reply.1,
             message,
@@ -51,7 +59,7 @@ impl Jobs {
         candidate: BackupCandidate,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Message, Error> {
-        if !self.allows_defaults() {
+        if !backup_kind_allowed(self.inner.authority, &candidate.message.kind) {
             return Err(Error::UnsupportedTask);
         }
         match self
@@ -79,11 +87,12 @@ impl Jobs {
         origin: &str,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
-        if !self.allows_defaults() {
+        if !backup_kind_allowed(self.inner.authority, &Kind::Create) {
             return Err(Error::UnsupportedTask);
         }
-        self.publish_normal_backup_task(&Task::CreateBackup, id, reply_to, origin, owner)
-            .await
+        let raw = protocol::encode(&Task::CreateBackup, id, reply_to, Uuid::new_v4(), origin)
+            .map_err(|_| Error::Protocol)?;
+        self.publish_normal_backup_raw(raw, id, owner).await
     }
     #[allow(clippy::too_many_arguments)]
     pub(crate) async fn publish_normal_restore(
@@ -108,21 +117,6 @@ impl Jobs {
             Uuid::new_v4(),
             origin,
         )?;
-        self.publish_normal_backup_raw(raw, id, owner).await
-    }
-    async fn publish_normal_backup_task(
-        &self,
-        task: &Task,
-        id: Uuid,
-        reply_to: Uuid,
-        origin: &str,
-        owner: Arc<dyn Send + Sync>,
-    ) -> Result<Published, Error> {
-        if !self.allows_defaults() {
-            return Err(Error::UnsupportedTask);
-        }
-        let raw = protocol::encode(task, id, reply_to, Uuid::new_v4(), origin)
-            .map_err(|_| Error::Protocol)?;
         self.publish_normal_backup_raw(raw, id, owner).await
     }
     async fn publish_normal_backup_raw(
@@ -158,7 +152,11 @@ impl Jobs {
         id: &str,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Option<Metadata>, Error> {
-        if !self.allows_defaults() || id.is_empty() || id.len() > 1024 || id.contains('\0') {
+        if (!self.allows_defaults() && !self.allows_backup())
+            || id.is_empty()
+            || id.len() > 1024
+            || id.contains('\0')
+        {
             return Err(Error::UnsupportedTask);
         }
         let (reply, _held) = self
@@ -189,7 +187,7 @@ impl Jobs {
         result: serde_json::Value,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        if !self.allows_defaults() {
+        if !backup_kind_allowed(self.inner.authority, &message.kind) {
             return Err(Error::UnsupportedTask);
         }
         let mut metadata = serde_json::json!({"status":"SUCCESS","result":result,"traceback":null,"children":[],"date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string(),"task_id":message.id.to_string()});
@@ -207,7 +205,7 @@ impl Jobs {
         message: &Message,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<bool, Error> {
-        if !self.allows_defaults() {
+        if !backup_kind_allowed(self.inner.authority, &message.kind) {
             return Err(Error::UnsupportedTask);
         }
         let mut metadata = serde_json::json!({"status":"REVOKED","result":{"exc_type":"TaskRevokedError","exc_message":["revoked"],"exc_module":"celery.exceptions"},"traceback":null,"children":[],"date_done":chrono::Utc::now().format("%Y-%m-%dT%H:%M:%S%.6f+00:00").to_string(),"task_id":message.id.to_string()});
@@ -292,5 +290,24 @@ mod restore_encoding_tests {
             )
             .is_err());
         }
+    }
+}
+
+#[cfg(test)]
+mod manual_authority_tests {
+    use super::*;
+
+    #[test]
+    fn manual_backup_cannot_claim_restore_or_scheduled_work() {
+        let create = Kind::Create;
+        let restore = Kind::Restore("owned.zip".into());
+        let scheduled = Kind::Scheduled(serde_json::json!(1));
+        assert!(backup_kind_allowed(Authority::Backup, &create));
+        assert!(!backup_kind_allowed(Authority::Backup, &restore));
+        assert!(!backup_kind_allowed(Authority::Backup, &scheduled));
+        assert!(backup_kind_allowed(Authority::DefaultServices, &create));
+        assert!(backup_kind_allowed(Authority::DefaultServices, &restore));
+        assert!(backup_kind_allowed(Authority::DefaultServices, &scheduled));
+        assert!(!backup_kind_allowed(Authority::Index, &create));
     }
 }
