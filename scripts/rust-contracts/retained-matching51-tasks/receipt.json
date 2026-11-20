@@ -1,0 +1,138 @@
+{
+  "format_version": 1,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "raw_report_sha256": "25d7b65d4600ac854fe88de560e8c15ad60030aecc682ffc5144ca59f9275397",
+  "scope": "Actual owned Source51 roots and children, downloaded-model-free, bounded local provider errors",
+  "sd_batch_definition": {
+    "original_path": "apps/epg/sd_tasks.py",
+    "original_sha256": "98909ed0e5ecd7bbeabb27d3de993e0f5323d5198288911c1406c510762aa60d",
+    "start_line": 452,
+    "end_line": 502,
+    "slice_sha256": "92a9b0416084e93ed6fb73f247507350c999bff52767eec031efb925a1f2ec86"
+  },
+  "rows": [
+    {
+      "name": "all-exact-gracenote-priority-inactive-unassigned",
+      "actual_parent_HTTP": 202,
+      "actual_parent_path": "/api/channels/channels/match-epg/",
+      "parent_task_id_sha256": "b849537b81a89c2bc9f6f1a7e7f57e1d3fc41cb932055ae4b2c2ee620b28067e",
+      "parent_frame_sha256": "090fd0010a4c7a916d26e0540c662f967a33663df83789f4bb29eb838f2f5aa6",
+      "parent_backend_result_sha256": "b4fb462a8f87d627826c7d9c5e5c6842d0fa5b5a431ec41d3db9bb024262ed6c",
+      "parent_task_name": "apps.channels.tasks.match_epg_channels",
+      "DB1_journal_terminal_durable": true,
+      "actual_changed_assignments": 2,
+      "root": {
+        "task_name": "apps.channels.tasks.match_epg_channels",
+        "positional_args": [],
+        "kwargs": {},
+        "queue": "celery",
+        "verified_parent_root_correlation": true,
+        "task_id_sha256": "b849537b81a89c2bc9f6f1a7e7f57e1d3fc41cb932055ae4b2c2ee620b28067e",
+        "parent_task_id_sha256": null,
+        "frame_sha256": "090fd0010a4c7a916d26e0540c662f967a33663df83789f4bb29eb838f2f5aa6",
+        "backend_status": "SUCCESS",
+        "backend_result_sha256": "b4fb462a8f87d627826c7d9c5e5c6842d0fa5b5a431ec41d3db9bb024262ed6c",
+        "backend_result": "Done. 2 channel(s) updated (0 unchanged)."
+      },
+      "children": []
+    },
+    {
+      "name": "all-excludes-nameless-catalog",
+      "actual_parent_HTTP": 202,
+      "actual_parent_path": "/api/channels/channels/match-epg/",
+      "parent_task_id_sha256": "db2fb474eda0dab4d1e4f2d2171db1f1801f44e2f53b252ead7a9831155305f2",
+      "parent_frame_sha256": "5a210c26147434f67970d4cb40de1d358a4a0c77428fb55c7b0c425af7f40a18",
+      "parent_backend_result_sha256": "57319f03b2bac5ae94b880c43d86ea3a3899cef7870779509bc7132fc272af02",
+      "parent_task_name": "apps.channels.tasks.match_epg_channels",
+      "DB1_journal_terminal_durable": true,
+      "actual_changed_assignments": 0,
+      "root": {
+        "task_name": "apps.channels.tasks.match_epg_channels",
+        "positional_args": [],
+        "kwargs": {},
+        "queue": "celery",
+        "verified_parent_root_correlation": true,
+        "task_id_sha256": "db2fb474eda0dab4d1e4f2d2171db1f1801f44e2f53b252ead7a9831155305f2",
+        "parent_task_id_sha256": null,
+        "frame_sha256": "5a210c26147434f67970d4cb40de1d358a4a0c77428fb55c7b0c425af7f40a18",
+        "backend_status": "SUCCESS",
+        "backend_result_sha256": "57319f03b2bac5ae94b880c43d86ea3a3899cef7870779509bc7132fc272af02",
+        "backend_result": "Done. 0 channel(s) updated (0 unchanged)."
+      },
+      "children": []
+    },
+    {
+      "name": "selected-mixed-SD-batch-XML-dummy",
+      "actual_parent_HTTP": 202,
+      "actual_parent_path": "/api/channels/channels/match-epg/",
+      "parent_task_id_sha256": "8c500b5bb93424895ee3cd937defcbcdc6628ee303c83568585b3f831be6335f",
+      "parent_frame_sha256": "96d0a7ee45c019b4438fa8774b9a3260c61c4d92819a1a33a33a51f5df9705c5",
+      "parent_backend_result_sha256": "4221bb3a88e3cbdad7b31f84b528ec257a7a52b997759b270244f92c4d005869",
+      "parent_task_name": "apps.channels.tasks.match_selected_channels_epg",
+      "DB1_journal_terminal_durable": true,
+      "actual_changed_assignments": 5,
+      "root": null,
+      "children": [
+        {
+          "task_name": "apps.epg.tasks.parse_programs_for_tvg_id",
+          "positional_args": [
+            4
+          ],
+          "kwargs": {},
+          "queue": "celery",
+          "verified_parent_root_correlation": true,
+          "task_id_sha256": "db7e88ee23022e0f4a170b47a2e67ccefd8e337092eaf6ec7ded817c2323541d",
+          "parent_task_id_sha256": "8c500b5bb93424895ee3cd937defcbcdc6628ee303c83568585b3f831be6335f",
+          "frame_sha256": "022d1f936bac4db676a64712aa56d11117b4321cf6142a2da6cfd130a250e3d2",
+          "backend_status": "SUCCESS",
+          "backend_result_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "backend_result": null
+        },
+        {
+          "task_name": "apps.epg.tasks.fetch_sd_mapped_guide_batch",
+          "positional_args": [
+            1
+          ],
+          "kwargs": {},
+          "queue": "celery",
+          "verified_parent_root_correlation": true,
+          "task_id_sha256": "a9a36baabb4cd7bca80dec4b6e83840f5a1ccdf1ad2a256b5af8012744aa2a24",
+          "parent_task_id_sha256": "8c500b5bb93424895ee3cd937defcbcdc6628ee303c83568585b3f831be6335f",
+          "frame_sha256": "ce6c35bf8e85f202fb3f135bccbe000b0f8f140769dab3d0a61a188466494403",
+          "backend_status": "SUCCESS",
+          "backend_result_sha256": "5d996740291423c8b7c546c3df1581d709536863be40b5e59d4d534ec18855bb",
+          "backend_result": "SD mapped guide batch complete"
+        }
+      ]
+    },
+    {
+      "name": "single-SD-direct-parse-cache-group",
+      "actual_parent_HTTP": 202,
+      "actual_parent_path": "/api/channels/channels/1/match-epg/",
+      "parent_task_id_sha256": "ff8ef69610d7e4ad9692faa2999d5dc52bba1b8bc8de40fe6909f61d1abfd303",
+      "parent_frame_sha256": "072aeaaa14df48c7abf8a3ac43bd3b5b4efbcefdafe0aec3df2bddcf7585285e",
+      "parent_backend_result_sha256": "28001d004a76e2c49d01b26f1212ca58505be572ca19e48a666f526317647002",
+      "parent_task_name": "apps.channels.tasks.match_single_channel_epg",
+      "DB1_journal_terminal_durable": true,
+      "actual_changed_assignments": 1,
+      "root": null,
+      "children": [
+        {
+          "task_name": "apps.epg.tasks.parse_programs_for_tvg_id",
+          "positional_args": [
+            1
+          ],
+          "kwargs": {},
+          "queue": "celery",
+          "verified_parent_root_correlation": true,
+          "task_id_sha256": "e9007f961e9629444441487473b0749e30291ad0935cca58f250816d8757ccb5",
+          "parent_task_id_sha256": "ff8ef69610d7e4ad9692faa2999d5dc52bba1b8bc8de40fe6909f61d1abfd303",
+          "frame_sha256": "412cda0cb39450e85fb5016f51ffeecc877b8ca6b9ede38c451bed53be3c8034",
+          "backend_status": "SUCCESS",
+          "backend_result_sha256": "aa20ec807d69c7bdbe3ffc233e6fc78e267d82ad86e2afffde3641bcc17f5a56",
+          "backend_result": "SD guide fetch complete"
+        }
+      ]
+    }
+  ]
+}

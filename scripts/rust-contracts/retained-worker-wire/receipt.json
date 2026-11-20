@@ -1,0 +1,384 @@
+{
+  "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "full_M0_accepted": false,
+  "new_runtime_execution": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "raw_digests": {
+    "integration.json": "85d74aa3721f91b2d58079f0d79b16a70bdbe54093a4e13c2541c3309c303309",
+    "periodic-worker-postrun.jsonl": "7fceb296ee523ee2e8edf4d5ca4c2af9f200d7779c076a9326c92647f45b4e21",
+    "periodic-worker-prerun.jsonl": "c01687ccc251bf2af9b900c03315eb3df25caf24886e94cf2d83d9241d024a6f",
+    "source-default-effects-worker-private.json": "f7350b9e1b664fa1e6a957cdf8cf88ef5a665354c6d3ee4777c95183d33d287a",
+    "source-default-stats-worker-private.json": "b348c8a9200d04c28c3d5ab3e34923167bdc918400e1d5dde483f21f1bd44aed",
+    "websocket-source-inside.py": "066919c768452513170d89ea765adc0408d8154704d4754807e7b8c297a934ce",
+    "websocket-source-wire.json": "8b5d3550d3a028a036485ab3e2799e665f2a52f4b83c677288fe259133e005f5",
+    "websocket-source.json": "c116332dfc01553a6662cdd6095c940689fa781531845f71eee8fe4e11ad2cd6"
+  },
+  "task_cases": {
+    "apps.channels.tasks.maintain_recurring_recordings": [
+      {
+        "actual_prerun_postrun_joined": true,
+        "args": [],
+        "backend_children": 0,
+        "backend_result": 0,
+        "case": "recurring-disabled",
+        "event_count": 0,
+        "kwargs": {},
+        "recording_rows_unchanged": true,
+        "root_without_parent": true,
+        "worker_terminal": "SUCCESS"
+      }
+    ],
+    "apps.m3u.tasks.check_account_expirations": [
+      {
+        "actual_prerun_postrun_joined": true,
+        "args": [],
+        "backend_children": 0,
+        "backend_result": null,
+        "case": "expiration-stale",
+        "event_count": 1,
+        "kwargs": {},
+        "owned_ChannelsRedis_notification_dismissal": true,
+        "root_without_parent": true,
+        "stale_notification_row_deleted": true,
+        "worker_terminal": "SUCCESS"
+      }
+    ],
+    "apps.proxy.tasks.fetch_channel_stats": [
+      {
+        "actual_prerun_postrun_joined": true,
+        "args": [],
+        "backend_children": 0,
+        "backend_result": null,
+        "broker_queue_and_unacked_empty": true,
+        "case": "empty",
+        "event_count": 1,
+        "kwargs": {},
+        "root_without_parent": true,
+        "stats_channel_count": 0,
+        "worker_terminal": "SUCCESS"
+      },
+      {
+        "actual_prerun_postrun_joined": true,
+        "args": [],
+        "backend_children": 0,
+        "backend_result": null,
+        "broker_queue_and_unacked_empty": true,
+        "case": "static-live-client",
+        "event_count": 1,
+        "kwargs": {},
+        "observed_client_count": 1,
+        "root_without_parent": true,
+        "stats_channel_count": 1,
+        "worker_terminal": "SUCCESS"
+      },
+      {
+        "actual_prerun_postrun_joined": true,
+        "args": [],
+        "backend_children": 0,
+        "backend_result": null,
+        "broker_queue_and_unacked_empty": true,
+        "case": "ghost-client",
+        "event_count": 1,
+        "kwargs": {},
+        "observed_client_count": 0,
+        "root_without_parent": true,
+        "stats_channel_count": 1,
+        "worker_terminal": "SUCCESS"
+      },
+      {
+        "actual_prerun_postrun_joined": true,
+        "args": [],
+        "backend_children": 0,
+        "backend_result": null,
+        "broker_queue_and_unacked_empty": true,
+        "case": "wrongtype-metadata",
+        "event_count": 1,
+        "kwargs": {},
+        "root_without_parent": true,
+        "stats_channel_count": 0,
+        "worker_terminal": "SUCCESS"
+      },
+      {
+        "actual_prerun_postrun_joined": true,
+        "args": [],
+        "backend_children": 0,
+        "backend_result": null,
+        "broker_queue_and_unacked_empty": true,
+        "case": "invalid-buffer-index",
+        "event_count": 1,
+        "kwargs": {},
+        "root_without_parent": true,
+        "stats_channel_count": 0,
+        "worker_terminal": "SUCCESS"
+      },
+      {
+        "actual_prerun_postrun_joined": true,
+        "args": [],
+        "backend_children": 0,
+        "backend_result": null,
+        "broker_queue_and_unacked_empty": true,
+        "case": "group-send-wrongtype",
+        "event_count": 0,
+        "kwargs": {},
+        "root_without_parent": true,
+        "stats_channel_count": null,
+        "worker_terminal": "SUCCESS"
+      }
+    ]
+  },
+  "websocket": {
+    "actor_transport": "actual Original Daphne and Django Channels",
+    "exceptional_source_member_cleanup_claimed": false,
+    "exceptional_source_members_left_before_compose_down": 4,
+    "guest_actual_exit": 0,
+    "new_synthetic_consumer_assignment": false,
+    "observed_cases": [
+      {
+        "case": "auth-absent",
+        "close": null,
+        "status": 403
+      },
+      {
+        "case": "auth-invalid",
+        "close": null,
+        "status": 403
+      },
+      {
+        "case": "auth-refresh",
+        "close": null,
+        "status": 403
+      },
+      {
+        "case": "auth-inactive",
+        "close": null,
+        "status": 403
+      },
+      {
+        "case": "auth-missing-user",
+        "close": null,
+        "status": 403
+      },
+      {
+        "case": "auth-apikey-query",
+        "close": null,
+        "status": 403
+      },
+      {
+        "case": "auth-header-only",
+        "close": null,
+        "status": 403
+      },
+      {
+        "case": "auth-wrong-case",
+        "close": null,
+        "status": 403
+      },
+      {
+        "case": "auth-invalid-first",
+        "close": null,
+        "status": 403
+      },
+      {
+        "case": "auth-blank-first",
+        "close": {
+          "closed": 1000
+        },
+        "status": 101
+      },
+      {
+        "case": "auth-valid-first",
+        "close": {
+          "closed": 1000
+        },
+        "status": 101
+      },
+      {
+        "case": "role-admin",
+        "close": {
+          "closed": 1000
+        },
+        "status": 101
+      },
+      {
+        "case": "role-standard",
+        "close": {
+          "closed": 1000
+        },
+        "status": 101
+      },
+      {
+        "case": "role-viewer",
+        "close": {
+          "closed": 1000
+        },
+        "status": 101
+      },
+      {
+        "case": "origin",
+        "close": {
+          "closed": 1000
+        },
+        "status": 101
+      },
+      {
+        "case": "origin",
+        "close": {
+          "closed": 1000
+        },
+        "status": 101
+      },
+      {
+        "case": "origin",
+        "close": {
+          "closed": 1000
+        },
+        "status": 101
+      },
+      {
+        "case": "cached-ip",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "cached-ip",
+        "close": {
+          "closed": 1000
+        }
+      },
+      {
+        "case": "event-filter"
+      },
+      {
+        "case": "event-filter"
+      },
+      {
+        "case": "event-filter"
+      },
+      {
+        "case": "event-filter"
+      },
+      {
+        "case": "event-filter"
+      },
+      {
+        "case": "event-filter"
+      },
+      {
+        "case": "event-filter"
+      },
+      {
+        "case": "notification-filter"
+      },
+      {
+        "case": "notification-filter"
+      },
+      {
+        "case": "notification-filter"
+      },
+      {
+        "case": "notification-filter"
+      },
+      {
+        "case": "notification-filter"
+      },
+      {
+        "case": "notification-filter"
+      },
+      {
+        "case": "notification-filter"
+      },
+      {
+        "case": "notification-filter"
+      },
+      {
+        "case": "notification-filter"
+      },
+      {
+        "case": "falsy-update"
+      },
+      {
+        "case": "falsy-update"
+      },
+      {
+        "case": "falsy-update"
+      },
+      {
+        "case": "falsy-update"
+      },
+      {
+        "case": "falsy-update"
+      },
+      {
+        "case": "falsy-update"
+      },
+      {
+        "case": "captured-role-and-active"
+      },
+      {
+        "case": "token-expiry-after-handshake"
+      },
+      {
+        "case": "inbound-invalid-json"
+      },
+      {
+        "case": "inbound-missing-type"
+      },
+      {
+        "case": "inbound-array"
+      },
+      {
+        "case": "inbound-binary"
+      },
+      {
+        "case": "standard-preview-ignored"
+      },
+      {
+        "case": "ping-pong"
+      }
+    ],
+    "path": "/ws/",
+    "project_cleanup_recorded": true,
+    "wire_case_count": 55
+  },
+  "worker_actual_orig_prefork_signals_used": true,
+  "worker_independent_outer_group_claimed": false,
+  "worker_other_families_counted": false,
+  "worker_outer_cleanup_recorded": "project removed"
+}

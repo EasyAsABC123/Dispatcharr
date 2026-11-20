@@ -1,0 +1,255 @@
+{
+  "format_version": 1,
+  "kind": "retained_original_Source51_all_match_and_guide_children_tasks",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "credit": "Original Dispatcharr, Django, Celery, CPython, RapidFuzz and dependency authors retain full credit.",
+  "fixtures": {
+    "Original-Source51-quiet-matching": {
+      "id": "Original-Source51-quiet-matching",
+      "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "actual_controller_exit": 0,
+      "settled_with_EOF": true,
+      "exact_cleanup": true,
+      "scope": {
+        "DISABLE_ML_DOWNLOADS": "true",
+        "actual_MiniLM_cache_present": false,
+        "default_ML_availability_parity": false
+      },
+      "actual_model_inference_qualified": false,
+      "authority_paths": {
+        "scripts/rust-contracts/retained-matching51-tasks/receipt.json": "72c19e284ad1e9007652360463696a1acacbf97108b1a183476ee010c7adbcf5",
+        "scripts/rust-contracts/retained-matching51-tasks/sd-batch-definition.py": "92a9b0416084e93ed6fb73f247507350c999bff52767eec031efb925a1f2ec86",
+        "scripts/rust-integration/channel-matching-source51/Source51/cases.json": "5e5bbd3023cb563043cd6a45e8dcd38b4cbaf59176e4ce4afa12e389f00774a3",
+        "scripts/rust-integration/channel-matching-source51/Source51/cleanup.json": "bf84729148064e378e0e92807967686485aceaf0b95a620cacf2278a65fbb79f",
+        "scripts/rust-integration/channel-matching-source51/Source51/execution.json": "799095effd305dbb0f2e436e7efcc28e3b288bb24fb20d22a724c1db9a01871d",
+        "scripts/rust-integration/channel-matching-source51/Source51/qualification.json": "7ffd10806cb2407432d21953387b85832e6d8a07afeeee899fd746c3ac66be6d",
+        "scripts/rust-integration/channel-matching-source51/Source51/availability.json": "6addf40504684d054ab4c1c56464d819b6e320794b163fa46754d49ccaf3f065",
+        "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "scripts/rust-contracts/scanner-tasks/original/apps/epg/tasks.py": "deb4792a39ed93c57da435ecc2a4fcdf5b4dad8f4e087d3afdb5d4f2b7932ff9"
+      }
+    }
+  },
+  "contracts": [],
+  "non_HTTP_contracts": [
+    {
+      "candidate_id": "candidate-f461943e677d63b54628",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/channels/tasks.py",
+        "line": 245,
+        "name": "match_epg_channels",
+        "callable": "celery.shared_task"
+      },
+      "task_name": "apps.channels.tasks.match_epg_channels",
+      "owning_milestone": "M6",
+      "fixture_ids": [
+        "Original-Source51-quiet-matching"
+      ],
+      "definition": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/apps/channels/tasks.py",
+        "start_line": 245,
+        "ast_sha256": "f6dfcccec5754c1bb32dd4234f5f4a951188f95e169317a4d723b4007fb08a4b"
+      },
+      "observed_actor": {
+        "producer": "Original authenticated matching view",
+        "executor": "Original normal Celery queue celery",
+        "complete_role_matrix": false
+      },
+      "observations": [
+        {
+          "task_name": "apps.channels.tasks.match_epg_channels",
+          "positional_args": [],
+          "kwargs": {},
+          "queue": "celery",
+          "verified_parent_root_correlation": true,
+          "task_id_sha256": "b849537b81a89c2bc9f6f1a7e7f57e1d3fc41cb932055ae4b2c2ee620b28067e",
+          "parent_task_id_sha256": null,
+          "frame_sha256": "090fd0010a4c7a916d26e0540c662f967a33663df83789f4bb29eb838f2f5aa6",
+          "backend_status": "SUCCESS",
+          "backend_result_sha256": "b4fb462a8f87d627826c7d9c5e5c6842d0fa5b5a431ec41d3db9bb024262ed6c",
+          "backend_result": "Done. 2 channel(s) updated (0 unchanged).",
+          "Source51_case": "all-exact-gracenote-priority-inactive-unassigned",
+          "actual_parent_HTTP_path": "/api/channels/channels/match-epg/",
+          "actual_parent_HTTP_status": 202,
+          "actual_changed_assignments": 2,
+          "direct_worker_signals_observed": false
+        },
+        {
+          "task_name": "apps.channels.tasks.match_epg_channels",
+          "positional_args": [],
+          "kwargs": {},
+          "queue": "celery",
+          "verified_parent_root_correlation": true,
+          "task_id_sha256": "db2fb474eda0dab4d1e4f2d2171db1f1801f44e2f53b252ead7a9831155305f2",
+          "parent_task_id_sha256": null,
+          "frame_sha256": "5a210c26147434f67970d4cb40de1d358a4a0c77428fb55c7b0c425af7f40a18",
+          "backend_status": "SUCCESS",
+          "backend_result_sha256": "57319f03b2bac5ae94b880c43d86ea3a3899cef7870779509bc7132fc272af02",
+          "backend_result": "Done. 0 channel(s) updated (0 unchanged).",
+          "Source51_case": "all-excludes-nameless-catalog",
+          "actual_parent_HTTP_path": "/api/channels/channels/match-epg/",
+          "actual_parent_HTTP_status": 202,
+          "actual_changed_assignments": 0,
+          "direct_worker_signals_observed": false
+        }
+      ],
+      "assertions": [
+        "Actual task, arguments, parent/root identity, backend SUCCESS/result and SQL assignment count match retained scope.",
+        "Exact all-unassigned matching updates the two qualifying channel rows and excludes nameless catalogue rows.",
+        "No successful external guide import or model inference was measured."
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_task_terminal_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-872650ecefd8633593b5",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/epg/tasks.py",
+        "line": 1779,
+        "name": "parse_programs_for_tvg_id",
+        "callable": "celery.shared_task"
+      },
+      "task_name": "apps.epg.tasks.parse_programs_for_tvg_id",
+      "owning_milestone": "M6",
+      "fixture_ids": [
+        "Original-Source51-quiet-matching"
+      ],
+      "definition": {
+        "path": "scripts/rust-contracts/scanner-tasks/original/apps/epg/tasks.py",
+        "start_line": 1779,
+        "ast_sha256": "53396f593a732a2048ea30478a7d5d3ed75d39b1d83b8351b1d58c9a20da9fcd"
+      },
+      "observed_actor": {
+        "producer": "Original matching worker parent",
+        "executor": "Original normal Celery queue celery",
+        "complete_role_matrix": false
+      },
+      "observations": [
+        {
+          "task_name": "apps.epg.tasks.parse_programs_for_tvg_id",
+          "positional_args": [
+            4
+          ],
+          "kwargs": {},
+          "queue": "celery",
+          "verified_parent_root_correlation": true,
+          "task_id_sha256": "db7e88ee23022e0f4a170b47a2e67ccefd8e337092eaf6ec7ded817c2323541d",
+          "parent_task_id_sha256": "8c500b5bb93424895ee3cd937defcbcdc6628ee303c83568585b3f831be6335f",
+          "frame_sha256": "022d1f936bac4db676a64712aa56d11117b4321cf6142a2da6cfd130a250e3d2",
+          "backend_status": "SUCCESS",
+          "backend_result_sha256": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "backend_result": null,
+          "Source51_case": "selected-mixed-SD-batch-XML-dummy",
+          "actual_parent_HTTP_path": "/api/channels/channels/match-epg/",
+          "actual_parent_HTTP_status": 202,
+          "actual_changed_assignments": 5,
+          "direct_worker_signals_observed": false
+        },
+        {
+          "task_name": "apps.epg.tasks.parse_programs_for_tvg_id",
+          "positional_args": [
+            1
+          ],
+          "kwargs": {},
+          "queue": "celery",
+          "verified_parent_root_correlation": true,
+          "task_id_sha256": "e9007f961e9629444441487473b0749e30291ad0935cca58f250816d8757ccb5",
+          "parent_task_id_sha256": "ff8ef69610d7e4ad9692faa2999d5dc52bba1b8bc8de40fe6909f61d1abfd303",
+          "frame_sha256": "412cda0cb39450e85fb5016f51ffeecc877b8ca6b9ede38c451bed53be3c8034",
+          "backend_status": "SUCCESS",
+          "backend_result_sha256": "aa20ec807d69c7bdbe3ffc233e6fc78e267d82ad86e2afffde3641bcc17f5a56",
+          "backend_result": "SD guide fetch complete",
+          "Source51_case": "single-SD-direct-parse-cache-group",
+          "actual_parent_HTTP_path": "/api/channels/channels/1/match-epg/",
+          "actual_parent_HTTP_status": 202,
+          "actual_changed_assignments": 1,
+          "direct_worker_signals_observed": false
+        }
+      ],
+      "assertions": [
+        "Actual task, arguments, parent/root identity, backend SUCCESS/result and SQL assignment count match retained scope.",
+        "Mixed selected bulk matching publishes one XMLTV parser; single SD match also publishes through the parser.",
+        "No successful external guide import or model inference was measured."
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_task_terminal_observations": 2,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-5190afcd5e590be9738a",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/epg/sd_tasks.py",
+        "line": 452,
+        "name": "fetch_sd_mapped_guide_batch",
+        "callable": "celery.shared_task"
+      },
+      "task_name": "apps.epg.tasks.fetch_sd_mapped_guide_batch",
+      "owning_milestone": "M6",
+      "fixture_ids": [
+        "Original-Source51-quiet-matching"
+      ],
+      "definition": {
+        "path": "scripts/rust-contracts/retained-matching51-tasks/sd-batch-definition.py",
+        "start_line": 452,
+        "ast_sha256": "39938823bd4f7ba68ea9044aed8a18fa83f36f9196cccf44d316d436ec1434f3"
+      },
+      "observed_actor": {
+        "producer": "Original matching worker parent",
+        "executor": "Original normal Celery queue celery",
+        "complete_role_matrix": false
+      },
+      "observations": [
+        {
+          "task_name": "apps.epg.tasks.fetch_sd_mapped_guide_batch",
+          "positional_args": [
+            1
+          ],
+          "kwargs": {},
+          "queue": "celery",
+          "verified_parent_root_correlation": true,
+          "task_id_sha256": "a9a36baabb4cd7bca80dec4b6e83840f5a1ccdf1ad2a256b5af8012744aa2a24",
+          "parent_task_id_sha256": "8c500b5bb93424895ee3cd937defcbcdc6628ee303c83568585b3f831be6335f",
+          "frame_sha256": "ce6c35bf8e85f202fb3f135bccbe000b0f8f140769dab3d0a61a188466494403",
+          "backend_status": "SUCCESS",
+          "backend_result_sha256": "5d996740291423c8b7c546c3df1581d709536863be40b5e59d4d534ec18855bb",
+          "backend_result": "SD mapped guide batch complete",
+          "Source51_case": "selected-mixed-SD-batch-XML-dummy",
+          "actual_parent_HTTP_path": "/api/channels/channels/match-epg/",
+          "actual_parent_HTTP_status": 202,
+          "actual_changed_assignments": 5,
+          "direct_worker_signals_observed": false
+        }
+      ],
+      "assertions": [
+        "Actual task, arguments, parent/root identity, backend SUCCESS/result and SQL assignment count match retained scope.",
+        "Selected bulk matching publishes one Schedules Direct batch; terminal result does not qualify provider import.",
+        "No successful external guide import or model inference was measured."
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_task_terminal_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "new_Source_executions": 0,
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "performance_verified": false
+}

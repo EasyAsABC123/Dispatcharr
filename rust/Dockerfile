@@ -156,3 +156,7 @@ COPY scripts/rust-milestone-batches/m6/channel-http-source-v1/driver/tools/cases
 COPY scripts/rust-milestone-batches/m6/channel-http-source-v1/driver/tools/guest.py ./scripts/rust-milestone-batches/m6/channel-http-source-v1/driver/tools/guest.py
 COPY scripts/rust-milestone-batches/m6/channel-http-source-v1/summary.json ./scripts/rust-milestone-batches/m6/channel-http-source-v1/summary.json
 COPY scripts/rust-vod-api-contracts/source-vod-http-wire-2.json ./scripts/rust-vod-api-contracts/source-vod-http-wire-2.json
+
+COPY scripts/rust-job-contracts/verified-source-native-default-stats-1.json ./scripts/rust-job-contracts/verified-source-native-default-stats-1.json
+
+COPY scripts/rust-realtime-contracts/verified-source-wire-1.json ./scripts/rust-realtime-contracts/verified-source-wire-1.json

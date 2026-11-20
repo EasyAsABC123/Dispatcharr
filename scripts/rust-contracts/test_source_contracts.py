@@ -262,6 +262,11 @@ class SourceContracts(unittest.TestCase):
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
+        import test_final_residual_wave
+        for name in test_final_residual_wave.dependencies(ROOT):
+            p = self.root / name
+            p.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, p)
         self.value = json.loads((self.root / 'scripts/rust-contracts/executable-source-bindings.json').read_text())
         self.bindings = json.loads((self.root / 'scripts/rust-contracts/case-bindings.json').read_text())
         self.register = json.loads((self.root / 'docs/rust-contract-register.json').read_text())
@@ -278,10 +283,10 @@ class SourceContracts(unittest.TestCase):
 
     def test_exact_partial_assignments(self):
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         assigned = [o for r in rows for o in r['operations'] if 'executable_Source_contract' in o]
-        self.assertEqual(len(assigned), 619)
-        self.assertEqual(sum(o['method'] is None for o in assigned), 218)
+        self.assertEqual(len(assigned), 796)
+        self.assertEqual(sum(o['method'] is None for o in assigned), 321)
         self.assertEqual(sum(o['result']['new_Source_cases_this_task'] for o in assigned), 78)
         self.assertTrue(all(not o['fully_verified'] for r in rows for o in r['operations']))
 
@@ -302,14 +307,14 @@ class SourceContracts(unittest.TestCase):
         self.assertEqual((case["method"], case["literal_path"], case["role"], case["status"]),
                          ("POST", "/api/m3u/refresh/6/", "admin", 202))
         self.assertTrue(case["profile_parent_is_refresh_root"])
-        self.assertEqual(result["operations"], 619)
+        self.assertEqual(result["operations"], 796)
         xc.restore_pre_xc(self.root, rows)
         self.assertEqual(operation, xc.reference(self.root)["prior_operation"])
-        self.assertEqual(sum("executable_Source_contract" in op for row in rows for op in row["operations"]), 618)
+        self.assertEqual(sum("executable_Source_contract" in op for row in rows for op in row["operations"]), 795)
         audit = m0_source_assignments.generate(self.root)
-        self.assertEqual(audit["counts"]["executable_Source_partial_operations"], 619)
-        self.assertEqual(audit["counts"]["operations_without_executable_Source_assignment"], 179)
-        self.assertEqual(audit["counts"]["method_unresolved_with_Source_fixture"], 218)
+        self.assertEqual(audit["counts"]["executable_Source_partial_operations"], 796)
+        self.assertEqual(audit["counts"]["operations_without_executable_Source_assignment"], 2)
+        self.assertEqual(audit["counts"]["method_unresolved_with_Source_fixture"], 321)
         self.assertEqual(audit["counts"]["fully_verified_operations"], 0)
 
     def test_alias_remainder_preserves_prior_primaries_and_reported_failures(self):
@@ -318,7 +323,7 @@ class SourceContracts(unittest.TestCase):
         subject.validate(self.root, packet)
         self.assertEqual(packet['capture_boundary']['observed_HTTP_status_counts']['500'], 75)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -349,7 +354,7 @@ class SourceContracts(unittest.TestCase):
         binding = subject.load(self.root)
         subject.validate(self.root, binding)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         operations = {op['contract_id']: op for route in rows for op in route['operations']}
         self.assertFalse(operations[subject.CONTRACT]['role_matrix']['complete'])
         self.assertNotIn('executable_Source_contract', operations['route-247b2930daac158ddf19:POST'])
@@ -376,7 +381,7 @@ class SourceContracts(unittest.TestCase):
         binding = subject.load(self.root)
         subject.validate(self.root, binding)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         records = {op['contract_id']: op for route in rows for op in route['operations']}
         assigned = records[subject.CONTRACT]
         self.assertEqual([case['status'] for case in assigned['executable_Source_contract']['cases']], [200, 400])
@@ -391,7 +396,7 @@ class SourceContracts(unittest.TestCase):
         packet = subject.load_batch(self.root)
         subject.validate_batch(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         operations = {op['contract_id']: op for route in rows for op in route['operations']}
         operation = operations[subject.BATCH_CONTRACT]
         self.assertIn('executable_Source_contract', operation)
@@ -427,7 +432,7 @@ class SourceContracts(unittest.TestCase):
         packet = retained_connect_detail_contracts.load(self.root)
         retained_connect_detail_contracts.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -457,7 +462,7 @@ class SourceContracts(unittest.TestCase):
         packet = retained_alias19_contracts.load(self.root)
         retained_alias19_contracts.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -487,7 +492,7 @@ class SourceContracts(unittest.TestCase):
         packet = retained_connect_actions_contracts.load(self.root)
         retained_connect_actions_contracts.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -518,7 +523,7 @@ class SourceContracts(unittest.TestCase):
         packet = retained_connect_contracts.load(self.root)
         retained_connect_contracts.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -552,7 +557,7 @@ class SourceContracts(unittest.TestCase):
         packet = dvr.load(self.root)
         dvr.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -588,7 +593,7 @@ class SourceContracts(unittest.TestCase):
         value = admin.load(self.root)
         admin.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         import retained_dvr_xc_contracts
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
@@ -625,7 +630,7 @@ class SourceContracts(unittest.TestCase):
         value = packet.load(self.root)
         packet.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         import retained_admin_model_contracts
         import retained_dvr_xc_contracts
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
@@ -664,7 +669,7 @@ class SourceContracts(unittest.TestCase):
         packet = image22.load(self.root)
         image22.validate(self.root, packet)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         import retained_repository_socket_switch_contracts
         import retained_admin_model_contracts
         import retained_dvr_xc_contracts
@@ -705,7 +710,7 @@ class SourceContracts(unittest.TestCase):
         value = playback.load(self.root)
         playback.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         self.assertEqual(sum(o['method'] is None for route in rows for o in route['operations']), 322)
         import retained_image22_controls_contracts
         import retained_repository_socket_switch_contracts
@@ -748,7 +753,7 @@ class SourceContracts(unittest.TestCase):
         value = json.loads((self.root / hdhr.INPUT).read_bytes())
         hdhr.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 120)
         self.assertEqual(sum(o['method'] is None for route in rows for o in route['operations']), 322)
         declared = {o['contract_id']: o for route in rows for o in route['operations']}
@@ -797,7 +802,7 @@ class SourceContracts(unittest.TestCase):
         value = json.loads((self.root / packet.INPUT).read_bytes())
         packet.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 132)
         import retained_hdhr_contracts
         import retained_playback_contracts
@@ -843,7 +848,7 @@ class SourceContracts(unittest.TestCase):
         value = json.loads((self.root / core.INPUT).read_bytes())
         core.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 96)
         import retained_provider_channel_vod_contracts
         import retained_hdhr_contracts
@@ -891,7 +896,7 @@ class SourceContracts(unittest.TestCase):
         value = json.loads((self.root / core.INPUT).read_bytes())
         core.validate(self.root, value)
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 619)
+        self.assertEqual(result['operations'], 796)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 29)
         import retained_serializer_null_contracts
         import retained_provider_channel_vod_contracts

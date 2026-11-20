@@ -10,10 +10,10 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | Routes with unresolved method/action mapping | 322 | Explicit unknown-method items; no GET/POST guess |
 | Runtime operation work items | 798 | Includes those 322 placeholders; not 798 verified endpoints |
 | OpenAPI operations | 362 | Separate discovery view; do not add to route totals |
-| Executable Original HTTP assignments | 403 | Scoped Source definitions across 798 operation work items. 395 work items await assignment. |
-| Unresolved methods with an executable Original fixture | 200 | Observed under 322 unresolved method/action declarations |
+| Executable Original HTTP assignments | 796 | Scoped Source definitions across 798 operation work items. 2 work items await assignment. |
+| Unresolved methods with an executable Original fixture | 321 | Observed under 322 unresolved method/action declarations |
 | Non-HTTP candidate identities | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
-| Typed executable Original non-HTTP assignments | 21 | Seventeen tasks, two commands, one model and one synthetic consumer. 229 candidates await assignment. |
+| Typed executable Original non-HTTP assignments | 32 | 27 tasks, two commands, one model, one synthetic consumer and one WebSocket route. 218 candidates await assignment. |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
 | Operations with partial case bindings | 11 | 403 scoped packaged observations; remaining role/input coverage stays open |
 | Fully audited register operation rows | 0 | Register-to-case mapping has not been completed; existing reports retain their actual passes |
@@ -594,3 +594,73 @@ Both launchers and all child phases exited zero with exact owned cleanup.
 The register has 619 partial HTTP Original assignments, 179 unassigned
 operations, and 218 methodless declarations with scoped observations. Original
 Dispatcharr authors and contributors retain full credit.
+.
+
+
+### Original backup tasks
+
+The [typed create task](../scripts/rust-contracts/retained-backup-create-task/bindings.json)
+binds the Original Source16 create-view publication, matched worker signals,
+backend result, PostgreSQL ZIP effect and exact cleanup. The owned queue and
+startup skips bound this one task result.
+[Source16 records](../scripts/rust-contracts/backup-source16/README.md)
+
+The [scheduled and restore tasks](../scripts/rust-contracts/retained-backup-lifecycle/bindings.json)
+bind four further Original observations. The UTC Beat task completes a
+PostgreSQL ZIP with one retention deletion. The Honolulu task publishes the same
+retention argument, then its newly created file is deleted and the earlier UTC
+archive survives. The ordinary current-schema restore recovers data and
+permission rows. An invalid owned archive reaches backend SUCCESS with a
+caught failure result and unchanged SQL. Both named contexts passed with exact
+cleanup, and their separate encompassing controller exits remain 1.
+[Lifecycle projection](../scripts/rust-contracts/retained-backup-lifecycle/receipt.json)
+
+The original Dispatcharr, Celery, PostgreSQL and dependency authors retain full
+application and behavior credit.
+
+
+### Original Source51 matching tasks
+
+Three typed assignments preserve two all-unassigned root results and three
+guide children from the actual owned Source51 matching run. Both bulk roots
+returned SUCCESS, with two and zero channel updates respectively. Selected
+matching published an XMLTV parser and a Schedules Direct batch. Single
+matching also published the parser for an SD entry. These are the literal
+parent and child task names, decoded arguments and returned results.
+Download-disabled, model-absent and local provider-error scope still applies.
+Original Dispatcharr and dependency authors retain full credit.
+[Typed bindings](../scripts/rust-contracts/retained-matching51-tasks/bindings.json)
+[Original Source51 observations](rust-channel-matching-source51.md)
+
+
+### Original Auto Sync task
+
+The retained Batch28 Original Auto Sync context passed all five cases.
+Its owned Celery producer published one standalone task with the account and
+scan-start arguments. The worker backend returned SUCCESS with zero channel
+changes and byte-identical SQL snapshots. Normal M3U refresh invoked Auto Sync
+inline. The distinct refresh root produced 6,001 channels and three observed
+guide children. The encompassing controller exit remains 1 and exact fixture
+cleanup passed. Original Dispatcharr and dependency authors retain full credit.
+[Typed binding](../scripts/rust-contracts/retained-autosync28-task/bindings.json)
+
+
+### Residual Original HTTP observations
+
+The retained projection adds 177 partial Original assignments.
+It retains each literal method, resolver identity, observed role statuses and
+owned fixture cleanup. The captured terminal states preserve failed and
+unrun operations. All Native, complete-role and performance gates stay open.
+Original Dispatcharr and dependency authors retain full credit.
+[Retained scoped Original observations](../scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json)
+
+
+### Retained Original worker effects and WebSocket route
+
+The [typed projection](../scripts/rust-contracts/retained-worker-wire/bindings.json)
+adds three exact Celery task identities and the literal Django WebSocket route.
+It retains eight physical prefork task observations and 55 Daphne wire
+observations. Four stale memberships after the exceptional close remain
+recorded independently of the Original Compose removal. These additions do
+not promote Native, default scheduler, full-role or milestone acceptance.
+Original Dispatcharr and dependency authors retain full credit.

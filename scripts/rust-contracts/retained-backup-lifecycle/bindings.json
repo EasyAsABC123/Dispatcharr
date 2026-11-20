@@ -1,0 +1,204 @@
+{
+  "format_version": 1,
+  "kind": "retained_original_Backup_Source12_and_41_lifecycle_tasks",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "credit": "Original Dispatcharr, Celery, PostgreSQL and dependency authors retain full application and behavior credit.",
+  "fixtures": {
+    "retained-Original-backup-scheduled": {
+      "id": "retained-Original-backup-scheduled",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "receipt_path": "scripts/rust-contracts/retained-backup-lifecycle/receipt.json",
+      "receipt_sha256": "f5891f39893bdee887582708b705fb588707abd5e258836c525c53383a351d35",
+      "whole_controller_exit": 1,
+      "whole_run_accepted": false,
+      "EOF_and_process_group_settled": true,
+      "exact_cleanup": true,
+      "owned_CIDs_absent": 3,
+      "cleanup_sha256": "3abb30da0495ee2ac5cb50957f581772a1e91de7bf53e59e5fe449d76f5d5bca",
+      "execution_sha256": "7af1f54bd5d7c435be2b804211f77152bb3f7b69e06de4f35a841e3d31115ab3",
+      "source_named_contexts_passed": 12,
+      "report_sha256": "298a25a6132a8ead7cf50d86e622d45f657643b9e3de21aadb1bf0a8fb9b4d55",
+      "schedule_disabled_after": true
+    },
+    "retained-Original-backup-restore": {
+      "id": "retained-Original-backup-restore",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "receipt_path": "scripts/rust-contracts/retained-backup-lifecycle/receipt.json",
+      "receipt_sha256": "f5891f39893bdee887582708b705fb588707abd5e258836c525c53383a351d35",
+      "whole_controller_exit": 1,
+      "whole_run_accepted": false,
+      "EOF_and_process_group_settled": true,
+      "exact_cleanup": true,
+      "owned_CIDs_absent": 2,
+      "cleanup_sha256": "5dc6687d9eb3054ef16cb423e3bb1d8bd703113fd7cd81d94dddbabeb8d841e9",
+      "execution_sha256": "c46f9cfd9835babd9f0ff119b0b9c68c9347eb3dcfcce9b8227c76236ce6a17c",
+      "source_named_contexts_passed": 5,
+      "report_sha256": "118341951b1fa09d2c82a86eee76eeb0989dab3b48e5f0160a4d45e1759e2827",
+      "actual_SQL_lock_and_retirement": true,
+      "restored_migrated_builtin_permissions": 4,
+      "restored_same_Main_login_settings_channel": true,
+      "invalid_owned_archive_SQL_unchanged": true
+    }
+  },
+  "contracts": [],
+  "non_HTTP_contracts": [
+    {
+      "candidate_id": "candidate-8981d161337a42b1cec6",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/backups/tasks.py",
+        "line": 81,
+        "name": "scheduled_backup_task",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M8",
+      "task_name": "apps.backups.tasks.scheduled_backup_task",
+      "fixture_ids": [
+        "retained-Original-backup-scheduled"
+      ],
+      "observed_actor": {
+        "producer": "Original Beat periodic task backup-scheduled-task",
+        "executor": "Original normal Celery worker queue celery",
+        "complete_role_matrix": false
+      },
+      "definition": {
+        "path": "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/apps/backups/tasks.py",
+        "start_line": 81,
+        "end_line": 109,
+        "ast_sha256": "c029caaa4923a2c53516d1f2c421827c7289199efcfc07fb37f4337bab9e2aae"
+      },
+      "producer_definition": {
+        "path": "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/apps/backups/scheduler.py",
+        "line": 127,
+        "call": "create_or_update_periodic_task(task_name=BACKUP_SCHEDULE_TASK_NAME, celery_task_path='apps.backups.tasks.scheduled_backup_task', kwargs={'retention_count': settings['retention_count']}, cron_expression=cron_expr, enabled=True)"
+      },
+      "observations": [
+        {
+          "timezone": "UTC",
+          "args": [],
+          "kwargs": {
+            "retention_count": 1
+          },
+          "queue": "celery",
+          "periodic_task_name": "backup-scheduled-task",
+          "own_root": true,
+          "task_id_sha256": "36dc69bbc2f1a8838c70a6c6e58a94ce0e6311ba10fde30d6cd0200162c4b827",
+          "publication_sha256": "0af3fb8ebc64851d7f85e01e792bbe1be513f63fba8900dcaea8b46f9c2246c6",
+          "actual_authenticated_terminal_status": "completed",
+          "terminal_body_sha256": "9eac0cb3ff5c19009f0dafeda7833c43d8fb15cad416585e8514dda2b67bb414",
+          "archive": {
+            "database_signature": "PGDMP",
+            "members": [
+              "database.dump",
+              "metadata.json"
+            ],
+            "archive_bytes": 50602,
+            "archive_sha256": "c42d3b42910015465ab7476f873b980ab53ea6adbb6bb268118d96c571e09947"
+          },
+          "deleted_count": 1
+        },
+        {
+          "timezone": "Pacific/Honolulu",
+          "args": [],
+          "kwargs": {
+            "retention_count": 1
+          },
+          "queue": "celery",
+          "periodic_task_name": "backup-scheduled-task",
+          "own_root": true,
+          "task_id_sha256": "f39d72cb6960f7eb3a4e74a037e8166dd083873035ddcd662f783ee1dc0c0ea0",
+          "publication_sha256": "0a22d0b0e5d53209b1c8d098d5139aad7bcb82145479c0b3055de664dcc53c94",
+          "actual_authenticated_terminal_status": "failed",
+          "terminal_body_sha256": "c66ddeb4e3327654aa3b58d1a2a291bae590d1a9a27368b156fb8c037195c3e8",
+          "fresh_scheduled_file_deleted": true,
+          "prior_UTC_archive_preserved": true,
+          "raw_backend_status_observed": false
+        }
+      ],
+      "assertions": [
+        "Two actual default Beat queue publications with no positional args and retention_count 1.",
+        "Authenticated status on the published identities reports UTC completed and Honolulu failed.",
+        "UTC PostgreSQL archive survives one retention deletion; Honolulu fresh archive is deleted by filename retention."
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_task_terminal_observations": 2,
+        "direct_worker_signals_observed": false,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-f503ee82e11bba950149",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/backups/tasks.py",
+        "line": 56,
+        "name": "restore_backup_task",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M8",
+      "task_name": "apps.backups.tasks.restore_backup_task",
+      "fixture_ids": [
+        "retained-Original-backup-restore"
+      ],
+      "observed_actor": {
+        "producer": "Original authenticated admin filename restore view",
+        "executor": "Original owned normal Celery worker",
+        "complete_role_matrix": false
+      },
+      "definition": {
+        "path": "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/apps/backups/tasks.py",
+        "start_line": 56,
+        "end_line": 78,
+        "ast_sha256": "181f777838aed3928864ae0bdf3a92359bb62461412b92607e47e615caa23fb9"
+      },
+      "producer_definition": {
+        "path": "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/apps/backups/api_views.py",
+        "line": 326,
+        "call": "restore_backup_task.delay(filename)"
+      },
+      "observations": [
+        {
+          "task_id_sha256": "5e69b99d94272fa9afbd605707798714452d877689929a07e50a1851d992a487",
+          "producer_method": "POST",
+          "producer_status": 202,
+          "producer_body_sha256": "d1137503304d69f0097d63d463d59e5bb9b85713e6cbfffb45e844d06b288893",
+          "backend_state": "SUCCESS",
+          "task_result_state": "completed",
+          "broker_frame_captured": false
+        },
+        {
+          "task_id_sha256": "f40e23d066ae74bc62a44f3cb8a1fbed1098976d445f50551b8d961d683a6b7d",
+          "producer_method": "POST",
+          "producer_status": 202,
+          "producer_body_sha256": "46c0eec0fbd87cfc36b0a08314d38d864ce5247c204dea4e192b07f6472d40fa",
+          "backend_state": "SUCCESS",
+          "task_result_state": "failed",
+          "broker_frame_captured": false
+        }
+      ],
+      "assertions": [
+        "Actual restore 202 identities match independently polled Redis backend and terminal HTTP status.",
+        "Ordinary current-schema restore holds a real SQL lock; migration restores permissions and the same Main reads the recovered data.",
+        "Invalid owned archive reaches backend SUCCESS with a caught failed result and unchanged SQL.",
+        "The filename publication call is Source-defined; broker frame and worker signals were not captured in this context."
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_task_terminal_observations": 2,
+        "direct_worker_signals_observed": false,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "new_Source_executions": 0,
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "performance_verified": false
+}

@@ -1,0 +1,113 @@
+{
+  "format_version": 1,
+  "kind": "retained_original_Source16_backup_create_task",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "credit": "Original Dispatcharr, Celery, PostgreSQL and dependency authors retain full application and behavior credit.",
+  "fixtures": {
+    "retained-Original-Source16-backup-create": {
+      "id": "retained-Original-Source16-backup-create",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "actual_controller_exit": 0,
+      "owned_cleanup_passed": true,
+      "APIClient_Original_TCP": false,
+      "normal_worker_backend_and_archive_effect": true,
+      "normal_startup_and_default_queue": false,
+      "authority_paths": {
+        "scripts/rust-contracts/backup-source16/Source16-projection.json": "5f0ce76f0d308da14cce1c0f57899577dd14732e1bc818ee916864d2d1902760",
+        "scripts/rust-contracts/backup-source16/Root-actual-exit.json": "04158922ff0bd9c4d15ec2b626db01867fd63b248aeca3e8eea45db9fd46b183",
+        "scripts/rust-contracts/backup-source16/Root-actual-review.json": "f9b252b69122e8d9cc0f6e0f9688583ea81ac06d49bba01727fcbb7b36b92f83",
+        "scripts/rust-contracts/backup-source16/archive-proof.json": "32336e35e3b1decab3bb0be850e82502d3f474369f31ec95dcaf8a10656cdf12",
+        "scripts/rust-contracts/backup-source16/lifecycle-projection.tar.gz": "15a18a2d7c0017c00aeab0250bba6652a2e866152aa533799bcd8fb69f4daeba",
+        "scripts/rust-contracts/backup-source16/lifecycle-projection-inventory.json": "2760beb7c10f23da3b8d4abbb7d66d334f2bf7e3c88354dd2a55dcf837d9ac4b",
+        "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/apps/backups/tasks.py": "b3376d03f807fbb2540e28d44f2a9c8f1982fb317953bef800a2d42691bf3742",
+        "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/apps/backups/api_views.py": "92dced3d20743862066dfeccb1728ca4f1fd508aecb7489686dd03c66939972a"
+      }
+    }
+  },
+  "contracts": [],
+  "non_HTTP_contracts": [
+    {
+      "candidate_id": "candidate-b745b2ca10c3763b5a5a",
+      "source": {
+        "kind": "task_candidate",
+        "path": "apps/backups/tasks.py",
+        "line": 35,
+        "name": "create_backup_task",
+        "callable": "celery.shared_task"
+      },
+      "owning_milestone": "M8",
+      "task_name": "apps.backups.tasks.create_backup_task",
+      "fixture_ids": [
+        "retained-Original-Source16-backup-create"
+      ],
+      "observed_actor": {
+        "producer": "Original authenticated admin create view",
+        "executor": "Original owned Celery solo worker",
+        "complete_role_matrix": false
+      },
+      "definition": {
+        "path": "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/apps/backups/tasks.py",
+        "start_line": 35,
+        "end_line": 53,
+        "ast_sha256": "ef4b0ad35c16f7dd5b469dccc0f08b1e5c05371743e27fd13588c17e21d731d3"
+      },
+      "producer_definition": {
+        "path": "scripts/rust-contracts/backup-source16/executed-definition/inputs/Original/apps/backups/api_views.py",
+        "line": 56,
+        "call": "create_backup_task.delay()"
+      },
+      "observations": [
+        {
+          "task_name": "apps.backups.tasks.create_backup_task",
+          "args": [],
+          "kwargs": {},
+          "task_id_sha256": "92dda2493f4ba2313f0bbcd0eedfa62ddb3524aa0c5157c3d6e4d1693bf7a996",
+          "routing_scope": "producer-only owned worker queue",
+          "broker_database": 2,
+          "own_root_no_parent": true,
+          "pre_and_post_passive_signals_match": true,
+          "backend_status": "SUCCESS",
+          "backend_result": "completed",
+          "backend_result_sha256": "a7ddf97f91d17bb4c220d0bf83b25e8467a4b170735150d3dcf9619e6f74ea0c",
+          "archive_format": "PostgreSQL PGDMP in Dispatcharr V2 ZIP",
+          "archive_bytes": 36960,
+          "archive_sha256": "93fdf1efa16194c6815a1edeb23f8a298a7cc0da1a987f0cd635057e3d7e78f2",
+          "retained_archive_members": [
+            {
+              "name": "database.dump",
+              "uncompressed_bytes": 241490,
+              "CRC32": 1157694763,
+              "sha256": "4023103cfa2f685c59a1ce8297222f623370df02c33c2aed05cfd2318ec2ab26"
+            },
+            {
+              "name": "metadata.json",
+              "uncompressed_bytes": 173,
+              "CRC32": 985232717,
+              "sha256": "1ea4ee0de8813c3d5bdf6fa4d5f904c0dc6a8e291f21c807e4ab90c33d95f37c"
+            }
+          ],
+          "raw_archive_redecoded": false,
+          "default11_SQL_users_and_events_unchanged": true,
+          "owned_cleanup_passed": true
+        }
+      ],
+      "assertions": [
+        "Exact natural empty-argument publication from the create view and one matched owned worker execution.",
+        "Actual backend SUCCESS and independently reviewed PostgreSQL V2 archive with unchanged SQL, users and events.",
+        "Exact owned lifecycle and cleanup. Queue override and startup skips bound this result."
+      ],
+      "result": {
+        "state": "partial_historical_Original_task_observations",
+        "actual_worker_observations": 1,
+        "new_Source_cases_this_task": 0,
+        "Native_coverage_increased": false,
+        "fully_verified": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "new_Source_executions": 0,
+  "fully_verified_operations": 0,
+  "Native_coverage_increased": false,
+  "performance_verified": false
+}

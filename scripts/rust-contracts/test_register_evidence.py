@@ -91,6 +91,14 @@ class CapturedEvidenceRegister(unittest.TestCase):
         import retained_c105_guide_startup_contracts
         refs.update(retained_clocked_recording_contracts.dependencies())
         refs.update(retained_c105_guide_startup_contracts.dependencies())
+        import retained_backup_create_task
+        refs.update(retained_backup_create_task.dependencies())
+        import retained_backup_lifecycle_tasks
+        refs.update(retained_backup_lifecycle_tasks.dependencies())
+        import retained_matching51_tasks
+        refs.update(retained_matching51_tasks.dependencies())
+        import retained_autosync28_task
+        refs.update(retained_autosync28_task.dependencies())
         import retained_management_contracts
         refs.update(retained_management_contracts.dependencies())
         import core_settings_source_contracts
@@ -169,6 +177,10 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(retained_c106_connect_replay_contracts.dependencies())
         refs.update(retained_logo_m3u_contracts.dependencies())
         refs.update(retained_epg_vod_logo_contracts.dependencies())
+        import retained_worker_wire_contracts
+        refs.update(retained_worker_wire_contracts.dependencies())
+        import retained_residual_source_contracts
+        refs.update(retained_residual_source_contracts.dependencies(REPO))
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
