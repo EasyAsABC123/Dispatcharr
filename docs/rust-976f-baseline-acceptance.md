@@ -11,6 +11,9 @@ its own receipt. [Standalone backup modes](rust-m8-standalone-backup-create.md)
 were exercised separately on 976f. Full M9 acceptance and comparative
 performance remain open.
 
+The [fresh 976f MPEG-TS functional checks](rust-m9-976f-functional-streaming.md) passed
+all three selected nodes with independently verified cleanup.
+
 The original Dispatcharr authors and contributors retain full application and workflow credit.
 
 [Redacted receipt](../scripts/rust-integration/milestone-batch113/976f-baseline-acceptance.json)
