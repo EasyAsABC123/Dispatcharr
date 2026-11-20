@@ -42,3 +42,27 @@ after all modal work passed. Source3 qualified corrected tools; identical five
 tool hashes ran successful paired image44. Raw private artifacts remain intact.
 
 [Scoped image44 evidence](../scripts/rust-vod-api-contracts/verified-provider-modal-browser-image44-1.json) binds the original archive, exact tools and manifest.
+
+## Current 8b0c package
+
+The cached provider modal replay passed on package
+`8b0c76ca67ade0ee65f0900a1c22792dc7510d90`. Original and Native used the same
+112-file React bundle. Both browsers signed in, switched both Movie and
+Series providers, verified the provider-specific two-episode lists and
+decoded six 2 × 3 artwork images. The ordered observations matched exactly
+on the same live fixture. Neither phase recorded VOD HTTP failures or
+uncaught exceptions.
+
+The Original browser matched the retained Source3 and image47 outcomes.
+For that cross-run comparison, the six artwork version values were each
+verified against the exact owned artwork URL and compared by artwork path.
+The live paired comparison included the original version bytes. The local
+origin served twelve GETs on its four allowed paths. Seven metadata-table
+fingerprints and the complete user row restored exactly. All three fixture
+ports bound to loopback, and zero project containers, networks or volumes
+remained.
+
+The first attempt exited 1 before Compose startup when Git archived the copied
+controller subdirectory. The retry anchored the same Original archive at
+the checkout root and exited zero. Full M5 acceptance and performance remain
+open. [8b0c browser receipt](../scripts/rust-vod-api-contracts/verified-provider-modal-browser-8b0c-1.json)
