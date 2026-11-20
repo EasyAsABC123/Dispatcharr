@@ -1,0 +1,152 @@
+{
+  "actual_exit": 0,
+  "candidate_image": "sha256:f1789228b9b2d9799bab8535b070504e1d0730b72f9b6b18f0351793fd716e18",
+  "candidate_revision": "8b0c76ca67ade0ee65f0900a1c22792dc7510d90",
+  "cases": [
+    {
+      "case": "standard-list",
+      "decoded_JSON_matches": true,
+      "response_length_valid_each": true,
+      "selected_headers": {
+        "Allow": "GET, HEAD, OPTIONS",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status_each": 200
+    },
+    {
+      "case": "admin-list",
+      "decoded_JSON_matches": true,
+      "response_length_valid_each": true,
+      "selected_headers": {
+        "Allow": "GET, HEAD, OPTIONS",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status_each": 200
+    },
+    {
+      "case": "settings",
+      "decoded_JSON_matches": true,
+      "response_length_valid_each": true,
+      "selected_headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status_each": 200
+    },
+    {
+      "case": "settings-visible",
+      "decoded_JSON_matches": true,
+      "response_length_valid_each": true,
+      "selected_headers": {
+        "Allow": "GET, HEAD, OPTIONS",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status_each": 200
+    }
+  ],
+  "exact_cleanup": true,
+  "fixture_module_imported_either": false,
+  "full_M8_accepted": false,
+  "isolated_positive_never_enabled_scope": true,
+  "original_discovery_explicitly_invoked": true,
+  "original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owned_generations_retired": 4,
+  "owned_inventory_remaining": {
+    "containers": 0,
+    "networks": 0,
+    "volumes": 0
+  },
+  "package_manifest_sha256": "6d2e67df51d08809554edabddea41477559e65deb0e517e92bc53222700173a0",
+  "performance_verified": false,
+  "pinned_plugin_actions_sha256": "b3186403fe317ef7c4d31a7f29f91266397e227d4777b170bd0b9d345b7b4528",
+  "prior_attempts": {
+    "first_attempt": {
+      "actual_exit": 1,
+      "http_cases_started": 0,
+      "observed_Original_generations_retired": 2,
+      "old_wrapper_exact_cleanup": false,
+      "original_only": true,
+      "owned_inventory_empty": true,
+      "raw_receipt_sha256": "7977fae57f2580299b4e5265c754db6f29b6ea4447f7325b839bbd5f9354def5"
+    },
+    "full_M8_accepted": false,
+    "performance_verified": false,
+    "second_attempt": {
+      "Original_registry_rows_after_migration": 0,
+      "actual_exit": 1,
+      "exact_cleanup": true,
+      "http_cases_started": 0,
+      "original_only": true,
+      "raw_receipt_sha256": "80771ef55a0dc5cdf06d9b2f6e3c79d3328f57143090e2bf1c11fa80cff63c42",
+      "targeted_Original_migration_exit": 0
+    },
+    "third_attempt": {
+      "actual_exit": 1,
+      "candidate_image": "sha256:01e513496e3ae02f8416ece3a07f2d5857e2998b5271f8138e9ed434a0685983",
+      "candidate_revision": "c74ea312bdc791ad12f5e43298b56bd9b81a19b5",
+      "cases": [
+        {
+          "HTTP_status_each": 200,
+          "Original_Vary": "Accept, origin",
+          "Rust_Vary": "origin",
+          "allow": "GET, HEAD, OPTIONS",
+          "case": "standard-list",
+          "content_length_valid_each": true,
+          "content_type": "application/json",
+          "decoded_JSON_matches": true
+        },
+        {
+          "HTTP_status_each": 200,
+          "Original_Vary": "Accept, origin",
+          "Rust_Vary": "origin",
+          "allow": "GET, HEAD, OPTIONS",
+          "case": "admin-list",
+          "content_length_valid_each": true,
+          "content_type": "application/json",
+          "decoded_JSON_matches": true
+        },
+        {
+          "HTTP_status_each": 200,
+          "Original_Vary": "Accept, origin",
+          "Rust_Vary": "origin",
+          "allow": "POST, OPTIONS",
+          "case": "settings",
+          "content_length_valid_each": true,
+          "content_type": "application/json",
+          "decoded_JSON_matches": true
+        },
+        {
+          "HTTP_status_each": 200,
+          "Original_Vary": "Accept, origin",
+          "Rust_Vary": "origin",
+          "allow": "GET, HEAD, OPTIONS",
+          "case": "settings-visible",
+          "content_length_valid_each": true,
+          "content_type": "application/json",
+          "decoded_JSON_matches": true
+        }
+      ],
+      "exact_cleanup": true,
+      "fixture_module_imported_either": false,
+      "observed_generations_retired": 4,
+      "only_selected_wire_mismatch": "Vary",
+      "raw_receipt_sha256": "550798a8e1cbbff8af240d838fe2bd7d847a3b463cd720b6e6466f246e6eaca2",
+      "settings_persisted_both": true
+    }
+  },
+  "raw_pair_receipt_sha256": "884485330f00397c733820980db4ca54834045694c3cdacfe8129526474b15cf",
+  "reviewed_product_patch_sha256": "4e19862bd85e12eef9d86b25e28d9e60a5fe886d95264100b204e32870557737",
+  "row_retirement_before_native": true,
+  "rust_cold_registration_matched": true,
+  "scoped_host_checks": {
+    "focused_test_exit": 0,
+    "plugin_actions_tests_passed": 13,
+    "strict_clippy_exit": 0
+  },
+  "settings_persisted_on_both": true
+}

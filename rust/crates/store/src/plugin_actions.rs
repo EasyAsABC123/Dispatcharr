@@ -1068,6 +1068,14 @@ async fn response(
             axum::http::HeaderValue::from_static(allow),
         );
     }
+    // The stock plugin list and settings views negotiate on Accept.
+    // Main adds the CORS origin token during response finalization.
+    if matches!(action, Action::List | Action::Settings) {
+        response
+            .headers_mut()
+            .entry(axum::http::header::VARY)
+            .or_insert(axum::http::HeaderValue::from_static("Accept"));
+    }
     if response
         .headers()
         .get("content-type")

@@ -1278,6 +1278,15 @@ no baseline or tool unavailability remains hidden behind a passing status.
 
 ## M1 — streaming core
 
+The packaged plugin-header successor at `8b0c76ca` passed 17 streaming
+core and 16 runtime library tests on the host. All 1,494 Rust source
+inputs matched its exact package. The tests cover TS alignment, atomic
+write refusal, shared viewer payloads, retention, cancellation and
+notification behavior. M1 still requires the integrated Compose scope
+and its M0 prerequisite.
+[Host test receipt](../scripts/rust-integration/milestone-batch113/stream-core-runtime-33.json)
+
+
 Add TS alignment across arbitrary input chunk boundaries, truncated-packet
 handling, time-based startup positioning, lag recovery, discontinuity stamping,
 bounded retention, independent viewer cursors, notifications without lost
