@@ -50,6 +50,19 @@ generations retired.
 
 [Redacted paired receipt](../scripts/rust-integration/milestone-batch113/standalone-backup-create-a785.json)
 
+## Restore-owner successor regressions
+
+The exact `976f2867` package passed the same create-only workflow and a
+separate default-off Compose run. The Restore owner flag was absent in both
+Native configurations. The create-only run matched Original HTTP 202/200/200,
+actual Redis SUCCESS, format-2 archive structure and normal process exit.
+The default-off run returned HTTP 200 for listing and schedule reads, 501
+for create and authenticated task status, and 401 for anonymous task status.
+Its broker queue and result database were empty, and Rust Main exited 0.
+All three owned Compose projects retired their exact resources.
+
+[Redacted successor regression receipt](../scripts/rust-integration/milestone-batch113/976f-backup-mode-regressions.json)
+
 ## Rows inside the downloaded archives
 
 A fresh pair on `a785a2b7` verified the actual downloaded archives in
@@ -150,7 +163,54 @@ through the management shell with application startup hooks skipped.
 Both roles stopped normally. The controller exited 0 with all six owned
 Compose generations retired and empty inventories. This qualification
 covers the selected current-schema route for the seeded fixture.
-Standalone restore remains unsupported. Enabled-plugin and older-schema
+Standalone restore was unsupported on a785. Enabled-plugin and older-schema
 restore, media files, full M8 and comparative performance remain open.
 
 [Redacted Selected restore receipt](../scripts/rust-integration/milestone-batch113/selected-backup-restore-a785.json)
+
+## Explicit standalone restore of an Original archive
+
+The `976f2867` package restored an Original current-schema PostgreSQL 17
+backup in a fresh internal Compose project. Rust Main ran with
+`RUST_BACKUP_RESTORE_OWNER=rust`, the standalone create owner absent,
+Selected jobs and Beat disabled, and dedicated Redis broker and result
+namespaces. Authenticated create returned HTTP 501 and left both
+namespaces empty. The backup schedule read returned a disabled schedule.
+
+The pinned Original API and worker produced a 39,434-byte format-2 ZIP.
+Rust Main accepted the upload with HTTP 201 and returned byte-identical
+archive data on download. Upload preserved the target records. The
+restore request returned HTTP 202, and its signed status matched the
+typed Redis SUCCESS result for that exact task ID.
+
+Restored PostgreSQL observations matched Original's representative user
+ID and password hash, channel ID and UUID, logo reference, and settings.
+The separate control database stayed unchanged. The same Main accepted
+the restored password, rejected the replaced password with HTTP 401 and
+served the restored settings and channel.
+
+The restore and readbacks finished before shutdown. Both roles exited 0.
+The controller verified retirement of all six owned Compose generations
+and empty inventories. This check covers the explicit current-schema
+scope. Active restore at SIGTERM, crash atomicity, enabled plugins,
+older schema graphs, media files, full M8 and comparative performance
+remain open.
+
+[Redacted standalone restore receipt](../scripts/rust-integration/milestone-batch113/standalone-restore-only-976f.json)
+
+## Selected-mode regression on 976f
+
+A fresh copied PostgreSQL 17 Restore ran against packaged 976f2867 with
+selected Rust Jobs enabled, selected Beat disabled, and both standalone
+backup owner settings absent. Original created a 39,397-byte current-schema
+archive. Rust returned the same uploaded bytes on download, preserved the
+seeded target data during upload, and then returned HTTP 202 for restore.
+Signed status agreed with the actual Redis SUCCESS result. The restored
+representative rows matched Original, the separate control database stayed
+unchanged, and the same Main served the restored login, settings and channel.
+
+The controller exited 0 and retired all six owned Compose generations.
+The a785 receipt remains tied to its earlier package. Standalone create and
+standalone restore have their own owner settings and qualification.
+
+[Redacted 976f selected-mode receipt](../scripts/rust-integration/m8-selected-backup-restore-976f.json)
