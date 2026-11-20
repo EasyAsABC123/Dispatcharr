@@ -1,0 +1,717 @@
+{
+  "actual_exit": 0,
+  "approved_review_sha256": "0512e1e14ef87c4bf4031a798c3ce405e54bfcddf2cd995c4c3a36fff0da2077",
+  "build_manifest_sha256": "da9b42e61ed4dab91510f30df638f4ace610ebd3623ba5f8462caa35379c22cd",
+  "candidate_revision": "4f9e3916fddfaf35a2f84c075cf11cd5eda2d3fe",
+  "chunk_boundary_regression": {
+    "actual_exit": 0,
+    "approved_review_sha256": "0512e1e14ef87c4bf4031a798c3ce405e54bfcddf2cd995c4c3a36fff0da2077",
+    "build_manifest_sha256": "da9b42e61ed4dab91510f30df638f4ace610ebd3623ba5f8462caa35379c22cd",
+    "candidate_revision": "4f9e3916fddfaf35a2f84c075cf11cd5eda2d3fe",
+    "exact_owned_cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "freeze_sha256": "5dbfbb9c2e8334d9c3b15bfea00e4bb23c6aab4e9d77254461597bd775ce964b",
+    "milestone_accepted": false,
+    "paired_terminal_receipt_sha256": "bcf8340154687c804a75339debe1bc8c2b621f2828156d6de00af60b81b69397",
+    "per_backend_redacted": {
+      "native": {
+        "after_sha256": "a30ae6bb2f1da0b7d283d424f73db6099fdaf87dfbddb82489b1e9eeb43d1b87",
+        "all_selected_raw_clocks_preserved": true,
+        "all_selected_typed_in_request_order": true,
+        "before_sha256": "0f24257dd4c48cc431f9b2acaa8e3ad221356c73dade6687e192ffc6619c72f6",
+        "boundary_reads": [
+          {
+            "had_override_before": false,
+            "index": 0,
+            "kind": "managed",
+            "wire": {
+              "allow": null,
+              "body_bytes": 1023,
+              "body_sha256": "8cffc709455d6a5183053620b6d92c5ad7fa3b37f2ec9ccc47a7ad432db5c475",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": true,
+            "index": 98,
+            "kind": "managed",
+            "wire": {
+              "allow": null,
+              "body_bytes": 1024,
+              "body_sha256": "ee803a883d08707505d20861aa4a7f95ec7cefe801b168a38b5039c66c5e460e",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": false,
+            "index": 99,
+            "kind": "manual",
+            "wire": {
+              "allow": null,
+              "body_bytes": 753,
+              "body_sha256": "c3727d1586b96b66e9b09fc24b16945ba7dbf0d326ca308e795756ea26e5c48f",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": false,
+            "index": 100,
+            "kind": "managed",
+            "wire": {
+              "allow": null,
+              "body_bytes": 1023,
+              "body_sha256": "1d1ca947373cd548dc41deaab4a9634f581baf0c63c94e39f018d11d54765891",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": true,
+            "index": 198,
+            "kind": "managed",
+            "wire": {
+              "allow": null,
+              "body_bytes": 1021,
+              "body_sha256": "25677ff1ef24e5134ab9d84866efa4746b9a445e7f1714c9c82a8097762dbb84",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": true,
+            "index": 199,
+            "kind": "managed",
+            "wire": {
+              "allow": null,
+              "body_bytes": 1021,
+              "body_sha256": "8d5ff52b2346d7c17d796886d433e7089ea795ddca68d47712e88542065247eb",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": true,
+            "index": 200,
+            "kind": "managed",
+            "wire": {
+              "allow": null,
+              "body_bytes": 1021,
+              "body_sha256": "9257f328302a14ae0a04a0607eca69abbcbcecfef1220df04690845f21f3e5d3",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": false,
+            "index": 201,
+            "kind": "managed",
+            "wire": {
+              "allow": null,
+              "body_bytes": 1018,
+              "body_sha256": "a0f0c71d68aae527f1bf2922b8c4f84984a42a236ccd3bdacdcefdb2ddfe8190",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": false,
+            "index": 202,
+            "kind": "manual",
+            "wire": {
+              "allow": null,
+              "body_bytes": 753,
+              "body_sha256": "38c4fe73417402c72af2e5bbd50a3a988eb85bc8f67090f6e81466c61a3a4759",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          }
+        ],
+        "boundary_reads_leave_SQL_unchanged": true,
+        "each_new_override_clock_within_request": true,
+        "existing_override_clocks_and_pins_preserved": true,
+        "existing_override_rows": 198,
+        "managed_override_group_rows": 201,
+        "manual_raw_group_rows": 2,
+        "new_custom_relations": 1,
+        "new_override_rows": 3,
+        "patch": {
+          "allow": "PATCH, OPTIONS",
+          "body_bytes": 191769,
+          "body_sha256": "b643ca54b82e2462e77a02de435f4abe0c1f73c5688fd05a0a74d85028ba2f24",
+          "method": "PATCH",
+          "mime": "application/json",
+          "status": 200
+        },
+        "raw_body_credentials_or_clock_values_retained": false,
+        "request_rows": 203,
+        "reset_SQL_sha256": null,
+        "unselected_scoped_SQL_and_links_unchanged": true
+      },
+      "original": {
+        "after_sha256": "ac3309bf828435bd636cb79cb028f475c76f072b27d42471aab849ad5ea2f305",
+        "all_selected_raw_clocks_preserved": true,
+        "all_selected_typed_in_request_order": true,
+        "before_sha256": "0f24257dd4c48cc431f9b2acaa8e3ad221356c73dade6687e192ffc6619c72f6",
+        "boundary_reads": [
+          {
+            "had_override_before": false,
+            "index": 0,
+            "kind": "managed",
+            "wire": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "body_bytes": 1023,
+              "body_sha256": "728b4bd6a67760d62dd31815c2cb228be26f66c2498a6e5328a5b9df48eef510",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": true,
+            "index": 98,
+            "kind": "managed",
+            "wire": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "body_bytes": 1024,
+              "body_sha256": "1ebaad96e6e5294f65b9a6f25e6fab28159fd345ecdb916d162d608ac9528620",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": false,
+            "index": 99,
+            "kind": "manual",
+            "wire": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "body_bytes": 753,
+              "body_sha256": "19848ca7cd9f873e6c9b629974c083f109a58a5d1ecc9c1d7bb0b6c7347d68f0",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": false,
+            "index": 100,
+            "kind": "managed",
+            "wire": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "body_bytes": 1023,
+              "body_sha256": "1d44f0a63efc477be5d96427e8b5d406858799f5757608712644f161c615cbab",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": true,
+            "index": 198,
+            "kind": "managed",
+            "wire": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "body_bytes": 1021,
+              "body_sha256": "32cacdce7f5c7e21650e2fab280f96ac4440fd4941b1ee861de8e48274a9f56e",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": true,
+            "index": 199,
+            "kind": "managed",
+            "wire": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "body_bytes": 1021,
+              "body_sha256": "140435c9647799c019c917978480a8cbc3d493ca8106dcd9c5141fe1b7cb39f7",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": true,
+            "index": 200,
+            "kind": "managed",
+            "wire": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "body_bytes": 1021,
+              "body_sha256": "1378c0016be70971bd3a59f85d9a865facf6028752340486f70a2eee3fbd4535",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": false,
+            "index": 201,
+            "kind": "managed",
+            "wire": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "body_bytes": 1018,
+              "body_sha256": "2e6168b1ba846c242177f742391133dda3b4e1ed3a13b8169d9b9dc3ac2b5798",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          },
+          {
+            "had_override_before": false,
+            "index": 202,
+            "kind": "manual",
+            "wire": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "body_bytes": 753,
+              "body_sha256": "a83be2fe04db54c4ed8b2a0989234de1580d6837a8b28f9f896b21d6e2f531bb",
+              "method": "GET",
+              "mime": "application/json",
+              "status": 200
+            }
+          }
+        ],
+        "boundary_reads_leave_SQL_unchanged": true,
+        "each_new_override_clock_within_request": true,
+        "existing_override_clocks_and_pins_preserved": true,
+        "existing_override_rows": 198,
+        "managed_override_group_rows": 201,
+        "manual_raw_group_rows": 2,
+        "new_custom_relations": 1,
+        "new_override_rows": 3,
+        "patch": {
+          "allow": "PATCH, OPTIONS",
+          "body_bytes": 191769,
+          "body_sha256": "a4bc2fe80dd3a1b7c7b3bfd6f1838b26cd1ec2aa62e12dd1a4d78c6f26c420ab",
+          "method": "PATCH",
+          "mime": "application/json",
+          "status": 200
+        },
+        "raw_body_credentials_or_clock_values_retained": false,
+        "request_rows": 203,
+        "reset_SQL_sha256": "0f24257dd4c48cc431f9b2acaa8e3ad221356c73dade6687e192ffc6619c72f6",
+        "unselected_scoped_SQL_and_links_unchanged": true
+      }
+    },
+    "platform": "linux/amd64",
+    "same_initial_scoped_SQL_sha256": "0f24257dd4c48cc431f9b2acaa8e3ad221356c73dade6687e192ffc6619c72f6",
+    "scope": "fresh Original and exact packaged Rust Main 203-channel normal batch boundaries",
+    "source_terminal_receipt_sha256": "5307e1d6e2bbdbc10ed1e8c553185234568b227438c58cb0c52af7c8978378bc",
+    "typed_workflow": {
+      "all_selected_raw_clocks_preserved": true,
+      "all_selected_typed_in_request_order": true,
+      "boundary_reads": [
+        {
+          "had_override_before": false,
+          "index": 0,
+          "kind": "managed",
+          "wire": {
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          }
+        },
+        {
+          "had_override_before": true,
+          "index": 98,
+          "kind": "managed",
+          "wire": {
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          }
+        },
+        {
+          "had_override_before": false,
+          "index": 99,
+          "kind": "manual",
+          "wire": {
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          }
+        },
+        {
+          "had_override_before": false,
+          "index": 100,
+          "kind": "managed",
+          "wire": {
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          }
+        },
+        {
+          "had_override_before": true,
+          "index": 198,
+          "kind": "managed",
+          "wire": {
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          }
+        },
+        {
+          "had_override_before": true,
+          "index": 199,
+          "kind": "managed",
+          "wire": {
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          }
+        },
+        {
+          "had_override_before": true,
+          "index": 200,
+          "kind": "managed",
+          "wire": {
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          }
+        },
+        {
+          "had_override_before": false,
+          "index": 201,
+          "kind": "managed",
+          "wire": {
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          }
+        },
+        {
+          "had_override_before": false,
+          "index": 202,
+          "kind": "manual",
+          "wire": {
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          }
+        }
+      ],
+      "boundary_reads_leave_SQL_unchanged": true,
+      "each_new_override_clock_within_request": true,
+      "existing_override_clocks_and_pins_preserved": true,
+      "existing_override_rows": 198,
+      "managed_override_group_rows": 201,
+      "manual_raw_group_rows": 2,
+      "new_custom_relations": 1,
+      "new_override_rows": 3,
+      "patch": {
+        "allow": "PATCH, OPTIONS",
+        "method": "PATCH",
+        "mime": "application/json",
+        "status": 200
+      },
+      "raw_body_credentials_or_clock_values_retained": false,
+      "request_rows": 203,
+      "unselected_scoped_SQL_and_links_unchanged": true
+    }
+  },
+  "m5_complete": false,
+  "profile_logo": {
+    "actual_exit": 0,
+    "approved_review_sha256": "0512e1e14ef87c4bf4031a798c3ce405e54bfcddf2cd995c4c3a36fff0da2077",
+    "build_manifest_sha256": "da9b42e61ed4dab91510f30df638f4ace610ebd3623ba5f8462caa35379c22cd",
+    "candidate_revision": "4f9e3916fddfaf35a2f84c075cf11cd5eda2d3fe",
+    "during_each_backend": {
+      "native": {
+        "cases": [
+          {
+            "case": "positive selections",
+            "ordered_channels": [
+              {
+                "detail": {
+                  "allow": null,
+                  "body_bytes": 1006,
+                  "body_sha256": "f28633c18fef1ef04ea9155e0530224dca938f7b3a141979fb809e18c54fb5ca",
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "existing_other_pins_and_clocks_preserved": true,
+                "kind": "managed",
+                "provider_fallback_after_clear": false,
+                "raw_null_after_clear": false
+              },
+              {
+                "detail": {
+                  "allow": null,
+                  "body_bytes": 733,
+                  "body_sha256": "88ce3dce3aed000cd38bc08d49f04fdc753e30fb1590fc7b58357b5fd7d1e57f",
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "existing_other_pins_and_clocks_preserved": true,
+                "kind": "manual",
+                "provider_fallback_after_clear": false,
+                "raw_null_after_clear": false
+              }
+            ],
+            "patch": {
+              "allow": "PATCH, OPTIONS",
+              "body_bytes": 1799,
+              "body_sha256": "bf0b2665e7b9837a6daa21711a0bd7e0fdf2894264edafa894ab63f6a10366a9",
+              "mime": "application/json",
+              "status": 200
+            },
+            "scoped_SQL_after_sha256": "fe1f1e153f43584d58eec7a01ff3c574d6322c870421a0ec337c2e552e6bd5de",
+            "scoped_SQL_before_sha256": "923db2da5275666f6f5212306015a4c0e2f14b3b5d3d53f8e1b3ebf918c4bd80",
+            "typed_success_message": "Successfully updated 2 channels",
+            "unchanged_other_scoped_SQL": true
+          },
+          {
+            "case": "clear/default",
+            "ordered_channels": [
+              {
+                "detail": {
+                  "allow": null,
+                  "body_bytes": 1012,
+                  "body_sha256": "d325b4e58c6f0d8e8513a0a03e316fa36a39a831d090bf39b94a1123496bbe97",
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "existing_other_pins_and_clocks_preserved": true,
+                "kind": "managed",
+                "provider_fallback_after_clear": true,
+                "raw_null_after_clear": false
+              },
+              {
+                "detail": {
+                  "allow": null,
+                  "body_bytes": 745,
+                  "body_sha256": "3c8f88bfbe3625d877339b9d7c50e663772d9f65d390af8dcada8599c9cc49fa",
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "existing_other_pins_and_clocks_preserved": true,
+                "kind": "manual",
+                "provider_fallback_after_clear": false,
+                "raw_null_after_clear": true
+              }
+            ],
+            "patch": {
+              "allow": "PATCH, OPTIONS",
+              "body_bytes": 1817,
+              "body_sha256": "2ecebaad60d30a9e8161e432b6adf2a300ca123dd090dbb8bf3eb9d7c20a1ec5",
+              "mime": "application/json",
+              "status": 200
+            },
+            "scoped_SQL_after_sha256": "bb169be4b72113a01c348d7320308aa5d14c3ade706f49f71ba3062fc0c0fc7a",
+            "scoped_SQL_before_sha256": "fe1f1e153f43584d58eec7a01ff3c574d6322c870421a0ec337c2e552e6bd5de",
+            "typed_success_message": "Successfully updated 2 channels",
+            "unchanged_other_scoped_SQL": true
+          }
+        ],
+        "raw_body_or_credentials_retained": false,
+        "reset_SQL_sha256": null
+      },
+      "original": {
+        "cases": [
+          {
+            "case": "positive selections",
+            "ordered_channels": [
+              {
+                "detail": {
+                  "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                  "body_bytes": 1006,
+                  "body_sha256": "6329e60d7db48eecb3a54ad24f8596b72003e8b8fe64262895498888746d76ac",
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "existing_other_pins_and_clocks_preserved": true,
+                "kind": "managed",
+                "provider_fallback_after_clear": false,
+                "raw_null_after_clear": false
+              },
+              {
+                "detail": {
+                  "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                  "body_bytes": 733,
+                  "body_sha256": "18d14d4b89cc320d8ff6e1725031a60cd3f06692002747c0885d0441178429da",
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "existing_other_pins_and_clocks_preserved": true,
+                "kind": "manual",
+                "provider_fallback_after_clear": false,
+                "raw_null_after_clear": false
+              }
+            ],
+            "patch": {
+              "allow": "PATCH, OPTIONS",
+              "body_bytes": 1799,
+              "body_sha256": "630c2810a733009356f7305bd70efb8e01be7080fec37a838a01723a2b403535",
+              "mime": "application/json",
+              "status": 200
+            },
+            "scoped_SQL_after_sha256": "fe1f1e153f43584d58eec7a01ff3c574d6322c870421a0ec337c2e552e6bd5de",
+            "scoped_SQL_before_sha256": "923db2da5275666f6f5212306015a4c0e2f14b3b5d3d53f8e1b3ebf918c4bd80",
+            "typed_success_message": "Successfully updated 2 channels",
+            "unchanged_other_scoped_SQL": true
+          },
+          {
+            "case": "clear/default",
+            "ordered_channels": [
+              {
+                "detail": {
+                  "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                  "body_bytes": 1012,
+                  "body_sha256": "f1cbd733f6e6696b640d7b947571834314ef54cfc06b31ae8b8861f17a688373",
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "existing_other_pins_and_clocks_preserved": true,
+                "kind": "managed",
+                "provider_fallback_after_clear": true,
+                "raw_null_after_clear": false
+              },
+              {
+                "detail": {
+                  "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                  "body_bytes": 745,
+                  "body_sha256": "fa6ecc176e9ec15d78d211c628c8a835f3b2a6d5e526ee23befb70f957f513d4",
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "existing_other_pins_and_clocks_preserved": true,
+                "kind": "manual",
+                "provider_fallback_after_clear": false,
+                "raw_null_after_clear": true
+              }
+            ],
+            "patch": {
+              "allow": "PATCH, OPTIONS",
+              "body_bytes": 1817,
+              "body_sha256": "8241e7f8e6f46ddec97ae6d3a20e50849df65afbe11be35a60974499ea946bc3",
+              "mime": "application/json",
+              "status": 200
+            },
+            "scoped_SQL_after_sha256": "bb169be4b72113a01c348d7320308aa5d14c3ade706f49f71ba3062fc0c0fc7a",
+            "scoped_SQL_before_sha256": "fe1f1e153f43584d58eec7a01ff3c574d6322c870421a0ec337c2e552e6bd5de",
+            "typed_success_message": "Successfully updated 2 channels",
+            "unchanged_other_scoped_SQL": true
+          }
+        ],
+        "raw_body_or_credentials_retained": false,
+        "reset_SQL_sha256": "923db2da5275666f6f5212306015a4c0e2f14b3b5d3d53f8e1b3ebf918c4bd80"
+      }
+    },
+    "freeze_sha256": "394460314a49f3e1063e51b33d12a5dec8f4b355ea0dc63cc34c49bd216e8df6",
+    "milestone_accepted": false,
+    "owned_cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "paired_terminal_receipt_sha256": "8dcec7791e4ab95763de1a02092ab474fd292abf13a003f3b52707f0ce5e97c5",
+    "platform": "linux/amd64",
+    "same_initial_scoped_SQL_sha256": "923db2da5275666f6f5212306015a4c0e2f14b3b5d3d53f8e1b3ebf918c4bd80",
+    "scope": "fresh Original and packaged Rust Main ordinary Channel Batch Stream Profile and Logo select/clear",
+    "source_terminal_receipt_sha256": "a146ca06c92deac800e479276d676cd05be1c614b1af100c16a09db5d9fb30cb",
+    "typed_result": {
+      "cases": [
+        {
+          "case": "positive selections",
+          "ordered_channels": [
+            {
+              "detail": {
+                "mime": "application/json",
+                "status": 200
+              },
+              "existing_other_pins_and_clocks_preserved": true,
+              "kind": "managed",
+              "provider_fallback_after_clear": false,
+              "raw_null_after_clear": false
+            },
+            {
+              "detail": {
+                "mime": "application/json",
+                "status": 200
+              },
+              "existing_other_pins_and_clocks_preserved": true,
+              "kind": "manual",
+              "provider_fallback_after_clear": false,
+              "raw_null_after_clear": false
+            }
+          ],
+          "patch": {
+            "allow": "PATCH, OPTIONS",
+            "mime": "application/json",
+            "status": 200
+          },
+          "typed_success_message": "Successfully updated 2 channels",
+          "unchanged_other_scoped_SQL": true
+        },
+        {
+          "case": "clear/default",
+          "ordered_channels": [
+            {
+              "detail": {
+                "mime": "application/json",
+                "status": 200
+              },
+              "existing_other_pins_and_clocks_preserved": true,
+              "kind": "managed",
+              "provider_fallback_after_clear": true,
+              "raw_null_after_clear": false
+            },
+            {
+              "detail": {
+                "mime": "application/json",
+                "status": 200
+              },
+              "existing_other_pins_and_clocks_preserved": true,
+              "kind": "manual",
+              "provider_fallback_after_clear": false,
+              "raw_null_after_clear": true
+            }
+          ],
+          "patch": {
+            "allow": "PATCH, OPTIONS",
+            "mime": "application/json",
+            "status": 200
+          },
+          "typed_success_message": "Successfully updated 2 channels",
+          "unchanged_other_scoped_SQL": true
+        }
+      ],
+      "raw_body_or_credentials_retained": false
+    }
+  }
+}
