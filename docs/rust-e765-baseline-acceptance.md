@@ -11,4 +11,6 @@ and comparative performance remain open.
 
 The original Dispatcharr authors and contributors retain full application and workflow credit.
 
+The [packaged provider workflow evidence](rust-e765-provider-workflows.md) covers the separate provider checks.
+
 [Redacted receipt](../scripts/rust-integration/milestone-batch113/e765-baseline-acceptance.json)
