@@ -42,3 +42,29 @@ The execution, evaluation and cleanup commands each exited 0. The
 coordinator recorded one passed node, 126 blocked nodes and literal exit
 2. The five required nodes verified on C74 span three runs.
 [Current-programme receipt](../scripts/rust-integration/milestone-batch113/c74-packaged-current64.json)
+
+## Two-worker MPEG-TS playback
+
+The exact C74 package passed all 24 checks for shared demand, global stop
+and owner process recovery. Each case used two production Main replicas.
+Two authenticated readers shared one upstream connection and one provider
+slot while playback was active. All six client decodes contained audio
+and 74 video frames. Each case retired both readers and released the
+slot. The independent project inventories were empty.
+
+Execution, evaluation and cleanup each exited 0. This candidate-only run
+recorded one passed node and 126 blocked nodes with coordinator exit 2.
+The earlier paired Original performance results remain in their own
+receipt.
+[Two-worker MPEG-TS receipt](../scripts/rust-integration/milestone-batch113/c74-shared-ts18.json)
+
+## Packaged guide grid
+
+The exact C74 package matched all 43 guide-grid requests against fresh
+pinned Original. The original controller also completed 104 guide HTTP
+cases. The paired requests ran within the same real five-minute window
+and matched status, content type, selected headers, length and body
+digest. Native terminated normally and the owned project inventory was
+empty. Execution, evaluation and cleanup exited 0. The coordinator
+recorded one passed node, 126 blocked and actual exit 2.
+[Guide grid receipt](../scripts/rust-integration/milestone-batch113/c74-guide-grid43.json)

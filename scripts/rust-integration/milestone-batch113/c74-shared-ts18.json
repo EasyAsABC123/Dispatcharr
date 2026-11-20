@@ -1,0 +1,72 @@
+{
+  "actual_coordinator_exit": 2,
+  "actual_phase_exits": {
+    "cleanup": 0,
+    "evaluation": 0,
+    "execution": 0
+  },
+  "candidate": {
+    "build_manifest_sha256": "f6263c4599f14bb9a18205210aaa6f0eedbb4ecef8c5a7114bf70fe20bdf6902",
+    "git": "c74ea312bdc791ad12f5e43298b56bd9b81a19b5",
+    "image_id": "sha256:01e513496e3ae02f8416ece3a07f2d5857e2998b5271f8138e9ed434a0685983",
+    "source_archive_sha256": "4deb578a33c7f059b1b9d61347ea9632262a22558a638bff548eec816fce008d",
+    "source_map_sha256": "e8610fc7d0c95cf1af1c8af5491e2437f0000fba12297cd82697eb7d298fe44c"
+  },
+  "cases": [
+    {
+      "actual_av_decoders": 2,
+      "concurrent_readers": 2,
+      "name": "shared-demand",
+      "occupied_provider_slots": 1,
+      "post_cleanup_readers": 0,
+      "post_cleanup_slots": 0,
+      "steady_origin_connections": 1,
+      "video_frames": [
+        74,
+        74
+      ]
+    },
+    {
+      "actual_av_decoders": 2,
+      "concurrent_readers": 2,
+      "name": "stop",
+      "occupied_provider_slots": 1,
+      "post_cleanup_readers": 0,
+      "post_cleanup_slots": 0,
+      "steady_origin_connections": 1,
+      "video_frames": [
+        74,
+        74
+      ]
+    },
+    {
+      "actual_av_decoders": 2,
+      "concurrent_readers": 2,
+      "name": "owner-crash",
+      "occupied_provider_slots": 1,
+      "post_cleanup_readers": 0,
+      "post_cleanup_slots": 0,
+      "steady_origin_connections": 1,
+      "video_frames": [
+        74,
+        74
+      ]
+    }
+  ],
+  "controller_actual_checks": 24,
+  "coordinator_report_sha256": "80f319f2f8b6a965b0ef461c35341da1be15d7bdb722f914b9f6d8e7e8261afd",
+  "credit": "The original Dispatcharr authors and contributors retain full application and workflow credit.",
+  "entrypoint": "production-Main",
+  "exact_owned_inventory_empty": true,
+  "full_milestone_passed": false,
+  "node_id": "package/sharedTS18",
+  "original_comparison_run": false,
+  "performance_verified": false,
+  "required_node_status_counts": {
+    "blocked": 126,
+    "passed": 1
+  },
+  "scope": "candidate-only two-worker MPEG-TS sharing, global stop and owner process recovery",
+  "settled_process_groups_and_both_EOFs": true,
+  "shared_ts_report_sha256": "8d96c735f39859f2e87b1129708a1784a0d41c7dd571661e4f7b5721db4a5051"
+}

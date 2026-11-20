@@ -12,14 +12,14 @@ alone does not establish application parity or an application performance gain.
 The [complete parity plan](rust-complete-parity-plan.md) assigns parallel work
 across M0–M9 and proposes M10/M11 as separate rollout stages.
 
-The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-typed177.json)
-passed all 110 tests, reproduced the register byte-for-byte, and verified cleanup.
+The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-typed227.json)
+passed all 113 tests, reproduced the register byte-for-byte, and verified cleanup.
 The register has partial Original coverage for 797 of 798 HTTP declarations
-and 177 of 250 typed declarations. The
-[Original migration observations](rust-m0-migration-source-evidence.md) cover
-145 project migrations with separate PostgreSQL and SQLite outcomes. The
-[earlier SDK receipt](../scripts/rust-contracts/sdk-live-root7-797.json) retains
-the 34-case result. Full role and Native parity remain open.
+and 227 of 250 typed declarations. The
+[Original migration and registry observations](rust-m0-migration-source-evidence.md)
+cover 145 project migrations and 50 Django class registrations. The
+[earlier SDK receipt](../scripts/rust-contracts/sdk-live-typed177.json) retains
+the 110-case result. Full role and Native parity remain open.
 
 The [Original packaged React root](rust-m0-original-aio-root.md) returned
 HTTP 200 with the exact baked index and both linked assets under the explicit
@@ -85,12 +85,12 @@ all 16 paired cases on the shared image. The
 phases on XMLTV, the programme grid, and Xtream short EPG. Both respective
 Compose projects retired exactly.
 
-The [C74 package checks](rust-c74-clean-install-operator.md) passed five
-required nodes across three runs on the same image. The checks covered
+The [C74 package checks](rust-c74-clean-install-operator.md) passed seven
+required nodes across five runs on the same image. The checks covered
 11 stock React fresh-install, 17 safe operator, 22 shipped
-`createsuperuser`, 154 strict API and 64 fresh paired current-programme
-cases. Each run exited 2 with the larger roster still open. The full
-integrated package and resource gates remain open.
+`createsuperuser`, 154 strict API, 64 current-programme and 43 guide-grid
+cases. The production two-worker MPEG-TS node passed all 24 checks.
+The full integrated package and resource gates remain open.
 
 The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
 ordinary Native login, cancel and both cleanup modes with exact SQL and

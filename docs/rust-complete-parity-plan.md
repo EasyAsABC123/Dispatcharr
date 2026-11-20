@@ -12,12 +12,13 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Starting point
 
-The network-disabled M0 SDK passed all 110 tests, reproduced its register exactly,
+The network-disabled M0 SDK passed all 113 tests, reproduced its register exactly,
 and verified partial Original coverage for 797 of 798 HTTP declarations and
-177 of 250 typed operations. A separate packaged Original run verified the
-anonymous React root and both baked assets with an explicit disposable login
-locale. The SDK binds that capture to the unresolved root declaration.
-[SDK receipt](../scripts/rust-contracts/sdk-live-typed177.json)
+227 of 250 typed operations. The 50 new typed observations record Django
+class registration and model metadata. A separate packaged Original run
+verified the anonymous React root and both baked assets with an explicit
+disposable login locale. The SDK binds that capture to the original root declaration.
+[SDK receipt](../scripts/rust-contracts/sdk-live-typed227.json)
 [Original packaged root](rust-m0-original-aio-root.md)
 
 The historical media comparisons established one upstream for 100 simultaneous
@@ -38,11 +39,11 @@ provider, scheduler and performance workflows require bindings with their
 normal runtime roles and full assertions.
 [Coordinator guide](../scripts/rust-milestone-batches/README.md)
 
-The C74 package passed five required workflow nodes across three runs. The
-11 fresh-install checks used the unchanged React setup and login. The
-17 safe operator, 22 shipped `createsuperuser` and 154 strict API cases
-ran against their bound Original references. A fresh paired comparison
-matched all 64 current-programme cases on production Main. Each
+The C74 package passed seven required workflow nodes across five runs.
+The checks covered 11 stock React fresh-install, 17 safe operator,
+22 shipped `createsuperuser`, 154 strict API, 64 current-programme and
+43 guide-grid cases. The two-worker MPEG-TS node also passed all 24
+checks for shared demand, global stop and owner recovery. Each
 coordinator run exited 2 with the larger roster still open.
 [C74 package checks](rust-c74-clean-install-operator.md)
 

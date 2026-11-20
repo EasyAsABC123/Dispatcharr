@@ -10,10 +10,10 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | Routes with unresolved method/action mapping | 322 | Explicit unknown-method items; no GET/POST guess |
 | Runtime operation work items | 798 | Includes those 322 placeholders; not 798 verified endpoints |
 | OpenAPI operations | 362 | Separate discovery view; do not add to route totals |
-| Executable Original HTTP assignments | 796 | Scoped Source definitions across 798 operation work items. 2 work items await assignment. |
+| Executable Original HTTP assignments | 797 | Partial Original definitions across 798 operation work items. One work item awaits assignment. |
 | Unresolved methods with an executable Original fixture | 321 | Observed under 322 unresolved method/action declarations |
 | Non-HTTP candidate identities | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
-| Typed executable Original non-HTTP assignments | 32 | 27 tasks, two commands, one model, one synthetic consumer and one WebSocket route. 218 candidates await assignment. |
+| Typed executable Original non-HTTP assignments | 227 | Partial observations for 145 migrations, 50 Django class registrations, 27 tasks, two commands, one model test, one synthetic consumer and one WebSocket route. 23 candidates await assignment. |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
 | Operations with partial case bindings | 11 | 403 scoped packaged observations; remaining role/input coverage stays open |
 | Fully audited register operation rows | 0 | Register-to-case mapping has not been completed; existing reports retain their actual passes |
