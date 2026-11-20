@@ -1081,6 +1081,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     } else {
         None
     };
+    let core_repack = core_compact
+        .as_ref()
+        .map(|_| dispatcharr_store::xc_account_http::Repack::prepare(auth.clone()));
     let auth_routes = match &core_settings {
         Some(core) => auth
             .clone()
@@ -1211,6 +1214,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         app = app.layer(axum::Extension(selected.sd_source_http()));
     } else if let Some(playback) = &ordinary_recording_playback {
         app = app.merge(playback.clone().router());
+    }
+    if let Some(repack) = &core_repack {
+        app = app.merge(repack.clone().router());
     }
     if let Some(m3u) = &original_m3u_refresh_all {
         app = app.merge(m3u.router());
@@ -1347,6 +1353,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         core_settings,
         selected_jobs,
         core_compact: core_compact.clone(),
+        core_repack: core_repack.clone(),
         ordinary_recording_playback: ordinary_recording_playback.clone(),
         original_m3u_refresh_all: original_m3u_refresh_all.clone(),
         engine,
@@ -1387,6 +1394,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         signal_services.stream_files.stop_stream_file_admission();
         signal_services.stream_regex.close_admission();
         signal_services.plugin_actions.stop_admission();
+        if let Some(repack) = &signal_services.core_repack {
+            repack.close_admission();
+        }
         if let Some(owner) = &signal_services.core_compact {
             owner.close_admission();
         }
@@ -1427,6 +1437,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             || original_m3u_refresh_all.is_some()
             || manual_backup_enabled
             || core_compact.as_ref().is_some_and(|owner| owner.was_used())
+            || core_repack
+                .as_ref()
+                .is_some_and(dispatcharr_store::xc_account_http::Repack::was_used)
             || auth.stream_files_were_used()
             || stream_regex.was_used()
             || ordinary_recording_playback
@@ -1504,6 +1517,7 @@ struct ShutdownServices {
     core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
     selected_jobs: Option<selected_jobs::SelectedJobs>,
     core_compact: Option<Arc<dispatcharr_job_transport::compact_coordination::CompactCoordinator>>,
+    core_repack: Option<dispatcharr_store::xc_account_http::Repack>,
     ordinary_recording_playback: Option<dispatcharr_store::RecordingPlayback>,
     original_m3u_refresh_all: Option<dispatcharr_job_transport::transport::OriginalM3uRefreshAll>,
     engine: StreamEngine,
@@ -1543,6 +1557,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         core_settings,
         selected_jobs,
         core_compact,
+        core_repack,
         ordinary_recording_playback,
         original_m3u_refresh_all,
         engine,
@@ -1587,10 +1602,20 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     if let Some(m3u) = &original_m3u_refresh_all {
         m3u.close_admission();
     }
+    if let Some(repack) = &core_repack {
+        repack.close_admission();
+    }
     if let Some(owner) = &core_compact {
         owner.close_admission();
     }
-    let (stream_files_drained, stream_regex_drained, original_m3u_drained, manual_restore_drained, compact_drained) = tokio::join!(
+    let (
+        stream_files_drained,
+        stream_regex_drained,
+        original_m3u_drained,
+        manual_restore_drained,
+        repack_drained,
+        compact_drained,
+    ) = tokio::join!(
         stream_files.shutdown_stream_files(Duration::from_secs(8)),
         stream_regex.shutdown(Duration::from_secs(8)),
         async {
@@ -1606,12 +1631,21 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
             }
         },
         async {
+            match core_repack {
+                Some(repack) => repack.shutdown(Duration::from_secs(8)).await,
+                None => true,
+            }
+        },
+        async {
             match core_compact {
                 Some(owner) => owner.shutdown(Duration::from_secs(8)).await,
                 None => true,
             }
         },
     );
+    if !repack_drained {
+        return Err("Core manual repack HTTP and SQL ownership did not settle".into());
+    }
     if !compact_drained {
         return Err("Core compact numbering ownership did not settle".into());
     }

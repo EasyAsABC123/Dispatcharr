@@ -15,7 +15,7 @@ use sqlx::Row;
 use std::{
     net::SocketAddr,
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicU8, Ordering},
         Arc,
     },
     time::Duration,
@@ -68,23 +68,35 @@ pub struct Http {
     inner: Arc<Inner>,
 }
 struct Inner {
-    auth: AuthService,
     publisher: Arc<dyn Publisher>,
-    closed: AtomicBool,
+    repack: Repack,
+}
+
+const REQUEST_SLOTS: u32 = 4;
+const CLOSED: u8 = 1;
+const REPACK_USED: u8 = 2;
+
+#[derive(Clone)]
+pub struct Repack {
+    inner: Arc<RepackIntake>,
+}
+
+struct RepackIntake {
+    auth: AuthService,
+    admission: AtomicU8,
     slots: Arc<Semaphore>,
 }
 impl Http {
     pub fn prepare(auth: AuthService, publisher: Arc<dyn Publisher>) -> Self {
         Self {
             inner: Arc::new(Inner {
-                auth,
                 publisher,
-                closed: AtomicBool::new(false),
-                slots: Arc::new(Semaphore::new(4)),
+                repack: Repack::prepare(auth),
             }),
         }
     }
     pub fn router(self) -> Router {
+        let repack = self.inner.repack.clone().router();
         Router::new()
             .route("/api/m3u/refresh-account-info/{profile}/", any(handle))
             .route(
@@ -93,11 +105,8 @@ impl Http {
             )
             .route("/api/m3u/refresh/", any(refresh_all_handle))
             .route("/api/m3u/accounts/{account}/refresh-vod/", any(vod_handle))
-            .route(
-                "/api/m3u/accounts/{account}/repack-group/",
-                any(repack_handle),
-            )
             .with_state(self)
+            .merge(repack)
     }
     pub fn refresh_all_router(self) -> Router {
         Router::new()
@@ -105,29 +114,78 @@ impl Http {
             .with_state(self)
     }
     pub fn close_admission(&self) {
-        self.inner.closed.store(true, Ordering::Release)
+        self.inner.repack.close_admission();
     }
+
     pub async fn shutdown(&self, duration: Duration) -> bool {
-        self.close_admission();
-        match tokio::time::timeout(duration, self.inner.slots.clone().acquire_many_owned(4)).await {
-            Ok(Ok(held)) => {
-                drop(held);
-                true
-            }
-            _ => false,
-        }
+        self.inner.repack.shutdown(duration).await
     }
 }
+
+impl Repack {
+    pub fn prepare(auth: AuthService) -> Self {
+        Self {
+            inner: Arc::new(RepackIntake {
+                auth,
+                admission: AtomicU8::new(0),
+                slots: Arc::new(Semaphore::new(REQUEST_SLOTS as usize)),
+            }),
+        }
+    }
+
+    pub fn router(self) -> Router {
+        Router::new()
+            .route(
+                "/api/m3u/accounts/{account}/repack-group/",
+                any(repack_handle),
+            )
+            .with_state(self)
+    }
+
+    fn is_closed(&self) -> bool {
+        self.inner.admission.load(Ordering::Acquire) & CLOSED != 0
+    }
+
+    fn admit_operation(&self) -> bool {
+        // The HTTP slot is already held. Record use in the same transition
+        // that checks closure, before creating a detached SQL owner.
+        self.inner
+            .admission
+            .fetch_update(Ordering::AcqRel, Ordering::Acquire, |state| {
+                (state & CLOSED == 0).then_some(state | REPACK_USED)
+            })
+            .is_ok()
+    }
+
+    pub fn close_admission(&self) {
+        self.inner.admission.fetch_or(CLOSED, Ordering::AcqRel);
+    }
+
+    pub fn was_used(&self) -> bool {
+        self.inner.admission.load(Ordering::Acquire) & REPACK_USED != 0
+    }
+
+    pub async fn shutdown(&self, duration: Duration) -> bool {
+        self.close_admission();
+        tokio::time::timeout(
+            duration,
+            self.inner.slots.clone().acquire_many_owned(REQUEST_SLOTS),
+        )
+        .await
+        .is_ok_and(|result| result.is_ok())
+    }
+}
+
 async fn handle(
     State(api): State<Http>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     Path(profile): Path<i64>,
     request: Request,
 ) -> Response {
-    if api.inner.closed.load(Ordering::Acquire) {
+    if api.inner.repack.is_closed() {
         return unavailable().into_response();
     }
-    let slot = match api.inner.slots.clone().try_acquire_owned() {
+    let slot = match api.inner.repack.inner.slots.clone().try_acquire_owned() {
         Ok(v) => v,
         Err(_) => return unavailable().into_response(),
     };
@@ -144,13 +202,13 @@ async fn handle(
     // Redis acknowledgement, keeping the same Auth4 writer session throughout.
     let result=tokio::spawn(async move{
         let owner=Arc::new((slot,api.inner.clone()));
-        let auth=api.inner.auth.clone().with_retained_scope(owner.clone());let user=auth.account_user(peer,headers,false).await?;
+        let auth=api.inner.repack.inner.auth.clone().with_retained_scope(owner.clone());let user=auth.account_user(peer,headers,false).await?;
         let required=if matches!(method,Method::GET|Method::HEAD){1}else{10};
         if user.user_level<required{return Err(StoreError::PermissionDenied)}
         if method!=Method::POST{return Ok((405,json!({"detail":format!("Method \"{method}\" not allowed.")})))}
         let session=auth.borrow_task_sql_session(owner.clone()).await?;
         let work=async{
-            if api.inner.closed.load(Ordering::Acquire){return Err(unavailable())}
+            if api.inner.repack.is_closed(){return Err(unavailable())}
             let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT p.name,a.account_type FROM m3u_m3uaccountprofile p JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id WHERE p.id=$1::bigint").bind(profile).fetch_optional(&mut*c).await})).await??;
             let Some(row)=row else{return Ok((404,json!({"success":false,"error":"Profile not found"})))};
             if row.try_get::<String,_>("account_type")?!="XC"{return Ok((400,json!({"success":false,"error":"Account info refresh is only available for XtreamCodes accounts"})))}
@@ -189,10 +247,10 @@ async fn refresh_handle(
     Path(account): Path<i64>,
     request: Request,
 ) -> Response {
-    if api.inner.closed.load(Ordering::Acquire) {
+    if api.inner.repack.is_closed() {
         return unavailable().into_response();
     }
-    let slot = match api.inner.slots.clone().try_acquire_owned() {
+    let slot = match api.inner.repack.inner.slots.clone().try_acquire_owned() {
         Ok(v) => v,
         Err(_) => return unavailable().into_response(),
     };
@@ -209,7 +267,7 @@ async fn refresh_handle(
     // Redis acknowledgement, keeping the same Auth4 writer session throughout.
     let result = tokio::spawn(async move {
         let owner = Arc::new((slot, api.inner.clone()));
-        let auth = api.inner.auth.clone().with_retained_scope(owner.clone());
+        let auth = api.inner.repack.inner.auth.clone().with_retained_scope(owner.clone());
         let user = auth.account_user(peer, headers, false).await?;
         let required = if matches!(method, Method::GET | Method::HEAD) {
             1
@@ -225,7 +283,7 @@ async fn refresh_handle(
                 json!({"detail":format!("Method \"{method}\" not allowed.")}),
             ));
         }
-        if api.inner.closed.load(Ordering::Acquire) {
+        if api.inner.repack.is_closed() {
             return Err(unavailable());
         }
         api.inner.publisher.publish_refresh(account, owner).await?;
@@ -252,10 +310,10 @@ async fn vod_handle(
     Path(account): Path<i64>,
     request: Request,
 ) -> Response {
-    if api.inner.closed.load(Ordering::Acquire) {
+    if api.inner.repack.is_closed() {
         return unavailable().into_response();
     }
-    let slot = match api.inner.slots.clone().try_acquire_owned() {
+    let slot = match api.inner.repack.inner.slots.clone().try_acquire_owned() {
         Ok(v) => v,
         Err(_) => return unavailable().into_response(),
     };
@@ -272,7 +330,7 @@ async fn vod_handle(
     // Redis acknowledgement, keeping the same Auth4 writer session throughout.
     let result = tokio::spawn(async move {
         let owner = Arc::new((slot, api.inner.clone()));
-        let auth = api.inner.auth.clone().with_retained_scope(owner.clone());
+        let auth = api.inner.repack.inner.auth.clone().with_retained_scope(owner.clone());
         let user = auth.account_user(peer, headers, false).await?;
         let required = if matches!(method, Method::GET | Method::HEAD) {
             1
@@ -288,7 +346,7 @@ async fn vod_handle(
                 json!({"detail":format!("Method \"{method}\" not allowed.")}),
             ));
         }
-        if api.inner.closed.load(Ordering::Acquire) {
+        if api.inner.repack.is_closed() {
             return Err(unavailable());
         }
         let value = api.inner.publisher.publish_vod(account, owner).await?;
@@ -311,10 +369,10 @@ async fn refresh_all_handle(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Response {
-    if api.inner.closed.load(Ordering::Acquire) {
+    if api.inner.repack.is_closed() {
         return unavailable().into_response();
     }
-    let slot = match api.inner.slots.clone().try_acquire_owned() {
+    let slot = match api.inner.repack.inner.slots.clone().try_acquire_owned() {
         Ok(v) => v,
         Err(_) => return unavailable().into_response(),
     };
@@ -331,7 +389,7 @@ async fn refresh_all_handle(
     // Redis acknowledgement, keeping the same Auth4 writer session throughout.
     let result = tokio::spawn(async move {
         let owner = Arc::new((slot, api.inner.clone()));
-        let auth = api.inner.auth.clone().with_retained_scope(owner.clone());
+        let auth = api.inner.repack.inner.auth.clone().with_retained_scope(owner.clone());
         let user = auth.account_user(peer, headers, false).await?;
         let required = if matches!(method, Method::GET | Method::HEAD) {
             1
@@ -347,7 +405,7 @@ async fn refresh_all_handle(
                 json!({"detail":format!("Method \"{method}\" not allowed.")}),
             ));
         }
-        if api.inner.closed.load(Ordering::Acquire) {
+        if api.inner.repack.is_closed() {
             return Err(unavailable());
         }
         api.inner.publisher.publish_all_refresh(owner).await?;
@@ -369,12 +427,12 @@ async fn refresh_all_handle(
     }
 }
 async fn repack_handle(
-    State(api): State<Http>,
+    State(api): State<Repack>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     Path(raw): Path<String>,
     request: Request,
 ) -> Response {
-    if api.inner.closed.load(Ordering::Acquire) {
+    if api.is_closed() {
         return unavailable().into_response();
     }
     let slot = match api.inner.slots.clone().try_acquire_owned() {
@@ -390,6 +448,9 @@ async fn repack_handle(
             Json(json!({"detail":"Request body too large."})),
         )
             .into_response();
+    }
+    if !api.admit_operation() {
+        return unavailable().into_response();
     }
     let result = tokio::spawn(async move {
         let owner: Arc<dyn Send + Sync> = Arc::new((slot, api.inner.clone()));
@@ -486,4 +547,44 @@ fn unavailable() -> StoreError {
         503,
         json!({"error":"XC account refresh intake or physical capacity unavailable"}),
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn auth() -> AuthService {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://unused:unused@localhost/unused")
+            .unwrap();
+        AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("test-signing-secret-only".into()).unwrap(),
+        )
+    }
+
+    #[tokio::test]
+    async fn repack_owner_retains_the_http_drain_slot_until_completion() {
+        let repack = Repack::prepare(auth());
+        let slot = repack.inner.slots.clone().try_acquire_owned().unwrap();
+        assert!(repack.admit_operation());
+        assert!(repack.was_used());
+
+        assert!(!repack.shutdown(Duration::ZERO).await);
+        assert!(!repack.admit_operation());
+        drop(slot);
+        assert!(repack.shutdown(Duration::ZERO).await);
+    }
+
+    #[tokio::test]
+    async fn unused_repack_intake_cannot_begin_after_closure() {
+        let repack = Repack::prepare(auth());
+        let waiting_request = repack.inner.slots.clone().try_acquire_owned().unwrap();
+        repack.close_admission();
+
+        assert!(!repack.admit_operation());
+        assert!(!repack.was_used());
+        drop(waiting_request);
+        assert!(repack.shutdown(Duration::ZERO).await);
+    }
 }

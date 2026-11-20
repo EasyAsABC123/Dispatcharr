@@ -4,7 +4,7 @@ use crate::{AuthService, Store, StoreError, User};
 use axum::{
     body::Bytes,
     extract::{ConnectInfo, OriginalUri, Path, Query, State},
-    http::{HeaderMap, Uri},
+    http::{header, HeaderMap, HeaderValue, Method, Uri},
     response::{IntoResponse, Response},
     routing::{get, post},
     Json, Router,
@@ -797,11 +797,12 @@ async fn summary(
 async fn retrieve(
     State(auth): State<AuthService>,
     Path(id): Path<String>,
+    method: Method,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     OriginalUri(uri): OriginalUri,
     Query(params): Query<HashMap<String, String>>,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers.clone(), false).await?;
     if user.user_level < 1 {
         return Err(StoreError::PermissionDenied);
@@ -809,7 +810,15 @@ async fn retrieve(
     let id = id
         .parse()
         .map_err(|_| StoreError::StatusBody(404, json!({"detail":"Not found."})))?;
-    read(auth, user, params, base_url(&headers, &uri)?, Some(id)).await
+    let body = read(auth, user, params, base_url(&headers, &uri)?, Some(id)).await?;
+    let mut response = body.into_response();
+    if method == Method::GET {
+        response.headers_mut().insert(
+            header::ALLOW,
+            HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
+        );
+    }
+    Ok(response)
 }
 // Unlike the management list, this action starts from Channel.objects.filter
 // and applies only the shared user ACL. List filtering, ordering and pagination
