@@ -1,0 +1,72 @@
+{
+  "actual_native": {
+    "actual_exit": 0,
+    "exact_cleanup": true,
+    "receipt_sha256": "7982f0e07dd332d703dce8137bad94096a870718b3f11ef325d97494d1390187",
+    "verified_roles_retired": 4
+  },
+  "both_backends": {
+    "own_named_backup_worker_or_beat_started": false,
+    "permission_statuses": {
+      "native": {
+        "anonymous": 401,
+        "viewer": 403
+      },
+      "original": {
+        "anonymous": 401,
+        "viewer": 403
+      }
+    },
+    "response_and_mutation": {
+      "cache_group_absent": true,
+      "content_type": "application/json",
+      "defaults_read_before_write": {
+        "cron_expression": "",
+        "day_of_week": 0,
+        "enabled": true,
+        "frequency": "daily",
+        "retention_count": 3,
+        "time": "03:00"
+      },
+      "foreign_rows_and_cache_unchanged": true,
+      "group_recreated": true,
+      "named_task_absent_and_beat_unchanged": true,
+      "performance_verified": false,
+      "persistent_version_in_request_window": true,
+      "queued_work_and_results_unchanged": true,
+      "settings_value": {
+        "retention_count": 3,
+        "schedule_cron_expression": "",
+        "schedule_day_of_week": 2,
+        "schedule_enabled": false,
+        "schedule_frequency": "weekly",
+        "schedule_time": "04:10"
+      },
+      "status": 200,
+      "wire_sha256": "229f4fabe81d2f26e62a2ea5ce80d483e17b2b2b8a58542e605c6779ccb6e5a3"
+    }
+  },
+  "candidate": {
+    "build_manifest_sha256": "da56af2bbb396b27285ab3fb2412b61456291b5bd7e8406751b420617795b473",
+    "image_id": "sha256:90bc93409ae1d7eb04985c6f208fc8e4c3f5d214be91e990f47611ad51eafd3f",
+    "revision": "7adb0c72dae360cc5c3a4b5e4d8f7b100e8f200b",
+    "source_archive_sha256": "e5dd7d7e111fc5f0bb4678a5af1ee6635150be66d4e1b42623ba505d3cb3104a",
+    "source_tree_sha256": "4f41ec61440944557af644bfc9b4dfd198b0f9e3f835d6b3fe1f946d0bcd708c"
+  },
+  "credit": "The original Dispatcharr authors, Django and django-celery-beat contributors retain full application and workflow credit.",
+  "full_M8_accepted": false,
+  "initial_native_launcher": {
+    "actual_exit": 1,
+    "before_docker": true,
+    "scope": "output was outside the existing fixture owner directory",
+    "stderr_sha256": "28d39428c7665ec8ec2e00d8a528c449ad44a63af78a7ee5677d15dce7fddb18"
+  },
+  "performance_verified": false,
+  "scope": "ordinary stock backup schedule disable with missing settings row",
+  "source_reference": {
+    "actual_exit": 0,
+    "receipt_sha256": "7aa848a536bba98c58eea91d6e6ebf0f98ca5e4e449130a81ae70a54f239aed9",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "verified_roles_retired": 2
+  }
+}

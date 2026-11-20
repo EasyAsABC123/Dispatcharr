@@ -48,6 +48,15 @@ Celery consumer completed the aggregate job and both children, with the
 expected streams and group memberships. The ordinary Native worker graph
 and equivalent-work measurement remain open.
 
+The [explicit VOD session check](rust-vod-explicit-session-id.md) passed
+four paired cohorts. Same-ID requests reused their sessions and fresh
+Native IDs had their own stats rows. Original returned 503 in both
+fresh-ID cases. Provider-slot release timing remains open.
+
+The [stock backup missing-settings replay](rust-m8-backup-missing-row.md)
+matched permissions, response bytes, row creation and cache invalidation
+when disabling the schedule. Both owned fixtures retired cleanly.
+
 The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
 ordinary Native login, cancel and both cleanup modes with exact SQL and
 teardown. The paired Original HTTP reference was retained.
