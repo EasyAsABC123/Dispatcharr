@@ -12,6 +12,14 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Latest packaged checks
 
+The exact `0c429b64` package matched both verbosity-2 migration listings
+against the copied PostgreSQL ledger and 28 ordinary Guide GET comparisons.
+The Guide checks covered browser media ranges, format aliases, casing and
+indentation with exact response content and teardown. The broader coordinator
+receipt below remains scoped to `82414407`.
+[Verbose migration inspection](rust-m0-native-showmigrations-verbosity.md)
+[Guide content negotiation](rust-m7-programme-get-negotiation.md)
+
 The exact `82414407` package passed **18 of 127 required coordinator
 nodes** in fresh scoped runs. Each counted node passed its complete
 workload, semantic evaluation and independent cleanup. The other 109

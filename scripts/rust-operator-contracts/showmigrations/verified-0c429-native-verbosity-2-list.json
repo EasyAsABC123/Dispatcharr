@@ -1,0 +1,65 @@
+{
+  "actual_controller_exit": 0,
+  "actual_report_sha256": "c755e9cf49bad111f13a1dfc496f49281a6f57b1fdb07467e9e76d0c611c2b51",
+  "approved_product_review_sha256": "073221fc96fe9fa8e408df4b7733aa46444d4b1057293d97e65b55f119a9a8c9",
+  "build_manifest_sha256": "58a2391378be6912fe3ea7d0c5fda3bd81e1ba1f84643b705ac79d121c55b6c3",
+  "candidate_image_id": "sha256:7260e19de25f9121d0e658cc06bd0758bf65afdb2df4cb3876f7d88fe6e4e71d",
+  "candidate_revision": "0c429b6418ded230e99d2e19658a139064dfca51",
+  "cases": {
+    "accounts-list": {
+      "after_SQL_sha256": "20e8d99b2518455b6d347b59732943526e7616541b5d6955c960f680d71e93fe",
+      "argv": [
+        "showmigrations",
+        "accounts",
+        "--list",
+        "--verbosity",
+        "2",
+        "--database",
+        "default",
+        "--no-color"
+      ],
+      "before_SQL_sha256": "10017daeecae6b13abcf7891a13ebd26e57b6b54b494d3d3c368c0013daf23af",
+      "exact_container_terminal_sha256": "8effe5ef86ec09f55f21e715b7066b691e051772110faadb8b73fa137111e63a",
+      "literal_exit": 0,
+      "matched_applied_timestamp_rows": 8,
+      "notification_and_backup_schedule_startup_SQL_match_source": true,
+      "whole_stdout_sha256": "004c4d95ee8de76493de6067d68c24d72f88f60cab2865bdf67102ae968f35d3"
+    },
+    "default-list": {
+      "after_SQL_sha256": "10017daeecae6b13abcf7891a13ebd26e57b6b54b494d3d3c368c0013daf23af",
+      "argv": [
+        "showmigrations",
+        "--verbosity=2",
+        "--database",
+        "default",
+        "--no-color"
+      ],
+      "before_SQL_sha256": "c23f5f5791bec5290795747ec99a6bda34c611f3936a3ef8201082d74ec295a3",
+      "exact_container_terminal_sha256": "6a760cb24971a1aba48277e383568827dd74d7a967c40630d02c5e018c7f739c",
+      "literal_exit": 0,
+      "matched_applied_timestamp_rows": 184,
+      "notification_and_backup_schedule_startup_SQL_match_source": true,
+      "whole_stdout_sha256": "bbe58837cfcc52948b94d7ffff2bc8ced363110dad01263320105788711eb49b"
+    }
+  },
+  "copied_migration_ledger_and_default_database_preserved": true,
+  "credits": "The original Dispatcharr and Django authors retain full credit.",
+  "exact_binding_sha256": "30e93d05c899fdbbb870e07aedebe483136440416a094d7a58b6d07c3b2a4514",
+  "exact_fixture_cleanup": {
+    "project_inventory_empty": true,
+    "role_identities_absent": {
+      "baseline": {
+        "container_absent": true,
+        "host_generation_absent": true
+      },
+      "origin": {
+        "container_absent": true,
+        "host_generation_absent": true
+      }
+    }
+  },
+  "full_M0_accepted": false,
+  "owned_native_operator_containers_retired": 2,
+  "performance_measured": false,
+  "stock_original_scope_sha256": "c1b225776b1c711af2050dea2552e067762d84f2901caa0f6ebe59f8821259b6"
+}
