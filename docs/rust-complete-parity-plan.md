@@ -234,7 +234,9 @@ API, job, contract and plugin implementation keep moving alongside it.
 
 Use the [milestone ledger](rust-milestones.md), the
 [e765 coordinator checkpoint](rust-e765-baseline-acceptance.md), the
-[Guide renderer successor](rust-m7-browsable-guide-original.md#packaged-rust-successful-list-get), and the
+[81ce streaming checks](rust-m9-81ce-functional-streaming.md), the
+[Guide renderer successor](rust-m7-browsable-guide-original.md#packaged-rust-successful-list-get), the
+[standalone restore parser workflow](rust-m8-standalone-restore-parser-acceptance.md), and the
 [coordinator guide](../scripts/rust-milestone-batches/README.md) as the living
 links between work, test bindings and evidence.
 

@@ -95,3 +95,23 @@ programme rows and verified teardown. This receipt covers Original stock
 front-door framing.
 
 [Redacted stock nginx HEAD receipt](../scripts/rust-epg-contracts/verified-stock-nginx-guide-head-1.json)
+
+## Packaged Rust list variants and HEAD
+
+The exact `11455873` package matched pinned Original for the admin
+`?format=api` request with `Accept: */*`, the standard-user bare HTML list,
+and the admin bare HTML list. Each variant returned two successful HTML GETs
+with fresh masked CSRF values, matching typed JSON controls, and the same
+normalized Source template. The programme rows stayed unchanged.
+
+Native admin HTML HEAD matched the separately recorded stock nginx response
+on status, selected headers and framing. It declared 16,070 bytes and sent
+none on the raw HTTP/1.0 response stream. The matching HTML GET sent 16,069
+bytes. The Native JSON HEAD regression declared 275 bytes and sent none.
+The same pair's cleanup verified retirement of four owned generations.
+
+This evidence covers the successful requests above on the exact package.
+Programme creation, form submission, detail HTML, broader negotiation and
+performance remain open.
+
+[Redacted paired list variants and HEAD receipt](../scripts/rust-epg-contracts/verified-native-guide-list-variants-11455873.json)
