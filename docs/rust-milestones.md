@@ -24,8 +24,9 @@ screen passed with 33.30% less CPU and 47.18% less peak working memory.
 The [cross-replica fMP4 check](rust-m3-live-format-continuation.md) also passed
 with one upstream and one provider slot. The initial 100-viewer comparison
 missed the equal-work bound. The [anchored diagnostic](rust-m2-100-viewer-anchor.md)
-then met that bound on both implementations. Six fresh measured phases are
-required for the 100-viewer resource comparison.
+then met that bound on both implementations. The [fresh 100-viewer
+comparison](rust-m2-100-viewer-measured.md) passed all three pairs with matched
+work. Rust used about 83% less CPU and 71% less peak working memory.
 
 The [Candidate107 VOD and XMLTV results](rust-milestone-batch107.md) verify
 calendar seek ranges, alternate-provider capacity and remote source creation.
