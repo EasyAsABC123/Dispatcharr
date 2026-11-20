@@ -1,0 +1,134 @@
+{
+  "actual_batch_exit": 0,
+  "build_manifest_sha256": "9fc786b8fdf70775bf4bf9a7239e4e13f9463d00f3d55cff33ca84e3f7c21833",
+  "candidate": "d482e39c5196f3044e91321f58766f1b134f8d25",
+  "cases": {
+    "aggregate": {
+      "lanes": {
+        "Native": {
+          "container_generations_retired": 3,
+          "controller_exit": 0,
+          "exact_cleanup": true,
+          "execution_sha256": "1ba65ca09962f185726cfe341cfaa02eb73493dcdcff6f4a07bed41d7bd45746",
+          "independent_cleanup_sha256": "8b64de2a5628055afbc26f36849ec6d977920bbd9b01371cc2e13620f8d4f6ba",
+          "lane_sha256": "ebe60fd8baa11b5ea0e35cb2939dc534ca484331a0a1f8ee3bcc69b6ea03669f"
+        },
+        "Original": {
+          "container_generations_retired": 2,
+          "controller_exit": 0,
+          "exact_cleanup": true,
+          "execution_sha256": "884d604b2655c4f8099651fb9d1145e74e44657f8669606aaa89fa363d572182",
+          "independent_cleanup_sha256": "bf630eed0df7d963c123fa027e31e15db8bf6b0d7e2d12d55bd95e4f3e8b9e19",
+          "lane_sha256": "934869c0c7e0aa468613b182b481b44454670f92e61c4ee7bc2632c7f4d512e0"
+        }
+      },
+      "qualification_sha256": "cd8101b33582826f774d11227bd38a789b0b38f5c04e2131a012bc538d032588",
+      "scope": {
+        "actual_origin_fetch_order": [
+          "alpha.xml",
+          "beta.xml"
+        ],
+        "child_results": [
+          null,
+          {
+            "details": [],
+            "scheduled": 0
+          },
+          null,
+          {
+            "details": [],
+            "scheduled": 0
+          }
+        ],
+        "equal_payload_sha256": "d7bd185569c7a083da294bbbff6e03bf4141b3aecbdc7c759543ecf0e60f7213",
+        "guide_rows": {
+          "alpha": {
+            "active": true,
+            "index": true,
+            "programme_titles": [
+              "Owned aggregate programme"
+            ],
+            "status": "success"
+          },
+          "beta": {
+            "active": true,
+            "index": true,
+            "programme_titles": [
+              "Owned aggregate programme"
+            ],
+            "status": "success"
+          },
+          "dummy": {
+            "active": true,
+            "index": false,
+            "programme_titles": [],
+            "status": "idle"
+          },
+          "inactive": {
+            "active": false,
+            "index": false,
+            "programme_titles": [],
+            "status": "idle"
+          }
+        },
+        "ordered_children": [
+          "Index(alpha)",
+          "Series()",
+          "Index(beta)",
+          "Series()"
+        ],
+        "parent_exact_return": "EPG data refreshed.",
+        "parent_hard_soft_limits": [
+          null,
+          null
+        ],
+        "parent_terminal_preceded_child_terminals": true,
+        "periodic_run_count": 1,
+        "remaining_ready_or_reserved": 0
+      }
+    },
+    "individual": {
+      "lanes": {
+        "Native": {
+          "container_generations_retired": 3,
+          "controller_exit": 0,
+          "exact_cleanup": true,
+          "execution_sha256": "4bf274289a10ccc06f2c6192d498f6f31cb2dbf3b881771af1ca1145a5b2dc60",
+          "independent_cleanup_sha256": "fdb638fd4248cf8cfe7aba4df3bb64f75bed74691ee2cd146cf6ac386308577b",
+          "lane_sha256": "2f87fdd922a75a8789e1e75cb1000e4a08ef25a8468a394986c16d2ebd48e24f"
+        },
+        "Original": {
+          "container_generations_retired": 2,
+          "controller_exit": 0,
+          "exact_cleanup": true,
+          "execution_sha256": "6c6d7aca298b446048ecd1908d65d6c46d3216f67ea5b47357af3b05baae473b",
+          "independent_cleanup_sha256": "3bd8cf39ad956341a151905a58707e952cbc8a188b39afba3718d0c07fd5ae5f",
+          "lane_sha256": "dbd7ca896184f898961c6a1cf241ec02aef7b97bc3eeb67fecc3dfcb78456575"
+        }
+      },
+      "qualification_sha256": "cd8101b33582826f774d11227bd38a789b0b38f5c04e2131a012bc538d032588",
+      "scope": {
+        "durable_run_count_delta": 1,
+        "parent_exact_return": null,
+        "parent_hard_soft_limits": [
+          14400,
+          null
+        ],
+        "programmes": [
+          [
+            "Owned scheduled guide programme",
+            "owned-scheduled-tvg"
+          ]
+        ],
+        "remaining_ready_or_reserved": 0,
+        "settled_children": 2
+      }
+    }
+  },
+  "credit": "Original Dispatcharr, Celery and Django authors retain full credit.",
+  "exact_cleanup": true,
+  "full_M6_accepted": false,
+  "native_image": "sha256:049eb37f5f898c09d2fd694d13c7e3be99d9ae0e9354bd4ef34a0f7585bb4fea",
+  "original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "performance_verified": false
+}

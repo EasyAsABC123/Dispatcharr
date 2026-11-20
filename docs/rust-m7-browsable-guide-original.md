@@ -124,3 +124,29 @@ cleanup each exited 0. This qualifies the baseline node on the exact
 image. The coordinator exited 2 with the wider 127-node roster open.
 
 [Redacted packaged Main baseline receipt](../scripts/rust-integration/milestone-batch113/114558-18-suite-baseline.json)
+
+### Standard format alias and admin detail on e0a3c10f
+
+Pinned Original and Native `e0a3c10f` returned HTTP 200 for the Standard list
+with `?format=api` and `Accept: */*`, and the admin programme detail with
+`Accept: text/html` for both a nullable and a populated programme. Each
+profile used fresh masked HTML responses and same-actor JSON controls. The
+Standard list matched the captured Original template. Both detail profiles
+matched the exact Original HTML bytes after substituting the independent
+CSRF mask, with the same rich embedded JSON.
+
+The detail forms preserved null and populated field values, all ten
+canonical path references, and the ordered raw-form JSON. The populated
+row distinguished millisecond truncation from rounding and preserved the
+original non-ASCII text in the UTF-8 textarea. Programme SQL stayed
+unchanged. The controller exited 0 and independently verified retirement
+of all four owned Compose generations.
+
+The first run on `d482e39c` exited 1. The alias, headers, typed JSON, form
+values and cleanup matched. Both detail HTML bodies differed because the
+rich JSON fields appeared in a different order. Reconstructing the four
+retained body hashes offline isolated that difference. The follow-up
+restored the Original serializer order and matched the detail bodies on
+the new package.
+
+[Redacted Standard alias and admin detail receipt](../scripts/rust-epg-contracts/verified-native-guide-detail-alias-e0a3c10f.json)

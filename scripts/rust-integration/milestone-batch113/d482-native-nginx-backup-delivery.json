@@ -1,0 +1,731 @@
+{
+  "archive_bytes": 168,
+  "candidate_build_manifest_sha256": "9fc786b8fdf70775bf4bf9a7239e4e13f9463d00f3d55cff33ca84e3f7c21833",
+  "candidate_image": "sha256:049eb37f5f898c09d2fd694d13c7e3be99d9ae0e9354bd4ef34a0f7585bb4fea",
+  "candidate_revision": "d482e39c5196f3044e91321f58766f1b134f8d25",
+  "credits": "Original Dispatcharr and Django authors retain full credit.",
+  "fresh_original_http_executed": false,
+  "full_milestone_passed": false,
+  "job_execution_verified": false,
+  "native_opt_in_configuration": "USE_NGINX_ACCEL=true",
+  "nginx_fixture_server_tokens": "build",
+  "nginx_fixture_sha256": "a906851cb4a2f1b92d013cb06275e3ae24b59c524e02b80cfa4ee245bfc70525",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_verified": false,
+  "profile_attempts": [
+    {
+      "paired_controller_actual_exit": 1,
+      "profiles": {
+        "accelerated": {
+          "actual_profile_exit": 1,
+          "download_guest_started": false,
+          "exact_cleanup": false,
+          "existing_roles_retired": 4,
+          "harness_failure": "The harness compared the stock image inspect identity with its OCI configuration digest.",
+          "independent_retirement_of_started_roles": true,
+          "profile": "accelerated",
+          "qualified": false,
+          "sidecar_created": false
+        },
+        "direct": {
+          "actual_profile_exit": 0,
+          "archive_preserved": true,
+          "cases": {
+            "ascii": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "latin1": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "unicode-b": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "unicode-q": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            }
+          },
+          "exact_cleanup": true,
+          "independently_retired_roles": [
+            "baseline",
+            "candidate",
+            "data-init",
+            "origin"
+          ],
+          "issue_requests": 4,
+          "native_http_calls": 12,
+          "native_main_exit": 0,
+          "nginx_sidecar_started_and_retired": false,
+          "ordinary_downloads": 8,
+          "phase_exits": {
+            "bootstrap": 0,
+            "cleanup": 0,
+            "native": 0,
+            "native-start": 0,
+            "seed": 0,
+            "stop-native": 0,
+            "stop-original-web": 0
+          },
+          "profile": "direct",
+          "qualified": true,
+          "read_only_archive_mount": true
+        }
+      },
+      "qualified": false
+    },
+    {
+      "paired_controller_actual_exit": 1,
+      "profiles": {
+        "accelerated": {
+          "actual_profile_exit": 1,
+          "download_guest_started": false,
+          "exact_cleanup": false,
+          "existing_roles_retired": 4,
+          "harness_failure": "Unqualified image inspect selected the OCI index instead of the AMD64 manifest.",
+          "independent_retirement_of_started_roles": true,
+          "profile": "accelerated",
+          "qualified": false,
+          "sidecar_created": false
+        },
+        "direct": {
+          "actual_profile_exit": 0,
+          "archive_preserved": true,
+          "cases": {
+            "ascii": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "latin1": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "unicode-b": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "unicode-q": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            }
+          },
+          "exact_cleanup": true,
+          "independently_retired_roles": [
+            "baseline",
+            "candidate",
+            "data-init",
+            "origin"
+          ],
+          "issue_requests": 4,
+          "native_http_calls": 12,
+          "native_main_exit": 0,
+          "nginx_sidecar_started_and_retired": false,
+          "ordinary_downloads": 8,
+          "phase_exits": {
+            "bootstrap": 0,
+            "cleanup": 0,
+            "native": 0,
+            "native-start": 0,
+            "seed": 0,
+            "stop-native": 0,
+            "stop-original-web": 0
+          },
+          "profile": "direct",
+          "qualified": true,
+          "read_only_archive_mount": true
+        }
+      },
+      "qualified": false
+    },
+    {
+      "paired_controller_actual_exit": 1,
+      "profiles": {
+        "accelerated": {
+          "actual_profile_exit": 1,
+          "exact_cleanup": true,
+          "matched_statuses_fixture_branding_difference": {
+            "actual_phase_exits": {
+              "bootstrap": 0,
+              "cleanup": 0,
+              "native": 0,
+              "native-start": 0,
+              "nginx-start": 0,
+              "seed": 0,
+              "stop-native": 0,
+              "stop-nginx": 0,
+              "stop-original-web": 0
+            },
+            "all_12_statuses_match": true,
+            "exact_ascii_downloads": 2,
+            "independently_retired_roles": [
+              "baseline",
+              "candidate",
+              "data-init",
+              "nginx",
+              "origin"
+            ],
+            "matched_issuance": 4,
+            "native_404_bytes": 153,
+            "native_footer": "nginx/1.28.3",
+            "nginx_error_page_branding_only_mismatches": 6,
+            "original_404_bytes": 162,
+            "original_footer": "nginx/1.28.3 (Ubuntu)"
+          },
+          "profile": "accelerated",
+          "qualified": false
+        },
+        "direct": {
+          "actual_profile_exit": 0,
+          "archive_preserved": true,
+          "cases": {
+            "ascii": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "latin1": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "unicode-b": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "unicode-q": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            }
+          },
+          "exact_cleanup": true,
+          "independently_retired_roles": [
+            "baseline",
+            "candidate",
+            "data-init",
+            "origin"
+          ],
+          "issue_requests": 4,
+          "native_http_calls": 12,
+          "native_main_exit": 0,
+          "nginx_sidecar_started_and_retired": false,
+          "ordinary_downloads": 8,
+          "phase_exits": {
+            "bootstrap": 0,
+            "cleanup": 0,
+            "native": 0,
+            "native-start": 0,
+            "seed": 0,
+            "stop-native": 0,
+            "stop-original-web": 0
+          },
+          "profile": "direct",
+          "qualified": true,
+          "read_only_archive_mount": true
+        }
+      },
+      "qualified": false
+    },
+    {
+      "paired_controller_actual_exit": 0,
+      "profiles": {
+        "accelerated": {
+          "actual_profile_exit": 0,
+          "archive_preserved": true,
+          "cases": {
+            "ascii": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "latin1": {
+              "direct": {
+                "body_bytes": 162,
+                "body_matches_archive": false,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 404,
+                "zip_mime": false
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 162,
+                "body_matches_archive": false,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 404,
+                "zip_mime": false
+              }
+            },
+            "unicode-b": {
+              "direct": {
+                "body_bytes": 162,
+                "body_matches_archive": false,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 404,
+                "zip_mime": false
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 162,
+                "body_matches_archive": false,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 404,
+                "zip_mime": false
+              }
+            },
+            "unicode-q": {
+              "direct": {
+                "body_bytes": 162,
+                "body_matches_archive": false,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 404,
+                "zip_mime": false
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 162,
+                "body_matches_archive": false,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 404,
+                "zip_mime": false
+              }
+            }
+          },
+          "exact_cleanup": true,
+          "independently_retired_roles": [
+            "baseline",
+            "candidate",
+            "data-init",
+            "nginx",
+            "origin"
+          ],
+          "issue_requests": 4,
+          "native_http_calls": 12,
+          "native_main_exit": 0,
+          "nginx_sidecar_started_and_retired": true,
+          "ordinary_downloads": 8,
+          "phase_exits": {
+            "bootstrap": 0,
+            "cleanup": 0,
+            "native": 0,
+            "native-start": 0,
+            "nginx-start": 0,
+            "seed": 0,
+            "stop-native": 0,
+            "stop-nginx": 0,
+            "stop-original-web": 0
+          },
+          "profile": "accelerated",
+          "qualified": true,
+          "read_only_archive_mount": true
+        },
+        "direct": {
+          "actual_profile_exit": 0,
+          "archive_preserved": true,
+          "cases": {
+            "ascii": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "latin1": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "unicode-b": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            },
+            "unicode-q": {
+              "direct": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              },
+              "issue": {
+                "complete": true,
+                "status": 200
+              },
+              "signed": {
+                "body_bytes": 168,
+                "body_matches_archive": true,
+                "complete": true,
+                "expected_disposition": true,
+                "internal_redirect_header_exposed": false,
+                "status": 200,
+                "zip_mime": true
+              }
+            }
+          },
+          "exact_cleanup": true,
+          "independently_retired_roles": [
+            "baseline",
+            "candidate",
+            "data-init",
+            "origin"
+          ],
+          "issue_requests": 4,
+          "native_http_calls": 12,
+          "native_main_exit": 0,
+          "nginx_sidecar_started_and_retired": false,
+          "ordinary_downloads": 8,
+          "phase_exits": {
+            "bootstrap": 0,
+            "cleanup": 0,
+            "native": 0,
+            "native-start": 0,
+            "seed": 0,
+            "stop-native": 0,
+            "stop-original-web": 0
+          },
+          "profile": "direct",
+          "qualified": true,
+          "read_only_archive_mount": true
+        }
+      },
+      "qualified": true
+    }
+  ],
+  "retained_original_stock_receipt_sha256": "d878ed16f8a259d2f72e77b61333c331c81cb921dcacb800f052a50b502d2671"
+}

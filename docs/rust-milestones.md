@@ -186,7 +186,9 @@ effects, and exact cleanup on the same packaged candidate.
 
 The [Original aggregate XMLTV run](rust-m6-original-aggregate-xmltv.md) verified
 ordered inline refresh for two active sources, four result-linked descendants
-and exact cleanup. The Rust aggregate and wider M6 gate remain open.
+and exact cleanup. The [paired Rust aggregate and individual XMLTV run](rust-m6-d482-aggregate-xmltv.md)
+matched that workflow and the independent single-source refresh on one exact package.
+The wider M6 gate remains open.
 
 The [735 MPEG-TS functional checks](rust-m9-735-functional-streaming.md) passed
 all three required nodes with verified cleanup. The run covered 24 two-worker

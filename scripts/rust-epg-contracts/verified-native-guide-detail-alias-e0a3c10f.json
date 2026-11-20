@@ -1,0 +1,350 @@
+{
+  "Original_form_formula_receipt_sha256": "cbd3bd74931b29c59941c0f60a9f6785cb1d21944f222898ebfae60aa8321a55",
+  "Original_template_receipt_sha256": "fdfd3475b46197c69a61d103916c74ccfd66ce3ef8aea67231de2f38e1e0217d",
+  "candidate_image_id": "sha256:8c137f5b70447b73afabd69c7e3533b3b9bd904baaed6f41455feb6b57e5fdf2",
+  "candidate_manifest_sha256": "795a7fea395038bbeb2190c7a0d20f1830a6acc968a00ac65d833f27a8046aed",
+  "candidate_revision": "e0a3c10fcacb8bd87e1b9bd0ceaae8693637b6cf",
+  "credit": "Original Dispatcharr, Django and Django REST Framework contributors retain full credit.",
+  "direct_corrected_file": "rust/crates/store/src/epg_reads.rs",
+  "empty_owned_inventories": true,
+  "first_comparison": {
+    "csrf_normalized_admin_detail_mismatches": [
+      {
+        "Native_sha256": "a719c040559aa523930079eab3e5f4f971d2091884f5ab1c41914d43623dec9b",
+        "Original_sha256": "5914a990d53b90a79f5d19453ff403853a48a764150e20ac79141a149be8d4ab",
+        "case": "nullable-utc"
+      },
+      {
+        "Native_sha256": "6156621d56d015b38c3830848d42a7698977f4f2b26b0169304b4a156e24fa12",
+        "Original_sha256": "f99298a7cda42413e9ffa1b939886de198b56a48acb79ceb0ef29833ce614453",
+        "case": "populated-offset-fractional"
+      }
+    ],
+    "exact_offline_hash_reconstruction_sha256": "d0890a5c46beb27f85ec7f7fdc27af55b4a09f96c4d8f9a7f67adf75f6f3d2a3",
+    "first_receipt_sha256": "5b593ec2543932d6eaae6d98039b17b4112422ddb73a498b83b4ff5119237e30",
+    "literal_controller_exit": 1,
+    "owned_cleanup_verified": true,
+    "revision": "d482e39c5196f3044e91321f58766f1b134f8d25",
+    "scoped_passed": false,
+    "standard_alias_matched": true
+  },
+  "fixture_seal_sha256": "2c63c24b5c7876eeadc1f7692a0e3aa26be0c5344776c633662bd416f5afe61c",
+  "literal_controller_exit": 0,
+  "owned_compose_generation_retirements": 4,
+  "pair_receipt_sha256": "538488bed1f6ee1d65876287bf7811ca1f0f57624d2e26b4810be67b1170c6c0",
+  "paired_get_profiles": [
+    {
+      "fresh_independent_masks": true,
+      "matched_HTML": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 11912,
+        "content_length": 11912,
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_header_present": true,
+        "status": 200,
+        "vary": "Accept, origin, Cookie"
+      },
+      "method": "GET",
+      "normalized_template_sha256": "a7e767a2d0b556fe98a622063d0d0a1b793c464055d30b564b94417f40748ecf",
+      "profile": "standard-list-alias",
+      "role": "standard",
+      "same_typed_JSON_in_HTML": true,
+      "typed_JSON_sha256": "3172759ff05949e164a30da7308bcf694d85a9cc4a42fa9365769c0bf1cfb790"
+    },
+    {
+      "csrf_normalized_body_sha256": "5914a990d53b90a79f5d19453ff403853a48a764150e20ac79141a149be8d4ab",
+      "form_relationships": {
+        "canonical_path": {
+          "attributes": {
+            "a.href.absolute.poster/": 1,
+            "a.href.relative.?format=api": 1,
+            "a.href.relative.?format=json": 1,
+            "a.href.relative.bare": 2,
+            "form.action.relative.bare": 4
+          },
+          "text_display": 1,
+          "total": 10
+        },
+        "case": "nullable-utc",
+        "datetime_local": {
+          "end_time": {
+            "equals_rounded_json_wall_clock_milliseconds": true,
+            "equals_truncated_json_wall_clock_milliseconds": true,
+            "form_fraction_digits": 3,
+            "form_has_T": true,
+            "form_has_seconds": true,
+            "form_offset": "none",
+            "json_fraction_digits": 0,
+            "json_has_utc_z": true,
+            "matches_json_except_utc_z": false,
+            "matches_json_through_minute": true,
+            "matches_json_truncated_to_minute": false,
+            "matches_json_with_space_except_utc_z": false,
+            "millisecond_rounding_and_truncation_equal": true
+          },
+          "start_time": {
+            "equals_rounded_json_wall_clock_milliseconds": true,
+            "equals_truncated_json_wall_clock_milliseconds": true,
+            "form_fraction_digits": 3,
+            "form_has_T": true,
+            "form_has_seconds": true,
+            "form_offset": "none",
+            "json_fraction_digits": 0,
+            "json_has_utc_z": true,
+            "matches_json_except_utc_z": false,
+            "matches_json_through_minute": true,
+            "matches_json_truncated_to_minute": false,
+            "matches_json_with_space_except_utc_z": false,
+            "millisecond_rounding_and_truncation_equal": true
+          }
+        },
+        "epg_choice_field_present": false,
+        "html_status": 200,
+        "inputs": {
+          "title": {
+            "contains_line_break": false,
+            "equals_json_null_mapped_to_empty": true,
+            "equals_json_string": true,
+            "exactly_empty": false,
+            "json_is_null": false,
+            "leading_whitespace_characters": 0,
+            "trailing_whitespace_characters": 0
+          },
+          "tvg_id": {
+            "contains_line_break": false,
+            "equals_json_null_mapped_to_empty": true,
+            "equals_json_string": false,
+            "exactly_empty": true,
+            "json_is_null": true,
+            "leading_whitespace_characters": 0,
+            "trailing_whitespace_characters": 0
+          }
+        },
+        "json_status": 200,
+        "method": "GET",
+        "raw_content": {
+          "all_present_values_equal_control_fields": true,
+          "exact_json_indent_2_utf8": false,
+          "exact_json_indent_4_utf8": false,
+          "exact_writable_field_order": false,
+          "exactly_one_LF_then_indent_4_ascii": true,
+          "exactly_one_LF_then_indent_4_utf8": true,
+          "isolated_non_ascii_codepoint_present": false,
+          "leading_line_feed": true,
+          "null_fields": [
+            "sub_title",
+            "description",
+            "tvg_id",
+            "season",
+            "episode"
+          ],
+          "ordered_keys": [
+            "id",
+            "start_time",
+            "end_time",
+            "title",
+            "sub_title",
+            "description",
+            "tvg_id",
+            "season",
+            "episode",
+            "is_new",
+            "is_live",
+            "is_premiere",
+            "is_finale"
+          ],
+          "positive_indent_widths": [
+            4
+          ],
+          "same_json_keys_and_values": false,
+          "trailing_line_feed": false
+        },
+        "role": "admin",
+        "same_typed_JSON_in_HTML": true,
+        "textareas": {
+          "description": {
+            "contains_line_break": false,
+            "equals_json_null_mapped_to_empty": true,
+            "equals_json_string": false,
+            "exactly_empty": true,
+            "json_is_null": true,
+            "leading_whitespace_characters": 0,
+            "trailing_whitespace_characters": 0
+          },
+          "sub_title": {
+            "contains_line_break": false,
+            "equals_json_null_mapped_to_empty": true,
+            "equals_json_string": false,
+            "exactly_empty": true,
+            "json_is_null": true,
+            "leading_whitespace_characters": 0,
+            "trailing_whitespace_characters": 0
+          }
+        }
+      },
+      "fresh_independent_masks": true,
+      "matched_HTML": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 18616,
+        "content_length": 18616,
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_header_present": true,
+        "status": 200,
+        "vary": "Accept, origin, Cookie"
+      },
+      "method": "GET",
+      "profile": "admin-detail-null",
+      "role": "admin",
+      "same_typed_JSON_in_HTML": true,
+      "typed_JSON_sha256": "506531e3f4ffe32f336444b53cef2965615b7d49f691042b606265213b905a1f"
+    },
+    {
+      "csrf_normalized_body_sha256": "f99298a7cda42413e9ffa1b939886de198b56a48acb79ceb0ef29833ce614453",
+      "form_relationships": {
+        "canonical_path": {
+          "attributes": {
+            "a.href.absolute.poster/": 1,
+            "a.href.relative.?format=api": 1,
+            "a.href.relative.?format=json": 1,
+            "a.href.relative.bare": 2,
+            "form.action.relative.bare": 4
+          },
+          "text_display": 1,
+          "total": 10
+        },
+        "case": "populated-offset-fractional",
+        "datetime_local": {
+          "end_time": {
+            "equals_rounded_json_wall_clock_milliseconds": false,
+            "equals_truncated_json_wall_clock_milliseconds": true,
+            "form_fraction_digits": 3,
+            "form_has_T": true,
+            "form_has_seconds": true,
+            "form_offset": "none",
+            "json_fraction_digits": 6,
+            "json_has_utc_z": true,
+            "matches_json_except_utc_z": false,
+            "matches_json_through_minute": true,
+            "matches_json_truncated_to_minute": false,
+            "matches_json_with_space_except_utc_z": false,
+            "millisecond_rounding_and_truncation_equal": false
+          },
+          "start_time": {
+            "equals_rounded_json_wall_clock_milliseconds": false,
+            "equals_truncated_json_wall_clock_milliseconds": true,
+            "form_fraction_digits": 3,
+            "form_has_T": true,
+            "form_has_seconds": true,
+            "form_offset": "none",
+            "json_fraction_digits": 6,
+            "json_has_utc_z": true,
+            "matches_json_except_utc_z": false,
+            "matches_json_through_minute": true,
+            "matches_json_truncated_to_minute": false,
+            "matches_json_with_space_except_utc_z": false,
+            "millisecond_rounding_and_truncation_equal": false
+          }
+        },
+        "epg_choice_field_present": false,
+        "html_status": 200,
+        "inputs": {
+          "title": {
+            "contains_line_break": false,
+            "equals_json_null_mapped_to_empty": true,
+            "equals_json_string": true,
+            "exactly_empty": false,
+            "json_is_null": false,
+            "leading_whitespace_characters": 0,
+            "trailing_whitespace_characters": 0
+          },
+          "tvg_id": {
+            "contains_line_break": false,
+            "equals_json_null_mapped_to_empty": true,
+            "equals_json_string": true,
+            "exactly_empty": false,
+            "json_is_null": false,
+            "leading_whitespace_characters": 1,
+            "trailing_whitespace_characters": 1
+          }
+        },
+        "json_status": 200,
+        "method": "GET",
+        "raw_content": {
+          "all_present_values_equal_control_fields": true,
+          "exact_json_indent_2_utf8": false,
+          "exact_json_indent_4_utf8": false,
+          "exact_writable_field_order": false,
+          "exactly_one_LF_then_indent_4_ascii": false,
+          "exactly_one_LF_then_indent_4_utf8": true,
+          "isolated_non_ascii_codepoint_present": true,
+          "leading_line_feed": true,
+          "null_fields": [
+            "season",
+            "episode"
+          ],
+          "ordered_keys": [
+            "id",
+            "start_time",
+            "end_time",
+            "title",
+            "sub_title",
+            "description",
+            "tvg_id",
+            "season",
+            "episode",
+            "is_new",
+            "is_live",
+            "is_premiere",
+            "is_finale"
+          ],
+          "positive_indent_widths": [
+            4
+          ],
+          "same_json_keys_and_values": false,
+          "trailing_line_feed": false
+        },
+        "role": "admin",
+        "same_typed_JSON_in_HTML": true,
+        "textareas": {
+          "description": {
+            "contains_line_break": true,
+            "equals_json_null_mapped_to_empty": true,
+            "equals_json_string": true,
+            "exactly_empty": false,
+            "json_is_null": false,
+            "leading_whitespace_characters": 1,
+            "trailing_whitespace_characters": 1
+          },
+          "sub_title": {
+            "contains_line_break": false,
+            "equals_json_null_mapped_to_empty": true,
+            "equals_json_string": true,
+            "exactly_empty": false,
+            "json_is_null": false,
+            "leading_whitespace_characters": 2,
+            "trailing_whitespace_characters": 2
+          }
+        }
+      },
+      "fresh_independent_masks": true,
+      "matched_HTML": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 19031,
+        "content_length": 19031,
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_header_present": true,
+        "status": 200,
+        "vary": "Accept, origin, Cookie"
+      },
+      "method": "GET",
+      "profile": "admin-detail-populated",
+      "role": "admin",
+      "same_typed_JSON_in_HTML": true,
+      "typed_JSON_sha256": "8f1575c26b34acd264493b3ff1fdfc536a91f9d46e935951a8773b22c717c247"
+    }
+  ],
+  "pinned_Original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "pinned_Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "programme_SQL_unchanged_both_arms": true,
+  "reviewed_product_paths_from_114558": 20
+}
