@@ -42,3 +42,18 @@ separate physical AIO capture before this direct wire difference can inform
 a production behavior change. Full M5 and performance remain open.
 
 [Redacted direct receipt](../scripts/rust-integration/milestone-batch113/channel-range-direct-head-735.json)
+
+## HEAD through stock nginx
+
+The first Source-only stock AIO run recorded all ten range GETs and
+stopped before recording the first HEAD. Its controller exited 1 and
+verified teardown. The fresh retry used the same explicit loopback Host
+for GET and HEAD and recorded the fifteen selectors through nginx on its
+normal port and uWSGI Unix socket. It exited 0 with exact teardown. The raw
+connection-close capture recorded
+5 empty HEAD bodies out of five. Of these, 5 also matched the
+corresponding Rust status and selected headers from the direct run. The
+stock and direct observations keep their separate fixture and process
+boundaries. Full M5 acceptance and performance remain open.
+
+[Range surface receipt](../scripts/rust-integration/milestone-batch113/channel-range-head-front-door-735.json)

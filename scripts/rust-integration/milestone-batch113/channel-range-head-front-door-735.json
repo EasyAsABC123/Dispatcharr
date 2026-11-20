@@ -1,0 +1,208 @@
+{
+  "cases": [
+    {
+      "case": "anonymous",
+      "direct_raw_bytes_equal": true,
+      "method": "GET",
+      "only_equal_number_order_variance": false,
+      "role": "anonymous",
+      "status": 401
+    },
+    {
+      "case": "viewer-denied",
+      "direct_raw_bytes_equal": true,
+      "method": "GET",
+      "only_equal_number_order_variance": false,
+      "role": "viewer",
+      "status": 403
+    },
+    {
+      "case": "standard-ACL",
+      "direct_raw_bytes_equal": true,
+      "method": "GET",
+      "only_equal_number_order_variance": false,
+      "role": "standard",
+      "status": 200
+    },
+    {
+      "case": "admin-reversed-cap50",
+      "direct_raw_bytes_equal": true,
+      "method": "GET",
+      "only_equal_number_order_variance": false,
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "case": "missing-start-ignores-bad-end",
+      "direct_raw_bytes_equal": true,
+      "method": "GET",
+      "only_equal_number_order_variance": false,
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "case": "empty-start-ignores-bad-end",
+      "direct_raw_bytes_equal": true,
+      "method": "GET",
+      "only_equal_number_order_variance": false,
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "case": "invalid-start-before-invalid-end",
+      "direct_raw_bytes_equal": true,
+      "method": "GET",
+      "only_equal_number_order_variance": false,
+      "role": "admin",
+      "status": 400
+    },
+    {
+      "case": "invalid-end",
+      "direct_raw_bytes_equal": true,
+      "method": "GET",
+      "only_equal_number_order_variance": false,
+      "role": "admin",
+      "status": 400
+    },
+    {
+      "case": "single-fraction-equal-duplicates",
+      "direct_raw_bytes_equal": true,
+      "method": "GET",
+      "only_equal_number_order_variance": false,
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "case": "repeated-last-value",
+      "direct_raw_bytes_equal": true,
+      "method": "GET",
+      "only_equal_number_order_variance": false,
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "case": "anonymous",
+      "direct_original_body_bytes": 58,
+      "direct_rust_body_bytes": 0,
+      "method": "HEAD",
+      "role": "anonymous",
+      "status": 401,
+      "stock_original_body_bytes": 0,
+      "stock_original_body_empty": true,
+      "stock_original_status": 401,
+      "stock_preserved_get_selected_headers": true,
+      "stock_status_equals_rust": true,
+      "stock_vs_rust_selected_header_differences": []
+    },
+    {
+      "case": "viewer-denied",
+      "direct_original_body_bytes": 63,
+      "direct_rust_body_bytes": 0,
+      "method": "HEAD",
+      "role": "viewer",
+      "status": 403,
+      "stock_original_body_bytes": 0,
+      "stock_original_body_empty": true,
+      "stock_original_status": 403,
+      "stock_preserved_get_selected_headers": true,
+      "stock_status_equals_rust": true,
+      "stock_vs_rust_selected_header_differences": []
+    },
+    {
+      "case": "standard-ACL",
+      "direct_original_body_bytes": 1466,
+      "direct_rust_body_bytes": 0,
+      "method": "HEAD",
+      "role": "standard",
+      "status": 200,
+      "stock_original_body_bytes": 0,
+      "stock_original_body_empty": true,
+      "stock_original_status": 200,
+      "stock_preserved_get_selected_headers": true,
+      "stock_status_equals_rust": true,
+      "stock_vs_rust_selected_header_differences": []
+    },
+    {
+      "case": "admin-reversed-cap50",
+      "direct_original_body_bytes": 10161,
+      "direct_rust_body_bytes": 0,
+      "method": "HEAD",
+      "role": "admin",
+      "status": 200,
+      "stock_original_body_bytes": 0,
+      "stock_original_body_empty": true,
+      "stock_original_status": 200,
+      "stock_preserved_get_selected_headers": true,
+      "stock_status_equals_rust": true,
+      "stock_vs_rust_selected_header_differences": []
+    },
+    {
+      "case": "invalid-start-before-invalid-end",
+      "direct_original_body_bytes": 32,
+      "direct_rust_body_bytes": 0,
+      "method": "HEAD",
+      "role": "admin",
+      "status": 400,
+      "stock_original_body_bytes": 0,
+      "stock_original_body_empty": true,
+      "stock_original_status": 400,
+      "stock_preserved_get_selected_headers": true,
+      "stock_status_equals_rust": true,
+      "stock_vs_rust_selected_header_differences": []
+    }
+  ],
+  "direct_GET_qualified_pairs": 10,
+  "direct_HEAD_pairs_with_body_differences": 5,
+  "direct_attempts": [
+    {
+      "actual_controller_exit": 1,
+      "attempt": 1,
+      "exact_cleanup": true,
+      "native_started": false,
+      "raw_terminal_sha256": "16bb10fc66ddb09522c0b6184ccbabf7b0221d679df2085f26ebd1df9989b2c6",
+      "recorded_original_GET": 0,
+      "recorded_original_HEAD": 0
+    },
+    {
+      "actual_controller_exit": 1,
+      "attempt": 2,
+      "exact_cleanup": true,
+      "native_started": false,
+      "raw_terminal_sha256": "1b35a18e3e96b0b0c216974a0b8091241b68fb3d088555425e6791697086a35a",
+      "recorded_original_GET": 10,
+      "recorded_original_HEAD": 0
+    },
+    {
+      "actual_controller_exit": 1,
+      "attempt": 3,
+      "exact_cleanup": true,
+      "native_started": true,
+      "raw_terminal_sha256": "b6aa1fc8885618d06e27a141c57cc5a25c1802db2283caba920b41fb398d00af",
+      "recorded_original_GET": 10,
+      "recorded_original_HEAD": 5
+    }
+  ],
+  "full_M5_accepted": false,
+  "native_image": "sha256:f9ab4d5bd5585cc36f3e117a13dddf3ed617a0a9d195127b7e37ef585cda3e6f",
+  "native_manifest_sha256": "0639e20c76a7891b386dcb97586636646b4b940682b0fe06de15e3d49d4115f8",
+  "native_revision": "735a0299c2cbb705fa8f70112a64582f1bcb106d",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_stock_image": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3",
+  "performance_verified": false,
+  "scope": "ordinary channel number range GET and raw HEAD on direct and stock Original HTTP surfaces",
+  "selected_SQL_unchanged": true,
+  "stock_GET_observations": 10,
+  "stock_HEAD_empty_bodies": 5,
+  "stock_HEAD_observations": 5,
+  "stock_first_attempt": {
+    "actual_exit": 1,
+    "raw_receipt_sha256": "77535213b6f4adafac683e1a6cee8a361326c73ef825d4d79681860f7a5c40dd",
+    "recorded_GET": 10,
+    "recorded_HEAD": 0,
+    "sole_stock_role_retired": true
+  },
+  "stock_source_capture_actual_exit": 0,
+  "stock_source_exact_cleanup": true,
+  "stock_source_raw_receipt_sha256": "37dfd15b229862b5b06255f99f86dc71c949e756132c0f6c4ef220dd2d682e61",
+  "stock_vs_rust_exact_selected_HEAD_pairs": 5
+}
