@@ -1,0 +1,225 @@
+{
+  "Rust_verified": false,
+  "actual_exit": 0,
+  "cases": [
+    {
+      "HTML_DOM": {
+        "document_title": "Program List \u2013 Django REST framework",
+        "dynamic_slots": {
+          "CSRF_MASK": 2,
+          "HOST": 1,
+          "JSON_HTML": 1,
+          "USERNAME": 1
+        },
+        "form_method_counts": {
+          "get": 2,
+          "post": 2
+        },
+        "h1": "Program List",
+        "known_form_fields": [
+          "_content",
+          "description",
+          "end_time",
+          "start_time",
+          "sub_title",
+          "title",
+          "tvg_id"
+        ],
+        "preformatted_blocks": 2,
+        "redacted_template_sha256": "11af4475449f87d99217a25915b97843232755db1d489411fe9754c8c1363f2b",
+        "same_typed_JSON_in_HTML": true
+      },
+      "JSON_control": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 275,
+        "body_sha256": "dcb0d6c591121ce1f22ad3b2a202f5c942a92222c44215c7edfd3a52d78fa941",
+        "content_length": 275,
+        "content_type": "application/json",
+        "csrf_cookie_header_present": false,
+        "status": 200,
+        "typed_programme_sha256": "74e9449bbad09afda347dcd28a75a22d8d88f74ea1f1731ef2eedb95afd1d326",
+        "vary": "Accept, origin"
+      },
+      "accept": "*/*",
+      "case": "admin-format-api",
+      "method": "GET",
+      "observation": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 16159,
+        "body_sha256": "7f4d1318f34aade31e18e295b54b78f3061e4536f37b4410f62d2fc60308d33e",
+        "content_length": 16159,
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_header_present": true,
+        "status": 200,
+        "vary": "Accept, origin, Cookie"
+      },
+      "role": "admin"
+    },
+    {
+      "HTML_DOM": {
+        "document_title": "Program List \u2013 Django REST framework",
+        "dynamic_slots": {
+          "CSRF_MASK": 1,
+          "HOST": 1,
+          "JSON_HTML": 1,
+          "USERNAME": 1
+        },
+        "form_method_counts": {
+          "get": 1
+        },
+        "h1": "Program List",
+        "known_form_fields": [],
+        "preformatted_blocks": 2,
+        "redacted_template_sha256": "a25fcd6f6967b5937638215fe6e0078b8642559d417f4d19d941fed9e16045f1",
+        "same_typed_JSON_in_HTML": true
+      },
+      "JSON_control": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 275,
+        "body_sha256": "dcb0d6c591121ce1f22ad3b2a202f5c942a92222c44215c7edfd3a52d78fa941",
+        "content_length": 275,
+        "content_type": "application/json",
+        "csrf_cookie_header_present": false,
+        "status": 200,
+        "typed_programme_sha256": "74e9449bbad09afda347dcd28a75a22d8d88f74ea1f1731ef2eedb95afd1d326",
+        "vary": "Accept, origin"
+      },
+      "accept": "text/html",
+      "case": "standard-html-list",
+      "method": "GET",
+      "observation": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 11162,
+        "body_sha256": "2744e5789f1ddb821fa3d1bbf9ecc6bfcdb6dc5dca9e7407c2c2710861d8de94",
+        "content_length": 11162,
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_header_present": true,
+        "status": 200,
+        "vary": "Accept, origin, Cookie"
+      },
+      "role": "standard"
+    },
+    {
+      "HTML_DOM": {
+        "document_title": "Program Instance \u2013 Django REST framework",
+        "dynamic_slots": {
+          "CSRF_MASK": 1,
+          "FORM_VALUE": 3,
+          "HOST": 1,
+          "JSON_HTML": 1,
+          "OWNED_DETAIL_PATH": 10,
+          "USERNAME": 1
+        },
+        "form_method_counts": {
+          "get": 5
+        },
+        "h1": "Program Instance",
+        "known_form_fields": [
+          "_content",
+          "description",
+          "end_time",
+          "start_time",
+          "sub_title",
+          "title",
+          "tvg_id"
+        ],
+        "preformatted_blocks": 2,
+        "redacted_template_sha256": "5cbb0559a7638a8bb145141b4c7ad68adef9fc3fe8389f287cc1dd1f3c2a80d1",
+        "same_typed_JSON_in_HTML": true
+      },
+      "JSON_control": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 774,
+        "body_sha256": "72df3a20ac66d907b95c9b34d561a7590682941cc1b0307c3431c52532ff5575",
+        "content_length": 774,
+        "content_type": "application/json",
+        "csrf_cookie_header_present": false,
+        "status": 200,
+        "typed_programme_sha256": "efc5df82de4feadee73932ff66e2c009bff11029b2a26d4b3868ce1d898dc891",
+        "vary": "Accept, origin"
+      },
+      "accept": "text/html",
+      "case": "admin-html-detail",
+      "method": "GET",
+      "observation": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 18686,
+        "body_sha256": "2ae6718f7948ae1632c33ce8151e55de0cfb7dd25248885cf12d454c093b9a5b",
+        "content_length": 18686,
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_header_present": true,
+        "status": 200,
+        "vary": "Accept, origin, Cookie"
+      },
+      "role": "admin"
+    },
+    {
+      "case": "admin-list-head",
+      "method": "HEAD",
+      "representations": {
+        "application/json": {
+          "GET_control": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 275,
+            "body_sha256": "dcb0d6c591121ce1f22ad3b2a202f5c942a92222c44215c7edfd3a52d78fa941",
+            "content_length": 275,
+            "content_type": "application/json",
+            "csrf_cookie_header_present": false,
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          "HEAD": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 275,
+            "body_sha256": "dcb0d6c591121ce1f22ad3b2a202f5c942a92222c44215c7edfd3a52d78fa941",
+            "content_length": 275,
+            "content_type": "application/json",
+            "csrf_cookie_header_present": false,
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          "HEAD_declared_length_equals_GET_body": true,
+          "HEAD_raw_wire_body_empty": false,
+          "HEAD_status_and_type_match_GET": true
+        },
+        "text/html": {
+          "GET_control": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 16060,
+            "body_sha256": "2a7ccb58a774becba8b53dac640ada22e7852ff848edad8c54ba5c8c1f1904d8",
+            "content_length": 16060,
+            "content_type": "text/html; charset=utf-8",
+            "csrf_cookie_header_present": true,
+            "status": 200,
+            "vary": "Accept, origin, Cookie"
+          },
+          "HEAD": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 16061,
+            "body_sha256": "75069d80b59e0e8ece9ce202260fad7342d0c97cc45085cbba8543fd8ea43903",
+            "content_length": 16061,
+            "content_type": "text/html; charset=utf-8",
+            "csrf_cookie_header_present": true,
+            "status": 200,
+            "vary": "Accept, origin, Cookie"
+          },
+          "HEAD_declared_length_equals_GET_body": false,
+          "HEAD_raw_wire_body_empty": false,
+          "HEAD_status_and_type_match_GET": true
+        }
+      },
+      "role": "admin"
+    }
+  ],
+  "credit": "The original Dispatcharr, Django and Django REST Framework contributors retain full credit.",
+  "exact_owned_generations_retired": 2,
+  "fixture_seal_sha256": "4237b8700449efe028351ab8dc4c74470abca38f99ba9c29dc2e3b839a04fc24",
+  "head_raw_tcp_stream_observed": true,
+  "original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "performance_verified": false,
+  "private_receipt_sha256": "53e16560b2cfe9351184d17bf281238c491b8ec518ce628257b3d0c3f2da4bed",
+  "programme_SQL_unchanged": true,
+  "scope": "pinned Original Guide grouped normal authenticated list and detail over Django uWSGI TCP"
+}

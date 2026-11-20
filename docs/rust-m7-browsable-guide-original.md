@@ -52,3 +52,31 @@ records 17 passes on its own package.
 
 [Programme JSON and HEAD receipt](../scripts/rust-integration/milestone-batch113/programme-json-head-81ce.json)
 [Packaged baseline receipt](../scripts/rust-integration/milestone-batch113/81ce-18-suite-baseline.json)
+
+## Other Original Guide representations
+
+Three additional requests returned HTTP 200 from pinned Original through
+the isolated Django uWSGI listener. Each HTML response embedded the same
+typed programme data as its JSON control using the same actor.
+
+| Request | HTML bytes | Observed document |
+| --- | ---: | --- |
+| Admin list with `?format=api` | 16,159 | Program List with two POST forms and two masked CSRF slots |
+| Standard user HTML list | 11,162 | Program List with one masked CSRF slot and a single form marked GET |
+| Admin HTML detail | 18,686 | Program Instance with ten detail-path slots and three populated form-value slots |
+
+The detail response advertised `GET, PUT, PATCH, DELETE, HEAD, OPTIONS`.
+The requests only read one owned programme and left the programme rows
+unchanged.
+
+The same stock uWSGI listener sent bytes after the HEAD response headers
+under a close-delimited HTTP/1.0 request. JSON HEAD returned the same 275
+bytes and digest as the matching GET. HTML HEAD declared and sent 16,061
+bytes, while the matching GET sent 16,060. Both HEAD responses matched the
+corresponding GET status and media type. The fixture read the underlying
+stream and verified retirement of both owned Compose generations.
+
+The grouped receipt covers Original. Rust rendering of these variants,
+stock nginx HEAD framing, browser workflows and performance remain open.
+
+[Redacted grouped Original receipt](../scripts/rust-epg-contracts/verified-original-browsable-guide-variants-1.json)
