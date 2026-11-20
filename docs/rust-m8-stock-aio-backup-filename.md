@@ -54,3 +54,25 @@ Backup creation, restore, wider M8 acceptance and comparative performance
 remain open.
 
 [Exact Native comparison receipt](../scripts/rust-integration/milestone-batch113/735-stock-backup-filename-comparison.json)
+
+## Stock upstream redirect witness
+
+A fresh run on the same stock AIO package and disposable UTF-8 fixture
+observed both the configured uWSGI upstream and the actual nginx
+frontend. The upstream GETs were separate authorized counterparts of
+the same four ordinary admin and signed filenames. The app and
+frontend configurations were unchanged. All eight upstream downloads
+returned HTTP 200 with ZIP metadata and Django's redirect bytes.
+
+The ASCII redirect named the on-disk file. The Latin-1 redirect named
+the protected alias but differed from the file's UTF-8 pathname bytes.
+The two beyond-Latin-1 redirects were MIME encoded and did not name the
+protected alias. nginx returned the exact ZIP for both ASCII requests
+and the complete HTML 404 for all six non-ASCII requests. It retained
+the expected disposition without exposing the internal redirect.
+Token issuance returned 200 for all four names.
+
+The stock deployment's nginx path and the earlier streaming path have
+separate receipts. This run leaves modular runtime and Native
+accelerated delivery unqualified. All owned resources retired.
+[Redacted stock pairing receipt](../scripts/rust-integration/milestone-batch113/stock-aio-backup-redirect-witness.json)
