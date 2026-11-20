@@ -95,7 +95,10 @@ def main():
     parser.add_argument('--native-grid-wire', action='store_true', help='Draft actual original/native-network guide replay with real clocks and strict expiry/hour guards')
     parser.add_argument('--candidate-grid-wire', action='store_true', help='Compare actual unpatched original/native packaged grid network replies')
     parser.add_argument('--current-file-multipart', action='store_true', help='Include five current-programme multipart file cases')
+    parser.add_argument('--current-proven-empty', action='store_true', help='Select only proven current-programme no-file misses and a stored-row control')
     args = parser.parse_args()
+    if args.current_proven_empty and (not args.candidate_current or args.current_multipart):
+        parser.error('current-proven-empty requires candidate-current without multipart variants')
     if args.current_file_multipart and not args.current_multipart:
         parser.error('current-file-multipart requires current-multipart')
     if args.current_multipart and not args.candidate_current:
@@ -385,6 +388,8 @@ def main():
                     current_environment = ['-e', 'CURRENT_MULTIPART_CAPTURE=1'] if args.current_multipart else []
                     if args.current_file_multipart:
                         current_environment += ['-e', 'CURRENT_FILE_MULTIPART_CAPTURE=1']
+                    if args.current_proven_empty:
+                        current_environment += ['-e', 'CURRENT_PROVEN_EMPTY_CAPTURE=1']
                     wire=command(compose+['exec','-T',*current_environment,'baseline','/dispatcharrpy/bin/python','-'],timeout=180,
                                  body=(tools/'scripts/rust-epg-contracts/current_wire_source.py').read_text())
                     (output/'current-wire-source-worker.log').write_text(wire.stderr)
@@ -393,6 +398,12 @@ def main():
                 command(compose+['up','-d','--no-build','candidate'])
                 candidate_id=command(compose+['ps','-q','candidate']).stdout.strip()
                 inspected=json.loads(command(['docker','inspect',candidate_id]).stdout)[0]
+                if args.current_proven_empty:
+                    current_env = dict(line.split('=', 1) for line in inspected['Config'].get('Env', []))
+                    if any(current_env.get(key, '0') != '0' for key in
+                           ('RUST_EPG_REFRESH_ENABLED', 'RUST_EXPERIMENTAL_SELECTED_JOBS')):
+                        raise RuntimeError('No-file scope requires ordinary SQL-only Main')
+                    report['native_current_sql_only'] = True
                 adapter=load(tools/'scripts/rust-playback-baseline/run.py','epg_candidate_provenance')
                 manifest_bytes=args.build_manifest.read_bytes()
                 source_hash=adapter.validate_build_manifest(json.loads(manifest_bytes),inspected['Image'],

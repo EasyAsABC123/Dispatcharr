@@ -175,12 +175,17 @@ fn retain_bytes(used: &mut usize, bytes: Option<&[u8]>, maximum: usize) -> Resul
         .ok_or_else(capacity)?;
     Ok(())
 }
+fn needs_current_file(source_type: Option<&str>, tvg_id: Option<&str>) -> bool {
+    !matches!(source_type, None | Some("dummy" | "schedules_direct"))
+        && tvg_id.is_some_and(|value| !value.is_empty())
+}
+
 impl Store {
     /// Bounded serialized DB-selection component. Caller must retain worker
     /// admission and final byte-allocation ownership before HTTP wiring. The
     /// transaction drains rollback before a completed call releases SQL work.
-    /// Real EPG entries without stored rows require the unfinished byte index;
-    /// they are never silently omitted as an empty result.
+    /// Omit a missing programme when Source would skip file lookup.
+    /// Other file-backed misses need the owned byte-offset lookup.
     pub async fn current_programmes_db(
         &self,
         selection: CurrentProgramSelection,
@@ -276,7 +281,7 @@ async fn select_current(
             if ids.len() > 50 {
                 return Err(capacity());
             }
-            let mut query=QueryBuilder::<Postgres>::new("SELECT d.id::bigint AS id,s.source_type FROM epg_epgdata d LEFT JOIN epg_epgsource s ON s.id=d.epg_source_id WHERE d.id IN (");
+            let mut query=QueryBuilder::<Postgres>::new("SELECT d.id::bigint AS id,d.tvg_id,s.source_type FROM epg_epgdata d LEFT JOIN epg_epgsource s ON s.id=d.epg_source_id WHERE d.id IN (");
             let mut separated = query.separated(",");
             let mut seen = HashSet::new();
             for id in ids {
@@ -316,11 +321,14 @@ async fn select_current(
                 let id = entry.get::<i64, _>("id");
                 if let Some(base) = first.remove(&id) {
                     output.append(&base, "epg_data_id", &json!(id))?;
-                } else if entry.get::<Option<String>, _>("source_type").as_deref() != Some("dummy")
-                {
-                    return Err(StoreError::Unsupported(
-                        "Current programme byte-offset fallback is not yet implemented",
-                    ));
+                } else {
+                    let source_type = entry.try_get::<Option<&str>, _>("source_type")?;
+                    let tvg_id = entry.try_get::<Option<&str>, _>("tvg_id")?;
+                    if needs_current_file(source_type, tvg_id) {
+                        return Err(StoreError::Unsupported(
+                            "Current programme byte-offset fallback is not yet implemented",
+                        ));
+                    }
                 }
             }
         }
@@ -403,5 +411,16 @@ mod tests {
             CurrentProgramSelection::from_json(&Value::Null),
             Err(StoreError::StatusBody(500, _))
         ));
+    }
+
+    #[test]
+    fn only_file_lookup_possible_misses_are_deferred() {
+        assert!(!needs_current_file(None, Some("owned")));
+        assert!(!needs_current_file(Some("dummy"), Some("owned")));
+        assert!(!needs_current_file(Some("schedules_direct"), Some("owned")));
+        assert!(!needs_current_file(Some("xmltv"), None));
+        assert!(!needs_current_file(Some("xmltv"), Some("")));
+        assert!(needs_current_file(Some("xmltv"), Some("owned")));
+        assert!(needs_current_file(Some("xmltv"), Some(" ")));
     }
 }
