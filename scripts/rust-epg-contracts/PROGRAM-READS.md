@@ -42,7 +42,7 @@ Large populated guides, playback during guide reads/refresh, delayed database
 network replies and failure/shutdown recovery need their own Compose workloads.
 No full M5 or application performance acceptance follows from this gate.
 
-Browsable HTML remains an explicit501 guard. The complete Accept/format grammar,
+Browsable HTML remains an explicit501 guard. The [Original TCP capture](../../docs/rust-m7-browsable-guide-original.md) records the browsable list response. The complete Accept/format grammar,
 OPTIONS metadata, programme writes/poster images, guide grid/current/search and
 unchanged React guide workflows remain separate implementation/test gates.
 `probe_programs.py` replays the37-case JSON/HEAD family against a packaged URL,
