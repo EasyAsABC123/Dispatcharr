@@ -1,0 +1,335 @@
+{
+  "active_journal_sha256": "cf5ce4faf13851c5cb0952aacb17a33be85f1749cbb146dbec07f7ca7770c950",
+  "active_provider_slots": 1,
+  "active_seconds": 7200,
+  "actual_exit": 0,
+  "candidate": {
+    "first_refresh_predecessor_receipt_sha256": "7ff0f9b53a1077707dbbad5e31d1ef4ba7e1a920997502416ef2c3eac867d2d2",
+    "image": "sha256:871ef32edb0cbaae81d905f8821f76cdeeb3422d93cea28a1965fff1ba914fd2",
+    "original_fixture_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "package_manifest_sha256": "d7e799045652e3aa905913ee0d5ffebab0e86d10262893dc9e3befa9d2d684a4",
+    "revision": "aa25a625492c7277672ac15c3663f8fa9e2181a7",
+    "runtime_recipe_sha256": "e6a8dc47afc4941fa9a343f45b05b317a76d2e6016976c333d593a224d668e07",
+    "short_predecessor_receipt_sha256": "74596cbe69cdad6a3ba7d0b567bf2ec5765d5bf20555edf5248e54445442de34",
+    "source_tree_sha256": "1130486393d87caf3f8a8bad0657cc01c55efa78e0685de4ad332ad1376c9336"
+  },
+  "controller_state_sha256": "032987ce6e1bad4b440e9f2dcd70b0a60310c44251a23d1b50239ecf767a08f2",
+  "decodes": {
+    "actual_av_decodes": 140,
+    "clips_per_viewer": 14,
+    "observed_startup_p95_ms": 6318.736756991711,
+    "viewers": 10
+  },
+  "default_worker_activation_claimed": false,
+  "full_M9_passed": false,
+  "independent_cleanup": {
+    "cgroup_roles": [
+      "baseline",
+      "candidate",
+      "origin",
+      "relay"
+    ],
+    "owned_container_generations_absent": 5,
+    "sha256": "651e2920592435f97b86506f853a478278e1a0e0203bac2b2ef17c851343467e"
+  },
+  "integration_sha256": "19e75711b94596deee37bc1bf6ad7031a501bec500ae78359ca93f1004ab1a10",
+  "minimum_observed_reader_media_bytes_per_complete_minute": 8955380,
+  "old_encoder_and_viewer_provider_state_retired": true,
+  "paired_performance_claimed": false,
+  "receipt_sha256": "52d1f4f3ac911f6fa902f3efa39007b3859ba60a83f0872d2767bfba656ec076",
+  "refreshes": {
+    "count": 12,
+    "longest_observed_terminal_seconds": 0.232826713,
+    "offsets_seconds": [
+      300,
+      900,
+      1500,
+      2100,
+      2700,
+      3300,
+      3900,
+      4500,
+      5100,
+      5700,
+      6300,
+      6900
+    ]
+  },
+  "release_eligible": false,
+  "resource_observations": {
+    "active_complete_censuses": 121,
+    "active_counter_ticks": 1441,
+    "post_idle_censuses": 11,
+    "post_idle_descriptor_process_thread_growth": {
+      "file_descriptors": -213,
+      "processes": -2,
+      "socket_descriptors": -58,
+      "threads": -3
+    },
+    "post_idle_working_memory_ceiling_bytes": 67108864,
+    "post_idle_working_memory_growth_bytes": 24563712,
+    "pre_idle_censuses": 11,
+    "thirty_minute_blocks": [
+      {
+        "aggregate_working_memory_delta_bytes": 9641984,
+        "aggregate_working_memory_slope_bytes_per_minute": 321399.4666666667,
+        "census_maxima": {
+          "file_descriptors": 753,
+          "processes": 21,
+          "socket_descriptors": 135,
+          "tcp_time_wait": 40,
+          "threads": 85
+        },
+        "end_second": 1800,
+        "roles": {
+          "baseline": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.77922358777899,
+              "cpu_usage_usec": 14026025,
+              "elapsed_seconds": 1800.0000538970053,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 21,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 253652992
+          },
+          "candidate": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.9258162716529854,
+              "cpu_usage_usec": 16664693,
+              "elapsed_seconds": 1800.0000119080069,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 9,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 47910912
+          },
+          "origin": {
+            "cpu_delta": {
+              "cpu_percent_mean": 2.1359540036192484,
+              "cpu_usage_usec": 38447172,
+              "elapsed_seconds": 1799.9999969500059,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 42,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 74616832
+          },
+          "relay": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.18995022421237354,
+              "cpu_usage_usec": 3419104,
+              "elapsed_seconds": 1799.9999811409944,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 14,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 14786560
+          }
+        },
+        "start_second": 0
+      },
+      {
+        "aggregate_working_memory_delta_bytes": 954368,
+        "aggregate_working_memory_slope_bytes_per_minute": 31812.266666666666,
+        "census_maxima": {
+          "file_descriptors": 236,
+          "processes": 14,
+          "socket_descriptors": 75,
+          "tcp_time_wait": 29,
+          "threads": 79
+        },
+        "end_second": 3600,
+        "roles": {
+          "baseline": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.7745379331481365,
+              "cpu_usage_usec": 13941682,
+              "elapsed_seconds": 1799.9998971430032,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 18,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 259178496
+          },
+          "candidate": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.9323013390864338,
+              "cpu_usage_usec": 16781423,
+              "elapsed_seconds": 1799.9998816309962,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 9,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 47149056
+          },
+          "origin": {
+            "cpu_delta": {
+              "cpu_percent_mean": 2.1288214815478064,
+              "cpu_usage_usec": 38318784,
+              "elapsed_seconds": 1799.9998746789934,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 42,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 74293248
+          },
+          "relay": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.18942707041221438,
+              "cpu_usage_usec": 3409687,
+              "elapsed_seconds": 1799.99985882701,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 14,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 14643200
+          }
+        },
+        "start_second": 1800
+      },
+      {
+        "aggregate_working_memory_delta_bytes": -1060864,
+        "aggregate_working_memory_slope_bytes_per_minute": -35362.13333333333,
+        "census_maxima": {
+          "file_descriptors": 246,
+          "processes": 15,
+          "socket_descriptors": 77,
+          "tcp_time_wait": 29,
+          "threads": 80
+        },
+        "end_second": 5400,
+        "roles": {
+          "baseline": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.7856282044456419,
+              "cpu_usage_usec": 14141308,
+              "elapsed_seconds": 1800.0000407289917,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 18,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 254447616
+          },
+          "candidate": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.945007241232246,
+              "cpu_usage_usec": 17010131,
+              "elapsed_seconds": 1800.0000696100033,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 9,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 47427584
+          },
+          "origin": {
+            "cpu_delta": {
+              "cpu_percent_mean": 2.125233457015556,
+              "cpu_usage_usec": 38254204,
+              "elapsed_seconds": 1800.0000834600069,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 42,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 74792960
+          },
+          "relay": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.18854409923168156,
+              "cpu_usage_usec": 3393794,
+              "elapsed_seconds": 1800.0001134109916,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 14,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 14417920
+          }
+        },
+        "start_second": 3600
+      },
+      {
+        "aggregate_working_memory_delta_bytes": -1097728,
+        "aggregate_working_memory_slope_bytes_per_minute": -36590.933333333334,
+        "census_maxima": {
+          "file_descriptors": 236,
+          "processes": 14,
+          "socket_descriptors": 75,
+          "tcp_time_wait": 29,
+          "threads": 79
+        },
+        "end_second": 7200,
+        "roles": {
+          "baseline": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.7828369215003623,
+              "cpu_usage_usec": 14091065,
+              "elapsed_seconds": 1800.0000527560042,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 18,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 255696896
+          },
+          "candidate": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.9481989883871952,
+              "cpu_usage_usec": 17067582,
+              "elapsed_seconds": 1800.000022045002,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 9,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 47570944
+          },
+          "origin": {
+            "cpu_delta": {
+              "cpu_percent_mean": 2.1192636581837223,
+              "cpu_usage_usec": 38146746,
+              "elapsed_seconds": 1800.0000072050025,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 42,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 74797056
+          },
+          "relay": {
+            "cpu_delta": {
+              "cpu_percent_mean": 0.18735111517517208,
+              "cpu_usage_usec": 3372320,
+              "elapsed_seconds": 1799.99996095401,
+              "throttled_period_fraction": 0.0,
+              "throttled_usec": 0
+            },
+            "peak_observed_pids": 14,
+            "peak_observed_swap_bytes": 0,
+            "peak_observed_working_memory_bytes": 14716928
+          }
+        },
+        "start_second": 5400
+      }
+    ]
+  },
+  "role_counters_sha256": "43b355495fcb96badc54e39c9e000aed0e4275779223c80b08ee3b01972b9203",
+  "rollback_or_production_rollout_claimed": false,
+  "schema_version": 1,
+  "scope": "Native refresh-opt-in 7200s one-channel shared H.264/AAC playback",
+  "scoped_passed": true,
+  "simultaneous_viewers": 10,
+  "unchanged_active_upstream_and_encoder": 1,
+  "warmup_seconds": 30
+}

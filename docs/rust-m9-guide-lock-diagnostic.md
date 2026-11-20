@@ -36,3 +36,18 @@ of all five owned service generations. The directed controls and both
 controller exits were 0. The two-hour qualification has its own receipt.
 
 [Candidate110 directed and playback evidence](../scripts/rust-integration/milestone-batch109/c110-guide-lock.json)
+
+## Two-hour playback and refresh soak
+
+The exact Candidate110 package completed 7,200 active seconds with guide
+refresh enabled. Ten viewers shared one upstream connection, encoder, and
+provider slot through all twelve scheduled guide refreshes. The independent
+checker verified 140 actual audio/video decodes, 1,441 counter samples,
+121 complete active resource censuses, and retirement of all five owned
+service generations. Median working memory rose 23.4 MiB between
+the pre- and post-idle windows, within the 64 MiB allowance. The
+controller exited 0.
+
+The result qualifies this one-channel soak with guide refresh enabled.
+Full M9 still requires the integrated release matrix and rollback gates.
+[Two-hour soak receipt](../scripts/rust-integration/milestone-batch109/c110-soak7200.json)
