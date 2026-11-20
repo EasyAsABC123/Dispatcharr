@@ -49,6 +49,14 @@ impl ProducerIdentitySource {
         args: &serde_json::Value,
         kwargs: &serde_json::Value,
     ) -> Result<(String, String), StoreError> {
+        Self::periodic_value_representations(args, kwargs)
+    }
+
+    /// Pure Beat argument formatting for settings-only callers.
+    pub fn periodic_value_representations(
+        args: &serde_json::Value,
+        kwargs: &serde_json::Value,
+    ) -> Result<(String, String), StoreError> {
         Ok((
             crate::celery_metadata::periodic_arguments(args)?,
             crate::celery_metadata::keywords(kwargs)?,

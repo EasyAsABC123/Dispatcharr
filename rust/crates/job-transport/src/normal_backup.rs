@@ -75,7 +75,6 @@ impl Application {
                 schedule: crate::normal_backup_schedule::Schedule::new(
                     store.clone(),
                     cache.clone(),
-                    identity.clone(),
                 ),
                 schedule_auth: auth.clone(),
                 executor: Executor::prepare(store, auth, cache, config, runtime, root, scratch)

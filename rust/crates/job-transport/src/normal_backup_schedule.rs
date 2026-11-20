@@ -27,11 +27,12 @@ fn truth(v: &Value) -> bool {
         Value::Object(v) => !v.is_empty(),
     }
 }
-fn text(v: &Value, identity: &ProducerIdentitySource) -> Result<String, StoreError> {
+fn text(v: &Value) -> Result<String, StoreError> {
     if let Some(v) = v.as_str() {
         return Ok(v.to_string());
     }
-    let (args, _) = identity.periodic_representations(&json!([v]), &json!({}))?;
+    let (args, _) =
+        ProducerIdentitySource::periodic_value_representations(&json!([v]), &json!({}))?;
     Ok(args[1..args.len() - 1].to_string())
 }
 fn integer(v: &Value) -> Result<i64, StoreError> {
@@ -51,26 +52,21 @@ fn integer(v: &Value) -> Result<i64, StoreError> {
         _ => Err(invalid("Invalid schedule integer")),
     }
 }
-fn normalized(v: &Value, identity: &ProducerIdentitySource) -> Result<Value, StoreError> {
+fn normalized(v: &Value) -> Result<Value, StoreError> {
     let d = defaults();
     let get = |key: &str| v.get(key).unwrap_or(&d[key]);
     Ok(
-        json!({"enabled":truth(get("schedule_enabled")),"frequency":text(get("schedule_frequency"),identity)?,"time":text(get("schedule_time"),identity)?,"day_of_week":integer(get("schedule_day_of_week"))?,"retention_count":integer(get("retention_count"))?,"cron_expression":text(get("schedule_cron_expression"),identity)?}),
+        json!({"enabled":truth(get("schedule_enabled")),"frequency":text(get("schedule_frequency"))?,"time":text(get("schedule_time"))?,"day_of_week":integer(get("schedule_day_of_week"))?,"retention_count":integer(get("retention_count"))?,"cron_expression":text(get("schedule_cron_expression"))?}),
     )
 }
 #[derive(Clone)]
 pub(crate) struct Schedule {
     store: Store,
     cache: String,
-    identity: ProducerIdentitySource,
 }
 impl Schedule {
-    pub(crate) fn new(store: Store, cache: String, identity: ProducerIdentitySource) -> Self {
-        Self {
-            store,
-            cache,
-            identity,
-        }
+    pub(crate) fn new(store: Store, cache: String) -> Self {
+        Self { store, cache }
     }
     pub(crate) async fn initialize(&self, owner: Arc<dyn Send + Sync>) -> Result<(), StoreError> {
         self.apply(None, owner, None, false).await.map(|_| ())
@@ -117,7 +113,7 @@ impl Schedule {
     if let Some(v)=fields.get("retention_count"){if integer(v)?<0{return Err(invalid("retention_count must be >= 0"))}}
     let map=value.as_object_mut().ok_or_else(||failed("Backup settings unavailable"))?;
     for(from,to)in[("enabled","schedule_enabled"),("frequency","schedule_frequency"),("time","schedule_time"),("day_of_week","schedule_day_of_week"),("retention_count","retention_count"),("cron_expression","schedule_cron_expression")]{
-     if let Some(v)=fields.get(from){let converted=match from{"enabled"=>json!(truth(v)),"day_of_week"|"retention_count"=>json!(integer(v)?),_=>json!(text(v,&self.identity)?)};map.insert(to.to_string(),converted);}
+     if let Some(v)=fields.get(from){let converted=match from{"enabled"=>json!(truth(v)),"day_of_week"|"retention_count"=>json!(integer(v)?),_=>json!(text(v)?)};map.insert(to.to_string(),converted);}
     }
     // Source commits the setting before periodic sync; a later invalid cron is
     // not grounds to fabricate rollback of the already committed setting.
@@ -147,7 +143,7 @@ impl Schedule {
         if let Some(auth) = backup_cache_after_save {
             auth.backup_schedule_settings_saved().await?;
         }
-        let config = normalized(&value, &self.identity)?;
+        let config = normalized(&value)?;
         let canonical = if config["enabled"] == json!(false) {
             "UTC"
         } else {
@@ -178,7 +174,7 @@ impl Schedule {
     let parts=expression.split_whitespace().collect::<Vec<_>>();if parts.len()!=5{return Err(invalid("Cron expression must have 5 parts: minute hour day month weekday"))}
     let found:Option<i64>=sqlx::query_scalar("SELECT id::bigint FROM django_celery_beat_crontabschedule WHERE minute=$1 AND hour=$2 AND day_of_month=$3 AND month_of_year=$4 AND day_of_week=$5 AND timezone=$6 ORDER BY id LIMIT 1").bind(parts[0]).bind(parts[1]).bind(parts[2]).bind(parts[3]).bind(parts[4]).bind(canonical).fetch_optional(&mut *tx).await?;
     let cron=match found{Some(id)=>id,None=>sqlx::query_scalar("INSERT INTO django_celery_beat_crontabschedule(minute,hour,day_of_month,month_of_year,day_of_week,timezone) VALUES($1,$2,$3,$4,$5,$6) RETURNING id::bigint").bind(parts[0]).bind(parts[1]).bind(parts[2]).bind(parts[3]).bind(parts[4]).bind(canonical).fetch_one(&mut *tx).await?};
-    let kwargs=serde_json::to_string(&json!({"retention_count":config["retention_count"]})).map_err(|_|failed("Backup schedule serialization"))?;
+    let kwargs=retention_kwargs(&config["retention_count"])?;
     sqlx::query("INSERT INTO django_celery_beat_periodictask(name,task,crontab_id,args,kwargs,headers,enabled,total_run_count,date_changed,description,one_off) VALUES('backup-scheduled-task','apps.backups.tasks.scheduled_backup_task',$1,'[]',$2,'{}',true,0,$3,'',false) ON CONFLICT(name) DO UPDATE SET task=EXCLUDED.task,crontab_id=EXCLUDED.crontab_id,interval_id=NULL,kwargs=EXCLUDED.kwargs,enabled=true,date_changed=EXCLUDED.date_changed").bind(cron).bind(kwargs).bind(chrono::Utc::now()).execute(&mut *tx).await?;
    }
    if let Some((_,interval,cron))=old{
@@ -231,13 +227,30 @@ fn ordinary_disable_request(data: &Value, missing_row: bool) -> bool {
         && data["cron_expression"].is_string()
 }
 
+fn retention_kwargs(retention: &Value) -> Result<String, StoreError> {
+    let count = retention
+        .as_i64()
+        .ok_or_else(|| failed("Backup schedule serialization"))?;
+    Ok(format!("{{\"retention_count\": {count}}}"))
+}
+
+/// Apply ordinary Original backup settings initialization without a worker,
+/// scheduler loop or job transport.
+pub async fn initialize_operator_backup_schedule(
+    store: Store,
+    cache: String,
+    owner: Arc<dyn Send + Sync>,
+) -> Result<(), StoreError> {
+    Schedule::new(store, cache).initialize(owner).await
+}
+
 /// Owned settings-only adapter. Its constructor does not start a worker or
 /// synchronize schedules on startup.
 pub struct BackupScheduleDisable(Schedule);
 
 impl BackupScheduleDisable {
-    pub fn new(store: Store, cache: String, identity: ProducerIdentitySource) -> Self {
-        Self(Schedule::new(store, cache, identity))
+    pub fn new(store: Store, cache: String, _identity: ProducerIdentitySource) -> Self {
+        Self(Schedule::new(store, cache))
     }
 }
 
@@ -260,6 +273,19 @@ impl BackupScheduleDisableApi for BackupScheduleDisable {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn row_kwargs_use_original_single_integer_spacing() {
+        assert_eq!(
+            retention_kwargs(&json!(3)).unwrap(),
+            r#"{"retention_count": 3}"#
+        );
+        assert_eq!(
+            retention_kwargs(&json!(0)).unwrap(),
+            r#"{"retention_count": 0}"#
+        );
+        assert!(retention_kwargs(&json!(null)).is_err());
+    }
 
     #[test]
     fn missing_ordinary_row_requires_the_full_stock_disabled_save() {

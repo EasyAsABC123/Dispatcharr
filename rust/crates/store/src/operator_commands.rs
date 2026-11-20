@@ -151,6 +151,43 @@ impl OperatorCommands {
         command: Result<OperatorCommand, OperatorError>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<String, OperatorError> {
+        self.run_owned(caller, move |own, physical| async move {
+            // Original CoreConfig initializes before argument parsing.
+            own.sync_notifications(physical.clone()).await;
+            own.execute(command?, physical).await
+        })
+        .await
+    }
+
+    /// Migration inspection has one additional Original AppConfig before Core.
+    /// Both initialization effects and the ledger read share one operator owner.
+    pub async fn show_migrations<F, Preparation>(
+        &self,
+        inspection: crate::operator_migrations::Inspection,
+        caller: Arc<dyn Send + Sync>,
+        prepare_backup_schedule: F,
+    ) -> Result<String, OperatorError>
+    where
+        F: FnOnce(Arc<dyn Send + Sync>) -> Preparation + Send + 'static,
+        Preparation: std::future::Future<Output = ()> + Send + 'static,
+    {
+        self.run_owned(caller, move |own, physical| async move {
+            prepare_backup_schedule(physical.clone()).await;
+            own.sync_notifications(physical).await;
+            inspection.execute(&own.store).await
+        })
+        .await
+    }
+
+    async fn run_owned<F, Operation>(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+        operation: F,
+    ) -> Result<String, OperatorError>
+    where
+        F: FnOnce(Self, Arc<dyn Send + Sync>) -> Operation + Send + 'static,
+        Operation: std::future::Future<Output = Result<String, OperatorError>> + Send + 'static,
+    {
         let permit = self
             .slot
             .clone()
@@ -162,13 +199,9 @@ impl OperatorCommands {
             // Carry both budgets through retained publication, whose logical
             // deadline may precede the actual physical Redis reply.
             let physical: Arc<dyn Send + Sync> = Arc::new((permit, caller));
-            // Original CoreConfig initializes before argument parsing.
-            own.sync_notifications(physical.clone()).await;
-            let result = match command {
-                Ok(command) => own.execute(command, physical.clone()).await,
-                Err(error) => Err(error),
-            };
+            let result = operation(own, physical.clone()).await;
             let _ = tx.send(result);
+            drop(physical);
         });
         rx.await.map_err(|_| OperatorError::Unavailable)?
     }

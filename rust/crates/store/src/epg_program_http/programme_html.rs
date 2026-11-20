@@ -28,9 +28,11 @@ pub(super) enum Template<'a> {
     Standard,
     StandardFormatAlias,
     AdminDetail(&'a str),
+    AdminDetailFormatAlias(&'a str),
+    StandardDetail(&'a str),
 }
 
-impl Template<'_> {
+impl<'a> Template<'a> {
     fn source(self) -> &'static str {
         match self {
             Self::Admin => include!("../../datasets/epg-programme-html/list-admin.rs.in"),
@@ -44,6 +46,21 @@ impl Template<'_> {
             Self::AdminDetail(_) => {
                 include!("../../datasets/epg-programme-html/detail-admin.rs.in")
             }
+            Self::AdminDetailFormatAlias(_) => {
+                include!("../../datasets/epg-programme-html/detail-admin-format-api.rs.in")
+            }
+            Self::StandardDetail(_) => {
+                include!("../../datasets/epg-programme-html/detail-standard.rs.in")
+            }
+        }
+    }
+
+    fn detail_path(self) -> Option<&'a str> {
+        match self {
+            Self::AdminDetail(path)
+            | Self::AdminDetailFormatAlias(path)
+            | Self::StandardDetail(path) => Some(path),
+            _ => None,
         }
     }
 }
@@ -137,8 +154,10 @@ fn render(
     let programmes: Value = serde_json::from_slice(programmes).map_err(|_| unavailable())?;
     let pretty = pretty_json(&programmes)?;
     let pretty = std::str::from_utf8(&pretty).map_err(|_| unavailable())?;
-    let detail = match template {
-        Template::AdminDetail(path) => Some((path, DetailForm::from_programme(&programmes)?)),
+    let form = match template {
+        Template::AdminDetail(_) | Template::AdminDetailFormatAlias(_) => {
+            Some(DetailForm::from_programme(&programmes)?)
+        }
         _ => None,
     };
 
@@ -157,11 +176,11 @@ fn render(
             "@@GUIDE_CSRF_MASK@@" => source_browsable_escape(&mut output, csrf),
             "@@GUIDE_JSON_HTML@@" => source_browsable_content(&mut output, pretty),
             "@@GUIDE_OWNED_DETAIL_PATH@@" => {
-                let (path, _) = detail.as_ref().ok_or_else(unavailable)?;
+                let path = template.detail_path().ok_or_else(unavailable)?;
                 source_browsable_escape(&mut output, path)
             }
             "@@GUIDE_FORM_START_TIME@@" | "@@GUIDE_FORM_END_TIME@@" => {
-                let (_, form) = detail.as_ref().ok_or_else(unavailable)?;
+                let form = form.as_ref().ok_or_else(unavailable)?;
                 let value = if &tail[..end] == "@@GUIDE_FORM_START_TIME@@" {
                     &form.start_time
                 } else {
@@ -183,7 +202,7 @@ fn render(
                 programmes["description"].as_str().unwrap_or(""),
             ),
             "@@GUIDE_TEXTAREA_CONTENT@@" => {
-                let (_, form) = detail.as_ref().ok_or_else(unavailable)?;
+                let form = form.as_ref().ok_or_else(unavailable)?;
                 let content = std::str::from_utf8(&form.content).map_err(|_| unavailable())?;
                 output.write_all(b"\n").map_err(|_| unavailable())?;
                 source_browsable_escape(&mut output, content)
@@ -220,9 +239,10 @@ pub(super) fn response(
             _programmes: programmes,
         }))
     };
-    let allow = match template {
-        Template::AdminDetail(_) => "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
-        _ => "GET, POST, HEAD, OPTIONS",
+    let allow = if template.detail_path().is_some() {
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+    } else {
+        "GET, POST, HEAD, OPTIONS"
     };
     Response::builder()
         .header("content-type", "text/html; charset=utf-8")
@@ -332,6 +352,45 @@ mod tests {
         assert!(html.contains("\"form-control\">\n{\n    &quot;id&quot;: 7,"));
         assert!(html.contains("&quot;rating_system&quot;"));
         assert_eq!(html.matches("mask-fixture").count(), 1);
+
+        let alias = render(
+            &serde_json::to_vec(&programme).unwrap(),
+            &Method::GET,
+            Template::AdminDetailFormatAlias(path),
+            "guide-admin",
+            "http://guide.example.invalid",
+            "mask-fixture",
+        )
+        .unwrap();
+        let alias = std::str::from_utf8(&alias).unwrap();
+        assert!(alias.contains("<b>GET</b> /api/epg/programs/7/?format=api</pre>"));
+        assert!(alias.contains("/api/epg/programs/7/poster/?format=api"));
+        assert!(alias.contains("value=\"2026-04-13T11:00:00.123\""));
+        assert!(alias.contains("> One\nTwo &lt;曲&gt; </textarea>"));
+        assert_eq!(alias.matches(path).count(), 10);
+        assert!(!alias.contains("@@GUIDE_"));
+    }
+
+    #[test]
+    fn standard_detail_renders_without_constructing_admin_form() {
+        let path = "/api/epg/programs/7/";
+        let html = render(
+            br#"{"id":7,"title":"A & B"}"#,
+            &Method::GET,
+            Template::StandardDetail(path),
+            "guide-standard",
+            "http://guide.example.invalid",
+            "mask-fixture",
+        )
+        .unwrap();
+        let html = std::str::from_utf8(&html).unwrap();
+        assert_eq!(html.matches(path).count(), 6);
+        assert_eq!(html.matches("mask-fixture").count(), 1);
+        assert!(html.contains("A &amp; B"));
+        assert!(html.contains("/api/epg/programs/7/poster/"));
+        assert!(!html.contains("<textarea"));
+        assert!(!html.contains("data-method=\"DELETE\""));
+        assert!(!html.contains("@@GUIDE_"));
     }
 
     #[tokio::test]

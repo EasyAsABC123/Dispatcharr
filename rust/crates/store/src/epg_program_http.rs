@@ -498,12 +498,11 @@ async fn detail(
     method: Method,
     uri: Uri,
 ) -> Result<Response, StoreError> {
-    if method == Method::GET
-        && uri.query().is_none()
-        && headers
-            .get("accept")
-            .is_some_and(|value| value == "text/html")
-    {
+    let accept = headers.get("accept");
+    let bare_html = uri.query().is_none() && accept.is_some_and(|value| value == "text/html");
+    let format_alias =
+        uri.query() == Some("format=api") && accept.is_some_and(|value| value == "*/*");
+    if method == Method::GET && (bare_html || format_alias) {
         let user = state
             .auth
             .account_user(peer, headers.clone(), false)
@@ -511,18 +510,27 @@ async fn detail(
         if user.user_level < 1 {
             return Err(StoreError::PermissionDenied);
         }
-        if user.user_level >= 10 {
-            let origin = origin(&state.auth, peer, &headers);
-            let programme = state.read_authorized(Some(&id), origin.clone()).await?;
-            return programme_html::response(
-                &headers,
-                method,
-                programme_html::Template::AdminDetail(uri.path()),
-                &user.username,
-                &origin,
-                programme,
-            );
-        }
+        let path = uri.path();
+        let template = match (user.user_level >= 10, format_alias) {
+            (true, true) => programme_html::Template::AdminDetailFormatAlias(path),
+            (true, false) => programme_html::Template::AdminDetail(path),
+            (false, false) => programme_html::Template::StandardDetail(path),
+            (false, true) => {
+                return Err(StoreError::Unsupported(
+                    "Guide browsable HTML is not yet implemented",
+                ));
+            }
+        };
+        let origin = origin(&state.auth, peer, &headers);
+        let programme = state.read_authorized(Some(&id), origin.clone()).await?;
+        return programme_html::response(
+            &headers,
+            method,
+            template,
+            &user.username,
+            &origin,
+            programme,
+        );
     }
     respond(state, peer, headers, Some(id), uri).await
 }
