@@ -69,6 +69,29 @@ close to Original's iterator finalization and the exact instant of the Redis
 updates remain unmeasured. Provider-capacity timing and performance remain
 open.
 
+### Ordinary close at a faster synthetic origin pace
+
+The Source-only follow-up served the same 4,299,455-byte asset at 128 KiB/s
+instead of 32 KiB/s. It retained the original close order, two shared
+readers, an unrelated reader and stock INFO logging. The three observed
+provider requests and both exact Compose generations retired. The guest
+and controller exited 0.
+
+| Observation after the last shared local close | 32 KiB/s | 128 KiB/s |
+| --- | --- | --- |
+| Last shared iterator marker | 1010.01–1010.02 ms | 10.02–10.03 ms |
+| Release marker after iterator marker | 0.73–0.74 ms | 0.75–0.75 ms |
+| Redis slot release sampling interval | 900.06–1100.22 ms | 0.00–50.17 ms |
+
+The earlier iterator marker at the faster rate supports sensitivity to the
+provider write cadence in this fixture. The log times measure Docker console
+delivery and Redis provides a separate sampling bracket. The exact event
+that precedes iterator retirement stays unobserved. The earlier Original
+503 and Rust 200 admission difference remains open. This diagnostic
+establishes no release-time requirement or performance result.
+
+[Redacted pacing comparison](rust-vod-stock-info-faster-origin.json)
+
 ## Fresh explicit ID after retirement
 
 Pinned Original and the exact `f3b8c08620b6` package both returned HTTP 200
