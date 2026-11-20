@@ -1,0 +1,299 @@
+{
+  "actual_controller_exit": 0,
+  "actual_receipt_sha256": "b87b8fd3230269d638d8de544a30412bd3361873e63979d18a93b585bf1e7e19",
+  "admin_Bearer_authenticated": true,
+  "baseline_refetch": {
+    "allow": "GET, POST, HEAD, OPTIONS",
+    "body_bytes": 5737,
+    "content_type": "application/json",
+    "full_body_sha256": "b0dd02a79ef121d0243c7a1a1327444d998d8475d26025b8651fe6b0162e6afa",
+    "status": 200
+  },
+  "cases": [
+    {
+      "baseline_channel_number_delta": 0,
+      "case": "manual-down",
+      "effective_order": "bcdeafs",
+      "mutation_message_matched": true,
+      "new_pin_clocks_inside_post": null,
+      "no_op": false,
+      "ordered_refetch": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 5737,
+        "content_type": "application/json",
+        "full_body_sha256": "3bbfc6734fca923c4ec8ae20622dc83d25bbffa01618cc1a8259259245a86a09",
+        "status": 200
+      },
+      "post": {
+        "allow": "POST, OPTIONS",
+        "body_bytes": 833,
+        "content_type": "application/json",
+        "full_body_sha256": "bb5ff3bb2b8a7ff35d34c8885f847be27d03ba0c149704ff8a47d1fddbe8ebdc",
+        "status": 200
+      },
+      "sql_after_sha256": "539334d9be0d81c29e79fa0d47069e9904fd3562faed600e29e72863aa5480fa",
+      "sql_and_refetch_match": true,
+      "sql_before_sha256": "9b698123fbdde87af18877b829100e23e75e69612d731c02dbdb35e01bc122a8",
+      "table_numbers_and_pins": [
+        [
+          1005,
+          null
+        ],
+        [
+          1001.5,
+          null
+        ],
+        [
+          50,
+          1002
+        ],
+        [
+          1003,
+          null
+        ],
+        [
+          1004,
+          null
+        ],
+        [
+          60,
+          1007
+        ],
+        [
+          1018,
+          null
+        ]
+      ]
+    },
+    {
+      "baseline_channel_number_delta": 0,
+      "case": "managed-up",
+      "effective_order": "bfcdeas",
+      "mutation_message_matched": true,
+      "new_pin_clocks_inside_post": null,
+      "no_op": false,
+      "ordered_refetch": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 5737,
+        "content_type": "application/json",
+        "full_body_sha256": "05af167210667dfdf9baead15783fede57bbfff471c071efaa2290db649386c6",
+        "status": 200
+      },
+      "post": {
+        "allow": "POST, OPTIONS",
+        "body_bytes": 1030,
+        "content_type": "application/json",
+        "full_body_sha256": "b916b5f1709e9140e2d6a9232bb3e511791d6a9be6da3839b0f17c3b5ee8dc64",
+        "status": 200
+      },
+      "sql_after_sha256": "4b3d92e5d43da3565773bb2fb91f8bb5b7f5df6ae3cd1fc7b90121c5dbe01526",
+      "sql_and_refetch_match": true,
+      "sql_before_sha256": "539334d9be0d81c29e79fa0d47069e9904fd3562faed600e29e72863aa5480fa",
+      "table_numbers_and_pins": [
+        [
+          1006,
+          null
+        ],
+        [
+          1001.5,
+          null
+        ],
+        [
+          50,
+          1003
+        ],
+        [
+          1004,
+          null
+        ],
+        [
+          1005,
+          null
+        ],
+        [
+          60,
+          1002
+        ],
+        [
+          1018,
+          null
+        ]
+      ]
+    },
+    {
+      "baseline_channel_number_delta": 1,
+      "case": "managed-to-start",
+      "effective_order": "dbfceas",
+      "mutation_message_matched": true,
+      "new_pin_clocks_inside_post": true,
+      "no_op": false,
+      "ordered_refetch": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 5904,
+        "content_type": "application/json",
+        "full_body_sha256": "7867dcc7de5d3d69c2fee09c10ed3c862f3eaad713a9928e560fa1f936ece9bb",
+        "status": 200
+      },
+      "post": {
+        "allow": "POST, OPTIONS",
+        "body_bytes": 996,
+        "content_type": "application/json",
+        "full_body_sha256": "08c3881e1c1343163c3058fb2db265b36dd819b52e550536f7d9ad5db3255e2c",
+        "status": 200
+      },
+      "sql_after_sha256": "360d8108de3fc7bfc918d4cff06e2eb51973117a59eb2f628fdad4d13c78f885",
+      "sql_and_refetch_match": true,
+      "sql_before_sha256": "4b3d92e5d43da3565773bb2fb91f8bb5b7f5df6ae3cd1fc7b90121c5dbe01526",
+      "table_numbers_and_pins": [
+        [
+          1006,
+          null
+        ],
+        [
+          1002.5,
+          null
+        ],
+        [
+          50,
+          1004
+        ],
+        [
+          1004,
+          1
+        ],
+        [
+          1005,
+          null
+        ],
+        [
+          60,
+          1003
+        ],
+        [
+          1018,
+          null
+        ]
+      ]
+    },
+    {
+      "baseline_channel_number_delta": 1,
+      "case": "already-at-start",
+      "effective_order": "dbfceas",
+      "mutation_message_matched": true,
+      "new_pin_clocks_inside_post": null,
+      "no_op": true,
+      "ordered_refetch": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 5904,
+        "content_type": "application/json",
+        "full_body_sha256": "7867dcc7de5d3d69c2fee09c10ed3c862f3eaad713a9928e560fa1f936ece9bb",
+        "status": 200
+      },
+      "post": {
+        "allow": "POST, OPTIONS",
+        "body_bytes": 998,
+        "content_type": "application/json",
+        "full_body_sha256": "5e88e9bef6e9d9b3407a56475e8ee88609db73d4ae8a6eaf5bb0b88d172d7b01",
+        "status": 200
+      },
+      "sql_after_sha256": "360d8108de3fc7bfc918d4cff06e2eb51973117a59eb2f628fdad4d13c78f885",
+      "sql_and_refetch_match": true,
+      "sql_before_sha256": "360d8108de3fc7bfc918d4cff06e2eb51973117a59eb2f628fdad4d13c78f885",
+      "table_numbers_and_pins": [
+        [
+          1006,
+          null
+        ],
+        [
+          1002.5,
+          null
+        ],
+        [
+          50,
+          1004
+        ],
+        [
+          1004,
+          1
+        ],
+        [
+          1005,
+          null
+        ],
+        [
+          60,
+          1003
+        ],
+        [
+          1018,
+          null
+        ]
+      ]
+    },
+    {
+      "baseline_channel_number_delta": 0,
+      "case": "managed-return-to-provider",
+      "effective_order": "bfcdeas",
+      "mutation_message_matched": true,
+      "new_pin_clocks_inside_post": null,
+      "no_op": false,
+      "ordered_refetch": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 5737,
+        "content_type": "application/json",
+        "full_body_sha256": "05af167210667dfdf9baead15783fede57bbfff471c071efaa2290db649386c6",
+        "status": 200
+      },
+      "post": {
+        "allow": "POST, OPTIONS",
+        "body_bytes": 832,
+        "content_type": "application/json",
+        "full_body_sha256": "eb4516e28fdb5bc3a4fbb32d0060e7a4b1610066a29346b1dd0c9bfff588f6ad",
+        "status": 200
+      },
+      "sql_after_sha256": "4b3d92e5d43da3565773bb2fb91f8bb5b7f5df6ae3cd1fc7b90121c5dbe01526",
+      "sql_and_refetch_match": true,
+      "sql_before_sha256": "360d8108de3fc7bfc918d4cff06e2eb51973117a59eb2f628fdad4d13c78f885",
+      "table_numbers_and_pins": [
+        [
+          1006,
+          null
+        ],
+        [
+          1001.5,
+          null
+        ],
+        [
+          50,
+          1003
+        ],
+        [
+          1004,
+          null
+        ],
+        [
+          1005,
+          null
+        ],
+        [
+          60,
+          1002
+        ],
+        [
+          1018,
+          null
+        ]
+      ]
+    }
+  ],
+  "credentials_or_raw_body_retained": false,
+  "credits": "The original Dispatcharr and Django authors retain full credit.",
+  "exact_cleanup_verified": true,
+  "first_actual_failed_with_exact_cleanup": true,
+  "first_actual_receipt_sha256": "0ac449eb0fd3b5199231a829f5c9cf97b55eb13170ea902b7e81c32f55d40120",
+  "native_verified": false,
+  "normal_write_status_checks": 5,
+  "ordered_list_reads": 6,
+  "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}
