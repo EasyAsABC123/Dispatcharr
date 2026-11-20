@@ -1,0 +1,91 @@
+{
+  "C117_changed_files_sha256": {
+    "rust/crates/store/src/epg_current.rs": "57cb8c9c03fa6bce7f1f249b74a10179db9ede168961bbcc7c915674adf29218",
+    "scripts/rust-epg-contracts/control_reads.py": "3a15cf6ecbde15042532406a93d0fe4b34109b9774387d616162fc5f1bdef484",
+    "scripts/rust-epg-contracts/current_wire_source.py": "c88700ffe1b6fb825c0a321d42de58d377a6adb28210468e7c87adf1844fd803",
+    "scripts/rust-epg-contracts/probe_current.py": "5c14e4a3f58d2304e38a6a3133420127f8cf2c7523c18e39111cc369fedb36e3"
+  },
+  "Original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_owned_startup_queue_unchanged_after_each_request": true,
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Rust_package_checks": [
+    "exact-package",
+    "rust-bins",
+    "rust-current-tests",
+    "rust-store-clippy",
+    "rustfmt"
+  ],
+  "actor": "admin",
+  "actual_packaged_build_exit": 0,
+  "actual_paired_exit": 0,
+  "candidate_build_manifest_sha256": "44d81fc4258f2080f03654aa068f76a3f69d1e899407974ecd1ab02c6d1c45e0",
+  "candidate_image_id": "sha256:a2a00b6cb9b2bb26f5987e71c24821d59c2e5570d4112d93a2b8c793fe26548d",
+  "candidate_revision": "fb130c124678bea6a77fbb4d463360ad4e456ad9",
+  "candidate_source_tree_sha256": "2155c837277ceb79b3926c601a3d25388c6d5bbbbd9cfba9a290eafcd7ecb6a3",
+  "cases": [
+    {
+      "body_bytes": 2,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "case": "source-less",
+      "content_length": "2",
+      "content_type": "application/json",
+      "status": 200
+    },
+    {
+      "body_bytes": 2,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "case": "schedules-direct",
+      "content_length": "2",
+      "content_type": "application/json",
+      "status": 200
+    },
+    {
+      "body_bytes": 2,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "case": "null-tvg",
+      "content_length": "2",
+      "content_type": "application/json",
+      "status": 200
+    },
+    {
+      "body_bytes": 2,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "case": "empty-tvg",
+      "content_length": "2",
+      "content_type": "application/json",
+      "status": 200
+    },
+    {
+      "body_bytes": 2,
+      "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "case": "all-four",
+      "content_length": "2",
+      "content_type": "application/json",
+      "status": 200
+    },
+    {
+      "body_bytes": 326,
+      "body_sha256": "da66fa803d4f128091c79cc076c25ab51add873db2b278f86c9a31dc5ef2fe0e",
+      "case": "stored-plus-four",
+      "content_length": "326",
+      "content_type": "application/json",
+      "status": 200
+    }
+  ],
+  "cleanup_sha256": "e203574bd6784a4e905a6cc84f9b6488f39ba24880d172a183547262d827e3bd",
+  "exact_owned_cleanup_verified": true,
+  "full_M7_passed": false,
+  "full_role_matrix": false,
+  "method": "POST",
+  "paired_execution_sha256": "eecc7eef074db29622ec7ccf58df8b580e6fcbab931fe5f0e5d00972f3d474a0",
+  "performance_verified": false,
+  "physical_qualification_sha256": "bb141cf0950ffb377638145546c3cfcb623c9c66ab1ceb875f20e2484ba571b7",
+  "protected_React_and_credit_inputs": 497,
+  "resolver_ordinal": 147,
+  "retained_Original_actual_exit": 0,
+  "retained_Original_receipt_sha256": "db125d630ad7a39885add049aadde2daf7b8dd563242c0f4e14512b1d3c4a5c4",
+  "route": "/api/epg/current-programs/",
+  "rust_suite_tests_passed": 6,
+  "scope": "ordinary-sql-only-admin-current-programme-no-file-and-stored-row",
+  "wire_differences": 0
+}

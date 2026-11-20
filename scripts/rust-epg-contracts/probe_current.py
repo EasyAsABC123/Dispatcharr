@@ -31,7 +31,11 @@ def capture(base,fixture):
         # emitted length, without timestamp, row or error-body normalization.
         if actual!=case['expected']:differences.append({'index':index,'method':case['method'],'role':case['role'],'expected':case['expected'],'actual':actual})
         cases.append({'index':index,'method':case['method'],'role':case['role'],**actual})
-    expected_count = 64
+    expected_count = 6 if fixture.get('proven_empty_only') else 64
+    if fixture.get('proven_empty_only'):
+        assert [case['name'] for case in fixture['cases']] == [
+            'source-less', 'schedules-direct', 'null-tvg', 'empty-tvg', 'all-four', 'stored-plus-four'
+        ]
     if fixture.get('includes_multipart', False):
         expected_count += 6
     if fixture.get('includes_file_multipart', False):
