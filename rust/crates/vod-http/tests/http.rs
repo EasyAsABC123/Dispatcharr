@@ -181,6 +181,23 @@ async fn fixture_with_user(
     i64,
     JoinHandle<()>,
 ) {
+    let idle_grace = if path == "recovery-idle" {
+        Duration::from_secs(1)
+    } else {
+        Duration::from_millis(20)
+    };
+    fixture_with_idle_grace(path, user, idle_grace).await
+}
+async fn fixture_with_idle_grace(
+    path: &str,
+    user: Option<User>,
+    idle_grace: Duration,
+) -> (
+    VodEngine,
+    redis::aio::MultiplexedConnection,
+    i64,
+    JoinHandle<()>,
+) {
     let url = std::env::var("REDIS_TEST_URL").expect("disposable REDIS_TEST_URL required");
     let mut connection = redis::Client::open(url.clone())
         .unwrap()
@@ -265,11 +282,7 @@ async fn fixture_with_user(
         coordinator,
         &url,
         VodConfig {
-            idle_grace: if path == "recovery-idle" {
-                Duration::from_secs(1)
-            } else {
-                Duration::from_millis(20)
-            },
+            idle_grace,
             ..Default::default()
         },
     )
@@ -453,11 +466,33 @@ async fn native_head_is_405_and_initial_provider_error_releases_slot() {
     origin.abort();
 }
 
+async fn wait_for_idle_metadata(
+    redis: &mut redis::aio::MultiplexedConnection,
+    metadata: &str,
+    provider: &str,
+) {
+    tokio::time::timeout(Duration::from_millis(750), async {
+        loop {
+            let readers: Option<i64> = redis.hget(metadata, "active_streams").await.unwrap();
+            let grants: Option<i64> = redis.get(provider).await.unwrap();
+            if readers == Some(0) && grants.unwrap_or(0) == 0 {
+                break;
+            }
+            tokio::time::sleep(Duration::from_millis(5)).await;
+        }
+    })
+    .await
+    .unwrap();
+}
+
 #[tokio::test]
 #[ignore = "requires disposable REDIS_TEST_URL and loopback networking"]
-async fn idle_adoption_caches_length_and_deleted_metadata_is_not_resurrected() {
-    let (engine, mut redis, profile, origin) = fixture("bytes").await;
+async fn explicit_vod_id_reuses_only_its_own_idle_session() {
+    let (engine, mut redis, profile, origin) =
+        fixture_with_idle_grace("bytes", None, Duration::from_secs(2)).await;
     let session = format!("test-{}", uuid::Uuid::new_v4());
+    let metadata = format!("vod_persistent_connection:{session}");
+    let provider = format!("profile_connections:{profile}");
     let response = engine.respond(request(&session, None)).await;
     assert_eq!(
         axum::body::to_bytes(response.into_body(), 1024)
@@ -466,22 +501,8 @@ async fn idle_adoption_caches_length_and_deleted_metadata_is_not_resurrected() {
             .len(),
         256
     );
-    // Wait for request teardown, within the configured idle grace.
-    for _ in 0..50 {
-        let count: i64 = redis
-            .hget(
-                format!("vod_persistent_connection:{session}"),
-                "active_streams",
-            )
-            .await
-            .unwrap_or(-1);
-        if count == 0 {
-            break;
-        }
-        tokio::task::yield_now().await;
-    }
-    let minted = format!("test-{}", uuid::Uuid::new_v4());
-    let response = engine.respond(request(&minted, Some("bytes=-10"))).await;
+    wait_for_idle_metadata(&mut redis, &metadata, &provider).await;
+    let response = engine.respond(request(&session, Some("bytes=-10"))).await;
     assert_eq!(response.status(), 206);
     assert_eq!(response.headers()["content-range"], "bytes 0-10/256");
     assert_eq!(
@@ -491,13 +512,37 @@ async fn idle_adoption_caches_length_and_deleted_metadata_is_not_resurrected() {
             .to_vec(),
         (0..=10).collect::<Vec<u8>>()
     );
-    assert!(!redis
-        .exists::<_, bool>(format!("vod_persistent_connection:{minted}"))
+    wait_for_idle_metadata(&mut redis, &metadata, &provider).await;
+    let fresh = format!("test-{}", uuid::Uuid::new_v4());
+    let response = engine.respond(request(&fresh, Some("bytes=-10"))).await;
+    assert_eq!(response.status(), 206);
+    // The public compatibility header normalizes the request independently
+    // of the fresh upstream response's suffix bytes.
+    assert_eq!(response.headers()["content-range"], "bytes 0-10/256");
+    let old_count: i64 = redis.hget(&metadata, "request_count").await.unwrap();
+    let new_count: i64 = redis
+        .hget(
+            format!("vod_persistent_connection:{fresh}"),
+            "request_count",
+        )
         .await
-        .unwrap());
+        .unwrap();
+    assert_eq!((old_count, new_count), (2, 1));
+    assert_eq!(
+        axum::body::to_bytes(response.into_body(), 1024)
+            .await
+            .unwrap()
+            .to_vec(),
+        (246..=255).collect::<Vec<u8>>()
+    );
     clean(&mut redis, &session, profile).await;
+    clean(&mut redis, &fresh, profile).await;
     origin.abort();
+}
 
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback networking"]
+async fn deleted_metadata_is_not_resurrected() {
     let (engine, mut redis, profile, origin) = fixture("paced").await;
     let session = format!("test-{}", uuid::Uuid::new_v4());
     let response = engine.respond(request(&session, None)).await;

@@ -99,6 +99,11 @@ impl Http {
             )
             .with_state(self)
     }
+    pub fn refresh_all_router(self) -> Router {
+        Router::new()
+            .route("/api/m3u/refresh/", any(refresh_all_handle))
+            .with_state(self)
+    }
     pub fn close_admission(&self) {
         self.inner.closed.store(true, Ordering::Release)
     }

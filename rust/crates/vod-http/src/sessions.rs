@@ -866,10 +866,13 @@ impl SessionPool {
         if self.stopped() {
             return Err(unavailable());
         }
-        let reusable = registry
-            .get(id)
-            .cloned()
-            .or_else(|| idle_match(&registry, &source, request));
+        let reusable = registry.get(id).cloned().or_else(|| {
+            if request.session_id.is_none() {
+                idle_match(&registry, &source, request)
+            } else {
+                None
+            }
+        });
         if let Some(session) = reusable {
             if session.source.content_uuid != source.content_uuid
                 || session.source.kind != source.kind

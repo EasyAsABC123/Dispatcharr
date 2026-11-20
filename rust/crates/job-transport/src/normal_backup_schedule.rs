@@ -95,7 +95,15 @@ impl Schedule {
         let mut connection = self.store.pool().acquire().await?;
         let observed=async{
    let row=sqlx::query("SELECT CASE WHEN value IS NULL OR octet_length(value::text)<=65536 THEN value ELSE NULL END AS value,value IS NULL OR octet_length(value::text)<=65536 AS bounded FROM core_coresettings WHERE key='backup_settings' LIMIT 1").fetch_optional(&mut *connection).await?;
-   let mut value=match row{Some(row)=>{if !row.try_get::<bool,_>("bounded")?{return Err(failed("Backup settings capacity unavailable"))}row.try_get::<Option<Value>,_>("value")?.filter(Value::is_object).unwrap_or_else(||if updating{json!({})}else{defaults()})},None if backup_cache_after_save.is_some()=>return Err(disable_unavailable()),None=>{let d=defaults();sqlx::query("INSERT INTO core_coresettings(key,name,value) VALUES('backup_settings','Backup Settings',$1) ON CONFLICT(key) DO NOTHING").bind(&d).execute(&mut *connection).await?;d}};
+   let create_ordinary_row = row.is_none() && backup_cache_after_save.is_some();
+   let mut value=match row{Some(row)=>{if !row.try_get::<bool,_>("bounded")?{return Err(failed("Backup settings capacity unavailable"))}row.try_get::<Option<Value>,_>("value")?.filter(Value::is_object).unwrap_or_else(||if updating{json!({})}else{defaults()})},
+    None if create_ordinary_row=>{
+     if !data.as_ref().is_some_and(|request| ordinary_disable_request(request, true)){
+      return Err(disable_unavailable());
+     }
+     defaults()
+    },
+    None=>{let d=defaults();sqlx::query("INSERT INTO core_coresettings(key,name,value) VALUES('backup_settings','Backup Settings',$1) ON CONFLICT(key) DO NOTHING").bind(&d).execute(&mut *connection).await?;d}};
    if let Some(data)=data{
     let fields=data.as_object().ok_or_else(||invalid("Expected an object"))?;
     if let Some(v)=fields.get("frequency"){if !matches!(v.as_str(),Some("daily"|"weekly")){return Err(invalid("frequency must be 'daily' or 'weekly'"))}}
@@ -111,7 +119,20 @@ impl Schedule {
     }
     // Source commits the setting before periodic sync; a later invalid cron is
     // not grounds to fabricate rollback of the already committed setting.
-    let changed=sqlx::query("UPDATE core_coresettings SET value=$1 WHERE key='backup_settings'").bind(&value).execute(&mut *connection).await?;
+    let changed = if create_ordinary_row {
+     // Persist the final disabled state without exposing a default-enabled row.
+     // Another request may have created the group after the initial SELECT.
+     // In that case preserve its unknown fields and existing display name.
+     sqlx::query(concat!(
+      "INSERT INTO core_coresettings(key,name,value) VALUES('backup_settings','Backup Settings',$1) ",
+      "ON CONFLICT(key) DO UPDATE SET value=CASE WHEN jsonb_typeof(core_coresettings.value)='object' ",
+      "THEN core_coresettings.value || EXCLUDED.value ELSE EXCLUDED.value END ",
+      "WHERE core_coresettings.value IS NULL OR octet_length(core_coresettings.value::text)<=65536"
+     )).bind(&value)
+     .execute(&mut *connection).await?
+    } else {
+     sqlx::query("UPDATE core_coresettings SET value=$1 WHERE key='backup_settings'").bind(&value).execute(&mut *connection).await?
+    };
     if backup_cache_after_save.is_some() && changed.rows_affected()!=1 { return Err(disable_unavailable()); }
    }
    Ok::<_,StoreError>(value)
@@ -180,7 +201,7 @@ fn disable_unavailable() -> StoreError {
     )
 }
 
-fn ordinary_disable_request(data: &Value) -> bool {
+fn ordinary_disable_request(data: &Value, missing_row: bool) -> bool {
     let Some(fields) = data.as_object() else {
         return false;
     };
@@ -188,7 +209,7 @@ fn ordinary_disable_request(data: &Value) -> bool {
         return false;
     }
     if fields.len() == 1 {
-        return true;
+        return !missing_row;
     }
     fields.len() == 6
         && matches!(data["frequency"].as_str(), Some("daily" | "weekly"))
@@ -222,7 +243,7 @@ impl BackupScheduleDisableApi for BackupScheduleDisable {
         caller: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'a, Result<Value, StoreError>> {
         Box::pin(async move {
-            if !ordinary_disable_request(&data) {
+            if !ordinary_disable_request(&data, false) {
                 return Err(disable_unavailable());
             }
             self.0.apply(Some(data), caller, Some(auth)).await
@@ -235,11 +256,24 @@ mod tests {
     use super::*;
 
     #[test]
+    fn missing_ordinary_row_requires_the_full_stock_disabled_save() {
+        let mut request = json!({"enabled":false, "frequency":"weekly", "time":"04:10",
+                                 "day_of_week":2, "retention_count":3, "cron_expression":""});
+        assert!(ordinary_disable_request(&request, true));
+        assert!(!ordinary_disable_request(&json!({"enabled":false}), true));
+        request["enabled"] = json!(true);
+        assert!(!ordinary_disable_request(&request, true));
+        request["enabled"] = json!(false);
+        request.as_object_mut().unwrap().remove("cron_expression");
+        assert!(!ordinary_disable_request(&request, true));
+    }
+
+    #[test]
     fn ordinary_scope_only_admits_a_stock_disabled_save() {
         let mut full = json!({"enabled":false, "frequency":"weekly", "time":"04:10",
                               "day_of_week":2, "retention_count":3, "cron_expression":""});
-        assert!(ordinary_disable_request(&full));
-        assert!(ordinary_disable_request(&json!({"enabled":false})));
+        assert!(ordinary_disable_request(&full, false));
+        assert!(ordinary_disable_request(&json!({"enabled":false}), false));
         for (key, value) in [
             ("enabled", json!(true)),
             ("enabled", json!("false")),
@@ -248,11 +282,12 @@ mod tests {
             ("retention_count", json!(-1)),
         ] {
             let old = std::mem::replace(&mut full[key], value);
-            assert!(!ordinary_disable_request(&full));
+            assert!(!ordinary_disable_request(&full, false));
             full[key] = old;
         }
         assert!(!ordinary_disable_request(
-            &json!({"enabled":false,"unknown":1})
+            &json!({"enabled":false,"unknown":1}),
+            false
         ));
     }
 }
