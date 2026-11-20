@@ -184,6 +184,10 @@ The [e765 scheduled XMLTV run](rust-m6-e765-scheduled-xmltv.md) verified one
 due refresh per backend, both settled descendants, programme and index
 effects, and exact cleanup on the same packaged candidate.
 
+The [Original aggregate XMLTV run](rust-m6-original-aggregate-xmltv.md) verified
+ordered inline refresh for two active sources, four result-linked descendants
+and exact cleanup. The Rust aggregate and wider M6 gate remain open.
+
 The [735 MPEG-TS functional checks](rust-m9-735-functional-streaming.md) passed
 all three required nodes with verified cleanup. The run covered 24 two-worker
 checks, 14 delayed restart checks and 100 retained-history readers with 20
