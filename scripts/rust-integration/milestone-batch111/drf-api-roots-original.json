@@ -1,0 +1,1269 @@
+{
+  "Native_verified": false,
+  "evidence_base_revision": "d3d0ae05ba59e347a14a95c1fb1d0655d2c941d8",
+  "exact_http_role_calls": 64,
+  "exact_owned_cleanup": true,
+  "fixture_freeze_sha256": "95ede7fcaaaf7605bc7d96ec3b2bd11d33581e5416e1ac7695912adec7f6bde5",
+  "full_role_matrix": false,
+  "immutable_source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "milestone_accepted": false,
+  "operation_count": 16,
+  "operations": [
+    {
+      "actual_path": "/api/accounts/.json",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/accounts/.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/accounts/.json",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/accounts/.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 177,
+          "actual_body_sha256": "dda2d5752b8859cb6eafd4216cd3765b8301ef313e0c74f5b4424cf6d06fa87e",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/accounts/.json",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-3972b5c042ea0642f404:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "accounts_json",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "2e427bee2f3764bbee3018640e36cbc8c8cd7d7abe4983b319dba0018b158aff",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/accounts/.json",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 28,
+        "pattern": "api/accounts/<drf_format_suffix:format>",
+        "view_name": "api:accounts:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/accounts/",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/accounts/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/accounts/",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/accounts/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 165,
+          "actual_body_sha256": "8f55087f3c44ef3985df14210cf268b8565a0a95fddf0805f3ee47c2ece30830",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/accounts/",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-2f0ebbed429f07494c01:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "accounts_root",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "f89c9661eac63b115818b36c75603fcf7fea3b4f5651f658d19786f83c508b7c",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/accounts/",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 27,
+        "pattern": "api/accounts/",
+        "view_name": "api:accounts:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/hdhr/.json",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/hdhr/.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/hdhr/.json",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/hdhr/.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 57,
+          "actual_body_sha256": "e1567027201ebf7b44a018b545de4f877b116a25ce0b6cd4d6ec91b0ca458b30",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/hdhr/.json",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-57610369344cb452225c:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "api_hdhr_json",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "fc1aa845199e149a98bacc42940bba20bc24af60221790dc811567cfb583243b",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/hdhr/.json",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 182,
+        "pattern": "api/hdhr/<drf_format_suffix:format>",
+        "view_name": "api:hdhr:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/channels/.json",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/channels/.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/channels/.json",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/channels/.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 441,
+          "actual_body_sha256": "c16f08bc10d3d5a67b96939ce5690e98fb9ebdb1e97b600b68a27bc73519c5b0",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/channels/.json",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-482aac7e9cad73e20e87:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "channels_json",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "38d9da4e07801e7f9bdfbacb68b1cc73c2a4a628a5a4ae847aaf700cc75a0e08",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/channels/.json",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 144,
+        "pattern": "api/channels/<drf_format_suffix:format>",
+        "view_name": "api:channels:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/channels/",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/channels/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/channels/",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/channels/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 413,
+          "actual_body_sha256": "756fae2f9e844ba4752d1a72c8a208d18129f85a79b309df054d721708502faa",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/channels/",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-6b777e58c3150f35aa9c:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "channels_root",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "73a9c964e4280cca0ec62cd66567d413f0e126b5dbc66f4c95c508a73b66a604",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/channels/",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 143,
+        "pattern": "api/channels/",
+        "view_name": "api:channels:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/connect/.json",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/connect/.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/connect/.json",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/connect/.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 194,
+          "actual_body_sha256": "f6db1ff8a32cdb74c8f6d0a6106084e740520d1c6439d9a88dd05ca9f52b326e",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/connect/.json",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-057f3d60fbf41f71fa3b:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "connect_json",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "172a0451e1212767e660e9ea0ec6313e192dfc6025d00ff78b9d1802fc87b475",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/connect/.json",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 351,
+        "pattern": "api/connect/<drf_format_suffix:format>",
+        "view_name": "api:connect:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/connect/",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/connect/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/connect/",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/connect/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 182,
+          "actual_body_sha256": "99a8e491c2208e15f59027a22d4383219ed9df3de646c54a2950029f051eec15",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/connect/",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-0b9461af78ded81781c0:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "connect_root",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "bda5206f188e044e5d897a5d0f046030cb545720be9b704ef318c5f8054bb7c5",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/connect/",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 350,
+        "pattern": "api/connect/",
+        "view_name": "api:connect:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/core/.json",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/core/.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/core/.json",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/core/.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 329,
+          "actual_body_sha256": "e1dc0bb0481fc680e74bab0de32342f3705c13058a098c44c9c7854230d7a5fb",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/core/.json",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-d87402d3d74780c4b662:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "core_json",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "8b854c3e79a4fe47469a457650d09ca053e72253d6df3fe85358b92fee70f05d",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/core/.json",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 249,
+        "pattern": "api/core/<drf_format_suffix:format>",
+        "view_name": "api:core:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/core/",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/core/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/core/",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/core/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 309,
+          "actual_body_sha256": "fad11e9486af90fb24d4897ed01d3b73dcd63a1fb89152b55f0028a84dd8ac92",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/core/",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-5a09390ffbfb3917778e:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "core_root",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "173e1460db9d2d4633bba046a5da63705d0404e7d195100a43f359a856a510ab",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/core/",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 248,
+        "pattern": "api/core/",
+        "view_name": "api:core:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/epg/.json",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/epg/.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/epg/.json",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/epg/.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 168,
+          "actual_body_sha256": "41a68f3af2a99a586727063a9642aa1e26cb79609c6257cd953df5786ae9dd4d",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/epg/.json",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-8062d0712308caa75291:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "epg_json",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "9da4c6407ce1915e94e682df05dc52320dace2671801e73dc03bd7c923413569",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/epg/.json",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 172,
+        "pattern": "api/epg/<drf_format_suffix:format>",
+        "view_name": "api:epg:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/epg/",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/epg/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/epg/",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/epg/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 156,
+          "actual_body_sha256": "f7371eb63bf2bf67704a1cfdd55676c9c0c50c1980a5a03bdbbb12b0d08a771b",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/epg/",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-42bf7668924bcaacce2c:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "epg_root",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "45d77c77a13bc6c348a100fc513bdbee1ea172f9f9b56b130421a75bacd28b55",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/epg/",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 171,
+        "pattern": "api/epg/",
+        "view_name": "api:epg:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/m3u/.json",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/m3u/.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/m3u/.json",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/m3u/.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 125,
+          "actual_body_sha256": "689d1cfc20888fd1e5dfb40e21c8f636d57cbdc207aaa611da3015d12159166f",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/m3u/.json",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-0ef353e279c00a9bea3c:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "m3u_json",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "29edd74d54f72133cb14bb33ca6ce1330d1625ef637c98cb07ae980c1ed8252c",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/m3u/.json",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 211,
+        "pattern": "api/m3u/<drf_format_suffix:format>",
+        "view_name": "api:m3u:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/m3u/",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/m3u/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/m3u/",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/m3u/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 117,
+          "actual_body_sha256": "1d4510f6d823cdab03cea30f7b8f185091b74544c76ce99fd965d4249d013ac9",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/m3u/",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-6ef4eb2b70aebf6471ee:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "m3u_root",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "3285f05472d87ab2fd7132e9f3d5caefcab787f87f696324f08715060fac6f75",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/m3u/",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 210,
+        "pattern": "api/m3u/",
+        "view_name": "api:m3u:api-root"
+      }
+    },
+    {
+      "actual_path": "/hdhr/.json",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/hdhr/.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/hdhr/.json",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/hdhr/.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 53,
+          "actual_body_sha256": "0155dd0c20756d622cc605ea4337b1e46aad196e7165df3f598eae10ec35463a",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/hdhr/.json",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-dc4da9ca250036ec34bc:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "public_hdhr_json",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "731a8d57555d6f05b38cb62d1a749dbaab2c06303ae204a0c4f4690508ca5bb2",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/hdhr/.json",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 383,
+        "pattern": "hdhr/<drf_format_suffix:format>",
+        "view_name": "hdhr:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/vod/.json",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/vod/.json",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/vod/.json",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/vod/.json",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 329,
+          "actual_body_sha256": "0fa94c63ed679429f0c887cadd59e9f1afe5f994743ddb0f6d341b71b334ec5f",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/vod/.json",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-9a06cadab4a398087cb0:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "vod_json",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "e69066f0039be91b4d63eb9d8f4ce45068efd095ed6325d844775064683ad8cc",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/vod/.json",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 317,
+        "pattern": "api/vod/<drf_format_suffix:format>",
+        "view_name": "api:vod:api-root"
+      }
+    },
+    {
+      "actual_path": "/api/vod/",
+      "additional_controls": {},
+      "cases": [
+        {
+          "actual_body_bytes": 58,
+          "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+          "actual_content_type": "application/json",
+          "actual_status": 401,
+          "authentication_challenge_present": true,
+          "label": "anonymous",
+          "method": "GET",
+          "path": "/api/vod/",
+          "role": "anonymous"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "viewer",
+          "method": "GET",
+          "path": "/api/vod/",
+          "role": "viewer"
+        },
+        {
+          "actual_body_bytes": 63,
+          "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+          "actual_content_type": "application/json",
+          "actual_status": 403,
+          "authentication_challenge_present": false,
+          "label": "standard",
+          "method": "GET",
+          "path": "/api/vod/",
+          "role": "standard"
+        },
+        {
+          "actual_body_bytes": 305,
+          "actual_body_sha256": "ebbfbe5186383166337786e3f34a111b284ad9b9995d852614a08bfae2e8a349",
+          "actual_content_type": "application/json",
+          "actual_status": 200,
+          "authentication_challenge_present": false,
+          "label": "admin",
+          "method": "GET",
+          "path": "/api/vod/",
+          "role": "admin"
+        }
+      ],
+      "contract_id": "route-071cc4ed86bb92480c20:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "expected_cases": {
+        "admin": 200,
+        "anonymous": 401,
+        "standard": 403,
+        "viewer": 403
+      },
+      "name": "vod_root",
+      "observed_method": "GET",
+      "owned_effects": {
+        "after_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "all_HTTP_role_responses_match": true,
+        "before_sha256": "82afa19f3f07b5b734eff15a6477e012770f6053d84c9acfcdc9567e4f5e2cab",
+        "complete_raw_proof_sha256": "01ad305a1ad2df4f7f000ce928524de2d7b26d23405c967cbc9491e55631c06b",
+        "exact_DRF_link_set_matches": true,
+        "selected_identity_rows_preserved": true
+      },
+      "path_template": "/api/vod/",
+      "resolver": {
+        "action": null,
+        "handler": "rest_framework.routers.APIRootView",
+        "ordinal": 316,
+        "pattern": "api/vod/",
+        "view_name": "api:vod:api-root"
+      }
+    }
+  ],
+  "owner_exact_controller_sha256": "7b28444fc2885468d239a81c82609bde7bc8ce6b314b6b5cdb633ee3644ca8b1",
+  "owner_observation": {
+    "actual_exit": 0,
+    "label": "drf-api-roots",
+    "separate_outer_EOF_process_group_witness": false,
+    "wait": "subprocess.run"
+  },
+  "owner_state_snapshot_sha256": "22e4d4110207be1ebfd2fc2853543f014b0d8f90bf74aa70e26bdc9f607a4b88",
+  "phase_exits": {
+    "cleanup": {
+      "EOF_and_process_group_settled": true,
+      "actual_exit": 0
+    },
+    "probe": {
+      "EOF_and_process_group_settled": true,
+      "actual_exit": 0
+    },
+    "startup": {
+      "EOF_and_process_group_settled": true,
+      "actual_exit": 0
+    }
+  },
+  "raw_fingerprints": {
+    "cleanup-execution.json": "d7021343699961de9b047a36090e31a8e561ddc191780875fb21601c4061c684",
+    "independent-cleanup.json": "109084cf330ecedf280c9efda37e29c4fcbbd17234f16539ec44dafab049ce0d",
+    "owned-roles.json": "eefe3af3bf32d4e31bb00efa7c6f94034389551edb23e85df5877adc6c99dff6",
+    "probe-execution.json": "127a0758c128f545699a19d78fd9b0bdab5d20461396dfb46c70d9ebd076c8f5",
+    "probe.stdout": "3e59928f4d3729f20e9418477a819c86e53e8c74326698dabc7e9065761110ad",
+    "project-before.json": "1ad187a6487df270243fc4248f54fe993fb67520dfd51843dad5e76049969660",
+    "receipt.json": "585b0f741b6ccc5869ec686e789bb77b9048bdd2a82d7e1b0acba32e4e28d68c",
+    "startup-execution.json": "759e37c97877102932dfea30542b46ec85258bf37529af2bd8255dbcd8f20e77"
+  },
+  "registry_changed": false,
+  "retired_owned_roles": [
+    "baseline",
+    "origin"
+  ],
+  "scope": "Original-only exact DRF API roots",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}
