@@ -57,6 +57,9 @@ this node failed. The nine C74 passes remain scoped to C74.
 The [735 persisted password upgrade](rust-735-auth-hash-acceptance.md) passed 34 checks and
 verified cleanup on 735, covering eight persisted credential variants.
 
+The [a785 persisted password upgrade](rust-a785-auth-hash-acceptance.md) passed 34 checks across eight persisted credential variants against a fresh
+Original fixture and independently verified Compose cleanup.
+
 The [735 createsuperuser and typed comparisons](rust-735-cli-acceptance.md) passed 22 shipped
 createsuperuser cases and 154 typed comparisons on 735. The coordinator
 recorded two passing nodes and verified cleanup.
