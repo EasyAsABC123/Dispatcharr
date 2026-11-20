@@ -31,3 +31,22 @@ This result covers equivalent authenticated viewers on a single VLC profile
 under ordinary Main. Per-format performance and full M3 acceptance remain open.
 
 [Redacted playback receipt](../scripts/rust-integration/milestone-batch113/ordinary-vlc-playback.json)
+
+## Fresh paired VLC playback on 976f
+
+Pinned Original and ordinary packaged `976f2867` each served two
+authenticated MPEG-TS readers through the same locked VLC StreamProfile.
+Both backends used one actual VLC process, one upstream connection and one
+provider slot. Each request returned HTTP 200. The two captures on
+Original decoded 74, 74 video frames and those on Rust decoded
+74, 74. All four decoded audio without errors.
+
+Original stopped its application roles and retired upstream. Rust
+retired the idle input and upstream before Main exited 0. The owned VLC
+proxy workers retired, their active socket counts reached zero, and the
+controller verified exact Compose and process cleanup on both sides.
+
+This qualification covers the VLC StreamProfile's MPEG-TS playback.
+Comparative resource performance and full M3 remain open.
+
+[Redacted fresh 976f VLC receipt](../scripts/rust-integration/milestone-batch113/ordinary-vlc-playback-976f.json)
