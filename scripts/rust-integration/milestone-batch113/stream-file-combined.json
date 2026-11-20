@@ -1,0 +1,54 @@
+{
+  "Native_leaf_sha256": "15d9396ff77e6fe46f5b76af7d0df8ae82cf16acc450847b0961ffe7db798109",
+  "Original_leaf_sha256": "57b36bd3fdb2fe522efb9fd17f717a9f25b7512c086f117bb558bbf63d973d30",
+  "actual_exit": 0,
+  "candidate_image_id": "sha256:90bc93409ae1d7eb04985c6f208fc8e4c3f5d214be91e990f47611ad51eafd3f",
+  "candidate_manifest_sha256": "da56af2bbb396b27285ab3fb2412b61456291b5bd7e8406751b420617795b473",
+  "candidate_revision": "7adb0c72dae360cc5c3a4b5e4d8f7b100e8f200b",
+  "cases": 16,
+  "credit": "The original Dispatcharr authors and Django contributors retain full application and workflow credit.",
+  "earlier_attempt": {
+    "actual_exit": 1,
+    "before_engine": true,
+    "missing_coordinator_dependency": "functional_lease.py",
+    "stderr_sha256": "762d94e11a8263b333ab0db88721f64fa45a231457119c1191eae8ca58a527d7"
+  },
+  "exact_cleanup_verified": true,
+  "full_M5_passed": false,
+  "launched_backend_outcomes": [
+    {
+      "actual_cleanup_passed": true,
+      "actual_exit": 0,
+      "backend": "Original",
+      "selected_contexts": [
+        "stream-file-crud"
+      ],
+      "selected_passed": true
+    },
+    {
+      "actual_cleanup_passed": true,
+      "actual_exit": 0,
+      "backend": "Native",
+      "selected_contexts": [
+        "stream-file-crud"
+      ],
+      "selected_passed": true
+    }
+  ],
+  "observation_differences": [],
+  "outer_receipt_sha256": "c02a9c5c2f8a94dcbdeaa63601d3e5f957741ccd52d7833eabae25150ce4aa15",
+  "owned_roles": {
+    "Native": {
+      "exact_cleanup": true,
+      "retired_container_and_process_generations": 3
+    },
+    "Original": {
+      "exact_cleanup": true,
+      "retired_container_and_process_generations": 2
+    }
+  },
+  "performance_verified": false,
+  "scope": "stream-file-crud",
+  "scope_passed": true,
+  "scope_receipt_sha256": "adbee4b09099682064bfbf7641ee26275f52917123abd5d22a8e8eb088a71325"
+}

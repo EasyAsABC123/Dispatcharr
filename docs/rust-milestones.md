@@ -58,6 +58,12 @@ The [stock backup missing-settings replay](rust-m8-backup-missing-row.md)
 matched permissions, response bytes, row creation and cache invalidation
 when disabling the schedule. Both owned fixtures retired cleanly.
 
+The [stock Stream multipart replay](rust-m5-stream-file-compose.md) matched
+all 16 paired cases on the shared image. The
+[UTC time-only custom guide replay](rust-m7-utc-guide-compose.md) passed both
+phases on XMLTV, the programme grid, and Xtream short EPG. Both respective
+Compose projects retired exactly.
+
 The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
 ordinary Native login, cancel and both cleanup modes with exact SQL and
 teardown. The paired Original HTTP reference was retained.
