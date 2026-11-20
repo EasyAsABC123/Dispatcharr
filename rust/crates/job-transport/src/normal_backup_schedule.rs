@@ -73,20 +73,22 @@ impl Schedule {
         }
     }
     pub(crate) async fn initialize(&self, owner: Arc<dyn Send + Sync>) -> Result<(), StoreError> {
-        self.apply(None, owner, None).await.map(|_| ())
+        self.apply(None, owner, None, false).await.map(|_| ())
     }
     pub(crate) async fn update(
         &self,
         data: Value,
+        auth: &AuthService,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Value, StoreError> {
-        self.apply(Some(data), owner, None).await
+        self.apply(Some(data), owner, Some(auth), false).await
     }
     async fn apply(
         &self,
         data: Option<Value>,
         owner: Arc<dyn Send + Sync>,
         backup_cache_after_save: Option<&AuthService>,
+        ordinary_disable: bool,
     ) -> Result<Value, StoreError> {
         // Source reads malformed stored values as DEFAULTS, but PUT merges
         // updates into an empty object. Preserve that distinction before data moves.
@@ -95,7 +97,7 @@ impl Schedule {
         let mut connection = self.store.pool().acquire().await?;
         let observed=async{
    let row=sqlx::query("SELECT CASE WHEN value IS NULL OR octet_length(value::text)<=65536 THEN value ELSE NULL END AS value,value IS NULL OR octet_length(value::text)<=65536 AS bounded FROM core_coresettings WHERE key='backup_settings' LIMIT 1").fetch_optional(&mut *connection).await?;
-   let create_ordinary_row = row.is_none() && backup_cache_after_save.is_some();
+   let create_ordinary_row = row.is_none() && ordinary_disable;
    let mut value=match row{Some(row)=>{if !row.try_get::<bool,_>("bounded")?{return Err(failed("Backup settings capacity unavailable"))}row.try_get::<Option<Value>,_>("value")?.filter(Value::is_object).unwrap_or_else(||if updating{json!({})}else{defaults()})},
     None if create_ordinary_row=>{
      if !data.as_ref().is_some_and(|request| ordinary_disable_request(request, true)){
@@ -133,7 +135,7 @@ impl Schedule {
     } else {
      sqlx::query("UPDATE core_coresettings SET value=$1 WHERE key='backup_settings'").bind(&value).execute(&mut *connection).await?
     };
-    if backup_cache_after_save.is_some() && changed.rows_affected()!=1 { return Err(disable_unavailable()); }
+    if ordinary_disable && changed.rows_affected()!=1 { return Err(disable_unavailable()); }
    }
    Ok::<_,StoreError>(value)
   }.await;
@@ -205,23 +207,27 @@ fn ordinary_disable_request(data: &Value, missing_row: bool) -> bool {
     let Some(fields) = data.as_object() else {
         return false;
     };
-    if fields.get("enabled") != Some(&Value::Bool(false)) {
+    if !matches!(fields.get("enabled"), Some(Value::Bool(false)))
+        && data["enabled"].as_str() != Some("")
+    {
         return false;
     }
     if fields.len() == 1 {
         return !missing_row;
     }
+    let form_integer = |key: &str| {
+        let value = fields.get(key)?;
+        value
+            .as_i64()
+            .or_else(|| value.as_str().and_then(|_| integer(value).ok()))
+    };
     fields.len() == 6
         && matches!(data["frequency"].as_str(), Some("daily" | "weekly"))
         && data["time"].as_str().is_some_and(|time| {
             time.len() == 5 && chrono::NaiveTime::parse_from_str(time, "%H:%M").is_ok()
         })
-        && data["day_of_week"]
-            .as_i64()
-            .is_some_and(|day| (0..=6).contains(&day))
-        && data["retention_count"]
-            .as_i64()
-            .is_some_and(|count| count >= 0)
+        && form_integer("day_of_week").is_some_and(|day| (0..=6).contains(&day))
+        && form_integer("retention_count").is_some_and(|count| count >= 0)
         && data["cron_expression"].is_string()
 }
 
@@ -246,7 +252,7 @@ impl BackupScheduleDisableApi for BackupScheduleDisable {
             if !ordinary_disable_request(&data, false) {
                 return Err(disable_unavailable());
             }
-            self.0.apply(Some(data), caller, Some(auth)).await
+            self.0.apply(Some(data), caller, Some(auth), true).await
         })
     }
 }
@@ -289,5 +295,18 @@ mod tests {
             &json!({"enabled":false,"unknown":1}),
             false
         ));
+    }
+
+    #[test]
+    fn ordinary_disable_accepts_the_stock_html_form_strings() {
+        let mut request = json!({"enabled":"", "frequency":"weekly", "time":"04:10",
+                                 "day_of_week":"2", "retention_count":"3", "cron_expression":""});
+        assert!(ordinary_disable_request(&request, false));
+        assert!(ordinary_disable_request(&request, true));
+        request["enabled"] = json!("false");
+        assert!(!ordinary_disable_request(&request, false));
+        request["enabled"] = json!("");
+        request["retention_count"] = json!("1.0");
+        assert!(!ordinary_disable_request(&request, false));
     }
 }

@@ -493,14 +493,7 @@ impl BackupFiles {
             if jobs.is_none() && self.schedule_disable.is_none() {
                 return Ok(reply(501, "Backup schedule consumer is not prepared"));
             }
-            let raw =
-                axum::body::to_bytes(std::mem::replace(request.body_mut(), Body::empty()), 65536)
-                    .await
-                    .map_err(|_| {
-                        StoreError::StatusBody(400, json!({"detail":"Invalid request body"}))
-                    })?;
-            let value: Value = serde_json::from_slice(&raw)
-                .map_err(|_| StoreError::StatusBody(400, json!({"detail":"JSON parse error"})))?;
+            let value = schedule_update_body(request).await?;
             let updated = if let Some(jobs) = jobs {
                 jobs.update_schedule(value, lease.clone()).await?
             } else if let Some(adapter) = &self.schedule_disable {
@@ -944,6 +937,52 @@ fn sanitize_filename(filename: &str) -> Option<String> {
 #[cfg(test)]
 #[path = "backup_files_tests.rs"]
 mod tests;
+
+async fn schedule_update_body(request: Request) -> Result<Value, StoreError> {
+    let (parts, body) = request.into_parts();
+    let raw = axum::body::to_bytes(body, 65536)
+        .await
+        .map_err(|_| StoreError::StatusBody(400, json!({"detail":"Invalid request body"})))?;
+    if raw.is_empty() {
+        return Ok(Value::Object(serde_json::Map::new()));
+    }
+    let content_type = parts
+        .headers
+        .get("content-type")
+        .and_then(|value| value.to_str().ok())
+        .unwrap_or("");
+    let media = content_type.split(';').next().unwrap_or("").trim();
+    if media.eq_ignore_ascii_case("application/x-www-form-urlencoded") {
+        let form = url::form_urlencoded::parse(&raw)
+            .map(|(key, value)| (key.into_owned(), Value::String(value.into_owned())))
+            .collect();
+        return Ok(Value::Object(form));
+    }
+    if media.eq_ignore_ascii_case("multipart/form-data") {
+        let invalid_form =
+            || StoreError::StatusBody(400, json!({"detail":"Invalid schedule form"}));
+        let body = Request::from_parts(parts, Body::from(raw));
+        let mut multipart = Multipart::from_request(body, &())
+            .await
+            .map_err(|_| invalid_form())?;
+        let mut form = serde_json::Map::new();
+        while let Some(field) = multipart.next_field().await.map_err(|_| invalid_form())? {
+            let Some(name) = field.name().map(str::to_owned) else {
+                continue;
+            };
+            if field.file_name().is_some() {
+                return Err(StoreError::Unsupported(
+                    "File-valued backup schedule fields",
+                ));
+            }
+            let value = field.text().await.map_err(|_| invalid_form())?;
+            form.insert(name, Value::String(value));
+        }
+        return Ok(Value::Object(form));
+    }
+    serde_json::from_slice(&raw)
+        .map_err(|_| StoreError::StatusBody(400, json!({"detail":"JSON parse error"})))
+}
 
 #[path = "backup_multipart_guard.rs"]
 mod multipart_guard;

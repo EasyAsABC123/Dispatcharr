@@ -39,6 +39,7 @@ struct Inner {
     revoked: crate::normal_revocation::Revoked,
     executor: Executor,
     schedule: crate::normal_backup_schedule::Schedule,
+    schedule_auth: AuthService,
     identity: ProducerIdentitySource,
     worker: Arc<Semaphore>,
     http: Arc<Semaphore>,
@@ -76,6 +77,7 @@ impl Application {
                     cache.clone(),
                     identity.clone(),
                 ),
+                schedule_auth: auth.clone(),
                 executor: Executor::prepare(store, auth, cache, config, runtime, root, scratch)
                     .map_err(|_| Error::Configuration)?,
                 identity,
@@ -444,7 +446,8 @@ impl BackupJobApi for Application {
             }
             let owner = self.owner(true, caller).map_err(|_| api_error())?;
             let schedule = self.inner.schedule.clone();
-            tokio::spawn(async move { schedule.update(data, owner).await })
+            let auth = self.inner.schedule_auth.clone();
+            tokio::spawn(async move { schedule.update(data, &auth, owner).await })
                 .await
                 .map_err(|_| api_error())?
         })
