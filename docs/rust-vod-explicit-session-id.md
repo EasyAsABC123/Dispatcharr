@@ -38,3 +38,33 @@ With the unrelated reader open, Original still showed two shared readers 750 ms 
 In the full-body control, both clients received HTTP 200 with the same 4,299,455-byte asset and verified the full SHA-256. Each origin served exactly one complete media response. On both backends, the last Redis sample about 43 ms before client body EOF showed one active reader and one slot. The first sample about 132 ms after EOF showed zero for both. The separate origin counter first showed a complete response at about 133 ms after client EOF. Both clients reported return from the explicit HTTP close call within 0.04 ms of body EOF.
 
 The Original log query completed with zero recognized completion, disconnect or slot-release markers. The observations bound reader retirement and origin completion to their sampling intervals. The order of Original response finalization, reader retirement and slot release within those intervals remains unobserved. Provider-capacity timing and performance remain open.
+
+### Original completion markers at INFO
+
+The Source-only follow-up repeated the ordinary close and full-body EOF
+cases on pinned Original with stock `DISPATCHARR_LOG_LEVEL=INFO`. Both guests
+exited 0 and each Compose scope retired both owned container generations.
+The earlier paired run's WARNING setting suppressed these INFO markers.
+[Redacted Source observations](rust-vod-stock-info-completion.json)
+
+In the close case, Docker received two shared-session `GeneratorExit`
+markers. The first arrived about 1,000 ms after the first client close
+settled, around the second close. The second arrived about 1,010 ms after
+the second close settled, followed about 0.73 ms later by the shared slot
+release marker. The latter markers fell between Redis samples at +900 ms
+with one shared reader and two slots, and +1,100 ms with zero shared readers
+and one slot. The unrelated reader stayed open through that transition.
+Both shared readers use the same session ID, so the logs identify the
+session and the order of its markers.
+
+In the EOF case, the client received all 4,299,455 bytes with the same
+SHA-256. Docker received the normal completion marker about 0.13 ms after
+client body EOF and the release marker about 1.01 ms after EOF. Redis showed
+one active reader and one slot in the last pre-EOF sample at about −43 ms,
+and zero for both in the first post-EOF sample at about +133 ms.
+
+The marker times measure Docker console delivery. The fixture observed
+Redis and origin counters separately. The elapsed interval from the client
+close to Original's iterator finalization and the exact instant of the Redis
+updates remain unmeasured. Provider-capacity timing and performance remain
+open.

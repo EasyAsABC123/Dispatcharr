@@ -25,7 +25,7 @@ standby drops its file backlog before later taking ownership. The new Rust
 controls verify both cases.
 
 The fresh startup scope, rotation failure invariant and standby invariant are
-recorded separately. Runtime settings transitions, rotation under load,
+recorded separately. Persistence toggles, rotation under load,
 replica behavior, resource measurements and full M8 remain open.
 
 The corrected shared image repeated the fresh-boot check. All seven Compose
@@ -49,6 +49,25 @@ mount. The 18 foundation checks also passed.
 The controller exited 0 with both EOFs and its process group settled.
 Teardown independently verified the absence of all four owned containers
 and their original host processes. Project container, network and volume
-inventories were empty. Active rotation, settings transitions and full M8
+inventories were empty. Active rotation, persistence toggles and full M8
 acceptance retain their separate gates.
 [Read-only System Logs receipt](../scripts/rust-integration/milestone-batch113/read-only-system-logs.json)
+
+## Active collector retention setting
+
+Pinned Original and the exact `c74ea312bdc7` package both applied the stock
+System Settings PUT while the collector was running. An anonymous PUT
+returned 401 and left the setting and all three test archives unchanged.
+An administrator then changed retention from five files to two while
+preserving the other settings. Both backends wrote the expected collector
+configuration and pruned archives two and three. Archive one retained its
+inode and byte hash. The live file retained its inode, and its admin list
+and cursor tail matched its actual contents after the change.
+
+All five Original and seven Native phases exited 0 with both EOFs and
+settled groups. Teardown verified one Original and four Native owned
+containers and their original processes were absent. The earlier
+Original51 APIClient capture established config-write behavior. This pair
+also observed the running collectors apply the change without restarting.
+Persistence toggling, size-triggered rotation and full M8 remain open.
+[Active retention receipt](../scripts/rust-integration/milestone-batch113/active-log-retention.json)

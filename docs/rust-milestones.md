@@ -72,6 +72,8 @@ startup-file production, authenticated list and tail, and clean process
 shutdown. Focused Rust controls cover failed rotation and standby ownership.
 The same package passed 29 paired stored System Logs cases on one
 read-only mount, with exact responses, unchanged files and clean teardown.
+A paired stock Settings change lowered retention from five to two and
+pruned the expected archives while keeping the active log readable.
 
 The [stock backup missing-settings replay](rust-m8-backup-missing-row.md)
 matched permissions, response bytes, row creation and cache invalidation

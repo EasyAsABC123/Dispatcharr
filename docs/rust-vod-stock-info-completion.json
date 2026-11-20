@@ -1,0 +1,204 @@
+{
+  "actual_exit": 0,
+  "cohorts": {
+    "close": {
+      "first_close_samples": [
+        {
+          "redis": [
+            2,
+            1,
+            2
+          ],
+          "relative_ms": [
+            750.064551,
+            750.174694
+          ],
+          "sample": "first_close+750ms"
+        }
+      ],
+      "first_shared_marker_ms_after_first_close": [
+        999.901326,
+        999.902756
+      ],
+      "first_shared_marker_ms_from_second_close": [
+        -0.101172,
+        -0.099742
+      ],
+      "guest_exit": 0,
+      "origin_GETs": 3,
+      "raw_receipt_sha256": "8e2ec7738583db65860b8d0bd331d1554f008bd627c0f003176c491bfb7a20d0",
+      "retired_role_generations": 2,
+      "sample_fields": [
+        "shared_active",
+        "other_active",
+        "provider_slots"
+      ],
+      "second_close_samples": [
+        {
+          "redis": [
+            2,
+            1,
+            2
+          ],
+          "relative_ms": [
+            0.00385,
+            0.130894
+          ],
+          "sample": "last_shared_close+0ms"
+        },
+        {
+          "redis": [
+            1,
+            1,
+            2
+          ],
+          "relative_ms": [
+            50.058967,
+            50.16478
+          ],
+          "sample": "last_shared_close+50ms"
+        },
+        {
+          "redis": [
+            1,
+            1,
+            2
+          ],
+          "relative_ms": [
+            900.061487,
+            900.17091
+          ],
+          "sample": "last_shared_close+900ms"
+        },
+        {
+          "redis": [
+            0,
+            1,
+            1
+          ],
+          "relative_ms": [
+            1100.065641,
+            1100.215635
+          ],
+          "sample": "last_shared_close+1100ms"
+        }
+      ],
+      "second_shared_marker_ms_after_second_close": [
+        1010.014339,
+        1010.015769
+      ],
+      "shared_release_marker_ms_after_second_close": [
+        1010.74794,
+        1010.74937
+      ],
+      "shared_release_marker_ms_after_second_marker": [
+        0.732171,
+        0.735031
+      ],
+      "shared_session_finalization_markers": 2,
+      "unrelated_close_samples": [
+        {
+          "redis": [
+            null,
+            1,
+            1
+          ],
+          "relative_ms": [
+            750.05893,
+            750.180163
+          ],
+          "sample": "other_close+750ms"
+        },
+        {
+          "redis": [
+            null,
+            0,
+            0
+          ],
+          "relative_ms": [
+            1500.066018,
+            1500.287304
+          ],
+          "sample": "other_close+1500ms"
+        }
+      ],
+      "unrelated_marker_ms_after_its_close": [
+        1261.059887,
+        1261.061317
+      ],
+      "unrelated_release_marker_ms_after_its_close": [
+        1261.820549,
+        1261.821979
+      ]
+    },
+    "eof": {
+      "body_bytes": 4299455,
+      "body_sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+      "close_call_and_return_ms_after_client_eof": [
+        0.011121,
+        0.028601
+      ],
+      "completion_marker_ms_after_client_eof": [
+        0.132434,
+        0.133874
+      ],
+      "guest_exit": 0,
+      "origin_GETs": 1,
+      "origin_counter_ms_after_eof": [
+        132.665089,
+        133.263266
+      ],
+      "origin_counter_ms_before_eof": [
+        -43.138462,
+        -42.561746
+      ],
+      "post_completion_release_marker_delta_ms": [
+        0.879335,
+        0.882215
+      ],
+      "raw_receipt_sha256": "e8987e6cf24424423e361af8c1c01b4a9c89bbf2564ffc692ed6853d906c7e26",
+      "redis_after_eof": {
+        "redis": [
+          0,
+          null,
+          0
+        ],
+        "relative_ms": [
+          132.516095,
+          132.663499
+        ],
+        "sample": "full_body_seen_by_observer"
+      },
+      "redis_before_eof": {
+        "redis": [
+          1,
+          null,
+          1
+        ],
+        "relative_ms": [
+          -43.290657,
+          -43.140012
+        ],
+        "sample": "full_body_tail"
+      },
+      "release_marker_ms_after_client_eof": [
+        1.013209,
+        1.014649
+      ],
+      "retired_role_generations": 2,
+      "sample_fields": [
+        "shared_active",
+        "other_active",
+        "provider_slots"
+      ]
+    }
+  },
+  "original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_verified": false,
+  "prior_paired_raw_receipt_sha256": "f69c50557c7360bfee812424cf739ed097b6a6bda9cbfd6d3f8548ad5e7a6465",
+  "provider_capacity_timing_accepted": false,
+  "raw_receipt_sha256": "362a74561e697d5d32f11d7b32e6594ee40bd0707c466fb178fcffae7b973a59",
+  "scope": "Original normal VOD close/EOF with stock INFO console logging",
+  "timestamp_scope": "Docker console ingress relative to guest events; independent sampled Redis and origin reads"
+}
