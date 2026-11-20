@@ -21,6 +21,21 @@ application release matrix remains open.
 
 [Exact portability receipt](../scripts/rust-integration/milestone-batch111/amd64-pg-vlc-portability.json)
 
+## a785 amd64 package check
+
+Ten probes passed on the exact `a785a2b7` application image. Five comparison
+probes passed on the retained standalone backup-component image. Both exposed
+the same PostgreSQL 17 payload sources and hashes. The `pg_dump`, `pg_restore`
+and `psql` version commands matched their packaged manifests. The application
+also passed the packaged VLC and cvlc wrapper and version checks.
+
+The probes used the retained images with networking disabled. The controller
+verified the amd64 image identities and independently confirmed all 15 probe
+containers were removed. Rollout and native ARM64 package validation remain
+open.
+
+[Exact a785 amd64 receipt](../scripts/rust-integration/milestone-batch111/a785-amd64-pg-vlc-portability.json)
+
 ## ARM64 donor provenance
 
 The published `base-20261103010601` index and its ARM64 tag index resolve to

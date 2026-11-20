@@ -125,3 +125,32 @@ Shutdown deadline expiration, scheduling, restore, cancellation,
 full M8 acceptance, and comparative performance remain open.
 
 [Redacted active-backup shutdown receipt](../scripts/rust-integration/milestone-batch113/standalone-backup-active-shutdown-a785.json)
+
+## Selected-mode restore of an Original archive
+
+A fresh run on `a785a2b7` verified a current-schema PostgreSQL restore
+with the Selected worker enabled, its scheduler disabled, and the
+standalone backup owner flag absent. Two sequential internal Compose
+projects each had their own PostgreSQL 17 instance and control database.
+
+Original created a 39,423-byte format-2 archive through its authenticated
+API and worker. The Native target had different seeded data. Rust Main
+accepted the archive upload with HTTP 201 and returned the exact Original
+bytes on download. The upload left the target records unchanged. An
+authenticated restore then returned HTTP 202. The signed status
+matched the restore worker's Redis SUCCESS result.
+
+After restore, the target matched Original's representative user ID and
+password hash, channel ID and UUID, logo relationship, and settings. Its
+separate database control stayed unchanged. The same Rust Main accepted
+the restored password, rejected the replaced password with HTTP 401,
+and returned the restored settings and channel. The SQL observer ran
+through the management shell with application startup hooks skipped.
+
+Both roles stopped normally. The controller exited 0 with all six owned
+Compose generations retired and empty inventories. This qualification
+covers the selected current-schema route for the seeded fixture.
+Standalone restore remains unsupported. Enabled-plugin and older-schema
+restore, media files, full M8 and comparative performance remain open.
+
+[Redacted Selected restore receipt](../scripts/rust-integration/milestone-batch113/selected-backup-restore-a785.json)
