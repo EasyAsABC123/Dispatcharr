@@ -170,6 +170,10 @@ The [e765 ordinary channel-maintenance pair](rust-m6-e765-ordinary-channel-tasks
 matched four authenticated job outcomes through HTTP, Redis, Channels and SQL
 with exact cleanup. The first controller exit 1 remains recorded separately.
 
+The [e765 scheduled XMLTV run](rust-m6-e765-scheduled-xmltv.md) verified one
+due refresh per backend, both settled descendants, programme and index
+effects, and exact cleanup on the same packaged candidate.
+
 The [735 MPEG-TS functional checks](rust-m9-735-functional-streaming.md) passed
 all three required nodes with verified cleanup. The run covered 24 two-worker
 checks, 14 delayed restart checks and 100 retained-history readers with 20
