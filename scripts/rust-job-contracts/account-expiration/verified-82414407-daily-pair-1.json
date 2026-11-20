@@ -1,0 +1,69 @@
+{
+  "actual_controller_exit": 0,
+  "candidate": "82414407934a2ac19f01949df302e9715f667261",
+  "credit": "Original Dispatcharr, Celery and Django Celery Beat authors retain full credit.",
+  "lanes": {
+    "Native": {
+      "actual_lane_exit": 0,
+      "business_evidence": {
+        "actual_Channels_receiver_sha256": "2daae61cefbd3042efc4a9387e9bd76949de42af40e50db15b6de6359635982c",
+        "actual_result_sha256": "c47ee71e0d97c718a4914d6badf00460c46245cffbdd62a6b8dbe0ade21d5be7",
+        "seed_and_both_SQL_snapshots_sha256": [
+          "84c8185430b9928434cc50a99d767a6df09b15e752632d09968ddeeeb9d9b45d",
+          "322cb1119df371df155c9a89874c5b34071715594541c6db04ffbc154c1f4aae",
+          "b786da33d8fbd1ece86891738cd6af0a7adc6e0283d91b90a9bc3109acf0cd5b"
+        ],
+        "wire_and_terminal_barrier_sha256": [
+          "979a1999ac9765675072d214022fd3da34fe974cda6af7d42589928e189ea210",
+          "2b589dc56cf5a4009ec37310b67a589244d9c3346b45bc1fbb5e5aaedf547fe9"
+        ]
+      },
+      "cleanup_sha256": "d67ae12f105df32bc3ccc745e148b32c0e850ffc1e3a7d4d05086b42af19be38",
+      "exact_generations_retired": 3,
+      "execution_sha256": "bf8404d1f63c6bae242ce03782f2f583e446e08ffbba10b3d57efd9eb157d71f",
+      "lane_sha256": "81b47af0d71eb40aa17670a6726aa9571a83cfd9a97aa329264087e39a2d10a5",
+      "main_actual_exit": 0,
+      "main_terminal_sha256": "1b920cb08762a62b79cc9cac0c25f18350a0ee13d220ab1815d30923ef2684f3"
+    },
+    "Original": {
+      "actual_lane_exit": 0,
+      "business_evidence": {
+        "actual_Channels_receiver_sha256": "7a367148dcbdf7f9c07398ff8217c624c4660d5c231f7384c34f69503ffa3617",
+        "actual_result_sha256": "1f0eab9300b4dc172152d226aaaf9455c9c63c5e0b2ec5e7ea2bb26b2a394230",
+        "seed_and_both_SQL_snapshots_sha256": [
+          "cfc290e90f35bf2f2cda9567d4985499db2610c2aa1a44d2cf23ba0ad7c23057",
+          "d4cdd539b79a80ffc6c9ff72d402cc14b282d39795954e66c8a4ef2887b165c2",
+          "8bb6517db9fee68cc9a8f8de351fb4f47735cc458bed3d10b1d1cc468f4c4fd4"
+        ],
+        "wire_and_terminal_barrier_sha256": [
+          "7c226a9c20bc3f93e867c1b0eb28869d843195eed6716cbd1712c7ef243fff5f",
+          "68af72d70f7e599d749c2035c9b45317cb901b96eaa319b4b632e89da871f438"
+        ]
+      },
+      "cleanup_sha256": "01cf69ccea6dfac4b243f52ff895511505de69a05de1660ba024bff700dcd624",
+      "exact_generations_retired": 2,
+      "execution_sha256": "64399d426d789f4f89fef0c843ec0369b657291d54ef6b0130d155f73681fdd1",
+      "lane_sha256": "cd1e225856569e6446f931bdae034395a2b403bd96f5d9b21b005f1ae843e162"
+    }
+  },
+  "manifest_sha256": "df4ae40af85a6a11f1aef934aa7d1c2d117531d9d7473588a02c554acbe60da1",
+  "native_image": "sha256:f51af34055df3a3b10b3aaf84624d638d1691d5778ce7169a8e8acc04ab14fd3",
+  "qualification_sha256": "5cc22f35d77c43614675e814542e87f4eb58cf52fb45422c8ed4ab0cb3200033",
+  "scope": {
+    "active_profile_sql_effects": [
+      "warning updated in place",
+      "expired value created"
+    ],
+    "deleted_and_dismissed_notifications": 2,
+    "full_M6": false,
+    "inactive_account_filtered": true,
+    "normal_queue_drained": true,
+    "notice_update_events": 2,
+    "performance_verified": false,
+    "profile_and_unrelated_notice_rows_unchanged": true,
+    "root_task": "apps.m3u.tasks.check_account_expirations",
+    "stock_daily_task_runs": 1,
+    "success_result": null
+  },
+  "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f"
+}

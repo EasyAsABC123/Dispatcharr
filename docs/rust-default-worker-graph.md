@@ -11,17 +11,20 @@ plugin registration. The
 registrations from actual natural producers, executable evidence and remaining
 unmapped workflows.
 
-Three recent paired Compose scopes exercise the selected Main workers with
+Four recent paired Compose scopes exercise the selected Main workers with
 `RUST_EXPERIMENTAL_SELECTED_JOBS=1` and
 `RUST_EXPERIMENTAL_SELECTED_BEAT=1`. On `c2a35f9d`, the Core
 compatibility Beat task produced its Stats event, scanner state and linked
 M3U group result. On `82414407`, the enabled hourly recurring rule created
 one future recording and completed its linked artwork job. The authenticated
 Series import completed Refresh, Index, Series and two artwork tasks with
-one artwork update. All three verified teardown.
+one artwork update. Daily account expiration matched warning and expired
+notification rows, dismissals and four Channels effects. All four verified
+teardown.
 [Compatibility Beat](rust-m6-c2a3-compat-beat.md)
 [Recurring rule](rust-m6-c2a3-enabled-recurring.md)
 [Series artwork](rust-m6-82414407-series-artwork.md)
+[Daily account expiration](rust-m6-82414407-account-expiration.md)
 
 | Family group | Current Main composition | Actual acceptance and remaining scope |
 | --- | --- | --- |
