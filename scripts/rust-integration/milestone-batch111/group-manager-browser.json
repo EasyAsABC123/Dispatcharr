@@ -1,0 +1,112 @@
+{
+  "accepted_attempt": {
+    "SQL_counts": {
+      "after": {
+        "channels": 11,
+        "groups": 1,
+        "relations": 0
+      },
+      "before": {
+        "channels": 11,
+        "groups": 3,
+        "relations": 1
+      }
+    },
+    "all_channel_rows_exact": true,
+    "artifact_sha256": {
+      "actual-exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "baseline-execution.json": "53bd776dca346ab01e16d2e7ac46cb6a91ee82bcecd2e7f12f4bdaa2ad04b518",
+      "binding.json": "e968a1892dcc0e5d44f244b1884f6e6260b430cf68dadc824e35e08de4e44bf2",
+      "browser.json": "e69e9d96bd0a3973fb73ea6ede549235bacc5654e849870e6402dda475a49945",
+      "candidate-execution.json": "3da9ee86e537f794b88d8cdf87559711e16cdeb265dc5419a2d41a501a8150b0",
+      "cleanup-execution.json": "e92400d9c334d5aa5702810255d0643a1094d6be0aa84f2584a80a019e2dc370",
+      "independent-cleanup.json": "2e445952d935f99bab20d73d8594e1ba2f28cedefa62a1f145626561a8214dc1",
+      "receipt.json": "f6a1c3efc7da8b9b9f218a9b6c888fbc43f92e0dfabb5a76156056c6998e273e",
+      "sql.json": "f6e65a566ef7e9cf5309b5dcbc7926ccd8f7edc8021a72d1c5be5748bc7fbb9a",
+      "stop-original-web-execution.json": "86aa3a653ce26b09e01c1dadb6195ac8dcb0ac057039ab044e1c14610fe672db"
+    },
+    "browser_exit": 0,
+    "cancel_without_cleanup_request": true,
+    "cleanup_calls": [
+      {
+        "include_custom": false,
+        "reported_deleted_groups": 1,
+        "status": 200
+      },
+      {
+        "include_custom": true,
+        "reported_deleted_groups": 1,
+        "status": 200
+      }
+    ],
+    "cleanup_route": "POST /api/channels/groups/cleanup/",
+    "controller_exit": 0,
+    "exact_browser_generation_absent": true,
+    "exact_retired_roles": [
+      "baseline",
+      "candidate",
+      "data-init",
+      "origin"
+    ],
+    "final_owned_inventory": {
+      "container": 0,
+      "network": 0,
+      "volume": 0
+    },
+    "phase_exits": {
+      "baseline": 0,
+      "candidate": 0,
+      "cleanup": 0,
+      "stop-original-web": 0
+    },
+    "process_groups_settled": true,
+    "stdout_stderr_EOF": true,
+    "stock_login": true,
+    "surviving_group_row_exact": true,
+    "uncaught_exceptions": 0
+  },
+  "browser_driver_sha256": "670c921d38c3b65be1971ab1bd943d2c19967acd202f6fb9733aa29de1e7de1a",
+  "candidate": {
+    "build_exit": 0,
+    "build_sha256": "2f37111a2acec3a5592016ed5450e47f56fbf33b005bba884447d6b267c9007b",
+    "frontend_source_sha256": {
+      "frontend/src/components/forms/GroupManager.jsx": "cabf193e45f29f5d8a1629960f9f20e913ffe4caddffba61bac0352f19e7db47",
+      "frontend/src/components/forms/LoginForm.jsx": "c2b7aa74e6bfed67ec6c137de6eec05d341bb6cb63290fe2ec23efae294f3038",
+      "frontend/src/components/tables/ChannelsTable.jsx": "1c8476d9a1e510ce02bc5b2b04e487bcf160487e94816c1214942503d574e0f3",
+      "frontend/src/components/tables/ChannelsTable/ChannelTableHeader.jsx": "10d24e85a042706696730615efa86685e311329ab1940536721297205953f8a5",
+      "frontend/src/utils/loginRedirect.js": "718cd7b17c48d9ff708e4c9b8bb304c2fe74e8e6f8b4974340396c44769b74cc"
+    },
+    "image_id": "sha256:c1ada4a0fbb3bec3b5995a45c5e7a7f2d36e862774b8375a1d73aa0924534e02",
+    "revision": "6667998fe8000057e4c08f46fd79a0b11bc751a3",
+    "source_archive_sha256": "21f3bf2074ba78cc17b3a0e80cd430d77953cbf43a60a69f9f6ff59f5a909791",
+    "source_tree_sha256": "08e25f126bca1a96ccbfd176009d52824f1d98926d5e7667492277e604d479d1"
+  },
+  "controller_freeze_sha256": "25ed8435c2694956260fb3374138367c7e7f9f94b8cfef4aa7fd4a5bac2d4038",
+  "controller_sha256": "a5cf2d1c673b97884f967a0ebdc02f146dd7d775eb7fbfb037c749a2f73d98be",
+  "credit": "Original Dispatcharr authors and contributors retain full application and React credit.",
+  "full_M5_accepted": false,
+  "original": {
+    "authority_sha256": "688d37c36429aa87a7adeaad0eb1406acc99290d16466607588ff9f9c8d2905e",
+    "focused_authority_checks_passed": 11,
+    "fresh_browser_execution": false,
+    "retained_http_authority": "scripts/rust-integration/verified-integration-m5-channel-groups-1.json",
+    "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "web_stopped_before_candidate_browser": true
+  },
+  "performance_verified": false,
+  "previous_attempt": {
+    "SQL_unchanged": true,
+    "artifact_sha256": {
+      "browser.json": "fa51c32774a01927527a79e15e38d51efd650f5842c228d72cdc8ffd33b41f0d",
+      "independent-cleanup.json": "306cd59e1e749e4bd7697ae468f0416abcd8ee0c222a272c0c14454917c020ea",
+      "receipt.json": "7ffbf9324f1d96f2a4629a45d7c64331fa855131913765b467325114fff689e6",
+      "sql.json": "c4632d56a06493b79dc38b2ee6e340fe3b86730adffe000383a9736a43eb37da"
+    },
+    "browser_exit": 1,
+    "controller_exit": 1,
+    "exact_cleanup": true,
+    "stage": "open-group-manager"
+  },
+  "scope": "Stock React Group Manager cleanup against ordinary Native Main with retained paired Original HTTP authority."
+}

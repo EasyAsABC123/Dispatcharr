@@ -36,6 +36,10 @@ passed 12 VOD and catch-up pairs with matched work. Median paired CPU fell
 The [Candidate108 API results](rust-milestone-batch108.md) verify Core JSON
 routes, the stock React channel-guide edit and legacy backup schedule reads.
 
+The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
+ordinary Native login, cancel and both cleanup modes with exact SQL and
+teardown. The paired Original HTTP reference was retained.
+
 [The late Redis commit replay](../scripts/rust-core-contracts/late-commit-replay/receipt.json)
 preserved all 23 paired streaming core cases. A fresh Rust writer recovered
 at the physically committed index and delivered both ordered payloads before
