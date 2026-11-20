@@ -124,6 +124,10 @@ across 18 suites with verified cleanup. It matched the exact HTTP 404
 body for the malformed settings ID. The coordinator recorded one passing
 node on 735.
 
+The [a785 permissions and management baseline](rust-a785-baseline-acceptance.md) passed
+1,024 checks across 18 suites on the standalone-backup successor image. The
+run decoded 75 video frames and independently verified project cleanup.
+
 The [735 MPEG-TS functional checks](rust-m9-735-functional-streaming.md) passed
 all three required nodes with verified cleanup. The run covered 24 two-worker
 checks, 14 delayed restart checks and 100 retained-history readers with 20
