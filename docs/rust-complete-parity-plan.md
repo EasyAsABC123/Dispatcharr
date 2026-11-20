@@ -49,6 +49,11 @@ with 100 late readers and 20 audio/video decodes. Each coordinator run
 exited 2 with the larger roster still open.
 [C74 package checks](rust-c74-clean-install-operator.md)
 
+The [e852 permissions and management baseline](rust-e852-permissions-management-baseline.md) ran all 18 suites.
+It recorded 1,023 passing checks and one response-body mismatch for a
+malformed settings ID. Cleanup passed. The coordinator exited 2 with
+this node failed. The nine C74 passes remain scoped to C74.
+
 The shared verification package kept the existing React inputs and combined
 the explicit VOD session change, opt-in Original Celery playlist refresh, and
 missing-row backup settings recovery. The scoped Compose checks passed.

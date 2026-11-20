@@ -1,0 +1,121 @@
+{
+  "actual_coordinator_exit": 2,
+  "actual_owned_original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "candidate": {
+    "build_manifest_sha256": "678e56836bd15aa39e14d64148e179c3adfba986b5c3724304bd5af3af5c0db5",
+    "git": "e852e76069609a9f39e5933a6810d3f59258db3a",
+    "image_id": "sha256:b42157d6e19e6a94aea11cd689118ce7a9cd027e6fe5556e0092caf5d79d6be9",
+    "source_archive_sha256": "e7d6330ef46993861454091c943c82d0327d6dc7e472e76ab23fccb48e6273d1",
+    "source_map_sha256": "2c6f3623028390a79e58f7c63cfe6943a75a4f3648c33357313fa361e8f76bdd"
+  },
+  "cleanup_uncertain": false,
+  "coordinator_binding_sha256": "90075b79844cea4b9089bea70504584bbd20ba265ea09061adcfdfd73b395543",
+  "coordinator_report_sha256": "3756caee80fc4fe76a217a0662565f6bfe8b7fbda731645a58ca00369e50397a",
+  "credit": "The original Dispatcharr authors and contributors retain full application and workflow credit.",
+  "entrypoint": "production-Main",
+  "exact_owned_inventory_empty": true,
+  "fixture_diagnostics": {
+    "checks_failed": 1,
+    "checks_passed": 1023,
+    "checks_recorded": 1024,
+    "failed_scope_counts": {
+      "core-read": 1
+    },
+    "failure_type": null,
+    "fixture_cleanup_recorded": true,
+    "observed_check_scopes": [
+      "account-body-parity",
+      "accounts",
+      "accounts-crud",
+      "app-data",
+      "channel-crud",
+      "channel-groups",
+      "channel-profiles",
+      "channel-read",
+      "channel-stop",
+      "core-read",
+      "core-stream-crud",
+      "core-utilities",
+      "django-password-auth",
+      "django-refresh-accepted-by-rust",
+      "django-token-role",
+      "filter-crud",
+      "group-cleanup",
+      "invalid-presented-token-rejected",
+      "notifications",
+      "profile-memberships",
+      "provider-read",
+      "rust-real-media-decoder",
+      "rust-tokens-accepted-by-django",
+      "server-group-crud",
+      "startup",
+      "status-parity",
+      "streams"
+    ],
+    "owned_report_sha256": "602b2be07ae7ab9e05181e296653f1e559c0643c62106d3a0ac5ca6a362ef2a6"
+  },
+  "fresh_owned_Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "full_milestone_passed": false,
+  "full_required_workflow_passed": false,
+  "historical_equivalent_check_passed": true,
+  "independent_cleanup_sha256": "433c8867f492b76856037a1b2585e4fab0cb541699e9299b9106da95b3f5faee",
+  "matrix_git": "b01cb4d68c31c493c3b605ea075d7c4020d30329",
+  "node_status": "failed",
+  "performance_verified": false,
+  "phase_EOF_and_process_groups_settled": {
+    "cleanup": true,
+    "evaluation": true,
+    "execution": true
+  },
+  "phase_actual_exits": {
+    "cleanup": 0,
+    "evaluation": 1,
+    "execution": 1
+  },
+  "phase_failure_types": {
+    "cleanup": null,
+    "evaluation": null,
+    "execution": null
+  },
+  "protected_React_and_credit_inputs": 497,
+  "required_node_status_counts": {
+    "blocked": 126,
+    "failed": 1,
+    "passed": 0
+  },
+  "scope": "package/baseline-all",
+  "selected_contract_suites": [
+    "accounts",
+    "account_crud",
+    "app_data",
+    "core",
+    "profiles",
+    "memberships",
+    "channel_reads",
+    "channel_crud",
+    "groups",
+    "channel_stops",
+    "group_cleanup",
+    "streams",
+    "provider_reads",
+    "server_group_crud",
+    "filter_crud",
+    "core_utilities",
+    "core_stream_crud",
+    "notifications"
+  ],
+  "single_failed_check": {
+    "confirmed_Native_body": {
+      "detail": "No CoreSettings matches the given query."
+    },
+    "confirmed_Original_body": {
+      "detail": "Not found."
+    },
+    "index_zero_based": 139,
+    "name": "core-read:settings:standard:detail:not-a-number",
+    "python_body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+    "python_status": 404,
+    "rust_body_sha256": "fd0ca29c308e5f3a4e11317aaa112de68bfd6a1fd55dc06be72817064feadb89",
+    "rust_status": 404
+  }
+}

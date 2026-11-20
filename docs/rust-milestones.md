@@ -98,6 +98,11 @@ further nodes passed 14 restart checks and the functional retained-history
 fixture with 100 late readers and 20 audio/video decodes. The full
 integrated package and resource gates remain open.
 
+The [e852 permissions and management baseline](rust-e852-permissions-management-baseline.md) ran all 18 suites.
+It recorded 1,023 passing checks and one response-body mismatch for a
+malformed settings ID. Cleanup passed. The coordinator exited 2 with
+this node failed. The nine C74 passes remain scoped to C74.
+
 The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
 ordinary Native login, cancel and both cleanup modes with exact SQL and
 teardown. The paired Original HTTP reference was retained.
