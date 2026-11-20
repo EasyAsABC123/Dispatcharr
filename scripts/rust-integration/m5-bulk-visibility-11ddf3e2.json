@@ -1,0 +1,294 @@
+{
+  "approved_review_sha256": "c1c022eb27596cdf2b464ec94efe532cb3947d85dd8869b7a1814057a4b128ad",
+  "candidate": "11ddf3e27526671a5a9a84b46c10494db4c3d691",
+  "candidate_image_id": "sha256:745ea1c62ae3a657941f33c1a033cc424f9fe904a2783a157128ae8fb8b4eb3e",
+  "credit": "The original Dispatcharr authors and contributors retain full credit.",
+  "default_Core": true,
+  "initial_compact_source_fixture_cleanup_verified": true,
+  "initial_compact_source_fixture_literal_exit": 1,
+  "manifest_sha256": "09883555e2af016451e7abf327dece37dcf6c47c265e3e5738067c3d670436de",
+  "milestone_accepted": false,
+  "paired_freeze_sha256": "ea41833d75fc5add8527763f8595a4a8019717382675a45e435155957f76df78",
+  "performance_verified": false,
+  "scopes": {
+    "compact": {
+      "cleanup": {
+        "compose_down_passed": true,
+        "exact_container_and_process_generations_absent": {
+          "baseline": true,
+          "candidate": true,
+          "data-init": true,
+          "origin": true
+        },
+        "remaining_owned": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "detail_Allow": {
+        "native": [
+          [
+            null,
+            null,
+            null
+          ],
+          [
+            null,
+            null,
+            null
+          ]
+        ],
+        "original": [
+          [
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+          ],
+          [
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+          ]
+        ]
+      },
+      "literal_exit": 0,
+      "paired_receipt_sha256": "035399b75676274b5cde23fe44c1ce50bd43962055d9abb26fe23fb4026c9183",
+      "source_receipt_sha256": "50edba035261c4fb1b8f4b602580e6bfe49db41c2a1830a43353efbfa9344c8d",
+      "typed_outcomes": {
+        "cases": [
+          {
+            "detail_numbers": [
+              null,
+              3002,
+              204
+            ],
+            "only_selected_flags_and_slots_changed": true,
+            "ordered_channels": [
+              {
+                "detail": {
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "detail_raw_and_effective_number": null,
+                "kind": "managed-first",
+                "outcome_flag": true,
+                "patch_raw_and_effective_number": null
+              },
+              {
+                "detail": {
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "detail_raw_and_effective_number": 3002,
+                "kind": "managed-second",
+                "outcome_flag": false,
+                "patch_raw_and_effective_number": null
+              },
+              {
+                "detail": {
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "detail_raw_and_effective_number": 204,
+                "kind": "manual",
+                "outcome_flag": true,
+                "patch_raw_and_effective_number": 204
+              }
+            ],
+            "outcome_flags": [
+              true,
+              false,
+              true
+            ],
+            "patch": {
+              "allow": "PATCH, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "patch_numbers": [
+              null,
+              null,
+              204
+            ],
+            "typed_success_message": "Successfully updated 3 channels"
+          },
+          {
+            "detail_numbers": [
+              3000,
+              null,
+              204
+            ],
+            "only_selected_flags_and_slots_changed": true,
+            "ordered_channels": [
+              {
+                "detail": {
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "detail_raw_and_effective_number": 3000,
+                "kind": "managed-first",
+                "outcome_flag": false,
+                "patch_raw_and_effective_number": null
+              },
+              {
+                "detail": {
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "detail_raw_and_effective_number": null,
+                "kind": "managed-second",
+                "outcome_flag": true,
+                "patch_raw_and_effective_number": null
+              },
+              {
+                "detail": {
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "detail_raw_and_effective_number": 204,
+                "kind": "manual",
+                "outcome_flag": false,
+                "patch_raw_and_effective_number": 204
+              }
+            ],
+            "outcome_flags": [
+              false,
+              true,
+              false
+            ],
+            "patch": {
+              "allow": "PATCH, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "patch_numbers": [
+              null,
+              null,
+              204
+            ],
+            "typed_success_message": "Successfully updated 3 channels"
+          }
+        ],
+        "compact_managed_group": true,
+        "final_SQL_equals_initial": true,
+        "patch_retains_pre_assignment_raw_number": true,
+        "raw_body_or_credentials_retained": false,
+        "unhide_precedes_hide_release": true
+      }
+    },
+    "noncompact": {
+      "cleanup": {
+        "compose_down_passed": true,
+        "exact_container_and_process_generations_absent": {
+          "baseline": true,
+          "candidate": true,
+          "data-init": true,
+          "origin": true
+        },
+        "remaining_owned": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "detail_Allow": {
+        "native": [
+          [
+            null,
+            null
+          ],
+          [
+            null,
+            null
+          ]
+        ],
+        "original": [
+          [
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+          ],
+          [
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+          ]
+        ]
+      },
+      "literal_exit": 0,
+      "paired_receipt_sha256": "7e050641a4e1e282a7f430e6e911514a9a7d18ebf8f8bcc6faa9e7375e2b883c",
+      "source_receipt_sha256": "ed51e3665a03f451289b7fed012b7bac0e50805879687d6f1c423e490942d5f0",
+      "typed_outcomes": {
+        "cases": [
+          {
+            "only_selected_raw_flags_changed": true,
+            "ordered_channels": [
+              {
+                "detail": {
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "hidden_from_output": true,
+                "kind": "managed",
+                "overlay_unchanged": true,
+                "raw_and_effective_numbers_unchanged": true
+              },
+              {
+                "detail": {
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "hidden_from_output": true,
+                "kind": "manual",
+                "overlay_unchanged": true,
+                "raw_and_effective_numbers_unchanged": true
+              }
+            ],
+            "patch": {
+              "allow": "PATCH, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "selected_hidden_value": true,
+            "typed_success_message": "Successfully updated 2 channels"
+          },
+          {
+            "only_selected_raw_flags_changed": true,
+            "ordered_channels": [
+              {
+                "detail": {
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "hidden_from_output": false,
+                "kind": "managed",
+                "overlay_unchanged": true,
+                "raw_and_effective_numbers_unchanged": true
+              },
+              {
+                "detail": {
+                  "mime": "application/json",
+                  "status": 200
+                },
+                "hidden_from_output": false,
+                "kind": "manual",
+                "overlay_unchanged": true,
+                "raw_and_effective_numbers_unchanged": true
+              }
+            ],
+            "patch": {
+              "allow": "PATCH, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "selected_hidden_value": false,
+            "typed_success_message": "Successfully updated 2 channels"
+          }
+        ],
+        "final_SQL_equals_initial": true,
+        "noncompact_managed_group": true,
+        "raw_body_or_credentials_retained": false
+      }
+    }
+  },
+  "verified_reducer_receipt_sha256": "7b8bce13424efcd94786c6c463955164d8bbfb799da4864c6bf566fe02e799bf"
+}

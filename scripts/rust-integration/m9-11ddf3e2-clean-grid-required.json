@@ -1,0 +1,96 @@
+{
+  "build_manifest_sha256": "09883555e2af016451e7abf327dece37dcf6c47c265e3e5738067c3d670436de",
+  "candidate_image_id": "sha256:745ea1c62ae3a657941f33c1a033cc424f9fe904a2783a157128ae8fb8b4eb3e",
+  "candidate_revision": "11ddf3e27526671a5a9a84b46c10494db4c3d691",
+  "credits": "The original Dispatcharr, Django, Celery and dependency contributors retain full credit.",
+  "formal_required_nodes": 127,
+  "fresh_verified_required_nodes": 2,
+  "full_M9_accepted": false,
+  "groups": {
+    "clean": {
+      "campaign_phases_sha256": {
+        "clean": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+        "clean-preflight": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "clean-proof": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/clean-install": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "9ffb2a7c787a04bffd5f84453463964e7b7f3f6240b010711d5b5b48791616ba",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "checks": 11,
+            "no_Original_or_Django_service": true
+          },
+          "proofs": {
+            "integration_sha256": "8272053e3554c33978f771bb1f643c92a1d3604e7bf118e5f68a3ace62dc3853"
+          },
+          "qualification_receipt_sha256": "a166e9fdeffb40b0555996ab7f4e2acc5527c7b83f170976b29d5b307e54f150"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "bb38e91caa4911e55d962780f264444a35c1d3afa1d103d489e5f65ca0a42e7b",
+      "redacted_projection_sha256": "66cb4685608711d19a68362ddaa2004a661f59257ed774526148bec36275b9c3",
+      "sealed_binding_sha256": "4f4c4c2d91351de341f1e83bb267c5966a1415beb2ccf3bdc8d16d98a6d48277",
+      "stage_seal_sha256": "4f72afb09c77736e65b3236c50a24e9dc2f0dccc888a600bb150ce410dfada94",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/clean-install"
+      ],
+      "terminal_node_statuses": {
+        "package/clean-install": "passed"
+      }
+    },
+    "grid": {
+      "campaign_phases_sha256": {
+        "grid": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+        "grid-preflight": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "grid-proof": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/guide-grid-packaged": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "be708dd1df536b5532bd9b0a73e1a461a36ae3f446dd506020ca90bcfe8cac86",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "required_wire_cases": 43
+          },
+          "proofs": {
+            "exact_native_wire_sha256": "31451b541ce75c3945152a1f459c5bc39d50ddefc7e2eb5483f07343b2ffda3f",
+            "exact_original_wire_sha256": "5f28b62d65ead711f4daf917457924edd6de1362df92a8eda81f5791a043cc23",
+            "integration_sha256": "129b5d4a3727154718851cdc9f03dbc2fde518d4a319dc35b39be4e0e05bef3c"
+          },
+          "qualification_receipt_sha256": "c74c341f6922aaddac6dc42a8fd8978e87ede1d43fdad7ad97a4c5d1b9eee99c"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "d276c0b7e90a63088b44e38035133d68d0d876ef5d0ccff6379332ae18d11edc",
+      "redacted_projection_sha256": "cac53d5efd2115417b2a04cb676c0ee2e6b85224c8231e25fc26b3e0e1afcc23",
+      "sealed_binding_sha256": "993f8e7c8236ef3d52e2316869cd57e8552838d8914a66f857a049c5f29288bf",
+      "stage_seal_sha256": "c9553fa0aebdce76c3961b19918d97cb3459c9170323eb6fe2227201ae4ae967",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/guide-grid-packaged"
+      ],
+      "terminal_node_statuses": {
+        "package/guide-grid-packaged": "passed"
+      }
+    }
+  },
+  "historical_statuses_transferred": false,
+  "performance_measured": false,
+  "required_nodes_without_fresh_proof": 125,
+  "source_tree_sha256": "80ca8d57ad9fba7fe5553c714c1aee44e0f61eaedd5c647b110c85b466058dce"
+}
