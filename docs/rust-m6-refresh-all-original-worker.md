@@ -29,3 +29,22 @@ The earlier no-owner comparison returned HTTP 202 on Original and HTTP 404 on
 Rust. A standalone ordinary Rust consumer, whole provider graph parity and
 equivalent-work performance remain open.
 [Validation receipt](../scripts/rust-integration/milestone-batch113/m3u-refresh-all-c125.json)
+
+## Local gzip on the integrated package
+
+On packaged a785a2b7, the stock admin Refresh All action returned HTTP 202
+with its usual JSON using the same explicit owner setting. One retained
+Original Celery worker finished the aggregate and both children. One child
+imported a local two-member gzip playlist and the other imported the plain
+control. Both streams used the exact URL-only hash configured in the live
+Original settings cache. Both existing group memberships were preserved and
+each account gained its Default Group membership. Encoded and decoded file
+hashes stayed unchanged.
+
+The manual-backup owner and selected Rust workers were absent. The worker
+exited normally and all three recorded container and host generations
+retired. The project contained zero remaining containers, networks or
+volumes. This run verifies the configured Rust producer with the retained
+Original worker on these inputs. The earlier selected Rust worker check
+remains separately documented. [Redacted receipt](../scripts/rust-integration/m6-ordinary-refresh-all-local-gzip-a785.json)
+[Selected worker gzip evidence](rust-m6-local-m3u-gzip.md)
