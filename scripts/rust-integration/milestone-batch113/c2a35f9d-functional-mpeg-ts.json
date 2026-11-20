@@ -1,0 +1,159 @@
+{
+  "actual_coordinator_exit": 2,
+  "candidate": {
+    "build_manifest_sha256": "de6e740ccbe0261030f6d86859f4d5b96d3f2d5051cfe38b4d54a1ad5f6c4382",
+    "git": "c2a35f9da453fc88d8c56e88d0df31b4ace4b9c0",
+    "image_id": "sha256:e6f570f3489513905451691df33d3dc16e113d7a7c834aa7310aa2dd360ac166",
+    "source_archive_sha256": "e66a3060eb128da40fe440b6a6d235bc91b162804d3a1fb9b30bd6767ac744c1",
+    "source_map_sha256": "20baefb1af31e6fdcacfcb89298c018b09fd23137c02694d07d3bdff2a3b649d"
+  },
+  "cleanup_uncertain": false,
+  "coordinator_report_sha256": "c7c9d9519d5ede0e249b8382173cf186a870687a5b55a9eeae4a8702e72238c9",
+  "credit": "Original Dispatcharr authors and contributors retain full application, workflow and algorithm credit.",
+  "exact_binding_sha256": "dacac9f20fbc343e71b93c2cb94767d4b566aae05ccac542882f8db8b31a6bbb",
+  "exact_native_chain": {
+    "package/retention100": {
+      "active_channels": 10,
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "all_late_readers_matched_historical_prefix": true,
+      "authoritative_history_ceiling_bytes_per_channel": 16777216,
+      "entrypoint": "production-Main",
+      "executed": true,
+      "functional_sampling_schedule_seconds": [
+        5,
+        30,
+        60,
+        75
+      ],
+      "historical_prefix_age_range_seconds": [
+        35,
+        55
+      ],
+      "integration_sha256": "709d2d1f9734cdfbc1c5831a137531f90410c3ba6fd66800e191625b9327cd1f",
+      "late_capture_video_frames_per_decoder": [
+        69,
+        69,
+        69,
+        69,
+        69,
+        69,
+        69,
+        69,
+        69,
+        69
+      ],
+      "late_offset_seconds": 45,
+      "late_reader_concurrency": 32,
+      "late_readers": 100,
+      "local_payload_ceiling_bytes_per_channel": 4194304,
+      "matched_av_decoders": 20,
+      "max_observed_authoritative_history_payload_bytes_per_channel": 15096212,
+      "max_observed_local_payload_bytes_per_channel": 4093888,
+      "no_extra_upstream": true,
+      "processes_settled_and_pipes_EOF": true,
+      "raw_cleanup_receipt_sha256": "6ec5b0dd2b4cba9334f5dae657f600f1a1713863292625c6453d34fc1ff15f73",
+      "retention_samples": 4,
+      "status": "passed",
+      "verified_empty_owned_inventories": true
+    },
+    "package/sharedTS18": {
+      "actual_checks": 24,
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "entrypoint": "production-Main",
+      "executed": true,
+      "historical_original_performance_reused": false,
+      "integration_sha256": "7603cce2e4493b6a1cf90e0cafcce990a8290293adf2ab7a25a399a48be41761",
+      "matched_av_decoders": 6,
+      "processes_settled_and_pipes_EOF": true,
+      "production_replicas": 2,
+      "raw_cleanup_receipt_sha256": "1475952f07e73820f9772a1a4e9e9fe52c7bf91427ed3db101810bdc8c6b54cc",
+      "required_cases": 3,
+      "scenarios": [
+        {
+          "provider_slots": 1,
+          "provider_slots_after": 0,
+          "reader_count_after": 0,
+          "scenario": "shared-demand",
+          "shared_readers": 2,
+          "upstream_connections": 1,
+          "video_frames_per_decoder": [
+            74,
+            74
+          ]
+        },
+        {
+          "provider_slots": 1,
+          "provider_slots_after": 0,
+          "reader_count_after": 0,
+          "scenario": "stop",
+          "shared_readers": 2,
+          "upstream_connections": 1,
+          "video_frames_per_decoder": [
+            74,
+            74
+          ]
+        },
+        {
+          "provider_slots": 1,
+          "provider_slots_after": 0,
+          "reader_count_after": 0,
+          "scenario": "owner-crash",
+          "shared_readers": 2,
+          "upstream_connections": 1,
+          "video_frames_per_decoder": [
+            74,
+            74
+          ]
+        }
+      ],
+      "status": "passed",
+      "verified_empty_owned_inventories": true
+    },
+    "package/sharedTS6-all-down": {
+      "actual_checks": 14,
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "durable_orphan_index_observed": true,
+      "entrypoint": "production-Main",
+      "executed": true,
+      "index_and_provider_slot_released": true,
+      "integration_sha256": "eed1c6ddaf2c2bd4b79562d36eeea6e5943f2e7f8f5ffb279646be539536b02a",
+      "matched_av_decoders": 2,
+      "no_new_upstream_after_restart": true,
+      "processes_settled_and_pipes_EOF": true,
+      "provider_slots": 1,
+      "raw_cleanup_receipt_sha256": "b745aff9c3fad0c34689a17a122ba64e0b3e0a45224c8144ac16e37b0895a590",
+      "shared_readers": 2,
+      "status": "passed",
+      "verified_empty_owned_inventories": true,
+      "video_frames_per_decoder": [
+        74,
+        74
+      ]
+    }
+  },
+  "fresh_same_image_scope_passed": true,
+  "full_M9_accepted": false,
+  "historical_native_results_reused": false,
+  "performance_verified": false,
+  "required_node_status_counts": {
+    "blocked": 124,
+    "passed": 3
+  },
+  "reviewed_direct_source_paths": 17,
+  "sealed_workload_sha256": "d0a72abc7ac28d3ec1249a55fc48ff42dc4d3ef5a6b9518cba9d252ac37545bc",
+  "standalone_create_owner_flag_absent": true,
+  "standalone_restore_owner_flag_absent": true,
+  "unchanged_protected_React_and_credit_inputs": 497
+}
