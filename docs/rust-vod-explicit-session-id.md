@@ -68,3 +68,21 @@ Redis and origin counters separately. The elapsed interval from the client
 close to Original's iterator finalization and the exact instant of the Redis
 updates remain unmeasured. Provider-capacity timing and performance remain
 open.
+
+## Fresh explicit ID after retirement
+
+Pinned Original and the exact `f3b8c08620b6` package both returned HTTP 200
+for a new explicit VOD ID once the old row was absent and one of the two
+provider slots was free. The same unrelated reader was still active at
+the gate and received another 1 MiB afterward. The new request got its
+own row. Each backend made three origin requests, and the fresh and
+unrelated 1 MiB prefixes matched across backends. Both prefixes decoded
+75 video frames with audio on each backend.
+
+Both guests and the combined controller exited 0. All readers, rows and
+slots retired, and teardown verified exact retirement of the four owned
+Compose generations with empty project inventories. The earlier
+early-close cohorts still recorded Original 503 and Rust 200. This later
+condition-gated check establishes admission after retirement. Provider
+release timing, performance and full M4 remain open.
+[Redacted late-admission receipt](rust-vod-late-explicit-session-id.json)

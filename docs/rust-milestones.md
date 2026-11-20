@@ -65,7 +65,9 @@ verified account detail and group-list output against the imported rows.
 The [explicit VOD session check](rust-vod-explicit-session-id.md) passed
 four paired cohorts. Same-ID requests reused their sessions and fresh
 Native IDs had their own stats rows. Original returned 503 in both
-fresh-ID cases. Provider-slot release timing remains open.
+early-close fresh-ID cases. Both admitted a fresh ID once the old row
+was absent and a provider slot was free. Provider-slot release timing
+remains open.
 
 The [Native managed-log check](rust-m8-native-managed-logs.md) verified
 startup-file production, authenticated list and tail, and clean process

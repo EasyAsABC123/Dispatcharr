@@ -51,3 +51,18 @@ and attribution inputs matched the prior package. Lineup Status, device XML,
 broader M7 coverage, and performance retain separate validation scopes.
 
 [Exact wire receipt](../scripts/rust-integration/milestone-batch113/hdhr-discovery-lineup-exact-wire.json)
+
+## Lineup Status JSON
+
+Pinned Original and the same f3b8 Rust package matched all seven ordinary
+Lineup Status GETs. The comparison covered both bare aliases, a named
+profile, three encoded profile names, and an unknown profile. Every pair
+returned HTTP 200 with matching selected headers, including
+`Content-Length: 84`, and the same 84-byte JSON body.
+
+The selected PostgreSQL rows stayed unchanged. The comparison exited 0,
+and all four owned fixture generations and project resources retired.
+Output-profile and combined status routes, device XML, wider M7 coverage,
+and performance remain open.
+
+[Lineup Status receipt](../scripts/rust-integration/milestone-batch113/hdhr-lineup-status-f3b8.json)
