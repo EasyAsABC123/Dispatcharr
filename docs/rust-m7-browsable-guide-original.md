@@ -26,3 +26,29 @@ Qualify the rendered representation and any advertised write actions
 against their own normal stock behavior.
 
 [Redacted Original receipt](../scripts/rust-epg-contracts/verified-original-browsable-programmes-1.json)
+
+## Packaged Rust successful list GET
+
+The exact `81ce753f` package matched Original on two authenticated admin
+HTML GETs to the no-query programme list. Both returned 200 with the same
+16,069-byte response length, selected headers and normalized document
+bytes. The JSON controls returned the same typed programme data shown
+inside each page. Each HTML request generated a fresh CSRF cookie and
+mask. Both masks in each response matched its cookie. The receipt
+retains the attributes and match results without credential values.
+
+The programme rows stayed unchanged, and Compose verified retirement of
+all four owned generations. This verifies the captured successful GET
+and JSON control. Programme creation, form submission, alternate methods,
+guide navigation and performance remain open.
+
+[Redacted paired Guide receipt](../scripts/rust-epg-contracts/verified-native-browsable-programmes-81ce753f.json)
+
+The exact `81ce753f` image passed 37 existing programme comparisons, covering
+36 JSON GET responses and the HEAD representation length. It also passed the
+1,024-check packaged baseline across 18 suites and decoded 75 MPEG-TS frames.
+Both runs verified teardown. The [e765 coordinator checkpoint](rust-e765-baseline-acceptance.md)
+records 17 passes on its own package.
+
+[Programme JSON and HEAD receipt](../scripts/rust-integration/milestone-batch113/programme-json-head-81ce.json)
+[Packaged baseline receipt](../scripts/rust-integration/milestone-batch113/81ce-18-suite-baseline.json)

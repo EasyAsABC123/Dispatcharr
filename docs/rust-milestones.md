@@ -9,6 +9,12 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+
+The [81ce Guide renderer package](rust-m7-browsable-guide-original.md#packaged-rust-successful-list-get)
+matched the successful HTML list and its cookie behavior, passed all 37
+programme JSON and HEAD comparisons, and passed the 18-suite packaged
+baseline. The e765 coordinator results retain their exact image binding.
+
 The [complete parity plan](rust-complete-parity-plan.md) assigns parallel work
 across M0–M9 and proposes M10/M11 as separate rollout stages.
 

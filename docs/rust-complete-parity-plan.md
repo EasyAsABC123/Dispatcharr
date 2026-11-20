@@ -233,7 +233,8 @@ API, job, contract and plugin implementation keep moving alongside it.
    and outcomes separately.
 
 Use the [milestone ledger](rust-milestones.md), the
-[latest packaged checkpoint](rust-e765-baseline-acceptance.md), and the
+[e765 coordinator checkpoint](rust-e765-baseline-acceptance.md), the
+[Guide renderer successor](rust-m7-browsable-guide-original.md#packaged-rust-successful-list-get), and the
 [coordinator guide](../scripts/rust-milestone-batches/README.md) as the living
 links between work, test bindings and evidence.
 
