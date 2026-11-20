@@ -187,3 +187,20 @@ matched all four pairs, verified that Guide SQL stayed unchanged and
 independently retired all four owned Compose generations.
 
 [Redacted stock nginx and Native HEAD receipt](../scripts/rust-epg-contracts/verified-guide-stock-nginx-head-c2a35f9d.json)
+
+### Standard programme detail format alias on 82414407
+
+Pinned Original and packaged Rust matched the Standard user's detail GET
+with `?format=api` under both `Accept: */*` and `Accept: text/html`.
+Both returned HTTP 200 with 12,459 HTML bytes. The same Compose pair
+matched the Standard bare detail GET and the admin detail alias with
+explicit `Accept: text/html`.
+
+Each body matched after substituting its fresh CSRF mask, and the typed
+embedded JSON matched its same-user JSON control. The Standard page
+displayed no editable programme form. Guide SQL stayed unchanged in
+both arms. Independent cleanup verified all four retired generations and
+empty owned inventories. [Redacted receipt](../scripts/rust-epg-contracts/verified-native-guide-standard-detail-format-82414407.json)
+
+The original Dispatcharr, Django and Django REST Framework contributors
+retain full credit. [Dispatcharr upstream](https://github.com/Dispatcharr/Dispatcharr)

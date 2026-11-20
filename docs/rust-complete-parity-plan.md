@@ -12,6 +12,14 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Latest packaged checks
 
+The exact `82414407` package matched four Guide detail GET profiles and
+both Standard detail HEAD representations. Its selected workers also matched
+Original's enabled hourly recurring maintenance and authenticated XMLTV
+Series artwork workflows. All four paired scopes verified cleanup.
+[Guide detail GETs](rust-m7-browsable-guide-original.md)
+[Standard detail HEAD](rust-m7-stock-nginx-standard-detail-head.md)
+[Series artwork](rust-m6-82414407-series-artwork.md)
+
 The exact `c2a35f9d` package passed **11 of 127 required coordinator
 nodes** across four Compose runs. The six operator, Guide and authentication
 checks and the three shared MPEG-TS checks retained exact cleanup. Full
