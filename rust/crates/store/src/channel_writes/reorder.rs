@@ -1,6 +1,9 @@
 //! Dispatcharr channel reorder and managed number pins.
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
-use super::{body_object, channel_object_query, missing_channel, Body};
+use super::{
+    assign_numbers::{lock_numbers, number_write, prune_empty_pins, NumberWrite},
+    body_object, channel_object_query, missing_channel, Body,
+};
 use crate::{channels, json_compat, AuthService, StoreError};
 use axum::{
     extract::{ConnectInfo, OriginalUri, Path, Query, State},
@@ -111,53 +114,45 @@ async fn assign(
     pinned: Option<f64>,
     number: f64,
 ) -> Result<(), StoreError> {
-    if !managed {
-        if raw != Some(number) {
+    match number_write(managed, raw, pinned, number) {
+        NumberWrite::Unchanged => {}
+        NumberWrite::Raw => {
             sqlx::query("UPDATE dispatcharr_channels_channel SET channel_number=$2 WHERE id=$1")
                 .bind(id)
                 .bind(number)
                 .execute(connection)
                 .await?;
         }
-    } else if raw == Some(number) {
-        if pinned.is_some() {
+        NumberWrite::ClearPin => {
             sqlx::query(
                 "UPDATE dispatcharr_channels_channeloverride SET channel_number=NULL WHERE channel_id=$1",
             )
             .bind(id)
             .execute(&mut *connection)
             .await?;
-            sqlx::query(
-                "DELETE FROM dispatcharr_channels_channeloverride
-                 WHERE channel_id=$1 AND channel_number IS NULL AND name IS NULL
-                   AND channel_group_id IS NULL AND logo_id IS NULL AND tvg_id IS NULL
-                   AND tvc_guide_stationid IS NULL AND epg_data_id IS NULL
-                   AND stream_profile_id IS NULL AND is_radio IS NULL",
-            )
-            .bind(id)
-            .execute(connection)
-            .await?;
+            prune_empty_pins(connection, &[id]).await?;
         }
-    } else if pinned != Some(number) {
-        // Updating a present pin keeps its row, clocks and unrelated fields.
-        let updated = sqlx::query(
-            "UPDATE dispatcharr_channels_channeloverride SET channel_number=$2 WHERE channel_id=$1",
-        )
-        .bind(id)
-        .bind(number)
-        .execute(&mut *connection)
-        .await?;
-        if updated.rows_affected() == 0 {
-            sqlx::query(
-                "INSERT INTO dispatcharr_channels_channeloverride
-                    (channel_id,channel_number,created_at,updated_at)
-                 VALUES($1,$2,statement_timestamp(),statement_timestamp())
-                 ON CONFLICT(channel_id) DO UPDATE SET channel_number=EXCLUDED.channel_number",
+        NumberWrite::Pin => {
+            // Updating a present pin keeps its row, clocks and unrelated fields.
+            let updated = sqlx::query(
+                "UPDATE dispatcharr_channels_channeloverride SET channel_number=$2 WHERE channel_id=$1",
             )
             .bind(id)
             .bind(number)
-            .execute(connection)
+            .execute(&mut *connection)
             .await?;
+            if updated.rows_affected() == 0 {
+                sqlx::query(
+                    "INSERT INTO dispatcharr_channels_channeloverride
+                        (channel_id,channel_number,created_at,updated_at)
+                     VALUES($1,$2,statement_timestamp(),statement_timestamp())
+                     ON CONFLICT(channel_id) DO UPDATE SET channel_number=EXCLUDED.channel_number",
+                )
+                .bind(id)
+                .bind(number)
+                .execute(connection)
+                .await?;
+            }
         }
     }
     Ok(())
@@ -182,11 +177,7 @@ pub(crate) async fn handle(
     let _writer = auth.task_sql_writer()?;
     let mut tx = auth.store.pool().begin().await?;
 
-    // Moves can touch channels across groups. Keep overlapping reorder
-    // requests serial while selecting the range and writing it atomically.
-    sqlx::query("SELECT pg_advisory_xact_lock(hashtext('dispatcharr.channels.reorder'), 0)")
-        .execute(&mut *tx)
-        .await?;
+    lock_numbers(&mut tx).await?;
     let original = scoped
         .push(" FOR UPDATE OF c")
         .build()

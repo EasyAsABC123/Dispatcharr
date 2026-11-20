@@ -912,6 +912,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
             get(numbers_in_range).layer(axum::middleware::map_response(range_response_headers)),
         )
         .route("/api/channels/channels/ids/", get(ids))
+        .route(
+            "/api/channels/channels/assign/",
+            post(crate::channel_writes::assign_numbers),
+        )
         .route("/api/channels/channels/summary/", get(summary))
         .route(
             "/api/channels/channels/batch-set-epg/",

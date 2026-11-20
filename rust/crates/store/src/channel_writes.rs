@@ -17,7 +17,9 @@ use serde_json::{json, Map, Value};
 use sqlx::{PgConnection, Postgres, QueryBuilder, Row, Transaction};
 use std::{collections::HashMap, net::SocketAddr};
 use uuid::Uuid;
+mod assign_numbers;
 mod reorder;
+pub(crate) use assign_numbers::handle as assign_numbers;
 pub(crate) use reorder::handle as reorder;
 
 type Body = Result<Json<Value>, JsonRejection>;
