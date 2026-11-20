@@ -1,0 +1,81 @@
+{
+  "Native_empty_owned_broker_around_archive_inspection": true,
+  "Native_empty_owned_broker_around_producer_free_final_SQL_snapshot": true,
+  "both_archives": {
+    "Native": {
+      "actual_terminal_metadata_verified": true,
+      "archive": {
+        "bytes": 39201,
+        "database_type": "postgresql",
+        "format_version": 2,
+        "members": [
+          "database.dump",
+          "metadata.json"
+        ],
+        "sha256": "690255241bf32cb72fddc1317af688055c2b0912422f90e74b18090b308b29f2"
+      },
+      "archive_inspection": {
+        "archive_bytes": 39201,
+        "archive_sha256": "690255241bf32cb72fddc1317af688055c2b0912422f90e74b18090b308b29f2",
+        "expected_seed_rows_verified": 4,
+        "passed": true,
+        "pg_major": 17,
+        "scratch_database_retired": true,
+        "sibling_control_unchanged": true
+      },
+      "create_status": 202,
+      "download_status": 200,
+      "exact_compose_generations_retired": 4,
+      "normal_process_exit": 0,
+      "owned_compose_absence_independent": true,
+      "receipt_sha256": "1f107d537acc7165f12dc5d3bf54b87c25b6e44f57593d24c6e266019f1bf01b",
+      "representative_seeded_SQL_snapshot_and_control_unchanged": true,
+      "result_state": "SUCCESS",
+      "signed_task_status": 200
+    },
+    "Original": {
+      "actual_terminal_metadata_verified": true,
+      "archive": {
+        "bytes": 39410,
+        "database_type": "postgresql",
+        "format_version": 2,
+        "members": [
+          "database.dump",
+          "metadata.json"
+        ],
+        "sha256": "a0b37957a07686e394ec07c53a8f34e2ce2bce1d21a210a915703a577a2a73e6"
+      },
+      "archive_inspection": {
+        "archive_bytes": 39410,
+        "archive_sha256": "a0b37957a07686e394ec07c53a8f34e2ce2bce1d21a210a915703a577a2a73e6",
+        "expected_seed_rows_verified": 4,
+        "passed": true,
+        "pg_major": 17,
+        "scratch_database_retired": true,
+        "sibling_control_unchanged": true
+      },
+      "create_status": 202,
+      "download_status": 200,
+      "exact_compose_generations_retired": 2,
+      "normal_process_exit": 0,
+      "owned_compose_absence_independent": true,
+      "receipt_sha256": "4bda5cf4fc6b8f5ac271881f37ddfad6a8bc96c5a9d7c9db42fb04294ac7a3eb",
+      "representative_seeded_SQL_snapshot_and_control_unchanged": true,
+      "result_state": "SUCCESS",
+      "signed_task_status": 200
+    }
+  },
+  "candidate_build_manifest_sha256": "88064eab5e75131fdd8a9ecf411f33f979748f72c32128b5bb04c61da7e1682a",
+  "candidate_image_id": "sha256:94dbaa2c371511f85e9d7a420a3d0049a6bd695b0382319b0bf477275ee6d941",
+  "candidate_revision": "a785a2b713b70d9d3e86328f94f02b891c7e4702",
+  "credit": "Original Dispatcharr, PostgreSQL and Celery authors and contributors retain full credit.",
+  "exact_private_controller_receipt_sha256": "6a6b64905e06264ab5701ccee16837e389ffcdc704b964c7f287c00da06acbd3",
+  "fresh_pair_controller_actual_exit": 0,
+  "full_M8_accepted": false,
+  "performance_verified": false,
+  "prior_clean_create_scope_receipt_sha256": "69cad6a24cd73c5ee8e082425c62c446c35931bd1a476b759d8355a86dcc31dc",
+  "real_application_restore_verified": false,
+  "scheduling_verified": false,
+  "scope": "Fresh ordinary manual create, status, download and four archived rows in disposable PostgreSQL",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}

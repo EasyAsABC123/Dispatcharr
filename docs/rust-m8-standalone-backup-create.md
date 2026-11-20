@@ -38,3 +38,22 @@ Live timezone changes, a shutdown deadline with work still active, restore,
 scheduled jobs, cancellation, full M8 and performance remain open.
 
 [Redacted paired receipt](../scripts/rust-integration/milestone-batch113/standalone-backup-create-a785.json)
+
+## Rows inside the downloaded archives
+
+A fresh pair on `a785a2b7` verified the actual downloaded archives in
+disposable PostgreSQL 17 databases. Each archive contained the seeded
+administrator and password-hash digest, channel ID and UUID with its logo
+reference, the linked logo, and the settings object. Each scratch database
+was removed and its independent control marker stayed unchanged.
+
+The Native backup queue was empty before and after the archive inspection
+and the final management-shell SQL snapshot. Both application roles
+stopped normally. The controller exited 0 with verified retirement of
+all six owned Compose generations and empty inventories.
+
+The checked archive scope covers the four seeded records. Application
+restore, scheduling, full M8 acceptance and comparative performance
+remain open.
+
+[Fresh archive row receipt](../scripts/rust-integration/milestone-batch113/standalone-backup-archive-rows-a785.json)
