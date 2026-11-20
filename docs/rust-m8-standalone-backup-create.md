@@ -192,7 +192,7 @@ served the restored settings and channel.
 The restore and readbacks finished before shutdown. Both roles exited 0.
 The controller verified retirement of all six owned Compose generations
 and empty inventories. This check covers the explicit current-schema
-scope. Active restore at SIGTERM, crash atomicity, enabled plugins,
+scope. Crash atomicity, enabled plugins,
 older schema graphs, media files, full M8 and comparative performance
 remain open.
 
@@ -214,3 +214,31 @@ The a785 receipt remains tied to its earlier package. Standalone create and
 standalone restore have their own owner settings and qualification.
 
 [Redacted 976f selected-mode receipt](../scripts/rust-integration/m8-selected-backup-restore-976f.json)
+
+## Normal shutdown during a claimed standalone restore
+
+A fresh `976f2867` run uploaded Original's 39,411-byte PostgreSQL archive to
+its disposable restore target and downloaded the exact bytes. Upload
+preserved the target records. The authenticated restore returned HTTP 202
+with a signed task reference. The same packaged `pg_restore` writer
+generation was active immediately before and after one ordinary SIGTERM
+to the owned Rust Main.
+
+Main exited 0 without an OOM kill. Redis still held exactly one typed
+SUCCESS result for the issued task, and the owned queue was empty.
+Post-shutdown SQL matched Original's representative user, channel, logo
+and settings records. The independent database control stayed unchanged.
+The controller exited 0 and verified retirement of two Original and
+four Native Compose generations with empty inventories.
+
+The first attempt exited 1 before issuing restore. Its watcher expected
+`/tmp` while the pinned Compose configuration used `/data`. Archive
+handoff, unchanged target SQL and retirement passed in that attempt.
+The corrected run verified `/data` and repeated both phases on the same
+package with the same overlap and result requirements.
+
+The evidence covers one normal active restore. Shutdown deadline
+expiration, forced termination, crash atomicity, full M8, and comparative
+performance remain open.
+
+[Redacted active standalone restore receipt](../scripts/rust-integration/milestone-batch113/standalone-restore-active-shutdown-976f.json)

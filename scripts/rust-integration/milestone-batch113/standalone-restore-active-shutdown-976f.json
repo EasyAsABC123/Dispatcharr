@@ -1,0 +1,82 @@
+{
+  "backends": {
+    "Native": {
+      "archive_download_status": 200,
+      "archive_upload_status": 201,
+      "create_unsupported_status": 501,
+      "distinct_owned_broker_and_result_namespaces": true,
+      "exact_owned_compose_generations_retired": 4,
+      "exact_owned_terminal_count_after_Main_exit": 1,
+      "independent_control_unchanged": true,
+      "initial_broker_and_result_empty": true,
+      "normal_Main_exit": 0,
+      "oom_killed": false,
+      "ordinary_SIGTERM_sent_to_exact_Main": true,
+      "owned_compose_inventory_empty": true,
+      "owned_queue_empty_after_Main_exit": true,
+      "owned_scratch_matches_pinned_compose": true,
+      "phase_receipt_sha256": "c22d88c139e6148b2a29e7d6039ea9819d2e375936dce2893681fba26b7cf40b",
+      "post_stop_restored_SQL_matches_Original": true,
+      "restore_acceptance_status": 202,
+      "restore_only": true,
+      "same_Original_archive": true,
+      "same_UID_watcher_ready": true,
+      "same_genuine_pg_restore_writer_generation_active_before_and_after_signal": true,
+      "schedule_disabled_observed": true,
+      "selected_beat": false,
+      "selected_worker": false,
+      "signed_task_issued": true,
+      "target_SQL_unchanged_at_upload": true,
+      "terminal_task_id_matches_issued_signed_task": true,
+      "typed_Redis_result_after_Main_exit": "SUCCESS"
+    },
+    "Original": {
+      "archive": {
+        "bytes": 39411,
+        "database_type": "postgresql",
+        "format_version": 2,
+        "members": [
+          "database.dump",
+          "metadata.json"
+        ],
+        "sha256": "66bb0ec02266a3f66d991d3c4cc1e8cb51b7ff90c2aadac8b4294b19e55bc3f2"
+      },
+      "create_status": 202,
+      "download_status": 200,
+      "exact_owned_compose_generations_retired": 2,
+      "normal_process_exit": 0,
+      "observer_skipped_Django_startup": true,
+      "owned_compose_inventory_empty": true,
+      "phase_receipt_sha256": "5a5fb3cd06caaf6e9592dbc4426939d0632355340a68b5443275d9c5635eecee",
+      "seeded_admin_login_status": 200,
+      "signed_status": 200,
+      "snapshot_observations": 1,
+      "source_SQL_and_separate_control_unchanged": true,
+      "worker_result": "SUCCESS"
+    }
+  },
+  "candidate_build_manifest_sha256": "4ade1d62365c3f30039fd3c9d352bbba251576cb816e28051eb511524dd0cafc",
+  "candidate_image_id": "sha256:2a8919316871f452e49f33de0ccc10d38de7d0991f7826c747f140df749330be",
+  "candidate_revision": "976f2867e9e1abe5dd04c41d9f9da277210b867f",
+  "controller_scope_label": "Original archive through standalone Native restore-only Main",
+  "crash_atomicity_verified": false,
+  "credit": "Original Dispatcharr, Django, PostgreSQL and Celery contributors retain full credit.",
+  "exact_private_controller_receipt_sha256": "974f76a291115c6ed95341795473dcfd9f9fc8b53fe5927c741f9e6a0acc07b7",
+  "forced_termination_verified": false,
+  "full_M8_accepted": false,
+  "paired_controller_actual_exit": 0,
+  "performance_verified": false,
+  "previous_attempt": {
+    "controller_actual_exit": 1,
+    "controller_receipt_sha256": "267d1a91ff28955ca3c7526e07bc83432f93188e840a561b692477ad01ed0cef",
+    "exact_owned_cleanup_verified": true,
+    "pinned_compose_scratch_mismatch": true,
+    "restore_request_issued": false,
+    "stock_archive_handoff_passed": true
+  },
+  "scope": "One genuine accepted current-schema standalone restore active during ordinary SIGTERM",
+  "sealed_workload_sha256": "bec8094c81ce4ba9f795a6caeb77715a8d0622257b8e8c4a65a7f4cfdf04b62a",
+  "shutdown_deadline_expiration_verified": false,
+  "signed_status_HTTP_after_Main_exit_verified": false,
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}
