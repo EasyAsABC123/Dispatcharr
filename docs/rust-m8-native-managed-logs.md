@@ -88,5 +88,25 @@ Native controller exited 1 when Compose restarted the already completed
 initializer, which exited 1. All four owned resources retired. The fresh
 Native retry started only the verified app container, passed all twelve
 phases, and verified exact teardown of all four owned containers and host
-processes. Re-enabling persistence and full M8 remain open.
+processes. Full M8 remains open.
 [Disabled file persistence receipt](../scripts/rust-integration/milestone-batch113/disabled-log-persistence.json)
+
+## File persistence re-enabled across restart
+
+Pinned Original and C74 applied the disabled settings to a running
+collector, witnessed by archival pruning. The administrator then changed
+only file persistence back to true using the stock System Settings PUT.
+After one ordinary restart, both returned the enabled setting and retained
+the previous live prefix in archive one. The normal new boot record reached
+the console and the managed file, and the authenticated tail matched the
+exact byte prefix at its cursor on the new live inode.
+
+All 13 tracked Original physical phases exited 0 with settled output and
+exact cleanup. Its controller exited 1 when the terminal JSON serializer
+received a regular expression match from a passing check. Native had yet
+to run. The Native-only retry used the independently verified Original
+evidence, exited 0 in all 12 phases, and confirmed absence of all four
+owned containers and observed process generations. The scoped file and
+console effects matched. Size-triggered rotation, live replica behavior,
+performance and full M8 remain open.
+[Re-enabled file persistence receipt](../scripts/rust-integration/milestone-batch113/reenabled-log-persistence.json)

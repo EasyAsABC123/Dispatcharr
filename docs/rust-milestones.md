@@ -74,6 +74,9 @@ The same package passed 29 paired stored System Logs cases on one
 read-only mount, with exact responses, unchanged files and clean teardown.
 A paired stock Settings change lowered retention from five to two and
 pruned the expected archives while keeping the active log readable.
+Scoped persistence toggles verified that ordinary console output continues
+while file writes are disabled and that the next restart files its normal
+startup record after re-enabling persistence.
 
 The [stock backup missing-settings replay](rust-m8-backup-missing-row.md)
 matched permissions, response bytes, row creation and cache invalidation
