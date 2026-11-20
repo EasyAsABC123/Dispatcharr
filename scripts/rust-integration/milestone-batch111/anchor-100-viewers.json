@@ -1,0 +1,107 @@
+{
+  "Native": {
+    "image_id": "sha256:5c047006711372ff1bc479f503ecedbd8a1df4b8892aa60d6138d8cdd27a5f25",
+    "revision": "fc2c81c2d52bbc17299d6900534d9564432d8e89"
+  },
+  "Original": {
+    "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "credit": "Original Dispatcharr authors and contributors",
+  "cross_phase_useful_span_spread_seconds": {
+    "audio": 1.6213333333333324,
+    "video": 1.6000000000000014
+  },
+  "evidence_sha256": {
+    "binding.json": "9e5ed00212c9fc622ae87643956abbfcc842bafcddc731e7ff42eb1c6d358c55",
+    "build.json": "252404ac213f563f8ffaa52a101b5f8bc92c823279a54ddb049864db2e2b18c0",
+    "frozen-workload.json": "684ae65afd7a7ef1c9f7c4e8e2601249574937e4876a38e9e0322ddcfc08f8d6",
+    "prior_unanchored_failure.json": "f1d9ed201003177594813ef1ad008dee417ad7daa789c72173c935eaa3e25dbf",
+    "result.json": "4376532d0c585627594d26781213d867fb6a67f8f4550cb0c04828cd507dff20"
+  },
+  "formal_comparison_eligible": false,
+  "fresh_formal_phases_required": 6,
+  "origin": {
+    "bytes": 7896000,
+    "decoder_context_drain_seconds": 5,
+    "fixture_sha256": "304385e14b16549a96074fd8b5d851a73be60b17c99bae58021bd9f8b49f538c",
+    "marker": "completion of the owned origin write",
+    "observed_lag_limit_ms": 30,
+    "packets": 42000,
+    "window_seconds": 60
+  },
+  "performance_gain_claimed": false,
+  "phase_results": [
+    {
+      "active_origin_connections": 1,
+      "active_provider_slots": 1,
+      "active_samples": 61,
+      "actual_exit": 0,
+      "anchor_observation_lag_ms": 5.698317,
+      "backend": "Original",
+      "compose_project_empty": true,
+      "controller_settled": true,
+      "evidence_sha256": {
+        "counter-sampler-settlement.json": "c3e55f02cf79b86fdf8e6df67bf718ea2b7a59a951309fe66e69b18e6a006238",
+        "metadata-observer-receipt.json": "26585f4eb286322a3a0eeb0db033f228d304b127c51762a37770798abb9fe273",
+        "resource-samples.json": "15ba495bd95b5f9e9c6d0971c47c026047d351235f447a16c46bd441947ceaee",
+        "shared-ts.json": "556925bf088ec64055579c1276daaa93fd731a7959819b5226cd892eb8e8b647",
+        "useful-media-complete.json": "671266734b29e48c8e0b825d7c48facbb5e29e110bf5919cab9d6b792c32c89f"
+      },
+      "exact_containers_absent": 3,
+      "max_sample_lag_ms": 5.997396001475863,
+      "observer_and_counter_sampler_settled": true,
+      "qualifying_decode_records": 200,
+      "redis_retired": true,
+      "useful_seconds": {
+        "audio": [
+          59.776,
+          61.397333333333336
+        ],
+        "video": [
+          59.76,
+          61.36
+        ]
+      },
+      "viewers": 100
+    },
+    {
+      "active_origin_connections": 1,
+      "active_provider_slots": 1,
+      "active_samples": 61,
+      "actual_exit": 0,
+      "anchor_observation_lag_ms": 4.570408,
+      "backend": "Native",
+      "compose_project_empty": true,
+      "controller_settled": true,
+      "evidence_sha256": {
+        "counter-sampler-settlement.json": "4237f350180c5d602dba0fddfb9487c2faa25293c3f4008646133f630331c9d0",
+        "metadata-observer-receipt.json": "562e66d22db5f34da8664f96bf5a2d2aecb5e939492433137d1621dd54c1c54e",
+        "resource-samples.json": "b2fee1a0ea2361f1bdf44321adb38cb06cbdadb2d0ceedb92dd04b5b1516c6f8",
+        "shared-ts.json": "8e1d54eaea695f3cb4c27e8a58a26b5dbb43c82d157e3e8be5d25e89c92a988c",
+        "useful-media-complete.json": "615e3186a27e0e8074b9d52c2b8263acbe47504c7e382f48890459e5be0b140b"
+      },
+      "exact_containers_absent": 4,
+      "max_sample_lag_ms": 5.011311994167045,
+      "observer_and_counter_sampler_settled": true,
+      "qualifying_decode_records": 200,
+      "redis_retired": true,
+      "useful_seconds": {
+        "audio": [
+          61.034666666666666,
+          61.397333333333336
+        ],
+        "video": [
+          61.0,
+          61.36
+        ]
+      },
+      "viewers": 100
+    }
+  ],
+  "prior_unanchored_actual_exit": 1,
+  "schema": 1,
+  "scope": "100-viewer physical origin-position diagnostic",
+  "unchanged_one_batch_tolerance_seconds": 2.005333333332999
+}
