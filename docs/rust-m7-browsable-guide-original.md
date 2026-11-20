@@ -150,3 +150,19 @@ restored the Original serializer order and matched the detail bodies on
 the new package.
 
 [Redacted Standard alias and admin detail receipt](../scripts/rust-epg-contracts/verified-native-guide-detail-alias-e0a3c10f.json)
+
+### Standard and admin format-alias detail on c6061adb
+
+Pinned Original and Rust `c6061adb` matched the Standard user's bare detail
+GET, the admin's `?format=api` detail GET with `Accept: */*`, and the
+existing admin bare detail GET. All three returned HTTP 200 and matched
+the original HTML bytes after substituting the independent CSRF mask.
+Each rendered response embedded the typed JSON from its same-actor
+control, with the Original field order in HTML.
+
+The Standard layout contains no editable programme form. Both admin
+layouts preserved the Original form fields and canonical detail links.
+The fixture left Guide SQL unchanged and independently verified
+retirement of all four Compose generations.
+
+[Redacted Standard and admin detail receipt](../scripts/rust-epg-contracts/verified-native-guide-detail-role-alias-c6061adb.json)

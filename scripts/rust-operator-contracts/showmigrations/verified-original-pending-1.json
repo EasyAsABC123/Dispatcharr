@@ -1,0 +1,63 @@
+{
+  "actual_controller_exit": 0,
+  "bound_actual_integration_sha256": "c165814f32ceeefb83631f021c8fd69f20220d03612b005db2d9fa5db0578434",
+  "cases": {
+    "list": {
+      "actual_exit": 0,
+      "actual_state_sha256": "ce7297ea536bcff318992a046f083a98450e442c13d85a4e4fd359860fcab6c2",
+      "applied": 31,
+      "pending": 1,
+      "rows": 32,
+      "startup_tables_changed": [
+        "developer_notifications",
+        "schedule"
+      ],
+      "stdout_sha256": "e727416ab4df285c02379b6722619fe40a90e0d2cd0dd1d7b79be5f26f844553"
+    },
+    "plan": {
+      "actual_exit": 0,
+      "actual_state_sha256": "41c945b2e8571140d8dd10763370f0d0fe48dff4f4c9535d74e3d1cc1a028220",
+      "applied": 183,
+      "pending": 1,
+      "rows": 184,
+      "startup_tables_changed": [
+        "developer_notifications",
+        "schedule"
+      ],
+      "stdout_sha256": "3e4befccf03169c393a1b27d5e6f8b4d2347f929d93addf36cba82461466a990"
+    }
+  },
+  "credit": "Original Dispatcharr and Django authors retain full credit.",
+  "default_database_unchanged": true,
+  "exact_retired_containers_and_generations": 2,
+  "migration_recorder_unchanged_by_inspection": true,
+  "native_verified": false,
+  "only_target_marker_changed": true,
+  "pending_migration": [
+    "core",
+    "0032_limit_default_interleave_delta"
+  ],
+  "performance_verified": false,
+  "preparation": {
+    "all_other_recorder_rows_exact": true,
+    "applied_after": 183,
+    "migration": [
+      "core",
+      "0032_limit_default_interleave_delta"
+    ],
+    "ordinary_plan_and_single_reverse": {
+      "plan": {
+        "actual_exit": 0,
+        "stdout_sha256": "753fbbcf30d93ef4bbbbf982ac5b9f13260992eb29a73d7724841a57d3b1a2c1"
+      },
+      "prepare": {
+        "actual_exit": 0,
+        "stdout_sha256": "6188ed4c7c46770f192fb8f73bb621df5ef351e9d40d7e330b3601a1b393b2be"
+      }
+    },
+    "pending_after": 1
+  },
+  "scope": "original showmigrations pending markers",
+  "source_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}

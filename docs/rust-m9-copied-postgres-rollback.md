@@ -48,3 +48,27 @@ Original arm failed before guest startup evidence and retired cleanly.
 The final run used one complete read-only verification mount. The raw
 engine error from the deferred failure remains unconfirmed.
 [C74 same-seed rollback receipt](../scripts/rust-integration/milestone-batch113/c74-same-seed-postgres-rollback.json)
+
+## Original-only startup timestamp witness
+
+A fresh pinned Original donor supplied one quiescent PostgreSQL archive to
+a separate Original-only project. The restored copy matched its full
+pre-start fingerprint. Each boundary paired the complete strict and keyed
+observations with the four named timestamp reads in the same read-only
+repeatable-read PostgreSQL transaction.
+
+All four timestamp values advanced within the independently measured
+Original startup interval. The backup and plugin repository schedules
+changed `date_changed`, the Beat change marker changed `last_update`,
+and the developer notification changed `updated_at`. All other keyed
+fields, row multiplicities, observed schema and sequence values stayed
+equal. The same authenticated channel read on the same front door added
+no database changes. Both projects retired all four owned containers and
+their observed host process generations, with empty project inventories.
+
+The Source-only witness exited 0. The earlier paired controller's strict
+full-fingerprint exit 1 remains recorded above. The production rollback
+and full M9 gates remain open. Original Dispatcharr and dependency authors
+retain full credit.
+
+[Redacted Source-only witness](../scripts/rust-integration/milestone-batch113/original-copied-restart-timestamps.json)
