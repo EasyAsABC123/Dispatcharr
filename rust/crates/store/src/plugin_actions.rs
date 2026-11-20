@@ -1068,9 +1068,9 @@ async fn response(
             axum::http::HeaderValue::from_static(allow),
         );
     }
-    // The stock plugin list and settings views negotiate on Accept.
+    // The stock plugin list, settings, and run views negotiate on Accept.
     // Main adds the CORS origin token during response finalization.
-    if matches!(action, Action::List | Action::Settings) {
+    if matches!(action, Action::List | Action::Settings | Action::Run) {
         response
             .headers_mut()
             .entry(axum::http::header::VARY)
