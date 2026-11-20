@@ -1,0 +1,612 @@
+{
+  "SQL_snapshots_and_typed_numeric_projections_verified": true,
+  "actual_joint_receipt_sha256": "e6ce1b2202a078d3d022676b226c8dfb5c5e013e9fc514863e7c4060fe165af3",
+  "application_tree_sha256": "7c96aeefa07f2f6eed6eb88529636d4aa540886d21989573124d2513bcf26003",
+  "approved_joint_review_sha256": "19c15bb4e666c5ce6fc7bd47a227acd511a87210d984538fc74357f80e0e8184",
+  "backend_evidence": {
+    "native": {
+      "baseline_ordered_refetch": {
+        "allow": null,
+        "body_bytes": 5737,
+        "content_type": "application/json",
+        "full_body_sha256": "573342c97f3c06e323065993dfa322acc473ea08feeb651460bb7e21c500a837",
+        "status": 200
+      },
+      "cases": [
+        {
+          "baseline_channel_number_delta": 0,
+          "case": "manual-down",
+          "effective_order": "bcdeafs",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": false,
+          "ordered_refetch": {
+            "allow": null,
+            "body_bytes": 5737,
+            "content_type": "application/json",
+            "full_body_sha256": "05841ce20b35902a4d82264cae584b7d9cbd64984727f700f13f45543bb8b81e",
+            "status": 200
+          },
+          "post": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 833,
+            "content_type": "application/json",
+            "full_body_sha256": "ba1738b8b3af070031a9ecc30af6ca09e7aabc79494df8ee459b4cb246c4b12a",
+            "status": 200
+          },
+          "sql_after_sha256": "fcee0251a7c43d59d96293068876b1256e8e5e66cc73e7a4c43b3b79ed04bb9d",
+          "sql_and_refetch_match": true,
+          "sql_before_sha256": "c6ca2507c8ef5b265745d6c31e4c6d725d3a49656122de5ab6a5459d0ac4da03",
+          "table_numbers_and_pins": [
+            [
+              1005,
+              null
+            ],
+            [
+              1001.5,
+              null
+            ],
+            [
+              50,
+              1002
+            ],
+            [
+              1003,
+              null
+            ],
+            [
+              1004,
+              null
+            ],
+            [
+              60,
+              1007
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "baseline_channel_number_delta": 0,
+          "case": "managed-up",
+          "effective_order": "bfcdeas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": false,
+          "ordered_refetch": {
+            "allow": null,
+            "body_bytes": 5737,
+            "content_type": "application/json",
+            "full_body_sha256": "11022f1b98cded960c847653c6cea8c06c3a954044ed7775a08c06169e097417",
+            "status": 200
+          },
+          "post": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 1030,
+            "content_type": "application/json",
+            "full_body_sha256": "47044cfead12245a592aca3d71be8d13ce12859105e26df8823d003e6f8b05d9",
+            "status": 200
+          },
+          "sql_after_sha256": "841455a0aa98e30041bacf64378a66187af8281d91e33e1f7f4516a8aaec030b",
+          "sql_and_refetch_match": true,
+          "sql_before_sha256": "fcee0251a7c43d59d96293068876b1256e8e5e66cc73e7a4c43b3b79ed04bb9d",
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1001.5,
+              null
+            ],
+            [
+              50,
+              1003
+            ],
+            [
+              1004,
+              null
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1002
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "baseline_channel_number_delta": 1,
+          "case": "managed-to-start",
+          "effective_order": "dbfceas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": true,
+          "no_op": false,
+          "ordered_refetch": {
+            "allow": null,
+            "body_bytes": 5904,
+            "content_type": "application/json",
+            "full_body_sha256": "7cb36acd4d761a867521a103ed5f56e22c010afeb41a17b6189ad4f4c952d6d7",
+            "status": 200
+          },
+          "post": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 996,
+            "content_type": "application/json",
+            "full_body_sha256": "2feb764003676bd9f20d7e0ca670f88410ff7b4cc7df41bcd6f76fd7c419e153",
+            "status": 200
+          },
+          "sql_after_sha256": "7c34f12fed05226c88c3e710def53589b73b4902cbd6795a8927c3d3e91b7207",
+          "sql_and_refetch_match": true,
+          "sql_before_sha256": "841455a0aa98e30041bacf64378a66187af8281d91e33e1f7f4516a8aaec030b",
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1002.5,
+              null
+            ],
+            [
+              50,
+              1004
+            ],
+            [
+              1004,
+              1
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1003
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "baseline_channel_number_delta": 1,
+          "case": "already-at-start",
+          "effective_order": "dbfceas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": true,
+          "ordered_refetch": {
+            "allow": null,
+            "body_bytes": 5904,
+            "content_type": "application/json",
+            "full_body_sha256": "7cb36acd4d761a867521a103ed5f56e22c010afeb41a17b6189ad4f4c952d6d7",
+            "status": 200
+          },
+          "post": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 998,
+            "content_type": "application/json",
+            "full_body_sha256": "e790e0a6310e7bc0e3c7a62db2cde15ebc3d5aabe49d4b32ab512ecc3f523040",
+            "status": 200
+          },
+          "sql_after_sha256": "7c34f12fed05226c88c3e710def53589b73b4902cbd6795a8927c3d3e91b7207",
+          "sql_and_refetch_match": true,
+          "sql_before_sha256": "7c34f12fed05226c88c3e710def53589b73b4902cbd6795a8927c3d3e91b7207",
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1002.5,
+              null
+            ],
+            [
+              50,
+              1004
+            ],
+            [
+              1004,
+              1
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1003
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "baseline_channel_number_delta": 0,
+          "case": "managed-return-to-provider",
+          "effective_order": "bfcdeas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": false,
+          "ordered_refetch": {
+            "allow": null,
+            "body_bytes": 5737,
+            "content_type": "application/json",
+            "full_body_sha256": "11022f1b98cded960c847653c6cea8c06c3a954044ed7775a08c06169e097417",
+            "status": 200
+          },
+          "post": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 832,
+            "content_type": "application/json",
+            "full_body_sha256": "79e2c454633985c2d2e67188611993814bb9f5a610683a4368faff1547eafabe",
+            "status": 200
+          },
+          "sql_after_sha256": "841455a0aa98e30041bacf64378a66187af8281d91e33e1f7f4516a8aaec030b",
+          "sql_and_refetch_match": true,
+          "sql_before_sha256": "7c34f12fed05226c88c3e710def53589b73b4902cbd6795a8927c3d3e91b7207",
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1001.5,
+              null
+            ],
+            [
+              50,
+              1003
+            ],
+            [
+              1004,
+              null
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1002
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        }
+      ],
+      "initial_SQL_sha256": "c6ca2507c8ef5b265745d6c31e4c6d725d3a49656122de5ab6a5459d0ac4da03"
+    },
+    "original": {
+      "baseline_ordered_refetch": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 5737,
+        "content_type": "application/json",
+        "full_body_sha256": "5a696fa5debf0ec2c3b2ce9dbf20ceb5f8d3f3a14c0f1dba3aefc8ca222569d7",
+        "status": 200
+      },
+      "cases": [
+        {
+          "baseline_channel_number_delta": 0,
+          "case": "manual-down",
+          "effective_order": "bcdeafs",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": false,
+          "ordered_refetch": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 5737,
+            "content_type": "application/json",
+            "full_body_sha256": "10c456f8ab94134dadeaebe3ef2be717f0236515909fce5dce1bf1e38f8d90e3",
+            "status": 200
+          },
+          "post": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 833,
+            "content_type": "application/json",
+            "full_body_sha256": "8c89aa03dccbdf692605e33210334320b53edc35efc6a517cb522746fa5040f5",
+            "status": 200
+          },
+          "sql_after_sha256": "fcee0251a7c43d59d96293068876b1256e8e5e66cc73e7a4c43b3b79ed04bb9d",
+          "sql_and_refetch_match": true,
+          "sql_before_sha256": "c6ca2507c8ef5b265745d6c31e4c6d725d3a49656122de5ab6a5459d0ac4da03",
+          "table_numbers_and_pins": [
+            [
+              1005,
+              null
+            ],
+            [
+              1001.5,
+              null
+            ],
+            [
+              50,
+              1002
+            ],
+            [
+              1003,
+              null
+            ],
+            [
+              1004,
+              null
+            ],
+            [
+              60,
+              1007
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "baseline_channel_number_delta": 0,
+          "case": "managed-up",
+          "effective_order": "bfcdeas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": false,
+          "ordered_refetch": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 5737,
+            "content_type": "application/json",
+            "full_body_sha256": "db6c0513cbd5f5b6c757ffebc4d0654e09e03cef25ff9235401e0b8f607e11d1",
+            "status": 200
+          },
+          "post": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 1030,
+            "content_type": "application/json",
+            "full_body_sha256": "08f381e958450f50bd812c867e9510e6ea98493f036289d602b4f283958df09a",
+            "status": 200
+          },
+          "sql_after_sha256": "841455a0aa98e30041bacf64378a66187af8281d91e33e1f7f4516a8aaec030b",
+          "sql_and_refetch_match": true,
+          "sql_before_sha256": "fcee0251a7c43d59d96293068876b1256e8e5e66cc73e7a4c43b3b79ed04bb9d",
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1001.5,
+              null
+            ],
+            [
+              50,
+              1003
+            ],
+            [
+              1004,
+              null
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1002
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "baseline_channel_number_delta": 1,
+          "case": "managed-to-start",
+          "effective_order": "dbfceas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": true,
+          "no_op": false,
+          "ordered_refetch": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 5904,
+            "content_type": "application/json",
+            "full_body_sha256": "90663e05fbbe954493b4a08ba38f274b30db33d64fdf7cdf6c8145f5f7c2fee7",
+            "status": 200
+          },
+          "post": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 996,
+            "content_type": "application/json",
+            "full_body_sha256": "1ab18c17ece449c8ca491d2cb3abb21597a13b57fde7fc4515f060bd21a751c4",
+            "status": 200
+          },
+          "sql_after_sha256": "1daf398a47b583882c72ef61f1b2908450f550646e8ad3321a5a7c715bc605e3",
+          "sql_and_refetch_match": true,
+          "sql_before_sha256": "841455a0aa98e30041bacf64378a66187af8281d91e33e1f7f4516a8aaec030b",
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1002.5,
+              null
+            ],
+            [
+              50,
+              1004
+            ],
+            [
+              1004,
+              1
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1003
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "baseline_channel_number_delta": 1,
+          "case": "already-at-start",
+          "effective_order": "dbfceas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": true,
+          "ordered_refetch": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 5904,
+            "content_type": "application/json",
+            "full_body_sha256": "90663e05fbbe954493b4a08ba38f274b30db33d64fdf7cdf6c8145f5f7c2fee7",
+            "status": 200
+          },
+          "post": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 998,
+            "content_type": "application/json",
+            "full_body_sha256": "5169ccc89e11ae522286a63fb4a84e0ef115401a57d85f53b6d0054590d8134a",
+            "status": 200
+          },
+          "sql_after_sha256": "1daf398a47b583882c72ef61f1b2908450f550646e8ad3321a5a7c715bc605e3",
+          "sql_and_refetch_match": true,
+          "sql_before_sha256": "1daf398a47b583882c72ef61f1b2908450f550646e8ad3321a5a7c715bc605e3",
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1002.5,
+              null
+            ],
+            [
+              50,
+              1004
+            ],
+            [
+              1004,
+              1
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1003
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "baseline_channel_number_delta": 0,
+          "case": "managed-return-to-provider",
+          "effective_order": "bfcdeas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": false,
+          "ordered_refetch": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 5737,
+            "content_type": "application/json",
+            "full_body_sha256": "db6c0513cbd5f5b6c757ffebc4d0654e09e03cef25ff9235401e0b8f607e11d1",
+            "status": 200
+          },
+          "post": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 832,
+            "content_type": "application/json",
+            "full_body_sha256": "8a926b28eca1f48ed04cd467a558c6fb88cba16f7deabd3bb59ec6b616634963",
+            "status": 200
+          },
+          "sql_after_sha256": "841455a0aa98e30041bacf64378a66187af8281d91e33e1f7f4516a8aaec030b",
+          "sql_and_refetch_match": true,
+          "sql_before_sha256": "1daf398a47b583882c72ef61f1b2908450f550646e8ad3321a5a7c715bc605e3",
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1001.5,
+              null
+            ],
+            [
+              50,
+              1003
+            ],
+            [
+              1004,
+              null
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1002
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        }
+      ],
+      "initial_SQL_sha256": "c6ca2507c8ef5b265745d6c31e4c6d725d3a49656122de5ab6a5459d0ac4da03"
+    }
+  },
+  "build_manifest_sha256": "6b99cc2ae26b3467ac2930d94de20f7003784c3c7e9fcb67b22347abccfe1a43",
+  "candidate_image_id": "sha256:02d82d74209a66d6e2b388c436b2b61dae25999374f5f2076197227283c7cd20",
+  "candidate_revision": "ca752176b5f257f88b1e6cff71fdfd00feb9610c",
+  "credits": "The original Dispatcharr and Django authors retain full credit.",
+  "exact_cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "first_source_retry_receipt_sha256": "b87b8fd3230269d638d8de544a30412bd3361873e63979d18a93b585bf1e7e19",
+  "full_M5_passed": false,
+  "literal_controller_actual_exit": 0,
+  "managed_pin_clocks_verified_in_post_by_guest": true,
+  "ordered_channel_lists_and_typed_JSON_responses_matched": true,
+  "performance_measured": false,
+  "stock_original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "stock_original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "typed_action_and_ordered_list_counts_per_backend": {
+    "GET": 6,
+    "POST": 5
+  }
+}

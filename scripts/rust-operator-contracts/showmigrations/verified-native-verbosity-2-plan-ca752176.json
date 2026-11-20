@@ -1,0 +1,59 @@
+{
+  "Original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_verbose_plan_receipt_sha256": "bf9cab548a87ab570d892641d3613da9aa1b391ea656ba84c4232f8e614b9471",
+  "approved_paths": [
+    "rust/crates/app/src/bin/dispatcharr-operator.rs",
+    "rust/crates/store/datasets/showmigrations-plan-dependencies.in",
+    "rust/crates/store/src/channel_writes.rs",
+    "rust/crates/store/src/channel_writes/reorder.rs",
+    "rust/crates/store/src/channels.rs",
+    "rust/crates/store/src/operator_migrations.rs"
+  ],
+  "candidate_image_id": "sha256:02d82d74209a66d6e2b388c436b2b61dae25999374f5f2076197227283c7cd20",
+  "candidate_manifest_sha256": "6b99cc2ae26b3467ac2930d94de20f7003784c3c7e9fcb67b22347abccfe1a43",
+  "candidate_revision": "ca752176b5f257f88b1e6cff71fdfd00feb9610c",
+  "credit": "Original Dispatcharr and Django contributors retain full credit.",
+  "dependency_order_verified": true,
+  "literal_native_controller_exit": 0,
+  "matched_cases": {
+    "plan": {
+      "Original_argv": [
+        "showmigrations",
+        "--plan",
+        "--database",
+        "default",
+        "--no-color"
+      ],
+      "actual_exit": 0,
+      "exact_startup_sql": true,
+      "independent_terminal_and_SQL_verified": true,
+      "migration_ledger_unchanged": true,
+      "rows": 184,
+      "stdout_bytes": 8883,
+      "stdout_sha256": "b7498724cd126933385a8bf78904546934ab620ffc1d22882842417486e29527"
+    },
+    "verbose-plan": {
+      "Original_argv": [
+        "showmigrations",
+        "--plan",
+        "--verbosity=2",
+        "--database",
+        "default",
+        "--no-color"
+      ],
+      "actual_exit": 0,
+      "exact_startup_sql": true,
+      "independent_terminal_and_SQL_verified": true,
+      "migration_ledger_unchanged": true,
+      "rows": 184,
+      "stdout_bytes": 18671,
+      "stdout_sha256": "3337afece625efb09643c1eb06fe3caec3fd5aceb1574e6f31f0c2a14a3a4675"
+    }
+  },
+  "owned_compose_roles_and_generations_retired": 2,
+  "owned_inventory_empty": true,
+  "owned_operator_containers_retired": 2,
+  "performance_verified": false,
+  "raw_native_terminal_receipt_sha256": "3384154debf1dd05b81681ab0cbd0f91a7db1cc98091804137cae539de5ae82a"
+}

@@ -12,6 +12,13 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Latest packaged checks
 
+The exact `ca752176` package matched both the plain and verbosity-2
+migration plans byte for byte. Its channel reorder comparison matched five
+typed admin actions and six ordered reads, with the same SQL transitions
+and pin timing. Both scopes verified teardown.
+[Verbose migration plan](rust-m0-native-showmigrations-verbosity-plan.md)
+[Channel reorder](rust-m5-native-channel-reorder.md)
+
 The exact `0c429b64` package matched both verbosity-2 migration listings
 against the copied PostgreSQL ledger and 28 ordinary Guide GET comparisons.
 The Guide checks covered browser media ranges, format aliases, casing and
