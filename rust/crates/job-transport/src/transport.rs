@@ -1805,6 +1805,7 @@ mod channel_matching_transport;
 
 #[path = "m3u_refresh_all_transport.rs"]
 mod m3u_refresh_all_transport;
+pub use m3u_refresh_all_transport::OriginalM3uRefreshAll;
 
 #[path = "vod_ingestion_transport.rs"]
 mod vod_ingestion_transport;
