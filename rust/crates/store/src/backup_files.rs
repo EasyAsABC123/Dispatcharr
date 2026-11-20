@@ -29,6 +29,7 @@ pub struct BackupFiles {
     secret: Arc<Vec<u8>>,
     workers: Arc<Semaphore>,
     jobs: Option<Arc<dyn BackupJobApi>>,
+    complete_jobs: bool,
     schedule_disable: Option<Arc<dyn BackupScheduleDisableApi>>,
 }
 /// Explicit adapter avoids a Store -> job-transport dependency cycle. No default
@@ -218,12 +219,20 @@ impl BackupFiles {
             secret: Arc::new(signing_key.into_bytes()),
             workers: Arc::new(Semaphore::new(4)),
             jobs: None,
+            complete_jobs: false,
             schedule_disable: None,
         })
     }
     /// Attach only a prepared, reviewed adapter. This starts no worker.
     pub fn with_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
         self.jobs = Some(jobs);
+        self.complete_jobs = true;
+        self
+    }
+    /// Keep the ordinary schedule and restore behavior with a manual create owner.
+    pub fn with_create_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
+        self.jobs = Some(jobs);
+        self.complete_jobs = false;
         self
     }
     /// Attach schedule-only behavior through the existing request executor.
@@ -435,7 +444,8 @@ impl BackupFiles {
             return Ok((status, Json(value)).into_response());
         }
         if kind == "schedule-update" {
-            if self.jobs.is_none() && self.schedule_disable.is_none() {
+            let jobs = self.jobs.as_ref().filter(|_| self.complete_jobs);
+            if jobs.is_none() && self.schedule_disable.is_none() {
                 return Ok(reply(501, "Backup schedule consumer is not prepared"));
             }
             let raw =
@@ -446,7 +456,7 @@ impl BackupFiles {
                     })?;
             let value: Value = serde_json::from_slice(&raw)
                 .map_err(|_| StoreError::StatusBody(400, json!({"detail":"JSON parse error"})))?;
-            let updated = if let Some(jobs) = &self.jobs {
+            let updated = if let Some(jobs) = jobs {
                 jobs.update_schedule(value, lease.clone()).await?
             } else if let Some(adapter) = &self.schedule_disable {
                 adapter.disable(value, &self.auth, lease.clone()).await?
@@ -535,7 +545,7 @@ impl BackupFiles {
             return Ok(Json(json!({"token":mac(&self.secret,&filename)})).into_response());
         }
         if kind == "restore" {
-            let Some(jobs) = &self.jobs else {
+            let Some(jobs) = self.jobs.as_ref().filter(|_| self.complete_jobs) else {
                 return Ok(reply(
                     501,
                     "Native durable backup restore jobs are not migrated",

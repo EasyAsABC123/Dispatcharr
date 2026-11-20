@@ -22,6 +22,9 @@ use std::{
 };
 use tokio::sync::{Notify, OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
+#[path = "normal_backup_manual.rs"]
+mod manual;
+pub use manual::ManualApplication;
 #[derive(Debug)]
 pub enum Error {
     Configuration,
@@ -61,7 +64,7 @@ impl Application {
         scratch: PathBuf,
         identity: ProducerIdentitySource,
     ) -> Result<Self, Error> {
-        if !jobs.allows_defaults() {
+        if !jobs.allows_defaults() && !jobs.allows_backup() {
             return Err(Error::Configuration);
         }
         Ok(Self {
@@ -85,12 +88,20 @@ impl Application {
         })
     }
     pub fn bind_restore_plugins(&self, plugins: PluginActions) -> Result<(), Error> {
+        if !self.inner.jobs.allows_defaults() {
+            return Err(Error::Configuration);
+        }
         self.inner
             .executor
             .bind_restore_plugins(plugins)
             .map_err(|_| Error::Configuration)
     }
     pub async fn initialize_schedule(&self, owner: Arc<dyn Send + Sync>) -> Result<(), StoreError> {
+        if !self.inner.jobs.allows_defaults() {
+            return Err(StoreError::Unsupported(
+                "Backup schedule consumer is not prepared",
+            ));
+        }
         self.inner.schedule.initialize(owner).await
     }
     pub fn close_admission(&self) {
@@ -129,7 +140,11 @@ impl Application {
         expected: Option<Arc<[u8]>>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Disposition, Disposition> {
-        let owner = self.owner(false, caller)?;
+        let owner = match self.owner(false, caller) {
+            Ok(owner) => owner,
+            Err(_) if self.manual_intake_closed() => return Ok(Disposition::NotDue),
+            Err(error) => return Err(error),
+        };
         let inner = self.inner.clone();
         let join_inner = inner.clone();
         let join_owner = owner.clone();
@@ -145,6 +160,9 @@ impl Application {
                 Ok(None) => return Ok(Disposition::Empty),
                 Err(TransportError::ClaimRace) => return Ok(Disposition::HeadChanged),
                 Err(TransportError::UnsupportedTask) => return Ok(Disposition::UnsupportedHead),
+                Err(TransportError::Capacity) if !inner.jobs.allows_defaults() => {
+                    return Ok(Disposition::Capacity)
+                }
                 Err(error) => {
                     return Err(Disposition::Operational(format!("backup peek {error:?}")))
                 }
@@ -172,7 +190,11 @@ impl Application {
                 if let Some(scope)=restore_scope.take() {
                     inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore preclaim drain unsettled".into()))?;
                 }
-                return if is_restore { Ok(Disposition::NotDue) } else { Err(Disposition::Operational("backup intake stopped before claim".into())) };
+                return if is_restore || !inner.jobs.allows_defaults() {
+                    Ok(Disposition::NotDue)
+                } else {
+                    Err(Disposition::Operational("backup intake stopped before claim".into()))
+                };
             }
             let message = match inner
                 .jobs
@@ -256,6 +278,10 @@ impl Application {
             }
         }
     }
+    fn manual_intake_closed(&self) -> bool {
+        !self.inner.jobs.allows_defaults() && self.inner.closed.load(Ordering::Acquire)
+    }
+
     async fn drain(&self, budget: Duration) -> bool {
         self.close_admission();
         let deadline = tokio::time::Instant::now() + budget;
@@ -342,7 +368,7 @@ impl BackupJobApi for Application {
         caller: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<String, StoreError>> {
         Box::pin(async move {
-            if !self.inner.executor.restore_ready() {
+            if !self.inner.jobs.allows_defaults() || !self.inner.executor.restore_ready() {
                 return Err(api_error());
             }
             let owner = self.owner(true, caller).map_err(|_| api_error())?;
@@ -411,6 +437,11 @@ impl BackupJobApi for Application {
         caller: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<Value, StoreError>> {
         Box::pin(async move {
+            if !self.inner.jobs.allows_defaults() {
+                return Err(StoreError::Unsupported(
+                    "Backup schedule consumer is not prepared",
+                ));
+            }
             let owner = self.owner(true, caller).map_err(|_| api_error())?;
             let schedule = self.inner.schedule.clone();
             tokio::spawn(async move { schedule.update(data, owner).await })

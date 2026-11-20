@@ -83,6 +83,11 @@ The [stock backup missing-settings replay](rust-m8-backup-missing-row.md)
 matched permissions, response bytes, row creation and cache invalidation
 when disabling the schedule. Both owned fixtures retired cleanly.
 
+The [standalone manual PostgreSQL backup](rust-m8-standalone-backup-create.md)
+matched Original create, signed task status and archive download on the
+exact a785 package under separate owned namespaces. The opt-in consumer
+verified normal shutdown and exact cleanup in both Compose projects.
+
 The [stock Stream multipart replay](rust-m5-stream-file-compose.md) matched
 all 16 paired cases on the shared image. The
 [UTC time-only custom guide replay](rust-m7-utc-guide-compose.md) passed both

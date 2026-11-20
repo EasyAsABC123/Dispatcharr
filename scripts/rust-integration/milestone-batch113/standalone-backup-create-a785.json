@@ -1,0 +1,120 @@
+{
+  "actual_paired_controller_exit": 0,
+  "candidate_image_id": "sha256:94dbaa2c371511f85e9d7a420a3d0049a6bd695b0382319b0bf477275ee6d941",
+  "candidate_manifest_sha256": "88064eab5e75131fdd8a9ecf411f33f979748f72c32128b5bb04c61da7e1682a",
+  "candidate_revision": "a785a2b713b70d9d3e86328f94f02b891c7e4702",
+  "candidate_source_tree_sha256": "9714cdb9e5888e974bbe80e3eb6e8b44a6a0fc52f9148ee69deeb0fd08032d65",
+  "credit": "Original Dispatcharr, Celery and PostgreSQL authors retain full credit.",
+  "exact_Rust_product_paths": [
+    "rust/crates/app/src/main.rs",
+    "rust/crates/app/src/manual_backup_config.rs",
+    "rust/crates/job-transport/src/normal_backup.rs",
+    "rust/crates/job-transport/src/normal_backup_manual.rs",
+    "rust/crates/job-transport/src/normal_backup_transport.rs",
+    "rust/crates/store/src/backup_files.rs"
+  ],
+  "full_M8_accepted": false,
+  "host_controls": {
+    "Clippy_stderr_sha256": "13e02684005a4df131222395d3ccc160053c8804d10857d917f67bf03fee72ea",
+    "disabled_and_competing_owner_config_covered_by_host_unit_test": true,
+    "disabled_and_competing_owner_config_physically_replayed": false,
+    "focused_test_passes": 18,
+    "literal_controls": {
+      "job-tests": {
+        "actual_exit": 0,
+        "ignored": 0,
+        "passed": 7,
+        "stdout_sha256": "f163a3d9ef0a53fc091793cc273d815f819cd485430af9d3b2c0e48c864f087b"
+      },
+      "main-tests": {
+        "actual_exit": 0,
+        "ignored": 0,
+        "passed": 1,
+        "stdout_sha256": "24b6ccbeb6367dd7f56708811ca9abb81c5dc854046745645f783b1530c65647"
+      },
+      "store-tests": {
+        "actual_exit": 0,
+        "ignored": 2,
+        "passed": 10,
+        "stdout_sha256": "bfde8e4ee579c68660d70dae2f7450ecedad17baf29be28916e453d1f6c1f702"
+      }
+    },
+    "strict_all_targets_Clippy_actual_exit": 0
+  },
+  "isolated_fixture_launcher_sha256": "c03be7919fa8ee0bf6bcdae4b4481bd71092471f313546b7c575f591fb050f2e",
+  "manual_owner_flag": "RUST_BACKUP_CREATE_OWNER=rust",
+  "native": {
+    "actual_terminal_metadata_verified": true,
+    "archive": {
+      "bytes": 39232,
+      "database_type": "postgresql",
+      "format_version": 2,
+      "members": [
+        "database.dump",
+        "metadata.json"
+      ],
+      "sha256": "f7ddf8f741706e840c33d1865a5066db96c9ba65b315212e1a7782f67bf77876"
+    },
+    "create_status": 202,
+    "download_status": 200,
+    "exact_compose_generations_retired": 4,
+    "normal_process_exit": 0,
+    "owned_compose_absence_independent": true,
+    "receipt_sha256": "85ac4f224f79b898e62834e78864d99296597cb631c8f662a9b15a19c61100ce",
+    "representative_seeded_SQL_snapshot_and_control_unchanged": true,
+    "result_state": "SUCCESS",
+    "signed_task_status": 200
+  },
+  "normal_shutdown_after_completed_archive_verified": true,
+  "ordinary_Native_broker_empty_before_and_after_management_SQL_snapshot": true,
+  "original": {
+    "actual_terminal_metadata_verified": true,
+    "archive": {
+      "bytes": 39393,
+      "database_type": "postgresql",
+      "format_version": 2,
+      "members": [
+        "database.dump",
+        "metadata.json"
+      ],
+      "sha256": "76dd11c3883304306042d50a1c37406eaa6f5bb2ea2a9f641e0db5843096665b"
+    },
+    "create_status": 202,
+    "download_status": 200,
+    "exact_compose_generations_retired": 2,
+    "normal_process_exit": 0,
+    "owned_compose_absence_independent": true,
+    "receipt_sha256": "f8a7c9f1618da91777b0f0f67efcef1882697be4b1cba84e68a9cf1753ea5808",
+    "representative_seeded_SQL_snapshot_and_control_unchanged": true,
+    "result_state": "SUCCESS",
+    "signed_task_status": 200
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "paired_controller_receipt_sha256": "616ff7667b5c76f82e5b482d60a6c3c838cfe70876a30ed606f76461840e150a",
+  "performance_verified": false,
+  "prior_same_image_nonzero": [
+    {
+      "Native_Main_exit": 1,
+      "Native_backup_completed": true,
+      "controller_exit": 1,
+      "controller_receipt_sha256": "5bcf8c64efc68a6da122818aab72c8afb7665f2e4f5ea07d74c03b8e6a698122",
+      "exact_resources_retired": true,
+      "retirement_receipt_sha256": "87c9e71e4287105bfc859018ef529f02774398bc984cb2d9e005351f70ae0598"
+    },
+    {
+      "Native_Main_exit": 1,
+      "Native_backup_completed": true,
+      "Native_worker_fault_category_observed": true,
+      "controller_exit": 1,
+      "controller_receipt_sha256": "392b284dbda89389f20c663d7d0f5a932129b95663fd434d97f26e11fe41a3e3",
+      "exact_resources_retired": true,
+      "retirement_receipt_sha256": "9568103b5dccc596341eeb21ed233251d7014ad6c38ffb22ece0048bd9210d71"
+    }
+  ],
+  "restore_schedule_or_cancellation_physically_verified": false,
+  "scope": "Standalone manual PostgreSQL create, signed task status and archive download",
+  "selected_Beat_runtime_active": false,
+  "selected_jobs_runtime_active": false,
+  "slow_or_unsettled_worker_deadline_physically_verified": false,
+  "verified_React_and_attribution_inputs": 497
+}

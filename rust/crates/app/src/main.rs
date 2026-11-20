@@ -8,6 +8,7 @@ mod control;
 mod database_config;
 mod m3u_refresh_all_config;
 mod managed_logs;
+mod manual_backup_config;
 mod playback;
 mod plugin_gpg_trace;
 mod plugin_jobs_bridge;
@@ -830,6 +831,16 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     } else {
         None
     };
+    let manual_backup = manual_backup_config::prepare(
+        selected_jobs_enabled
+            || refresh_enabled
+            || version_tasks_enabled
+            || original_m3u_refresh_all.is_some(),
+        store.clone(),
+        auth.clone(),
+        cache_url.as_deref(),
+    )
+    .await?;
     let artwork_completions = dispatcharr_job_transport::ArtworkCompletions::new();
     let mut epg_index = None;
     let mut epg_series = None;
@@ -1117,6 +1128,10 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         )),
         (None, None) => backup_files,
     };
+    let backup_files = match &manual_backup {
+        Some(owner) => backup_files.with_create_jobs(Arc::new(owner.clone())),
+        None => backup_files,
+    };
     let ordinary_recording_playback = selected_jobs.is_none().then(|| {
         dispatcharr_store::RecordingPlayback::prepare(
             auth.clone(),
@@ -1283,6 +1298,10 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     if let Some(selected) = &selected_jobs {
         selected.start_after_serving()?;
     }
+    if let Some(owner) = &manual_backup {
+        owner.start().map_err(|_| "Manual backup intake failed")?;
+    }
+    let manual_backup_enabled = manual_backup.is_some();
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
     let services = ShutdownServices {
         stream_files: auth.clone(),
@@ -1305,6 +1324,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         xc,
         output_profiles,
         backup_files,
+        manual_backup,
         epg_programs,
         epg_refresh,
         epg_index,
@@ -1328,6 +1348,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         signal_services.stream_files.stop_stream_file_admission();
         signal_services.stream_regex.close_admission();
         signal_services.plugin_actions.stop_admission();
+        if let Some(owner) = &signal_services.manual_backup {
+            owner.stop_admission();
+        }
         if let Some(m3u) = &signal_services.original_m3u_refresh_all {
             m3u.close_admission();
         }
@@ -1352,12 +1375,15 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         "Refresh worker"
     } else if original_m3u_refresh_all.is_some() {
         "Original M3U publisher"
+    } else if manual_backup_enabled {
+        "Manual backup worker"
     } else {
         "Selected"
     };
     let shutdown_requires_drain = || {
         refresh_enabled
             || original_m3u_refresh_all.is_some()
+            || manual_backup_enabled
             || auth.stream_files_were_used()
             || stream_regex.was_used()
             || ordinary_recording_playback
@@ -1449,6 +1475,7 @@ struct ShutdownServices {
     xc: Option<dispatcharr_xc_http::XcGateway>,
     output_profiles: dispatcharr_store::OutputProfileWrites,
     backup_files: dispatcharr_store::BackupFiles,
+    manual_backup: Option<dispatcharr_job_transport::normal_backup::ManualApplication>,
     epg_programs: dispatcharr_store::EpgProgramReads,
     epg_refresh: Option<dispatcharr_job_transport::refresh_application::RefreshApplication>,
     epg_index: Option<dispatcharr_job_transport::index_application::IndexApplication>,
@@ -1485,6 +1512,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         xc,
         output_profiles,
         backup_files,
+        manual_backup,
         epg_programs,
         mut epg_refresh,
         mut epg_index,
@@ -1498,6 +1526,9 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         live_statistics,
         combined_statistics,
     } = services;
+    if let Some(owner) = &manual_backup {
+        owner.stop_admission();
+    }
     if selected_jobs.is_none() {
         if let Some(tvg) = &epg_tvg {
             tvg.stop_channel_publications();
@@ -1758,6 +1789,11 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     }
     if !original_m3u_drained {
         return Err("Original M3U aggregate broker publication remains unsettled".into());
+    }
+    if manual_backup.is_some() && !backups {
+        return Err(
+            "Manual backup consumer or accepted archive work did not settle cleanly".into(),
+        );
     }
     if !stream_files_drained {
         return Err("Stream upload storage/SQL remains physically unsettled".into());
