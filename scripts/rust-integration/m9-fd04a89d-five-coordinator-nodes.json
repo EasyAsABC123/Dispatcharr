@@ -1,0 +1,176 @@
+{
+  "build_manifest_sha256": "889b2f7e9431be14f0a390142aea3ee7e88bfc7285f59bd6130431ea82f333a7",
+  "candidate_image_id": "sha256:54f645958b5f83d02b9739014969956d3f13105285ee32cacafc400dbbeeeed3",
+  "candidate_revision": "fd04a89dbec0ec3b636414e1cd8be7e55f6984b3",
+  "credit": "The original Dispatcharr, Django, Celery and dependency contributors retain full credit.",
+  "formal_required_nodes": 127,
+  "fresh_passed_nodes": [
+    "package/clean-install",
+    "package/guide-grid-packaged",
+    "package/packaged-cached-provider-info",
+    "package/packaged-provider-actions",
+    "package/provider-modal-browser"
+  ],
+  "fresh_verified_required_nodes": 5,
+  "full_M9_accepted": false,
+  "groups": {
+    "clean-install": {
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/clean-install": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "4ff51bb6b5c135e9985f2768aaac464a7055501cf6aaa50e766064a6a2f6934d",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "checks": 11,
+            "no_Original_or_Django_service": true
+          },
+          "proofs": {
+            "integration_sha256": "0b7957d076409936e9128d53f7b7e7aa368227c55431f0253b656161479dd308"
+          },
+          "qualification_receipt_sha256": "dffeff494d968a25efc34804d5cc3ef035c50f869cba09f62a3bf88e3dbafbf7"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "5c0f8d59ae77ef6e32a80a695750ddf2dadccc9ac7659d971a2b68c40afbc1da",
+      "redacted_owner_projection_sha256": "307180e171fb275e221581b0b931270a51a1a6685b5a4ea8436157cf807a0168",
+      "sealed_binding_sha256": "4fb800b0b2370e6abf54b3c5ea59f2878888f831888d20719d5112400f261039",
+      "stage_seal_sha256": "0abc3886dd4a7ee4a5cb28c4bbdaee6f384d8711010175ceca7d3d91f609e70a",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/clean-install"
+      ],
+      "terminal_node_statuses": {
+        "package/clean-install": "passed"
+      }
+    },
+    "grid": {
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/guide-grid-packaged": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "8e842efe5fc5bbecdb0a7f58c9c5ede3e98f3f551207ba75f5a3ee7fa0b4a7cf",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "required_wire_cases": 43
+          },
+          "proofs": {
+            "exact_native_wire_sha256": "19844e51612e62eeaa86b331a23b2357fc0acd2294caa83096fd39c79cba1f9c",
+            "exact_original_wire_sha256": "c06abe7657db5d93cc062612511f9a2f4890a775719cc21b5d58e02731a190a0",
+            "integration_sha256": "9f38dc0cb424ebb16c6dfce13cee45364493075ffbf736a5f28459918022be59"
+          },
+          "qualification_receipt_sha256": "0f28e3905bdb5f80edab9a59dab75369c693d35fd3086a9e3cf37875359f93e1"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "bbc1c64c1abf910e81c2a10abd03c1cec10960893a0bac7eb6b0c0a8e6d37de6",
+      "redacted_owner_projection_sha256": "cd188f4a306e3c7487f81de6d4dfeeefe1801330736f90deff3f97ddbf665bff",
+      "sealed_binding_sha256": "ec9a0395863e141e2b7a7cfafb3a939c89dc60f256dc3be2096a31db9acb7989",
+      "stage_seal_sha256": "5a56fd32e559ee18186abc9c86fe6816edaa48fbc3ec3d1123987ab5078f508d",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/guide-grid-packaged"
+      ],
+      "terminal_node_statuses": {
+        "package/guide-grid-packaged": "passed"
+      }
+    },
+    "provider": {
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/packaged-cached-provider-info": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "502b413fc3482ef91457edae326ee31158561f58639607d3f21ddd59720b492c",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "Native_burst_requests": 10,
+            "Original_HTTP_captures": 592,
+            "Original_burst_requests": 10,
+            "Original_captures_outside_ordinary_comparison": 199,
+            "actual_provider_attempts": 0,
+            "ordinary_packaged_HTTP_comparisons": 393,
+            "restored_SQL_tables": 18,
+            "specialized_HTTP_cases": 90
+          },
+          "ordinary_packaged_HTTP_receipt_sha256": "93f54366b8e2d3c790a7ce8e9452e1b01d24bb4ce2719a6d82d386dd70f11d53",
+          "proofs": {},
+          "qualification_receipt_sha256": "dd115bfdfc8004e42786735896336783823072cfc1b14364eac29ca6be413c7c"
+        },
+        "package/packaged-provider-actions": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "1227d8eae50b55c56fb03a44dc670c016b68f008edd10a9b50a1c87eb7cf3adb",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "Original_HTTP_captures": 592,
+            "Original_captures_outside_ordinary_comparison": 199,
+            "fresh_same_state_references": 25,
+            "ordinary_packaged_HTTP_comparisons": 393,
+            "restored_SQL_tables": 18,
+            "specialized_HTTP_cases": 150
+          },
+          "ordinary_packaged_HTTP_receipt_sha256": "866f542b50ac18201ff653eda6924d5044f4b2ae41ab11fa364fda7e39a73494",
+          "proofs": {},
+          "qualification_receipt_sha256": "02acb4114851cb410fdc73e4cb1361291f51fda45dabfca99dde6919ef2831f2"
+        },
+        "package/provider-modal-browser": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "b6e13a32d2dc57974113414231301124e06156b13e73652241e8d41f3155a033",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "artwork_accesses": 12,
+            "exact_static_assets": 112,
+            "normal_modal_cards_per_arm": 2,
+            "paired_browser_arms": 2,
+            "restoration_verified": true
+          },
+          "proofs": {},
+          "qualification_receipt_sha256": "3adc0ed0143d195ccdf8e1b39320678e79303379e74b7d5864bcf03f25546d40"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "e534face04232d9d2c2fbfe42b34aad32ef108b88ae36ffed2803b2ef48bd29b",
+      "sealed_binding_sha256": "72ce942d7e51e34f50505680a503b495925361ebd92335a55224f1468039f2c2",
+      "stage_seal_sha256": "03619feb26e77c844f54c0de1a621d68a27e2e3390a2c5bc47bf282c8e5d3182",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/packaged-cached-provider-info",
+        "package/packaged-provider-actions",
+        "package/provider-modal-browser"
+      ],
+      "terminal_node_statuses": {
+        "package/packaged-cached-provider-info": "passed",
+        "package/packaged-provider-actions": "passed",
+        "package/provider-modal-browser": "passed"
+      }
+    }
+  },
+  "historical_statuses_transferred": false,
+  "performance_measured": false,
+  "required_nodes_without_fresh_proof": 122,
+  "source_tree_sha256": "db6d9a7d050123e01c9fb1510e75658a1ea26f3e46d8e937989f9c52f709154a"
+}
