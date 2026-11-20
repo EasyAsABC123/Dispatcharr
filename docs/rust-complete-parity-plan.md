@@ -15,17 +15,24 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 The exact `0c429b64` package matched both verbosity-2 migration listings
 against the copied PostgreSQL ledger and 28 ordinary Guide GET comparisons.
 The Guide checks covered browser media ranges, format aliases, casing and
-indentation with exact response content and teardown. The broader coordinator
-receipt below remains scoped to `82414407`.
+indentation with exact response content and teardown.
 [Verbose migration inspection](rust-m0-native-showmigrations-verbosity.md)
 [Guide content negotiation](rust-m7-programme-get-negotiation.md)
+
+The exact `0c429b64` package passed **2 of 127 required coordinator
+nodes** in fresh Compose runs. Main passed 1,024 checks across 18 suites
+and decoded 75 MPEG-TS frames. Both browser arms verified advancing live
+video, active-channel Stats, normal player close, and 112 shipped React
+assets. Both nodes verified independent cleanup. The other 125 required
+nodes lack fresh qualifying evidence on this image.
+[0c429b64 coordinator coverage](rust-m9-0c429-coordinator-coverage.md)
 
 The exact `82414407` package passed **18 of 127 required coordinator
 nodes** in fresh scoped runs. Each counted node passed its complete
 workload, semantic evaluation and independent cleanup. The other 109
 required nodes lack qualifying evidence in this report. Full release
 workflow, soak, rollback and equivalent-work performance remain open.
-[Current 82414407 coordinator coverage](rust-m9-8241-coordinator-coverage.md)
+[82414407 coordinator coverage](rust-m9-8241-coordinator-coverage.md)
 
 The exact `82414407` package matched four Guide detail GET profiles and
 both Standard detail HEAD representations. Its selected workers also matched
