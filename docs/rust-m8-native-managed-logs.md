@@ -69,5 +69,24 @@ settled groups. Teardown verified one Original and four Native owned
 containers and their original processes were absent. The earlier
 Original51 APIClient capture established config-write behavior. This pair
 also observed the running collectors apply the change without restarting.
-Persistence toggling, size-triggered rotation and full M8 remain open.
+Size-triggered rotation and full M8 remain open.
 [Active retention receipt](../scripts/rust-integration/milestone-batch113/active-log-retention.json)
+
+## File persistence disabled across restart
+
+Pinned Original and the exact `c74ea312bdc7` package handled the stock
+System Settings PUT changing file persistence to false. After restarting,
+the admin GET returned the saved setting and System Logs still reported
+an active collector. Each process emitted its ordinary startup record to
+the console. Neither target record appeared in the live file. The earlier
+enabled-period log prefix remained in the first archive, and the live
+file was stable across six writer intervals. Original retained 1,328 bytes
+from earlier in the disabled boot. The Native retry observed zero.
+
+The Original controller exited 0 with all ten phases settled. The first
+Native controller exited 1 when Compose restarted the already completed
+initializer, which exited 1. All four owned resources retired. The fresh
+Native retry started only the verified app container, passed all twelve
+phases, and verified exact teardown of all four owned containers and host
+processes. Re-enabling persistence and full M8 remain open.
+[Disabled file persistence receipt](../scripts/rust-integration/milestone-batch113/disabled-log-persistence.json)

@@ -37,6 +37,35 @@ Original worker to use PostgreSQL over the shared loopback network. The first
 run and cleanup are preserved, and Rust did not start in that attempt.
 
 This qualifies the observed startup and same-cache restart of the declared
-Version worker. Daily scheduling, the shared default worker graph, full M6
+Version worker. Ordinary daily scheduling, the shared default worker graph, full M6
 and performance remain open.
 [Redacted paired receipt](../scripts/rust-integration/milestone-batch113/ordinary-version-startup.json)
+
+## Daily Version on the selected worker graph
+
+A separate c74 Compose run paired Original's Django DatabaseScheduler
+with selected Rust Main. Rust used
+`RUST_EXPERIMENTAL_SELECTED_JOBS=1` and
+`RUST_EXPERIMENTAL_SELECTED_BEAT=1`. The ordinary startup-owner flag was
+absent. Both controllers and workers exited 0, and the owned generations
+and project resources retired.
+
+The stock `check-version-updates` row retained its 86,400-second interval.
+The fixture enabled it after startup and backdated its last-run timestamp
+to make one ordinary run due. No Version job, release request or notice
+was observed before arming. Each scheduler published one unparented
+Version job on `celery` with the exact periodic task name. Its worker
+completed with SUCCESS/null, one HTTP 200 from the owned release
+dependency, one active high-priority administrator notice and one
+Channels event. A normal stop left one run recorded and an advanced
+last-run timestamp on the same row.
+
+The initial attempt exited 1 before either scheduler started. The
+Original management guest could not import its mounted Django settings.
+The retry supplied the app's Python path. The first exit and cleanup
+are preserved.
+
+The result qualifies one daily update in selected Rust Main. The
+ordinary Rust scheduler entry point, formal M6 cell and performance
+remain open.
+[Redacted selected daily receipt](../scripts/rust-integration/milestone-batch113/selected-daily-version.json)
