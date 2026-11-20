@@ -913,6 +913,7 @@ async fn project(
 enum QueueFreeProviderEdit {
     Rename,
     Activate,
+    Deactivate,
 }
 
 fn queue_free_provider_edit(input: &Map<String, Value>) -> Option<QueueFreeProviderEdit> {
@@ -921,10 +922,12 @@ fn queue_free_provider_edit(input: &Map<String, Value>) -> Option<QueueFreeProvi
     }
     if input.get("name").is_some_and(Value::is_string) {
         Some(QueueFreeProviderEdit::Rename)
-    } else if input.get("is_active") == Some(&Value::Bool(true)) {
-        Some(QueueFreeProviderEdit::Activate)
     } else {
-        None
+        match input.get("is_active").and_then(Value::as_bool) {
+            Some(true) => Some(QueueFreeProviderEdit::Activate),
+            Some(false) => Some(QueueFreeProviderEdit::Deactivate),
+            None => None,
+        }
     }
 }
 
@@ -949,7 +952,24 @@ fn eligible_queue_free_edit(edit: QueueFreeProviderEdit, old: &Value, previous_c
                     && old["status"] == "disabled"
                     && old["refresh_interval"].as_i64().is_some_and(|hours| hours > 0)
             }
+            QueueFreeProviderEdit::Deactivate => old["is_active"] == true,
         }
+}
+
+fn deactivation_lock_error(error: StoreError) -> StoreError {
+    if matches!(
+        &error,
+        StoreError::Database(database)
+            if database.as_database_error().and_then(|error| error.code()).as_deref()
+                == Some("55P03")
+    ) {
+        StoreError::StatusBody(
+            503,
+            json!({"detail":"Provider deactivation rows are busy. Retry the request."}),
+        )
+    } else {
+        error
+    }
 }
 
 async fn edit_without_broker(
@@ -958,13 +978,18 @@ async fn edit_without_broker(
     old: &Value,
     validated: Validated,
     edit: QueueFreeProviderEdit,
-) -> Result<Json<Value>, StoreError> {
+    signal: Arc<dyn crate::xc_account_tasks::ProfileSaveSignal>,
+) -> Result<(Json<Value>, Vec<String>), StoreError> {
     let mut expected = old.clone();
     match edit {
         QueueFreeProviderEdit::Rename => expected["name"] = validated.saved["name"].clone(),
         QueueFreeProviderEdit::Activate => {
             expected["is_active"] = json!(true);
             expected["status"] = json!("idle");
+        }
+        QueueFreeProviderEdit::Deactivate => {
+            expected["is_active"] = json!(false);
+            expected["status"] = json!("disabled");
         }
     }
     if validated.saved != expected
@@ -993,8 +1018,8 @@ async fn edit_without_broker(
     session
         .run(move |c| {
             Box::pin(async move {
-                // Both edits acquire the account before its linked task and
-                // recheck the pre-edit settings in the same transaction.
+                // Acquire the account before its linked task and recheck
+                // the pre-edit settings in the same transaction.
                 let mut tx = c.begin().await?;
                 let account: Option<i64> = match edit {
                     QueueFreeProviderEdit::Rename => sqlx::query_scalar(
@@ -1021,15 +1046,35 @@ async fn edit_without_broker(
                     .bind(max)
                     .fetch_optional(&mut *tx)
                     .await?,
+                    QueueFreeProviderEdit::Deactivate => sqlx::query_scalar(
+                        "WITH eligible AS (SELECT id FROM m3u_m3uaccount WHERE id=$1 AND account_type='STD' \
+                         AND NOT locked AND is_active AND status='idle' AND refresh_interval=$2 \
+                         AND refresh_task_id=$3 AND max_streams=$4 FOR UPDATE NOWAIT) \
+                         UPDATE m3u_m3uaccount AS account SET is_active=false,status='disabled' \
+                         FROM eligible WHERE account.id=eligible.id RETURNING account.id::bigint",
+                    )
+                    .bind(id)
+                    .bind(interval)
+                    .bind(task)
+                    .bind(max)
+                    .fetch_optional(&mut *tx)
+                    .await?,
                 };
                 let account = account.ok_or_else(unsupported)?;
                 let task_name = format!("m3u_account-refresh-{id}");
-                let present: Option<i64> = sqlx::query_scalar(
-                    "SELECT t.id::bigint FROM django_celery_beat_periodictask t \
+                let deactivating = edit == QueueFreeProviderEdit::Deactivate;
+                let task_lock = "SELECT t.id::bigint FROM django_celery_beat_periodictask t \
                      JOIN django_celery_beat_intervalschedule i ON i.id=t.interval_id \
                      WHERE t.id=$1 AND t.name=$2 AND t.task=$3 AND t.enabled=$5 \
-                     AND i.every=$4 AND i.period='hours' FOR UPDATE OF t",
-                )
+                     AND i.every=$4 AND i.period='hours' FOR UPDATE OF t";
+                let scoped_task_lock;
+                let task_lock = if deactivating {
+                    scoped_task_lock = format!("{task_lock} NOWAIT FOR SHARE OF i NOWAIT");
+                    &scoped_task_lock
+                } else {
+                    task_lock
+                };
+                let present: Option<i64> = sqlx::query_scalar(task_lock)
                 .bind(task)
                 .bind(&task_name)
                 .bind("apps.m3u.tasks.refresh_single_m3u_account")
@@ -1040,6 +1085,18 @@ async fn edit_without_broker(
                 if present.is_none() {
                     return Err(unsupported());
                 }
+                let dismissed = if deactivating {
+                    let keys = signal.collect_account_deactivation(&mut tx, account).await?;
+                    let marker: Option<i16> = sqlx::query_scalar(
+                        "SELECT ident::smallint FROM django_celery_beat_periodictasks WHERE ident=1 FOR UPDATE NOWAIT",
+                    )
+                    .fetch_optional(&mut *tx)
+                    .await?;
+                    marker.ok_or_else(unsupported)?;
+                    keys
+                } else {
+                    Vec::new()
+                };
                 update_default_capacity(&mut tx, account, max).await?;
                 let kwargs = format!("{{\"account_id\": {id}}}");
                 let scheduled = crate::provider_schedule::upsert(
@@ -1061,7 +1118,7 @@ async fn edit_without_broker(
                 let mut value = crate::provider_reads::physical_account_detail(&mut tx, id).await?;
                 value["cron_expression"] = json!("");
                 tx.commit().await?;
-                Ok(Json(value))
+                Ok((Json(value), dismissed))
             })
         })
         .await?
@@ -1146,7 +1203,23 @@ async fn change(
             })).await??;
             if let Some(edit) = queue_free_edit {
                 let account = id.ok_or_else(unsupported)?;
-                let response = edit_without_broker(&session, account, &old, validated, edit).await?;
+                let signal = auth.profile_save_signal.clone().ok_or_else(unsupported)?;
+                let result = edit_without_broker(&session, account, &old, validated, edit, signal.clone()).await;
+                let (response, dismissed) = match result {
+                    Err(error) if edit == QueueFreeProviderEdit::Deactivate => {
+                        // The dropped transaction has queued its rollback.
+                        // Classify a retry only after physical settlement.
+                        session.close().await?;
+                        return Err(deactivation_lock_error(error));
+                    }
+                    outcome => outcome?,
+                };
+                if !dismissed.is_empty() {
+                    // SQL committed inside the actor. Retire it before sending
+                    // so publication retains the caller but none of the locks.
+                    session.close().await?;
+                    signal.dispatch_account_dismissals(dismissed, owner.clone()).await?;
+                }
                 return Ok((account, None, (StatusCode::OK, response)));
             }
             let saved=validated.saved;let cron=validated.cron;
@@ -1482,10 +1555,34 @@ mod tests {
         assert!(!validated.hash_changed && validated.expiration.is_none());
         assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
         assert!(!eligible_queue_free_edit(edit, &expected, ""));
-        assert_eq!(queue_free_provider_edit(&Map::from_iter([("is_active".into(), json!(false))])), None);
+        assert_eq!(
+            queue_free_provider_edit(&Map::from_iter([("is_active".into(), json!(false))])),
+            Some(QueueFreeProviderEdit::Deactivate)
+        );
         assert_eq!(queue_free_provider_edit(&Map::from_iter([
             ("is_active".into(), json!(true)), ("name".into(), json!("Owned name"))
         ])), None);
+    }
+
+    #[test]
+    fn flags_off_std_deactivation_requires_the_existing_active_idle_interval() {
+        let mut old = defaults();
+        old["is_active"] = json!(true);
+        old["status"] = json!("idle");
+        old["refresh_task_id"] = json!(7);
+        old["refresh_interval"] = json!(4);
+        let edit = QueueFreeProviderEdit::Deactivate;
+        let input = Map::from_iter([("is_active".into(), json!(false))]);
+        assert_eq!(queue_free_provider_edit(&input), Some(edit));
+        assert!(eligible_queue_free_edit(edit, &old, ""));
+        assert!(!eligible_queue_free_edit(edit, &old, "0 7 * * *"));
+        let validated = validate(input, &old, "", true, false).unwrap();
+        old["is_active"] = json!(false);
+        old["status"] = json!("disabled");
+        assert_eq!(validated.saved, old);
+        assert!(!validated.hash_changed && validated.expiration.is_none());
+        assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
+        assert!(!eligible_queue_free_edit(edit, &old, ""));
     }
 
     #[test]

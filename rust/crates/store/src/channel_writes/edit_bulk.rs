@@ -1,6 +1,6 @@
-//! Original Dispatcharr Channel Batch group and mature flag updates.
+//! Original Dispatcharr Channel Batch group, content and access flag updates.
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
-use super::{boolean, mark_group};
+use super::{boolean, err, integer, mark_group, rename};
 use crate::{channels, AuthService, StoreError};
 use axum::{
     extract::{ConnectInfo, OriginalUri, Query, Request, State},
@@ -15,12 +15,15 @@ use std::{
     net::SocketAddr,
 };
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Default, PartialEq, Eq)]
 struct Edit {
     id: i64,
     group: Option<i64>,
     override_group: Option<i64>,
     mature: Option<bool>,
+    radio: Option<bool>,
+    override_radio: Option<bool>,
+    level: Option<i32>,
 }
 
 fn unsupported() -> StoreError {
@@ -29,6 +32,19 @@ fn unsupported() -> StoreError {
 
 fn group(value: &Value) -> Result<i64, StoreError> {
     value.as_i64().filter(|id| *id > 0).ok_or_else(unsupported)
+}
+
+fn user_level(value: &Value) -> Result<i32, StoreError> {
+    let integer = integer(value).map_err(|error| rename(error, "channel_id", "user_level"))?;
+    let number = integer.as_i64().unwrap_or(i64::MAX);
+    i32::try_from(number).map_err(|_| {
+        let message = if number < i64::from(i32::MIN) {
+            "Ensure this value is greater than or equal to -2147483648."
+        } else {
+            "Ensure this value is less than or equal to 2147483647."
+        };
+        err("user_level", message)
+    })
 }
 
 fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
@@ -69,23 +85,38 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
             if row.keys().any(|key| {
                 !matches!(
                     key.as_str(),
-                    "id" | "channel_group_id" | "is_adult" | "override"
+                    "id" | "channel_group_id" | "is_adult" | "is_radio" | "user_level" | "override"
                 )
             }) {
                 return Err(unsupported());
             }
-            let override_group = match overrides.get(&id) {
-                None => None,
-                Some(Value::Object(values)) if values.is_empty() => None,
-                Some(Value::Object(values)) if values.len() == 1 => Some(group(
-                    values.get("channel_group_id").ok_or_else(unsupported)?,
-                )?),
+            let (override_group, override_radio) = match overrides.get(&id) {
+                None => (None, None),
+                Some(Value::Object(values))
+                    if values
+                        .keys()
+                        .all(|key| matches!(key.as_str(), "channel_group_id" | "is_radio")) =>
+                {
+                    (
+                        values.get("channel_group_id").map(group).transpose()?,
+                        values
+                            .get("is_radio")
+                            .map(|value| boolean("is_radio", value))
+                            .transpose()?,
+                    )
+                }
                 _ => return Err(unsupported()),
             };
             Ok(Edit {
                 id,
                 group: row.get("channel_group_id").map(group).transpose()?,
                 override_group,
+                override_radio,
+                radio: row
+                    .get("is_radio")
+                    .map(|value| boolean("is_radio", value))
+                    .transpose()?,
+                level: row.get("user_level").map(user_level).transpose()?,
                 mature: row
                     .get("is_adult")
                     .map(|value| boolean("is_adult", value))
@@ -132,7 +163,7 @@ async fn validate_and_lock(
             errors.push(json!({"channel_id":edit.id,"error":"Channel not found"}));
             continue;
         };
-        if !managed && edit.override_group.is_some() {
+        if !managed && (edit.override_group.is_some() || edit.override_radio.is_some()) {
             return Err(unsupported());
         }
         let mut fields = serde_json::Map::new();
@@ -171,31 +202,42 @@ async fn apply(
     let mut scalar_edits = Vec::new();
     let mut override_edits = Vec::new();
     for edit in edits {
-        if edit.group.is_some() || edit.mature.is_some() {
+        if edit.group.is_some()
+            || edit.mature.is_some()
+            || edit.level.is_some()
+            || edit.radio.is_some()
+        {
             scalar_edits.push(edit);
         }
         if !selected[&edit.id] {
             manual_groups.extend(edit.group);
         }
-        if let Some(group) = edit.override_group {
-            override_edits.push((edit.id, group));
+        if edit.override_group.is_some() || edit.override_radio.is_some() {
+            override_edits.push(edit);
         }
     }
     for chunk in scalar_edits.chunks(CHANNEL_BATCH_SIZE) {
         let ids: Vec<_> = chunk.iter().map(|edit| edit.id).collect();
         let groups: Vec<_> = chunk.iter().map(|edit| edit.group).collect();
         let mature: Vec<_> = chunk.iter().map(|edit| edit.mature).collect();
+        let radio: Vec<_> = chunk.iter().map(|edit| edit.radio).collect();
+        let levels: Vec<_> = chunk.iter().map(|edit| edit.level).collect();
         // Stock bulk_update leaves channel row clocks unchanged.
         sqlx::query(
             "UPDATE dispatcharr_channels_channel AS channel
              SET channel_group_id = COALESCE(change.group_id, channel.channel_group_id),
-                 is_adult = COALESCE(change.mature, channel.is_adult)
-             FROM unnest($1::bigint[], $2::bigint[], $3::boolean[]) AS change(id, group_id, mature)
+                 is_adult = COALESCE(change.mature, channel.is_adult),
+                 is_radio = COALESCE(change.radio, channel.is_radio),
+                 user_level = COALESCE(change.level, channel.user_level)
+             FROM unnest($1::bigint[], $2::bigint[], $3::boolean[], $4::boolean[], $5::integer[])
+                 AS change(id, group_id, mature, radio, level)
              WHERE channel.id = change.id",
         )
         .bind(ids)
         .bind(groups)
         .bind(mature)
+        .bind(radio)
+        .bind(levels)
         .execute(&mut **tx)
         .await?;
     }
@@ -203,26 +245,30 @@ async fn apply(
         mark_group(tx, &json!(group)).await?;
     }
     for chunk in override_edits.chunks(OVERRIDE_BATCH_SIZE) {
-        let (ids, groups): (Vec<_>, Vec<_>) = chunk.iter().copied().unzip();
+        let ids: Vec<_> = chunk.iter().map(|edit| edit.id).collect();
+        let groups: Vec<_> = chunk.iter().map(|edit| edit.override_group).collect();
+        let radio: Vec<_> = chunk.iter().map(|edit| edit.override_radio).collect();
         // A data-modifying CTE separates existing rows from newly inserted
         // overlays without spending an identity or updating clocks on a hit.
         sqlx::query(
             "WITH incoming AS (
-                 SELECT * FROM unnest($1::bigint[], $2::bigint[]) AS change(id, group_id)
+                 SELECT * FROM unnest($1::bigint[], $2::bigint[], $3::boolean[]) AS change(id, group_id, radio)
              ), existing AS (
                  UPDATE dispatcharr_channels_channeloverride AS overlay
-                 SET channel_group_id = incoming.group_id
+                 SET channel_group_id = COALESCE(incoming.group_id, overlay.channel_group_id),
+                     is_radio = COALESCE(incoming.radio, overlay.is_radio)
                  FROM incoming WHERE overlay.channel_id = incoming.id
                  RETURNING overlay.channel_id
              )
              INSERT INTO dispatcharr_channels_channeloverride
-                 (channel_id, channel_group_id, created_at, updated_at)
-             SELECT incoming.id, incoming.group_id, clock_timestamp(), clock_timestamp()
+                 (channel_id, channel_group_id, is_radio, created_at, updated_at)
+             SELECT incoming.id, incoming.group_id, incoming.radio, clock_timestamp(), clock_timestamp()
              FROM incoming
              WHERE NOT EXISTS (SELECT 1 FROM existing WHERE existing.channel_id = incoming.id)",
         )
         .bind(ids)
         .bind(groups)
+        .bind(radio)
         .execute(&mut **tx)
         .await?;
     }
@@ -329,13 +375,15 @@ mod tests {
                     id: 21,
                     group: None,
                     override_group: Some(3),
-                    mature: Some(true)
+                    mature: Some(true),
+                    ..Edit::default()
                 },
                 Edit {
                     id: 14,
                     group: Some(3),
                     override_group: None,
-                    mature: Some(true)
+                    mature: Some(true),
+                    ..Edit::default()
                 },
             ]
         );
@@ -371,7 +419,8 @@ mod tests {
                 id: 21,
                 group: None,
                 override_group: Some(4),
-                mature: Some(false)
+                mature: Some(false),
+                ..Edit::default()
             }
         );
         assert_eq!(
@@ -380,8 +429,36 @@ mod tests {
                 id: 14,
                 group: None,
                 override_group: None,
-                mature: Some(true)
+                mature: Some(true),
+                ..Edit::default()
             }
+        );
+    }
+
+    #[test]
+    fn standard_access_and_false_radio_resolve_into_distinct_raw_and_override_writes() {
+        let result = edits(json!([
+            {"id":21,"user_level":"1","override":{"is_radio":false,"channel_group_id":3}},
+            {"id":14,"user_level":"1","is_radio":false}
+        ]))
+        .unwrap();
+        assert_eq!(
+            result,
+            vec![
+                Edit {
+                    id: 21,
+                    level: Some(1),
+                    override_group: Some(3),
+                    override_radio: Some(false),
+                    ..Edit::default()
+                },
+                Edit {
+                    id: 14,
+                    level: Some(1),
+                    radio: Some(false),
+                    ..Edit::default()
+                },
+            ]
         );
     }
 

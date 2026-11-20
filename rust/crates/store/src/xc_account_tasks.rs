@@ -70,6 +70,30 @@ pub trait ProfileSaveSignal: Send + Sync {
         })
     }
 
+    fn collect_account_deactivation<'a>(
+        &'a self,
+        _connection: &'a mut sqlx::PgConnection,
+        _account_id: i64,
+    ) -> BoxFuture<'a, Result<Vec<String>, StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "Transactional account deactivation signal unavailable.",
+            ))
+        })
+    }
+
+    fn dispatch_account_dismissals(
+        &self,
+        _keys: Vec<String>,
+        _owner: Owner,
+    ) -> BoxFuture<'_, Result<SignalOutcome, StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "Account dismissal event transport unavailable.",
+            ))
+        })
+    }
+
     fn guard(
         &self,
         session: TaskSqlSession,

@@ -317,6 +317,56 @@ impl ProfileSaveSignal for Callback {
         })
     }
 
+    fn collect_account_deactivation<'a>(
+        &'a self,
+        c: &'a mut sqlx::PgConnection,
+        account_id: i64,
+    ) -> BoxFuture<'a, Result<Vec<String>, StoreError>> {
+        Box::pin(async move {
+            let ids: Vec<i64> = sqlx::query_scalar(
+                "SELECT id::bigint FROM m3u_m3uaccountprofile WHERE m3u_account_id=$1 \
+                 ORDER BY id LIMIT 65 FOR UPDATE NOWAIT",
+            )
+            .bind(account_id)
+            .fetch_all(&mut *c)
+            .await?;
+            if ids.len() > 64 {
+                return Err(unsupported());
+            }
+            let keys = ids
+                .into_iter()
+                .flat_map(|id| [format!("xc-exp-warning-{id}"), format!("xc-exp-expired-{id}")])
+                .collect();
+            shared::collect_deactivation_in_transaction(c, keys)
+                .await
+                .map_err(|report| match report.error {
+                    Error::Sql(error) => StoreError::Database(error),
+                    _ => unsupported(),
+                })
+        })
+    }
+
+    fn dispatch_account_dismissals(
+        &self,
+        keys: Vec<String>,
+        owner: Owner,
+    ) -> BoxFuture<'_, Result<SignalOutcome, StoreError>> {
+        Box::pin(async move {
+            let mut caught = false;
+            for key in keys {
+                let event = json!({"type":"update","data":{
+                    "type":"notification_dismissed","notification_key":key
+                }});
+                caught |= self.send(event, owner.clone()).await?;
+            }
+            Ok(if caught {
+                SignalOutcome::CaughtSettledFailure
+            } else {
+                SignalOutcome::Applied
+            })
+        })
+    }
+
     fn guard(
         &self,
         session: TaskSqlSession,
@@ -377,6 +427,44 @@ mod retained_signal_event_tests {
             })
         }
     }
+    #[derive(Default)]
+    struct RecordingSink(Mutex<Vec<(String, serde_json::Value)>>);
+
+    impl UpdateEventSink for RecordingSink {
+        fn send<'a>(
+            &'a self,
+            group: &'a str,
+            event: serde_json::Value,
+        ) -> BoxFuture<'a, Result<(), UpdateEventError>> {
+            Box::pin(async move {
+                self.0.lock().unwrap().push((group.to_owned(), event));
+                Ok(())
+            })
+        }
+    }
+
+    #[tokio::test]
+    async fn deactivation_dispatches_each_committed_key_in_the_source_envelope() {
+        let sink = Arc::new(RecordingSink::default());
+        let callback = Callback::new(sink.clone());
+        let keys = vec!["xc-exp-warning-7".into(), "xc-exp-expired-9".into()];
+        assert_eq!(
+            callback.dispatch_account_dismissals(keys, Arc::new(())).await.unwrap(),
+            SignalOutcome::Applied
+        );
+        assert_eq!(
+            *sink.0.lock().unwrap(),
+            vec![
+                ("updates".into(), json!({"type":"update","data":{
+                    "type":"notification_dismissed","notification_key":"xc-exp-warning-7"
+                }})),
+                ("updates".into(), json!({"type":"update","data":{
+                    "type":"notification_dismissed","notification_key":"xc-exp-expired-9"
+                }})),
+            ]
+        );
+    }
+
     #[tokio::test]
     async fn caught_event_error_still_waits_for_actual_retained_owner_drop() {
         let sink = Arc::new(HeldSink {

@@ -296,17 +296,68 @@ async fn delete_collector_rows(
     if related > 1024 {
         return Err(Error::Unsupported.into());
     }
-    sqlx::query("DELETE FROM core_notificationdismissal WHERE notification_id=ANY($1)")
-        .bind(&ids)
-        .execute(&mut *c)
-        .await
-        .map_err(|error| ReportError::effect(error, effect))?;
+    delete_dismissal_rows(c, &ids, effect).await?;
     sqlx::query("DELETE FROM core_systemnotification WHERE id=ANY($1)")
         .bind(&ids)
         .execute(&mut *c)
         .await
         .map_err(|error| ReportError::effect(error, effect))?;
     Ok(())
+}
+
+async fn delete_dismissal_rows(
+    c: &mut PgConnection,
+    ids: &[i64],
+    effect: Effect,
+) -> Result<(), ReportError> {
+    sqlx::query("DELETE FROM core_notificationdismissal WHERE notification_id=ANY($1)")
+        .bind(ids)
+        .execute(&mut *c)
+        .await
+        .map_err(|error| ReportError::effect(error, effect))?;
+    Ok(())
+}
+
+/// The bounded standalone deactivation holds the account and task first.
+/// Legacy deletes can own notice rows first, so a held row here rejects
+/// the transaction. Deletion and event capture use the same locked rows.
+pub(crate) async fn collect_deactivation_in_transaction(
+    c: &mut PgConnection,
+    keys: Vec<String>,
+) -> Result<Vec<String>, ReportError> {
+    if c.protocol_transaction_is_idle().await.map_err(Error::Sql)? {
+        return Err(Error::Unsupported.into());
+    }
+    let ids: Vec<i64> = sqlx::query_scalar(
+        "SELECT id::bigint FROM core_systemnotification WHERE notification_key=ANY($1) \
+         ORDER BY id LIMIT 129 FOR UPDATE NOWAIT",
+    )
+    .bind(keys)
+    .fetch_all(&mut *c)
+    .await
+    .map_err(Error::Sql)?;
+    if ids.len() > 128 {
+        return Err(Error::Unsupported.into());
+    }
+    let dismissals: Vec<i64> = sqlx::query_scalar(
+        "SELECT id::bigint FROM core_notificationdismissal WHERE notification_id=ANY($1) \
+         ORDER BY id LIMIT 1025 FOR UPDATE NOWAIT",
+    )
+    .bind(&ids)
+    .fetch_all(&mut *c)
+    .await
+    .map_err(Error::Sql)?;
+    if dismissals.len() > 1024 {
+        return Err(Error::Unsupported.into());
+    }
+    delete_dismissal_rows(c, &ids, Effect::OppositeCollector).await?;
+    sqlx::query_scalar(
+        "DELETE FROM core_systemnotification WHERE id=ANY($1) RETURNING notification_key",
+    )
+    .bind(&ids)
+    .fetch_all(&mut *c)
+    .await
+    .map_err(|error| ReportError::effect(error, Effect::OppositeCollector))
 }
 /// Exact legacy notification upsert on the caller's session. Legacy caller
 /// retains its title-domain guard; signal caller lets actual PG reject an
