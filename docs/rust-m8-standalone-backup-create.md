@@ -242,3 +242,19 @@ expiration, forced termination, crash atomicity, full M8, and comparative
 performance remain open.
 
 [Redacted active standalone restore receipt](../scripts/rust-integration/milestone-batch113/standalone-restore-active-shutdown-976f.json)
+
+## Selected UTC scheduled backup and retention
+
+Pinned Original and packaged 976f2867 each accepted a daily UTC backup
+schedule through the stock admin API. The same schedule survived a normal
+worker and scheduler restart before the due minute. Each scheduler then
+published one backup, and the stock admin status agreed with the actual
+Redis SUCCESS result. The persisted scheduler row advanced once.
+
+Retention removed one earlier archive on each backend and kept the new
+PostgreSQL format-2 archive. The scoped database rows stayed unchanged.
+Both arms exited 0 and their owned container, process and Compose
+inventories were empty after cleanup. Rust used selected Jobs and Beat
+with both standalone backup owners absent.
+
+[Redacted scheduled backup receipt](../scripts/rust-integration/m8-selected-scheduled-backup-976f.json)
