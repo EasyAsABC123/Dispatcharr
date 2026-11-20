@@ -33,6 +33,11 @@ impl RetryState {
         self.failures
     }
 
+    pub(super) fn source_http_reconnect_delay(&self) -> Duration {
+        // Original waits 250 ms per consecutive failure, capped at 3 s.
+        Duration::from_millis(250 * self.failures.min(12) as u64)
+    }
+
     pub fn new_source(&mut self, index: usize) {
         self.failures = 0;
         self.last_failure = None;
@@ -64,6 +69,47 @@ mod tests {
             state.failure(now + Duration::from_secs(121), Duration::from_secs(60)),
             1
         );
+    }
+
+    #[test]
+    fn ordinary_http_reconnect_delay_matches_source() {
+        let mut state = RetryState::new();
+        for (failures, milliseconds) in [
+            (0, 0),
+            (1, 250),
+            (2, 500),
+            (3, 750),
+            (11, 2750),
+            (12, 3000),
+            (13, 3000),
+            (usize::MAX, 3000),
+        ] {
+            state.failures = failures;
+            assert_eq!(
+                state.source_http_reconnect_delay(),
+                Duration::from_millis(milliseconds)
+            );
+        }
+    }
+
+    #[test]
+    fn new_source_and_expired_failure_window_restart_the_delay() {
+        let now = Instant::now();
+        let window = Duration::from_secs(1800);
+        let mut state = RetryState::new();
+        state.failure(now, window);
+        state.failure(now + window, window);
+        assert_eq!(
+            state.source_http_reconnect_delay(),
+            Duration::from_millis(500)
+        );
+        state.failure(now + window + window + Duration::from_millis(1), window);
+        assert_eq!(
+            state.source_http_reconnect_delay(),
+            Duration::from_millis(250)
+        );
+        state.new_source(1);
+        assert_eq!(state.source_http_reconnect_delay(), Duration::ZERO);
     }
 
     #[test]

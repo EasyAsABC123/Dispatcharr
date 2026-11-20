@@ -187,6 +187,7 @@ pub type MediaStream =
 
 pub(crate) struct Inner {
     config: EngineConfig,
+    source_http_retry_backoff: bool,
     health_settings: Option<Arc<dyn HealthSettingsSource>>,
     profiles: Option<Arc<output_profiles::Profiles>>,
     sessions: Mutex<HashMap<String, Arc<Session>>>,
@@ -336,6 +337,7 @@ impl StreamEngine {
         Ok(Self {
             inner: Arc::new(Inner {
                 config,
+                source_http_retry_backoff: false,
                 health_settings: None,
                 profiles: None,
                 sessions: Mutex::new(HashMap::new()),
@@ -348,6 +350,19 @@ impl StreamEngine {
                 statistics_reader: Mutex::new(None),
             }),
         })
+    }
+
+    /// Use Original backoff for registered direct-HTTP TS playback in Main.
+    /// Existing constructors continue to use the exact configured delay.
+    pub fn with_source_http_retry_backoff(mut self) -> Result<Self, PlaybackError> {
+        let inner = Arc::get_mut(&mut self.inner).ok_or_else(|| {
+            PlaybackError::new(
+                500,
+                "HTTP retry backoff must be bound before engine sharing",
+            )
+        })?;
+        inner.source_http_retry_backoff = true;
+        Ok(self)
     }
 
     /// Bind before cloning/starting the engine. Main must construct the Core
@@ -1647,10 +1662,18 @@ async fn run_upstream(
                         break 'session;
                     }
                     if retry.failures > 0 {
+                        let delay = if inner.source_http_retry_backoff
+                            && session.native_initializing.load(Ordering::Acquire)
+                            && candidate.input_command.is_none()
+                        {
+                            retry.source_http_reconnect_delay()
+                        } else {
+                            inner.config.retry_delay
+                        };
                         tokio::select! {
                             _ = stop.changed() => break 'session,
                             _ = lost.changed() => break 'session,
-                            _ = time::sleep(inner.config.retry_delay) => {},
+                            _ = time::sleep(delay) => {},
                         }
                     }
                     if attempts > 0 {
@@ -2498,6 +2521,33 @@ mod dynamic_health_settings_tests {
             .await
             .is_err());
     }
+    #[test]
+    fn existing_constructors_keep_explicit_fixed_retry_delays() {
+        for milliseconds in [0, 10, 500, 501] {
+            let delay = Duration::from_millis(milliseconds);
+            let engine = StreamEngine::new(EngineConfig {
+                source_initialization: true,
+                retry_delay: delay,
+                ..EngineConfig::default()
+            })
+            .unwrap();
+            assert!(!engine.inner.source_http_retry_backoff);
+            assert_eq!(engine.inner.config.retry_delay, delay);
+        }
+    }
+
+    #[test]
+    fn source_http_backoff_is_bound_only_before_engine_sharing() {
+        let engine = StreamEngine::new(EngineConfig::default()).unwrap();
+        let shared = engine.clone();
+        assert!(engine.with_source_http_retry_backoff().is_err());
+        assert!(!shared.inner.source_http_retry_backoff);
+        let default = StreamEngine::new(EngineConfig::default()).unwrap();
+        let bound = default.with_source_http_retry_backoff().unwrap();
+        assert!(bound.inner.source_http_retry_backoff);
+        assert_eq!(bound.inner.config.retry_delay, Duration::from_millis(500));
+    }
+
     #[tokio::test]
     async fn no_hook_retains_static_config_and_late_binding_is_refused() {
         let timing = effective_health_timing(base(), None).await.unwrap();
