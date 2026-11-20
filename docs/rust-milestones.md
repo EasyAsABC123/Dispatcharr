@@ -158,6 +158,10 @@ The [976f permissions and management baseline](rust-976f-baseline-acceptance.md)
 passed 1,024 checks across 18 suites on the standalone-restore successor
 image, decoded 75 video frames and independently verified project cleanup.
 
+The [e765 permissions and management baseline](rust-e765-baseline-acceptance.md)
+passed 1,024 checks across 18 suites on the backup schedule request successor
+image, decoded 75 video frames and independently verified project cleanup.
+
 The [976f scheduler setup and daily Version run](rust-m6-976f-scheduler-startup.md)
 observed six stock Beat rows and one actual Version result per backend, with
 selected Main readiness and independent cleanup. The wider M6 graph remains open.

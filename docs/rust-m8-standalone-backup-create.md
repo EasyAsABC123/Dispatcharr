@@ -258,3 +258,25 @@ inventories were empty after cleanup. Rust used selected Jobs and Beat
 with both standalone backup owners absent.
 
 [Redacted scheduled backup receipt](../scripts/rust-integration/m8-selected-scheduled-backup-976f.json)
+
+## Admin backup schedule request formats
+
+Pinned Original and packaged `e7651a6d` returned HTTP 200 with matching
+decoded settings for JSON, URL-encoded and text multipart requests to
+disable an existing schedule. Native used ordinary Main for these three
+requests. Each accepted request updated the stored values, invalidated
+the cached group and advanced its persistent cache version. The named
+backup task remained absent with the Beat marker unchanged.
+
+After an explicit disabled setup, empty requests with and without the
+JSON content type returned the existing values and advanced the cache
+version on both backends. These two Native requests used Selected Jobs
+with Beat off. The cache group remained absent. In both Native modes
+the standalone backup owners were absent, unrelated scoped state stayed
+unchanged, and Compose verified exact cleanup with empty inventories.
+
+The 976f scheduled publication and retention receipt covers a different
+package. This comparison verifies request input and persistence for the
+listed cases on `e7651a6d`. It carries no performance or full M8 result.
+
+[Redacted backup schedule request receipt](../scripts/rust-integration/m8-backup-schedule-inputs-e7651a6d.json)
