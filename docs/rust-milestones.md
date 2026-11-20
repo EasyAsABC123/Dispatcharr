@@ -189,6 +189,10 @@ teardown. The paired Original HTTP reference was retained.
 The [stock React provider modal replay](rust-provider-modal-browser.md)
 matched all 12 scoped image requests and decodes across both Chromium phases.
 
+The [e765 React live playback and Stats gate](rust-e765-react-live-stats.md)
+verified real Chromium login, decoded advancing video, active-channel Stats
+and normal player close on both backends, with exact owned cleanup.
+
 The [trusted plugin action replay](rust-m8-selected-trusted-plugin-actions.md)
 matched the decoded results and selected headers for echo and scalar with
 selected workers and verified exact compatibility-host retirement.
