@@ -115,3 +115,12 @@ Programme creation, form submission, detail HTML, broader negotiation and
 performance remain open.
 
 [Redacted paired list variants and HEAD receipt](../scripts/rust-epg-contracts/verified-native-guide-list-variants-11455873.json)
+
+### Packaged Main regression on the same image
+
+The full 18-suite baseline passed 1,024 matched checks and decoded 75
+MPEG-TS frames on `11455873`. The baseline execution, evaluation and
+cleanup each exited 0. This qualifies the baseline node on the exact
+image. The coordinator exited 2 with the wider 127-node roster open.
+
+[Redacted packaged Main baseline receipt](../scripts/rust-integration/milestone-batch113/114558-18-suite-baseline.json)
