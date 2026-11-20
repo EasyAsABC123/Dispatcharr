@@ -39,6 +39,14 @@ pub enum Error {
     DrainTimeout,
 }
 pub type ExecuteFuture<'a> = Pin<Box<dyn Future<Output = Result<NormalReturn, Error>> + Send + 'a>>;
+pub use crate::refresh_aggregate::XmltvSources;
+
+pub struct AggregateCompletion {
+    pub(crate) children: Vec<Uuid>,
+    pub(crate) series: Vec<Uuid>,
+}
+pub type AggregateFuture<'a> =
+    Pin<Box<dyn Future<Output = Result<AggregateCompletion, Error>> + Send + 'a>>;
 pub trait RefreshExecutor: Send + Sync + 'static {
     fn execute<'a>(
         &'a self,
@@ -46,6 +54,15 @@ pub trait RefreshExecutor: Send + Sync + 'static {
         publisher: ChildPublisher,
         owner: Arc<dyn Send + Sync>,
     ) -> ExecuteFuture<'a>;
+
+    fn execute_aggregate<'a>(
+        &'a self,
+        _sources: XmltvSources,
+        _publisher: ChildPublisher,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> AggregateFuture<'a> {
+        Box::pin(async { Err(Error::Configuration) })
+    }
 }
 struct Owner {
     _slot: OwnedSemaphorePermit,
@@ -76,11 +93,15 @@ impl ChildPublisher {
         message: RefreshMessage,
         owner: Arc<dyn Send + Sync>,
     ) -> Self {
+        Self::with_identity(jobs, message.root, message.task_id, owner)
+    }
+
+    fn with_identity(jobs: Jobs, root: Uuid, parent: Uuid, owner: Arc<dyn Send + Sync>) -> Self {
         Self {
             jobs,
-            root: message.root,
-            parent: message.task_id,
-            parent_key: message.task_id.to_string(),
+            root,
+            parent,
+            parent_key: parent.to_string(),
             claimed_raw: None,
             observed_trail: Arc::new(Mutex::new(None)),
             trail_closed: Arc::new(AtomicBool::new(false)),
@@ -101,6 +122,33 @@ impl ChildPublisher {
         publisher.claimed_raw = Some(raw.into());
         publisher
     }
+    pub(crate) fn aggregate(
+        jobs: Jobs,
+        id: Uuid,
+        owner: Arc<dyn Send + Sync>,
+        raw: Vec<u8>,
+    ) -> Self {
+        let mut publisher = Self::with_identity(jobs, id, id, owner);
+        publisher.claimed_raw = Some(raw.into());
+        publisher
+    }
+
+    pub(crate) fn task_id(&self) -> Uuid {
+        self.parent
+    }
+
+    fn inline_source(&self) -> Self {
+        let mut scoped = Self::with_identity(
+            self.jobs.clone(),
+            self.root,
+            self.parent,
+            self.owner.clone(),
+        );
+        scoped.claimed_raw = self.claimed_raw.clone();
+        scoped.child_slots = self.child_slots.clone();
+        scoped
+    }
+
     pub(crate) fn observed_trail(&self) -> Result<Option<serde_json::Value>, Error> {
         self.observed_trail
             .lock()
@@ -390,17 +438,19 @@ impl ServiceExecutor {
             .map_err(|_| Error::Configuration)
     }
 }
-impl RefreshExecutor for ServiceExecutor {
-    fn execute<'a>(
+impl ServiceExecutor {
+    fn execute_source<'a>(
         &'a self,
-        message: RefreshMessage,
+        source_id: i64,
+        force: bool,
+        retry: u32,
         publisher: ChildPublisher,
         owner: Arc<dyn Send + Sync>,
     ) -> ExecuteFuture<'a> {
         Box::pin(async move {
             let dispatcher = Arc::new(RefreshDispatcher::new(
-                message.root,
-                message.task_id,
+                publisher.root,
+                publisher.parent,
                 Arc::new(publisher.clone()),
                 self.store.clone(),
                 self.clock.clone(),
@@ -429,9 +479,9 @@ impl RefreshExecutor for ServiceExecutor {
                 .runner
                 .run_report_with_dispatcher_scoped(
                     FileJobRequest {
-                        source_id: message.source_id,
-                        force: message.force,
-                        defer_retry: message.retry,
+                        source_id,
+                        force,
+                        defer_retry: retry,
                         cancelled,
                     },
                     owner,
@@ -511,11 +561,7 @@ impl RefreshExecutor for ServiceExecutor {
                 FileJobOutcome::MissingSource(value) => {
                     // FileJobRunner now performs the proven retained orphan
                     // helper, including Source's caught P0001 partial commits.
-                    if value
-                        != format!(
-                            "EPG source {} does not exist, task cleaned up",
-                            message.source_id
-                        )
+                    if value != format!("EPG source {} does not exist, task cleaned up", source_id)
                     {
                         Err(Error::Execution)
                     } else {
@@ -525,15 +571,13 @@ impl RefreshExecutor for ServiceExecutor {
                 FileJobOutcome::PendingDownloadRejected(proof) => {
                     let completed = completion.as_ref().ok_or(Error::Execution)?;
                     let proof = proof.settle(completed).map_err(|_| Error::Execution)?;
-                    if proof.source_id() == message.source_id {
+                    if proof.source_id() == source_id {
                         Ok(NormalReturn::Null)
                     } else {
                         Err(Error::Execution)
                     }
                 }
-                FileJobOutcome::DownloadRejected(proof)
-                    if proof.source_id() == message.source_id =>
-                {
+                FileJobOutcome::DownloadRejected(proof) if proof.source_id() == source_id => {
                     Ok(NormalReturn::Null)
                 }
                 FileJobOutcome::DownloadRejected(_) => Err(Error::Execution),
@@ -541,6 +585,46 @@ impl RefreshExecutor for ServiceExecutor {
                 // manufacture Source normalSUCCESS before detailed failure gates exist.
                 FileJobOutcome::Failed | FileJobOutcome::Unsupported(_) => Err(Error::Execution),
             }
+        })
+    }
+}
+
+impl RefreshExecutor for ServiceExecutor {
+    fn execute<'a>(
+        &'a self,
+        message: RefreshMessage,
+        publisher: ChildPublisher,
+        owner: Arc<dyn Send + Sync>,
+    ) -> ExecuteFuture<'a> {
+        self.execute_source(
+            message.source_id,
+            message.force,
+            message.retry,
+            publisher,
+            owner,
+        )
+    }
+
+    fn execute_aggregate<'a>(
+        &'a self,
+        sources: XmltvSources,
+        publisher: ChildPublisher,
+        owner: Arc<dyn Send + Sync>,
+    ) -> AggregateFuture<'a> {
+        Box::pin(async move {
+            let mut children = Vec::new();
+            let mut series = Vec::new();
+            let mut scopes = Vec::new();
+            for source_id in sources.into_ids() {
+                let scoped = publisher.inline_source();
+                self.execute_source(source_id, false, 0, scoped.clone(), owner.clone())
+                    .await?;
+                children.extend(scoped.completed_children()?);
+                series.extend(scoped.completed_series_children()?);
+                // Hold publication permits across source scopes until all publications settle.
+                scopes.push(scoped);
+            }
+            Ok(AggregateCompletion { children, series })
         })
     }
 }

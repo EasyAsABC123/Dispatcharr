@@ -16,7 +16,7 @@ use sha2::{Digest, Sha256};
 use std::{
     io::{Read, Seek, Write},
     net::SocketAddr,
-    path::PathBuf,
+    path::{Component, Path, PathBuf},
     sync::Arc,
     time::Duration,
 };
@@ -31,6 +31,7 @@ pub struct BackupFiles {
     jobs: Option<Arc<dyn BackupJobApi>>,
     job_access: JobAccess,
     schedule_disable: Option<Arc<dyn BackupScheduleDisableApi>>,
+    nginx_accel: bool,
 }
 #[derive(Clone, Copy)]
 enum JobAccess {
@@ -179,7 +180,10 @@ fn invalid(name: &str) -> bool {
     name.contains("..") || name.contains('/') || name.contains('\\')
 }
 fn download_disposition(filename: &str) -> Option<HeaderValue> {
-    let value = format!("attachment; filename=\"{filename}\"");
+    django_download_header(&format!("attachment; filename=\"{filename}\""))
+}
+
+fn django_download_header(value: &str) -> Option<HeaderValue> {
     if let Some(latin) = value
         .chars()
         .map(|c| u8::try_from(c as u32).ok())
@@ -227,6 +231,59 @@ fn download_disposition(filename: &str) -> Option<HeaderValue> {
     };
     HeaderValue::from_str(&encoded).ok()
 }
+fn nginx_filename(filename: &str) -> bool {
+    let mut components = Path::new(filename).components();
+    matches!(
+        (components.next(), components.next()),
+        (Some(Component::Normal(_)), None)
+    ) && !invalid(filename)
+        && !filename.contains(['%', '?', '#'])
+        && !filename.chars().any(char::is_control)
+}
+
+fn nginx_download_response(filename: &str) -> Option<Response> {
+    let redirect = django_download_header(&format!("/protected-backups/{filename}"))?;
+    let disposition = download_disposition(filename)?;
+    Some(
+        (
+            StatusCode::OK,
+            [
+                ("x-accel-redirect", redirect),
+                ("content-disposition", disposition),
+                ("content-type", HeaderValue::from_static("application/zip")),
+                ("content-length", HeaderValue::from_static("0")),
+            ],
+            Body::empty(),
+        )
+            .into_response(),
+    )
+}
+
+fn open_backup_download(path: PathBuf, nginx_accel: bool) -> std::io::Result<std::fs::File> {
+    if !nginx_accel {
+        return std::fs::File::open(path);
+    }
+    // nginx reopens the named file from its independently configured alias.
+    // Validate an actual ordinary file within the same authorized component.
+    #[cfg(unix)]
+    {
+        use std::os::unix::fs::OpenOptionsExt;
+        let file = std::fs::OpenOptions::new()
+            .read(true)
+            .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+            .open(path)?;
+        if !file.metadata()?.is_file() {
+            return Err(std::io::Error::other("not a regular backup file"));
+        }
+        Ok(file)
+    }
+    #[cfg(not(unix))]
+    {
+        let _ = path;
+        Err(std::io::Error::other("nginx backup handoff requires Unix"))
+    }
+}
+
 fn mac(key: &[u8], value: &str) -> String {
     let mut block = [0u8; 64];
     if key.len() > 64 {
@@ -255,7 +312,14 @@ impl BackupFiles {
             jobs: None,
             job_access: JobAccess::None,
             schedule_disable: None,
+            nginx_accel: false,
         })
+    }
+    /// Serve authorized downloads through a trusted nginx protected alias.
+    /// The proxy must mount this service's backup root at its internal alias.
+    pub fn with_nginx_accel(mut self, enabled: bool) -> Self {
+        self.nginx_accel = enabled;
+        self
     }
     /// Attach only a prepared, reviewed adapter. This starts no worker.
     pub fn with_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
@@ -627,10 +691,24 @@ impl BackupFiles {
         if !inside {
             return Ok(reply(404, "Invalid filename"));
         }
-        let file = match self.io(&lease, move || std::fs::File::open(path)).await? {
+        let nginx_accel = self.nginx_accel;
+        if nginx_accel && !nginx_filename(&filename) {
+            return Ok(reply(404, "Invalid filename"));
+        }
+        let file = match self
+            .io(&lease, move || open_backup_download(path, nginx_accel))
+            .await?
+        {
             Ok(file) => file,
             Err(_) => return Ok(reply(500, "Download failed")),
         };
+        if nginx_accel {
+            // Keep the upstream response valid HTTP with no entity. nginx
+            // supplies the real file or its own error and the corresponding
+            // downstream length from the protected alias.
+            return Ok(nginx_download_response(&filename)
+                .unwrap_or_else(|| reply(404, "Invalid filename")));
+        }
         let state = self.clone();
         let stream = async_stream::stream! {
             let mut file=file;

@@ -53,6 +53,7 @@ pub mod interval_schedule;
 pub mod refresh_driver;
 
 // Bounded positive-ID refresh HTTP assembly with explicit application configuration.
+mod refresh_aggregate;
 pub mod refresh_application;
 
 pub mod index_application;

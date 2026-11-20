@@ -3,8 +3,7 @@
 //! that order. Visible restore traverses ZREVRANGEBYSCORE before RPUSH.
 //! Original Dispatcharr, Celery and Kombu authors retain transport/algorithm credit.
 use crate::{
-    protocol::ProtocolError,
-    refresh_protocol::{self, RefreshMessage},
+    protocol::ProtocolError, refresh_aggregate::ScheduledMessage, refresh_protocol::RefreshMessage,
 };
 use serde_json::{json, Value};
 use uuid::Uuid;
@@ -12,7 +11,7 @@ pub const MAX_UNACKED: usize = 131072;
 pub const RESERVATION_MEMORY: usize = 8 * 1024 * 1024;
 #[derive(Clone, Debug)]
 pub(crate) struct Receipt {
-    pub message: RefreshMessage,
+    pub message: ScheduledMessage,
     pub delivery_tag: Uuid,
     pub redelivered: bool,
     /// Original queue bytes used for atomic compare/reserve, never logged.
@@ -31,6 +30,10 @@ pub struct Candidate {
 }
 impl Candidate {
     pub fn message(&self) -> &RefreshMessage {
+        self.scheduled_message().individual()
+    }
+
+    pub(crate) fn scheduled_message(&self) -> &ScheduledMessage {
         &self.receipt.message
     }
 }
@@ -64,6 +67,10 @@ impl Reservation {
         }
     }
     pub fn message(&self) -> &RefreshMessage {
+        self.scheduled_message().individual()
+    }
+
+    pub(crate) fn scheduled_message(&self) -> &ScheduledMessage {
         &self.receipt.message
     }
     pub fn delivery_tag(&self) -> Uuid {
@@ -109,8 +116,7 @@ impl Receipt {
         let original = bounded_json(bytes, crate::protocol::MAX_ENVELOPE)?;
         let mut normalized = original.clone();
         let redelivered = remove_redelivery(&mut normalized)?;
-        let message =
-            refresh_protocol::parse(&serde_json::to_vec(&normalized).map_err(|_| invalid())?)?;
+        let message = ScheduledMessage::prepare(normalized)?;
         let delivery_tag = Uuid::parse_str(
             original["properties"]["delivery_tag"]
                 .as_str()
@@ -172,8 +178,8 @@ mod tests {
             let packet = serde_json::to_vec(&row["child"]).unwrap();
             let prepared = Receipt::prepare(&packet).unwrap();
             assert!(prepared.message.eta.is_some());
-            assert!(prepared.message.force);
-            assert_eq!(prepared.message.retry, 1);
+            assert!(prepared.message.individual().force);
+            assert_eq!(prepared.message.individual().retry, 1);
             assert!(prepared.message.parent.is_some());
             let raw = STANDARD
                 .decode(row["stored_tuple_base64"].as_str().unwrap())

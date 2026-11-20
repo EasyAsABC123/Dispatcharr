@@ -535,11 +535,34 @@ impl Jobs {
         message: &crate::refresh_protocol::RefreshMessage,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Option<Vec<u8>>, Error> {
+        self.read_refresh_lineage_bytes(message.task_id, caller, |raw| {
+            crate::refresh_result::parse_success(raw, message.task_id, message.source_id).is_ok()
+        })
+        .await
+    }
+
+    pub(crate) async fn read_aggregate_refresh_lineage(
+        &self,
+        task_id: Uuid,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Vec<u8>>, Error> {
+        self.read_refresh_lineage_bytes(task_id, caller, |raw| {
+            crate::refresh_result::parse_aggregate_success(raw, task_id).is_ok()
+        })
+        .await
+    }
+
+    async fn read_refresh_lineage_bytes(
+        &self,
+        task_id: Uuid,
+        caller: Arc<dyn Send + Sync>,
+        valid: impl FnOnce(&[u8]) -> bool,
+    ) -> Result<Option<Vec<u8>>, Error> {
         if !self.allows_refresh() {
             return Err(Error::UnsupportedTask);
         }
         let lease = self.lease(caller)?;
-        let keys = vec![format!("celery-tasks:celery-task-meta-{}", message.task_id)];
+        let keys = vec![format!("celery-tasks:celery-task-meta-{task_id}")];
         let (reply, _held) = self
             .inner
             .result
@@ -548,11 +571,8 @@ impl Jobs {
             .map_err(map)?;
         match reply.0 {
             0 => Ok(None),
-            1 => {
-                crate::refresh_result::parse_success(&reply.1, message.task_id, message.source_id)
-                    .map_err(|_| Error::Protocol)?;
-                Ok(Some(reply.1))
-            }
+            1 if valid(&reply.1) => Ok(Some(reply.1)),
+            1 => Err(Error::Protocol),
             _ => Err(Error::Corrupt),
         }
     }

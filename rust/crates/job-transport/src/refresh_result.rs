@@ -24,22 +24,36 @@ pub fn parse_success(
     task_id: Uuid,
     source_id: i64,
 ) -> Result<RefreshSuccess, ProtocolError> {
+    parse_refresh_success(bytes, task_id, Some(source_id))
+}
+
+pub(crate) fn parse_aggregate_success(
+    bytes: &[u8],
+    task_id: Uuid,
+) -> Result<RefreshSuccess, ProtocolError> {
+    parse_refresh_success(bytes, task_id, None)
+}
+
+fn parse_refresh_success(
+    bytes: &[u8],
+    task_id: Uuid,
+    source_id: Option<i64>,
+) -> Result<RefreshSuccess, ProtocolError> {
     if bytes.len() > decode::MAX_RESULT_BYTES {
         return Err(ProtocolError::Capacity);
     }
-    if source_id <= 0 {
+    if source_id.is_some_and(|id| id <= 0) {
         return Err(invalid());
     }
     let m = decode::decode(bytes, task_id).map_err(|_| invalid())?;
     if m.state != State::Success || m.traceback.is_some() || !m.tagged_values.is_empty() {
         return Err(invalid());
     }
-    let missing_source = if m.result.is_null() {
-        false
-    } else if m.result == format!("EPG source {source_id} does not exist, task cleaned up") {
-        true
-    } else {
-        return Err(invalid());
+    let missing_source = match source_id {
+        Some(_) if m.result.is_null() => false,
+        Some(id) if m.result == format!("EPG source {id} does not exist, task cleaned up") => true,
+        None if m.result == crate::refresh_aggregate::SUCCESS => false,
+        _ => return Err(invalid()),
     };
     let e: Value = serde_json::from_slice(bytes).map_err(|_| invalid())?;
     let fields = e.as_object().ok_or_else(invalid)?;
@@ -88,6 +102,12 @@ pub fn parse_success(
             Uuid::parse_str(identity[0].as_str().ok_or_else(invalid)?).map_err(|_| invalid())?,
         );
     }
+    if source_id.is_none() {
+        let unique = children.iter().collect::<std::collections::BTreeSet<_>>();
+        if parent.is_some() || unique.len() != children.len() || unique.contains(&task_id) {
+            return Err(invalid());
+        }
+    }
     Ok(RefreshSuccess {
         task_id,
         parent,
@@ -103,6 +123,32 @@ mod tests {
     fn corpus() -> Value {
         serde_json::from_str(include_str!("../datasets/source-epg-refresh-success.json")).unwrap()
     }
+    #[test]
+    fn aggregate_terminal_keeps_exact_text_and_ordered_unique_children() {
+        let root = Uuid::new_v4();
+        let a = Uuid::new_v4();
+        let b = Uuid::new_v4();
+        let mut frame = json!({
+            "status": "SUCCESS",
+            "result": crate::refresh_aggregate::SUCCESS,
+            "traceback": null,
+            "children": [],
+            "date_done": "2026-11-20T14:06:50.841123+00:00",
+            "task_id": root.to_string()
+        });
+        let parse =
+            |frame: &Value| parse_aggregate_success(&serde_json::to_vec(frame).unwrap(), root);
+        assert!(parse(&frame).unwrap().children.is_empty());
+        frame["children"] = json!([[[a, null], null], [[b, null], null]]);
+        assert_eq!(parse(&frame).unwrap().children, vec![a, b]);
+        assert!(parse_success(&serde_json::to_vec(&frame).unwrap(), root, 1).is_err());
+        frame["children"][1][0][0] = json!(a);
+        assert!(parse(&frame).is_err());
+        frame["children"] = json!([]);
+        frame["parent_id"] = json!(b);
+        assert!(parse(&frame).is_err());
+    }
+
     #[test]
     fn actual_initial_import_missing_and_executed_descendant_results_are_distinct() {
         let c = corpus();

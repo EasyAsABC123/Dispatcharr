@@ -38,6 +38,7 @@ pub enum Outcome {
     Restored(Uuid),
 }
 struct Entry {
+    sources: Mutex<Option<crate::refresh_aggregate::XmltvSources>>,
     seq: u64,
     reservation: Reservation,
     _owned: OwnedSemaphorePermit,
@@ -122,6 +123,18 @@ impl ScheduledRefreshWorker {
         reservation: &Reservation,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Job, Error> {
+        self.start_normal(reservation, caller, None)
+    }
+
+    pub(crate) fn start_normal(
+        &self,
+        reservation: &Reservation,
+        caller: Arc<dyn Send + Sync>,
+        sources: Option<crate::refresh_aggregate::XmltvSources>,
+    ) -> Result<Job, Error> {
+        if reservation.scheduled_message().aggregate() != sources.is_some() {
+            return Err(Error::Configuration);
+        }
         self.inner
             .jobs
             .owns_refresh_reservation(reservation)
@@ -135,7 +148,7 @@ impl ScheduledRefreshWorker {
             .clone()
             .try_acquire_owned()
             .map_err(|_| Error::Capacity)?;
-        let kind = if reservation.message().eta.is_some() {
+        let kind = if reservation.scheduled_message().eta.is_some() {
             self.inner.eta.clone()
         } else {
             self.inner.prefetch.clone()
@@ -144,6 +157,7 @@ impl ScheduledRefreshWorker {
         let seq = self.inner.next.fetch_add(1, Ordering::Relaxed);
         let (done, receiver) = watch::channel(None);
         let entry = Arc::new(Entry {
+            sources: Mutex::new(sources),
             seq,
             reservation: reservation.clone(),
             _owned: owned,
@@ -181,7 +195,7 @@ impl ScheduledRefreshWorker {
                         .jobs
                         .restore_refresh_eta(&entry.reservation, entry.clone())
                         .await
-                        .map(|()| Outcome::Restored(entry.reservation.message().task_id))
+                        .map(|()| Outcome::Restored(entry.reservation.scheduled_message().task_id))
                         .map_err(Error::Transport);
                     if let Err(error) = outcome {
                         inner.restore_failures.lock().unwrap().push(error);
@@ -220,7 +234,7 @@ async fn execute(inner: Arc<Inner>, entry: Arc<Entry>) {
         stopped(&entry).await;
         return;
     }
-    if let Some(eta) = entry.reservation.message().eta {
+    if let Some(eta) = entry.reservation.scheduled_message().eta {
         let wait = (eta - chrono::Utc::now())
             .to_std()
             .unwrap_or(Duration::ZERO);
@@ -253,30 +267,62 @@ async fn run_active(inner: &Inner, entry: &Arc<Entry>) -> Result<Outcome, Error>
         .ack_refresh_eta(&entry.reservation, entry.clone())
         .await
         .map_err(Error::Transport)?;
-    let message = entry.reservation.message().clone();
-    let publisher = ChildPublisher::claimed(
-        inner.jobs.clone(),
-        message.clone(),
-        entry.clone(),
-        entry.reservation.receipt.queued_bytes.clone(),
-    );
-    let terminal = inner
-        .executor
-        .execute(message.clone(), publisher.clone(), entry.clone())
-        .await?;
-    match inner
-        .jobs
-        .write_refresh_scheduled_success(
-            &message,
-            terminal,
-            publisher.completed_children()?,
-            publisher.observed_trail()?,
-            entry.clone(),
-        )
-        .await
-        .map_err(Error::Transport)?
-    {
-        true => Ok(Outcome::Completed(message.task_id)),
-        false => Ok(Outcome::AlreadySucceeded(message.task_id)),
+    let message = entry.reservation.scheduled_message();
+    let raw = &entry.reservation.receipt.queued_bytes;
+    let written = match &message.work {
+        crate::refresh_aggregate::RefreshWork::Individual(work) => {
+            let publisher = ChildPublisher::claimed(
+                inner.jobs.clone(),
+                work.as_ref().clone(),
+                entry.clone(),
+                raw.clone(),
+            );
+            let terminal = inner
+                .executor
+                .execute(work.as_ref().clone(), publisher.clone(), entry.clone())
+                .await?;
+            inner
+                .jobs
+                .write_refresh_scheduled_success(
+                    work,
+                    terminal,
+                    publisher.completed_children()?,
+                    publisher.observed_trail()?,
+                    entry.clone(),
+                )
+                .await
+        }
+        crate::refresh_aggregate::RefreshWork::Aggregate => {
+            let sources = entry
+                .sources
+                .lock()
+                .map_err(|_| Error::Execution)?
+                .take()
+                .ok_or(Error::Configuration)?;
+            let publisher = ChildPublisher::aggregate(
+                inner.jobs.clone(),
+                message.task_id,
+                entry.clone(),
+                raw.clone(),
+            );
+            let completion = inner
+                .executor
+                .execute_aggregate(sources, publisher, entry.clone())
+                .await?;
+            inner
+                .jobs
+                .write_aggregate_refresh_success(
+                    message.task_id,
+                    completion.children,
+                    entry.clone(),
+                )
+                .await
+        }
     }
+    .map_err(Error::Transport)?;
+    Ok(if written {
+        Outcome::Completed(message.task_id)
+    } else {
+        Outcome::AlreadySucceeded(message.task_id)
+    })
 }

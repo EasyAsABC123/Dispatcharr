@@ -24,6 +24,21 @@ impl Jobs {
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
     ) -> Result<Option<crate::refresh_eta::Candidate>, Error> {
+        self.peek_refresh(caller, limits, false).await
+    }
+    pub(crate) async fn peek_normal_refresh_candidate(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+        limits: crate::eta::Limits,
+    ) -> Result<Option<crate::refresh_eta::Candidate>, Error> {
+        self.peek_refresh(caller, limits, true).await
+    }
+    async fn peek_refresh(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+        limits: crate::eta::Limits,
+        allow_aggregate: bool,
+    ) -> Result<Option<crate::refresh_eta::Candidate>, Error> {
         if !self.allows_refresh() {
             return Err(Error::UnsupportedTask);
         }
@@ -41,14 +56,17 @@ impl Jobs {
         match reply.0 {
             0 => Ok(None),
             1 => crate::refresh_eta::Receipt::prepare(&reply.1)
-                .map(|receipt| {
-                    Some(crate::refresh_eta::Candidate {
+                .map_err(|_| Error::UnsupportedTask)
+                .and_then(|receipt| {
+                    if !allow_aggregate && receipt.message.aggregate() {
+                        return Err(Error::UnsupportedTask);
+                    }
+                    Ok(Some(crate::refresh_eta::Candidate {
                         receipt: Arc::new(receipt),
                         budget,
                         pool,
-                    })
-                })
-                .map_err(|_| Error::UnsupportedTask),
+                    }))
+                }),
             _ => Err(Error::Corrupt),
         }
     }
@@ -180,7 +198,7 @@ impl Jobs {
             Ok((-4, _)) => Err(Error::Capacity),
             Ok(_) => Err(Error::Corrupt),
             Err(ClassifiedError::Backend) => Err(Error::AmbiguousReservation {
-                task_id: reservation.message().task_id,
+                task_id: reservation.scheduled_message().task_id,
                 delivery_tag: reservation.delivery_tag(),
             }),
             Err(e) => Err(map(e)),
@@ -225,8 +243,13 @@ impl Jobs {
         match reply.0 {
             0 => Ok(None),
             1 => crate::refresh_eta::Receipt::from_stored(&reply.1, tag)
-                .map(|r| Some(crate::refresh_eta::Reservation::new(r, budget, pool)))
-                .map_err(|_| Error::Corrupt),
+                .map_err(|_| Error::Corrupt)
+                .and_then(|r| {
+                    if r.message.aggregate() {
+                        return Err(Error::UnsupportedTask);
+                    }
+                    Ok(Some(crate::refresh_eta::Reservation::new(r, budget, pool)))
+                }),
             _ => Err(Error::Corrupt),
         }
     }
@@ -261,7 +284,7 @@ impl Jobs {
             Ok((0, _)) => Err(Error::LostReservation),
             Ok(_) => Err(Error::Corrupt),
             Err(ClassifiedError::Backend) => {
-                Err(Error::AmbiguousAck(reservation.message().task_id))
+                Err(Error::AmbiguousAck(reservation.scheduled_message().task_id))
             }
             Err(e) => Err(map(e)),
         }
@@ -300,12 +323,31 @@ impl Jobs {
             Ok((1, _)) => Ok(()),
             Ok((0, _)) => Err(Error::LostReservation),
             Ok(_) => Err(Error::Corrupt),
-            Err(ClassifiedError::Backend) => {
-                Err(Error::AmbiguousRestore(reservation.message().task_id))
-            }
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousRestore(
+                reservation.scheduled_message().task_id,
+            )),
             Err(e) => Err(map(e)),
         }
     }
+    pub(crate) async fn write_aggregate_refresh_success(
+        &self,
+        task_id: Uuid,
+        children: Vec<Uuid>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, Error> {
+        if !self.allows_refresh() || children.len() > 64 {
+            return Err(Error::Protocol);
+        }
+        self.write_result(
+            task_id,
+            serde_json::json!(crate::refresh_aggregate::SUCCESS),
+            None,
+            children,
+            caller,
+        )
+        .await
+    }
+
     pub(crate) async fn write_refresh_scheduled_success(
         &self,
         message: &crate::refresh_protocol::RefreshMessage,

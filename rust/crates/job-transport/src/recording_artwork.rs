@@ -154,6 +154,34 @@ impl RefreshSeriesChild {
         validation.call = crate::refresh_protocol::RefreshCall::initial(refresh.source_id);
         Self::from_completed_refresh(&validation, backend, child)
     }
+    pub(crate) fn from_completed_aggregate(
+        root: Uuid,
+        backend: &[u8],
+        child: &crate::series_protocol::SeriesMessage,
+    ) -> Option<Self> {
+        let canonical =
+            |id: Uuid| id.get_version_num() == 4 && id.get_variant() == uuid::Variant::RFC4122;
+        if child.root != root
+            || child.parent != Some(root)
+            || child.task_id == root
+            || !canonical(root)
+            || !canonical(child.task_id)
+        {
+            return None;
+        }
+        let completed = crate::refresh_result::parse_aggregate_success(backend, root).ok()?;
+        if !completed.children.contains(&child.task_id) {
+            return None;
+        }
+        Some(Self {
+            task: DirectTask {
+                id: child.task_id,
+                root,
+                parent: Some(root),
+            },
+        })
+    }
+
     pub(crate) fn admit(
         self,
         message: &crate::series_protocol::SeriesMessage,

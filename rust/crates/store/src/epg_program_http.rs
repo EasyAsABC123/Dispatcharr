@@ -469,6 +469,7 @@ async fn list(
         let template = match (user.user_level >= 10, format_alias, &method) {
             (true, true, _) => programme_html::Template::AdminFormatAlias,
             (true, false, _) => programme_html::Template::Admin,
+            (false, true, _) => programme_html::Template::StandardFormatAlias,
             (false, false, &Method::GET) => programme_html::Template::Standard,
             (false, _, _) => {
                 return Err(StoreError::Unsupported(
@@ -494,8 +495,35 @@ async fn detail(
     Path(id): Path<String>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
+    method: Method,
     uri: Uri,
 ) -> Result<Response, StoreError> {
+    if method == Method::GET
+        && uri.query().is_none()
+        && headers
+            .get("accept")
+            .is_some_and(|value| value == "text/html")
+    {
+        let user = state
+            .auth
+            .account_user(peer, headers.clone(), false)
+            .await?;
+        if user.user_level < 1 {
+            return Err(StoreError::PermissionDenied);
+        }
+        if user.user_level >= 10 {
+            let origin = origin(&state.auth, peer, &headers);
+            let programme = state.read_authorized(Some(&id), origin.clone()).await?;
+            return programme_html::response(
+                &headers,
+                method,
+                programme_html::Template::AdminDetail(uri.path()),
+                &user.username,
+                &origin,
+                programme,
+            );
+        }
+    }
     respond(state, peer, headers, Some(id), uri).await
 }
 

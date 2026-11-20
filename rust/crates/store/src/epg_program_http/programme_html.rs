@@ -1,4 +1,4 @@
-//! Stored programme list rendered using the pinned Original DRF template.
+//! Stored programme representations rendered using pinned Original DRF templates.
 //! The original Dispatcharr, Django, and DRF authors retain full credit.
 use super::{unavailable, BoundedJson};
 use crate::{
@@ -22,13 +22,15 @@ const MAXIMUM_PROGRAMME_JSON_BYTES: usize = 256 * 1024;
 const MAXIMUM_RENDERED_BYTES: usize = 1024 * 1024;
 
 #[derive(Clone, Copy)]
-pub(super) enum Template {
+pub(super) enum Template<'a> {
     Admin,
     AdminFormatAlias,
     Standard,
+    StandardFormatAlias,
+    AdminDetail(&'a str),
 }
 
-impl Template {
+impl Template<'_> {
     fn source(self) -> &'static str {
         match self {
             Self::Admin => include!("../../datasets/epg-programme-html/list-admin.rs.in"),
@@ -36,6 +38,12 @@ impl Template {
                 include!("../../datasets/epg-programme-html/list-admin-format-api.rs.in")
             }
             Self::Standard => include!("../../datasets/epg-programme-html/list-standard.rs.in"),
+            Self::StandardFormatAlias => {
+                include!("../../datasets/epg-programme-html/list-standard-format-api.rs.in")
+            }
+            Self::AdminDetail(_) => {
+                include!("../../datasets/epg-programme-html/detail-admin.rs.in")
+            }
         }
     }
 }
@@ -58,10 +66,67 @@ fn render_error(error: ReadError) -> StoreError {
     }
 }
 
+fn pretty_json(programme: &Value) -> Result<Vec<u8>, StoreError> {
+    let mut output = BoundedJson::new(MAXIMUM_RENDERED_BYTES);
+    let formatter = PrettyFormatter::with_indent(b"    ");
+    programme
+        .serialize(&mut Serializer::with_formatter(&mut output, formatter))
+        .map_err(|_| unavailable())?;
+    Ok(output.into_data())
+}
+
+struct DetailForm {
+    content: Vec<u8>,
+    start_time: String,
+    end_time: String,
+}
+
+impl DetailForm {
+    fn from_programme(programme: &Value) -> Result<Self, StoreError> {
+        const FIELDS: [&str; 13] = [
+            "id",
+            "start_time",
+            "end_time",
+            "title",
+            "sub_title",
+            "description",
+            "tvg_id",
+            "season",
+            "episode",
+            "is_new",
+            "is_live",
+            "is_premiere",
+            "is_finale",
+        ];
+        let mut raw = serde_json::Map::new();
+        for field in FIELDS {
+            raw.insert(
+                field.into(),
+                programme.get(field).ok_or_else(unavailable)?.clone(),
+            );
+        }
+        let datetime = |field: &str| {
+            let value = programme[field].as_str().ok_or_else(unavailable)?;
+            let value = chrono::DateTime::parse_from_rfc3339(value).map_err(|_| unavailable())?;
+            Ok::<_, StoreError>(
+                value
+                    .naive_utc()
+                    .format("%Y-%m-%dT%H:%M:%S%.3f")
+                    .to_string(),
+            )
+        };
+        Ok(Self {
+            content: pretty_json(&Value::Object(raw))?,
+            start_time: datetime("start_time")?,
+            end_time: datetime("end_time")?,
+        })
+    }
+}
+
 fn render(
     programmes: &[u8],
     method: &Method,
-    template: Template,
+    template: Template<'_>,
     username: &str,
     origin: &str,
     csrf: &str,
@@ -70,13 +135,12 @@ fn render(
         return Err(unavailable());
     }
     let programmes: Value = serde_json::from_slice(programmes).map_err(|_| unavailable())?;
-    let mut pretty = BoundedJson::new(MAXIMUM_RENDERED_BYTES);
-    let formatter = PrettyFormatter::with_indent(b"    ");
-    programmes
-        .serialize(&mut Serializer::with_formatter(&mut pretty, formatter))
-        .map_err(|_| unavailable())?;
-    let pretty = pretty.into_data();
+    let pretty = pretty_json(&programmes)?;
     let pretty = std::str::from_utf8(&pretty).map_err(|_| unavailable())?;
+    let detail = match template {
+        Template::AdminDetail(path) => Some((path, DetailForm::from_programme(&programmes)?)),
+        _ => None,
+    };
 
     let mut output = BoundedJson::new(MAXIMUM_RENDERED_BYTES);
     let mut remaining = template.source();
@@ -92,6 +156,38 @@ fn render(
             "@@GUIDE_ORIGIN@@" => source_browsable_escape(&mut output, origin),
             "@@GUIDE_CSRF_MASK@@" => source_browsable_escape(&mut output, csrf),
             "@@GUIDE_JSON_HTML@@" => source_browsable_content(&mut output, pretty),
+            "@@GUIDE_OWNED_DETAIL_PATH@@" => {
+                let (path, _) = detail.as_ref().ok_or_else(unavailable)?;
+                source_browsable_escape(&mut output, path)
+            }
+            "@@GUIDE_FORM_START_TIME@@" | "@@GUIDE_FORM_END_TIME@@" => {
+                let (_, form) = detail.as_ref().ok_or_else(unavailable)?;
+                let value = if &tail[..end] == "@@GUIDE_FORM_START_TIME@@" {
+                    &form.start_time
+                } else {
+                    &form.end_time
+                };
+                source_browsable_escape(&mut output, value)
+            }
+            "@@GUIDE_FORM_TITLE@@" => {
+                source_browsable_escape(&mut output, programmes["title"].as_str().unwrap_or(""))
+            }
+            "@@GUIDE_FORM_TVG_ID@@" => {
+                source_browsable_escape(&mut output, programmes["tvg_id"].as_str().unwrap_or(""))
+            }
+            "@@GUIDE_TEXTAREA_SUB_TITLE@@" => {
+                source_browsable_escape(&mut output, programmes["sub_title"].as_str().unwrap_or(""))
+            }
+            "@@GUIDE_TEXTAREA_DESCRIPTION@@" => source_browsable_escape(
+                &mut output,
+                programmes["description"].as_str().unwrap_or(""),
+            ),
+            "@@GUIDE_TEXTAREA_CONTENT@@" => {
+                let (_, form) = detail.as_ref().ok_or_else(unavailable)?;
+                let content = std::str::from_utf8(&form.content).map_err(|_| unavailable())?;
+                output.write_all(b"\n").map_err(|_| unavailable())?;
+                source_browsable_escape(&mut output, content)
+            }
             _ => return Err(unavailable()),
         }
         .map_err(render_error)?;
@@ -106,7 +202,7 @@ fn render(
 pub(super) fn response(
     headers: &HeaderMap,
     method: Method,
-    template: Template,
+    template: Template<'_>,
     username: &str,
     origin: &str,
     programmes: Bytes,
@@ -124,10 +220,14 @@ pub(super) fn response(
             _programmes: programmes,
         }))
     };
+    let allow = match template {
+        Template::AdminDetail(_) => "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        _ => "GET, POST, HEAD, OPTIONS",
+    };
     Response::builder()
         .header("content-type", "text/html; charset=utf-8")
         .header("vary", "Accept, origin, Cookie")
-        .header("allow", "GET, POST, HEAD, OPTIONS")
+        .header("allow", allow)
         .header("set-cookie", cookie)
         .header("content-length", length.to_string())
         .body(body)
@@ -181,6 +281,57 @@ mod tests {
         assert!(standard.contains("<b>GET</b> /api/epg/programs/</pre>"));
         assert!(!standard.contains("method=\"POST\""));
         assert_eq!(standard.matches("mask-fixture").count(), 1);
+        let standard_alias = render_fixture(Template::StandardFormatAlias);
+        let standard_alias = std::str::from_utf8(&standard_alias).unwrap();
+        assert!(standard_alias.contains("<b>GET</b> /api/epg/programs/?format=api</pre>"));
+        assert!(!standard_alias.contains("method=\"POST\""));
+        assert_eq!(standard_alias.matches("mask-fixture").count(), 1);
+    }
+
+    #[test]
+    fn admin_detail_renders_dates_and_the_editable_serializer_projection() {
+        let programme = serde_json::json!({
+            "id": 7,
+            "start_time": "2026-04-13T11:00:00.123901Z",
+            "end_time": "2026-04-13T11:59:59.999999Z",
+            "title": "A & B",
+            "sub_title": null,
+            "description": " One\nTwo <曲> ",
+            "tvg_id": " guide-id ",
+            "season": null,
+            "episode": null,
+            "is_new": false,
+            "is_live": false,
+            "is_premiere": false,
+            "is_finale": false,
+            "rating_system": null,
+        });
+        let form = DetailForm::from_programme(&programme).unwrap();
+        assert_eq!(form.start_time, "2026-04-13T11:00:00.123");
+        assert_eq!(form.end_time, "2026-04-13T11:59:59.999");
+        let raw = std::str::from_utf8(&form.content).unwrap();
+        assert!(raw.starts_with("{\n    \"id\": 7,\n    \"start_time\":"));
+        assert!(raw.contains("Two <曲>"));
+        assert!(!raw.contains("rating_system"));
+
+        let path = "/api/epg/programs/7/";
+        let html = render(
+            &serde_json::to_vec(&programme).unwrap(),
+            &Method::GET,
+            Template::AdminDetail(path),
+            "guide-admin",
+            "http://guide.example.invalid",
+            "mask-fixture",
+        )
+        .unwrap();
+        let html = std::str::from_utf8(&html).unwrap();
+        assert_eq!(html.matches(path).count(), 10);
+        assert!(html.contains("value=\"A &amp; B\""));
+        assert!(html.contains("value=\" guide-id \""));
+        assert!(html.contains("> One\nTwo &lt;曲&gt; </textarea>"));
+        assert!(html.contains("\"form-control\">\n{\n    &quot;id&quot;: 7,"));
+        assert!(html.contains("&quot;rating_system&quot;"));
+        assert_eq!(html.matches("mask-fixture").count(), 1);
     }
 
     #[tokio::test]

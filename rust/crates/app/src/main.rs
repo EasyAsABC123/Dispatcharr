@@ -755,7 +755,10 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         ),
         secret,
     )
-    .map_err(|_| "Invalid backup file API configuration")?;
+    .map_err(|_| "Invalid backup file API configuration")?
+    .with_nginx_accel(
+        env::var("USE_NGINX_ACCEL").is_ok_and(|value| value.eq_ignore_ascii_case("true")),
+    );
     let mut epg_programs = dispatcharr_store::EpgProgramReads::new(
         auth.clone(),
         dispatcharr_store::EpgProgramReadLimits {

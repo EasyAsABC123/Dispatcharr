@@ -16,8 +16,13 @@ use std::{
 use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 
+enum Parent {
+    Individual(Box<RefreshMessage>),
+    Aggregate(Uuid),
+}
+
 struct Entry {
-    parent: RefreshMessage,
+    parent: Parent,
     children: Mutex<BTreeSet<Uuid>>,
     _permit: OwnedSemaphorePermit,
 }
@@ -33,6 +38,7 @@ pub struct Handoff {
 }
 pub(crate) struct CompletedParent {
     entry: Arc<Entry>,
+    root: Uuid,
     pub(crate) child: RefreshSeriesChild,
 }
 impl Handoff {
@@ -73,20 +79,33 @@ impl Handoff {
         }
         // Queue publication precedes parent SUCCESS. Absence is an ordinary
         // wait, never permission to synthesize completion or remove this head.
-        let Some(raw) = self
-            .inner
-            .jobs
-            .read_refresh_lineage(&entry.parent, owner)
-            .await?
-        else {
-            return Ok(None);
-        };
-        let child = RefreshSeriesChild::from_completed_refresh(&entry.parent, &raw, message)
-            .or_else(|| {
-                RefreshSeriesChild::from_completed_refresh_api(&entry.parent, &raw, message)
-            })
-            .ok_or(TransportError::Protocol)?;
-        Ok(Some(CompletedParent { entry, child }))
+        let child = match &entry.parent {
+            Parent::Individual(refresh) => {
+                let Some(raw) = self.inner.jobs.read_refresh_lineage(refresh, owner).await? else {
+                    return Ok(None);
+                };
+                RefreshSeriesChild::from_completed_refresh(refresh, &raw, message).or_else(|| {
+                    RefreshSeriesChild::from_completed_refresh_api(refresh, &raw, message)
+                })
+            }
+            Parent::Aggregate(root) => {
+                let Some(raw) = self
+                    .inner
+                    .jobs
+                    .read_aggregate_refresh_lineage(*root, owner)
+                    .await?
+                else {
+                    return Ok(None);
+                };
+                RefreshSeriesChild::from_completed_aggregate(*root, &raw, message)
+            }
+        }
+        .ok_or(TransportError::Protocol)?;
+        Ok(Some(CompletedParent {
+            entry,
+            root: parent,
+            child,
+        }))
     }
     pub(crate) fn completed_child(
         &self,
@@ -98,7 +117,7 @@ impl Handoff {
             .entries
             .lock()
             .map_err(|_| TransportError::Protocol)?;
-        let Some(entry) = entries.get(&pending.entry.parent.task_id) else {
+        let Some(entry) = entries.get(&pending.root) else {
             return Err(TransportError::Protocol);
         };
         if !Arc::ptr_eq(entry, &pending.entry) {
@@ -115,10 +134,44 @@ impl Handoff {
             children.is_empty()
         };
         if empty {
-            entries.remove(&pending.entry.parent.task_id);
+            entries.remove(&pending.root);
         }
         Ok(())
     }
+    async fn acquire(&self) -> Result<OwnedSemaphorePermit, Error> {
+        self.inner
+            .slots
+            .clone()
+            .acquire_owned()
+            .await
+            .map_err(|_| Error::Closed)
+    }
+
+    fn retain(
+        &self,
+        id: Uuid,
+        parent: Parent,
+        children: &[Uuid],
+        permit: OwnedSemaphorePermit,
+    ) -> Result<(), Error> {
+        if children.is_empty() {
+            return Ok(());
+        }
+        let mut entries = self.inner.entries.lock().map_err(|_| Error::Execution)?;
+        if entries.contains_key(&id) {
+            return Err(Error::Execution);
+        }
+        entries.insert(
+            id,
+            Arc::new(Entry {
+                parent,
+                children: Mutex::new(children.iter().copied().collect()),
+                _permit: permit,
+            }),
+        );
+        Ok(())
+    }
+
     pub(crate) fn close_admission(&self) {
         self.inner.slots.close();
     }
@@ -161,15 +214,7 @@ impl RefreshExecutor for Executor {
             // Bound retained parents without eviction. Backpressure retains the
             // actual accepted parent owner while older Series children drain.
             let permit = if selected {
-                Some(
-                    self.handoff
-                        .inner
-                        .slots
-                        .clone()
-                        .acquire_owned()
-                        .await
-                        .map_err(|_| Error::Closed)?,
-                )
+                Some(self.handoff.acquire().await?)
             } else {
                 None
             };
@@ -178,28 +223,33 @@ impl RefreshExecutor for Executor {
                 .execute(message.clone(), publisher.clone(), owner)
                 .await?;
             let children = publisher.completed_series_children()?;
-            if let Some(permit) = permit.filter(|_| !children.is_empty()) {
-                let mut entries = self
-                    .handoff
-                    .inner
-                    .entries
-                    .lock()
-                    .map_err(|_| Error::Execution)?;
-                // A duplicated root is not allowed to replace an older pending
-                // capability. No fabricated/reused completion after replay.
-                if entries.contains_key(&message.task_id) {
-                    return Err(Error::Execution);
-                }
-                entries.insert(
+            if let Some(permit) = permit {
+                self.handoff.retain(
                     message.task_id,
-                    Arc::new(Entry {
-                        parent: message,
-                        children: Mutex::new(children.into_iter().collect()),
-                        _permit: permit,
-                    }),
-                );
+                    Parent::Individual(Box::new(message)),
+                    &children,
+                    permit,
+                )?;
             }
             Ok(result)
+        })
+    }
+    fn execute_aggregate<'a>(
+        &'a self,
+        sources: crate::refresh_aggregate::XmltvSources,
+        publisher: ChildPublisher,
+        owner: Arc<dyn Send + Sync>,
+    ) -> crate::refresh_worker::AggregateFuture<'a> {
+        Box::pin(async move {
+            let permit = self.handoff.acquire().await?;
+            let root = publisher.task_id();
+            let completed = self
+                .inner
+                .execute_aggregate(sources, publisher, owner)
+                .await?;
+            self.handoff
+                .retain(root, Parent::Aggregate(root), &completed.series, permit)?;
+            Ok(completed)
         })
     }
 }

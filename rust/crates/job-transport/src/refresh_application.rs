@@ -566,7 +566,7 @@ impl NormalHandler {
             .app
             .inner
             .jobs
-            .peek_refresh_candidate(owner.clone(), self.limits)
+            .peek_normal_refresh_candidate(owner.clone(), self.limits)
             .await
         {
             Ok(Some(value)) => value,
@@ -586,6 +586,16 @@ impl NormalHandler {
         {
             return Ok(D::HeadChanged);
         }
+        let sources = if candidate.scheduled_message().aggregate() {
+            use crate::refresh_aggregate::{Admission, XmltvSources};
+            match XmltvSources::read(&self.app.inner.store).await {
+                Ok(Admission::Ordinary(sources)) => Some(sources),
+                Ok(Admission::Unsupported) => return Ok(D::UnsupportedDomain),
+                Err(_) => return Err(D::Operational("aggregate XMLTV selection failed".into())),
+            }
+        } else {
+            None
+        };
         let receipt = self
             .app
             .inner
@@ -599,7 +609,7 @@ impl NormalHandler {
             })?;
         let outcome = self
             .worker
-            .start(&receipt, owner)
+            .start_normal(&receipt, owner, sources)
             .map_err(|error| D::Operational(format!("normal scheduled admission {error:?}")))?
             .wait()
             .await

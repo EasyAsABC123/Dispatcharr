@@ -256,7 +256,7 @@ pub fn classify(raw: &[u8]) -> Option<Family> {
         "apps.m3u.tasks.refresh_m3u_accounts" => Family::M3uAll,
         "apps.vod.tasks.refresh_vod_content" => Family::VodIngestion,
         "apps.m3u.tasks.sync_auto_channels" => Family::AutoChannels,
-        "apps.epg.tasks.refresh_epg_data" => Family::Refresh,
+        "apps.epg.tasks.refresh_epg_data" | crate::refresh_aggregate::NAME => Family::Refresh,
         "apps.epg.tasks.build_programme_index_task" => Family::ProgrammeIndex,
         "apps.epg.tasks.parse_programs_for_tvg_id" => Family::TvgProgrammes,
         "apps.epg.tasks.fetch_schedules_direct_stations"

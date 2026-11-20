@@ -269,12 +269,29 @@ pub(crate) fn create_identity(bytes: &[u8]) -> Result<Uuid, Error> {
         return Err(Error::UnsupportedEnvelope);
     }
     let e: Value = serde_json::from_slice(bytes).map_err(|_| Error::UnsupportedEnvelope)?;
+    no_argument_root_identity(&e, ImmediateNoArgumentTask::CreateBackup)
+}
+
+pub(crate) enum ImmediateNoArgumentTask {
+    CreateBackup,
+    XmltvAggregate,
+}
+
+pub(crate) fn no_argument_root_identity(
+    frame: &Value,
+    task: ImmediateNoArgumentTask,
+) -> Result<Uuid, Error> {
+    let e = frame;
+    let name = match task {
+        ImmediateNoArgumentTask::CreateBackup => "apps.backups.tasks.create_backup_task",
+        ImmediateNoArgumentTask::XmltvAggregate => crate::refresh_aggregate::NAME,
+    };
     let fields = |v: &Value, names: &[&str]| {
         v.as_object()
             .is_some_and(|m| m.len() == names.len() && names.iter().all(|k| m.contains_key(*k)))
     };
     if !fields(
-        &e,
+        e,
         &[
             "body",
             "content-encoding",
@@ -325,7 +342,7 @@ pub(crate) fn create_identity(bytes: &[u8]) -> Result<Uuid, Error> {
         .map_err(|_| Error::UnsupportedEnvelope)?;
     if e["content-type"] != "application/json"
         || e["content-encoding"] != "utf-8"
-        || h["task"] != "apps.backups.tasks.create_backup_task"
+        || h["task"] != name
         || h["lang"] != "py"
         || h["root_id"] != id.to_string()
         || !h["parent_id"].is_null()
