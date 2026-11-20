@@ -114,6 +114,10 @@ verified cleanup on 735, covering eight persisted credential variants.
 The [a785 persisted password upgrade](rust-a785-auth-hash-acceptance.md) passed 34 checks across eight persisted credential variants against a fresh
 Original fixture and independently verified Compose cleanup.
 
+The [a785 configured proxy identity and access policies](rust-a785-proxy-auth-acceptance.md)
+passed 38 checks in a paired Original and Rust Compose fixture, including
+20 configured identity and access-policy checks, with verified cleanup.
+
 The [735 createsuperuser and typed comparisons](rust-735-cli-acceptance.md) passed 22 shipped
 createsuperuser cases and 154 typed comparisons on 735. The coordinator
 recorded two passing nodes and verified cleanup.
