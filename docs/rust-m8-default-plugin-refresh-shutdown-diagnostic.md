@@ -20,3 +20,17 @@ supported startup refresh skip setting.
 
 The original Dispatcharr authors and dependency contributors retain full credit.
 [Redacted diagnostic receipt](../scripts/rust-integration/m8-default-plugin-refresh-shutdown-diagnostic.json)
+
+## Refined platform DNS result
+
+A fresh diagnostic image reran the same copied restore with startup
+plugin refresh enabled. Restore completed, and the controller and
+Rust Main each retained exit 1. The refined fixed markers place the
+error in the platform DNS branch of claimed PluginRefresh execution.
+The family permit remained held. This trace establishes the observed
+branch. The stock failure mapping and safe graceful-shutdown behavior
+still need verification.
+
+Independent Docker event and inventory checks verified retirement of
+all four tracked Native fixture roles. Full M8 and performance stay open.
+[Redacted refined receipt](../scripts/rust-integration/m8-default-plugin-refresh-platform-dns.json)
