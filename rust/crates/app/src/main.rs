@@ -6,6 +6,7 @@ mod combined_statistics_html;
 mod combined_statistics_wire;
 mod control;
 mod database_config;
+mod m3u_refresh_all_config;
 mod playback;
 mod plugin_gpg_trace;
 mod plugin_jobs_bridge;
@@ -743,6 +744,12 @@ async fn run() -> Result<(), String> {
         _ => return Err("RUST_VERSION_TASKS_ENABLED must be 0 or 1".into()),
     };
     let version_tasks_enabled = version_tasks_enabled || selected_jobs_enabled;
+    let original_m3u_refresh_all = m3u_refresh_all_config::prepare(
+        auth.clone(),
+        selected_jobs_enabled,
+        refresh_enabled || version_tasks_enabled,
+    )
+    .await?;
     let version_tasks = if version_tasks_enabled {
         let cache = cache_url
             .clone()
@@ -1114,6 +1121,9 @@ async fn run() -> Result<(), String> {
     } else if let Some(playback) = &ordinary_recording_playback {
         app = app.merge(playback.clone().router());
     }
+    if let Some(m3u) = &original_m3u_refresh_all {
+        app = app.merge(m3u.router());
+    }
     if let Some(gateway) = &realtime {
         app = app.merge(gateway.router());
     }
@@ -1227,6 +1237,7 @@ async fn run() -> Result<(), String> {
         core_settings,
         selected_jobs,
         ordinary_recording_playback: ordinary_recording_playback.clone(),
+        original_m3u_refresh_all: original_m3u_refresh_all.clone(),
         engine,
         clients,
         hls,
@@ -1263,6 +1274,9 @@ async fn run() -> Result<(), String> {
         signal_services.stream_files.stop_stream_file_admission();
         signal_services.stream_regex.close_admission();
         signal_services.plugin_actions.stop_admission();
+        if let Some(m3u) = &signal_services.original_m3u_refresh_all {
+            m3u.close_admission();
+        }
         if let Some(playback) = &signal_services.ordinary_recording_playback {
             playback.close_admission();
         }
@@ -1282,11 +1296,14 @@ async fn run() -> Result<(), String> {
     tokio::pin!(server);
     let shutdown_mode = if refresh_enabled && !selected_jobs_enabled {
         "Refresh worker"
+    } else if original_m3u_refresh_all.is_some() {
+        "Original M3U publisher"
     } else {
         "Selected"
     };
     let shutdown_requires_drain = || {
         refresh_enabled
+            || original_m3u_refresh_all.is_some()
             || auth.stream_files_were_used()
             || stream_regex.was_used()
             || ordinary_recording_playback
@@ -1364,6 +1381,7 @@ struct ShutdownServices {
     core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
     selected_jobs: Option<selected_jobs::SelectedJobs>,
     ordinary_recording_playback: Option<dispatcharr_store::RecordingPlayback>,
+    original_m3u_refresh_all: Option<dispatcharr_job_transport::transport::OriginalM3uRefreshAll>,
     engine: StreamEngine,
     clients: Option<ClientStore>,
     hls: Option<dispatcharr_hls_http::HlsGateway>,
@@ -1399,6 +1417,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         core_settings,
         selected_jobs,
         ordinary_recording_playback,
+        original_m3u_refresh_all,
         engine,
         clients,
         hls,
@@ -1433,9 +1452,18 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     if let Some(playback) = &ordinary_recording_playback {
         playback.close_admission();
     }
-    let (stream_files_drained, stream_regex_drained) = tokio::join!(
+    if let Some(m3u) = &original_m3u_refresh_all {
+        m3u.close_admission();
+    }
+    let (stream_files_drained, stream_regex_drained, original_m3u_drained) = tokio::join!(
         stream_files.shutdown_stream_files(Duration::from_secs(8)),
         stream_regex.shutdown(Duration::from_secs(8)),
+        async {
+            match original_m3u_refresh_all {
+                Some(m3u) => m3u.shutdown(Duration::from_secs(8)).await,
+                None => true,
+            }
+        },
     );
     plugin_actions
         .shutdown(Duration::from_secs(8))
@@ -1673,6 +1701,9 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     }
     if !stream_regex_drained {
         return Err("Stream regex preview dependency remains physically unsettled".into());
+    }
+    if !original_m3u_drained {
+        return Err("Original M3U aggregate broker publication remains unsettled".into());
     }
     if !stream_files_drained {
         return Err("Stream upload storage/SQL remains physically unsettled".into());

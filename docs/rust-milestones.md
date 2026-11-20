@@ -42,6 +42,12 @@ passed 12 VOD and catch-up pairs with matched work. Median paired CPU fell
 The [Candidate108 API results](rust-milestone-batch108.md) verify Core JSON
 routes, the stock React channel-guide edit and legacy backup schedule reads.
 
+The [opt-in playlist Refresh All workflow](rust-m6-refresh-all-original-worker.md)
+passed on both the standalone and integrated packages. One retained Original
+Celery consumer completed the aggregate job and both children, with the
+expected streams and group memberships. The ordinary Native worker graph
+and equivalent-work measurement remain open.
+
 The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
 ordinary Native login, cancel and both cleanup modes with exact SQL and
 teardown. The paired Original HTTP reference was retained.
