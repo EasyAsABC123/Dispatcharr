@@ -149,9 +149,10 @@ campaign for the integrated release candidate.
 ## First assignments and blockers to resolve early
 
 - **Playback agent:** Verify M2 ownership/failover and bind its React playback
-  workflow. Characterize and implement the explicit HLS output-profile path,
-  which still has a guard, and rotate into archive idle adoption. Confirm the
-  Source reservation and busy-counter behavior before changing ownership.
+  workflow. Rerun the ordinary profiled HLS workload on the release image,
+  using the [existing paired HLS evidence](rust-migration-shared-playback-checks.md)
+  as a reference. Track the legacy metadata guard and archive idle adoption.
+  Confirm Source reservation and busy-counter behavior before changing ownership.
 - **Application agent:** Reconcile M5 and M7 owner rows with the current Main
   routes. Start with multipart provider actions, broader XC update and nested
   groups, and content-bearing account deletion. Then bind guide response
