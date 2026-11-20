@@ -17,3 +17,28 @@ Every captured GET, including errors, supplies Source Allow and Vary headers.
 Candidate65 lacks those route headers; a production successor is required before
 Native acceptance. This reference establishes no full milestone or performance
 gain. Original Dispatcharr and dependency authors retain all credit.
+
+## GET and HEAD on direct HTTP
+
+Pinned Original and Rust package `735a0299` matched all ten range GETs
+byte for byte, including status and selected headers across anonymous,
+viewer, standard and admin roles. The five HEADs also matched status
+and selected headers. The direct Original uWSGI HTTP listener sent each
+corresponding GET body on HEAD, while Rust emitted an empty body. Selected
+SQL rows stayed unchanged on both backends. The controller exited 1 for
+the HEAD body difference and verified exact retirement of four roles.
+
+The first run failed before target HTTP because the inherited owner had
+already seeded ten playback channels. The next run moved only those
+verified channel numbers outside the query range. It captured ten fresh
+Original GETs before its first HEAD transport check stopped without a
+recorded HEAD response. Both runs exited 1 with exact cleanup and Native
+unstarted. The third run sent HTTP/1.0 HEAD with Connection close and read
+the bounded raw stream to EOF.
+
+Stock Original serves this route through nginx and the uWSGI Unix socket.
+The direct fixture bypasses nginx. Stock HEAD body behavior requires the
+separate physical AIO capture before this direct wire difference can inform
+a production behavior change. Full M5 and performance remain open.
+
+[Redacted direct receipt](../scripts/rust-integration/milestone-batch113/channel-range-direct-head-735.json)
