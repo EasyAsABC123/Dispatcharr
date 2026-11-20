@@ -34,8 +34,8 @@ and with a competing worker. They verified pre-claim capacity retry,
 create-only transport authority and preservation of worker failure during
 shutdown retries. Strict all-target Clippy exited 0. The paired Compose
 run used the option enabled and verified a normal stop after completion.
-Live timezone changes, a shutdown deadline with work still active, restore,
-scheduled jobs, cancellation, full M8 and performance remain open.
+A shutdown deadline with work still active, restore, scheduled jobs,
+cancellation, full M8 and performance remain open.
 
 A separate Compose run on the same image omitted the owner flag from the
 actual Rust Main environment. Authenticated archive listing and schedule
@@ -68,3 +68,33 @@ restore, scheduling, full M8 acceptance and comparative performance
 remain open.
 
 [Fresh archive row receipt](../scripts/rust-integration/milestone-batch113/standalone-backup-archive-rows-a785.json)
+
+## Manual archive clock after live settings changes
+
+A fresh pair on the same `a785a2b7` image saved UTC, created and downloaded
+an archive, then saved Pacific/Honolulu and created and downloaded a second
+archive. Original and Rust both accepted each authenticated System Settings
+save and returned the exact updated values on readback. Both preserved the
+other settings. All four creates returned HTTP 202. The signed status and
+download requests returned HTTP 200, and the status matched the worker's
+Redis SUCCESS result in every case.
+
+For each download, the filename decoded in the saved timezone and the UTC
+timestamp in the archive metadata fell within the independently observed
+create and download interval. The two creates per backend had distinct
+task IDs and filenames. The representative PostgreSQL snapshot and
+independent control stayed unchanged.
+
+Original's separate startup observation found two queued plugin startup
+jobs before its worker started. Its queue was sampled empty before the
+clock workflow. Both backends had empty queue samples around each save and
+create. Rust Main used the dedicated Manual worker and its queue was also
+sampled empty around the final management-shell snapshot.
+
+Both roles exited normally. The controller exited 0 and verified the
+retirement of two Original generations and four Native generations. The
+evidence covers these two timezone policies for manual create. Scheduling,
+application restore, full M8 acceptance, and comparative performance
+remain open.
+
+[Redacted clock-policy receipt](../scripts/rust-integration/milestone-batch113/standalone-backup-clock-a785.json)

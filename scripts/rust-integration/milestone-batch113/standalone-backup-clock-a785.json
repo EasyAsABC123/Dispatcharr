@@ -1,0 +1,149 @@
+{
+  "backends": {
+    "Native": {
+      "distinct_actual_task_ids_and_filenames": true,
+      "exact_owned_compose_generations_retired": 4,
+      "normal_role_exit": 0,
+      "observations": [
+        {
+          "actual_terminal_metadata_verified": true,
+          "archive": {
+            "bytes": 39225,
+            "database_type": "postgresql",
+            "format_version": 2,
+            "members": [
+              "database.dump",
+              "metadata.json"
+            ],
+            "sha256": "525f004614e17728c468bf2c0c44f9ca7b12dd0a249b66a8b47e437d1014c941"
+          },
+          "clock": {
+            "filename_clock_matches_saved_zone": true,
+            "metadata_is_UTC": true,
+            "same_actual_create_interval": true,
+            "time_zone": "UTC"
+          },
+          "create_status": 202,
+          "download_status": 200,
+          "result_state": "SUCCESS",
+          "sampled_empty_queue_around_settings_save_and_create": true,
+          "settings_save_and_readback": 200,
+          "signed_task_status": 200,
+          "time_zone": "UTC"
+        },
+        {
+          "actual_terminal_metadata_verified": true,
+          "archive": {
+            "bytes": 39235,
+            "database_type": "postgresql",
+            "format_version": 2,
+            "members": [
+              "database.dump",
+              "metadata.json"
+            ],
+            "sha256": "ede521193e3e8986744e97fc81dcdfd9fa39355f29721e98c21d438c4ee0df9b"
+          },
+          "clock": {
+            "filename_clock_matches_saved_zone": true,
+            "metadata_is_UTC": true,
+            "same_actual_create_interval": true,
+            "time_zone": "Pacific/Honolulu"
+          },
+          "create_status": 202,
+          "download_status": 200,
+          "result_state": "SUCCESS",
+          "sampled_empty_queue_around_settings_save_and_create": true,
+          "settings_save_and_readback": 200,
+          "signed_task_status": 200,
+          "time_zone": "Pacific/Honolulu"
+        }
+      ],
+      "owned_compose_inventory_empty": true,
+      "phase_receipt_sha256": "718416bcc37c181c0c9e481f921b1496dd2ba875f50264de2a6a8eba31fb95cd",
+      "representative_seeded_SQL_snapshot_and_control_unchanged": true,
+      "sampled_empty_broker_before_workload_and_around_final_SQL_snapshot": true
+    },
+    "Original": {
+      "distinct_actual_task_ids_and_filenames": true,
+      "exact_owned_compose_generations_retired": 2,
+      "normal_role_exit": 0,
+      "observations": [
+        {
+          "actual_terminal_metadata_verified": true,
+          "archive": {
+            "bytes": 39428,
+            "database_type": "postgresql",
+            "format_version": 2,
+            "members": [
+              "database.dump",
+              "metadata.json"
+            ],
+            "sha256": "fac57add1c3872e63e390fa8ae5356041b08324359c47885368e5af90320bf4b"
+          },
+          "clock": {
+            "filename_clock_matches_saved_zone": true,
+            "metadata_is_UTC": true,
+            "same_actual_create_interval": true,
+            "time_zone": "UTC"
+          },
+          "create_status": 202,
+          "download_status": 200,
+          "result_state": "SUCCESS",
+          "sampled_empty_queue_around_settings_save_and_create": true,
+          "settings_save_and_readback": 200,
+          "signed_task_status": 200,
+          "time_zone": "UTC"
+        },
+        {
+          "actual_terminal_metadata_verified": true,
+          "archive": {
+            "bytes": 39441,
+            "database_type": "postgresql",
+            "format_version": 2,
+            "members": [
+              "database.dump",
+              "metadata.json"
+            ],
+            "sha256": "384d9e33ca89ee3a83d1c743adb7be9cf7a8259173c6749cbb5fccc2df0197f9"
+          },
+          "clock": {
+            "filename_clock_matches_saved_zone": true,
+            "metadata_is_UTC": true,
+            "same_actual_create_interval": true,
+            "time_zone": "Pacific/Honolulu"
+          },
+          "create_status": 202,
+          "download_status": 200,
+          "result_state": "SUCCESS",
+          "sampled_empty_queue_around_settings_save_and_create": true,
+          "settings_save_and_readback": 200,
+          "signed_task_status": 200,
+          "time_zone": "Pacific/Honolulu"
+        }
+      ],
+      "owned_compose_inventory_empty": true,
+      "phase_receipt_sha256": "ce78132605116f72cf1a2796934353268e2942eba88d54fd1f2c9162f6a740d3",
+      "representative_seeded_SQL_snapshot_and_control_unchanged": true,
+      "sampled_empty_broker_before_workload": true,
+      "separate_stock_bootstrap_before_worker": {
+        "queue_length": 2,
+        "sampled_create": 0,
+        "sampled_other": 0,
+        "sampled_plugin_startup": 2
+      }
+    }
+  },
+  "candidate_build_manifest_sha256": "88064eab5e75131fdd8a9ecf411f33f979748f72c32128b5bb04c61da7e1682a",
+  "candidate_image_id": "sha256:94dbaa2c371511f85e9d7a420a3d0049a6bd695b0382319b0bf477275ee6d941",
+  "candidate_revision": "a785a2b713b70d9d3e86328f94f02b891c7e4702",
+  "credit": "Original Dispatcharr, PostgreSQL and Celery authors and contributors retain full credit.",
+  "exact_private_controller_receipt_sha256": "a49970e222754e89e9a1de9aef931c66970240b3fc28cfe844095854cea90e84",
+  "full_M8_accepted": false,
+  "paired_controller_actual_exit": 0,
+  "performance_verified": false,
+  "real_application_restore_verified": false,
+  "scheduling_verified": false,
+  "scope": "Two ordinary live timezone saves and two manual backup archives per backend",
+  "sealed_workload_sha256": "435e9a80e5545d270434a7dd35e7eb78898dd01eabfb59312487a2c9ba0983fa",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}
