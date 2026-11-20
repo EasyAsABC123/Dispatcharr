@@ -52,3 +52,22 @@ media processes and all five owned container and host generations. The project
 inventories were empty.
 
 [Redacted a785 receipt](../scripts/rust-integration/m3-ordinary-ffmpeg-output-profile-a785.json)
+
+## Integrated 976f FFmpeg output-profile run
+
+A fresh two-viewer Compose comparison passed on packaged 976f2867 and
+pinned Original. Both authenticated clients per backend received HTTP 200
+fMP4 and shared one upstream connection, one FFmpeg output-profile transform,
+and one remux. After the lead viewer disconnected, the survivor received
+826,598 fresh bytes on Original and 854,025 on Rust while
+the same media process generations stayed active.
+
+Both captures on each backend shared the initialization segment and complete
+fragments. Independent parsing found 6 shared fragments on Original and
+6 on Rust. All four captures decoded H.264 video and AAC audio with zero
+decoder errors. Rust Main ran with both standalone backup owner flags, selected workers,
+Beat and media diagnostics absent and exited 0. Both runs retired the exact
+media processes and all five owned container and host generations. The project
+inventories were empty.
+
+[Redacted 976f receipt](../scripts/rust-integration/m3-ordinary-ffmpeg-output-profile-976f.json)
