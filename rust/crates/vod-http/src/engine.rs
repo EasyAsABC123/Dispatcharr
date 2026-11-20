@@ -374,14 +374,9 @@ impl VodEngine {
         let provider_body_length = upstream.content_length();
         let progress = ticket.progress();
         let (start_body, body_started) = tokio::sync::oneshot::channel();
-        // Only the opt-in Source body protocol waits for downstream completion.
-        // A hard stop still releases an unpolled held response during shutdown.
-        let (finish_body, body_finished) = if ticket.source_blocks() {
-            let (sender, receiver) = tokio::sync::oneshot::channel();
-            (Some(sender), Some(receiver))
-        } else {
-            (None, None)
-        };
+        // Upstream EOF can leave a frame queued for the downstream body.
+        // Keep the reader Ticket through that frame's body completion.
+        let (finish_body, body_finished) = tokio::sync::oneshot::channel();
         let task = tokio::spawn(pump(
             upstream,
             ticket,
@@ -396,7 +391,7 @@ impl VodEngine {
             stop,
             _cancel: CancelTask(task),
             start_body: Some(start_body),
-            finish_body,
+            finish_body: Some(finish_body),
             progress,
             pending_bytes: 0,
             remaining: provider_body_length,
@@ -534,10 +529,11 @@ async fn pump(
     frame_bytes: usize,
     retry: RetryRequest,
     body_started: tokio::sync::oneshot::Receiver<()>,
-    body_finished: Option<tokio::sync::oneshot::Receiver<()>>,
+    body_finished: tokio::sync::oneshot::Receiver<()>,
 ) {
     let mut stop = ticket.session.stop.subscribe();
     let source_blocks = ticket.source_blocks();
+    let mut clean_eof = false;
     async {
     let mut upstream: ProviderStream = Box::pin(upstream.bytes_stream());
     if *stop.borrow() {
@@ -563,6 +559,7 @@ async fn pump(
         }
         let next = tokio::select! { result=upstream.next()=>result, _=stop.changed()=>return };
         let Some(next) = next else {
+            clean_eof = true;
             return;
         };
         let mut chunk = match next {
@@ -611,15 +608,73 @@ async fn pump(
         }
     }
     }.await;
-    // Close the receiver after upstream EOF, while keeping the true body owner
-    // until its final acknowledgment or cancellation. Do not deadlock EOF reads.
+    settle_pump_body(sender, body_finished, &mut stop, clean_eof || source_blocks).await;
+}
+
+async fn settle_pump_body(
+    sender: tokio::sync::mpsc::Sender<Result<Bytes, io::Error>>,
+    body_finished: tokio::sync::oneshot::Receiver<()>,
+    stop: &mut tokio::sync::watch::Receiver<bool>,
+    wait_for_body: bool,
+) {
+    // Let the receiver observe EOF before waiting for its completion signal.
     drop(sender);
-    if let Some(finished) = body_finished {
-        if !*stop.borrow() {
-            tokio::select! {_=finished=>{},_=stop.changed()=>{}}
-        }
+    if wait_for_body && !*stop.borrow() {
+        tokio::select! { _ = body_finished => {}, _ = stop.changed() => {} }
     }
 }
+#[cfg(test)]
+mod normal_eof_ownership {
+    use super::*;
+    use std::task::Poll;
+
+    #[tokio::test]
+    async fn a_buffered_final_frame_holds_the_retiring_pump_until_body_completion() {
+        let (sender, mut body) = tokio::sync::mpsc::channel(1);
+        sender
+            .send(Ok(Bytes::from_static(b"final frame")))
+            .await
+            .unwrap();
+        let (body_completed, body_finished) = tokio::sync::oneshot::channel();
+        let (_session_stop, mut stop) = tokio::sync::watch::channel(false);
+        let clean_eof = settle_pump_body(sender, body_finished, &mut stop, true);
+        tokio::pin!(clean_eof);
+
+        assert_eq!(futures_util::poll!(&mut clean_eof), Poll::Pending);
+        assert_eq!(body.recv().await.unwrap().unwrap(), b"final frame"[..]);
+        assert!(body.recv().await.is_none());
+        assert_eq!(futures_util::poll!(&mut clean_eof), Poll::Pending);
+        body_completed.send(()).unwrap();
+        assert_eq!(futures_util::poll!(&mut clean_eof), Poll::Ready(()));
+    }
+
+    #[tokio::test]
+    async fn a_dropped_body_can_abort_a_pump_waiting_at_clean_eof() {
+        let (sender, mut body) = tokio::sync::mpsc::channel(1);
+        let (_body_completed, body_finished) = tokio::sync::oneshot::channel();
+        let (_session_stop, mut stop) = tokio::sync::watch::channel(false);
+        let (body_owner, owner_retired) = tokio::sync::oneshot::channel::<()>();
+        let cancel = CancelTask(tokio::spawn(async move {
+            let _owned = body_owner;
+            settle_pump_body(sender, body_finished, &mut stop, true).await;
+        }));
+
+        assert!(body.recv().await.is_none());
+        drop(cancel);
+        assert!(owner_retired.await.is_err());
+    }
+
+    #[tokio::test]
+    async fn an_ordinary_non_eof_retirement_can_leave_without_the_body_signal() {
+        let (sender, _body) = tokio::sync::mpsc::channel(1);
+        let (_body_completed, body_finished) = tokio::sync::oneshot::channel();
+        let (_session_stop, mut stop) = tokio::sync::watch::channel(false);
+        let other_terminal = settle_pump_body(sender, body_finished, &mut stop, false);
+        tokio::pin!(other_terminal);
+        assert_eq!(futures_util::poll!(&mut other_terminal), Poll::Ready(()));
+    }
+}
+
 async fn stopped(ticket: &Ticket) {
     let mut stop = ticket.session.stop.subscribe();
     if *stop.borrow() {
