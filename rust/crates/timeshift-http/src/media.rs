@@ -353,7 +353,7 @@ impl CatchupMedia {
         let provided = request
             .parameter("session_id")
             .filter(|value| !value.is_empty());
-        let binding = if let Some(sid) = provided {
+        let (binding, allow_programme_hop) = if let Some(sid) = provided {
             if let Some(binding) = self.inner.sessions.resolve(sid, channel).await? {
                 if authenticated
                     .as_ref()
@@ -361,7 +361,7 @@ impl CatchupMedia {
                 {
                     return Err(StoreError::StatusBody(403, json!("Access denied")));
                 }
-                binding
+                (binding, false)
             } else {
                 let user = authenticated.ok_or_else(|| {
                     StoreError::StatusBody(
@@ -369,7 +369,8 @@ impl CatchupMedia {
                         json!({"error":"Invalid or expired playback session"}),
                     )
                 })?;
-                self.inner
+                let binding = self
+                    .inner
                     .resolver
                     .direct_binding(
                         user,
@@ -377,13 +378,15 @@ impl CatchupMedia {
                         request.parameter("start"),
                         request.parameter("duration"),
                     )
-                    .await?
+                    .await?;
+                (binding, true)
             }
         } else {
             let user = authenticated.ok_or_else(|| {
                 StoreError::StatusBody(401, json!({"error":"Authentication required"}))
             })?;
-            self.inner
+            let binding = self
+                .inner
                 .resolver
                 .direct_binding(
                     user,
@@ -391,13 +394,15 @@ impl CatchupMedia {
                     request.parameter("start"),
                     request.parameter("duration"),
                 )
-                .await?
+                .await?;
+            (binding, false)
         };
         self.serve(
             binding,
             &request,
             &format!("/proxy/catchup/{channel}"),
             false,
+            allow_programme_hop,
         )
         .await
     }
@@ -410,7 +415,8 @@ impl CatchupMedia {
     ) -> Response {
         let result = async {
             let binding = self.inner.resolver.xc_binding(&request, &intent).await?;
-            self.serve(binding, &request, &path, query_layout).await
+            self.serve(binding, &request, &path, query_layout, false)
+                .await
         }
         .await;
         let mut response = match result {
@@ -426,6 +432,7 @@ impl CatchupMedia {
         request: &PlaybackRequest,
         path: &str,
         query_layout: bool,
+        allow_programme_hop: bool,
     ) -> Result<Response, StoreError> {
         let provided = request
             .parameter("session_id")
@@ -522,7 +529,23 @@ impl CatchupMedia {
         } else {
             None
         };
-        let candidates = if let Some(route) = &stored {
+        let hop = if allow_programme_hop && provided == Some(sid) {
+            self.inner
+                .pool
+                .active_programme_hop(sid, source.channel.id, source.user.id, &media_id)
+        } else {
+            None
+        };
+        let candidates = if let Some(hop) = &hop {
+            let candidate = source
+                .candidates
+                .iter()
+                .find(|candidate| hop.matches(candidate))
+                .ok_or(StoreError::Unsupported(
+                    "archive programme/profile adoption is not yet implemented",
+                ))?;
+            std::slice::from_ref(candidate)
+        } else if let Some(route) = &stored {
             let candidate = source
                 .candidates
                 .iter()
@@ -552,7 +575,9 @@ impl CatchupMedia {
                 request,
                 &self.inner.resolver.client_ip_text(request),
             );
-            let opened = if let Some(owner) = fingerprint_owner.as_deref() {
+            let opened = if let Some(hop) = &hop {
+                self.inner.pool.open_programme_hop(hop, pool_request).await
+            } else if let Some(owner) = fingerprint_owner.as_deref() {
                 self.inner
                     .pool
                     .open_idle_fingerprint(pool_request, owner)
@@ -591,6 +616,13 @@ impl CatchupMedia {
                 }
                 Err(error) => return Err(error),
             };
+            if hop.is_some() && !ticket.alive().await? {
+                ticket.abort().await?;
+                return Err(StoreError::StatusBody(
+                    503,
+                    json!("Archive session stopped"),
+                ));
+            }
             let cached = self.inner.pool.format_index(candidate.account_id).await;
             let final_url = ticket.cached_final_url().await?;
             let setup_stopped = ticket.stopped();
@@ -926,15 +958,26 @@ fn supervised_probe_body(
         },
     ))
 }
-fn supervised_body(
-    mut media: crate::ArchiveMedia,
+// Fields drop in declaration order. Keep both owned by the task even when
+// dropping the HTTP body aborts it before the normal transfer epilogue.
+struct ArchiveBodyResources {
+    media: crate::ArchiveMedia,
     ticket: ArchiveTicket,
-    frame_bytes: usize,
-) -> Body {
+}
+
+impl ArchiveBodyResources {
+    fn parts(&mut self) -> (&mut crate::ArchiveMedia, &ArchiveTicket) {
+        (&mut self.media, &self.ticket)
+    }
+}
+
+fn supervised_body(media: crate::ArchiveMedia, ticket: ArchiveTicket, frame_bytes: usize) -> Body {
     let (tx, rx) = mpsc::channel::<Result<Bytes, io::Error>>(1);
     let mut stopped = ticket.stopped();
     let mut lost = ticket.lease_lost();
+    let mut resources = ArchiveBodyResources { media, ticket };
     let task = tokio::spawn(async move {
+        let (media, ticket) = resources.parts();
         let stream = async {
             while let Ok(Some(chunk)) = media.next_chunk().await {
                 let mut offset = 0;
@@ -970,8 +1013,7 @@ fn supervised_body(
         if ticket.total_bytes() > 0 {
             let _ = ticket.heartbeat().await;
         }
-        drop(media);
-        drop(ticket);
+        drop(resources);
     });
     let abort = AbortBody(task.abort_handle());
     Body::from_stream(stream::unfold(
