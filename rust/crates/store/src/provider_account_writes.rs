@@ -14,7 +14,7 @@ use axum::{
     Json,
 };
 use serde_json::{json, Map, Value};
-use sqlx::{PgConnection, Row};
+use sqlx::{Connection, PgConnection, Row};
 use std::{collections::HashSet, net::SocketAddr, sync::Arc};
 type Body = Result<Json<Value>, JsonRejection>;
 type Owner = Arc<dyn Send + Sync>;
@@ -730,6 +730,17 @@ impl TargetLock {
         Ok(())
     }
 }
+async fn update_default_capacity(c: &mut PgConnection, account: i64, max: i32) -> Result<(), StoreError> {
+    sqlx::query(
+        "UPDATE m3u_m3uaccountprofile SET max_streams=$2 WHERE m3u_account_id=$1 AND is_default AND max_streams<>$2",
+    )
+    .bind(account)
+    .bind(max)
+    .execute(c)
+    .await?;
+    Ok(())
+}
+
 async fn default_profile(
     session: &TaskSqlSession,
     auth: &AuthService,
@@ -763,7 +774,9 @@ async fn default_profile(
             .await?;
     } else {
         // QuerySet.update: no profile save signal for max_streams propagation.
-        session.run(move|c|Box::pin(async move{sqlx::query("UPDATE m3u_m3uaccountprofile SET max_streams=$2 WHERE m3u_account_id=$1 AND is_default AND max_streams<>$2").bind(id).bind(max).execute(c).await.map(|_|())})).await??;
+        session
+            .run(move |c| Box::pin(update_default_capacity(c, id, max)))
+            .await??;
     }
     if let Some(expiration) = expiration.filter(|v| !create || v.is_some()) {
         let profile:Option<(i64,String)>=session.run(move|c|Box::pin(async move{sqlx::query_as("SELECT id::bigint,name FROM m3u_m3uaccountprofile WHERE m3u_account_id=$1 AND is_default ORDER BY id LIMIT 1").bind(id).fetch_optional(c).await})).await??;
@@ -896,6 +909,109 @@ async fn project(
     value["cron_expression"] = json!(cron);
     Ok(Json(value))
 }
+fn ordinary_name_only(input: &Map<String, Value>) -> bool {
+    input.len() == 1 && input.get("name").is_some_and(Value::is_string)
+}
+
+fn existing_inactive_std(old: &Value, previous_cron: &str) -> bool {
+    old["account_type"] == "STD"
+        && old["is_active"] == false
+        && old["locked"] == false
+        && old["refresh_task_id"].as_i64().is_some_and(|id| id > 0)
+        && previous_cron.is_empty()
+}
+
+async fn rename_without_broker(
+    session: &TaskSqlSession,
+    id: i64,
+    old: &Value,
+    validated: Validated,
+) -> Result<Json<Value>, StoreError> {
+    let mut expected = old.clone();
+    expected["name"] = validated.saved["name"].clone();
+    if validated.saved != expected
+        || validated.hash_changed
+        || validated.expiration.is_some()
+        || !validated.group_selection.is_empty()
+        || !validated.cron.is_empty()
+    {
+        return Err(unsupported());
+    }
+    let name = validated.saved["name"]
+        .as_str()
+        .ok_or_else(unsupported)?
+        .to_owned();
+    let task = old["refresh_task_id"].as_i64().ok_or_else(unsupported)?;
+    let interval = old["refresh_interval"]
+        .as_i64()
+        .and_then(|value| i32::try_from(value).ok())
+        .ok_or_else(unsupported)?;
+    let max = old["max_streams"]
+        .as_i64()
+        .and_then(|value| i32::try_from(value).ok())
+        .ok_or_else(unsupported)?;
+    session
+        .run(move |c| {
+            Box::pin(async move {
+                // Lock the same account/schedule while preserving all unrelated
+                // columns and the ordinary periodic-row save effects.
+                let mut tx = c.begin().await?;
+                let account: Option<i64> = sqlx::query_scalar(
+                    "UPDATE m3u_m3uaccount SET name=$2 WHERE id=$1 AND account_type='STD' \
+                     AND NOT locked AND NOT is_active AND refresh_interval=$3 AND refresh_task_id=$4 \
+                     AND max_streams=$5 RETURNING id::bigint",
+                )
+                .bind(id)
+                .bind(name)
+                .bind(interval)
+                .bind(task)
+                .bind(max)
+                .fetch_optional(&mut *tx)
+                .await?;
+                let account = account.ok_or_else(unsupported)?;
+                let task_name = format!("m3u_account-refresh-{id}");
+                let present: Option<i64> = sqlx::query_scalar(
+                    "SELECT t.id::bigint FROM django_celery_beat_periodictask t \
+                     JOIN django_celery_beat_intervalschedule i ON i.id=t.interval_id \
+                     WHERE t.id=$1 AND t.name=$2 AND t.task=$3 AND NOT t.enabled \
+                     AND i.every=$4 AND i.period='hours' FOR UPDATE OF t",
+                )
+                .bind(task)
+                .bind(&task_name)
+                .bind("apps.m3u.tasks.refresh_single_m3u_account")
+                .bind(interval.max(1))
+                .fetch_optional(&mut *tx)
+                .await?;
+                if present.is_none() {
+                    return Err(unsupported());
+                }
+                update_default_capacity(&mut tx, account, max).await?;
+                let kwargs = format!("{{\"account_id\": {id}}}");
+                let scheduled = crate::provider_schedule::upsert(
+                    &mut tx,
+                    crate::provider_schedule::Spec {
+                        name: &task_name,
+                        task: "apps.m3u.tasks.refresh_single_m3u_account",
+                        kwargs: &kwargs,
+                        interval_hours: interval,
+                        cron: "",
+                        active: false,
+                        timezone: "UTC",
+                    },
+                )
+                .await?;
+                if scheduled != task {
+                    return Err(unsupported());
+                }
+                let mut value = crate::provider_reads::physical_account_detail(&mut tx, id).await?;
+                value["cron_expression"] = json!("");
+                tx.commit().await?;
+                Ok(Json(value))
+            })
+        })
+        .await?
+}
+
 async fn change(
     auth: AuthService,
     peer: SocketAddr,
@@ -907,6 +1023,8 @@ async fn change(
     auth.account_user(peer, headers, true).await?;
     let id = raw.map(path_key).transpose()?;
     let input = body_object(body)?;
+    let broker_missing = auth.core_task_broker.get().is_none();
+    let queue_free_name = broker_missing && partial && id.is_some() && ordinary_name_only(&input);
     let direct_xc = id.is_none() && input.get("account_type").and_then(Value::as_str) == Some("XC");
     let direct_vod = input.get("enable_vod") == Some(&Value::Bool(true));
     let inline_groups = if direct_xc {
@@ -937,7 +1055,7 @@ async fn change(
     };
     if auth.profile_save_signal.is_none()
         || auth.event_sink.is_none()
-        || auth.core_task_broker.get().is_none()
+        || (broker_missing && !queue_free_name)
     {
         return Err(unsupported());
     }
@@ -948,11 +1066,15 @@ async fn change(
         let mut handed_off = false;
         let outcome=async{
             let (old,old_cron)=if let Some(id)=id{
-                let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT CASE WHEN octet_length(to_jsonb(a)::text)<=1048576 THEN to_jsonb(a) END AS raw,COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week),'') AS cron FROM m3u_m3uaccount a LEFT JOIN django_celery_beat_periodictask t ON t.id=a.refresh_task_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=t.crontab_id WHERE a.id=$1").bind(id).fetch_optional(c).await})).await??.ok_or_else(missing)?;
-                let raw:Option<Value>=row.try_get("raw")?;let old=raw.ok_or_else(unsupported)?;if old["locked"]==true{return Err(locked())}let cron:String=row.try_get("cron")?;(old,cron)
+                let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT CASE WHEN octet_length(to_jsonb(a)::text)<=1048576 THEN to_jsonb(a) END AS raw,COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week),'') AS cron FROM m3u_m3uaccount a LEFT JOIN django_celery_beat_periodictask t ON t.id=a.refresh_task_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=t.crontab_id WHERE a.id=$1").bind(id).fetch_optional(c).await})).await??.ok_or_else(|| if queue_free_name { unsupported() } else { missing() })?;
+                let raw:Option<Value>=row.try_get("raw")?;let old=raw.ok_or_else(unsupported)?;
+                let cron:String=row.try_get("cron")?;
+                if queue_free_name && !existing_inactive_std(&old, &cron) { return Err(unsupported()); }
+                if old["locked"]==true{return Err(locked())}
+                (old,cron)
             }else{(defaults(),String::new())};
-            let mut validated=validate(input,&old,&old_cron,partial,id.is_none())?;let saved=validated.saved;let cron=validated.cron;
-            let check=saved.clone();let group_ids:Vec<i64>=validated.group_selection.iter().map(|(id,_)|*id).collect();
+            let mut validated=validate(input,&old,&old_cron,partial,id.is_none())?;
+            let check=validated.saved.clone();let group_ids:Vec<i64>=validated.group_selection.iter().map(|(id,_)|*id).collect();
             session.run(move|c|Box::pin(async move{
                 preflight(c,id,&check).await?;
                 if !group_ids.is_empty() {
@@ -961,6 +1083,12 @@ async fn change(
                 }
                 Ok::<_,StoreError>(())
             })).await??;
+            if queue_free_name {
+                let account = id.ok_or_else(unsupported)?;
+                let response = rename_without_broker(&session, account, &old, validated).await?;
+                return Ok((account, None, (StatusCode::OK, response)));
+            }
+            let saved=validated.saved;let cron=validated.cron;
             keep_first_group_selections(&mut validated.group_selection);
             let inline_admission=inline_groups.as_ref().map(|groups|groups.admit(&auth)).transpose()?;
             if validated.hash_changed{lock=Some(TargetLock::acquire(&auth,id.ok_or_else(unsupported)?).await?);}
@@ -1243,6 +1371,28 @@ mod tests {
         .unwrap();
         assert_eq!(put.cron, "");
     }
+    #[test]
+    fn flags_off_name_edit_has_only_the_validated_name_effect() {
+        let mut old = defaults();
+        old["name"] = json!("Owned rehash provider target");
+        old["is_active"] = json!(false);
+        old["refresh_task_id"] = json!(7);
+        old["refresh_interval"] = json!(4);
+        old["custom_properties"] = json!({"hash_key":"name,url","owned_fixture_marker":"preserve"});
+        let input = Map::from_iter([("name".into(), json!("Owned renamed standard provider"))]);
+        assert!(ordinary_name_only(&input) && existing_inactive_std(&old, ""));
+        let validated = validate(input, &old, "", true, false).unwrap();
+        let mut expected = old.clone();
+        expected["name"] = json!("Owned renamed standard provider");
+        assert_eq!(validated.saved, expected);
+        assert!(!validated.hash_changed && validated.expiration.is_none());
+        assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
+        let extra = Map::from_iter([("name".into(), json!("Owned name")), ("hash_key".into(), json!("name"))]);
+        assert!(!ordinary_name_only(&extra));
+        old["is_active"] = json!(true);
+        assert!(!existing_inactive_std(&old, ""));
+    }
+
     #[test]
     fn account_hash_order_only_has_no_rehash_lock_or_job() {
         let mut old = defaults();
