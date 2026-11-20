@@ -122,7 +122,36 @@ the boundary batch in different files.
 
 Both implementations archive a prior nonempty live log during startup
 independently of the size cap. The persistence restart checks cover that
-boot behavior. A physical size-triggered check still needs an ordinary
-post-start event that produces enough log bytes while the same collector
-owns the live file.
+boot behavior.
 [Original entrypoint](../docker/entrypoint.sh) · [Native file acquisition](../rust/crates/app/src/managed_logs.rs)
+
+Pinned Original and Rust package `735a0299` passed a fresh paired
+size-triggered check. Each running collector owned a live file seeded
+to exactly 1 MiB before rotation, with no first archive. On Original,
+ordinary authenticated tail and download requests for an absent archive
+both returned HTTP 404 and produced distinct Django warning records.
+The authenticated log list returned HTTP 200 and showed exactly the live
+file and archive one. On Rust, the normal schema-skip startup record
+crossed the cap, and the ordinary readiness record followed after the
+fixture SQL wait released.
+
+The first Original-only attempt returned HTTP 200 for the version
+request and failed the crossing-file check. Stock non-debug Original
+disables successful uWSGI request records. The controller exited 1,
+verified exact cleanup, and left Native unstarted. The fresh retry used
+normal Django warnings with the same stock Original configuration.
+
+Both collectors moved the seeded inode and preserved its prefix. Each
+wrote the crossing record beyond the cap in archive one and placed the
+following record in the replacement live file. Both controllers exited 0.
+Teardown verified the disappearance of the Original container, all
+four Native containers and their observed process generations. Neither
+project retained a container, network or volume.
+
+Rust moves the live inode before writing the crossing batch to that
+inode. A concurrent reader can briefly observe the replacement file
+before the archived append completes. This check establishes final
+file placement at the configured boundary. Concurrent reader timing,
+failed I/O, broader retention and performance retain separate checks.
+
+[Paired size-rotation receipt](../scripts/rust-integration/milestone-batch113/managed-log-size-rotation-735.json)

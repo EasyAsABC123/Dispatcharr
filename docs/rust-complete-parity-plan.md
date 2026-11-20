@@ -54,6 +54,11 @@ It recorded 1,023 passing checks and one response-body mismatch for a
 malformed settings ID. Cleanup passed. The coordinator exited 2 with
 this node failed. The nine C74 passes remain scoped to C74.
 
+The [735 permissions and management baseline](rust-735-baseline-acceptance.md) passed all 1,024 checks
+across 18 suites with verified cleanup. It matched the exact HTTP 404
+body for the malformed settings ID. The coordinator recorded one passing
+node on 735.
+
 The shared verification package kept the existing React inputs and combined
 the explicit VOD session change, opt-in Original Celery playlist refresh, and
 missing-row backup settings recovery. The scoped Compose checks passed.
