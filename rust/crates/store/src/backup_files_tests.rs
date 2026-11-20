@@ -3,6 +3,43 @@ use super::*;
 use std::path::Path;
 #[path = "../../app/src/response_headers.rs"]
 mod response_headers;
+
+#[tokio::test]
+async fn schedule_update_body_preserves_json_and_html_values() {
+    let multipart = concat!(
+        "--schedule-fixture\r\nContent-Disposition: form-data; name=\"enabled\"\r\n\r\n\r\n",
+        "--schedule-fixture\r\nContent-Disposition: form-data; name=\"retention_count\"\r\n\r\n3\r\n",
+        "--schedule-fixture--\r\n",
+    );
+    for (content_type, body, expected) in [
+        (
+            Some("application/json"),
+            r#"{"enabled":false,"retention_count":3}"#,
+            json!({"enabled":false,"retention_count":3}),
+        ),
+        (
+            Some("application/x-www-form-urlencoded"),
+            "enabled=&retention_count=3",
+            json!({"enabled":"","retention_count":"3"}),
+        ),
+        (
+            Some("multipart/form-data; boundary=schedule-fixture"),
+            multipart,
+            json!({"enabled":"","retention_count":"3"}),
+        ),
+        (None, "", json!({})),
+        (Some("application/json"), "", json!({})),
+    ] {
+        let mut request = Request::new(Body::from(body));
+        if let Some(value) = content_type {
+            request
+                .headers_mut()
+                .insert("content-type", HeaderValue::from_static(value));
+        }
+        assert_eq!(schedule_update_body(request).await.unwrap(), expected);
+    }
+}
+
 #[test]
 fn signed_token_rfc_and_original_vector() {
     assert_eq!(
