@@ -1,0 +1,89 @@
+{
+  "actual_controller_exit": 0,
+  "build_manifest_sha256": "17d29b842ad10380ecfcf40b42969ec8a5578fd663d5d079ca96f908d9817251",
+  "candidate_image_id": "sha256:ce96b3f58404a0667b2520f2ca3fce1ae36ee356f23459803f81342e460271cb",
+  "candidate_revision": "00daafd23810bfa9f5c02bed30d38086a80708f9",
+  "equal_work": {
+    "account_success_count": 2,
+    "admin_api": {
+      "body": {
+        "message": "M3U refresh initiated.",
+        "success": true
+      },
+      "context": "m3u-refresh-all",
+      "credential_role": "admin",
+      "method": "POST",
+      "path": "/api/m3u/refresh/",
+      "status": 202
+    },
+    "backend_stream_count": 2,
+    "group_projection_sha256": "dcf0f4ba1edecd93a688be6cb5d33d01062218ab4080b8af76e004cb9f32b71a",
+    "inputs": {
+      "A": {
+        "decoded_bytes": 108,
+        "decoded_sha256": "8095866e91e3c6fd25ee0be7fba8207e9a91a307f6efbe059e061374adbca335",
+        "encoded_bytes": 123,
+        "encoded_sha256": "9ebfc0916ea84c5917ecb59a2314488b1da59a67c66443c3ec301082f1c695da",
+        "gzip_members": 2
+      },
+      "B": {
+        "decoded_bytes": 108,
+        "decoded_sha256": "bb2ae4732f281adba6da37aa7b08d8befae2dccb37a4a9e2dddb3bc6eaee2b64",
+        "encoded_bytes": 108,
+        "encoded_sha256": "bb2ae4732f281adba6da37aa7b08d8befae2dccb37a4a9e2dddb3bc6eaee2b64",
+        "gzip_members": 0
+      }
+    },
+    "parent_result": "Queued M3U refresh for 2 active account(s).",
+    "per_account_enabled_group_count": 2,
+    "relationships_after": 4,
+    "relationships_before": 2,
+    "settled_account_children": 2,
+    "stream_projection_sha256": "76ce4bb2b2911c74182980a55ecaa5d20602bcf2c45970904001bc6071cabdd6"
+  },
+  "full_milestone_passed": false,
+  "native": {
+    "actual_exit": 0,
+    "business_probe_sha256": "c81a4e0a0a0e2d4fbbe03cbfc199f53bae06fa71eec49b6a27117c7e80e8bd6c",
+    "child_execution_sha256": "b451dcd1e3273934bfb595faaba921ae7255e2d375438537916b14265d534430",
+    "owned_containers": 0,
+    "owned_networks": 0,
+    "owned_volumes": 0,
+    "physical_cleanup_sha256": "1ff8f644bef4d56b98fc4d083494f24dad115652b0592d89975cfa0f3eda1c5a",
+    "request_response_sha256": "db8c06db806228168215dea727259e893e5a5e75ff6339ba9494baf93365b78a",
+    "roles_retired": 3
+  },
+  "ordinary_main_verified": false,
+  "original": {
+    "actual_exit": 0,
+    "business_probe_sha256": "9386565b94c4c0461c8b14feb6bf14c0543d2ab7fa6f20beeb6bdb4f390fcab4",
+    "child_execution_sha256": "fbe4d132e1cbd52ce10a912fc145b7267cab65dbebc047f86aa43051e0031a0b",
+    "owned_containers": 0,
+    "owned_networks": 0,
+    "owned_volumes": 0,
+    "physical_cleanup_sha256": "a59c0f1a8658f911064d2c3b6f22aae4b1125272c2a39e7acdb1138f16918712",
+    "request_response_sha256": "db8c06db806228168215dea727259e893e5a5e75ff6339ba9494baf93365b78a",
+    "roles_retired": 2
+  },
+  "original_authors_credit": "Original Dispatcharr authors and contributors, with Celery dependency credit",
+  "paired_receipt_sha256": "a8ecb960a6c5c2e8cb501b7b8fe25d31352dd2c3cf65fba7604e9a35587a87bd",
+  "performance_verified": false,
+  "previous_attempt": {
+    "clean_original": {
+      "owned_containers": 0,
+      "owned_networks": 0,
+      "owned_volumes": 0,
+      "physical_cleanup_sha256": "08f776f6a59b7bcc1c5a5937123431f22c08da8872859e2f84da450fd1da3203",
+      "roles_retired": 2
+    },
+    "controller_actual_exit": 1,
+    "failure": "copied tools mount directory was not traversable",
+    "native_started": false,
+    "settled_original_host_sha256": "cc33cfb714462337a68a1564a8a1c0a978cf602487374cc708b270c00f3abd8a",
+    "source_business_reached": false,
+    "source_startup_observer_actual_exit": 2
+  },
+  "same_image_reused": true,
+  "scope": "selected local standard M3U Refresh All with two-member gzip and plain control",
+  "selected_workers_verified": true
+}
