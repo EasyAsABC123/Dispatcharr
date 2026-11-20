@@ -24,8 +24,8 @@ the 34-case result. Full role and Native parity remain open.
 The [Original packaged React root](rust-m0-original-aio-root.md) returned
 HTTP 200 with the exact baked index and both linked assets under the explicit
 disposable OS login locale fixture. The deployed resolver and exact teardown
-also passed. The result awaits a successor SDK binding for the single Original
-GET.
+also passed. The current SDK binds that capture to the Original anonymous GET
+as partial coverage.
 
 The [Redis write retry and shared playback checks](rust-migration-shared-playback-checks.md)
 verified the same-writer retry after a rejected write, the joined transport
@@ -85,10 +85,12 @@ all 16 paired cases on the shared image. The
 phases on XMLTV, the programme grid, and Xtream short EPG. Both respective
 Compose projects retired exactly.
 
-The [C74 clean-install and safe operator group](rust-c74-clean-install-operator.md)
-passed 11 stock React installation checks and all 17 packaged operator
-cases. Both required nodes passed on the shared image, with 124 other
-nodes still unbound in that coordinator run.
+The [C74 package checks](rust-c74-clean-install-operator.md) passed four
+required nodes across two runs on the same image. The first covered 11
+stock React fresh-install and 17 safe operator checks. The second covered
+22 shipped `createsuperuser` cases and 154 strict API comparisons. Each
+run exited 2 because it bound two required nodes. The full integrated
+package and resource gates remain open.
 
 The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
 ordinary Native login, cancel and both cleanup modes with exact SQL and
