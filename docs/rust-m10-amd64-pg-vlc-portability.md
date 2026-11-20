@@ -112,3 +112,16 @@ qualification remain pending. The Original Dispatcharr and Comskip authors
 retain full credit.
 [Original build run](https://github.com/Dispatcharr/Dispatcharr/actions/runs/41557436058/attempts/1)
 [Exact attestation and build-record receipt](../scripts/rust-integration/milestone-batch111/arm64-comskip-provenance.json)
+
+## Guarded restore helper architecture
+
+The application image builds the guarded PostgreSQL helper even when the
+restore opt-in is unset. The offline audit read the Debian package control
+records for all five pinned builder inputs. All five target AMD64. The
+helper builder also checks for the AMD64 package owner and loader. These
+inputs and the Dockerfile are identical on the paired candidate.
+
+Native ARM64 qualification requires a pinned package inventory, matching
+loader and dependency checks, and a copied guarded restore on the ARM64
+application image. The ARM64 Comskip corresponding-source requirement
+remains open as a separate distribution gate.
