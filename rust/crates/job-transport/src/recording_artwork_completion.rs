@@ -152,14 +152,16 @@ impl Completions {
         )
         .await
     }
-    pub(crate) async fn record_broker_series(
+    /// Selected countdown children settle through the broker-owned artwork path.
+    /// Validate the parent report here without creating a legacy child permit.
+    pub(crate) fn verify_broker_series(
         &self,
         message: SeriesMessage,
         report: SeriesReport,
-        backend: Vec<u8>,
+        backend: &[u8],
     ) -> Result<(), Error> {
-        self.record_parent(
-            Parent::Series {
+        verify_parent(
+            &Parent::Series {
                 message,
                 refresh: None,
                 broker_observed: true,
@@ -167,29 +169,20 @@ impl Completions {
             },
             backend,
         )
-        .await
     }
-    pub(crate) async fn record_recurring(
+    pub(crate) fn verify_recurring(
         &self,
         message: default_protocol::Message,
         report: RecurringReport,
-        backend: Vec<u8>,
+        backend: &[u8],
     ) -> Result<(), Error> {
-        self.record_parent(Parent::Recurring { message, report }, backend)
-            .await
+        verify_parent(&Parent::Recurring { message, report }, backend)
     }
     async fn record_parent(&self, parent: Parent, backend: Vec<u8>) -> Result<(), Error> {
-        if !parent.valid() {
-            return Err(Error::Protocol);
-        }
+        verify_parent(&parent, &backend)?;
         if parent.targets().is_empty() {
             return Ok(());
         }
-        if parent.targets().len() > 64 {
-            return Err(Error::Capacity);
-        }
-        let first = parent.frames().first().ok_or(Error::Protocol)?;
-        validate(&parent, &backend, first).ok_or(Error::Protocol)?;
         let permit = self
             .inner
             .slots
@@ -257,6 +250,20 @@ impl Completions {
     pub fn close_admission(&self) {
         self.inner.slots.close();
     }
+}
+fn verify_parent(parent: &Parent, backend: &[u8]) -> Result<(), Error> {
+    if !parent.valid() {
+        return Err(Error::Protocol);
+    }
+    if parent.targets().is_empty() {
+        return Ok(());
+    }
+    if parent.targets().len() > 64 {
+        return Err(Error::Capacity);
+    }
+    let first = parent.frames().first().ok_or(Error::Protocol)?;
+    validate(parent, backend, first).ok_or(Error::Protocol)?;
+    Ok(())
 }
 fn validate(parent: &Parent, backend: &[u8], child: &Message) -> Option<Proof> {
     if !parent.valid() {

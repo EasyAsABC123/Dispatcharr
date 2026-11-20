@@ -30,6 +30,7 @@ pub(super) enum Template<'a> {
     AdminDetail(&'a str),
     AdminDetailFormatAlias(&'a str),
     StandardDetail(&'a str),
+    StandardDetailFormatAlias(&'a str),
 }
 
 impl<'a> Template<'a> {
@@ -49,7 +50,7 @@ impl<'a> Template<'a> {
             Self::AdminDetailFormatAlias(_) => {
                 include!("../../datasets/epg-programme-html/detail-admin-format-api.rs.in")
             }
-            Self::StandardDetail(_) => {
+            Self::StandardDetail(_) | Self::StandardDetailFormatAlias(_) => {
                 include!("../../datasets/epg-programme-html/detail-standard.rs.in")
             }
         }
@@ -59,7 +60,8 @@ impl<'a> Template<'a> {
         match self {
             Self::AdminDetail(path)
             | Self::AdminDetailFormatAlias(path)
-            | Self::StandardDetail(path) => Some(path),
+            | Self::StandardDetail(path)
+            | Self::StandardDetailFormatAlias(path) => Some(path),
             _ => None,
         }
     }
@@ -178,6 +180,14 @@ fn render(
             "@@GUIDE_OWNED_DETAIL_PATH@@" => {
                 let path = template.detail_path().ok_or_else(unavailable)?;
                 source_browsable_escape(&mut output, path)
+            }
+            "@@GUIDE_FORMAT_ALIAS@@" => {
+                let query = if matches!(template, Template::StandardDetailFormatAlias(_)) {
+                    "?format=api"
+                } else {
+                    ""
+                };
+                source_browsable_escape(&mut output, query)
             }
             "@@GUIDE_FORM_START_TIME@@" | "@@GUIDE_FORM_END_TIME@@" => {
                 let form = form.as_ref().ok_or_else(unavailable)?;
@@ -391,10 +401,28 @@ mod tests {
         assert!(!html.contains("<textarea"));
         assert!(!html.contains("data-method=\"DELETE\""));
         assert!(!html.contains("@@GUIDE_"));
+
+        let alias = render(
+            br#"{"id":7,"title":"A & B"}"#,
+            &Method::GET,
+            Template::StandardDetailFormatAlias(path),
+            "guide-standard",
+            "http://guide.example.invalid",
+            "mask-fixture",
+        )
+        .unwrap();
+        let alias = std::str::from_utf8(&alias).unwrap();
+        assert!(alias.contains("<b>GET</b> /api/epg/programs/7/?format=api</pre>"));
+        assert!(alias.contains("/api/epg/programs/7/poster/?format=api"));
+        assert!(alias.contains("/api/epg/programs/7/?format=json"));
+        assert!(alias.contains("/api/epg/programs?format=api"));
+        assert_eq!(alias.matches("?format=api").count(), 8);
+        assert!(!alias.contains("<textarea"));
+        assert!(!alias.contains("@@GUIDE_"));
     }
 
     #[tokio::test]
-    async fn detail_admin_and_list_standard_head_add_method_byte_without_entity() {
+    async fn programme_head_adds_method_byte_without_entity() {
         let headers = HeaderMap::new();
         let programme = Bytes::from_static(
             br#"{"id":7,"start_time":"2026-04-13T11:00:00Z","end_time":"2026-04-13T11:30:00Z","title":"Programme","sub_title":null,"description":null,"tvg_id":null,"season":null,"episode":null,"is_new":false,"is_live":false,"is_premiere":false,"is_finale":false}"#,
@@ -404,6 +432,11 @@ mod tests {
             (
                 Template::AdminDetail("/api/epg/programs/7/"),
                 programme,
+                super::super::PROGRAMME_DETAIL_ALLOW,
+            ),
+            (
+                Template::StandardDetail("/api/epg/programs/7/"),
+                Bytes::from_static(br#"{"id":7,"title":"Programme"}"#),
                 super::super::PROGRAMME_DETAIL_ALLOW,
             ),
             (

@@ -247,16 +247,15 @@ impl RecurringHandler {
                 .map_err(|e| Disposition::Operational(format!("recurring result {e:?}")))?
                 .ok_or_else(|| Disposition::Operational("recurring result missing".into()))?;
             self.completions
-                .record_recurring(
+                .verify_recurring(
                     Message {
                         task_id: id,
                         kind: Kind::RecurringMaintenance,
                         expires: None,
                     },
                     report,
-                    backend,
+                    &backend,
                 )
-                .await
                 .map_err(|e| {
                     Disposition::Operational(format!("recurring artwork provenance {e:?}"))
                 })?;

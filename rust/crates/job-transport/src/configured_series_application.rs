@@ -442,8 +442,7 @@ impl NormalHandler {
                 .map_err(|error| D::Operational(format!("normal Series backend {error:?}")))?
                 .ok_or_else(|| D::Operational("normal Series backend missing".into()))?;
             completions
-                .record_broker_series(message, report, backend)
-                .await
+                .verify_broker_series(message, report, &backend)
                 .map_err(|error| D::Operational(format!("normal Series provenance {error:?}")))?;
         }
         match run {

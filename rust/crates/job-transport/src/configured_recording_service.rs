@@ -758,3 +758,56 @@ mod normal_defaults_controls {
         assert_eq!(pool.size(), 0, "all no-rules branches avoid SQL entirely");
     }
 }
+
+#[cfg(test)]
+mod selected_recurring_provenance_tests {
+    use super::*;
+    use crate::{
+        default_protocol::{Kind, Message},
+        recording_artwork_protocol, ArtworkCompletions,
+    };
+
+    #[test]
+    fn successful_selected_recurring_artwork_keeps_no_legacy_child_permit() {
+        let completions = ArtworkCompletions::new();
+        // Selected children use normal broker ownership rather than the legacy
+        // in-memory capability. A lifetime of completed parents stays bounded.
+        for index in 1..=65 {
+            let task = Uuid::new_v4();
+            let child = Uuid::new_v4();
+            let now = Utc::now();
+            let publication = recording_artwork_protocol::Message {
+                task_id: child,
+                parent: task,
+                root: task,
+                recording: index,
+                eta: now,
+            };
+            let message = Message {
+                task_id: task,
+                kind: Kind::RecurringMaintenance,
+                expires: None,
+            };
+            let report = RecurringReport {
+                task,
+                created: 1,
+                children: vec![child],
+                artwork_targets: vec![(child, index)],
+                artwork_frames: vec![publication.clone()],
+            };
+            let backend = serde_json::to_vec(&json!({
+                "status": "SUCCESS",
+                "result": 1,
+                "traceback": null,
+                "children": [[[child, null], null]],
+                "date_done": now.to_rfc3339(),
+                "task_id": task,
+            }))
+            .unwrap();
+            completions
+                .verify_recurring(message, report, &backend)
+                .unwrap();
+            assert!(completions.admit(&publication).unwrap().is_none());
+        }
+    }
+}

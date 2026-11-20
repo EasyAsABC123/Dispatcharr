@@ -522,7 +522,7 @@ async fn detail(
     let bare_html = uri.query().is_none() && accept.is_some_and(|value| value == "text/html");
     let format_alias = method == Method::GET
         && uri.query() == Some("format=api")
-        && accept.is_some_and(|value| value == "*/*");
+        && accept.is_some_and(|value| value == "*/*" || value == "text/html");
     if (matches!(method, Method::GET | Method::HEAD) && bare_html) || format_alias {
         let user = state
             .auth
@@ -532,15 +532,11 @@ async fn detail(
             return Err(StoreError::PermissionDenied);
         }
         let path = uri.path();
-        let template = match (user.user_level >= 10, format_alias, &method) {
-            (true, true, _) => programme_html::Template::AdminDetailFormatAlias(path),
-            (true, false, _) => programme_html::Template::AdminDetail(path),
-            (false, false, &Method::GET) => programme_html::Template::StandardDetail(path),
-            (false, _, _) => {
-                return Err(StoreError::Unsupported(
-                    "Guide browsable HTML is not yet implemented",
-                ));
-            }
+        let template = match (user.user_level >= 10, format_alias) {
+            (true, true) => programme_html::Template::AdminDetailFormatAlias(path),
+            (true, false) => programme_html::Template::AdminDetail(path),
+            (false, true) => programme_html::Template::StandardDetailFormatAlias(path),
+            (false, false) => programme_html::Template::StandardDetail(path),
         };
         let origin = origin(&state.auth, peer, &headers);
         let programme = state.read_authorized(Some(&id), origin.clone()).await?;
