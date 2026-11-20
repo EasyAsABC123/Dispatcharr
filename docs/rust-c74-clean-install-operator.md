@@ -68,3 +68,24 @@ digest. Native terminated normally and the owned project inventory was
 empty. Execution, evaluation and cleanup exited 0. The coordinator
 recorded one passed node, 126 blocked and actual exit 2.
 [Guide grid receipt](../scripts/rust-integration/milestone-batch113/c74-guide-grid43.json)
+
+## Delayed worker restart and retained MPEG-TS history
+
+The exact C74 package passed 14 checks after both MPEG-TS workers stopped.
+Before the delayed restart, the fixture observed the retained input index
+after the owner expired. Restart cleared that index and released the
+provider slot without opening a new upstream connection. Both reader
+captures decoded audio and video.
+
+The retained-history fixture observed ten channels through 75 seconds.
+All 100 late readers matched an exact historical prefix without a new
+upstream connection. Ten live captures and ten retained-history captures
+decoded audio and video. All samples stayed within the 4 MiB local payload
+cap and 16 MiB authoritative history cap per channel. This records
+functional payload bounds. Comparative CPU and memory remain open.
+
+Both new nodes passed execution, evaluation, and exact cleanup. The
+coordinator reused the previous same-image two-worker pass, then exited 2
+with 124 blocked nodes. C74 now has nine distinct passing required
+workflow nodes across six runs.
+[Restart and retention receipt](../scripts/rust-integration/milestone-batch113/c74-ts-recovery-retention.json)

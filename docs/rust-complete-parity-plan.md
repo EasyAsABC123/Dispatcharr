@@ -39,12 +39,13 @@ provider, scheduler and performance workflows require bindings with their
 normal runtime roles and full assertions.
 [Coordinator guide](../scripts/rust-milestone-batches/README.md)
 
-The C74 package passed seven required workflow nodes across five runs.
-The checks covered 11 stock React fresh-install, 17 safe operator,
+The C74 package passed nine distinct required workflow nodes across six
+runs. The checks covered 11 stock React fresh-install, 17 safe operator,
 22 shipped `createsuperuser`, 154 strict API, 64 current-programme and
-43 guide-grid cases. The two-worker MPEG-TS node also passed all 24
-checks for shared demand, global stop and owner recovery. Each
-coordinator run exited 2 with the larger roster still open.
+43 guide-grid cases. Three MPEG-TS nodes passed the 24 two-worker checks,
+14 delayed restart checks, and the functional retained-history fixture
+with 100 late readers and 20 audio/video decodes. Each coordinator run
+exited 2 with the larger roster still open.
 [C74 package checks](rust-c74-clean-install-operator.md)
 
 The shared verification package kept the existing React inputs and combined
