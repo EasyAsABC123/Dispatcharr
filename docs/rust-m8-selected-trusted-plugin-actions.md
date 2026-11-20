@@ -45,3 +45,25 @@ difference remains recorded above. Default compatibility-host ownership,
 enablement through the API, broader M8 acceptance and performance remain open.
 
 [Exact header receipt](../scripts/rust-integration/milestone-batch113/selected-trusted-plugin-run-vary-e852.json)
+
+## Trusted enabled plugin on 976f
+
+A fresh `976f2867` run used the same installed, already-enabled trusted
+fixture on Selected Main. Selected Beat and both standalone backup owners
+were disabled. Both authenticated `echo` and `scalar` requests returned
+HTTP 200 and matched the decoded JSON, Content-Type, Allow and literal
+`Vary: Accept, origin` of the retained pinned Original responses. The
+response lengths matched the returned bytes.
+
+The echo used the same effective saved settings and plugin defaults.
+One import and one action marker per request were observed. The plugin
+registry stayed unchanged. The same Main and the same compatibility
+host served both actions. Main exited 0 and both tracked process
+generations retired. Three owned Compose service generations and the
+separate UID helper retired, and the inventories were empty.
+
+This scope covers an already-enabled reviewed local module under the
+Selected runtime. Default runtime attachment, enabling through the API,
+enabled-plugin restore, full M8 and comparative performance remain open.
+
+[Redacted 976f Selected plugin receipt](../scripts/rust-integration/milestone-batch113/trusted-selected-plugin-actions-976f.json)
