@@ -4,15 +4,41 @@
     "git": "e7651a6d1e5e63a3a890ec4c7ef454d325cd9a02",
     "image_id": "sha256:4a6c8b7cfd998052d5f842f29cad815242bb5b2e4ae7afb948598d3eab97747e"
   },
-  "distinct_passed": 8,
+  "distinct_passed": 16,
   "original_application_credit": "The original Dispatcharr authors and contributors retain full credit.",
   "performance_verified": false,
-  "remaining_unqualified": 119,
+  "remaining_unqualified": 111,
   "scopes": {
     "baseline": {
       "receipt_sha256": "c227d3a22a9256e9b5c0559774756ea6ea22a20141b26abfcaceb11bdb6b5f0a",
       "required_nodes_passed": [
         "package/baseline-all"
+      ]
+    },
+    "cli": {
+      "receipt_sha256": "85c70468792b92dd5ebf0d5f1e90631bf084d11fbab0478751ba9ac4e4c586b6",
+      "required_nodes_passed": [
+        "package/shipped-createsuperuser22",
+        "package/strict-typed154"
+      ]
+    },
+    "mpeg_ts": {
+      "receipt_sha256": "09d598a73e8330ab6a6df8b82af7be22ee1b98dadcbf1c51ae39a4e537cb9301",
+      "required_nodes_passed": [
+        "package/retention100",
+        "package/sharedTS18",
+        "package/sharedTS6-all-down"
+      ]
+    },
+    "operators_guide_auth": {
+      "receipt_sha256": "9778b3e06e000677a73301dfed35b1fea01ce4385c8410f9918d9fb2dab3e40e",
+      "required_nodes_passed": [
+        "package/auth-hash",
+        "package/clean-install",
+        "package/current-packaged",
+        "package/guide-grid-packaged",
+        "package/proxy-auth",
+        "package/shipped-safe17"
       ]
     },
     "profiles_browser": {
@@ -27,14 +53,6 @@
       "required_nodes_passed": [
         "package/packaged-cached-provider-info",
         "package/packaged-provider-actions"
-      ]
-    },
-    "streaming": {
-      "receipt_sha256": "09d598a73e8330ab6a6df8b82af7be22ee1b98dadcbf1c51ae39a4e537cb9301",
-      "required_nodes_passed": [
-        "package/retention100",
-        "package/sharedTS18",
-        "package/sharedTS6-all-down"
       ]
     }
   },

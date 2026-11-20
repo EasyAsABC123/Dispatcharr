@@ -17,14 +17,16 @@ The [packaged provider workflow evidence](rust-e765-provider-workflows.md) cover
 
 The [e765 createsuperuser and strict typed comparisons](rust-e765-createsuperuser-and-typed154.md) cover a separate coordinator run.
 
+The [operator, guide and authentication checks](rust-e765-operator-guide-auth.md) cover the separate six-node run.
+
 [Redacted receipt](../scripts/rust-integration/milestone-batch113/e765-baseline-acceptance.json)
 
 The MPEG-TS runs covered shared demand, delayed restart and bounded
 retention, with exact cleanup after each run. [MPEG-TS functional checks](rust-m9-e765-functional-streaming.md)
 
-Across four fresh coordinator scopes, this exact package has eight
-distinct passed nodes out of 127. The remaining 119 nodes still need
-qualification on this package. [Combined required-node evidence](../scripts/rust-integration/milestone-batch113/e765-current-required-node-coverage.json)
+Across six fresh coordinator scopes, this exact package has 16 distinct
+passed nodes out of 127. The remaining 111 nodes still need qualification
+on this package. [Combined required-node evidence](../scripts/rust-integration/milestone-batch113/e765-current-required-node-coverage.json)
 
 The bounded streaming core passed all 33 host tests. Cargo compiled both
 crates from a workspace whose 1,496 Rust files matched this package.
