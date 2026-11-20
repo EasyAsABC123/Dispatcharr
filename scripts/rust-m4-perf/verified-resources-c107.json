@@ -1,0 +1,620 @@
+{
+  "application_performance_verified": false,
+  "budgets": {
+    "first_byte_floor_ms": 50,
+    "max_cpu_ratio": 0.8,
+    "max_errors": 0,
+    "max_first_byte_ratio": 1.1,
+    "max_memory_ratio": 0.95,
+    "max_viewer_rate_fraction": 1.1,
+    "min_samples": 20,
+    "min_throughput_ratio": 0.95,
+    "min_viewer_rate_fraction": 0.9
+  },
+  "cleanup": {
+    "compose_started": true,
+    "owned_after_cleanup": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    },
+    "owned_before_cleanup": {
+      "containers": 5,
+      "networks": 1,
+      "volumes": 1
+    },
+    "passed": true
+  },
+  "completed_pairs": 12,
+  "format_version": 1,
+  "frozen_plan_sha256": "cebad4c1409679e7f5efc6b1544c9fb40fc1b9981789554c490c26d1acfc4f42",
+  "frozen_resource_gate_passed": true,
+  "full_m4_parity_verified": false,
+  "matched_work_verified": true,
+  "measurement_seconds": 60,
+  "measurement_started": true,
+  "original_application_credit": "Dispatcharr authors and contributors",
+  "original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owner_exit": 0,
+  "pairs": [
+    {
+      "equal_work": true,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.22766666666666666,
+          "group_working_memory_bytes_peak": 493204013.056,
+          "measured_bytes_per_second": 262144.0,
+          "median_first_byte_ms": 258.77594998746645,
+          "resource_samples": 30,
+          "total_measured_bytes": 15728640,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.38066666666666665,
+          "group_working_memory_bytes_peak": 769759641.5999999,
+          "measured_bytes_per_second": 262144.0,
+          "median_first_byte_ms": 265.22344800469,
+          "resource_samples": 30,
+          "total_measured_bytes": 15728640,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        }
+      },
+      "protocol": "vod",
+      "ratios": {
+        "cpu_ratio": 0.5980735551663747,
+        "first_byte_ratio": 0.975690316728295,
+        "memory_ratio": 0.6407246969077783,
+        "throughput_ratio": 1.0
+      },
+      "resource_gate_failed": [],
+      "trial": 1,
+      "viewers": 1
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.26166666666666666,
+          "group_working_memory_bytes_peak": 495696478.208,
+          "measured_bytes_per_second": 261613.06666666668,
+          "median_first_byte_ms": 257.76294800743926,
+          "resource_samples": 30,
+          "total_measured_bytes": 15696784,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.37433333333333335,
+          "group_working_memory_bytes_peak": 773953945.6,
+          "measured_bytes_per_second": 262144.0,
+          "median_first_byte_ms": 265.2029390010284,
+          "resource_samples": 30,
+          "total_measured_bytes": 15728640,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        }
+      },
+      "protocol": "vod",
+      "ratios": {
+        "cpu_ratio": 0.699020480854853,
+        "first_byte_ratio": 0.9719460462179859,
+        "memory_ratio": 0.6404728356591247,
+        "throughput_ratio": 0.9979746500651042
+      },
+      "resource_gate_failed": [],
+      "trial": 2,
+      "viewers": 1
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.221,
+          "group_working_memory_bytes_peak": 516676386.816,
+          "measured_bytes_per_second": 261582.66666666666,
+          "median_first_byte_ms": 258.32967199676204,
+          "resource_samples": 30,
+          "total_measured_bytes": 15694960,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.362,
+          "group_working_memory_bytes_peak": 789577728.0,
+          "measured_bytes_per_second": 261870.93333333332,
+          "median_first_byte_ms": 265.02110200817697,
+          "resource_samples": 30,
+          "total_measured_bytes": 15712256,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        }
+      },
+      "protocol": "vod",
+      "ratios": {
+        "cpu_ratio": 0.6104972375690608,
+        "first_byte_ratio": 0.9747513312686759,
+        "memory_ratio": 0.6543705179282868,
+        "throughput_ratio": 0.9988992032716372
+      },
+      "resource_gate_failed": [],
+      "trial": 3,
+      "viewers": 1
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.5893333333333334,
+          "group_working_memory_bytes_peak": 541568532.48,
+          "measured_bytes_per_second": 2621102.1333333333,
+          "median_first_byte_ms": 262.4114290010766,
+          "resource_samples": 30,
+          "total_measured_bytes": 157266128,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 2.1763333333333335,
+          "group_working_memory_bytes_peak": 812122112.0,
+          "measured_bytes_per_second": 2621440.0,
+          "median_first_byte_ms": 351.8178725062171,
+          "resource_samples": 30,
+          "total_measured_bytes": 157286400,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        }
+      },
+      "protocol": "vod",
+      "ratios": {
+        "cpu_ratio": 0.2707918517383979,
+        "first_byte_ratio": 0.7458729345719622,
+        "memory_ratio": 0.6668560361523563,
+        "throughput_ratio": 0.999871114095052
+      },
+      "resource_gate_failed": [],
+      "trial": 1,
+      "viewers": 10
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.6106666666666667,
+          "group_working_memory_bytes_peak": 540373155.84,
+          "measured_bytes_per_second": 2620909.066666667,
+          "median_first_byte_ms": 261.5079595052521,
+          "resource_samples": 30,
+          "total_measured_bytes": 157254544,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 2.1229999999999998,
+          "group_working_memory_bytes_peak": 802160640.0,
+          "measured_bytes_per_second": 2621371.7333333334,
+          "median_first_byte_ms": 343.128530003014,
+          "resource_samples": 30,
+          "total_measured_bytes": 157282304,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        }
+      },
+      "protocol": "vod",
+      "ratios": {
+        "cpu_ratio": 0.2876432720992307,
+        "first_byte_ratio": 0.7621282890785998,
+        "memory_ratio": 0.6736470588235295,
+        "throughput_ratio": 0.9998235020768771
+      },
+      "resource_gate_failed": [],
+      "trial": 2,
+      "viewers": 10
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.5543333333333333,
+          "group_working_memory_bytes_peak": 539523809.28,
+          "measured_bytes_per_second": 2621367.6,
+          "median_first_byte_ms": 262.14623100531753,
+          "resource_samples": 30,
+          "total_measured_bytes": 157282056,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 2.0893333333333333,
+          "group_working_memory_bytes_peak": 804362649.6,
+          "measured_bytes_per_second": 2621508.2666666666,
+          "median_first_byte_ms": 342.20981949329143,
+          "resource_samples": 30,
+          "total_measured_bytes": 157290496,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        }
+      },
+      "protocol": "vod",
+      "ratios": {
+        "cpu_ratio": 0.26531589023612,
+        "first_byte_ratio": 0.7660394765804099,
+        "memory_ratio": 0.6707469691044192,
+        "throughput_ratio": 0.9999463413224917
+      },
+      "resource_gate_failed": [],
+      "trial": 3,
+      "viewers": 10
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.241,
+          "group_working_memory_bytes_peak": 519653294.08,
+          "measured_bytes_per_second": 500258.13333333336,
+          "median_first_byte_ms": 7.537030993262306,
+          "resource_samples": 30,
+          "total_measured_bytes": 30015488,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.39666666666666667,
+          "group_working_memory_bytes_peak": 788004864.0,
+          "measured_bytes_per_second": 502442.6666666667,
+          "median_first_byte_ms": 17.6185419986723,
+          "resource_samples": 30,
+          "total_measured_bytes": 30146560,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        }
+      },
+      "protocol": "timeshift",
+      "ratios": {
+        "cpu_ratio": 0.607563025210084,
+        "first_byte_ratio": 1.0,
+        "memory_ratio": 0.6594544244843645,
+        "throughput_ratio": 0.9956521739130435
+      },
+      "resource_gate_failed": [],
+      "trial": 1,
+      "viewers": 1
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.25066666666666665,
+          "group_working_memory_bytes_peak": 519921729.536,
+          "measured_bytes_per_second": 500258.13333333336,
+          "median_first_byte_ms": 7.353876004344784,
+          "resource_samples": 30,
+          "total_measured_bytes": 30015488,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.43333333333333335,
+          "group_working_memory_bytes_peak": 788424294.4000001,
+          "measured_bytes_per_second": 502442.6666666667,
+          "median_first_byte_ms": 18.872610991820693,
+          "resource_samples": 30,
+          "total_measured_bytes": 30146560,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        }
+      },
+      "protocol": "timeshift",
+      "ratios": {
+        "cpu_ratio": 0.5784615384615384,
+        "first_byte_ratio": 1.0,
+        "memory_ratio": 0.6594440750099747,
+        "throughput_ratio": 0.9956521739130435
+      },
+      "resource_gate_failed": [],
+      "trial": 2,
+      "viewers": 1
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.27466666666666667,
+          "group_working_memory_bytes_peak": 520036024.32,
+          "measured_bytes_per_second": 500258.13333333336,
+          "median_first_byte_ms": 7.359987997915596,
+          "resource_samples": 30,
+          "total_measured_bytes": 30015488,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.4093333333333333,
+          "group_working_memory_bytes_peak": 788634009.6,
+          "measured_bytes_per_second": 502442.6666666667,
+          "median_first_byte_ms": 19.392315996810794,
+          "resource_samples": 30,
+          "total_measured_bytes": 30146560,
+          "valid": true,
+          "websocket_stats_snapshots": 2
+        }
+      },
+      "protocol": "timeshift",
+      "ratios": {
+        "cpu_ratio": 0.6710097719869706,
+        "first_byte_ratio": 1.0,
+        "memory_ratio": 0.6594136418029517,
+        "throughput_ratio": 0.9956521739130435
+      },
+      "resource_gate_failed": [],
+      "trial": 3,
+      "viewers": 1
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.798,
+          "group_working_memory_bytes_peak": 547776102.4,
+          "measured_bytes_per_second": 5002581.333333333,
+          "median_first_byte_ms": 14.999844497651793,
+          "resource_samples": 30,
+          "total_measured_bytes": 300154880,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 2.6643333333333334,
+          "group_working_memory_bytes_peak": 802894643.2,
+          "measured_bytes_per_second": 5024426.666666667,
+          "median_first_byte_ms": 124.19235850393306,
+          "resource_samples": 30,
+          "total_measured_bytes": 301465600,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        }
+      },
+      "protocol": "timeshift",
+      "ratios": {
+        "cpu_ratio": 0.29951207306393096,
+        "first_byte_ratio": 0.40260125987072337,
+        "memory_ratio": 0.6822515345435548,
+        "throughput_ratio": 0.9956521739130434
+      },
+      "resource_gate_failed": [],
+      "trial": 1,
+      "viewers": 10
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.739,
+          "group_working_memory_bytes_peak": 547534929.92,
+          "measured_bytes_per_second": 5002581.333333333,
+          "median_first_byte_ms": 16.55690350162331,
+          "resource_samples": 30,
+          "total_measured_bytes": 300154880,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 2.5463333333333336,
+          "group_working_memory_bytes_peak": 804362649.6,
+          "measured_bytes_per_second": 5024426.666666667,
+          "median_first_byte_ms": 122.00079650210682,
+          "resource_samples": 30,
+          "total_measured_bytes": 301465600,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        }
+      },
+      "protocol": "timeshift",
+      "ratios": {
+        "cpu_ratio": 0.29022123314569964,
+        "first_byte_ratio": 0.40983338989214346,
+        "memory_ratio": 0.6807065571633424,
+        "throughput_ratio": 0.9956521739130434
+      },
+      "resource_gate_failed": [],
+      "trial": 2,
+      "viewers": 10
+    },
+    {
+      "equal_work": true,
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "phases": {
+        "candidate": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 0.811,
+          "group_working_memory_bytes_peak": 549390909.44,
+          "measured_bytes_per_second": 5002581.333333333,
+          "median_first_byte_ms": 17.52177749585826,
+          "resource_samples": 30,
+          "total_measured_bytes": 300154880,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        },
+        "source": {
+          "checks_failed": [],
+          "group_cpu_percent_mean": 2.5153333333333334,
+          "group_working_memory_bytes_peak": 801007206.4,
+          "measured_bytes_per_second": 5024426.666666667,
+          "median_first_byte_ms": 122.60767100087833,
+          "resource_samples": 30,
+          "total_measured_bytes": 301465600,
+          "valid": true,
+          "websocket_stats_snapshots": 20
+        }
+      },
+      "protocol": "timeshift",
+      "ratios": {
+        "cpu_ratio": 0.3224224754837,
+        "first_byte_ratio": 0.40780482649932903,
+        "memory_ratio": 0.6858751145437886,
+        "throughput_ratio": 0.9956521739130434
+      },
+      "resource_gate_failed": [],
+      "trial": 3,
+      "viewers": 10
+    }
+  ],
+  "planned_pairs": 12,
+  "preflights": [
+    {
+      "backend": "source",
+      "decoded_video_frames_with_audio_mapping": 200,
+      "protocol": "vod",
+      "sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+      "websocket_snapshots": 4
+    },
+    {
+      "backend": "candidate",
+      "decoded_video_frames_with_audio_mapping": 200,
+      "protocol": "vod",
+      "sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+      "websocket_snapshots": 4
+    },
+    {
+      "backend": "source",
+      "decoded_video_frames_with_audio_mapping": 199,
+      "protocol": "timeshift",
+      "sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+      "websocket_snapshots": 4
+    },
+    {
+      "backend": "candidate",
+      "decoded_video_frames_with_audio_mapping": 199,
+      "protocol": "timeshift",
+      "sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+      "websocket_snapshots": 4
+    }
+  ],
+  "raw_report_sha256": "f848c0d5f5ce4847935603f7501101a14f59f684525f4f6a7e2a96df199c981b",
+  "rust_image": "sha256:7e7059895df9f87554ce31bf235a760bd47a5649c1518efc87a63b61f0926d8c",
+  "rust_package_manifest_sha256": "08acd1a0ce474b18d9ab04401b330869d9b344a8f0aaad2eb6d9bf8209691bb8",
+  "rust_revision": "1ea708bf321ec7348a9f04a7fa5d16668e4d072b",
+  "scope": "Sustained native XC VOD and timeshift playback with one and ten viewers",
+  "scoped_performance_verified": true,
+  "terminal_error_type": null,
+  "terminal_stage": "measurement",
+  "warmup_seconds": 15,
+  "workload_medians": [
+    {
+      "median_ratios": {
+        "cpu_ratio": 0.6104972375690608,
+        "first_byte_ratio": 0.9747513312686759,
+        "memory_ratio": 0.6407246969077783,
+        "throughput_ratio": 0.9988992032716372
+      },
+      "protocol": "vod",
+      "trials": 3,
+      "viewers": 1
+    },
+    {
+      "median_ratios": {
+        "cpu_ratio": 0.2707918517383979,
+        "first_byte_ratio": 0.7621282890785998,
+        "memory_ratio": 0.6707469691044192,
+        "throughput_ratio": 0.999871114095052
+      },
+      "protocol": "vod",
+      "trials": 3,
+      "viewers": 10
+    },
+    {
+      "median_ratios": {
+        "cpu_ratio": 0.607563025210084,
+        "first_byte_ratio": 1.0,
+        "memory_ratio": 0.6594440750099747,
+        "throughput_ratio": 0.9956521739130435
+      },
+      "protocol": "timeshift",
+      "trials": 3,
+      "viewers": 1
+    },
+    {
+      "median_ratios": {
+        "cpu_ratio": 0.29951207306393096,
+        "first_byte_ratio": 0.40780482649932903,
+        "memory_ratio": 0.6822515345435548,
+        "throughput_ratio": 0.9956521739130434
+      },
+      "protocol": "timeshift",
+      "trials": 3,
+      "viewers": 10
+    }
+  ]
+}
