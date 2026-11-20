@@ -31,3 +31,21 @@ manifest and settings workflow. Enabled-plugin execution, broader M8
 acceptance and performance remain open.
 
 [Redacted scoped receipt](../scripts/rust-integration/milestone-batch113/never-enabled-plugin-vary.json)
+
+## Enabled legacy plugins
+
+Main calls `PluginRuntime::prepare` through `SelectedJobs::prepare` and
+attaches that runtime to the plugin routes only when the selected graph owns it.
+The bridge becomes ready after the shared queue prepares the registered
+plugin family. The Python host checks the Jobs capabilities before Django
+setup, even for a direct action that publishes no tasks. An enabled
+collection listing or action thus requires a runtime that ordinary Main
+does not attach.
+[Main attachment](../rust/crates/app/src/main.rs) · [Jobs bridge](../rust/crates/app/src/plugin_jobs_bridge.rs) · [Python capability check](../rust/runtime/plugin_bridge/dispatcharr_native/kombu_transport.py)
+
+Pinned Original has successful HTTP 200 captures for the local trusted
+fixture's enabled echo and scalar actions. The retained collection GET
+captures cover never-enabled and ever-enabled-disabled configurations.
+A collection GET with an enabled configuration and the corresponding
+ordinary Native positive requests remain unverified.
+[Original HTTP evidence](../scripts/rust-plugin-contracts/verified-plugin-http-4.json)
