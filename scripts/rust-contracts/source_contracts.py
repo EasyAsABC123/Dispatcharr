@@ -223,6 +223,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_packaged_Root7_HTTP':
             import retained_root7_contract
             retained_root7_contract.validate(root, value)
+        elif reference['kind'] == 'retained_original_fresh_migration_recorder_non_HTTP':
+            import retained_migration_recorder_contracts
+            retained_migration_recorder_contracts.validate(root, value)
         elif reference['kind'] == 'retained_original_range_Source10_resolver_HTTP':
             import retained_range_source10_contracts
             retained_range_source10_contracts.validate(root, value, bindings)
@@ -532,7 +535,7 @@ def apply_non_HTTP(root, entries):
             'retained_original_comskip_task_observations', 'retained_original_clocked_recording_tasks', 'retained_original_C105_guide_startup_tasks',
             'retained_original_Source16_backup_create_task', 'retained_original_Backup_Source12_and_41_lifecycle_tasks',
             'retained_original_Source51_all_match_and_guide_children_tasks', 'retained_original_Source28_autosync_standalone_task',
-            'retained_original_worker_wire_non_HTTP',
+            'retained_original_worker_wire_non_HTTP', 'retained_original_fresh_migration_recorder_non_HTTP',
         ]:
             continue
         value = checked(root, reference)
@@ -556,6 +559,10 @@ def apply_non_HTTP(root, entries):
             import retained_worker_wire_contracts
             retained_worker_wire_contracts.validate(root, value)
             source_kind = None
+        elif reference['kind'] == 'retained_original_fresh_migration_recorder_non_HTTP':
+            import retained_migration_recorder_contracts
+            retained_migration_recorder_contracts.validate(root, value)
+            source_kind = 'migration'
         elif reference['kind'] == 'retained_original_C105_guide_startup_tasks':
             import retained_c105_guide_startup_contracts
             retained_c105_guide_startup_contracts.validate(root, value)
@@ -607,7 +614,7 @@ def apply_non_HTTP(root, entries):
                                      'retained_original_Source51_all_match_and_guide_children_tasks',
                                      'retained_original_Source28_autosync_standalone_task'):
                 entry['owning_milestone'] = contract['owning_milestone']
-            elif reference['kind'] == 'retained_original_worker_wire_non_HTTP':
+            elif current_kind == 'migration' or reference['kind'] == 'retained_original_worker_wire_non_HTTP':
                 entry['owning_milestone'] = contract['owning_milestone']
             entry['assertions'] = copy.deepcopy(contract['assertions'])
             entry['result'] = copy.deepcopy(contract['result'])
@@ -616,6 +623,7 @@ def apply_non_HTTP(root, entries):
                               else 'partial_executable_Original_task_observations' if current_kind == 'task_candidate'
                               else 'partial_executable_Original_management_subprocess_observations' if current_kind == 'management_command'
                               else 'partial_executable_Original_websocket_route_observations' if current_kind == 'websocket_route'
+                              else retained_migration_recorder_contracts.STATE if current_kind == 'migration'
                               else 'partial_executable_Original_synthetic_consumer_method_tests')
-    return {'state': 'typed partial Original model/task/management/synthetic-consumer assertions, not HTTP or Native verification',
+    return {'state': 'typed partial Original migration/model/task/management/consumer observations, not HTTP or Native verification',
             'candidates': len(seen), 'fully_verified_added': 0}

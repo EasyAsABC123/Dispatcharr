@@ -12,12 +12,12 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Starting point
 
-The network-disabled M0 SDK passed all 34 tests, reproduced its register exactly,
+The network-disabled M0 SDK passed all 110 tests, reproduced its register exactly,
 and verified partial Original coverage for 797 of 798 HTTP declarations and
-32 of 250 typed operations. A separate packaged Original run verified the
+177 of 250 typed operations. A separate packaged Original run verified the
 anonymous React root and both baked assets with an explicit disposable login
 locale. The SDK binds that capture to the unresolved root declaration.
-[SDK receipt](../scripts/rust-contracts/sdk-live-root7-797.json)
+[SDK receipt](../scripts/rust-contracts/sdk-live-typed177.json)
 [Original packaged root](rust-m0-original-aio-root.md)
 
 The historical media comparisons established one upstream for 100 simultaneous

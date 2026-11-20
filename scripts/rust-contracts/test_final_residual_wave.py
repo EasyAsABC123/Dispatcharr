@@ -8,6 +8,7 @@ import retained_autosync28_task
 import retained_backup_create_task
 import retained_backup_lifecycle_tasks
 import retained_matching51_tasks
+import retained_migration_recorder_contracts as migrations
 import retained_residual_source_contracts as portable
 import retained_root7_contract
 import retained_worker_wire_contracts
@@ -28,13 +29,17 @@ TYPED_COUNT = 11
 
 
 def dependencies(root):
-    return portable.dependencies(root).union(retained_root7_contract.dependencies(),
+    return portable.dependencies(root).union(retained_root7_contract.dependencies(), migrations.dependencies(),
                                              *(module.dependencies() for module in TYPED))
 
 
 def restore_pre_final_wave(root, register):
     """Reverse the exact scoped additions before checking historical row digests."""
     inputs = register['executable_Source_mapping']['inputs']
+    migration_input = inputs.pop()
+    assert (migration_input['kind'], migration_input['path']) == (migrations.KIND, migrations.INPUT)
+    migrations.validate(root, source_contracts.checked(root, migration_input))
+    migrations.restore_before(root, register['non_HTTP_candidates'])
     root7 = inputs.pop()
     assert root7['kind'] == retained_root7_contract.KIND and root7['path'] == retained_root7_contract.INPUT
     retained_root7_contract.validate(root, source_contracts.checked(root, root7))

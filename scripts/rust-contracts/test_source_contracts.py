@@ -277,12 +277,48 @@ class SourceContracts(unittest.TestCase):
 
     def apply_before_root7(self):
         import retained_root7_contract as root7
+        import retained_migration_recorder_contracts as migrations
         result, rows = self.apply()
+        migration_input = result['inputs'].pop()
+        self.assertEqual((migration_input['kind'], migration_input['path']), (migrations.KIND, migrations.INPUT))
         reference = result['inputs'].pop()
         self.assertEqual((reference['kind'], reference['path']), (root7.KIND, root7.INPUT))
         root7.restore_before(self.root, rows)
         result['operations'] -= 1
         return result, rows
+
+    def restore_before_residual_wave(self, result, rows):
+        import hashlib
+        import test_final_residual_wave as wave
+
+        projection = {
+            'runtime_routes': rows,
+            'non_HTTP_candidates': copy.deepcopy(self.register['non_HTTP_candidates']),
+            'executable_Source_mapping': result,
+        }
+        wave.restore_pre_final_wave(self.root, projection)
+        del result['inputs'][-(len(wave.TYPED) + 1):]
+        result['operations'] -= wave.HTTP_COUNT + 1
+        # Canonical field bytes from 0c2b9920b180318f591506b31d555bc1aba7780d.
+        before = {
+            'runtime_routes': '4b2a083a493df7be212b52f01e06993c810a5b3a1099cb83efe3bcb5bc13966f',
+            'non_HTTP_candidates': '3ba566ff6cddc0076f4e0ccd4c69b6fd914e53a8a3d7d2de96f4d80878ac5403',
+            'executable_Source_mapping': 'bfb0837cb0f49ecf7b2fa24aeecf7a61ad92653ca6bc3f7004efb6a8cbf56b20',
+        }
+        for key, digest in before.items():
+            canonical = (json.dumps(projection[key], indent=2, ensure_ascii=False) + '\n').encode()
+            self.assertEqual(hashlib.sha256(canonical).hexdigest(), digest, key)
+
+    def apply_before_residual_wave(self):
+        result, rows = self.apply()
+        self.restore_before_residual_wave(result, rows)
+        return result, rows
+
+    def test_historical_projection_rejects_unrelated_role_drift(self):
+        result, rows = self.apply()
+        rows[0]['operations'][0]['role_matrix']['required_roles'].append('unexpected-role')
+        with self.assertRaises(AssertionError):
+            self.restore_before_residual_wave(result, rows)
 
     def corrupt(self, mutate):
         value = copy.deepcopy(self.value)
@@ -331,8 +367,8 @@ class SourceContracts(unittest.TestCase):
         packet = subject.load(self.root)
         subject.validate(self.root, packet)
         self.assertEqual(packet['capture_boundary']['observed_HTTP_status_counts']['500'], 75)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -362,8 +398,8 @@ class SourceContracts(unittest.TestCase):
         subject = retained_connect_test_contracts
         binding = subject.load(self.root)
         subject.validate(self.root, binding)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         operations = {op['contract_id']: op for route in rows for op in route['operations']}
         self.assertFalse(operations[subject.CONTRACT]['role_matrix']['complete'])
         self.assertNotIn('executable_Source_contract', operations['route-247b2930daac158ddf19:POST'])
@@ -389,8 +425,8 @@ class SourceContracts(unittest.TestCase):
         subject = retained_set_epg_selected_contracts
         binding = subject.load(self.root)
         subject.validate(self.root, binding)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         records = {op['contract_id']: op for route in rows for op in route['operations']}
         assigned = records[subject.CONTRACT]
         self.assertEqual([case['status'] for case in assigned['executable_Source_contract']['cases']], [200, 400])
@@ -404,8 +440,8 @@ class SourceContracts(unittest.TestCase):
         subject = retained_set_epg_selected_contracts
         packet = subject.load_batch(self.root)
         subject.validate_batch(self.root, packet)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         operations = {op['contract_id']: op for route in rows for op in route['operations']}
         operation = operations[subject.BATCH_CONTRACT]
         self.assertIn('executable_Source_contract', operation)
@@ -440,8 +476,8 @@ class SourceContracts(unittest.TestCase):
     def test_connect_detail_keeps_successes_without_literal_paths_separate(self):
         packet = retained_connect_detail_contracts.load(self.root)
         retained_connect_detail_contracts.validate(self.root, packet)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -470,8 +506,8 @@ class SourceContracts(unittest.TestCase):
     def test_alias19_uses_only_completed_anonymous_observations(self):
         packet = retained_alias19_contracts.load(self.root)
         retained_alias19_contracts.validate(self.root, packet)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -500,8 +536,8 @@ class SourceContracts(unittest.TestCase):
     def test_connect_actions_preserve_literal_routes_and_symbolic_fixture_paths(self):
         packet = retained_connect_actions_contracts.load(self.root)
         retained_connect_actions_contracts.validate(self.root, packet)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -531,8 +567,8 @@ class SourceContracts(unittest.TestCase):
     def test_connect_collection_preserves_method_scoped_responses_and_failed_outer_run(self):
         packet = retained_connect_contracts.load(self.root)
         retained_connect_contracts.validate(self.root, packet)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -565,8 +601,8 @@ class SourceContracts(unittest.TestCase):
 
         packet = dvr.load(self.root)
         dvr.validate(self.root, packet)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
         retained_live_stop_contracts.restore_pre_live_stop(self.root, rows)
@@ -601,8 +637,8 @@ class SourceContracts(unittest.TestCase):
 
         value = admin.load(self.root)
         admin.validate(self.root, value)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         import retained_dvr_xc_contracts
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(self.root, rows)
@@ -638,8 +674,8 @@ class SourceContracts(unittest.TestCase):
 
         value = packet.load(self.root)
         packet.validate(self.root, value)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         import retained_admin_model_contracts
         import retained_dvr_xc_contracts
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(self.root, rows)
@@ -677,8 +713,8 @@ class SourceContracts(unittest.TestCase):
 
         packet = image22.load(self.root)
         image22.validate(self.root, packet)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         import retained_repository_socket_switch_contracts
         import retained_admin_model_contracts
         import retained_dvr_xc_contracts
@@ -718,8 +754,8 @@ class SourceContracts(unittest.TestCase):
 
         value = playback.load(self.root)
         playback.validate(self.root, value)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         self.assertEqual(sum(o['method'] is None for route in rows for o in route['operations']), 322)
         import retained_image22_controls_contracts
         import retained_repository_socket_switch_contracts
@@ -761,8 +797,8 @@ class SourceContracts(unittest.TestCase):
         import retained_hdhr_contracts as hdhr
         value = json.loads((self.root / hdhr.INPUT).read_bytes())
         hdhr.validate(self.root, value)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 120)
         self.assertEqual(sum(o['method'] is None for route in rows for o in route['operations']), 322)
         declared = {o['contract_id']: o for route in rows for o in route['operations']}
@@ -810,8 +846,8 @@ class SourceContracts(unittest.TestCase):
         import retained_provider_channel_vod_contracts as packet
         value = json.loads((self.root / packet.INPUT).read_bytes())
         packet.validate(self.root, value)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 132)
         import retained_hdhr_contracts
         import retained_playback_contracts
@@ -856,8 +892,8 @@ class SourceContracts(unittest.TestCase):
         import retained_serializer_null_contracts as core
         value = json.loads((self.root / core.INPUT).read_bytes())
         core.validate(self.root, value)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 96)
         import retained_provider_channel_vod_contracts
         import retained_hdhr_contracts
@@ -904,8 +940,8 @@ class SourceContracts(unittest.TestCase):
         import retained_core_read_contracts as core
         value = json.loads((self.root / core.INPUT).read_bytes())
         core.validate(self.root, value)
-        result, rows = self.apply_before_root7()
-        self.assertEqual(result['operations'], 796)
+        result, rows = self.apply_before_residual_wave()
+        self.assertEqual(result['operations'], 619)
         self.assertEqual(sum(len(contract['cases']) for contract in value['contracts']), 29)
         import retained_serializer_null_contracts
         import retained_provider_channel_vod_contracts
