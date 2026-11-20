@@ -203,6 +203,10 @@ The [e765 React live playback and Stats gate](rust-e765-react-live-stats.md)
 verified real Chromium login, decoded advancing video, active-channel Stats
 and normal player close on both backends, with exact owned cleanup.
 
+The [114558 React live playback and Stats run](rust-114558-react-live-stats.md)
+repeated the two browser arms on the exact Guide successor package and
+verified all 112 shipped React assets and independent process and Compose cleanup.
+
 The [trusted plugin action replay](rust-m8-selected-trusted-plugin-actions.md)
 matched the decoded results and selected headers for echo and scalar with
 selected workers and verified exact compatibility-host retirement.
