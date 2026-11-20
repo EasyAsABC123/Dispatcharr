@@ -50,7 +50,9 @@ The [opt-in playlist Refresh All workflow](rust-m6-refresh-all-original-worker.m
 passed on both the standalone and integrated packages. One retained Original
 Celery consumer completed the aggregate job and both children, with the
 expected streams and group memberships. The ordinary Native worker graph
-and equivalent-work measurement remain open.
+and equivalent-work measurement remain open. The
+[Original stock Groups capture](rust-m6-remote-std-stock-groups.md) also
+verified account detail and group-list output against the imported rows.
 
 The [explicit VOD session check](rust-vod-explicit-session-id.md) passed
 four paired cohorts. Same-ID requests reused their sessions and fresh

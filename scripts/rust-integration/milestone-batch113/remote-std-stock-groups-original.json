@@ -1,0 +1,84 @@
+{
+  "active": {
+    "enabled_groups": 2,
+    "group_links_match_SQL": true,
+    "groups": [
+      "Default Group",
+      "Owned Auto"
+    ],
+    "message": "M3U groups loaded. Please select groups or refresh M3U to complete setup.",
+    "origin_GETs": 1,
+    "parsed_cache_matches": true,
+    "parsed_rows": 6001,
+    "result_sha256": "c6956e770f0bde101d37154fb3713ba45a4764f9c2bb802ef9d520fcf88c30d3",
+    "status": "pending_setup",
+    "streams": 0
+  },
+  "actual_exit": {
+    "Original": 0,
+    "UID_helper": 0,
+    "queue": 0
+  },
+  "cleanup": {
+    "Original_containers_and_host_generations_absent": 2,
+    "UID_container_absent": true,
+    "process_groups_settled": true
+  },
+  "each_root_terminal": "SUCCESS",
+  "historical_runs": [
+    {
+      "actual_exit_by_backend": {
+        "Original": 1
+      },
+      "run": "m6-natural-remote-std-groups-1/prepared-6667998",
+      "sha256": "110ee357d70ba63aa448e20b99831c21e3e5d6af47a0f06b8ea4467dff72743f"
+    },
+    {
+      "actual_exit_by_backend": {
+        "Native": 1,
+        "Original": 0
+      },
+      "run": "m6-remote-std-source-cache-retry-1/prepared-retry",
+      "sha256": "3317c0a6ef353031bd970a81661eaf47cfd297352aa2a0278868bd81a591b1e3"
+    },
+    {
+      "actual_exit_by_backend": {
+        "Native": 0,
+        "Original": 0
+      },
+      "run": "m6-remote-std-create-compat-1/actual-fc96771b6daec96a5b4b86b8bbd04589becf670e",
+      "sha256": "88f1163000cc0d89bbb3874d912fdc096dd0b35ad7d2edbc299a4db42be30454"
+    }
+  ],
+  "inactive": {
+    "groups": [],
+    "origin_GETs": 0,
+    "status": "idle",
+    "streams": 0
+  },
+  "ordinary_rust_stock_execution": "not_run",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owner_freeze_sha256": "2b33a9c8edf1a5012008f696a269cdda1ae5c39744de7d12c324d98dea16e109",
+  "parity_verified": false,
+  "performance_verified": false,
+  "plan_sha256": "a814b298c62bd97fbb59af511bce27042a990e8240b69ec97b9c25436d6abb7e",
+  "result_backend_DB": 2,
+  "scope": "M6 stock remote STD create, Groups task, and natural post-import stock HTTP visibility",
+  "stock_HTTP": {
+    "GET_account_detail": [
+      200,
+      200
+    ],
+    "GET_groups": [
+      200,
+      200
+    ],
+    "POST_accounts": [
+      201,
+      201
+    ]
+  },
+  "two_default_celery_roots": "apps.m3u.tasks.refresh_m3u_groups"
+}
