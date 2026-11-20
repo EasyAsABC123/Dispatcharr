@@ -26,3 +26,19 @@ and [ordinary Lineup Status](../scripts/rust-integration/milestone-batch113/hdhr
 results. Full M7 acceptance and performance remain open.
 
 [Redacted scoped receipt](../scripts/rust-integration/milestone-batch113/hdhr-device-xml-output-status-e852.json)
+
+## Integrated a785 metadata group
+
+One internal Compose comparison ran 27 ordinary positive GETs per backend
+against pinned Original and packaged Rust a785a2b7. It combined the 14
+discovery and lineup requests, seven ordinary Lineup Status requests and
+six XML and output-profile status requests. All 54 requests returned
+HTTP 200. Every pair matched body lengths, full body digests and selected
+wire headers. The scoped SQL snapshots remained unchanged throughout each
+subgroup. The manual-backup owner was absent from Rust Main.
+
+The controller exited 0. All four container and host generations retired
+and the project inventories were empty. The earlier f3b8 and e852 receipts
+remain tied to their respective images.
+
+[Redacted a785 grouped receipt](../scripts/rust-integration/m7-hdhr-ordinary-group-a785.json)

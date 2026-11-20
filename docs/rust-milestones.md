@@ -1331,6 +1331,11 @@ no baseline or tool unavailability remains hidden behind a passing status.
 
 ## M1 — streaming core
 
+The exact `a785a2b7` package passed all 17 stream-core and 16 stream-runtime
+library tests after recompiling both crates. All 1,496 Rust inputs matched
+the package source map. The Compose and M0 prerequisite gates retain their
+separate scope. [Exact a785 host receipt](../scripts/rust-integration/m1-a785-bounded-core-host.json)
+
 The packaged plugin-header successor at `8b0c76ca` passed 17 streaming
 core and 16 runtime library tests on the host. All 1,494 Rust source
 inputs matched its exact package. The tests cover TS alignment, atomic
