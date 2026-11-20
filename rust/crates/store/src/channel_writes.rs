@@ -17,6 +17,9 @@ use serde_json::{json, Map, Value};
 use sqlx::{PgConnection, Postgres, QueryBuilder, Row, Transaction};
 use std::{collections::HashMap, net::SocketAddr};
 use uuid::Uuid;
+mod reorder;
+pub(crate) use reorder::handle as reorder;
+
 type Body = Result<Json<Value>, JsonRejection>;
 const COLUMNS:&str="channel_number,name,logo_id,channel_group_id,tvg_id,tvc_guide_stationid,epg_data_id,stream_profile_id,uuid,user_level,is_adult,auto_created,auto_created_by_id,is_catchup,catchup_days,is_radio,hidden_from_output,created_at,updated_at";
 const OVERRIDABLE: &[&str] = &[

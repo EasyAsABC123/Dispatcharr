@@ -13,7 +13,7 @@ use std::{sync::Arc, time::Duration};
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
     if args == ["--help"] {
-        println!("Native Dispatcharr safe operator\nUsage: dispatcharr-operator reset_network_access\n       dispatcharr-operator reset_user_network [--user USERNAME]\n       dispatcharr-operator createsuperuser --noinput [--username USERNAME] [--email EMAIL]\n       dispatcharr-operator showmigrations [APP] [--list] [--verbosity 2]\n       dispatcharr-operator showmigrations --plan\nOnly these safe commands and flags are supported. Django global flags are not emulated.");
+        println!("Native Dispatcharr safe operator\nUsage: dispatcharr-operator reset_network_access\n       dispatcharr-operator reset_user_network [--user USERNAME]\n       dispatcharr-operator createsuperuser --noinput [--username USERNAME] [--email EMAIL]\n       dispatcharr-operator showmigrations [APP] [--list] [--verbosity 2]\n       dispatcharr-operator showmigrations --plan [--verbosity 2]\nOnly these safe commands and flags are supported. Django global flags are not emulated.");
         return;
     }
 

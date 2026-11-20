@@ -5,6 +5,8 @@ use chrono::{DateTime, Utc};
 use std::{collections::BTreeSet, fmt::Write as _};
 
 const PLAN: [(&str, &str); 184] = include!("../datasets/showmigrations-plan-order.in");
+const PLAN_DEPENDENCIES: [(&str, &str); PLAN.len()] =
+    include!("../datasets/showmigrations-plan-dependencies.in");
 const APP_WITHOUT_MIGRATIONS: &str = "backups";
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -12,6 +14,7 @@ pub enum Inspection {
     List(Option<&'static str>),
     ListWithDates(Option<&'static str>),
     Plan,
+    PlanWithDependencies,
 }
 
 #[derive(Clone, Copy, Default)]
@@ -40,7 +43,11 @@ impl Inspection {
         };
         match mode {
             [] | ["--list"] => Ok(list(None)),
-            ["--plan"] if !verbose => Ok(Self::Plan),
+            ["--plan"] => Ok(if verbose {
+                Self::PlanWithDependencies
+            } else {
+                Self::Plan
+            }),
             [app] | [app, "--list"] => PLAN
                 .iter()
                 .map(|(label, _)| *label)
@@ -93,9 +100,14 @@ impl Inspection {
         let mut text = String::new();
         let mark = |ordinal: usize| if applied[ordinal].present { 'X' } else { ' ' };
         match self {
-            Self::Plan => {
+            Self::Plan | Self::PlanWithDependencies => {
                 for (index, (app, name)) in PLAN.iter().enumerate() {
-                    writeln!(text, "[{}]  {app}.{name}", mark(index)).unwrap();
+                    write!(text, "[{}]  {app}.{name}", mark(index)).unwrap();
+                    let (_, dependencies) = PLAN_DEPENDENCIES[index];
+                    if self == Self::PlanWithDependencies && !dependencies.is_empty() {
+                        write!(text, " ... ({dependencies})").unwrap();
+                    }
+                    text.push('\n');
                 }
             }
             Self::List(selected) | Self::ListWithDates(selected) => {
@@ -200,6 +212,30 @@ mod tests {
     }
 
     #[test]
+    fn verbose_plan_matches_original_complete_stdout_and_direct_dependency_order() {
+        let mut seen = BTreeSet::new();
+        let mut edge_count = 0;
+        for ((app, name), (label, dependencies)) in PLAN.iter().zip(PLAN_DEPENDENCIES) {
+            assert_eq!(label, format!("{app}.{name}"));
+            let mut previous = "";
+            for parent in dependencies.split(", ").filter(|parent| !parent.is_empty()) {
+                assert!(seen.contains(parent) && previous < parent);
+                previous = parent;
+                edge_count += 1;
+            }
+            assert!(seen.insert(label));
+        }
+        assert_eq!(edge_count, 203);
+        let plan = Inspection::PlanWithDependencies.render(&[PRESENT; PLAN.len()]);
+        assert_eq!(plan.len(), 18671);
+        assert_eq!(plan.lines().count(), 184);
+        assert_eq!(
+            format!("{:x}", Sha256::digest(plan.as_bytes())),
+            "3337afece625efb09643c1eb06fe3caec3fd5aceb1574e6f31f0c2a14a3a4675"
+        );
+    }
+
+    #[test]
     fn pending_only_changes_the_live_record_mark() {
         let position = PLAN
             .iter()
@@ -213,6 +249,10 @@ mod tests {
         assert_eq!(plan.matches("[ ]  ").count(), 1);
         assert!(list.contains(" [ ] 0032_limit_default_interleave_delta\n"));
         assert!(plan.contains("[ ]  core.0032_limit_default_interleave_delta\n"));
+        let verbose = Inspection::PlanWithDependencies.render(&applied);
+        assert!(verbose.contains(
+            "[ ]  core.0032_limit_default_interleave_delta ... (core.0031_default_reverse_proxy_auth_settings)\n"
+        ));
     }
 
     #[test]
@@ -295,17 +335,23 @@ mod tests {
             .unwrap(),
             Inspection::ListWithDates(Some("accounts"))
         );
-        assert!(parse(&["showmigrations", "--plan", "--verbosity=2"]).is_err());
-        assert!(parse(&[
-            "showmigrations",
-            "--plan",
-            "--verbosity",
-            "2",
-            "--database",
-            "default",
-            "--no-color"
-        ])
-        .is_err());
+        assert_eq!(
+            parse(&["showmigrations", "--plan", "--verbosity=2"]).unwrap(),
+            Inspection::PlanWithDependencies
+        );
+        assert_eq!(
+            parse(&[
+                "showmigrations",
+                "--plan",
+                "--verbosity",
+                "2",
+                "--database",
+                "default",
+                "--no-color"
+            ])
+            .unwrap(),
+            Inspection::PlanWithDependencies
+        );
         assert!(parse(&["showmigrations", "--plan", "--database", "other"]).is_err());
         assert!(parse(&["showmigrations", "unknown_app", "--list"]).is_err());
     }

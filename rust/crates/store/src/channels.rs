@@ -922,6 +922,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
             post(crate::channel_writes::set_epg),
         )
         .route(
+            "/api/channels/channels/{id}/reorder/",
+            post(crate::channel_writes::reorder),
+        )
+        .route(
             "/api/channels/channels/{id}/streams/",
             get(crate::channel_relations::streams),
         )
