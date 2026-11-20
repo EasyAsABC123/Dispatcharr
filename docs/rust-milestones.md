@@ -47,6 +47,10 @@ and audio, and Main stopped cleanly with exact owned cleanup.
 
 The [Candidate107 VOD and XMLTV results](rust-milestone-batch107.md) verify
 calendar seek ranges, alternate-provider capacity and remote source creation.
+
+The [e765 VOD and catch-up Range pair](rust-m4-e765-ordinary-seek-calendar.md)
+matched 20 authenticated HTTP 206 responses and one upstream request per case
+and backend. All eight Compose roles retired and both projects were empty.
 The [Candidate107 resource comparison](rust-m4-performance.md#candidate107-playback-comparison)
 passed 12 VOD and catch-up pairs with matched work. Median paired CPU fell
 39–73% and working memory fell 32–36% depending on the workload.
