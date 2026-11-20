@@ -15,6 +15,8 @@ The original Dispatcharr authors and contributors retain full application and wo
 
 The [packaged provider workflow evidence](rust-e765-provider-workflows.md) covers the separate provider checks.
 
+The [e765 createsuperuser and strict typed comparisons](rust-e765-createsuperuser-and-typed154.md) cover a separate coordinator run.
+
 [Redacted receipt](../scripts/rust-integration/milestone-batch113/e765-baseline-acceptance.json)
 
 The MPEG-TS runs covered shared demand, delayed restart and bounded
