@@ -1,6 +1,6 @@
 //! Original Dispatcharr Channel Batch group, content and access flag updates.
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
-use super::{boolean, err, integer, mark_group, rename};
+use super::{boolean, err, integer, mark_group, primary_key, rename};
 use crate::{channels, AuthService, StoreError};
 use axum::{
     extract::{ConnectInfo, OriginalUri, Query, Request, State},
@@ -8,12 +8,87 @@ use axum::{
     response::{IntoResponse, Response},
     Json,
 };
-use serde_json::{json, Value};
+use serde_json::{json, Map, Value};
 use sqlx::{Postgres, QueryBuilder, Transaction};
 use std::{
     collections::{BTreeSet, HashMap},
     net::SocketAddr,
 };
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+enum Reference {
+    #[default]
+    Absent,
+    Clear,
+    Set(i64),
+}
+
+impl Reference {
+    fn parse(field: &str, value: Option<&Value>) -> Result<Self, StoreError> {
+        match value {
+            None => Ok(Self::Absent),
+            Some(Value::Null) => Ok(Self::Clear),
+            Some(value) => primary_key(value)
+                .map_err(|error| rename(error, "channel", field))?
+                .map(Self::Set)
+                .ok_or_else(|| err(field, "Object does not exist.")),
+        }
+    }
+
+    fn id(self) -> Option<i64> {
+        if let Self::Set(id) = self {
+            Some(id)
+        } else {
+            None
+        }
+    }
+}
+
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+struct References {
+    profile: Reference,
+    logo: Reference,
+}
+
+impl References {
+    fn parse(fields: &Map<String, Value>) -> Result<Self, StoreError> {
+        Ok(Self {
+            profile: Reference::parse("stream_profile_id", fields.get("stream_profile_id"))?,
+            logo: Reference::parse("logo_id", fields.get("logo_id"))?,
+        })
+    }
+
+    fn present(self) -> bool {
+        self.profile != Reference::Absent || self.logo != Reference::Absent
+    }
+
+    fn clears(self) -> bool {
+        self.profile == Reference::Clear || self.logo == Reference::Clear
+    }
+}
+
+#[derive(Default)]
+struct ReferenceColumns {
+    profiles_present: Vec<bool>,
+    profiles: Vec<Option<i64>>,
+    logos_present: Vec<bool>,
+    logos: Vec<Option<i64>>,
+}
+
+impl FromIterator<References> for ReferenceColumns {
+    fn from_iter<T: IntoIterator<Item = References>>(rows: T) -> Self {
+        let mut columns = Self::default();
+        for row in rows {
+            columns
+                .profiles_present
+                .push(row.profile != Reference::Absent);
+            columns.profiles.push(row.profile.id());
+            columns.logos_present.push(row.logo != Reference::Absent);
+            columns.logos.push(row.logo.id());
+        }
+        columns
+    }
+}
 
 #[derive(Debug, Default, PartialEq, Eq)]
 struct Edit {
@@ -24,6 +99,16 @@ struct Edit {
     radio: Option<bool>,
     override_radio: Option<bool>,
     level: Option<i32>,
+    references: References,
+    override_references: References,
+}
+
+impl Edit {
+    fn changes_override(&self) -> bool {
+        self.override_group.is_some()
+            || self.override_radio.is_some()
+            || self.override_references.present()
+    }
 }
 
 fn unsupported() -> StoreError {
@@ -85,17 +170,26 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
             if row.keys().any(|key| {
                 !matches!(
                     key.as_str(),
-                    "id" | "channel_group_id" | "is_adult" | "is_radio" | "user_level" | "override"
+                    "id" | "channel_group_id"
+                        | "is_adult"
+                        | "is_radio"
+                        | "user_level"
+                        | "override"
+                        | "stream_profile_id"
+                        | "logo_id"
                 )
             }) {
                 return Err(unsupported());
             }
-            let (override_group, override_radio) = match overrides.get(&id) {
-                None => (None, None),
+            let (override_group, override_radio, override_references) = match overrides.get(&id) {
+                None => (None, None, References::default()),
                 Some(Value::Object(values))
-                    if values
-                        .keys()
-                        .all(|key| matches!(key.as_str(), "channel_group_id" | "is_radio")) =>
+                    if values.keys().all(|key| {
+                        matches!(
+                            key.as_str(),
+                            "channel_group_id" | "is_radio" | "stream_profile_id" | "logo_id"
+                        )
+                    }) =>
                 {
                     (
                         values.get("channel_group_id").map(group).transpose()?,
@@ -103,6 +197,7 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                             .get("is_radio")
                             .map(|value| boolean("is_radio", value))
                             .transpose()?,
+                        References::parse(values)?,
                     )
                 }
                 _ => return Err(unsupported()),
@@ -112,6 +207,8 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                 group: row.get("channel_group_id").map(group).transpose()?,
                 override_group,
                 override_radio,
+                override_references,
+                references: References::parse(row)?,
                 radio: row
                     .get("is_radio")
                     .map(|value| boolean("is_radio", value))
@@ -126,6 +223,47 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
         .collect()
 }
 
+async fn lock_references(
+    tx: &mut Transaction<'_, Postgres>,
+    statement: &str,
+    ids: impl Iterator<Item = i64>,
+) -> Result<BTreeSet<i64>, StoreError> {
+    let requested: Vec<_> = ids.collect::<BTreeSet<_>>().into_iter().collect();
+    if requested.is_empty() {
+        return Ok(BTreeSet::new());
+    }
+    Ok(sqlx::query_scalar(statement)
+        .bind(&requested)
+        .fetch_all(&mut **tx)
+        .await?
+        .into_iter()
+        .collect())
+}
+
+fn reference_errors(
+    group: Option<i64>,
+    references: References,
+    groups: &BTreeSet<i64>,
+    profiles: &BTreeSet<i64>,
+    logos: &BTreeSet<i64>,
+) -> Map<String, Value> {
+    [
+        ("channel_group_id", group, groups),
+        ("stream_profile_id", references.profile.id(), profiles),
+        ("logo_id", references.logo.id(), logos),
+    ]
+    .into_iter()
+    .filter_map(|(field, id, existing)| {
+        id.filter(|id| !existing.contains(id)).map(|missing| {
+            (
+                field.to_owned(),
+                json!([format!("Invalid pk \"{missing}\" - object does not exist.")]),
+            )
+        })
+    })
+    .collect()
+}
+
 async fn validate_and_lock(
     tx: &mut Transaction<'_, Postgres>,
     edits: &[Edit],
@@ -133,21 +271,24 @@ async fn validate_and_lock(
 ) -> Result<HashMap<i64, bool>, StoreError> {
     // Group update/delete already starts with the group lock. Match
     // that order before taking the channel rows in canonical order.
-    let requested_groups: Vec<i64> = edits
-        .iter()
-        .flat_map(|edit| [edit.group, edit.override_group].into_iter().flatten())
-        .collect::<BTreeSet<_>>()
-        .into_iter()
-        .collect();
-    let existing_groups: BTreeSet<i64> = sqlx::query_scalar(
-        "SELECT id FROM dispatcharr_channels_channelgroup
-         WHERE id = ANY($1) ORDER BY id FOR KEY SHARE",
+    let groups = lock_references(
+        tx,
+        "SELECT id FROM dispatcharr_channels_channelgroup WHERE id = ANY($1) ORDER BY id FOR KEY SHARE",
+        edits.iter().flat_map(|edit| [edit.group, edit.override_group].into_iter().flatten()),
+    ).await?;
+    let profiles = lock_references(
+        tx,
+        "SELECT id FROM core_streamprofile WHERE id = ANY($1) ORDER BY id FOR KEY SHARE",
+        edits.iter().flat_map(|edit| {
+            [
+                edit.references.profile.id(),
+                edit.override_references.profile.id(),
+            ]
+            .into_iter()
+            .flatten()
+        }),
     )
-    .bind(&requested_groups)
-    .fetch_all(&mut **tx)
-    .await?
-    .into_iter()
-    .collect();
+    .await?;
     let selected: HashMap<i64, bool> = sqlx::query_as(
         "SELECT id, auto_created FROM dispatcharr_channels_channel
          WHERE id = ANY($1) ORDER BY id FOR UPDATE",
@@ -157,25 +298,61 @@ async fn validate_and_lock(
     .await?
     .into_iter()
     .collect();
+    // Logo collectors clear channel and existing override links before
+    // deleting logo rows. Lock the same children before the logo reference,
+    // including overrides that have no corresponding raw logo link.
+    let logo_ids: Vec<_> = edits
+        .iter()
+        .flat_map(|edit| {
+            [
+                edit.references.logo.id(),
+                edit.override_references.logo.id(),
+            ]
+            .into_iter()
+            .flatten()
+        })
+        .collect();
+    if !logo_ids.is_empty() {
+        let overlays: Vec<_> = edits
+            .iter()
+            .filter(|edit| edit.changes_override())
+            .map(|edit| edit.id)
+            .collect();
+        if !overlays.is_empty() {
+            sqlx::query(
+                "SELECT channel_id FROM dispatcharr_channels_channeloverride
+                 WHERE channel_id = ANY($1) ORDER BY channel_id FOR UPDATE",
+            )
+            .bind(overlays)
+            .execute(&mut **tx)
+            .await?;
+        }
+    }
+    let logos = lock_references(
+        tx,
+        "SELECT id FROM dispatcharr_channels_logo WHERE id = ANY($1) ORDER BY id FOR KEY SHARE",
+        logo_ids.into_iter(),
+    )
+    .await?;
     let mut errors = Vec::new();
     for edit in edits {
         let Some(managed) = selected.get(&edit.id) else {
             errors.push(json!({"channel_id":edit.id,"error":"Channel not found"}));
             continue;
         };
-        if !managed && (edit.override_group.is_some() || edit.override_radio.is_some()) {
+        if !managed && edit.changes_override() {
             return Err(unsupported());
         }
-        let mut fields = serde_json::Map::new();
-        for (id, nested) in [(edit.group, false), (edit.override_group, true)] {
-            if let Some(missing) = id.filter(|id| !existing_groups.contains(id)) {
-                let message = format!("Invalid pk \"{missing}\" - object does not exist.");
-                if nested {
-                    fields.insert("override".into(), json!({"channel_group_id":[message]}));
-                } else {
-                    fields.insert("channel_group_id".into(), json!([message]));
-                }
-            }
+        let mut fields = reference_errors(edit.group, edit.references, &groups, &profiles, &logos);
+        let nested = reference_errors(
+            edit.override_group,
+            edit.override_references,
+            &groups,
+            &profiles,
+            &logos,
+        );
+        if !nested.is_empty() {
+            fields.insert("override".into(), Value::Object(nested));
         }
         if !fields.is_empty() {
             errors.push(json!({"channel_id":edit.id,"errors":fields}));
@@ -206,13 +383,14 @@ async fn apply(
             || edit.mature.is_some()
             || edit.level.is_some()
             || edit.radio.is_some()
+            || edit.references.present()
         {
             scalar_edits.push(edit);
         }
         if !selected[&edit.id] {
             manual_groups.extend(edit.group);
         }
-        if edit.override_group.is_some() || edit.override_radio.is_some() {
+        if edit.changes_override() {
             override_edits.push(edit);
         }
     }
@@ -222,15 +400,19 @@ async fn apply(
         let mature: Vec<_> = chunk.iter().map(|edit| edit.mature).collect();
         let radio: Vec<_> = chunk.iter().map(|edit| edit.radio).collect();
         let levels: Vec<_> = chunk.iter().map(|edit| edit.level).collect();
+        let refs: ReferenceColumns = chunk.iter().map(|edit| edit.references).collect();
         // Stock bulk_update leaves channel row clocks unchanged.
         sqlx::query(
             "UPDATE dispatcharr_channels_channel AS channel
              SET channel_group_id = COALESCE(change.group_id, channel.channel_group_id),
                  is_adult = COALESCE(change.mature, channel.is_adult),
                  is_radio = COALESCE(change.radio, channel.is_radio),
-                 user_level = COALESCE(change.level, channel.user_level)
-             FROM unnest($1::bigint[], $2::bigint[], $3::boolean[], $4::boolean[], $5::integer[])
-                 AS change(id, group_id, mature, radio, level)
+                 user_level = COALESCE(change.level, channel.user_level),
+                 stream_profile_id = CASE WHEN change.has_profile THEN change.profile ELSE channel.stream_profile_id END,
+                 logo_id = CASE WHEN change.has_logo THEN change.logo ELSE channel.logo_id END
+             FROM unnest($1::bigint[], $2::bigint[], $3::boolean[], $4::boolean[], $5::integer[],
+                         $6::boolean[], $7::bigint[], $8::boolean[], $9::bigint[])
+                 AS change(id, group_id, mature, radio, level, has_profile, profile, has_logo, logo)
              WHERE channel.id = change.id",
         )
         .bind(ids)
@@ -238,6 +420,10 @@ async fn apply(
         .bind(mature)
         .bind(radio)
         .bind(levels)
+        .bind(refs.profiles_present)
+        .bind(refs.profiles)
+        .bind(refs.logos_present)
+        .bind(refs.logos)
         .execute(&mut **tx)
         .await?;
     }
@@ -248,29 +434,56 @@ async fn apply(
         let ids: Vec<_> = chunk.iter().map(|edit| edit.id).collect();
         let groups: Vec<_> = chunk.iter().map(|edit| edit.override_group).collect();
         let radio: Vec<_> = chunk.iter().map(|edit| edit.override_radio).collect();
+        let refs: ReferenceColumns = chunk.iter().map(|edit| edit.override_references).collect();
         // A data-modifying CTE separates existing rows from newly inserted
         // overlays without spending an identity or updating clocks on a hit.
         sqlx::query(
             "WITH incoming AS (
-                 SELECT * FROM unnest($1::bigint[], $2::bigint[], $3::boolean[]) AS change(id, group_id, radio)
+                 SELECT * FROM unnest($1::bigint[], $2::bigint[], $3::boolean[], $4::boolean[],
+                                      $5::bigint[], $6::boolean[], $7::bigint[])
+                     AS change(id, group_id, radio, has_profile, profile, has_logo, logo)
              ), existing AS (
                  UPDATE dispatcharr_channels_channeloverride AS overlay
                  SET channel_group_id = COALESCE(incoming.group_id, overlay.channel_group_id),
-                     is_radio = COALESCE(incoming.radio, overlay.is_radio)
+                     is_radio = COALESCE(incoming.radio, overlay.is_radio),
+                     stream_profile_id = CASE WHEN incoming.has_profile THEN incoming.profile ELSE overlay.stream_profile_id END,
+                     logo_id = CASE WHEN incoming.has_logo THEN incoming.logo ELSE overlay.logo_id END
                  FROM incoming WHERE overlay.channel_id = incoming.id
                  RETURNING overlay.channel_id
              )
              INSERT INTO dispatcharr_channels_channeloverride
-                 (channel_id, channel_group_id, is_radio, created_at, updated_at)
-             SELECT incoming.id, incoming.group_id, incoming.radio, clock_timestamp(), clock_timestamp()
+                 (channel_id, channel_group_id, is_radio, stream_profile_id, logo_id, created_at, updated_at)
+             SELECT incoming.id, incoming.group_id, incoming.radio, incoming.profile, incoming.logo,
+                    clock_timestamp(), clock_timestamp()
              FROM incoming
              WHERE NOT EXISTS (SELECT 1 FROM existing WHERE existing.channel_id = incoming.id)",
         )
         .bind(ids)
         .bind(groups)
         .bind(radio)
+        .bind(refs.profiles_present)
+        .bind(refs.profiles)
+        .bind(refs.logos_present)
+        .bind(refs.logos)
         .execute(&mut **tx)
         .await?;
+        let may_clear: Vec<_> = chunk
+            .iter()
+            .filter(|edit| edit.override_references.clears())
+            .map(|edit| edit.id)
+            .collect();
+        if !may_clear.is_empty() {
+            sqlx::query(
+                "DELETE FROM dispatcharr_channels_channeloverride
+                 WHERE channel_id = ANY($1) AND num_nonnulls(
+                    name, channel_number, channel_group_id, logo_id, tvg_id, tvc_guide_stationid,
+                    epg_data_id, stream_profile_id, is_radio
+                 ) = 0",
+            )
+            .bind(may_clear)
+            .execute(&mut **tx)
+            .await?;
+        }
     }
     Ok(())
 }
@@ -459,6 +672,62 @@ mod tests {
                     ..Edit::default()
                 },
             ]
+        );
+    }
+
+    #[test]
+    fn profile_and_logo_edits_keep_absent_set_and_clear_distinct_at_both_write_levels() {
+        let rows = edits(json!([
+            {"id":21,"override":{"stream_profile_id":"5","logo_id":null}},
+            {"id":14,"stream_profile_id":null,"logo_id":6},
+            {"id":12,"logo_id":null},
+        ]))
+        .unwrap();
+        assert_eq!(
+            rows[0].override_references,
+            References {
+                profile: Reference::Set(5),
+                logo: Reference::Clear
+            }
+        );
+        assert_eq!(
+            rows[1].references,
+            References {
+                profile: Reference::Clear,
+                logo: Reference::Set(6)
+            }
+        );
+        assert_eq!(
+            rows[2].references,
+            References {
+                profile: Reference::Absent,
+                logo: Reference::Clear
+            }
+        );
+        let cols: ReferenceColumns = rows.iter().map(|row| row.references).collect();
+        assert_eq!(cols.profiles_present, [false, true, false]);
+        assert_eq!(cols.profiles, [None, None, None]);
+        assert_eq!(cols.logos_present, [false, true, true]);
+        assert_eq!(cols.logos, [None, Some(6), None]);
+    }
+
+    #[test]
+    fn every_overlay_write_participates_in_the_owned_logo_lock_order() {
+        let rows = edits(json!([
+            {"id":1,"logo_id":5},
+            {"id":2,"override":{"logo_id":5}},
+            {"id":3,"override":{"stream_profile_id":null}},
+            {"id":4,"override":{"is_radio":false}},
+            {"id":5,"override":{"channel_group_id":9}},
+            {"id":6,"override":{}}
+        ]))
+        .unwrap();
+        assert_eq!(
+            rows.iter()
+                .filter(|edit| edit.changes_override())
+                .map(|edit| edit.id)
+                .collect::<Vec<_>>(),
+            [2, 3, 4, 5]
         );
     }
 

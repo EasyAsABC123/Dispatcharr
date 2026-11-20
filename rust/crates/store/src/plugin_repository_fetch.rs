@@ -26,6 +26,12 @@ pub(super) enum Action {
     Preview,
     Refresh(String),
 }
+#[derive(Clone, Copy)]
+enum TransportUse {
+    Request,
+    RefreshTask,
+}
+
 #[derive(Debug)]
 enum Failure {
     ReleaseTooLarge,
@@ -36,6 +42,8 @@ enum Failure {
     Http(u16),
     Timeout,
     Connect,
+    #[cfg(all(target_os = "linux", target_env = "gnu"))]
+    PreConnectTemporaryResolution,
     Unexpected,
     Unqualified(&'static str),
 }
@@ -343,6 +351,7 @@ async fn one_get_literal(
 async fn one_get(
     url: &reqwest::Url,
     proxy_port: Option<u16>,
+    purpose: TransportUse,
 ) -> Result<(u16, Option<String>, Vec<u8>), Failure> {
     let literal = url
         .host_str()
@@ -354,17 +363,14 @@ async fn one_get(
         .filter(|v| !v.is_empty())
         .or_else(|| std::env::var_os("CURL_CA_BUNDLE").filter(|v| !v.is_empty()))
         .map(std::path::PathBuf::from);
-    tls_transport::one_get(url, bundle.as_deref(), proxy_port).await
+    tls_transport::one_get(url, bundle.as_deref(), proxy_port, purpose).await
 }
-async fn fetch(raw: &str) -> Result<Value, Failure> {
-    fetch_any(raw, true).await
-}
-async fn fetch_any(raw: &str, registry: bool) -> Result<Value, Failure> {
+async fn fetch_any(raw: &str, registry: bool, purpose: TransportUse) -> Result<Value, Failure> {
     let mut current =
         reqwest::Url::parse(raw).map_err(|_| Failure::Policy("URL has no hostname.".into()))?;
     let mut proxy_port = proxy_environment::explicit_port(raw);
     for _ in 0..=5 {
-        let (status, location, body) = one_get(&current, proxy_port).await?;
+        let (status, location, body) = one_get(&current, proxy_port, purpose).await?;
         if [301, 302, 303, 307, 308].contains(&status) {
             let location = location.filter(|v| !v.is_empty()).ok_or_else(|| {
                 Failure::Policy("Redirect response missing Location header.".into())
@@ -384,8 +390,12 @@ async fn fetch_any(raw: &str, registry: bool) -> Result<Value, Failure> {
     }
     Err(Failure::Policy("Exceeded maximum of 5 redirects.".into()))
 }
-async fn fetch_verified(raw: &str, key: Option<&str>) -> Result<(Value, Option<bool>), Failure> {
-    let data = fetch(raw).await?;
+async fn fetch_verified(
+    raw: &str,
+    key: Option<&str>,
+    purpose: TransportUse,
+) -> Result<(Value, Option<bool>), Failure> {
+    let data = fetch_any(raw, true, purpose).await?;
     let verified = manifest_signature::verify(inner(&data), data.get("signature"), key).await?;
     Ok((data, verified))
 }
@@ -695,7 +705,7 @@ pub(super) async fn execute(
         Some((_, row)) => raw_text(row.get("public_key"))?,
         None => text(fields.get("public_key"))?,
     };
-    let (data, verification) = match fetch_verified(&url, Some(&verification_key)).await {
+    let (data, verification) = match fetch_verified(&url, Some(&verification_key), TransportUse::Request).await {
         Ok(value) => value,
         Err(error) => {
             if let Some(id) = created {
@@ -969,6 +979,8 @@ fn settled_fetch_status(error: Failure) -> Result<String, StoreError> {
     match error {
         Failure::Http(code) => Ok(code.to_string()),
         Failure::Policy(_) | Failure::MissingPlugins => Ok("ValueError".into()),
+        #[cfg(all(target_os = "linux", target_env = "gnu"))]
+        Failure::PreConnectTemporaryResolution => Ok("ValueError".into()),
         // Existing HTTP-facing ports deliberately collapse distinct Python
         // exception classes. Never persist a guessed class or successful None.
         Failure::Json => Err(unqualified(
@@ -1046,7 +1058,7 @@ async fn refresh_enabled_sql(mut connection: RefreshSql<'_>) -> Result<Value, St
         } else {
             Some(repo.key.as_str())
         };
-        let (data, verified) = match fetch_verified(&repo.url, key).await {
+        let (data, verified) = match fetch_verified(&repo.url, key, TransportUse::RefreshTask).await {
             Ok(value) => value,
             Err(error) => {
                 let status = settled_fetch_status(error)?;
@@ -1197,7 +1209,9 @@ pub(super) async fn fetch_detail(
     raw: &str,
     key: Option<&str>,
 ) -> Result<(Value, Option<bool>), StoreError> {
-    let data = fetch_any(raw, false).await.map_err(detail_failure)?;
+    let data = fetch_any(raw, false, TransportUse::Request)
+        .await
+        .map_err(detail_failure)?;
     let verified = manifest_signature::verify(inner(&data), data.get("signature"), key)
         .await
         .map_err(detail_failure)?;
@@ -1210,5 +1224,30 @@ fn detail_failure(failure: Failure) -> StoreError {
         _ => StoreError::Unsupported(
             "Exact Source detail HTTP/JSON exception text remains unqualified",
         ),
+    }
+}
+
+#[cfg(all(test, target_os = "linux", target_env = "gnu"))]
+mod refresh_task_resolution_tests {
+    use super::*;
+
+    #[test]
+    fn settled_refresh_only_maps_the_typed_preconnect_temporary_resolution_failure() {
+        assert_eq!(
+            settled_fetch_status(Failure::PreConnectTemporaryResolution).unwrap(),
+            "ValueError"
+        );
+        for guarded in [
+            Failure::Timeout,
+            Failure::Connect,
+            Failure::Json,
+            Failure::Unexpected,
+            Failure::Unqualified(tls_transport::UNQUALIFIED_DNS),
+        ] {
+            assert!(matches!(
+                settled_fetch_status(guarded),
+                Err(StoreError::Unsupported(_))
+            ));
+        }
     }
 }
