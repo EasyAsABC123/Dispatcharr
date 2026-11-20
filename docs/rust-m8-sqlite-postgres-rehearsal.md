@@ -20,3 +20,20 @@ controller exited 0.
 The acceptance covers historical SQLite migration to PostgreSQL and the
 pre-cutover rollback copy. Native SQLite and full M8 acceptance remain open.
 [Historical bridge and runtime receipt](../scripts/rust-integration/milestone-batch111/legacy-sqlite-postgres.json)
+
+## Backup filenames and current Original SQLite upgrade
+
+The exact Candidate111 and pinned Original Compose comparison passed 21
+filename pairs for 42 requests. It covers signed and authorized reading and
+the status and response details for each tested filename and role. Both
+backends and all owned resources retired. Backup job execution has its own
+acceptance scope.
+
+A separate pinned Original run attempted the current migrations against
+another disposable copy of the same historical v0.11.2 SQLite fixture. It
+advanced from 132 to 163 migration records, then exited 1 at the PostgreSQL
+syntax in Channels 0038. The immutable historical SQLite master stayed
+unchanged. The SQLite-to-PostgreSQL rehearsal above remains the verified
+bridge for this historical fixture.
+
+[Scoped filename and Original upgrade evidence](../scripts/rust-integration/milestone-batch111/backup-filenames-and-original-sqlite.json)
