@@ -1,0 +1,584 @@
+[
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-7e9d45f88cd3cb8ab8ff",
+    "decorator_line": 1019,
+    "definition_line": 1020,
+    "kind": "task_candidate",
+    "line": 1019,
+    "module": "apps.channels.tasks",
+    "name": "reschedule_upcoming_recordings_for_offset_change",
+    "parameters": [],
+    "path": "apps/channels/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+    "task_name": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-f7ba4ddb084a9bad742b",
+    "decorator_line": 1152,
+    "definition_line": 1153,
+    "kind": "task_candidate",
+    "line": 1152,
+    "module": "apps.channels.tasks",
+    "name": "rebuild_recurring_rule",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "rule_id"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "horizon_days"
+      }
+    ],
+    "path": "apps/channels/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+    "task_name": "apps.channels.tasks.rebuild_recurring_rule",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-5dffa68b5a8c880c40c1",
+    "decorator_line": 1170,
+    "definition_line": 1171,
+    "kind": "task_candidate",
+    "line": 1170,
+    "module": "apps.channels.tasks",
+    "name": "purge_recurring_rule",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "rule_id"
+      }
+    ],
+    "path": "apps/channels/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+    "task_name": "apps.channels.tasks.purge_recurring_rule",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-bf5b6446943290a55a07",
+    "decorator_line": 1174,
+    "definition_line": 1175,
+    "kind": "task_candidate",
+    "line": 1174,
+    "module": "apps.channels.tasks",
+    "name": "_safe_name",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "s"
+      }
+    ],
+    "path": "apps/channels/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+    "task_name": "apps.channels.tasks._safe_name",
+    "time_limit": null
+  },
+  {
+    "bound": true,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-b6d3e5196b9fdf4d22f4",
+    "decorator_line": 3957,
+    "definition_line": 3958,
+    "kind": "task_candidate",
+    "line": 3957,
+    "module": "apps.channels.tasks",
+    "name": "bulk_create_channels_from_streams",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "self"
+      },
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "stream_ids"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "channel_profile_ids"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "starting_channel_number"
+      }
+    ],
+    "path": "apps/channels/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+    "task_name": "apps.channels.tasks.bulk_create_channels_from_streams",
+    "time_limit": null
+  },
+  {
+    "bound": true,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-5fb6aee2109e9610a953",
+    "decorator_line": 4287,
+    "definition_line": 4288,
+    "kind": "task_candidate",
+    "line": 4287,
+    "module": "apps.channels.tasks",
+    "name": "set_channels_names_from_epg",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "self"
+      },
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "channel_ids"
+      }
+    ],
+    "path": "apps/channels/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+    "task_name": "apps.channels.tasks.set_channels_names_from_epg",
+    "time_limit": null
+  },
+  {
+    "bound": true,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-dbc05325b5fec6965cf2",
+    "decorator_line": 4386,
+    "definition_line": 4387,
+    "kind": "task_candidate",
+    "line": 4386,
+    "module": "apps.channels.tasks",
+    "name": "set_channels_logos_from_epg",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "self"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "channel_ids"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "epg_source_id"
+      }
+    ],
+    "path": "apps/channels/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+    "task_name": "apps.channels.tasks.set_channels_logos_from_epg",
+    "time_limit": null
+  },
+  {
+    "bound": true,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-7b8d35e77b886d865574",
+    "decorator_line": 4554,
+    "definition_line": 4555,
+    "kind": "task_candidate",
+    "line": 4554,
+    "module": "apps.channels.tasks",
+    "name": "set_channels_tvg_ids_from_epg",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "self"
+      },
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "channel_ids"
+      }
+    ],
+    "path": "apps/channels/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+    "task_name": "apps.channels.tasks.set_channels_tvg_ids_from_epg",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-a07b431c4d32fca11993",
+    "decorator_line": 505,
+    "definition_line": 510,
+    "kind": "task_candidate",
+    "line": 505,
+    "module": "apps.epg.sd_tasks",
+    "name": "fetch_sd_guide_for_epg",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "epg_id"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "force"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "_defer_retry"
+      }
+    ],
+    "path": "apps/epg/sd_tasks.py",
+    "soft_time_limit": 3500,
+    "source_sha256": "98909ed0e5ecd7bbeabb27d3de993e0f5323d5198288911c1406c510762aa60d",
+    "task_name": "apps.epg.tasks.fetch_sd_guide_for_epg",
+    "time_limit": 3600
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-51a728331140b3e4a5e8",
+    "decorator_line": 482,
+    "definition_line": 483,
+    "kind": "task_candidate",
+    "line": 482,
+    "module": "apps.epg.tasks",
+    "name": "refresh_all_epg_data",
+    "parameters": [],
+    "path": "apps/epg/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "deb4792a39ed93c57da435ecc2a4fcdf5b4dad8f4e087d3afdb5d4f2b7932ff9",
+    "task_name": "apps.epg.tasks.refresh_all_epg_data",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-9447b1e37de998be5e88",
+    "decorator_line": 748,
+    "definition_line": 749,
+    "kind": "task_candidate",
+    "line": 748,
+    "module": "apps.m3u.tasks",
+    "name": "process_groups",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "account"
+      },
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "groups"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "scan_start_time"
+      }
+    ],
+    "path": "apps/m3u/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+    "task_name": "apps.m3u.tasks.process_groups",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-36118078e913ece60848",
+    "decorator_line": 3278,
+    "definition_line": 3279,
+    "kind": "task_candidate",
+    "line": 3278,
+    "module": "apps.m3u.tasks",
+    "name": "refresh_account_profiles",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "account_id"
+      }
+    ],
+    "path": "apps/m3u/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+    "task_name": "apps.m3u.tasks.refresh_account_profiles",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-8f06d250259fa82da431",
+    "decorator_line": 3389,
+    "definition_line": 3390,
+    "kind": "task_candidate",
+    "line": 3389,
+    "module": "apps.m3u.tasks",
+    "name": "refresh_account_info",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "profile_id"
+      }
+    ],
+    "path": "apps/m3u/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+    "task_name": "apps.m3u.tasks.refresh_account_info",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-3260073d0c423b157cfe",
+    "decorator_line": 476,
+    "definition_line": 477,
+    "kind": "task_candidate",
+    "line": 476,
+    "module": "apps.vod.tasks",
+    "name": "process_movie_batch",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "account"
+      },
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "batch"
+      },
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "categories"
+      },
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "relations"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "scan_start_time"
+      }
+    ],
+    "path": "apps/vod/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "8bed587b6a113caf26039f1ee3e133a0c3a4d51f4909b4e7282956a6b0e5681d",
+    "task_name": "apps.vod.tasks.process_movie_batch",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-510f88ae4db95dd85ed6",
+    "decorator_line": 846,
+    "definition_line": 847,
+    "kind": "task_candidate",
+    "line": 846,
+    "module": "apps.vod.tasks",
+    "name": "process_series_batch",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "account"
+      },
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "batch"
+      },
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "categories"
+      },
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "relations"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "scan_start_time"
+      }
+    ],
+    "path": "apps/vod/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "8bed587b6a113caf26039f1ee3e133a0c3a4d51f4909b4e7282956a6b0e5681d",
+    "task_name": "apps.vod.tasks.process_series_batch",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-3be97df658b7aa18633b",
+    "decorator_line": 1845,
+    "definition_line": 1846,
+    "kind": "task_candidate",
+    "line": 1845,
+    "module": "apps.vod.tasks",
+    "name": "batch_refresh_series_episodes",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "account_id"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "series_ids"
+      }
+    ],
+    "path": "apps/vod/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "8bed587b6a113caf26039f1ee3e133a0c3a4d51f4909b4e7282956a6b0e5681d",
+    "task_name": "apps.vod.tasks.batch_refresh_series_episodes",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-22a4d69de13e976678c7",
+    "decorator_line": 2723,
+    "definition_line": 2724,
+    "kind": "task_candidate",
+    "line": 2723,
+    "module": "apps.vod.tasks",
+    "name": "cleanup_orphaned_vod_content",
+    "parameters": [
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "stale_days"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "scan_start_time"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "account_id"
+      }
+    ],
+    "path": "apps/vod/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "8bed587b6a113caf26039f1ee3e133a0c3a4d51f4909b4e7282956a6b0e5681d",
+    "task_name": "apps.vod.tasks.cleanup_orphaned_vod_content",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-45a550bc3de95f01b5e2",
+    "decorator_line": 3309,
+    "definition_line": 3310,
+    "kind": "task_candidate",
+    "line": 3309,
+    "module": "apps.vod.tasks",
+    "name": "refresh_movie_advanced_data",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "m3u_movie_relation_id"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "force_refresh"
+      }
+    ],
+    "path": "apps/vod/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "8bed587b6a113caf26039f1ee3e133a0c3a4d51f4909b4e7282956a6b0e5681d",
+    "task_name": "apps.vod.tasks.refresh_movie_advanced_data",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-895853e17f0d94b6ad60",
+    "decorator_line": 55,
+    "definition_line": 56,
+    "kind": "task_candidate",
+    "line": 55,
+    "module": "core.tasks",
+    "name": "beat_periodic_task",
+    "parameters": [],
+    "path": "core/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "5e20b3a7395c9d78cc45f3b07abc1becc7d744a3f37e09735eac512ae537dcbc",
+    "task_name": "core.tasks.beat_periodic_task",
+    "time_limit": null
+  },
+  {
+    "bound": false,
+    "callable": "celery.shared_task",
+    "candidate_id": "candidate-3a3d80f355c183143811",
+    "decorator_line": 637,
+    "definition_line": 638,
+    "kind": "task_candidate",
+    "line": 637,
+    "module": "core.tasks",
+    "name": "rehash_streams",
+    "parameters": [
+      {
+        "has_default": false,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "keys"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "account_id"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "locks_preacquired"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "preacquired_lock_ids"
+      },
+      {
+        "has_default": true,
+        "kind": "POSITIONAL_OR_KEYWORD",
+        "name": "preacquired_lock_token"
+      }
+    ],
+    "path": "core/tasks.py",
+    "soft_time_limit": null,
+    "source_sha256": "5e20b3a7395c9d78cc45f3b07abc1becc7d744a3f37e09735eac512ae537dcbc",
+    "task_name": "core.tasks.rehash_streams",
+    "time_limit": null
+  }
+]

@@ -1,0 +1,62 @@
+{
+  "diagnostic_attempt": {
+    "denied_api": "socket.bind",
+    "exact_cleanup": true,
+    "guest_exit": 0,
+    "guest_report_sha256": "610e8a1c1b47b4daebf6acd7b460dfeae9180a8f2c6eb065b1a0b2be4b6ca841",
+    "owner_failure": "recursive receipt validator",
+    "owner_receipt_sha256": "2f6f5b4efc5fc60b243ec6fe81766ce93b559dd43a27a0b9a5dd6bfe4b17c316",
+    "owner_terminal_exit": 1,
+    "unobserved": 20
+  },
+  "first_attempt": {
+    "denied_effect_attempts": {
+      "network": 1
+    },
+    "exact_cleanup": true,
+    "guest_exit": 0,
+    "guest_report_sha256": "423323e404e37eba991091516c460dc70d43b9fec5d274df2c4c5aebb84f7d56",
+    "owner_receipt_sha256": "56e81b9b0eb7a09844b99944043248c8ab599ca5375006b02dba79341e7c330c",
+    "unobserved": 20
+  },
+  "full_M0_accepted": false,
+  "full_source_reduction_sha256": "f635776e0580c93bc1cd788064ddede9f5695c583910bbf289ddf0f68588b79c",
+  "metadata_replay": {
+    "compose_model_sha256": "afdd38e2feb6d5ebfc1efef7104a70194a94eb2549493988fe7cd1da1b918323",
+    "exact_cleanup": true,
+    "external_effects_executed": false,
+    "guest_exit": 0,
+    "guest_report_sha256": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+    "guest_stderr_bytes": 0,
+    "ipv6_capability": "unavailable",
+    "management_commands_started": false,
+    "network_mode": "none",
+    "observed": 20,
+    "other_denied_effect_attempts": {},
+    "owner_receipt_sha256": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+    "owner_terminal_exit": 0,
+    "pre_syscall_fallback": {
+      "api": "socket.bind",
+      "function": "_has_ipv6",
+      "line": 127,
+      "module": "urllib3.util.connection",
+      "result": "EAFNOSUPPORT",
+      "source_sha256": "2633bbdb69731e5ccb5cf4e4afd65605d86c7979cc5633126f50c92d5ad74a74"
+    },
+    "read_only_root_and_source_mounts": true,
+    "seal_sha256": "6201b6566a7f9c026f87a965ad97dda977f1532edf0e92971527ae488e91ca62",
+    "unobserved": 0
+  },
+  "native_task_registration_accepted": false,
+  "schema_version": 1,
+  "scope": "Original Celery registration and callable metadata",
+  "source": {
+    "celery": "5.6.3",
+    "django": "6.0.9",
+    "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "published_inventory_revision": "1e939f9dc92240230bc6f57dfe932b6567bc38e1",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "sealed_roster_sha256": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23"
+  },
+  "task_execution_accepted": false
+}

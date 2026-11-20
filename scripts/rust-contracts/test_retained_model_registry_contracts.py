@@ -25,11 +25,19 @@ class ModelRegistration(unittest.TestCase):
         subject.validate(ROOT, binding)
         register = json.loads((ROOT / "docs/rust-contract-register.json").read_bytes())
         typed = register["non_HTTP_candidates"]
+        import retained_task_registry_contracts as task_registry
+        import retained_management_registration_contracts as command_registry
+        command_registry.restore_before(ROOT, typed)
+        command_input = register["executable_Source_mapping"]["inputs"].pop()
+        self.assertEqual((command_input["kind"], command_input["path"]), (command_registry.KIND, command_registry.INPUT))
+        task_registry.restore_before(ROOT, typed)
+        task_input = register["executable_Source_mapping"]["inputs"].pop()
+        self.assertEqual((task_input["kind"], task_input["path"]), (task_registry.KIND, task_registry.INPUT))
         added = [row for row in typed if row["state"] == subject.STATE]
         self.assertEqual((len(typed), len(added)), (250, 50))
         self.assertEqual(sum(row["result"] is None for row in typed), 23)
         self.assertEqual(sum(row["fully_verified"] is True for row in typed), 0)
-        self.assertEqual(register["executable_Source_non_HTTP_mapping"]["candidates"], 227)
+        self.assertEqual(sum("executable_Source_contract" in row for row in typed), 227)
         self.assertEqual(register["counts"]["fully_verified_route_operations"], 0)
         self.assertEqual(register["executable_Source_mapping"]["operations"], 797)
         self.assertEqual([row["executable_Source_contract"] for row in added], binding["non_HTTP_contracts"])
