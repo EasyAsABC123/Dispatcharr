@@ -12,9 +12,9 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Latest packaged checks
 
-The exact `82414407` package passed **9 of 127 required coordinator
+The exact `82414407` package passed **17 of 127 required coordinator
 nodes** in fresh scoped runs. Each counted node passed its complete
-workload, semantic evaluation and independent cleanup. The other 118
+workload, semantic evaluation and independent cleanup. The other 110
 required nodes lack qualifying evidence in this report. Full release
 workflow, soak, rollback and equivalent-work performance remain open.
 [Current 82414407 coordinator coverage](rust-m9-8241-coordinator-coverage.md)
