@@ -42,3 +42,21 @@ and the project inventories were empty. The earlier f3b8 and e852 receipts
 remain tied to their respective images.
 
 [Redacted a785 grouped receipt](../scripts/rust-integration/m7-hdhr-ordinary-group-a785.json)
+
+## Integrated e765 metadata group
+
+One internal Compose comparison ran 27 ordinary positive GETs per backend
+against pinned Original and packaged Rust e7651a6d. It combined the 14
+discovery and lineup requests, seven ordinary Lineup Status requests and
+six XML and output-profile status requests. All 54 requests returned
+HTTP 200. Every pair matched body lengths, full body digests and selected
+wire headers. The scoped SQL snapshots remained unchanged throughout each
+subgroup. Both standalone backup owner flags and the Selected flags were absent
+from Rust Main.
+
+The controller exited 0. All four container and host generations retired
+and the project inventories were empty. This is a fresh rerun of the a785
+workload. The receipt covers ordinary metadata, with full M7 acceptance
+and performance open.
+
+[Redacted e765 grouped receipt](../scripts/rust-integration/m7-hdhr-ordinary-group-e765.json)
