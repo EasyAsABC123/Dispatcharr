@@ -226,6 +226,9 @@ def apply(root, rows, bindings):
         elif reference['kind'] == 'retained_original_fresh_migration_recorder_non_HTTP':
             import retained_migration_recorder_contracts
             retained_migration_recorder_contracts.validate(root, value)
+        elif reference['kind'] == 'retained_original_django_model_registry_non_HTTP':
+            import retained_model_registry_contracts
+            retained_model_registry_contracts.validate(root, value)
         elif reference['kind'] == 'retained_original_range_Source10_resolver_HTTP':
             import retained_range_source10_contracts
             retained_range_source10_contracts.validate(root, value, bindings)
@@ -536,6 +539,7 @@ def apply_non_HTTP(root, entries):
             'retained_original_Source16_backup_create_task', 'retained_original_Backup_Source12_and_41_lifecycle_tasks',
             'retained_original_Source51_all_match_and_guide_children_tasks', 'retained_original_Source28_autosync_standalone_task',
             'retained_original_worker_wire_non_HTTP', 'retained_original_fresh_migration_recorder_non_HTTP',
+            'retained_original_django_model_registry_non_HTTP',
         ]:
             continue
         value = checked(root, reference)
@@ -563,6 +567,10 @@ def apply_non_HTTP(root, entries):
             import retained_migration_recorder_contracts
             retained_migration_recorder_contracts.validate(root, value)
             source_kind = 'migration'
+        elif reference['kind'] == 'retained_original_django_model_registry_non_HTTP':
+            import retained_model_registry_contracts
+            retained_model_registry_contracts.validate(root, value)
+            source_kind = 'model_candidate'
         elif reference['kind'] == 'retained_original_C105_guide_startup_tasks':
             import retained_c105_guide_startup_contracts
             retained_c105_guide_startup_contracts.validate(root, value)
@@ -619,7 +627,9 @@ def apply_non_HTTP(root, entries):
             entry['assertions'] = copy.deepcopy(contract['assertions'])
             entry['result'] = copy.deepcopy(contract['result'])
             entry['executable_Source_contract'] = copy.deepcopy(contract)
-            entry['state'] = ('partial_executable_Original_model_tests' if current_kind == 'model_candidate'
+            entry['state'] = (retained_model_registry_contracts.STATE
+                              if reference['kind'] == 'retained_original_django_model_registry_non_HTTP'
+                              else 'partial_executable_Original_model_tests' if current_kind == 'model_candidate'
                               else 'partial_executable_Original_task_observations' if current_kind == 'task_candidate'
                               else 'partial_executable_Original_management_subprocess_observations' if current_kind == 'management_command'
                               else 'partial_executable_Original_websocket_route_observations' if current_kind == 'websocket_route'

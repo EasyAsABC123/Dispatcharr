@@ -23,10 +23,12 @@ class MigrationRecorder(unittest.TestCase):
         subject.validate(ROOT, published)
         register = json.loads((ROOT / "docs/rust-contract-register.json").read_bytes())
         typed = register["non_HTTP_candidates"]
+        import retained_model_registry_contracts as model_registry
+        model_registry.restore_before(ROOT, typed)
         selected = [entry["executable_Source_contract"] for entry in typed if entry["source"]["kind"] == "migration"]
         self.assertEqual(len(typed), 250)
         self.assertEqual(len(selected), 145)
-        self.assertEqual(register["executable_Source_non_HTTP_mapping"]["candidates"], 177)
+        self.assertEqual(sum("executable_Source_contract" in row for row in typed), 177)
         self.assertEqual(register["executable_Source_mapping"]["operations"], 797)
         self.assertEqual(selected, published["non_HTTP_contracts"])
         self.assertEqual(digest(register["runtime_routes"]), PRIOR_HTTP)

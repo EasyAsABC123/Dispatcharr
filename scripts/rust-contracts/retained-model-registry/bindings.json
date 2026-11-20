@@ -1,0 +1,1644 @@
+{
+  "format_version": 1,
+  "kind": "retained_original_django_model_registry_non_HTTP",
+  "credit": "Original Dispatcharr and Django contributors retain full credit.",
+  "contracts": [],
+  "fixtures": {
+    "Original-1241b3-Django-model-registry": {
+      "id": "Original-1241b3-Django-model-registry",
+      "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "django": "6.0.9",
+      "database_connections": 0,
+      "actual_exit": 0,
+      "exact_owned_cleanup": true,
+      "network_mode": "none",
+      "runtime_compose_sha256": "261e60aca27a7d7b405a3722e65870005a0f8e72cd6fd792729a052199c69818",
+      "files_sha256": {
+        "scripts/rust-contracts/retained-model-registry/declarations.json": "c522ab2ff66d767d003af04c13462c4ea268d9675d75605005e4bb38cbeed046",
+        "scripts/rust-contracts/retained-model-registry/observations.json": "645a2c3bf63f55578ef0241c1d2770580f00647cad9c53d7896d6114335a3a45",
+        "scripts/rust-contracts/retained-model-registry/execution.json": "fa66cf71289a1ee6671c6e79c90b79ecd333b006856053a90548523abc67d8a4",
+        "scripts/rust-contracts/retained-model-registry/probe.py": "2695f73a2e8d843300eb126bef848216e619c4d7795e4a905dfed85b7d2815f8"
+      },
+      "scope": "Django registry metadata and Manager or QuerySet class bindings from pinned Original."
+    }
+  },
+  "non_HTTP_contracts": [
+    {
+      "candidate_id": "candidate-84291478332a287aef0b",
+      "source": {
+        "kind": "model_candidate",
+        "name": "CustomUserManager",
+        "line": 7,
+        "path": "apps/accounts/models.py"
+      },
+      "original_file_sha256": "05cab8c590de411e68ff83b72d9d6256ca43007cbbab5d2a7f96a3a8965a9ded",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-manager",
+        "bound_models": [
+          "accounts.User"
+        ],
+        "declared_methods": [
+          "create_superuser"
+        ]
+      },
+      "observation_sha256": "f12cab2b8f14db99b5511d213f24017d541293f27af4c45cd28115b6849cca6b",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-dce8ea8a84d9aa3a8f74",
+      "source": {
+        "kind": "model_candidate",
+        "name": "User",
+        "line": 13,
+        "path": "apps/accounts/models.py"
+      },
+      "original_file_sha256": "05cab8c590de411e68ff83b72d9d6256ca43007cbbab5d2a7f96a3a8965a9ded",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "accounts.User",
+        "table": "accounts_user",
+        "primary_key": "id",
+        "field_count": 19
+      },
+      "observation_sha256": "556754972cabd040397033a2c0541713951ba2c62ef5b9515c995a53a436fb18",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-7792810bd910955ceb82",
+      "source": {
+        "kind": "model_candidate",
+        "name": "UserAppData",
+        "line": 52,
+        "path": "apps/accounts/models.py"
+      },
+      "original_file_sha256": "05cab8c590de411e68ff83b72d9d6256ca43007cbbab5d2a7f96a3a8965a9ded",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "accounts.UserAppData",
+        "table": "accounts_userappdata",
+        "primary_key": "id",
+        "field_count": 6
+      },
+      "observation_sha256": "748c46451a61298e45c9db29ee04d67f9940ca78f5f89f8c5ee0510aefba35c2",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-2ca1aa0e3d659fd0c0ae",
+      "source": {
+        "kind": "model_candidate",
+        "name": "ChannelGroupManager",
+        "line": 43,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-manager",
+        "bound_models": [
+          "dispatcharr_channels.ChannelGroup"
+        ],
+        "declared_methods": [
+          "bulk_create_provider_groups",
+          "create_manual",
+          "get_or_create_manual",
+          "mark_custom"
+        ]
+      },
+      "observation_sha256": "c73eb434d2df7100fa52f69a250b48c5d4678999d21f55d033c2dbb1d919588f",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-dafb248787cff0551e53",
+      "source": {
+        "kind": "model_candidate",
+        "name": "ChannelGroup",
+        "line": 70,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.ChannelGroup",
+        "table": "dispatcharr_channels_channelgroup",
+        "primary_key": "id",
+        "field_count": 2
+      },
+      "observation_sha256": "91d3a27c91632e4f7b30e0d4423f6f03ec374073a7b9194d0c9f6f7a398f1da1",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-ab32fbc114fb03c946ca",
+      "source": {
+        "kind": "model_candidate",
+        "name": "Stream",
+        "line": 93,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.Stream",
+        "table": "dispatcharr_channels_stream",
+        "primary_key": "id",
+        "field_count": 24
+      },
+      "observation_sha256": "3b53bb1a7657d27483df9a7ad2f76b424d18974dca4351643a3d860906e44f60",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-1f455ad770e45ab0f5d8",
+      "source": {
+        "kind": "model_candidate",
+        "name": "ChannelManager",
+        "line": 521,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-manager",
+        "bound_models": [
+          "dispatcharr_channels.Channel"
+        ],
+        "declared_methods": [
+          "active",
+          "with_effective_values"
+        ]
+      },
+      "observation_sha256": "a124ec5c5451d2a184556750e31c69c043038788485ef4dbe4278351103104ba",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-3a124ae00012d932b497",
+      "source": {
+        "kind": "model_candidate",
+        "name": "Channel",
+        "line": 540,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.Channel",
+        "table": "dispatcharr_channels_channel",
+        "primary_key": "id",
+        "field_count": 21
+      },
+      "observation_sha256": "4cad0acba0136bc48442368004e0bb0e367648cd3d1031c03835d0b7b04febf1",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-9279eadfbac50255cdec",
+      "source": {
+        "kind": "model_candidate",
+        "name": "ChannelOverride",
+        "line": 1251,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.ChannelOverride",
+        "table": "dispatcharr_channels_channeloverride",
+        "primary_key": "id",
+        "field_count": 13
+      },
+      "observation_sha256": "38d490ea2823d773ffec76d9b802d11b512c57fc1878684105b121cb0f234765",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-7b28e33fd591157f2a45",
+      "source": {
+        "kind": "model_candidate",
+        "name": "ChannelProfile",
+        "line": 1327,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.ChannelProfile",
+        "table": "dispatcharr_channels_channelprofile",
+        "primary_key": "id",
+        "field_count": 2
+      },
+      "observation_sha256": "614a86d4fa7cb0511e04bcc944b527223a0b8788e303df0f57e603bc6adb9e45",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-a3b70f6fdfe82346e248",
+      "source": {
+        "kind": "model_candidate",
+        "name": "ChannelProfileMembership",
+        "line": 1331,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.ChannelProfileMembership",
+        "table": "dispatcharr_channels_channelprofilemembership",
+        "primary_key": "id",
+        "field_count": 4
+      },
+      "observation_sha256": "97fd816ecb5cfdf3e6558e4e44774f9146c61132b284d5cae25762ab5c800b0e",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-55c38b8d0a2c0313ff71",
+      "source": {
+        "kind": "model_candidate",
+        "name": "ChannelStream",
+        "line": 1342,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.ChannelStream",
+        "table": "dispatcharr_channels_channelstream",
+        "primary_key": "id",
+        "field_count": 4
+      },
+      "observation_sha256": "ff0f2cb199660599aae0a5c131c2afeb79e5d66f552af60aa8644bff9c728eb0",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-3ced630b3c7806d99a09",
+      "source": {
+        "kind": "model_candidate",
+        "name": "ChannelGroupM3UAccount",
+        "line": 1356,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.ChannelGroupM3UAccount",
+        "table": "dispatcharr_channels_channelgroupm3uaccount",
+        "primary_key": "id",
+        "field_count": 10
+      },
+      "observation_sha256": "a3385ffc7b37d92653c22cf0246c470524c2a30324b4329c81bd70132ed34462",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-82db33cbb549332d12ef",
+      "source": {
+        "kind": "model_candidate",
+        "name": "LogoQuerySet",
+        "line": 1405,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-queryset",
+        "bound_models": [
+          "dispatcharr_channels.Logo"
+        ],
+        "declared_methods": [
+          "bulk_create"
+        ]
+      },
+      "observation_sha256": "c9b01de54bcf8bbb660938e28ef96be3b6b304e427e6bc18ebb63bdb6c28a3bf",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-0b668c78d677940c02d6",
+      "source": {
+        "kind": "model_candidate",
+        "name": "Logo",
+        "line": 1419,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.Logo",
+        "table": "dispatcharr_channels_logo",
+        "primary_key": "id",
+        "field_count": 3
+      },
+      "observation_sha256": "6668c615b4c37c3bf4a5627bf910cffae497d59317ebd8529d72b28696527cdc",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-88ee1d32304a2242d315",
+      "source": {
+        "kind": "model_candidate",
+        "name": "Recording",
+        "line": 1439,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.Recording",
+        "table": "dispatcharr_channels_recording",
+        "primary_key": "id",
+        "field_count": 6
+      },
+      "observation_sha256": "fa9cb91ac56054664874317994770c43e0a0c331fcdc987cb32e4a11ecba08e5",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-08d388fbba30a7f11233",
+      "source": {
+        "kind": "model_candidate",
+        "name": "RecurringRecordingRule",
+        "line": 1452,
+        "path": "apps/channels/models.py"
+      },
+      "original_file_sha256": "f76cd4a71a2997b04ce836fc3191d56755c26b88fcdfb9caec85b3c67d119f04",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_channels.RecurringRecordingRule",
+        "table": "dispatcharr_channels_recurringrecordingrule",
+        "primary_key": "id",
+        "field_count": 11
+      },
+      "observation_sha256": "f575541bde4a5e08afe3eaa92f60cb301a0296e61ad8f99c3d8af1cb52ac9697",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-fe5a45f11d24ad4aaa67",
+      "source": {
+        "kind": "model_candidate",
+        "name": "Integration",
+        "line": 26,
+        "path": "apps/connect/models.py"
+      },
+      "original_file_sha256": "60b4e17da280810e6fe55508d741b8bc537748b8abc3d4820f1cfdfb33907a11",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_connect.Integration",
+        "table": "dispatcharr_connect_integration",
+        "primary_key": "id",
+        "field_count": 6
+      },
+      "observation_sha256": "1302d4572914627bdd512dd57bd9324effacb40612bc7575a8e21fe246f63088",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-3d87bb3535cffb963401",
+      "source": {
+        "kind": "model_candidate",
+        "name": "EventSubscription",
+        "line": 39,
+        "path": "apps/connect/models.py"
+      },
+      "original_file_sha256": "60b4e17da280810e6fe55508d741b8bc537748b8abc3d4820f1cfdfb33907a11",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_connect.EventSubscription",
+        "table": "dispatcharr_connect_eventsubscription",
+        "primary_key": "id",
+        "field_count": 5
+      },
+      "observation_sha256": "81ec9dbe4a09fbae051de2a3a1cf08cb009d6800cd1c26add61753c39f60885e",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-8fa2f6654168a68bdc7b",
+      "source": {
+        "kind": "model_candidate",
+        "name": "DeliveryLog",
+        "line": 46,
+        "path": "apps/connect/models.py"
+      },
+      "original_file_sha256": "60b4e17da280810e6fe55508d741b8bc537748b8abc3d4820f1cfdfb33907a11",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dispatcharr_connect.DeliveryLog",
+        "table": "dispatcharr_connect_deliverylog",
+        "primary_key": "id",
+        "field_count": 7
+      },
+      "observation_sha256": "2b882fcda42737e8abb2de1d4001792efb8fb90987dd52100b8d21f718b5896e",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-a308cf08d0dd73ef8c75",
+      "source": {
+        "kind": "model_candidate",
+        "name": "Settings",
+        "line": 3,
+        "path": "apps/dashboard/models.py"
+      },
+      "original_file_sha256": "4d3884a1992a936b67093c022871a04646ea1f3a97cc9525118f697d0ede1529",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "dashboard.Settings",
+        "table": "dashboard_settings",
+        "primary_key": "id",
+        "field_count": 27
+      },
+      "observation_sha256": "3407c91f2422718bbab9e73963eb6096690dcc50e0fc3cd31f50c7d2a650298e",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-2061a6f0f5016672aa64",
+      "source": {
+        "kind": "model_candidate",
+        "name": "EPGSource",
+        "line": 7,
+        "path": "apps/epg/models.py"
+      },
+      "original_file_sha256": "975b645dee46899dec59f5620c664de9c246045d437b66c3edd52b1948589178",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "epg.EPGSource",
+        "table": "epg_epgsource",
+        "primary_key": "id",
+        "field_count": 17
+      },
+      "observation_sha256": "e43fc00dea7675d2dadd594ae208bfe5adc235e0dd28d7860c4cf5b2be18e931",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-f1cf32441deebc1532ad",
+      "source": {
+        "kind": "model_candidate",
+        "name": "EPGSourceIndex",
+        "line": 137,
+        "path": "apps/epg/models.py"
+      },
+      "original_file_sha256": "975b645dee46899dec59f5620c664de9c246045d437b66c3edd52b1948589178",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "epg.EPGSourceIndex",
+        "table": "epg_epgsourceindex",
+        "primary_key": "source",
+        "field_count": 3
+      },
+      "observation_sha256": "36a1d2288bda159d32415571390309a3b0375eea5dbbd9dcbd53213ebff2ee4d",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-5f5a0f236859ab89a80c",
+      "source": {
+        "kind": "model_candidate",
+        "name": "EPGData",
+        "line": 156,
+        "path": "apps/epg/models.py"
+      },
+      "original_file_sha256": "975b645dee46899dec59f5620c664de9c246045d437b66c3edd52b1948589178",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "epg.EPGData",
+        "table": "epg_epgdata",
+        "primary_key": "id",
+        "field_count": 5
+      },
+      "observation_sha256": "0ff143d5635907d16732f23943af92d5afa0cf5fe785778f51115458ac9c6c0d",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-1f708af464ff9e9cbb4a",
+      "source": {
+        "kind": "model_candidate",
+        "name": "ProgramData",
+        "line": 174,
+        "path": "apps/epg/models.py"
+      },
+      "original_file_sha256": "975b645dee46899dec59f5620c664de9c246045d437b66c3edd52b1948589178",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "epg.ProgramData",
+        "table": "epg_programdata",
+        "primary_key": "id",
+        "field_count": 10
+      },
+      "observation_sha256": "5cd9881a43837a69dfba7d16ac31ef4cef9a4f29655b760cbf2472f52214108e",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-e23458edc6ebd7f743d2",
+      "source": {
+        "kind": "model_candidate",
+        "name": "SDScheduleMD5",
+        "line": 198,
+        "path": "apps/epg/models.py"
+      },
+      "original_file_sha256": "975b645dee46899dec59f5620c664de9c246045d437b66c3edd52b1948589178",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "epg.SDScheduleMD5",
+        "table": "epg_sdschedulemd5",
+        "primary_key": "id",
+        "field_count": 6
+      },
+      "observation_sha256": "d9b1a4f615f9ad35993d58ab1c1a81af91285a26a9fce333a5100c88737f8169",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-e826c1be19fa41af9442",
+      "source": {
+        "kind": "model_candidate",
+        "name": "SDProgramMD5",
+        "line": 234,
+        "path": "apps/epg/models.py"
+      },
+      "original_file_sha256": "975b645dee46899dec59f5620c664de9c246045d437b66c3edd52b1948589178",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "epg.SDProgramMD5",
+        "table": "epg_sdprogrammd5",
+        "primary_key": "id",
+        "field_count": 4
+      },
+      "observation_sha256": "6a120cde2704491276fcacf4ca87a122d2a528f33676e4e97f7800c6ca3fe79c",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-4b7c7f184ce463be13fd",
+      "source": {
+        "kind": "model_candidate",
+        "name": "HDHRDevice",
+        "line": 3,
+        "path": "apps/hdhr/models.py"
+      },
+      "original_file_sha256": "aa47dec77e87253060c9a1cb9f9f95854d56b4885cad1b32bc219850c4adcc9c",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "hdhr.HDHRDevice",
+        "table": "hdhr_hdhrdevice",
+        "primary_key": "id",
+        "field_count": 4
+      },
+      "observation_sha256": "6332e726ac5065e2b59c20bc57c58eb1aaf492e30684033b30c5c7f5287ae8b7",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-83384b7e25d2df0488ef",
+      "source": {
+        "kind": "model_candidate",
+        "name": "M3UAccount",
+        "line": 15,
+        "path": "apps/m3u/models.py"
+      },
+      "original_file_sha256": "f8e0cd0862d9c576cbd7ac6af71c195a1fde8eaa1b3ea5f225c3b8b56ead7219",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "m3u.M3UAccount",
+        "table": "m3u_m3uaccount",
+        "primary_key": "id",
+        "field_count": 22
+      },
+      "observation_sha256": "4cd7350340d2d2a60ffee1a9a784589cd1a3e2e90d87b345a847496c552d5fa5",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-47d887a19a19279548c4",
+      "source": {
+        "kind": "model_candidate",
+        "name": "M3UFilter",
+        "line": 184,
+        "path": "apps/m3u/models.py"
+      },
+      "original_file_sha256": "f8e0cd0862d9c576cbd7ac6af71c195a1fde8eaa1b3ea5f225c3b8b56ead7219",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "m3u.M3UFilter",
+        "table": "m3u_m3ufilter",
+        "primary_key": "id",
+        "field_count": 7
+      },
+      "observation_sha256": "c76183bea1b50296703b4056191d0e0a50d10549c3664a7e1e9f0b56c99264fa",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-eaeb70fd165378cb3de9",
+      "source": {
+        "kind": "model_candidate",
+        "name": "ServerGroup",
+        "line": 233,
+        "path": "apps/m3u/models.py"
+      },
+      "original_file_sha256": "f8e0cd0862d9c576cbd7ac6af71c195a1fde8eaa1b3ea5f225c3b8b56ead7219",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "m3u.ServerGroup",
+        "table": "m3u_servergroup",
+        "primary_key": "id",
+        "field_count": 2
+      },
+      "observation_sha256": "9a16616ed30aaa8609f685f94fd063649439ee110080d9b8fa0e979736d97c41",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-0477811ddcb73f3f3937",
+      "source": {
+        "kind": "model_candidate",
+        "name": "M3UAccountProfile",
+        "line": 250,
+        "path": "apps/m3u/models.py"
+      },
+      "original_file_sha256": "f8e0cd0862d9c576cbd7ac6af71c195a1fde8eaa1b3ea5f225c3b8b56ead7219",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "m3u.M3UAccountProfile",
+        "table": "m3u_m3uaccountprofile",
+        "primary_key": "id",
+        "field_count": 11
+      },
+      "observation_sha256": "6df3c65fe3c0948235d368d189a59bbcbf2cf8fe1f885779990f214bee35c9a7",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-e81334d6cedf364e396d",
+      "source": {
+        "kind": "model_candidate",
+        "name": "PluginConfig",
+        "line": 4,
+        "path": "apps/plugins/models.py"
+      },
+      "original_file_sha256": "f013c9a70afd71ffd55cc90406354a694b9b9836d905c58e3869152b13035cf7",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "plugins.PluginConfig",
+        "table": "plugins_pluginconfig",
+        "primary_key": "id",
+        "field_count": 16
+      },
+      "observation_sha256": "eedc20127a6647eafc2750ab6d975ebc8ff54db67b280e3a57b7dbd38224f276",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-a402de5c9b6b24796b17",
+      "source": {
+        "kind": "model_candidate",
+        "name": "PluginRepo",
+        "line": 46,
+        "path": "apps/plugins/models.py"
+      },
+      "original_file_sha256": "f013c9a70afd71ffd55cc90406354a694b9b9836d905c58e3869152b13035cf7",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "plugins.PluginRepo",
+        "table": "plugins_pluginrepo",
+        "primary_key": "id",
+        "field_count": 12
+      },
+      "observation_sha256": "09bbbb33a899af9c7f1c223a86156d30b591d5f500b538000065f0b6b631461d",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-3344a565f49b340d552e",
+      "source": {
+        "kind": "model_candidate",
+        "name": "VODLogoQuerySet",
+        "line": 10,
+        "path": "apps/vod/models.py"
+      },
+      "original_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-queryset",
+        "bound_models": [
+          "vod.VODLogo"
+        ],
+        "declared_methods": [
+          "bulk_create"
+        ]
+      },
+      "observation_sha256": "fc397c3fb9314bd65c8612bcda373b84ba787733d55e94bc8e26da09630bf191",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-f6c0931fcb4a0cd1c2b1",
+      "source": {
+        "kind": "model_candidate",
+        "name": "VODLogo",
+        "line": 24,
+        "path": "apps/vod/models.py"
+      },
+      "original_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "vod.VODLogo",
+        "table": "vod_vodlogo",
+        "primary_key": "id",
+        "field_count": 3
+      },
+      "observation_sha256": "413c64e37fcfbfbc0a1fae35c24c2e9d1d5a42ae7c2b407e42d54a2a03911e96",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-3590cbcca498d89b1fee",
+      "source": {
+        "kind": "model_candidate",
+        "name": "VODCategory",
+        "line": 49,
+        "path": "apps/vod/models.py"
+      },
+      "original_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "vod.VODCategory",
+        "table": "vod_vodcategory",
+        "primary_key": "id",
+        "field_count": 5
+      },
+      "observation_sha256": "7a54870c301bbb6d01aee22d2978ab8607c0e7ba6b23812c49d96b57aca50463",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-1a258591f2f5f460df5c",
+      "source": {
+        "kind": "model_candidate",
+        "name": "Series",
+        "line": 102,
+        "path": "apps/vod/models.py"
+      },
+      "original_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "vod.Series",
+        "table": "vod_series",
+        "primary_key": "id",
+        "field_count": 14
+      },
+      "observation_sha256": "62651d5bd401c3a1d085ccdffee27b720fbd97b6632ef85e8ccf8a8f6c282fa5",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-cab89f1d2119f21849fc",
+      "source": {
+        "kind": "model_candidate",
+        "name": "Movie",
+        "line": 158,
+        "path": "apps/vod/models.py"
+      },
+      "original_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "vod.Movie",
+        "table": "vod_movie",
+        "primary_key": "id",
+        "field_count": 16
+      },
+      "observation_sha256": "f19d345340a4c445ecb49277e71f7430b4de06b4749667dd0fa852bbc23d2bf5",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-a5f67d73e39f5f54de33",
+      "source": {
+        "kind": "model_candidate",
+        "name": "Episode",
+        "line": 221,
+        "path": "apps/vod/models.py"
+      },
+      "original_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "vod.Episode",
+        "table": "vod_episode",
+        "primary_key": "id",
+        "field_count": 15
+      },
+      "observation_sha256": "3343ceedb53ac554d1a9d15e1e67883dce05dd4fafbc6c383d7af959861c7a1d",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-f7c0a539d2031251572b",
+      "source": {
+        "kind": "model_candidate",
+        "name": "M3USeriesRelation",
+        "line": 260,
+        "path": "apps/vod/models.py"
+      },
+      "original_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "vod.M3USeriesRelation",
+        "table": "vod_m3useriesrelation",
+        "primary_key": "id",
+        "field_count": 10
+      },
+      "observation_sha256": "aa733157a8173e0394712646314b9f9c1618b53594ee9383fea20dd1aa319428",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-8bc555e058b85430f666",
+      "source": {
+        "kind": "model_candidate",
+        "name": "M3UMovieRelation",
+        "line": 285,
+        "path": "apps/vod/models.py"
+      },
+      "original_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "vod.M3UMovieRelation",
+        "table": "vod_m3umovierelation",
+        "primary_key": "id",
+        "field_count": 11
+      },
+      "observation_sha256": "2f71b2afa65880db9e7bfd8c003ca1841db03646ff67fa88d0bf2197a254bdff",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-6e1a28fc443267fe6b51",
+      "source": {
+        "kind": "model_candidate",
+        "name": "M3UEpisodeRelation",
+        "line": 343,
+        "path": "apps/vod/models.py"
+      },
+      "original_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "vod.M3UEpisodeRelation",
+        "table": "vod_m3uepisoderelation",
+        "primary_key": "id",
+        "field_count": 10
+      },
+      "observation_sha256": "05bc5c1eb40e5f8c6dad1ff67afef66610c38f3260490f49d82cc32d073a9d69",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-cf177f1eaf1310341c57",
+      "source": {
+        "kind": "model_candidate",
+        "name": "M3UVODCategoryRelation",
+        "line": 406,
+        "path": "apps/vod/models.py"
+      },
+      "original_file_sha256": "4e306f9f103f2873d9ab624d537176792e00b7f959c6755c8ec3104dac39d1b6",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "vod.M3UVODCategoryRelation",
+        "table": "vod_m3uvodcategoryrelation",
+        "primary_key": "id",
+        "field_count": 7
+      },
+      "observation_sha256": "a1e61d76bdec7ebdec2597cba2f9d3571f70d01f3d65eb2caef3836f2ed488b2",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-8f35ebf6514bac73716d",
+      "source": {
+        "kind": "model_candidate",
+        "name": "UserAgent",
+        "line": 26,
+        "path": "core/models.py"
+      },
+      "original_file_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "core.UserAgent",
+        "table": "core_useragent",
+        "primary_key": "id",
+        "field_count": 7
+      },
+      "observation_sha256": "a5b08ae6aec88ccb160d199fe9743e5fcdf07d2a62bb09fc0dc3692d55c82a8d",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-04d0067947b1e7b35bef",
+      "source": {
+        "kind": "model_candidate",
+        "name": "StreamProfile",
+        "line": 81,
+        "path": "core/models.py"
+      },
+      "original_file_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "core.StreamProfile",
+        "table": "core_streamprofile",
+        "primary_key": "id",
+        "field_count": 7
+      },
+      "observation_sha256": "9b05893def9111d094a49e1d7a79841e8c8173e2b15f9d03323bef5dbce29478",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-e26beeacca6ebefb48b0",
+      "source": {
+        "kind": "model_candidate",
+        "name": "OutputProfile",
+        "line": 179,
+        "path": "core/models.py"
+      },
+      "original_file_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "core.OutputProfile",
+        "table": "core_outputprofile",
+        "primary_key": "id",
+        "field_count": 6
+      },
+      "observation_sha256": "09538c4508f80007263e19b29bddef36d11fc88aeab34596a4bb43ed52b1febc",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-5cb36bedc17cb01fa9ca",
+      "source": {
+        "kind": "model_candidate",
+        "name": "SystemEvent",
+        "line": 926,
+        "path": "core/models.py"
+      },
+      "original_file_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "core.SystemEvent",
+        "table": "core_systemevent",
+        "primary_key": "id",
+        "field_count": 6
+      },
+      "observation_sha256": "5cdd4bf65069f316c240a406cf74ea8b4c19214496cc303c5d170c8b550633a5",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-7568d099b5083d3a20fd",
+      "source": {
+        "kind": "model_candidate",
+        "name": "SystemNotification",
+        "line": 975,
+        "path": "core/models.py"
+      },
+      "original_file_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "core.SystemNotification",
+        "table": "core_systemnotification",
+        "primary_key": "id",
+        "field_count": 13
+      },
+      "observation_sha256": "a677e6b547a25951b238777bf407d2fa177843a168fd67e6ab433a5eff68ef4a",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    },
+    {
+      "candidate_id": "candidate-462cbe6ecf7fa60fefb5",
+      "source": {
+        "kind": "model_candidate",
+        "name": "NotificationDismissal",
+        "line": 1095,
+        "path": "core/models.py"
+      },
+      "original_file_sha256": "a6098d95888fecc5de8f5ce0515a5a290178ed23cfd50839d014b304263d5afb",
+      "fixture_id": "Original-1241b3-Django-model-registry",
+      "observation": {
+        "kind": "django-registered-model",
+        "label": "core.NotificationDismissal",
+        "table": "core_notificationdismissal",
+        "primary_key": "id",
+        "field_count": 5
+      },
+      "observation_sha256": "62c35592012872434e88eb1415fed0d5d7bcd4db4c16d6b9ba13e563aa09ff7f",
+      "assertions": [
+        "Original runtime verified the exact source file bytes, class name and line before reading metadata.",
+        "The observed class is registered as this Django model or bound to the listed models as this Manager or QuerySet.",
+        "The probe opened zero database connections and did not exercise ORM methods."
+      ],
+      "result": {
+        "state": "partial_executable_Original_Django_class_registration",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "model_data_parity_verified": false,
+        "runtime_behavior_verified": false
+      },
+      "fully_verified": false
+    }
+  ],
+  "fully_verified_added": 0,
+  "performance_verified": false
+}

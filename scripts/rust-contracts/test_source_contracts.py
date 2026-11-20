@@ -279,6 +279,9 @@ class SourceContracts(unittest.TestCase):
         import retained_root7_contract as root7
         import retained_migration_recorder_contracts as migrations
         result, rows = self.apply()
+        import retained_model_registry_contracts as model_registry
+        model_input = result['inputs'].pop()
+        self.assertEqual((model_input['kind'], model_input['path']), (model_registry.KIND, model_registry.INPUT))
         migration_input = result['inputs'].pop()
         self.assertEqual((migration_input['kind'], migration_input['path']), (migrations.KIND, migrations.INPUT))
         reference = result['inputs'].pop()

@@ -272,7 +272,9 @@ class NotificationMutationControls(unittest.TestCase):
   self.assertEqual(non_HTTP_mapping,new['executable_Source_non_HTTP_mapping'])
   import retained_migration_recorder_contracts as migrations
   migration_count=len(migrations.derive(ROOT)['non_HTTP_contracts'])
-  self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+13+final_wave.TYPED_COUNT+migration_count)
+  import retained_model_registry_contracts as model_registry
+  model_count=len(model_registry.derive(ROOT)['non_HTTP_contracts'])
+  self.assertEqual(non_HTTP_mapping['candidates'],old['non_HTTP_mapping']['candidates']+13+final_wave.TYPED_COUNT+migration_count+model_count)
   self.assertEqual(non_HTTP_mapping['fully_verified_added'],0)
   expected=old['base_HTTP_assignments']+len(selected)+len(later_ids)
   self.assertEqual(expected,402) # pre-XC preservation count
