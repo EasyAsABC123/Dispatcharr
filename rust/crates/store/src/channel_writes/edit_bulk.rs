@@ -102,6 +102,7 @@ struct Edit {
     references: References,
     override_references: References,
     clear_override: bool,
+    hidden: Option<bool>,
 }
 
 impl Edit {
@@ -182,6 +183,7 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                         | "override"
                         | "stream_profile_id"
                         | "logo_id"
+                        | "hidden_from_output"
                 )
             }) {
                 return Err(unsupported());
@@ -215,6 +217,14 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                 override_radio,
                 override_references,
                 clear_override: override_intent == Some(&Value::Null),
+                hidden: row
+                    .get("hidden_from_output")
+                    .map(|value| {
+                        value
+                            .as_bool()
+                            .ok_or_else(|| err("hidden_from_output", "Must be a valid boolean."))
+                    })
+                    .transpose()?,
                 references: References::parse(row)?,
                 radio: row
                     .get("is_radio")
@@ -271,11 +281,23 @@ fn reference_errors(
     .collect()
 }
 
+struct LockedChannel {
+    managed: bool,
+    hidden: bool,
+    has_raw_number: bool,
+}
+
+impl LockedChannel {
+    fn can_change_compact_number(&self, hidden: bool) -> bool {
+        self.managed && self.hidden != hidden && self.has_raw_number == hidden
+    }
+}
+
 async fn validate_and_lock(
     tx: &mut Transaction<'_, Postgres>,
     edits: &[Edit],
     ids: &[i64],
-) -> Result<HashMap<i64, bool>, StoreError> {
+) -> Result<HashMap<i64, LockedChannel>, StoreError> {
     // Group update/delete already starts with the group lock. Match
     // that order before taking the channel rows in canonical order.
     let groups = lock_references(
@@ -296,14 +318,25 @@ async fn validate_and_lock(
         }),
     )
     .await?;
-    let selected: HashMap<i64, bool> = sqlx::query_as(
-        "SELECT id, auto_created FROM dispatcharr_channels_channel
+    let selected: HashMap<_, _> = sqlx::query_as::<_, (i64, bool, bool, bool)>(
+        "SELECT id, auto_created, hidden_from_output, channel_number IS NOT NULL
+         FROM dispatcharr_channels_channel
          WHERE id = ANY($1) ORDER BY id FOR UPDATE",
     )
     .bind(ids)
     .fetch_all(&mut **tx)
     .await?
     .into_iter()
+    .map(|(id, managed, hidden, has_raw_number)| {
+        (
+            id,
+            LockedChannel {
+                managed,
+                hidden,
+                has_raw_number,
+            },
+        )
+    })
     .collect();
     // Logo collectors clear channel and existing override links before
     // deleting logo rows. Lock the same children before the logo reference,
@@ -343,11 +376,11 @@ async fn validate_and_lock(
     .await?;
     let mut errors = Vec::new();
     for edit in edits {
-        let Some(managed) = selected.get(&edit.id) else {
+        let Some(channel) = selected.get(&edit.id) else {
             errors.push(json!({"channel_id":edit.id,"error":"Channel not found"}));
             continue;
         };
-        if !managed && edit.has_override_values() {
+        if !channel.managed && edit.has_override_values() {
             return Err(unsupported());
         }
         let mut fields = reference_errors(edit.group, edit.references, &groups, &profiles, &logos);
@@ -378,24 +411,39 @@ const CHANNEL_BATCH_SIZE: usize = 100;
 const OVERRIDE_BATCH_SIZE: usize = 200;
 
 async fn apply(
+    auth: &AuthService,
     tx: &mut Transaction<'_, Postgres>,
     edits: &[Edit],
-    selected: &HashMap<i64, bool>,
+    selected: &HashMap<i64, LockedChannel>,
+    owner: crate::compact_numbering::Owner,
 ) -> Result<(), StoreError> {
     let mut manual_groups = BTreeSet::new();
     let mut scalar_edits = Vec::new();
     let mut override_edits = Vec::new();
     let mut clear_ids = Vec::new();
+    let mut unhide = Vec::new();
+    let mut hide = Vec::new();
     for edit in edits {
+        if let Some(hidden) = edit
+            .hidden
+            .filter(|hidden| selected[&edit.id].can_change_compact_number(*hidden))
+        {
+            if hidden {
+                hide.push(edit.id);
+            } else {
+                unhide.push(edit.id);
+            }
+        }
         if edit.group.is_some()
             || edit.mature.is_some()
             || edit.level.is_some()
             || edit.radio.is_some()
+            || edit.hidden.is_some()
             || edit.references.present()
         {
             scalar_edits.push(edit);
         }
-        if !selected[&edit.id] {
+        if !selected[&edit.id].managed {
             manual_groups.extend(edit.group);
         }
         if edit.clear_override {
@@ -410,6 +458,7 @@ async fn apply(
         let mature: Vec<_> = chunk.iter().map(|edit| edit.mature).collect();
         let radio: Vec<_> = chunk.iter().map(|edit| edit.radio).collect();
         let levels: Vec<_> = chunk.iter().map(|edit| edit.level).collect();
+        let hidden: Vec<_> = chunk.iter().map(|edit| edit.hidden).collect();
         let refs: ReferenceColumns = chunk.iter().map(|edit| edit.references).collect();
         // Stock bulk_update leaves channel row clocks unchanged.
         sqlx::query(
@@ -419,10 +468,11 @@ async fn apply(
                  is_radio = COALESCE(change.radio, channel.is_radio),
                  user_level = COALESCE(change.level, channel.user_level),
                  stream_profile_id = CASE WHEN change.has_profile THEN change.profile ELSE channel.stream_profile_id END,
-                 logo_id = CASE WHEN change.has_logo THEN change.logo ELSE channel.logo_id END
+                 logo_id = CASE WHEN change.has_logo THEN change.logo ELSE channel.logo_id END,
+                 hidden_from_output = COALESCE(change.hidden, channel.hidden_from_output)
              FROM unnest($1::bigint[], $2::bigint[], $3::boolean[], $4::boolean[], $5::integer[],
-                         $6::boolean[], $7::bigint[], $8::boolean[], $9::bigint[])
-                 AS change(id, group_id, mature, radio, level, has_profile, profile, has_logo, logo)
+                         $6::boolean[], $7::bigint[], $8::boolean[], $9::bigint[], $10::boolean[])
+                 AS change(id, group_id, mature, radio, level, has_profile, profile, has_logo, logo, hidden)
              WHERE channel.id = change.id",
         )
         .bind(ids)
@@ -434,12 +484,16 @@ async fn apply(
         .bind(refs.profiles)
         .bind(refs.logos_present)
         .bind(refs.logos)
+        .bind(hidden)
         .execute(&mut **tx)
         .await?;
     }
     for group in manual_groups {
         mark_group(tx, &json!(group)).await?;
     }
+    // The stock bulk action assigns unhide numbers while all old hide
+    // numbers are still reserved. Overrides follow both number phases.
+    crate::compact_unhide::bulk_visibility(auth, tx, &unhide, &hide, owner).await?;
     // Source applies whole-row clear to every selected ID, including
     // manual channels. A missing overlay is an ordinary no-op.
     for chunk in clear_ids.chunks(OVERRIDE_BATCH_SIZE) {
@@ -517,10 +571,11 @@ async fn write(
     ids: &[i64],
     include: bool,
     base: &url::Url,
+    owner: crate::compact_numbering::Owner,
 ) -> Result<Vec<Value>, StoreError> {
     for attempt in 0..3 {
         let mut tx = auth.store.pool().begin().await?;
-        let result = update_and_read(&mut tx, edits, ids, include, base).await;
+        let result = update_and_read(auth, &mut tx, edits, ids, include, base, owner.clone()).await;
         match result {
             Ok(rows) => {
                 // A commit error can have an uncertain outcome. Never retry it.
@@ -535,14 +590,16 @@ async fn write(
 }
 
 async fn update_and_read(
+    auth: &AuthService,
     tx: &mut Transaction<'_, Postgres>,
     edits: &[Edit],
     ids: &[i64],
     include: bool,
     base: &url::Url,
+    owner: crate::compact_numbering::Owner,
 ) -> Result<Vec<Value>, StoreError> {
     let selected = validate_and_lock(tx, edits, ids).await?;
-    apply(tx, edits, &selected).await?;
+    apply(auth, tx, edits, &selected, owner).await?;
     let fetched = QueryBuilder::new(channels::SELECT)
         .push(" AND c.id = ANY(")
         .push_bind(ids)
@@ -558,9 +615,28 @@ async fn update_and_read(
             .ok_or(StoreError::UnhandledRestFault)?;
         rows.insert(id, serialized);
     }
-    ids.iter()
-        .map(|id| rows.remove(id).ok_or(StoreError::UnhandledRestFault))
+    edits
+        .iter()
+        .map(|edit| {
+            let mut row = rows
+                .remove(&edit.id)
+                .ok_or(StoreError::UnhandledRestFault)?;
+            if edit.hidden == Some(false)
+                && selected[&edit.id].can_change_compact_number(false)
+                && !row["channel_number"].is_null()
+            {
+                project_unhide_response(&mut row);
+            }
+            Ok(row)
+        })
         .collect()
+}
+
+fn project_unhide_response(row: &mut Value) {
+    // Original assigns through fresh queryset objects and serializes its
+    // previously fetched Channel objects. GET reads the committed raw slot.
+    row["channel_number"] = Value::Null;
+    row["effective_channel_number"] = row["override"]["channel_number"].clone();
 }
 
 pub(crate) async fn handle(
@@ -571,7 +647,8 @@ pub(crate) async fn handle(
     request: Request,
 ) -> Result<Response, StoreError> {
     let permit = auth.task_sql_writer()?;
-    let auth = auth.with_request_writer_permit(permit)?;
+    let auth = auth.with_request_writer_permit(permit.clone())?;
+    let owner = auth.core_publication_owner(permit);
     tokio::spawn(async move {
         let headers = request.headers().clone();
         auth.account_user(peer, headers.clone(), true).await?;
@@ -579,7 +656,7 @@ pub(crate) async fn handle(
         let include = params.get("include_streams").is_some_and(|value| value == "true");
         let edits = edits(channels::mutation_value(request).await?)?;
         let ids: Vec<i64> = edits.iter().map(|edit| edit.id).collect();
-        let result = write(&auth, &edits, &ids, include, &base).await?;
+        let result = write(&auth, &edits, &ids, include, &base, owner).await?;
         Ok((
             [(header::ALLOW, "PATCH, OPTIONS"), (header::VARY, "Accept, origin")],
             Json(json!({"message":format!("Successfully updated {} channels", result.len()),"channels":result})),
@@ -792,6 +869,74 @@ mod tests {
         assert!(!rows[1].has_override_values());
         assert!(!rows[2].changes_override());
         assert_eq!(rows[3].override_references.logo, Reference::Set(7));
+    }
+
+    #[test]
+    fn bulk_hidden_output_accepts_only_selected_raw_booleans() {
+        let rows = edits(json!([
+            {"id": 21, "hidden_from_output": true},
+            {"id": 14, "hidden_from_output": false},
+            {"id": 18}
+        ]))
+        .unwrap();
+        assert_eq!(
+            rows.iter().map(|edit| edit.hidden).collect::<Vec<_>>(),
+            [Some(true), Some(false), None]
+        );
+        assert!(matches!(
+            edits(json!([{"id": 1, "hidden_from_output": null}])),
+            Err(StoreError::InvalidInput(_))
+        ));
+        assert!(matches!(
+            edits(json!([{"id": 1, "override": {"hidden_from_output": true}}])),
+            Err(StoreError::Unsupported(_))
+        ));
+        let mixed = edits(json!([
+            {"id": 1, "hidden_from_output": true, "override": {"logo_id": 4}},
+            {"id": 2, "hidden_from_output": false, "channel_group_id": 5, "is_radio": false}
+        ]))
+        .unwrap();
+        assert_eq!(mixed[0].hidden, Some(true));
+        assert_eq!(mixed[0].override_references.logo, Reference::Set(4));
+        assert_eq!(mixed[1].hidden, Some(false));
+        assert_eq!(mixed[1].group, Some(5));
+        assert_eq!(mixed[1].radio, Some(false));
+    }
+
+    #[test]
+    fn compact_unhide_patch_keeps_preassignment_raw_and_current_overlay() {
+        for pin in [Value::Null, json!(0.0), json!(3003.0)] {
+            let mut row = json!({
+                "channel_number": 3002.0,
+                "effective_channel_number": 3002.0,
+                "hidden_from_output": false,
+                "override": {"channel_number": pin},
+            });
+            project_unhide_response(&mut row);
+            assert_eq!(row["channel_number"], Value::Null);
+            assert_eq!(row["effective_channel_number"], pin);
+            assert_eq!(row["hidden_from_output"], json!(false));
+        }
+    }
+
+    #[test]
+    fn only_actual_eligible_managed_transitions_enter_compact_numbering() {
+        for managed in [false, true] {
+            for hidden in [false, true] {
+                for has_raw_number in [false, true] {
+                    let row = LockedChannel {
+                        managed,
+                        hidden,
+                        has_raw_number,
+                    };
+                    assert!(!row.can_change_compact_number(hidden));
+                    assert_eq!(
+                        row.can_change_compact_number(!hidden),
+                        managed && ((!hidden && has_raw_number) || (hidden && !has_raw_number))
+                    );
+                }
+            }
+        }
     }
 
     #[test]

@@ -48,6 +48,7 @@ struct Inner {
     local: SocketAddr,
     recording_http: dispatcharr_store::recording_http::RecordingHttp,
     xc_http: dispatcharr_store::xc_account_http::Http,
+    compact: Arc<jobs::compact_coordination::CompactCoordinator>,
     recording_playback: dispatcharr_store::RecordingPlayback,
     beat_enabled: bool,
     #[cfg(target_os = "linux")]
@@ -300,7 +301,8 @@ impl SelectedJobs {
         )
         .map_err(|_| "Selected XC account task configuration unsupported")?;
         let xc_port = Arc::new(xc.clone());
-        auth.bind_compact_coordinator(xc_port.clone())
+        let compact = Arc::new(jobs::compact_coordination::CompactCoordinator::shared(locks.clone()));
+        auth.bind_compact_coordinator(compact.clone())
             .map_err(|_| "Selected compact coordinator binding failed")?;
         let xc_http = dispatcharr_store::xc_account_http::Http::prepare(auth.clone(), xc_port);
         let recording_playback = dispatcharr_store::RecordingPlayback::prepare(
@@ -615,6 +617,7 @@ impl SelectedJobs {
                 local,
                 recording_http,
                 xc_http,
+                compact,
                 recording_playback,
                 beat_enabled,
                 #[cfg(target_os = "linux")]
@@ -766,6 +769,7 @@ impl SelectedJobs {
         self.inner.sd_source_http.close_admission();
         self.inner.recording_http.close_admission();
         self.inner.xc_http.close_admission();
+        self.inner.compact.close_admission();
         self.inner.recording_playback.close_admission();
         self.inner.closed.store(true, Ordering::Release);
         self.inner.startup.send_replace(Startup::Stopping);
@@ -838,6 +842,14 @@ impl SelectedJobs {
             .await
         {
             return selected_shutdown_failed("xc_http");
+        }
+        if !self
+            .inner
+            .compact
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+        {
+            return selected_shutdown_failed("compact");
         }
         if !self
             .inner

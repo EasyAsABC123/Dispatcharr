@@ -292,6 +292,7 @@ pub mod core_settings_broker;
 
 pub mod normal_plugin_repos;
 pub mod normal_xc_accounts;
+pub mod compact_coordination;
 
 mod xc_profile_notifications;
 

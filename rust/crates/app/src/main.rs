@@ -1069,6 +1069,18 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     if plugin_actions.startup_discover(Arc::new(())).await.is_err() {
         eprintln!("Plugin discovery requires compatible runtime or unavailable startup resources");
     }
+    let core_compact = if selected_jobs_enabled {
+        None
+    } else if let Some(cache) = cache_url.as_ref() {
+        let owner = Arc::new(dispatcharr_job_transport::compact_coordination::CompactCoordinator::lazy(
+            cache.clone(),
+        ));
+        auth.bind_compact_coordinator(owner.clone())
+            .map_err(|_| "Core compact coordinator binding failed")?;
+        Some(owner)
+    } else {
+        None
+    };
     let auth_routes = match &core_settings {
         Some(core) => auth
             .clone()
@@ -1334,6 +1346,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         plugin_actions,
         core_settings,
         selected_jobs,
+        core_compact: core_compact.clone(),
         ordinary_recording_playback: ordinary_recording_playback.clone(),
         original_m3u_refresh_all: original_m3u_refresh_all.clone(),
         engine,
@@ -1374,6 +1387,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         signal_services.stream_files.stop_stream_file_admission();
         signal_services.stream_regex.close_admission();
         signal_services.plugin_actions.stop_admission();
+        if let Some(owner) = &signal_services.core_compact {
+            owner.close_admission();
+        }
         if let Some(owner) = &signal_services.manual_backup {
             owner.stop_admission();
         }
@@ -1410,6 +1426,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         refresh_enabled
             || original_m3u_refresh_all.is_some()
             || manual_backup_enabled
+            || core_compact.as_ref().is_some_and(|owner| owner.was_used())
             || auth.stream_files_were_used()
             || stream_regex.was_used()
             || ordinary_recording_playback
@@ -1486,6 +1503,7 @@ struct ShutdownServices {
     plugin_actions: dispatcharr_store::PluginActions,
     core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
     selected_jobs: Option<selected_jobs::SelectedJobs>,
+    core_compact: Option<Arc<dispatcharr_job_transport::compact_coordination::CompactCoordinator>>,
     ordinary_recording_playback: Option<dispatcharr_store::RecordingPlayback>,
     original_m3u_refresh_all: Option<dispatcharr_job_transport::transport::OriginalM3uRefreshAll>,
     engine: StreamEngine,
@@ -1524,6 +1542,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         plugin_actions,
         core_settings,
         selected_jobs,
+        core_compact,
         ordinary_recording_playback,
         original_m3u_refresh_all,
         engine,
@@ -1568,7 +1587,10 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     if let Some(m3u) = &original_m3u_refresh_all {
         m3u.close_admission();
     }
-    let (stream_files_drained, stream_regex_drained, original_m3u_drained, manual_restore_drained) = tokio::join!(
+    if let Some(owner) = &core_compact {
+        owner.close_admission();
+    }
+    let (stream_files_drained, stream_regex_drained, original_m3u_drained, manual_restore_drained, compact_drained) = tokio::join!(
         stream_files.shutdown_stream_files(Duration::from_secs(8)),
         stream_regex.shutdown(Duration::from_secs(8)),
         async {
@@ -1583,7 +1605,16 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
                 None => true,
             }
         },
+        async {
+            match core_compact {
+                Some(owner) => owner.shutdown(Duration::from_secs(8)).await,
+                None => true,
+            }
+        },
     );
+    if !compact_drained {
+        return Err("Core compact numbering ownership did not settle".into());
+    }
     if !manual_restore_drained {
         return Err("Manual restore worker or accepted restore did not settle cleanly".into());
     }
