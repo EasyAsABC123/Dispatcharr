@@ -98,3 +98,30 @@ application restore, full M8 acceptance, and comparative performance
 remain open.
 
 [Redacted clock-policy receipt](../scripts/rust-integration/milestone-batch113/standalone-backup-clock-a785.json)
+
+## Normal shutdown during an active manual backup
+
+A fresh run on the same `a785a2b7` package issued an authenticated manual
+create to Rust Main. It returned HTTP 202 and a signed task reference. An
+observer in the owned container sent one ordinary SIGTERM to Main. The
+same packaged PostgreSQL dump process generation was active immediately
+before and after the signal.
+
+Rust Main exited 0 without an OOM kill. Redis retained the typed SUCCESS
+result for the issued task. The 39,221-byte archive read from the stopped
+container matched the recorded size and the PostgreSQL format-2 ZIP
+contract. The representative SQL records and independent control stayed
+unchanged. The owned broker queue was sampled empty around the final SQL
+snapshot.
+
+Stock Original ran its regular authenticated create, signed status, and
+download in a separate Compose project, producing a 39,402-byte
+PostgreSQL format-2 archive. Both phases stopped normally. The controller
+exited 0 and verified retirement of all six owned Compose generations
+with empty inventories.
+
+This run verifies one normal shutdown during accepted backup work.
+Shutdown deadline expiration, scheduling, restore, cancellation,
+full M8 acceptance, and comparative performance remain open.
+
+[Redacted active-backup shutdown receipt](../scripts/rust-integration/milestone-batch113/standalone-backup-active-shutdown-a785.json)
