@@ -1,0 +1,183 @@
+{
+  "Candidate_image_id": "sha256:90bc93409ae1d7eb04985c6f208fc8e4c3f5d214be91e990f47611ad51eafd3f",
+  "Candidate_revision": "7adb0c72dae360cc5c3a4b5e4d8f7b100e8f200b",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "absolute_group_measurements": {
+    "Original": [
+      {
+        "cpu_mean_cores": 0.14213626955289002,
+        "peak_simultaneous_working_set_bytes": 998424576,
+        "real_measurement_seconds": 59.999513332004426,
+        "trial": 1
+      },
+      {
+        "cpu_mean_cores": 0.14293235820350916,
+        "peak_simultaneous_working_set_bytes": 998236160,
+        "real_measurement_seconds": 60.00206746598997,
+        "trial": 2
+      },
+      {
+        "cpu_mean_cores": 0.141370555659992,
+        "peak_simultaneous_working_set_bytes": 996569088,
+        "real_measurement_seconds": 60.00078984198626,
+        "trial": 3
+      }
+    ],
+    "Rust": [
+      {
+        "cpu_mean_cores": 0.024787712432740628,
+        "peak_simultaneous_working_set_bytes": 289280000,
+        "real_measurement_seconds": 59.99537085300835,
+        "trial": 1
+      },
+      {
+        "cpu_mean_cores": 0.024658981841056585,
+        "peak_simultaneous_working_set_bytes": 287547392,
+        "real_measurement_seconds": 59.99838150400319,
+        "trial": 2
+      },
+      {
+        "cpu_mean_cores": 0.025469212931283684,
+        "peak_simultaneous_working_set_bytes": 289693696,
+        "real_measurement_seconds": 60.00185416499153,
+        "trial": 3
+      }
+    ]
+  },
+  "all_six_clean_and_physically_valid": true,
+  "anchor_windows_matched": true,
+  "changed_input_count": 0,
+  "comparative_summary": {
+    "median_original_CPU_cores": 0.14213626955289002,
+    "median_original_peak_working_set_MiB": 951.9921875,
+    "median_paired_CPU_reduction_percent": 82.56060011233309,
+    "median_paired_peak_working_memory_reduction_percent": 71.02635422307553,
+    "median_rust_CPU_cores": 0.024787712432740628,
+    "median_rust_peak_working_set_MiB": 275.87890625,
+    "useful_throughput_change_percent_range": [
+      0.8585458563454607,
+      1.133664981985394
+    ]
+  },
+  "comparison_eligible": true,
+  "controller_state_sha256": "18f0c10044817a2eb6dc944dee81d0157dd6c26f4b0d6c9c6a9702ba6b710e36",
+  "credit": "Original Dispatcharr authors and contributors",
+  "fresh_phases": 6,
+  "full_migration_or_streaming_milestone_accepted": false,
+  "independent_reducer_actual_exit": 0,
+  "independent_result_sha256": "da08f328a06ef644029e0ebcbfafac6b5c0a28d7b02a1368dbdb3808c8616677",
+  "independently_verified_exact_clean_phases": 6,
+  "literal_comparison_eligible": true,
+  "literal_pair_budget_verdict": true,
+  "literal_pair_count": 3,
+  "pairs": [
+    {
+      "failed": [],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.17439399887666904,
+        "encoded_useful_throughput": 1.01127456138931,
+        "first_byte_p95": 0.11765197432433885,
+        "memory": 0.28973645776924467,
+        "throughput": 1.011562498894034
+      },
+      "trial": 1,
+      "viewers": 100
+    },
+    {
+      "failed": [],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.17252203875309166,
+        "encoded_useful_throughput": 1.011336649819854,
+        "first_byte_p95": 0.0869402670014644,
+        "memory": 0.2880554757703828,
+        "throughput": 1.011615555478493
+      },
+      "trial": 2,
+      "viewers": 100
+    },
+    {
+      "failed": [],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.180159247534821,
+        "encoded_useful_throughput": 1.0085854585634546,
+        "first_byte_p95": 0.08761000624536287,
+        "memory": 0.2906910313477433,
+        "throughput": 1.0088576336147232
+      },
+      "trial": 3,
+      "viewers": 100
+    }
+  ],
+  "phase_status": [
+    {
+      "anchor_observation_lag_ms": 5.2227,
+      "backend": "Original",
+      "literal_actual_exit": 0,
+      "phase": 1,
+      "trial": 1,
+      "verified_cleanup": true
+    },
+    {
+      "anchor_observation_lag_ms": 5.935809,
+      "backend": "Native",
+      "literal_actual_exit": 0,
+      "phase": 2,
+      "trial": 1,
+      "verified_cleanup": true
+    },
+    {
+      "anchor_observation_lag_ms": 6.332961,
+      "backend": "Native",
+      "literal_actual_exit": 0,
+      "phase": 3,
+      "trial": 2,
+      "verified_cleanup": true
+    },
+    {
+      "anchor_observation_lag_ms": 2.380688,
+      "backend": "Original",
+      "literal_actual_exit": 0,
+      "phase": 4,
+      "trial": 2,
+      "verified_cleanup": true
+    },
+    {
+      "anchor_observation_lag_ms": 1.484823,
+      "backend": "Original",
+      "literal_actual_exit": 0,
+      "phase": 5,
+      "trial": 3,
+      "verified_cleanup": true
+    },
+    {
+      "anchor_observation_lag_ms": 2.600274,
+      "backend": "Native",
+      "literal_actual_exit": 0,
+      "phase": 6,
+      "trial": 3,
+      "verified_cleanup": true
+    }
+  ],
+  "plan_sha256": "3ccb9fa89462f222331fead612c4c94ad11b9090c4964f304e68e5b9f389a52f",
+  "primary_accounting": "backend and infrastructure plus origin, observer excluded",
+  "result_sha256": "dc09f91aa06554d14bafdbe33e8aff4b94546d327fa589e3a528dcabacd767f3",
+  "schema": 1,
+  "scope": "fresh anchored 100-viewer, one-channel VLC MPEG-TS comparison",
+  "scoped_pair_budgets_passed": true,
+  "useful_one_batch_tolerance_seconds": 2.005333333332999,
+  "useful_span_spread_seconds": {
+    "audio": 1.6213333333333324,
+    "video": 1.6000000000000014
+  },
+  "verification_complete": true,
+  "whole_controller_literal_actual_exit": 0,
+  "whole_expected_exit": 0,
+  "work_equivalent": {
+    "audio": true,
+    "video": true
+  },
+  "workload_sha256": "e3db735554048977f7f20449c438d639b6c2311a42f153cf166f67894ec5542b"
+}

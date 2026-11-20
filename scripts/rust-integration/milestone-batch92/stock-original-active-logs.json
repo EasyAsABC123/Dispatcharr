@@ -1,0 +1,75 @@
+{
+  "actual_http": {
+    "admin_token": {
+      "mime": "application/json",
+      "status": 200
+    },
+    "list": {
+      "mime": "application/json",
+      "status": 200
+    },
+    "setup_admin": {
+      "mime": "application/json",
+      "status": 200
+    },
+    "setup_status": {
+      "mime": "application/json",
+      "status": 200
+    },
+    "tail": {
+      "mime": "application/json",
+      "status": 200
+    }
+  },
+  "actual_phase_exits": {
+    "cleanup": 0,
+    "create": 0,
+    "probe": 0,
+    "readiness": 0,
+    "startup": 0
+  },
+  "admin_log_list": {
+    "collector_running": true,
+    "live_file_modified_is_utc": true,
+    "live_file_size_matches_owned_interval": true,
+    "single_live_file_named": true
+  },
+  "admin_log_tail": {
+    "cursor_matches_open_file_and_bound": true,
+    "file_prefix_matches_HTTP_tail": true,
+    "real_startup_record_visible": true,
+    "reset_without_truncation": true
+  },
+  "credit": "Original Dispatcharr authors and contributors",
+  "evidence_sha256": {
+    "corrected-fixture-receipt.json": "d5a83e03d573ca119dd4738be6c41da99480702b071d1b54955f16c0e74d0153",
+    "independent-cleanup.json": "1ea39352aca6265bf4da48695e735940b1a11b33060f4c68594dfb4320abd16e",
+    "probe-execution.json": "ed459ae8a783f2e3016fbefb25dfd90f7bed8a52c97cfafc1fdd18cc50f84f46",
+    "probe.stdout": "76c0847417fbcb7a2ec1f6b84662faf92860590ec6ca874486d5f6b9c7a45151",
+    "receipt.json": "4f52b653cad7cf412e67daaebaea5b23a25ef0abbb4c1812392e92fba5514c76"
+  },
+  "exact_owned_cleanup": true,
+  "full_M8_verified": false,
+  "native_active_log_production_verified": false,
+  "original": {
+    "config": "sha256:e6dd7702028a8540782053a8433a77db47f4713ba92c296c572e5deef9b3b3cc",
+    "index": "sha256:ceb66020eebaf5d4a319fdb580e06c9a22f36813ad02d862ee438b72e0353f1a",
+    "manifest": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "root7_receipt_sha256": "4e67e3a74bde612b51aeebd80902a8f2ccdc7c5c017f1ac50f6ed5397023eb37"
+  },
+  "performance_verified": false,
+  "physical_controller_exit": 0,
+  "scope": "owned stock Original AIO active managed startup log listing and tail",
+  "startup": {
+    "actual_startup_record_sha256": "14086b485e4c67d43de502b2c2e33005d4043601d05ff215c5e399c862f68c11",
+    "file_prefix_bytes_before_admin": 26096,
+    "fresh_tmpfs": "/data",
+    "locale_fixture": "LANG=C.UTF-8",
+    "normal_application_produced_file": true,
+    "synthetic_log_text_written_by_fixture": false,
+    "unmounted_application": true
+  },
+  "tail_file_prefix_bytes": 26096,
+  "tail_file_prefix_sha256": "5ef6d4defd615d64ac807a00dbe441123c387632be8a763ba478493b2061f1d1"
+}
