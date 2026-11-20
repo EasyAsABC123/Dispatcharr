@@ -59,3 +59,28 @@ fetched a moving upstream `master`. The ARM64 binary identity leaves its
 corresponding source and dependency notices unresolved for distribution.
 [Original build recipe](https://github.com/Dispatcharr/Dispatcharr/blob/1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430/docker/DispatcharrBase)
 [Retained Comskip notice](../rust/runtime/comskip-NOTICE)
+
+### Comskip build attestation
+
+The official ARM64 index points to attestation manifest
+`sha256:101a3215d5d658cb5f55b23333cc784e79849e39981111417d0f4e4e3a18aed9`
+and SLSA v1 statement
+`sha256:ccaee1b02aa0f09dabfd5e41fb1270655611aa110dc9018e1d4dd8c38fee17ba`.
+Their digests and subject match the exact Original image. The statement's
+embedded recipe matches the pinned Dockerfile. BuildKit ties its Comskip copy
+step to the verified ELF layer. The recorded build command downloads a moving
+`master` archive. The statement marks its resolved-dependency list incomplete
+and lists only the two ARM64 base images.
+[Official ARM64 attestation descriptor](https://ghcr.io/v2/dispatcharr/dispatcharr/manifests/sha256:101a3215d5d658cb5f55b23333cc784e79849e39981111417d0f4e4e3a18aed9)
+
+The authenticated workflow artifacts `13194869636` (ARM64) and `13196150368`
+(amd64) matched their declared sizes and OCI digests. Their decoded records
+each identify one uncached Comskip build step. The retained ARM64 step output
+covers 681 chunks and 99,115 bytes. The official attestation and build
+records did not identify the fetched upstream commit or archive digest. An
+authoritative revision or exact archived source remains needed to establish
+corresponding source for this binary. Native ARM64 runtime and redistribution
+qualification remain pending. The Original Dispatcharr and Comskip authors
+retain full credit.
+[Original build run](https://github.com/Dispatcharr/Dispatcharr/actions/runs/41557436058/attempts/1)
+[Exact attestation and build-record receipt](../scripts/rust-integration/milestone-batch111/arm64-comskip-provenance.json)

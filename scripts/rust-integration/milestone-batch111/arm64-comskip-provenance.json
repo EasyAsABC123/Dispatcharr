@@ -1,0 +1,76 @@
+{
+  "arm64_manifest": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+  "attested_resolved_dependencies": [
+    {
+      "digest": {
+        "sha256": "af22a52f5eafef3d78e551599d405c02df61919d18028f0cea8eda93bc9986d0"
+      },
+      "uri": "pkg:docker/ghcr.io/astral-sh/uv@latest?platform=linux%2Farm64"
+    },
+    {
+      "digest": {
+        "sha256": "6baed9ed3c8b828c9663abda7ff13f66c4a230ffbbb3f05e125df0c6eb7fa0d1"
+      },
+      "uri": "pkg:docker/ghcr.io/dispatcharr/ffmpeg@latest?platform=linux%2Farm64"
+    }
+  ],
+  "comskip_binary_sha256": "75bc4daf372684c366fbd86a3d53106f12d1be571a63ed4d55bc28d400ab4692",
+  "comskip_build_step": "step13",
+  "comskip_copy_step": "step16",
+  "comskip_layer": "sha256:ba50f4bf6f93d9ce0aed9bfde9a3b8286d7863a58c36d0158ab2a51cfc520e7e",
+  "comskip_source_url_from_build": "https://github.com/erikkaashoek/Comskip/archive/refs/heads/master.tar.gz",
+  "credit": "Original Dispatcharr authors and contributors, Comskip and dependency authors",
+  "dockerfile_sha256": "3195943a1d2dc301c986d55eddc44d14b1fb46b01495251a7b4f006d6270375b",
+  "evidence_sha256": {
+    "authenticated-comskip-build-record.json": "d88e5cf5e72fb9b093f8a2d41822ebefccd61777e16c49021235ab0e5192ae78",
+    "authenticated-record-exact-layout.json": "e78a700f1ed2f1d9996c26fcd2223e11057db18e122af8923b08c2c3efe96f38",
+    "github-artifact-access.json": "2f06d518888ea7ae954e910ce82fc7a574b4b3196a09d393d526616129146f99",
+    "verified-provenance.json": "0255cfd4d39d813d3aa027c6385feacd2218b88e86a38b86429eab66882a8935"
+  },
+  "exact_comskip_copy_layer_bound_by_attestation": true,
+  "exact_corresponding_source_verified": false,
+  "in_toto_statement_digest": "sha256:ccaee1b02aa0f09dabfd5e41fb1270655611aa110dc9018e1d4dd8c38fee17ba",
+  "native_ARM64_runtime_verified": false,
+  "oci_attestation_manifest": "sha256:101a3215d5d658cb5f55b23333cc784e79849e39981111417d0f4e4e3a18aed9",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "raw_build_outputs_retained": false,
+  "redistribution_qualified": false,
+  "registry_http": {
+    "arm64_referrers_status": 404,
+    "attestation_blob_statuses": [
+      200
+    ],
+    "attestation_manifest_status": 200
+  },
+  "resolved_dependencies_complete": false,
+  "scope": "exact official Original ARM64 registry attestation and authenticated workflow build records",
+  "slsa_predicate_type": "https://slsa.dev/provenance/v1",
+  "source_identity_still_required": "An authoritative Comskip revision or digest-pinned source archive attributable to the exact ARM64 build input.",
+  "statement_bytes": 66350,
+  "stored_credentials_updated": false,
+  "verified_official_build_records": {
+    "amd64": {
+      "actual_download_exit": 0,
+      "archive_bytes": 223969,
+      "archive_sha256": "a21cea475e6c13e317689f15913862dea14c7844019577f5e11c0a9f8c93e17b",
+      "artifact_id": 13196150368,
+      "comskip_build_step_marked_cached": false,
+      "decoded_build_step_output_bytes": 99292,
+      "decoded_build_step_output_chunks": 716,
+      "source_commit_or_archive_digest_observed": false,
+      "status_frames": 1
+    },
+    "arm64": {
+      "actual_download_exit": 0,
+      "archive_bytes": 232026,
+      "archive_sha256": "d5fda0373b7a8c279786db16dbe916bc9296fb5db75892edc121df02f4c81e7b",
+      "artifact_id": 13194869636,
+      "comskip_build_step_marked_cached": false,
+      "decoded_build_step_output_bytes": 99115,
+      "decoded_build_step_output_chunks": 681,
+      "source_commit_or_archive_digest_observed": false,
+      "status_frames": 2
+    }
+  },
+  "workflow": "https://github.com/Dispatcharr/Dispatcharr/actions/runs/41557436058/attempts/1"
+}
