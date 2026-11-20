@@ -453,16 +453,39 @@ async fn list(
     method: Method,
     uri: Uri,
 ) -> Result<Response, StoreError> {
-    if method == Method::GET
-        && uri.query().is_none()
-        && headers
-            .get("accept")
-            .is_some_and(|value| value == "text/html")
-    {
-        let user = state.auth.account_user(peer, headers.clone(), true).await?;
+    let accept = headers.get("accept");
+    let bare_html = uri.query().is_none() && accept.is_some_and(|value| value == "text/html");
+    let format_alias = method == Method::GET
+        && uri.query() == Some("format=api")
+        && accept.is_some_and(|value| value == "*/*");
+    if (matches!(method, Method::GET | Method::HEAD) && bare_html) || format_alias {
+        let user = state
+            .auth
+            .account_user(peer, headers.clone(), false)
+            .await?;
+        if user.user_level < 1 {
+            return Err(StoreError::PermissionDenied);
+        }
+        let template = match (user.user_level >= 10, format_alias, &method) {
+            (true, true, _) => programme_html::Template::AdminFormatAlias,
+            (true, false, _) => programme_html::Template::Admin,
+            (false, false, &Method::GET) => programme_html::Template::Standard,
+            (false, _, _) => {
+                return Err(StoreError::Unsupported(
+                    "This Guide browsable HTML representation is not yet implemented",
+                ));
+            }
+        };
         let origin = origin(&state.auth, peer, &headers);
         let programmes = state.read_authorized(None, origin.clone()).await?;
-        return programme_html::response(&headers, &user.username, &origin, programmes);
+        return programme_html::response(
+            &headers,
+            method,
+            template,
+            &user.username,
+            &origin,
+            programmes,
+        );
     }
     respond(state, peer, headers, None, uri).await
 }

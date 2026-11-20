@@ -19,6 +19,8 @@ use std::{
 };
 use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 
+mod restore_plugin_copy;
+
 #[derive(Clone)]
 pub struct Limits {
     pub database_bytes: u64,
@@ -766,7 +768,7 @@ fn restore_archive(
         if bytes.len() > 1 << 20 {
             return Err(Error::Metadata);
         }
-        require_disabled_restore_plugins(&bytes)?;
+        restore_plugin_copy::require_disabled(&bytes).map_err(|_| Error::Metadata)?;
         // Prove the configured PG tool reaches the SAME observed Main server
         // lifetime/database, not merely a different server with an equal DB name.
         let identity_file = scratch.0.join("restore-target.json");
@@ -864,62 +866,6 @@ fn parse_migration_copy(
     Ok(result)
 }
 
-/// Before destructive SQL, keep enabled/history plugin restore explicitly gated
-/// until its actual restore-task context/owned child-trail port is composed.
-fn require_disabled_restore_plugins(bytes: &[u8]) -> Result<(), Error> {
-    let text = std::str::from_utf8(bytes).map_err(|_| Error::Metadata)?;
-    let prefix = "COPY public.plugins_pluginconfig (";
-    let mut columns: Option<Vec<&str>> = None;
-    let mut ended = false;
-    let mut rows = 0;
-    for line in text.lines() {
-        if columns.is_none() {
-            if let Some(names) = line
-                .strip_prefix(prefix)
-                .and_then(|v| v.strip_suffix(") FROM stdin;"))
-            {
-                let observed = names.splitn(65, ", ").collect::<Vec<_>>();
-                if observed.len() > 64 {
-                    return Err(Error::Metadata);
-                }
-                columns = Some(observed);
-            }
-            continue;
-        }
-        if line == "\\." {
-            ended = true;
-            break;
-        }
-        rows += 1;
-        if rows > 256 {
-            return Err(Error::Metadata);
-        }
-        let columns = columns.as_ref().ok_or(Error::Metadata)?;
-        let values = line.splitn(columns.len() + 1, '\t').collect::<Vec<_>>();
-        if values.len() != columns.len() {
-            return Err(Error::Metadata);
-        }
-        for (field, expected) in [
-            ("enabled", "f"),
-            ("ever_enabled", "f"),
-            ("owned_tasks", "[]"),
-            ("suspended_schedules", "[]"),
-        ] {
-            let index = columns
-                .iter()
-                .position(|v| *v == field)
-                .ok_or(Error::Metadata)?;
-            if values[index] != expected {
-                return Err(Error::Metadata);
-            }
-        }
-    }
-    if columns.is_none() || !ended {
-        return Err(Error::Metadata);
-    }
-    Ok(())
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -947,16 +893,18 @@ mod tests {
     fn current_restore_plugin_guard_rejects_active_or_history_before_any_drop() {
         let header="COPY public.plugins_pluginconfig (key, enabled, owned_tasks, suspended_schedules, ever_enabled) FROM stdin;\n";
         let body = |row: &str| format!("{header}{row}\n\\.\n");
-        assert!(require_disabled_restore_plugins(body("owned\tf\t[]\t[]\tf").as_bytes()).is_ok());
+        assert!(
+            restore_plugin_copy::require_disabled(body("owned\tf\t[]\t[]\tf").as_bytes()).is_ok()
+        );
         for row in [
             "owned\tt\t[]\t[]\tf",
             "owned\tf\t[]\t[]\tt",
             "owned\tf\t[1]\t[]\tf",
             "owned\tf\t[]\t[1]\tf",
         ] {
-            assert!(require_disabled_restore_plugins(body(row).as_bytes()).is_err());
+            assert!(restore_plugin_copy::require_disabled(body(row).as_bytes()).is_err());
         }
-        assert!(require_disabled_restore_plugins(
+        assert!(restore_plugin_copy::require_disabled(
             b"COPY public.plugins_pluginconfig (enabled) FROM stdin;\nf\n\\.\n"
         )
         .is_err());
