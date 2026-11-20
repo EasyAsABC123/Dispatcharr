@@ -12,10 +12,11 @@ alone does not establish application parity or an application performance gain.
 The [complete parity plan](rust-complete-parity-plan.md) assigns parallel work
 across M0–M9 and proposes M10/M11 as separate rollout stages.
 
-The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-final-wave-796.json)
-passed all 33 tests, reproduced the register byte-for-byte, and verified cleanup.
-The register has partial Original coverage for 796 of 798 HTTP declarations
-and 32 of 250 typed declarations. Full role and Native parity remain open.
+The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-root7-797.json)
+passed all 34 tests, reproduced the register byte-for-byte, and verified cleanup.
+The register has partial Original coverage for 797 of 798 HTTP declarations
+and 32 of 250 typed declarations. The [previous SDK receipt](../scripts/rust-contracts/sdk-live-final-wave-796.json)
+retains the 796-declaration result. Full role and Native parity remain open.
 
 The [Original packaged React root](rust-m0-original-aio-root.md) returned
 HTTP 200 with the exact baked index and both linked assets under the explicit
@@ -832,7 +833,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 
 | ID | Deliverable | Depends on | Current status | Evidence required to pass |
 | --- | --- | --- | --- | --- |
-| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 619 partial HTTP Source assignments, 179 HTTP assignments absent, and 21 typed non-HTTP assignments across 250 candidates; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
+| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 797 partial HTTP Original assignments, one unassigned HTTP declaration, and 32 partial typed assignments across 250 candidates; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
 | M1 | Shared bounded streaming core | M0 | In progress (technical core gates passed; M0 executable-contract prerequisite open) | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
 | M2 | Authenticated live TS vertical slice | M1 | In progress | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
 | M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |

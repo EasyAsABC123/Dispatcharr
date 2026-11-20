@@ -9,6 +9,7 @@ import retained_backup_create_task
 import retained_backup_lifecycle_tasks
 import retained_matching51_tasks
 import retained_residual_source_contracts as portable
+import retained_root7_contract
 import retained_worker_wire_contracts
 import source_contracts
 
@@ -27,12 +28,18 @@ TYPED_COUNT = 11
 
 
 def dependencies(root):
-    return portable.dependencies(root).union(*(module.dependencies() for module in TYPED))
+    return portable.dependencies(root).union(retained_root7_contract.dependencies(),
+                                             *(module.dependencies() for module in TYPED))
 
 
 def restore_pre_final_wave(root, register):
     """Reverse the exact scoped additions before checking historical row digests."""
-    tail = register['executable_Source_mapping']['inputs'][-(len(TYPED) + 1):]
+    inputs = register['executable_Source_mapping']['inputs']
+    root7 = inputs.pop()
+    assert root7['kind'] == retained_root7_contract.KIND and root7['path'] == retained_root7_contract.INPUT
+    retained_root7_contract.validate(root, source_contracts.checked(root, root7))
+    retained_root7_contract.restore_before(root, register['runtime_routes'])
+    tail = inputs[-(len(TYPED) + 1):]
     assert [ref['kind'] for ref in tail] == [module.KIND for module in (*TYPED, portable)]
     captured_http = source_contracts.checked(root, tail[-1])
     portable.validate(root, captured_http)

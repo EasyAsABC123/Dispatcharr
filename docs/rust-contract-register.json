@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "d136ed4d7123957b39b13dd6e76ca7eb67ea119380faf9bb93c8397030d92b59",
+    "scripts/rust-contracts/executable-source-inputs.json": "27d77c602fcc9c42bb213bf31530adbfbc1c552a01a2bc4e18a5ef5e76585fe0",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -76,11 +76,12 @@
     "scripts/rust-contracts/retained-matching51-tasks/bindings.json": "ac8ff1b321b14b9891ba369201f4899e6bec5d0cab81f5d9fea24cf140be7212",
     "scripts/rust-contracts/retained-autosync28-task/bindings.json": "fa788962ac69e09a3174341c79e533969182f0a64873f0fc7fce1c7d5f87b5e3",
     "scripts/rust-contracts/retained-worker-wire/bindings.json": "397b1adb1c189a9fa7f362f0c31a3cdc02d392dae03a4907c2e372b0b21cd29b",
-    "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json": "5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9"
+    "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json": "5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9",
+    "scripts/rust-contracts/retained-root7-binding.json": "d0f98082a29c3cff6abfeb522a0a4a0cb2f9e59a7a23ffa3f0d9e29160d6f191"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 796,
+    "operations": 797,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -416,6 +417,11 @@
         "path": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
         "sha256": "5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9",
         "kind": "retained_original_residual_frozen_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-root7-binding.json",
+        "sha256": "d0f98082a29c3cff6abfeb522a0a4a0cb2f9e59a7a23ffa3f0d9e29160d6f191",
+        "kind": "retained_original_packaged_Root7_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -331980,15 +331986,187 @@
           "owning_milestone": "M8",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "anonymous"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "id": "Original-packaged-root7-C.UTF-8",
+            "description": "Stock Original packaged React root with an explicit disposable OS login locale.",
+            "receipt": {
+              "path": "scripts/rust-contracts/original-aio-root7.json",
+              "sha256": "54e02d91c7ed04c5abaa8464a0c7805edadc00d8631952c701ebeae656aecdbf"
+            },
+            "Original": {
+              "OCI_configuration": "sha256:e6dd7702028a8540782053a8433a77db47f4713ba92c296c572e5deef9b3b3cc",
+              "OCI_index": "sha256:ceb66020eebaf5d4a319fdb580e06c9a22f36813ad02d862ee438b72e0353f1a",
+              "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+              "baked_frontend_layer_sha256": "d6d5796ecb66ca1c8c0dfb69bebb7cdeceee51a13d9024948aac1ad7ada81d87",
+              "local_build_actual": {
+                "actual_exit": 0,
+                "settled": true,
+                "sha256": "6a1280b2acbb5f73ec8012347acd77d7fa211184eb02e218f773cabed97461fd",
+                "stdout_stderr_EOF": true
+              },
+              "local_build_manifest_sha256": "c00b7d95bb7df15a50d363cef1be0b6e3c642d1c44149ba37205f2ae79fb9b4b",
+              "network_mode": "none",
+              "original_source_copy_layer_sha256": "bef096b250b05e284ef55bafad0ec26c0289b5681cdf88ae6b22cd79956a2cba",
+              "original_source_directory_mode": "0755",
+              "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+              "selected_OCI_manifest": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3",
+              "stock_entrypoint": true,
+              "unmounted_application_and_assets": true
+            },
+            "login_fixture": {
+              "OS_file": "/etc/environment",
+              "actual_phase_results": {
+                "copy-base-os-environment": {
+                  "actual_exit": 0,
+                  "settled": true,
+                  "sha256": "b3dfb315c94dc38e237bb3975081467060ff67cfbf6355d7cbd88ea51d16ac71",
+                  "stdout_stderr_EOF": true
+                },
+                "copy-utf8-os-environment": {
+                  "actual_exit": 0,
+                  "settled": true,
+                  "sha256": "d4f48273a1c75ae1492ddedf8f69136bb18186d8b541c02c3091c284802de1ef",
+                  "stdout_stderr_EOF": true
+                },
+                "verify-os-environment-round-trip": {
+                  "actual_exit": 0,
+                  "settled": true,
+                  "sha256": "bc481884607424c28ff08af93041f90f1249e3c649a18a94325113a983fc8d0e",
+                  "stdout_stderr_EOF": true
+                }
+              },
+              "before_sha256": "3d88795b8d42b87bbbf91f8d30dae43b6db9ecd4b1eb93a883062352c902ff5d",
+              "default_login_locale_qualified": false,
+              "fresh_data_tmpfs": true,
+              "single_added_entry": "LANG=C.UTF-8",
+              "verified_roundtrip_sha256": "a1e4b29183cf1e30cbe2c457f15c50b3f5260518ec9a23d7fb7325cd38a5fd09"
+            },
+            "actual_teardown": {
+              "cleanup_sha256": "1ea39352aca6265bf4da48695e735940b1a11b33060f4c68594dfb4320abd16e",
+              "exact_owned_Original_container_and_generation_retired": true,
+              "owned_resources_after_cleanup": {
+                "container": 0,
+                "network": 0,
+                "volume": 0
+              }
+            }
+          },
+          "assertions": [
+            "Exact anonymous HTTP 200 root and linked JavaScript and stylesheet match the baked Original image.",
+            "Full Django resolver selected the unnamed TemplateView at ordinal 589 with no keyword arguments.",
+            "The explicitly qualified disposable login locale, exact container generation and cleanup were verified."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "state": "partial_exact_Original_observations",
+            "Source_case_observations": 1,
+            "new_Source_cases_this_task": 0,
+            "Native_coverage_increased": false
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "contract_id": "route-a21d90b60c8d5e9c908b:METHOD_UNRESOLVED",
+            "fixture_id": "Original-packaged-root7-C.UTF-8",
+            "resolver_ordinal": 589,
+            "resolver_name": "",
+            "pattern_exact": "",
+            "source_handler": "django.views.generic.base.TemplateView",
+            "owning_milestone": "M8",
+            "method": null,
+            "source_action": null,
+            "observed_methods": [
+              "GET"
+            ],
+            "observed_roles": [
+              "anonymous"
+            ],
+            "source_role_specs": {
+              "anonymous": {
+                "fixture_role_or_supplied_credential": "anonymous",
+                "complete": false
+              }
+            },
+            "assertions": [
+              "Exact anonymous HTTP 200 root and linked JavaScript and stylesheet match the baked Original image.",
+              "Full Django resolver selected the unnamed TemplateView at ordinal 589 with no keyword arguments.",
+              "The explicitly qualified disposable login locale, exact container generation and cleanup were verified."
+            ],
+            "result": {
+              "state": "partial_exact_Original_observations",
+              "Source_case_observations": 1,
+              "new_Source_cases_this_task": 0,
+              "Native_coverage_increased": false
+            },
+            "fully_verified": false,
+            "cases": [
+              {
+                "actual_content_type": "text/html",
+                "actual_html_bytes": 858,
+                "actual_html_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                "actual_location": null,
+                "actual_location_present": false,
+                "actual_resolver": {
+                  "action": null,
+                  "handler": "django.views.generic.base.TemplateView",
+                  "ordinal": 589,
+                  "pattern": "",
+                  "view_name": "django.views.generic.base.TemplateView"
+                },
+                "actual_status": 200,
+                "checkpoint": "complete",
+                "contract_id": "route-a21d90b60c8d5e9c908b:METHOD_UNRESOLVED",
+                "django_version": "6.0.9",
+                "exact_related_assets": [
+                  {
+                    "actual_bytes": 2654224,
+                    "actual_content_type": "application/javascript",
+                    "actual_sha256": "010b81d1bb1557f5374d6eb2c0bf3f61fd122833029dbd98b321eb5dd1cfd058",
+                    "actual_status": 200,
+                    "kind": "module",
+                    "path": "/assets/index-msm8qEOi.js",
+                    "redirect_present": false,
+                    "same_stock_file": true
+                  },
+                  {
+                    "actual_bytes": 227833,
+                    "actual_content_type": "text/css",
+                    "actual_sha256": "5dafb4056775922dd4dc8423bb3e2e50d00170e2bc1ab73c22cda50321fbb33c",
+                    "actual_status": 200,
+                    "kind": "stylesheet",
+                    "path": "/assets/index-Ds5qLkMK.css",
+                    "redirect_present": false,
+                    "same_stock_file": true
+                  }
+                ],
+                "host": "127.0.0.1:9191",
+                "method": "GET",
+                "path": "/",
+                "resolver_declared_name_empty": true,
+                "resolver_kwargs_empty": true,
+                "resolver_method_declaration": null,
+                "resolver_packaged_index": true,
+                "resolver_passed": true,
+                "resolver_url_name": null,
+                "role": "anonymous",
+                "stock_index_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+                "wire_passed": true
+              }
+            ]
+          }
         }
       ]
     },

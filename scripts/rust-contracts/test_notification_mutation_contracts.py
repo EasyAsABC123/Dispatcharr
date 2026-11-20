@@ -45,7 +45,7 @@ class NotificationMutationControls(unittest.TestCase):
   ops={o['contract_id']:o for r in new['runtime_routes']for o in r['operations']}
   selected=set(old['new_selected_contract_ids'])
   self.assertEqual(len(ops),798);self.assertEqual(len(old['unselected_operation_dicts']),795)
-  inputs=new['executable_Source_mapping']['inputs'];prior=old['existing_executable_Source_mapping_inputs']
+  inputs=historical_register['executable_Source_mapping']['inputs'];prior=old['existing_executable_Source_mapping_inputs']
   self.assertEqual(inputs[:len(prior)],prior)
   self.assertEqual(inputs[len(prior)]['kind'],subject.KIND)
   # The receipt is immutable. Later schema/credential/VOD/logo/matching/station
@@ -290,7 +290,7 @@ class NotificationMutationControls(unittest.TestCase):
   expected += retained_c106_connect_replay_contracts.load(ROOT)['operation_count']
   expected += retained_logo_m3u_contracts.load(ROOT)['operation_count']
   expected += retained_epg_vod_logo_contracts.load(ROOT)['operation_count']
-  expected += final_wave.HTTP_COUNT
+  expected += final_wave.HTTP_COUNT + 1  # Packaged Original Root-7.
   self.assertEqual(mapping['operations'],expected)
   self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)
   self.assertEqual({key for key,o in ops.items()if 'executable_Source_contract'in o and o['executable_Source_contract'].get('fixture_id')=='retained-Original-notification-mutations-Source2-48'},selected)

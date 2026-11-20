@@ -37,8 +37,8 @@ using the explicit locale but exited 1 at an incorrect resolver assertion
 before the root request. The succeeding attempt corrected that assertion and
 recorded the root and assets first.
 
-This result supports one partial Original assignment for the anonymous
-root. The published SDK still reports 796 of 798 HTTP declarations with
-partial Original coverage until its next regeneration and acceptance. The
-remaining route, Native coverage, default-locale boot, performance and full
-M0 remain open. [Milestone ledger](rust-milestones.md)
+The network-disabled SDK now includes one partial Original assignment for
+the anonymous root. It verified 797 of 798 HTTP declarations with partial
+Original coverage. The remaining route, Native coverage, default-locale
+boot, performance and full M0 remain open.
+[SDK receipt](../scripts/rust-contracts/sdk-live-root7-797.json)

@@ -12,22 +12,41 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Starting point
 
-M0–M8 are in progress and M9 is planned. M0 records 175 partial executable
-Python HTTP references, with 623 operations lacking one. The 322 unresolved
-method declarations overlap those categories. These are coverage counts. A
-separate implementation audit establishes which Rust behavior is
-missing. The latest parallel fixes have focused compilation, tests and
-reference controls. The exact Candidate68 image completed all twelve XC
-lifecycle calls and matched five task result values, with cache and
-WebSocket differences remaining. The follow-up code needs verification through
-Main. Candidate67 passed twelve scoped live-viewing budget pairs. New output
-formats, active jobs and the final release image require their own evidence.
+The network-disabled M0 SDK passed all 34 tests, reproduced its register exactly,
+and verified partial Original coverage for 797 of 798 HTTP declarations and
+32 of 250 typed operations. A separate packaged Original run verified the
+anonymous React root and both baked assets with an explicit disposable login
+locale. The SDK binds that capture to the unresolved root declaration.
+[SDK receipt](../scripts/rust-contracts/sdk-live-root7-797.json)
+[Original packaged root](rust-m0-original-aio-root.md)
 
-The existing coordinator exports **127 required nodes** shared across the
-playback/API, protocols/operations, jobs and root owners. This is the starting
-execution matrix. Check each node against the requirements below, including
-shared workflows that cover multiple contract IDs. Record any required cell
-without a production entry point or runnable binding as a blocker.
+The historical media comparisons established one upstream for 100 simultaneous
+live TS viewers and measured about 83% lower CPU and 71% lower peak working
+memory at matched work. A separate two-hour soak completed twelve guide
+refreshes with ten viewers sharing one upstream and provider slot. The release
+candidate still needs integrated equivalents. The Auto Sync full-scan latency
+check remains scheduled at the end of functional migration.
+[100-viewer comparison](rust-m2-100-viewer-measured.md)
+[Two-hour soak](rust-m9-guide-lock-diagnostic.md#two-hour-playback-and-refresh-soak)
+
+The exact coordinator exports **127 required nodes**. The required roster has
+44 playback and management nodes, 28 protocol and operations nodes, 48
+provider and scheduler nodes, and 7 cross-milestone nodes. Each owner binds
+the candidate, Source authority and declared effects for its executable
+workflows. The current M6 owner admits two partial probes. Complete
+provider, scheduler and performance workflows require bindings with their
+normal runtime roles and full assertions.
+[Coordinator guide](../scripts/rust-milestone-batches/README.md)
+
+The shared verification package kept the existing React inputs and combined
+the explicit VOD session change, opt-in Original Celery playlist refresh, and
+missing-row backup settings recovery. The scoped Compose checks passed.
+Fresh VOD admissions still differ at the measured provider-slot boundary.
+The complete Native worker graph, packed application suite, and final
+resource comparison remain open.
+[VOD session evidence](rust-vod-explicit-session-id.md)
+[Refresh All evidence](rust-m6-refresh-all-original-worker.md)
+[Backup settings evidence](rust-m8-backup-missing-row.md)
 
 ## Orchestration
 
@@ -153,3 +172,18 @@ Use the [milestone ledger](rust-milestones.md), the
 [latest development checkpoint](rust-milestone-batch69.md), and the
 [coordinator guide](../scripts/rust-milestone-batches/README.md) as the living
 links between work, test bindings and evidence.
+
+## M10/M11 operator handoff
+
+M10 and M11 remain proposed. Record each decision against the exact image
+and effective configuration selected for that stage. The release record should
+carry the source revision, platform digests, configuration, decision and owner,
+observations, and the fallback digest and runbook.
+
+| Decision | Current evidence | What the operator needs to record |
+| --- | --- | --- |
+| **M10 · Select the release candidate and supported platforms** | Two amd64 packages passed 15 scoped PostgreSQL/VLC probes. ARM64 donor and Comskip identities passed offline verification. [Package evidence and native checks](rust-m10-amd64-pg-vlc-portability.md) | Select the exact M9-qualified digest and effective deployment configuration. Bind per-platform runtime checks for the supported scope, including native ARM64 package and dependency/attribution checks where ARM64 is supported. The amd64 component results do not establish full M9 or platform-wide readiness. |
+| **M10 · Start and evaluate the rollout** | The current evidence is from isolated package and copied-data fixtures. | Record the isolated production-scale rehearsal or designated canary, traffic and time bounds, recovery targets, and playback, ingest, admin, plugin, resource and data-integrity thresholds. Identify the single writer, scheduler and upstream owner per scope. Record the actual observations and stop/continue outcome. Real deployment requires the release decision already called for in M10. |
+| **M10 · Stop and restore the fallback** | Candidate110 and Candidate111 restored a transactional PostgreSQL copy, reused the front door and authenticated session, confined the Native edit to the copy, and matched the complete Original fingerprint before restart. Both strict controllers exited 1 after the same four timestamp changes reproduced by an independent Original restart. [Exact copied PostgreSQL rollback](rust-m9-copied-postgres-rollback.md) | Bind rollback to the selected release image and configuration. Record how to stop writers and workers, retain or reconcile writes accepted after cutover, resume the fallback, and verify service and data integrity within the declared recovery targets. The integrated strict M9 rollback gate remains open. |
+| **M11 · Switch the default and transfer ownership** | Package and copied-data results supply bounded inputs to the M10 decision. | Use the actual M10 result to decide whether to switch. Verify the served release digest, effective default configuration, supported platforms and roles, and successful fresh install and upgrade. Hand over release notes, compatibility matrix, operator ownership, dashboards and the upgrade/rollback runbook. Retain the unchanged React UI and original application and dependency credits. [Attribution](../ATTRIBUTION.md) |
+| **M11 · Monitor and retire the fallback** | The isolated PostgreSQL rollback evidence covers copied data and the recorded restart outcome. | Keep the tested fallback available throughout the declared rollback interval and record post-cutover monitoring and recovery evidence. Decide separately whether to retire it using the existing retention and rollback criteria. |
