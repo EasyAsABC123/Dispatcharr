@@ -33,3 +33,22 @@ network, and volume inventories.
 The ordinary FFmpeg input profile, broader M3, and comparative performance
 remain open.
 [Ordinary FFmpeg output-profile receipt](../scripts/rust-integration/milestone-batch113/f3b8-ordinary-ffmpeg-output-profile.json)
+
+## Integrated a785 FFmpeg output-profile run
+
+A fresh two-viewer Compose comparison passed on packaged a785a2b7 and
+pinned Original. Both authenticated clients per backend received HTTP 200
+fMP4 and shared one upstream connection, one FFmpeg output-profile transform,
+and one remux. After the lead viewer disconnected, the survivor received
+826,598 fresh bytes on Original and 854,025 on Rust while
+the same media process generations stayed active.
+
+Both captures on each backend shared the initialization segment and complete
+fragments. Independent parsing found 6 shared fragments on Original and
+6 on Rust. All four captures decoded H.264 video and AAC audio with zero
+decoder errors. Rust Main ran with the manual-backup owner, selected workers,
+Beat and media diagnostics absent and exited 0. Both runs retired the exact
+media processes and all five owned container and host generations. The project
+inventories were empty.
+
+[Redacted a785 receipt](../scripts/rust-integration/m3-ordinary-ffmpeg-output-profile-a785.json)
