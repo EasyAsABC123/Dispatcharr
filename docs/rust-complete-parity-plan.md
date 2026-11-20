@@ -54,6 +54,9 @@ It recorded 1,023 passing checks and one response-body mismatch for a
 malformed settings ID. Cleanup passed. The coordinator exited 2 with
 this node failed. The nine C74 passes remain scoped to C74.
 
+The [735 persisted password upgrade](rust-735-auth-hash-acceptance.md) passed 34 checks and
+verified cleanup on 735, covering eight persisted credential variants.
+
 The [735 createsuperuser and typed comparisons](rust-735-cli-acceptance.md) passed 22 shipped
 createsuperuser cases and 154 typed comparisons on 735. The coordinator
 recorded two passing nodes and verified cleanup.
