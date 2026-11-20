@@ -242,6 +242,13 @@ fn validate(
     if input.contains_key("locked") {
         return Err(unsupported());
     }
+    let create_account_type = input.get("account_type").and_then(Value::as_str);
+    // Remote live STD playlists use the same ordinary HTTP(S) URL shape as XC.
+    let remote_std_create = create_account_type == Some("STD")
+        && input
+            .get("file_path")
+            .is_none_or(|value| value.is_null() || value.as_str() == Some(""))
+        && matches!(input.get("enable_vod"), None | Some(Value::Bool(false)));
     let mut saved = old.clone();
     let mut errors = Map::new();
     for name in [
@@ -275,8 +282,7 @@ fn validate(
                 // flexible URL validator, not a narrower invented URL policy.
                 if value == &old["server_url"] || value.is_null() || value.as_str() == Some("") {
                     Ok(value.clone())
-                } else if create && input.get("account_type").and_then(Value::as_str) == Some("XC")
-                {
+                } else if create && (create_account_type == Some("XC") || remote_std_create) {
                     let text = character(name, value, None, true)?;
                     // Source flexible URL validator accepts these ordinary
                     // HTTP(S) URLs without rewriting them. Keep all other
@@ -1265,6 +1271,111 @@ mod tests {
             true
         );
     }
+    #[test]
+    fn remote_std_create_admits_active_and_inactive_live_provider_urls() {
+        let url = "http://127.0.0.1:30000/owned.m3u";
+        for active in [false, true] {
+            let input = json!({
+                "name": "Owned",
+                "server_url": url,
+                "account_type": "STD",
+                "is_active": active,
+                "refresh_interval": 0
+            });
+            let outcome = validate(
+                input.as_object().unwrap().clone(),
+                &defaults(),
+                "",
+                false,
+                true,
+            )
+            .unwrap();
+            assert_eq!(outcome.saved["server_url"], url);
+            assert_eq!(outcome.saved["account_type"], "STD");
+            assert_eq!(outcome.saved["is_active"], active);
+            assert_eq!(outcome.saved["status"], "idle");
+            assert_eq!(outcome.saved["refresh_interval"], 0);
+            assert_eq!(outcome.saved["custom_properties"]["enable_vod"], false);
+        }
+    }
+
+    #[test]
+    fn remote_std_create_accepts_typed_editor_defaults() {
+        let url = "https://example.invalid/owned.m3u";
+        let input = json!({
+            "name": "Owned",
+            "server_url": url,
+            "account_type": "STD",
+            "is_active": true,
+            "refresh_interval": 24,
+            "cron_expression": "",
+            "exp_date": null,
+            "server_group": null,
+            "user_agent": null,
+            "username": "",
+            "password": "",
+            "hash_key": null,
+            "stale_stream_days": 0,
+            "max_streams": 0,
+            "enable_vod": false
+        });
+        let outcome = validate(
+            input.as_object().unwrap().clone(),
+            &defaults(),
+            "",
+            false,
+            true,
+        )
+        .unwrap();
+        assert_eq!(outcome.saved["server_url"], url);
+        assert_eq!(outcome.saved["refresh_interval"], 24);
+        assert_eq!(outcome.expiration, Some(None));
+        assert!(outcome.cron.is_empty());
+    }
+
+    #[test]
+    fn remote_std_create_preserves_other_provider_url_admission() {
+        let url = "https://example.invalid/owned.m3u";
+        for (input, create) in [
+            (json!({"name": "Owned", "server_url": url}), true),
+            (
+                json!({"name": "Owned", "server_url": url, "account_type": "STD",
+                       "file_path": "owned.m3u"}),
+                true,
+            ),
+            (
+                json!({"name": "Owned", "server_url": url, "account_type": "STD",
+                       "enable_vod": true}),
+                true,
+            ),
+            (json!({"server_url": url, "account_type": "STD"}), false),
+        ] {
+            assert!(matches!(
+                validate(
+                    input.as_object().unwrap().clone(),
+                    &defaults(),
+                    "",
+                    !create,
+                    create
+                ),
+                Err(StoreError::Unsupported(_)),
+            ));
+        }
+        let xc = json!({"name": "Owned", "server_url": url, "account_type": "XC"});
+        assert_eq!(
+            validate(
+                xc.as_object().unwrap().clone(),
+                &defaults(),
+                "",
+                false,
+                true
+            )
+            .unwrap()
+            .saved["server_url"],
+            url
+        );
+    }
+
     #[test]
     fn xc_group_selection_preserves_activity_and_vod_preferences() {
         let groups = json!({"channel_groups":[
