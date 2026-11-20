@@ -9,6 +9,7 @@ pub(crate) struct BackupCandidate {
 fn backup_kind_allowed(authority: Authority, kind: &Kind) -> bool {
     matches!(authority, Authority::Fixture | Authority::DefaultServices)
         || (authority == Authority::Backup && matches!(kind, Kind::Create))
+        || (authority == Authority::BackupRestore && matches!(kind, Kind::Restore(_)))
 }
 
 impl Jobs {
@@ -17,7 +18,7 @@ impl Jobs {
         expected: Option<&[u8]>,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Option<BackupCandidate>, Error> {
-        if !self.allows_defaults() && !self.allows_backup() {
+        if !self.allows_defaults() && !self.allows_backup() && !self.allows_manual_restore() {
             return Err(Error::UnsupportedTask);
         }
         let (reply, _held) = self
@@ -105,7 +106,7 @@ impl Jobs {
         origin: &str,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Published, Error> {
-        if !self.allows_defaults() {
+        if !self.allows_normal_restore() {
             return Err(Error::UnsupportedTask);
         }
         let raw = encode_restore(
@@ -152,7 +153,7 @@ impl Jobs {
         id: &str,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Option<Metadata>, Error> {
-        if (!self.allows_defaults() && !self.allows_backup())
+        if (!self.allows_defaults() && !self.allows_backup() && !self.allows_manual_restore())
             || id.is_empty()
             || id.len() > 1024
             || id.contains('\0')
@@ -298,13 +299,16 @@ mod manual_authority_tests {
     use super::*;
 
     #[test]
-    fn manual_backup_cannot_claim_restore_or_scheduled_work() {
+    fn manual_backup_authorities_keep_create_and_restore_separate() {
         let create = Kind::Create;
         let restore = Kind::Restore("owned.zip".into());
         let scheduled = Kind::Scheduled(serde_json::json!(1));
         assert!(backup_kind_allowed(Authority::Backup, &create));
         assert!(!backup_kind_allowed(Authority::Backup, &restore));
         assert!(!backup_kind_allowed(Authority::Backup, &scheduled));
+        assert!(!backup_kind_allowed(Authority::BackupRestore, &create));
+        assert!(backup_kind_allowed(Authority::BackupRestore, &restore));
+        assert!(!backup_kind_allowed(Authority::BackupRestore, &scheduled));
         assert!(backup_kind_allowed(Authority::DefaultServices, &create));
         assert!(backup_kind_allowed(Authority::DefaultServices, &restore));
         assert!(backup_kind_allowed(Authority::DefaultServices, &scheduled));

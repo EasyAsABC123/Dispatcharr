@@ -1,9 +1,9 @@
-//! Owned create/status consumer for a separately declared Celery namespace.
+//! Owned manual backup consumer for a separately declared Celery namespace.
 //! The original Dispatcharr and Celery authors retain application credit.
 
 use super::{Application, Disposition, Error};
 use dispatcharr_contracts::BoxFuture;
-use dispatcharr_store::{BackupJobApi, StoreError};
+use dispatcharr_store::{BackupJobApi, PluginActions, StoreError};
 use serde_json::Value;
 use std::{sync::Arc, time::Duration};
 use tokio::{
@@ -61,7 +61,9 @@ pub struct ManualApplication {
 
 impl ManualApplication {
     pub fn new(app: Application) -> Result<Self, Error> {
-        if app.inner.jobs.allows_defaults() || !app.inner.jobs.allows_backup() {
+        if app.inner.jobs.allows_defaults()
+            || (!app.inner.jobs.allows_backup() && !app.inner.jobs.allows_manual_restore())
+        {
             return Err(Error::Configuration);
         }
         Ok(Self {
@@ -73,7 +75,18 @@ impl ManualApplication {
         })
     }
 
+    pub fn is_restore_owner(&self) -> bool {
+        self.app.inner.jobs.allows_manual_restore()
+    }
+
+    pub fn bind_restore_plugins(&self, plugins: PluginActions) -> Result<(), Error> {
+        self.app.bind_restore_plugins(plugins)
+    }
+
     pub fn start(&self) -> Result<(), Error> {
+        if self.is_restore_owner() && !self.app.inner.executor.restore_ready() {
+            return Err(Error::Configuration);
+        }
         let mut task = self
             .owner
             .poller
@@ -138,6 +151,14 @@ impl BackupJobApi for ManualApplication {
         self.app.create(caller)
     }
 
+    fn restore(
+        &self,
+        filename: String,
+        caller: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<String, StoreError>> {
+        self.app.restore(filename, caller)
+    }
+
     fn status<'a>(
         &'a self,
         id: &'a str,
@@ -180,6 +201,19 @@ mod tests {
         assert_eq!(
             task.join(Instant::now() + Duration::from_secs(1)).await,
             Some(false)
+        );
+    }
+
+    #[tokio::test]
+    async fn an_expired_drain_keeps_the_live_worker_owned() {
+        let (done, work) = tokio::sync::oneshot::channel::<()>();
+        let mut poller = Poller::Running(tokio::spawn(async { work.await.is_ok() }));
+        assert_eq!(poller.join(Instant::now()).await, None);
+        assert!(matches!(poller, Poller::Running(_)));
+        done.send(()).unwrap();
+        assert_eq!(
+            poller.join(Instant::now() + Duration::from_secs(1)).await,
+            Some(true)
         );
     }
 }

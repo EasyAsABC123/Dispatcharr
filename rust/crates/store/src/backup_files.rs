@@ -29,9 +29,43 @@ pub struct BackupFiles {
     secret: Arc<Vec<u8>>,
     workers: Arc<Semaphore>,
     jobs: Option<Arc<dyn BackupJobApi>>,
-    complete_jobs: bool,
+    job_access: JobAccess,
     schedule_disable: Option<Arc<dyn BackupScheduleDisableApi>>,
 }
+#[derive(Clone, Copy)]
+enum JobAccess {
+    None,
+    Create,
+    Restore,
+    Complete,
+}
+
+impl JobAccess {
+    fn permits(self, kind: &str) -> bool {
+        matches!(
+            (self, kind),
+            (Self::Create | Self::Complete, "create")
+                | (Self::Create | Self::Restore | Self::Complete, "status")
+                | (Self::Restore | Self::Complete, "restore")
+                | (Self::Complete, "schedule-update")
+        )
+    }
+}
+
+#[cfg(test)]
+#[test]
+fn durable_job_routes_preserve_their_owner_capabilities() {
+    let routes = ["create", "status", "restore", "schedule-update"];
+    for (scope, expected) in [
+        (JobAccess::None, [false, false, false, false]),
+        (JobAccess::Create, [true, true, false, false]),
+        (JobAccess::Restore, [false, true, true, false]),
+        (JobAccess::Complete, [true, true, true, true]),
+    ] {
+        assert_eq!(routes.map(|route| scope.permits(route)), expected);
+    }
+}
+
 /// Explicit adapter avoids a Store -> job-transport dependency cycle. No default
 /// constructor, background worker or unrestricted restore authority is implied.
 pub trait BackupJobApi: Send + Sync {
@@ -219,22 +253,33 @@ impl BackupFiles {
             secret: Arc::new(signing_key.into_bytes()),
             workers: Arc::new(Semaphore::new(4)),
             jobs: None,
-            complete_jobs: false,
+            job_access: JobAccess::None,
             schedule_disable: None,
         })
     }
     /// Attach only a prepared, reviewed adapter. This starts no worker.
     pub fn with_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
         self.jobs = Some(jobs);
-        self.complete_jobs = true;
+        self.job_access = JobAccess::Complete;
         self
     }
     /// Keep the ordinary schedule and restore behavior with a manual create owner.
     pub fn with_create_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
         self.jobs = Some(jobs);
-        self.complete_jobs = false;
+        self.job_access = JobAccess::Create;
         self
     }
+    /// Enable only restore and signed status using the prepared worker.
+    pub fn with_restore_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
+        self.jobs = Some(jobs);
+        self.job_access = JobAccess::Restore;
+        self
+    }
+
+    fn jobs_for(&self, kind: &str) -> Option<&Arc<dyn BackupJobApi>> {
+        self.jobs.as_ref().filter(|_| self.job_access.permits(kind))
+    }
+
     /// Attach schedule-only behavior through the existing request executor.
     pub fn with_schedule_disable(mut self, adapter: Arc<dyn BackupScheduleDisableApi>) -> Self {
         self.schedule_disable = Some(adapter);
@@ -424,7 +469,7 @@ impl BackupFiles {
             }
         }
         if kind == "status" || kind == "create" {
-            let Some(jobs) = &self.jobs else {
+            let Some(jobs) = self.jobs_for(kind) else {
                 return Ok(reply(501, "Native durable backup jobs are not migrated"));
             };
             // Preserve auth -> method -> token/admin ordering above. Create
@@ -444,7 +489,7 @@ impl BackupFiles {
             return Ok((status, Json(value)).into_response());
         }
         if kind == "schedule-update" {
-            let jobs = self.jobs.as_ref().filter(|_| self.complete_jobs);
+            let jobs = self.jobs_for(kind);
             if jobs.is_none() && self.schedule_disable.is_none() {
                 return Ok(reply(501, "Backup schedule consumer is not prepared"));
             }
@@ -545,7 +590,7 @@ impl BackupFiles {
             return Ok(Json(json!({"token":mac(&self.secret,&filename)})).into_response());
         }
         if kind == "restore" {
-            let Some(jobs) = self.jobs.as_ref().filter(|_| self.complete_jobs) else {
+            let Some(jobs) = self.jobs_for(kind) else {
                 return Ok(reply(
                     501,
                     "Native durable backup restore jobs are not migrated",

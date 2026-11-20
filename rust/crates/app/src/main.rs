@@ -1129,6 +1129,12 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         (None, None) => backup_files,
     };
     let backup_files = match &manual_backup {
+        Some(owner) if owner.is_restore_owner() => {
+            owner
+                .bind_restore_plugins(plugin_actions.clone())
+                .map_err(|_| "Manual restore plugin reconciliation binding failed")?;
+            backup_files.with_restore_jobs(Arc::new(owner.clone()))
+        }
         Some(owner) => backup_files.with_create_jobs(Arc::new(owner.clone())),
         None => backup_files,
     };
@@ -1279,6 +1285,11 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     app = app.layer(axum::middleware::from_fn(response_headers::apply));
     eprintln!("Dispatcharr Rust port listening on {bind}; migration parity is incomplete");
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
+    let manual_restore_grace = manual_backup
+        .as_ref()
+        .filter(|owner| owner.is_restore_owner())
+        .map(|_| manual_backup_config::restore_drain_grace(shutdown_timeout))
+        .transpose()?;
     if let Some(version) = version_tasks.as_ref().filter(|_| !selected_jobs_enabled) {
         let started = if version_startup {
             let cache = cache_url
@@ -1325,6 +1336,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         output_profiles,
         backup_files,
         manual_backup,
+        manual_restore_grace,
         epg_programs,
         epg_refresh,
         epg_index,
@@ -1476,6 +1488,7 @@ struct ShutdownServices {
     output_profiles: dispatcharr_store::OutputProfileWrites,
     backup_files: dispatcharr_store::BackupFiles,
     manual_backup: Option<dispatcharr_job_transport::normal_backup::ManualApplication>,
+    manual_restore_grace: Option<Duration>,
     epg_programs: dispatcharr_store::EpgProgramReads,
     epg_refresh: Option<dispatcharr_job_transport::refresh_application::RefreshApplication>,
     epg_index: Option<dispatcharr_job_transport::index_application::IndexApplication>,
@@ -1513,6 +1526,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         output_profiles,
         backup_files,
         manual_backup,
+        manual_restore_grace,
         epg_programs,
         mut epg_refresh,
         mut epg_index,
@@ -1540,7 +1554,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     if let Some(m3u) = &original_m3u_refresh_all {
         m3u.close_admission();
     }
-    let (stream_files_drained, stream_regex_drained, original_m3u_drained) = tokio::join!(
+    let (stream_files_drained, stream_regex_drained, original_m3u_drained, manual_restore_drained) = tokio::join!(
         stream_files.shutdown_stream_files(Duration::from_secs(8)),
         stream_regex.shutdown(Duration::from_secs(8)),
         async {
@@ -1549,7 +1563,16 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
                 None => true,
             }
         },
+        async {
+            match manual_restore_grace {
+                Some(grace) => backup_files.shutdown(grace).await,
+                None => true,
+            }
+        },
     );
+    if !manual_restore_drained {
+        return Err("Manual restore worker or accepted restore did not settle cleanly".into());
+    }
     plugin_actions
         .shutdown(Duration::from_secs(8))
         .await
@@ -1714,7 +1737,13 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
             }
         },
         output_profiles.shutdown(Duration::from_secs(8)),
-        backup_files.shutdown(Duration::from_secs(8)),
+        async {
+            if manual_restore_grace.is_some() {
+                true
+            } else {
+                backup_files.shutdown(Duration::from_secs(8)).await
+            }
+        },
         epg_programs.shutdown(Duration::from_secs(8)),
         grid.shutdown(Duration::from_secs(8)),
         hdhr.shutdown(),
@@ -1771,7 +1800,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
             "Statistics drain deadline reached; process termination may close pending callbacks"
         );
     }
-    if selected_mode && (incomplete || !statistics_drained) {
+    if (selected_mode || manual_restore_grace.is_some()) && (incomplete || !statistics_drained) {
         return Err(
             "Service drain incomplete; process termination may close outstanding resources".into(),
         );

@@ -64,7 +64,7 @@ impl Application {
         scratch: PathBuf,
         identity: ProducerIdentitySource,
     ) -> Result<Self, Error> {
-        if !jobs.allows_defaults() && !jobs.allows_backup() {
+        if !jobs.allows_defaults() && !jobs.allows_backup() && !jobs.allows_manual_restore() {
             return Err(Error::Configuration);
         }
         Ok(Self {
@@ -88,7 +88,7 @@ impl Application {
         })
     }
     pub fn bind_restore_plugins(&self, plugins: PluginActions) -> Result<(), Error> {
-        if !self.inner.jobs.allows_defaults() {
+        if !self.inner.jobs.allows_normal_restore() {
             return Err(Error::Configuration);
         }
         self.inner
@@ -368,7 +368,7 @@ impl BackupJobApi for Application {
         caller: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<String, StoreError>> {
         Box::pin(async move {
-            if !self.inner.jobs.allows_defaults() || !self.inner.executor.restore_ready() {
+            if !self.inner.jobs.allows_normal_restore() || !self.inner.executor.restore_ready() {
                 return Err(api_error());
             }
             let owner = self.owner(true, caller).map_err(|_| api_error())?;

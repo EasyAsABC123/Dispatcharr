@@ -119,6 +119,7 @@ enum Authority {
     Series,
     DefaultServices,
     Backup,
+    BackupRestore,
 }
 impl Jobs {
     // Positive allowlist preserves every old role truth table, including the
@@ -187,6 +188,31 @@ impl Jobs {
     pub async fn connect_backup(broker: &str, result: &str, config: Config) -> Result<Self, Error> {
         Self::connect_owned(broker, result, config, String::new(), Authority::Backup).await
     }
+    /// Explicit standalone restore/status authority. Legacy backup, schedule,
+    /// create and other default families remain outside this connection role.
+    pub async fn connect_backup_restore(
+        broker: &str,
+        result: &str,
+        config: Config,
+    ) -> Result<Self, Error> {
+        Self::connect_owned(
+            broker,
+            result,
+            config,
+            String::new(),
+            Authority::BackupRestore,
+        )
+        .await
+    }
+
+    pub(crate) fn allows_manual_restore(&self) -> bool {
+        self.inner.authority == Authority::BackupRestore
+    }
+
+    pub(crate) fn allows_normal_restore(&self) -> bool {
+        self.allows_defaults() || self.allows_manual_restore()
+    }
+
     pub(crate) fn allows_backup(&self) -> bool {
         matches!(self.inner.authority, Authority::Fixture | Authority::Backup)
     }
