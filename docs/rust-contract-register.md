@@ -13,7 +13,7 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | Executable Original HTTP assignments | 797 | Partial Original definitions across 798 operation work items. One work item awaits assignment. |
 | Unresolved method placeholders with a partial Original fixture definition | 322 | The original method/action declarations remain open. |
 | Non-HTTP candidate identities | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
-| Typed executable Original non-HTTP assignments | 250 | Partial observations for 145 migrations, 50 Django class registrations, 27 task behaviors, 20 task registrations, two command executions, three command registrations, one model test, one synthetic consumer and one WebSocket route. |
+| Typed executable Original non-HTTP assignments | 250 | Partial observations for 145 migrations, 50 Django class registrations, 31 task behaviors, 16 registration-only tasks, two command executions, three command registrations, one model test, one synthetic consumer and one WebSocket route. |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
 | Operations with partial case bindings | 11 | 403 scoped packaged observations; remaining role/input coverage stays open |
 | Fully audited register operation rows | 0 | Register-to-case mapping has not been completed; existing reports retain their actual passes |
@@ -679,3 +679,22 @@ unassigned. It records 32 of 250 partial typed Original assignments.
 Complete role matrices, Native equivalence, performance and formal M0
 acceptance remain open. Original Dispatcharr and dependency authors retain full
 application and behavior credit.
+
+
+## Original channel-maintenance task behavior
+
+Four registered task candidates now also carry scoped Original worker evidence.
+Three update a seeded channel's EPG name, TVG-ID or logo. The bulk-create task
+adds one stream-derived channel, its logo and the ordered stream relation.
+All four matched their Redis SUCCESS results to their Channels progress events
+and the expected PostgreSQL changes. The retained controller, guest and
+prefork worker exited zero. The default database stayed unchanged, and exact
+owned cleanup passed. [Original capture and fixture](../scripts/rust-milestone-batches/m6/channel-failure-source-v1)
+
+The register keeps the original registration result on each row and attaches
+the worker evidence separately. The verifier binds only the four ordinary
+successful cases. All 798 HTTP rows, 145 migration-recorder rows and every
+other typed row retain their prior values. The attachment qualifies scoped
+Original task behavior. Native parity, full task input coverage, performance
+and formal M0 acceptance remain open. Original Dispatcharr, Celery, Django
+and PostgreSQL authors and contributors retain full credit.

@@ -268,6 +268,8 @@ class NotificationMutationControls(unittest.TestCase):
   # Reapply actual checked public Source data and require every new field too;
   # dropping arbitrary fields or accepting a changed seven-row oracle cannot pass.
   non_HTTP_mapping=source_contracts.apply_non_HTTP(ROOT,historical_non_HTTP)
+  import retained_channel_task_effects
+  retained_channel_task_effects.apply(ROOT,historical_non_HTTP)
   self.assertEqual(historical_non_HTTP,new['non_HTTP_candidates'])
   self.assertEqual(non_HTTP_mapping,new['executable_Source_non_HTTP_mapping'])
   import retained_migration_recorder_contracts as migrations

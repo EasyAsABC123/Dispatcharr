@@ -9,6 +9,11 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
+    "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json": "57f54204594c9f71c4fd12633818b145d96f3965e45aa2e5e8a982a082a90b62",
+    "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/report.json": "481bde98368d9ee2d0b996a1f2dcec0a288a171f1cf25262bedccc4cfa13ec0b",
+    "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/independent-cleanup.json": "91cf44aa94c63b31ba154a78aa9bc6ca59a2768ce463b180344a50eb3d263bd2",
+    "scripts/rust-milestone-batches/m6/channel-failure-source-v1/driver3/tools/guest.py": "3415cfe7880be835e3975c9665b72c72877120bbebbf6b3c80fb6dc7f60a9685",
+    "scripts/rust-milestone-batches/m6/channel-failure-source-v1/driver3/input-sha256.json": "df225d03bce1b985252c88db55102eccf80b8bf04134c8aca4d17ab5a0fa4fd8",
     "scripts/rust-contracts/executable-source-inputs.json": "fa245defee78d70956a0a7bf8828a182b973103a4eac74dca770defe44e24f47",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
@@ -351394,6 +351399,62 @@
           "task_execution_verified": false
         },
         "fully_verified": false
+      },
+      "supplemental_Original_task_observation": {
+        "candidate_id": "candidate-b6d3e5196b9fdf4d22f4",
+        "ordinary_case": "normal_bulk",
+        "capture_case_index": 3,
+        "task": "apps.channels.tasks.bulk_create_channels_from_streams",
+        "arguments": [
+          [
+            1
+          ],
+          [],
+          0
+        ],
+        "keyword_arguments": {},
+        "backend_status": "SUCCESS",
+        "backend_result": {
+          "status": "completed",
+          "created_count": 1,
+          "error_count": 0,
+          "errors": []
+        },
+        "backend_record_sha256": "040387b2c371cbd2cd066eaf640f0ee0ccc4e160b74b077f197ae23bf15b1c60",
+        "matched_backend_and_progress_task_id": true,
+        "channels_event_count": 6,
+        "channels_progress_event_type": "bulk_channel_creation_progress",
+        "SQL_effects": {
+          "channel": {
+            "before": 6,
+            "after": 7,
+            "changed": true
+          },
+          "logo": {
+            "before": 1,
+            "after": 2,
+            "changed": true
+          },
+          "channelstream": {
+            "before": 0,
+            "after": 1,
+            "changed": true
+          },
+          "channelprofilemembership": {
+            "before": 0,
+            "after": 0,
+            "changed": false
+          }
+        },
+        "full_task_input_coverage": false,
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "capture": "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json",
+        "Original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "Original_controller_exit": 0,
+        "Original_guest_exit": 0,
+        "Original_worker_exit": 0,
+        "Original_exact_owned_absence": true
       }
     },
     {
@@ -351470,6 +351531,60 @@
           "task_execution_verified": false
         },
         "fully_verified": false
+      },
+      "supplemental_Original_task_observation": {
+        "candidate_id": "candidate-5fb6aee2109e9610a953",
+        "ordinary_case": "normal_names",
+        "capture_case_index": 0,
+        "task": "apps.channels.tasks.set_channels_names_from_epg",
+        "arguments": [
+          [
+            1
+          ]
+        ],
+        "keyword_arguments": {},
+        "backend_status": "SUCCESS",
+        "backend_result": {
+          "status": "completed",
+          "updated_count": 1,
+          "error_count": 0,
+          "errors": []
+        },
+        "backend_record_sha256": "f1e86656c36c0ec69f5cbca298349694695d3927a3c62551f79bab4d78b82285",
+        "matched_backend_and_progress_task_id": true,
+        "channels_event_count": 3,
+        "channels_progress_event_type": "epg_name_setting_progress",
+        "SQL_effects": {
+          "channel": {
+            "before": 6,
+            "after": 6,
+            "changed": true
+          },
+          "logo": {
+            "before": 0,
+            "after": 0,
+            "changed": false
+          },
+          "channelstream": {
+            "before": 0,
+            "after": 0,
+            "changed": false
+          },
+          "channelprofilemembership": {
+            "before": 0,
+            "after": 0,
+            "changed": false
+          }
+        },
+        "full_task_input_coverage": false,
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "capture": "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json",
+        "Original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "Original_controller_exit": 0,
+        "Original_guest_exit": 0,
+        "Original_worker_exit": 0,
+        "Original_exact_owned_absence": true
       }
     },
     {
@@ -351546,6 +351661,61 @@
           "task_execution_verified": false
         },
         "fully_verified": false
+      },
+      "supplemental_Original_task_observation": {
+        "candidate_id": "candidate-dbc05325b5fec6965cf2",
+        "ordinary_case": "normal_logos",
+        "capture_case_index": 2,
+        "task": "apps.channels.tasks.set_channels_logos_from_epg",
+        "arguments": [],
+        "keyword_arguments": {
+          "channel_ids": [
+            1
+          ]
+        },
+        "backend_status": "SUCCESS",
+        "backend_result": {
+          "status": "completed",
+          "updated_count": 1,
+          "error_count": 0,
+          "errors": [],
+          "created_logos_count": 1
+        },
+        "backend_record_sha256": "1c5ad90d4264fc4707a74df79ad097af1b5f49326c19bd1dbf5949ffda93dfc1",
+        "matched_backend_and_progress_task_id": true,
+        "channels_event_count": 3,
+        "channels_progress_event_type": "epg_logo_setting_progress",
+        "SQL_effects": {
+          "channel": {
+            "before": 6,
+            "after": 6,
+            "changed": true
+          },
+          "logo": {
+            "before": 0,
+            "after": 1,
+            "changed": true
+          },
+          "channelstream": {
+            "before": 0,
+            "after": 0,
+            "changed": false
+          },
+          "channelprofilemembership": {
+            "before": 0,
+            "after": 0,
+            "changed": false
+          }
+        },
+        "full_task_input_coverage": false,
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "capture": "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json",
+        "Original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "Original_controller_exit": 0,
+        "Original_guest_exit": 0,
+        "Original_worker_exit": 0,
+        "Original_exact_owned_absence": true
       }
     },
     {
@@ -351622,6 +351792,60 @@
           "task_execution_verified": false
         },
         "fully_verified": false
+      },
+      "supplemental_Original_task_observation": {
+        "candidate_id": "candidate-7b8d35e77b886d865574",
+        "ordinary_case": "normal_tvg",
+        "capture_case_index": 1,
+        "task": "apps.channels.tasks.set_channels_tvg_ids_from_epg",
+        "arguments": [
+          [
+            1
+          ]
+        ],
+        "keyword_arguments": {},
+        "backend_status": "SUCCESS",
+        "backend_result": {
+          "status": "completed",
+          "updated_count": 1,
+          "error_count": 0,
+          "errors": []
+        },
+        "backend_record_sha256": "3ca029024bc1af5f37b8fcbbaff5cfeb494062c66c43969c7864488f22c16c16",
+        "matched_backend_and_progress_task_id": true,
+        "channels_event_count": 3,
+        "channels_progress_event_type": "epg_tvg_id_setting_progress",
+        "SQL_effects": {
+          "channel": {
+            "before": 6,
+            "after": 6,
+            "changed": true
+          },
+          "logo": {
+            "before": 0,
+            "after": 0,
+            "changed": false
+          },
+          "channelstream": {
+            "before": 0,
+            "after": 0,
+            "changed": false
+          },
+          "channelprofilemembership": {
+            "before": 0,
+            "after": 0,
+            "changed": false
+          }
+        },
+        "full_task_input_coverage": false,
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "capture": "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json",
+        "Original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "Original_controller_exit": 0,
+        "Original_guest_exit": 0,
+        "Original_worker_exit": 0,
+        "Original_exact_owned_absence": true
       }
     },
     {

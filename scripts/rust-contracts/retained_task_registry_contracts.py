@@ -32,7 +32,9 @@ DIAGNOSTIC = {"api_counts":{}, "reports":[]}
 
 
 def dependencies():
-    return {INPUT, *EXPECTED_SHA256}
+    from retained_channel_task_effects import INPUT_SHA256
+
+    return {INPUT, *EXPECTED_SHA256, *INPUT_SHA256}
 
 
 def exact_bytes(root, path):
@@ -129,6 +131,9 @@ def validate(root, value):
 
 
 def restore_before(root, entries):
+    import retained_channel_task_effects
+
+    retained_channel_task_effects.restore_before(root, entries)
     binding = derive(root)
     by_id = {row["candidate_id"]:row for row in binding["non_HTTP_contracts"]}
     for entry in entries:

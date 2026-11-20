@@ -3,6 +3,7 @@ import copy
 import json
 import unittest
 
+import retained_channel_task_effects
 import retained_management_registration_contracts as subject
 from test_retained_task_registry_contracts import ROOT, PRIOR_HTTP, PRIOR_OPENAPI, digest
 
@@ -25,6 +26,7 @@ class ManagementRegistration(unittest.TestCase):
         self.assertEqual(digest(document["openapi_operations"]), PRIOR_OPENAPI)
         changed = {row["candidate_id"]: row["executable_Source_contract"] for row in typed if row["state"] == subject.STATE}
         self.assertEqual(changed, {row["candidate_id"]: row for row in stored["non_HTTP_contracts"]})
+        retained_channel_task_effects.restore_before(ROOT, typed)
         subject.restore_before(ROOT, typed)
         self.assertEqual(digest(typed), PRIOR_TYPED)
         reference = document["executable_Source_mapping"]["inputs"].pop()
