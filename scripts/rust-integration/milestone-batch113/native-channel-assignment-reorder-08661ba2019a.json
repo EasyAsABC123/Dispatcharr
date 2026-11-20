@@ -1,0 +1,617 @@
+{
+  "application_tree_sha256": "1c98b978eac64858294f9c059d0967ed7678830a3e3272f44a17179dccb23f20",
+  "approved_review_sha256": "173137bac704dce5d1b62d727d7dca9682c53614390e2c09f75c342a6906a333",
+  "assignment_numeric_input_scope": "distinct existing integral JSON PKs and finite numeric JSON starting values",
+  "candidate_image_id": "sha256:348cecabb51332e5d513489342971671423e5dafb3c8c26f6870aeca25680f81",
+  "candidate_manifest_sha256": "d2da3c0d08d46e504883a82bc708b1aa5a410e60b31d50c3e4c6e9b449d69b2d",
+  "candidate_revision": "08661ba2019a985dccaea99b45a2f53467789a76",
+  "credits": "The original Dispatcharr and Django authors retain full credit.",
+  "full_M5_passed": false,
+  "offline_additional_coverage": [
+    "duplicate IDs",
+    "missing IDs",
+    "numeric string conversion",
+    "default start"
+  ],
+  "performance_measured": false,
+  "scopes": {
+    "assignment": {
+      "actual_controller_exit": 0,
+      "actual_pair_receipt_sha256": "80979064cb81e0cfae09043311dda3db9f3e73074e9694b4d8cd7451b6fbc1f5",
+      "backends": {
+        "native": {
+          "baseline_ordered_refetch": {
+            "allow": null,
+            "full_body_sha256": "c28ffc1944a67737857c907864e7affa31191e9b8f5f4ea20c2680defdcf92fe"
+          },
+          "changes": [
+            {
+              "action_HTTP_body_sha256": "6a82de84ed26335aa1bfffcb8125566f904b7029416ebb980c8ba5daccb1dcf7",
+              "case": "decimal-order",
+              "ordered_refetch_HTTP_body_sha256": "e117de0972e215c8714063df0362e3b115a58b7b0312831eaa795b1399649c0a",
+              "ordered_refetch_allow": null,
+              "sql_after_sha256": "eb69529747419a44265b90e9e4bb051c8d420f7c0f565a6f2621b6eeb7acfb3f",
+              "sql_before_sha256": "5c7f3415c7322f64385d5929bf59256a773ce67f3a6d1475855c741fdd73f3c1"
+            },
+            {
+              "action_HTTP_body_sha256": "6a82de84ed26335aa1bfffcb8125566f904b7029416ebb980c8ba5daccb1dcf7",
+              "case": "match-provider-numbers",
+              "ordered_refetch_HTTP_body_sha256": "dade2eb5e2c83678c8ad040232eaf42d61fb225e4477406bada88af2015bd89d",
+              "ordered_refetch_allow": null,
+              "sql_after_sha256": "dc098729496d59fa8e82206403ea80f6b4466f7bb53faa286ec2fc94d2d38de3",
+              "sql_before_sha256": "eb69529747419a44265b90e9e4bb051c8d420f7c0f565a6f2621b6eeb7acfb3f"
+            },
+            {
+              "action_HTTP_body_sha256": "6a82de84ed26335aa1bfffcb8125566f904b7029416ebb980c8ba5daccb1dcf7",
+              "case": "form-default-start",
+              "ordered_refetch_HTTP_body_sha256": "94bf0abeac1310fa2b0c7d6e7f92e8a03d292072237eae170c733dc1150c908c",
+              "ordered_refetch_allow": null,
+              "sql_after_sha256": "f1930d4d9c0f70d4da695f9d9911713cb1254ff6a3a1786cb13dc5eb2c7c1b5d",
+              "sql_before_sha256": "dc098729496d59fa8e82206403ea80f6b4466f7bb53faa286ec2fc94d2d38de3"
+            }
+          ],
+          "initial_SQL_sha256": "5c7f3415c7322f64385d5929bf59256a773ce67f3a6d1475855c741fdd73f3c1"
+        },
+        "original": {
+          "baseline_ordered_refetch": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "full_body_sha256": "c93d7d4f0505283657162a7d8a2dc0c17f43a8c6e6a028627334c976a66874a5"
+          },
+          "changes": [
+            {
+              "action_HTTP_body_sha256": "6a82de84ed26335aa1bfffcb8125566f904b7029416ebb980c8ba5daccb1dcf7",
+              "case": "decimal-order",
+              "ordered_refetch_HTTP_body_sha256": "088965691b7f0b598240b1f9e1a3957ec496c487854554a5cb9347b198adffc9",
+              "ordered_refetch_allow": "GET, POST, HEAD, OPTIONS",
+              "sql_after_sha256": "756ec8fc9669c43a1a4cc21b44926bc4cdffa48231290f056d8bd7da35033627",
+              "sql_before_sha256": "5c7f3415c7322f64385d5929bf59256a773ce67f3a6d1475855c741fdd73f3c1"
+            },
+            {
+              "action_HTTP_body_sha256": "6a82de84ed26335aa1bfffcb8125566f904b7029416ebb980c8ba5daccb1dcf7",
+              "case": "match-provider-numbers",
+              "ordered_refetch_HTTP_body_sha256": "b2aac8c98c28014d180fd832796052cff9985ca95016c876bf97a38b73b971a2",
+              "ordered_refetch_allow": "GET, POST, HEAD, OPTIONS",
+              "sql_after_sha256": "dea999e99f6a3e77ab30023c2c6ec6dd3de16c41a461ed64e6db6f942f7d2902",
+              "sql_before_sha256": "756ec8fc9669c43a1a4cc21b44926bc4cdffa48231290f056d8bd7da35033627"
+            },
+            {
+              "action_HTTP_body_sha256": "6a82de84ed26335aa1bfffcb8125566f904b7029416ebb980c8ba5daccb1dcf7",
+              "case": "form-default-start",
+              "ordered_refetch_HTTP_body_sha256": "398baf4e0dea2a8cf2668e196e452431210b7e7556b5b5f14dad0fc2cafe8d84",
+              "ordered_refetch_allow": "GET, POST, HEAD, OPTIONS",
+              "sql_after_sha256": "e11615e8f9c706be12968f2029fb9794964500504c6400a57f4ae14097e8372a",
+              "sql_before_sha256": "dea999e99f6a3e77ab30023c2c6ec6dd3de16c41a461ed64e6db6f942f7d2902"
+            }
+          ],
+          "initial_SQL_sha256": "5c7f3415c7322f64385d5929bf59256a773ce67f3a6d1475855c741fdd73f3c1"
+        }
+      },
+      "candidate_manifest_sha256": "d2da3c0d08d46e504883a82bc708b1aa5a410e60b31d50c3e4c6e9b449d69b2d",
+      "cleanup": {
+        "compose_down_passed": true,
+        "exact_container_and_process_generations_absent": {
+          "baseline": true,
+          "candidate": true,
+          "data-init": true,
+          "origin": true
+        },
+        "remaining_owned": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "managed_pin_clocks_verified_in_POST": true,
+      "pinned_Original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "pinned_Original_receipt_sha256": "e0dc315a4eaf07fc25c21101985960bd19dde0bae4bd0e327df2b8735e99e80b",
+      "pinned_Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "request_counts_per_backend": {
+        "GET": 4,
+        "POST": 3
+      },
+      "scoped_SQL_after_and_ordered_lists_matched": true,
+      "typed_case_projections": [
+        {
+          "action": {
+            "allow": "POST, OPTIONS",
+            "content_type": "application/json",
+            "status": 200
+          },
+          "case": "decimal-order",
+          "effective_order": "dabcs",
+          "new_pin_clocks_inside_post": true,
+          "read": {
+            "content_type": "application/json",
+            "status": 200
+          },
+          "request_labels": [
+            "d",
+            "a",
+            "b"
+          ],
+          "sql_and_refetch_match": true,
+          "starting_number": 20.5,
+          "success_message_matched": true,
+          "table_numbers_and_pins": [
+            [
+              21.5,
+              null
+            ],
+            [
+              99,
+              22.5
+            ],
+            [
+              100,
+              1004
+            ],
+            [
+              1400,
+              20.5
+            ],
+            [
+              1800,
+              null
+            ]
+          ]
+        },
+        {
+          "action": {
+            "allow": "POST, OPTIONS",
+            "content_type": "application/json",
+            "status": 200
+          },
+          "case": "match-provider-numbers",
+          "effective_order": "dabcs",
+          "new_pin_clocks_inside_post": null,
+          "read": {
+            "content_type": "application/json",
+            "status": 200
+          },
+          "request_labels": [
+            "b",
+            "c"
+          ],
+          "sql_and_refetch_match": true,
+          "starting_number": 99,
+          "success_message_matched": true,
+          "table_numbers_and_pins": [
+            [
+              21.5,
+              null
+            ],
+            [
+              99,
+              null
+            ],
+            [
+              100,
+              null
+            ],
+            [
+              1400,
+              20.5
+            ],
+            [
+              1800,
+              null
+            ]
+          ]
+        },
+        {
+          "action": {
+            "allow": "POST, OPTIONS",
+            "content_type": "application/json",
+            "status": 200
+          },
+          "case": "form-default-start",
+          "effective_order": "adbcs",
+          "new_pin_clocks_inside_post": null,
+          "read": {
+            "content_type": "application/json",
+            "status": 200
+          },
+          "request_labels": [
+            "a",
+            "d"
+          ],
+          "sql_and_refetch_match": true,
+          "starting_number": 1,
+          "success_message_matched": true,
+          "table_numbers_and_pins": [
+            [
+              1,
+              null
+            ],
+            [
+              99,
+              null
+            ],
+            [
+              100,
+              null
+            ],
+            [
+              1400,
+              2
+            ],
+            [
+              1800,
+              null
+            ]
+          ]
+        }
+      ]
+    },
+    "reorder_regression": {
+      "actual_controller_exit": 0,
+      "actual_pair_receipt_sha256": "e55b5e9f6caa4d0892bd9f6f2f6189051ead4c1f8af269aa5ddde25b4d3eb62b",
+      "backends": {
+        "native": {
+          "baseline_ordered_refetch": {
+            "allow": null,
+            "full_body_sha256": "ca7f98e0c5cb84ab4b9eb1d1cc364a71bf002b6b18376279fcc48f311fff7d69"
+          },
+          "changes": [
+            {
+              "action_HTTP_body_sha256": "33d33adfd036a2620558d26b174ba68055cb22831806e639218ff69e247ee454",
+              "case": "manual-down",
+              "ordered_refetch_HTTP_body_sha256": "8209a8618b476b34cf2a07b092b5e96ef9b8dfafbda2d3bfc6ee9290b1e5c9e1",
+              "ordered_refetch_allow": null,
+              "sql_after_sha256": "bbac617c6ba54313e427a00f039db860f540f66ffcbb60aad764e7288eb6f676",
+              "sql_before_sha256": "04d6134447eed532ae1fe368b715b582671754bd3ba7bc2b22b78ec07018d415"
+            },
+            {
+              "action_HTTP_body_sha256": "101a0ec642ad975236abe7667d9277fc6fe23929858ee751ed91da39f8c503a2",
+              "case": "managed-up",
+              "ordered_refetch_HTTP_body_sha256": "6532fb7723d5fd87ce487dead06bb2388ac6ff1638ec93ec915d612b998496fc",
+              "ordered_refetch_allow": null,
+              "sql_after_sha256": "c60dcbccf8663e832fa239f3744739d815da14a40187feca2cd234b34205649b",
+              "sql_before_sha256": "bbac617c6ba54313e427a00f039db860f540f66ffcbb60aad764e7288eb6f676"
+            },
+            {
+              "action_HTTP_body_sha256": "d7274c95648774e29746e1df04239d5a3c6806abfc3d09a6d47b5bc61b4669a1",
+              "case": "managed-to-start",
+              "ordered_refetch_HTTP_body_sha256": "e2e552bc9ab5026369c7924fa5e6f9da6296b34ab8e9729383b2802090b21686",
+              "ordered_refetch_allow": null,
+              "sql_after_sha256": "2b641a12021aed3ffe245f6bb181cc48c4d0f87436317da8766934f395b13450",
+              "sql_before_sha256": "c60dcbccf8663e832fa239f3744739d815da14a40187feca2cd234b34205649b"
+            },
+            {
+              "action_HTTP_body_sha256": "2868382b4d886cde4f44131956dd2dcda2b0e3e173f3795d1c538e2c49c8ff64",
+              "case": "already-at-start",
+              "ordered_refetch_HTTP_body_sha256": "e2e552bc9ab5026369c7924fa5e6f9da6296b34ab8e9729383b2802090b21686",
+              "ordered_refetch_allow": null,
+              "sql_after_sha256": "2b641a12021aed3ffe245f6bb181cc48c4d0f87436317da8766934f395b13450",
+              "sql_before_sha256": "2b641a12021aed3ffe245f6bb181cc48c4d0f87436317da8766934f395b13450"
+            },
+            {
+              "action_HTTP_body_sha256": "1b52f5a59c6277b2d71ec78af6e147dd1cdf1f6ce0be906f924825fa5f75f355",
+              "case": "managed-return-to-provider",
+              "ordered_refetch_HTTP_body_sha256": "6532fb7723d5fd87ce487dead06bb2388ac6ff1638ec93ec915d612b998496fc",
+              "ordered_refetch_allow": null,
+              "sql_after_sha256": "c60dcbccf8663e832fa239f3744739d815da14a40187feca2cd234b34205649b",
+              "sql_before_sha256": "2b641a12021aed3ffe245f6bb181cc48c4d0f87436317da8766934f395b13450"
+            }
+          ],
+          "initial_SQL_sha256": "04d6134447eed532ae1fe368b715b582671754bd3ba7bc2b22b78ec07018d415"
+        },
+        "original": {
+          "baseline_ordered_refetch": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "full_body_sha256": "ec4fc1f46d2e12fe22914ac0ef6069d19756e8474a91277461cd1f15ed91c985"
+          },
+          "changes": [
+            {
+              "action_HTTP_body_sha256": "acdb8679bcb3d9c8c500bc4122190a97898cd0ae617ccfa0b6744d92f30f23a9",
+              "case": "manual-down",
+              "ordered_refetch_HTTP_body_sha256": "93222a818ae0d0caa8daa697394db7b187f378d555ab0610054d396ccb865f77",
+              "ordered_refetch_allow": "GET, POST, HEAD, OPTIONS",
+              "sql_after_sha256": "bbac617c6ba54313e427a00f039db860f540f66ffcbb60aad764e7288eb6f676",
+              "sql_before_sha256": "04d6134447eed532ae1fe368b715b582671754bd3ba7bc2b22b78ec07018d415"
+            },
+            {
+              "action_HTTP_body_sha256": "bd1dcc8cef684483e9892925f5d753d40766d30cd9afa7f62127d9d39a6ebdb3",
+              "case": "managed-up",
+              "ordered_refetch_HTTP_body_sha256": "305225712a35e86b37856a32c2e4dd57ac95237e11a201383fb6f49cf1420dbc",
+              "ordered_refetch_allow": "GET, POST, HEAD, OPTIONS",
+              "sql_after_sha256": "c60dcbccf8663e832fa239f3744739d815da14a40187feca2cd234b34205649b",
+              "sql_before_sha256": "bbac617c6ba54313e427a00f039db860f540f66ffcbb60aad764e7288eb6f676"
+            },
+            {
+              "action_HTTP_body_sha256": "6a3e6392d17b9b076b6420d1a8c81328adbf867c83021a70172f33ea7fa23fb2",
+              "case": "managed-to-start",
+              "ordered_refetch_HTTP_body_sha256": "a2926df62d23bacbb1f8ee06999ffdd1f2ea546660b1821924e6c02d5a9f85eb",
+              "ordered_refetch_allow": "GET, POST, HEAD, OPTIONS",
+              "sql_after_sha256": "15c4329cb1516b20b501ceb4ab511f822bd403939616f7069be352cff2097e52",
+              "sql_before_sha256": "c60dcbccf8663e832fa239f3744739d815da14a40187feca2cd234b34205649b"
+            },
+            {
+              "action_HTTP_body_sha256": "b14e5f5c07a9ef6b74573b27ea899548714112629bc02bbb6f8f5cfb8c500f23",
+              "case": "already-at-start",
+              "ordered_refetch_HTTP_body_sha256": "a2926df62d23bacbb1f8ee06999ffdd1f2ea546660b1821924e6c02d5a9f85eb",
+              "ordered_refetch_allow": "GET, POST, HEAD, OPTIONS",
+              "sql_after_sha256": "15c4329cb1516b20b501ceb4ab511f822bd403939616f7069be352cff2097e52",
+              "sql_before_sha256": "15c4329cb1516b20b501ceb4ab511f822bd403939616f7069be352cff2097e52"
+            },
+            {
+              "action_HTTP_body_sha256": "089732fc6254a75ecb2b30af5a9acc2de3e155e7d1551faf98366d2cddb0f91b",
+              "case": "managed-return-to-provider",
+              "ordered_refetch_HTTP_body_sha256": "305225712a35e86b37856a32c2e4dd57ac95237e11a201383fb6f49cf1420dbc",
+              "ordered_refetch_allow": "GET, POST, HEAD, OPTIONS",
+              "sql_after_sha256": "c60dcbccf8663e832fa239f3744739d815da14a40187feca2cd234b34205649b",
+              "sql_before_sha256": "15c4329cb1516b20b501ceb4ab511f822bd403939616f7069be352cff2097e52"
+            }
+          ],
+          "initial_SQL_sha256": "04d6134447eed532ae1fe368b715b582671754bd3ba7bc2b22b78ec07018d415"
+        }
+      },
+      "candidate_manifest_sha256": "d2da3c0d08d46e504883a82bc708b1aa5a410e60b31d50c3e4c6e9b449d69b2d",
+      "cleanup": {
+        "compose_down_passed": true,
+        "exact_container_and_process_generations_absent": {
+          "baseline": true,
+          "candidate": true,
+          "data-init": true,
+          "origin": true
+        },
+        "remaining_owned": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "managed_pin_clocks_verified_in_POST": true,
+      "pinned_Original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "pinned_Original_receipt_sha256": "b87b8fd3230269d638d8de544a30412bd3361873e63979d18a93b585bf1e7e19",
+      "pinned_Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "request_counts_per_backend": {
+        "GET": 6,
+        "POST": 5
+      },
+      "scoped_SQL_after_and_ordered_lists_matched": true,
+      "typed_case_projections": [
+        {
+          "action": {
+            "allow": "POST, OPTIONS",
+            "content_type": "application/json",
+            "status": 200
+          },
+          "baseline_channel_number_delta": 0,
+          "case": "manual-down",
+          "effective_order": "bcdeafs",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": false,
+          "read": {
+            "content_type": "application/json",
+            "status": 200
+          },
+          "sql_and_refetch_match": true,
+          "table_numbers_and_pins": [
+            [
+              1005,
+              null
+            ],
+            [
+              1001.5,
+              null
+            ],
+            [
+              50,
+              1002
+            ],
+            [
+              1003,
+              null
+            ],
+            [
+              1004,
+              null
+            ],
+            [
+              60,
+              1007
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "action": {
+            "allow": "POST, OPTIONS",
+            "content_type": "application/json",
+            "status": 200
+          },
+          "baseline_channel_number_delta": 0,
+          "case": "managed-up",
+          "effective_order": "bfcdeas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": false,
+          "read": {
+            "content_type": "application/json",
+            "status": 200
+          },
+          "sql_and_refetch_match": true,
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1001.5,
+              null
+            ],
+            [
+              50,
+              1003
+            ],
+            [
+              1004,
+              null
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1002
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "action": {
+            "allow": "POST, OPTIONS",
+            "content_type": "application/json",
+            "status": 200
+          },
+          "baseline_channel_number_delta": 1,
+          "case": "managed-to-start",
+          "effective_order": "dbfceas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": true,
+          "no_op": false,
+          "read": {
+            "content_type": "application/json",
+            "status": 200
+          },
+          "sql_and_refetch_match": true,
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1002.5,
+              null
+            ],
+            [
+              50,
+              1004
+            ],
+            [
+              1004,
+              1
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1003
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "action": {
+            "allow": "POST, OPTIONS",
+            "content_type": "application/json",
+            "status": 200
+          },
+          "baseline_channel_number_delta": 1,
+          "case": "already-at-start",
+          "effective_order": "dbfceas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": true,
+          "read": {
+            "content_type": "application/json",
+            "status": 200
+          },
+          "sql_and_refetch_match": true,
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1002.5,
+              null
+            ],
+            [
+              50,
+              1004
+            ],
+            [
+              1004,
+              1
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1003
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        },
+        {
+          "action": {
+            "allow": "POST, OPTIONS",
+            "content_type": "application/json",
+            "status": 200
+          },
+          "baseline_channel_number_delta": 0,
+          "case": "managed-return-to-provider",
+          "effective_order": "bfcdeas",
+          "mutation_message_matched": true,
+          "new_pin_clocks_inside_post": null,
+          "no_op": false,
+          "read": {
+            "content_type": "application/json",
+            "status": 200
+          },
+          "sql_and_refetch_match": true,
+          "table_numbers_and_pins": [
+            [
+              1006,
+              null
+            ],
+            [
+              1001.5,
+              null
+            ],
+            [
+              50,
+              1003
+            ],
+            [
+              1004,
+              null
+            ],
+            [
+              1005,
+              null
+            ],
+            [
+              60,
+              1002
+            ],
+            [
+              1018,
+              null
+            ]
+          ]
+        }
+      ]
+    }
+  }
+}

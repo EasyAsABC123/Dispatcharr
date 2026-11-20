@@ -1,0 +1,173 @@
+{
+  "actual_controller_exit": 0,
+  "actual_receipt_sha256": "e0dc315a4eaf07fc25c21101985960bd19dde0bae4bd0e327df2b8735e99e80b",
+  "admin_Bearer_authenticated": true,
+  "baseline_refetch": {
+    "allow": "GET, POST, HEAD, OPTIONS",
+    "body_bytes": 4259,
+    "content_type": "application/json",
+    "full_body_sha256": "a1c09b16f744102d5480b2ec19a5cdf8d28151173545389596c9ec501139cfd5",
+    "status": 200
+  },
+  "cases": [
+    {
+      "case": "decimal-order",
+      "effective_order": "dabcs",
+      "new_pin_clocks_inside_post": true,
+      "ordered_refetch": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 4420,
+        "content_type": "application/json",
+        "full_body_sha256": "b74f1056d0903f216d818c7c8231d497586dc247d37e7c49afaa86781f2b06df",
+        "status": 200
+      },
+      "post": {
+        "allow": "POST, OPTIONS",
+        "body_bytes": 47,
+        "content_type": "application/json",
+        "full_body_sha256": "6a82de84ed26335aa1bfffcb8125566f904b7029416ebb980c8ba5daccb1dcf7",
+        "status": 200
+      },
+      "request_labels": [
+        "d",
+        "a",
+        "b"
+      ],
+      "sql_after_sha256": "e66d94e72e5ad16d1d00a071b80b638907e0742ab2e797dbb79bbbeddf4fffdb",
+      "sql_and_refetch_match": true,
+      "sql_before_sha256": "1126bbcb24eecd3d07cafeb71dd93f02c617578a316ce35bf9e549c29acf413f",
+      "starting_number": 20.5,
+      "success_message_matched": true,
+      "table_numbers_and_pins": [
+        [
+          21.5,
+          null
+        ],
+        [
+          99,
+          22.5
+        ],
+        [
+          100,
+          1004
+        ],
+        [
+          1400,
+          20.5
+        ],
+        [
+          1800,
+          null
+        ]
+      ]
+    },
+    {
+      "case": "match-provider-numbers",
+      "effective_order": "dabcs",
+      "new_pin_clocks_inside_post": null,
+      "ordered_refetch": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 4246,
+        "content_type": "application/json",
+        "full_body_sha256": "889a45a08a24c751fa5cfc5ab224ba8a7ee44c154b31f1da1ec42e51467b4a28",
+        "status": 200
+      },
+      "post": {
+        "allow": "POST, OPTIONS",
+        "body_bytes": 47,
+        "content_type": "application/json",
+        "full_body_sha256": "6a82de84ed26335aa1bfffcb8125566f904b7029416ebb980c8ba5daccb1dcf7",
+        "status": 200
+      },
+      "request_labels": [
+        "b",
+        "c"
+      ],
+      "sql_after_sha256": "988a2cd93f4248140a6df5e8612300850da7053249b1e57bb5edf34beb11ba96",
+      "sql_and_refetch_match": true,
+      "sql_before_sha256": "e66d94e72e5ad16d1d00a071b80b638907e0742ab2e797dbb79bbbeddf4fffdb",
+      "starting_number": 99,
+      "success_message_matched": true,
+      "table_numbers_and_pins": [
+        [
+          21.5,
+          null
+        ],
+        [
+          99,
+          null
+        ],
+        [
+          100,
+          null
+        ],
+        [
+          1400,
+          20.5
+        ],
+        [
+          1800,
+          null
+        ]
+      ]
+    },
+    {
+      "case": "form-default-start",
+      "effective_order": "adbcs",
+      "new_pin_clocks_inside_post": null,
+      "ordered_refetch": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 4242,
+        "content_type": "application/json",
+        "full_body_sha256": "1c79de04ab3682514e33d4897b55417a9e5646c8da1541868f05abfd65e39722",
+        "status": 200
+      },
+      "post": {
+        "allow": "POST, OPTIONS",
+        "body_bytes": 47,
+        "content_type": "application/json",
+        "full_body_sha256": "6a82de84ed26335aa1bfffcb8125566f904b7029416ebb980c8ba5daccb1dcf7",
+        "status": 200
+      },
+      "request_labels": [
+        "a",
+        "d"
+      ],
+      "sql_after_sha256": "0be8639bafd54a8238c7d4729ef9f75ed43f1c2ff40126714de76cc25a5bca29",
+      "sql_and_refetch_match": true,
+      "sql_before_sha256": "988a2cd93f4248140a6df5e8612300850da7053249b1e57bb5edf34beb11ba96",
+      "starting_number": 1,
+      "success_message_matched": true,
+      "table_numbers_and_pins": [
+        [
+          1,
+          null
+        ],
+        [
+          99,
+          null
+        ],
+        [
+          100,
+          null
+        ],
+        [
+          1400,
+          2
+        ],
+        [
+          1800,
+          null
+        ]
+      ]
+    }
+  ],
+  "credentials_or_raw_body_retained": false,
+  "credits": "The original Dispatcharr and Django authors retain full credit.",
+  "exact_cleanup_verified": true,
+  "native_verified": false,
+  "normal_write_status_checks": 3,
+  "ordered_list_reads": 4,
+  "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}
