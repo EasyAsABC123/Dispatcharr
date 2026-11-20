@@ -83,6 +83,11 @@ all 16 paired cases on the shared image. The
 phases on XMLTV, the programme grid, and Xtream short EPG. Both respective
 Compose projects retired exactly.
 
+The [C74 clean-install and safe operator group](rust-c74-clean-install-operator.md)
+passed 11 stock React installation checks and all 17 packaged operator
+cases. Both required nodes passed on the shared image, with 124 other
+nodes still unbound in that coordinator run.
+
 The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
 ordinary Native login, cancel and both cleanup modes with exact SQL and
 teardown. The paired Original HTTP reference was retained.
