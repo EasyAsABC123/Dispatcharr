@@ -192,6 +192,8 @@ The wider M6 gate remains open.
 
 The [Original compatibility Beat wrapper](rust-m6-original-compat-beat.md) verified its inline Stats and scanner effects, the linked group child and exact retirement.
 
+The [paired compatibility Beat wrapper](rust-m6-c2a3-compat-beat.md) matched the Original Stats, scanner and linked group child effects on the exact packaged Rust Main.
+
 The [735 MPEG-TS functional checks](rust-m9-735-functional-streaming.md) passed
 all three required nodes with verified cleanup. The run covered 24 two-worker
 checks, 14 delayed restart checks and 100 retained-history readers with 20

@@ -166,3 +166,24 @@ The fixture left Guide SQL unchanged and independently verified
 retirement of all four Compose generations.
 
 [Redacted Standard and admin detail receipt](../scripts/rust-epg-contracts/verified-native-guide-detail-role-alias-c6061adb.json)
+
+### Admin detail and Standard list HEAD on c2a35f9d
+
+The packaged Rust successor matched the pinned stock Original nginx
+front door for admin programme detail and Standard programme list
+HEAD. The same authenticated GET controls also matched after
+normalizing each HTML CSRF mask. Every pair returned HTTP 200 and
+matched the media type, Allow and Vary headers.
+
+| Request | Media | GET entity bytes | HEAD declared bytes | HEAD entity bytes |
+| --- | --- | ---: | ---: | ---: |
+| Admin programme detail | application/json | 774 | 774 | 0 |
+| Admin programme detail | text/html | 18,697 | 18,698 | 0 |
+| Standard programme list | application/json | 275 | 275 | 0 |
+| Standard programme list | text/html | 11,171 | 11,172 | 0 |
+
+Each HEAD was read to connection close at the wire. The controller
+matched all four pairs, verified that Guide SQL stayed unchanged and
+independently retired all four owned Compose generations.
+
+[Redacted stock nginx and Native HEAD receipt](../scripts/rust-epg-contracts/verified-guide-stock-nginx-head-c2a35f9d.json)
