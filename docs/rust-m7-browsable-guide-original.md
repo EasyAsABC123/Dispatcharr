@@ -77,6 +77,21 @@ corresponding GET status and media type. The fixture read the underlying
 stream and verified retirement of both owned Compose generations.
 
 The grouped receipt covers Original. Rust rendering of these variants,
-stock nginx HEAD framing, browser workflows and performance remain open.
+browser workflows and performance remain open.
 
 [Redacted grouped Original receipt](../scripts/rust-epg-contracts/verified-original-browsable-guide-variants-1.json)
+
+## Stock nginx list HEAD
+
+The stock Original AIO nginx listener returned HTTP 200 for the same
+authenticated list GET and HEAD requests. Both HEAD responses had no
+entity bytes on the raw HTTP/1.0 stream. JSON HEAD declared 275 bytes,
+matching the GET. HTML HEAD declared 16,070 bytes, one more than the
+16,069-byte GET body. Status and media type matched in both pairs.
+
+The separately verified direct uWSGI listener sent 275 JSON bytes and
+16,061 HTML bytes after its HEAD response headers. The nginx run preserved
+programme rows and verified teardown. This receipt covers Original stock
+front-door framing.
+
+[Redacted stock nginx HEAD receipt](../scripts/rust-epg-contracts/verified-stock-nginx-guide-head-1.json)

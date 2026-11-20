@@ -1,0 +1,74 @@
+{
+  "Rust_verified": false,
+  "actual_exit": 0,
+  "credit": "The original Dispatcharr, Django, Django REST Framework and nginx contributors retain full credit.",
+  "exact_owned_cleanup": true,
+  "exact_stock_original_image": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3",
+  "exact_stock_source_build_sha256": "c00b7d95bb7df15a50d363cef1be0b6e3c642d1c44149ba37205f2ae79fb9b4b",
+  "fixture_seal_sha256": "c15fd63d175e645a8b5c4a1d07ff36b4c86162063d219b090ed11942f699e585",
+  "lifecycle_sha256": "40c70c0100d89391258433bf4a71dfb5b946182ee8e667f73e2b7ac2b4af1fe8",
+  "performance_verified": false,
+  "phase_actual_exits": {
+    "cleanup": 0,
+    "create": 0,
+    "probe": 0,
+    "readiness": 0,
+    "startup": 0
+  },
+  "prior_direct_uwsgi_HEAD_entity_lengths": {
+    "application/json": 275,
+    "text/html": 16061
+  },
+  "prior_direct_uwsgi_receipt_sha256": "b20099a80a745cc554dc5d1fd669049a0d0bff924409c649a062500f5e9a6725",
+  "private_receipt_sha256": "963c9c74895c3953a7319114ce098b6b57dbf5b044be9a06fb7ede8a3c3c845a",
+  "programme_SQL_unchanged": true,
+  "scope": "stock Original AIO nginx admin programmes list JSON and HTML GET/HEAD",
+  "stock_nginx_observations": {
+    "application/json": {
+      "GET": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 275,
+        "body_sha256": "dcb0d6c591121ce1f22ad3b2a202f5c942a92222c44215c7edfd3a52d78fa941",
+        "content_length": 275,
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "HEAD": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": 275,
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "HEAD_declared_length_matches_GET": true,
+      "HEAD_raw_wire_body_empty": true,
+      "HEAD_status_and_media_match_GET": true
+    },
+    "text/html": {
+      "GET": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 16069,
+        "body_sha256": "10b4084e83066a9e7b4d3b2a6d96f45d858fce637d051f49c4d8f6a9eb84aecb",
+        "content_length": 16069,
+        "content_type": "text/html; charset=utf-8",
+        "status": 200,
+        "vary": "Accept, origin, Cookie"
+      },
+      "HEAD": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": 16070,
+        "content_type": "text/html; charset=utf-8",
+        "status": 200,
+        "vary": "Accept, origin, Cookie"
+      },
+      "HEAD_declared_length_matches_GET": false,
+      "HEAD_raw_wire_body_empty": true,
+      "HEAD_status_and_media_match_GET": true
+    }
+  }
+}
