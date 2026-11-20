@@ -36,6 +36,19 @@ open.
 
 [Exact a785 amd64 receipt](../scripts/rust-integration/milestone-batch111/a785-amd64-pg-vlc-portability.json)
 
+## ca752176 amd64 package check
+
+All 10 probes passed on the exact `ca752176` application image. Five passed
+on the retained standalone backup image. PostgreSQL 17 payload hashes and
+source identities matched between packages, and each package ran pg_dump,
+pg_restore, and psql. The application also passed the VLC and cvlc wrapper
+and version checks. All 15 probe containers ran with networking disabled,
+exited 0 and were independently verified removed.
+
+Native ARM64 validation and the complete release matrix remain open.
+
+[Exact ca752176 amd64 receipt](../scripts/rust-integration/milestone-batch113/ca752176-amd64-pg-vlc-portability.json)
+
 ## ARM64 donor provenance
 
 The published `base-20261103010601` index and its ARM64 tag index resolve to
