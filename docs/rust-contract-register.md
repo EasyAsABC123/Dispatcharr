@@ -11,7 +11,7 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | Runtime operation work items | 798 | Includes those 322 placeholders; not 798 verified endpoints |
 | OpenAPI operations | 362 | Separate discovery view; do not add to route totals |
 | Executable Original HTTP assignments | 797 | Partial Original definitions across 798 operation work items. One work item awaits assignment. |
-| Unresolved methods with an executable Original fixture | 321 | Observed under 322 unresolved method/action declarations |
+| Unresolved method placeholders with a partial Original fixture definition | 322 | The original method/action declarations remain open. |
 | Non-HTTP candidate identities | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
 | Typed executable Original non-HTTP assignments | 250 | Partial observations for 145 migrations, 50 Django class registrations, 27 task behaviors, 20 task registrations, two command executions, three command registrations, one model test, one synthetic consumer and one WebSocket route. |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
@@ -37,7 +37,7 @@ The next mapping step is case-level: bind a source/native test and its frozen re
 
 ## Runtime handler candidates
 
-[The pinned method inspection](rust-runtime-methods.json) adds static handler candidates for 166 of the 322 method-unresolved routes; 156 still have no such candidate. The 322 original unresolved method/action placeholders remain unchanged. A present handler or default permission class does not prove successful dispatch, authorization, CSRF or any response contract. Dynamic permission-method references are retained for later case mapping.
+[The pinned method inspection](rust-runtime-methods.json) adds static handler candidates for 166 of the 322 method-unresolved routes; 156 still have no such candidate. The 322 original unresolved method/action placeholders remain unchanged. A fixture attachment records the scope of a partial Original case. Successful dispatch, authorization, CSRF and response contracts require separate observations. The one operation awaiting a fixture assignment already has a declared GET method. Dynamic permission-method references are retained for later case mapping.
 
 The inspector walks the exact same 592 routes without instantiating/executing their views. A SQL execution wrapper rejects queries during inspection; the successful probe recorded zero inspection SQL statements and zero inspection view invocations. The owned setup separately performs its usual web readiness request. The fixture was removed, and the original source archive matched the pinned hash.
 

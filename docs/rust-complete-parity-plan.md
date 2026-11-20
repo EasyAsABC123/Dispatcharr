@@ -75,6 +75,9 @@ The [735 operator and guide acceptance](rust-735-group-acceptance.md) passed fou
 on 735. It verified 11 clean-install checks, 17 safe CLI cases, 64 current
 programme cases and 43 guide grid cases with verified cleanup.
 
+The [a785 operator and guide acceptance](rust-a785-group-acceptance.md) verified 11 clean-install checks, 17 CLI cases, 64 current programme cases
+and 43 guide grid cases with independent Compose cleanup.
+
 The [735 permissions and management baseline](rust-735-baseline-acceptance.md) passed all 1,024 checks
 across 18 suites with verified cleanup. It matched the exact HTTP 404
 body for the malformed settings ID. The coordinator recorded one passing
