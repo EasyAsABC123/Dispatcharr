@@ -66,3 +66,18 @@ The first attempt exited 1 before Compose startup when Git archived the copied
 controller subdirectory. The retry anchored the same Original archive at
 the checkout root and exited zero. Full M5 acceptance and performance remain
 open. [8b0c browser receipt](../scripts/rust-vod-api-contracts/verified-provider-modal-browser-8b0c-1.json)
+
+## Integrated 976f browser comparison
+
+A fresh Original and 976f2867 comparison used the same 112 shipped React
+files. In both browsers, normal sign-in, Movie and Series provider switching,
+provider-specific episode replacement and six artwork decodes passed. The
+ordered live observations matched, with zero VOD HTTP errors and uncaught
+exceptions. All twelve artwork requests stayed on the four owned paths.
+
+Seven metadata-table fingerprints and the full user row, including
+microsecond values, restored exactly. Rust ran with selected workers and both
+standalone backup owners absent. The controller exited 0 and the owned
+Compose inventory was empty.
+
+[Redacted 976f browser receipt](../scripts/rust-vod-api-contracts/verified-provider-modal-browser-976f-1.json)
