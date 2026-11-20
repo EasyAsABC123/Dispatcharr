@@ -900,7 +900,7 @@ fn source_action_error() -> Response {
 
 #[path = "channel_batch_epg.rs"]
 mod batch_epg;
-pub(crate) use batch_epg::batch_body as channel_mutation_json;
+pub(crate) use batch_epg::{batch_body as channel_mutation_json, mutation_value};
 
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
@@ -915,6 +915,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route(
             "/api/channels/channels/from-stream/",
             post(crate::channel_writes::create_from_stream),
+        )
+        .route(
+            "/api/channels/channels/edit/bulk/",
+            axum::routing::patch(crate::channel_writes::edit_bulk),
         )
         .route(
             "/api/channels/channels/assign/",

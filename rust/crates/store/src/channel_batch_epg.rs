@@ -79,7 +79,7 @@ fn associations(rows: &[Value]) -> Result<BTreeMap<i64, Option<i64>>, StoreError
     Ok(pairs)
 }
 
-pub(crate) async fn batch_body(request: Request) -> Result<Map<String, Value>, StoreError> {
+pub(crate) async fn mutation_value(request: Request) -> Result<Value, StoreError> {
     let media = request
         .headers()
         .get(header::CONTENT_TYPE)
@@ -90,7 +90,7 @@ pub(crate) async fn batch_body(request: Request) -> Result<Map<String, Value>, S
         .await
         .map_err(|_| StoreError::StatusBody(413, json!({"detail": "Request body too large."})))?;
     if raw.is_empty() {
-        return Ok(Map::new());
+        return Ok(Value::Object(Map::new()));
     }
     if media.split(';').next().map(str::trim) != Some("application/json") {
         return Err(StoreError::StatusBody(
@@ -98,11 +98,15 @@ pub(crate) async fn batch_body(request: Request) -> Result<Map<String, Value>, S
             json!({"detail": format!("Unsupported media type \"{media}\" in request.")}),
         ));
     }
-    match serde_json::from_slice::<Value>(&raw).map_err(|error| {
+    serde_json::from_slice::<Value>(&raw).map_err(|error| {
         StoreError::InvalidInput(json!({"detail": format!(
             "JSON parse error - {}", crate::source_json_error(&raw, error)
         )}))
-    })? {
+    })
+}
+
+pub(crate) async fn batch_body(request: Request) -> Result<Map<String, Value>, StoreError> {
+    match mutation_value(request).await? {
         Value::Object(fields) => Ok(fields),
         _ => Err(StoreError::UnhandledRestFault),
     }

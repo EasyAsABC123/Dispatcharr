@@ -909,8 +909,23 @@ async fn project(
     value["cron_expression"] = json!(cron);
     Ok(Json(value))
 }
-fn ordinary_name_only(input: &Map<String, Value>) -> bool {
-    input.len() == 1 && input.get("name").is_some_and(Value::is_string)
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum QueueFreeProviderEdit {
+    Rename,
+    Activate,
+}
+
+fn queue_free_provider_edit(input: &Map<String, Value>) -> Option<QueueFreeProviderEdit> {
+    if input.len() != 1 {
+        return None;
+    }
+    if input.get("name").is_some_and(Value::is_string) {
+        Some(QueueFreeProviderEdit::Rename)
+    } else if input.get("is_active") == Some(&Value::Bool(true)) {
+        Some(QueueFreeProviderEdit::Activate)
+    } else {
+        None
+    }
 }
 
 fn existing_std_interval_account(old: &Value, previous_cron: &str) -> bool {
@@ -925,14 +940,33 @@ fn existing_std_interval_account(old: &Value, previous_cron: &str) -> bool {
         && previous_cron.is_empty()
 }
 
-async fn rename_without_broker(
+fn eligible_queue_free_edit(edit: QueueFreeProviderEdit, old: &Value, previous_cron: &str) -> bool {
+    existing_std_interval_account(old, previous_cron)
+        && match edit {
+            QueueFreeProviderEdit::Rename => true,
+            QueueFreeProviderEdit::Activate => {
+                old["is_active"] == false
+                    && old["status"] == "disabled"
+                    && old["refresh_interval"].as_i64().is_some_and(|hours| hours > 0)
+            }
+        }
+}
+
+async fn edit_without_broker(
     session: &TaskSqlSession,
     id: i64,
     old: &Value,
     validated: Validated,
+    edit: QueueFreeProviderEdit,
 ) -> Result<Json<Value>, StoreError> {
     let mut expected = old.clone();
-    expected["name"] = validated.saved["name"].clone();
+    match edit {
+        QueueFreeProviderEdit::Rename => expected["name"] = validated.saved["name"].clone(),
+        QueueFreeProviderEdit::Activate => {
+            expected["is_active"] = json!(true);
+            expected["status"] = json!("idle");
+        }
+    }
     if validated.saved != expected
         || validated.hash_changed
         || validated.expiration.is_some()
@@ -946,7 +980,8 @@ async fn rename_without_broker(
         .ok_or_else(unsupported)?
         .to_owned();
     let task = old["refresh_task_id"].as_i64().ok_or_else(unsupported)?;
-    let active = old["is_active"].as_bool().ok_or_else(unsupported)?;
+    let was_active = old["is_active"].as_bool().ok_or_else(unsupported)?;
+    let next_active = expected["is_active"].as_bool().ok_or_else(unsupported)?;
     let interval = old["refresh_interval"]
         .as_i64()
         .and_then(|value| i32::try_from(value).ok())
@@ -958,22 +993,35 @@ async fn rename_without_broker(
     session
         .run(move |c| {
             Box::pin(async move {
-                // Lock the same account/schedule while preserving all unrelated
-                // columns and the ordinary periodic-row save effects.
+                // Both edits acquire the account before its linked task and
+                // recheck the pre-edit settings in the same transaction.
                 let mut tx = c.begin().await?;
-                let account: Option<i64> = sqlx::query_scalar(
-                    "UPDATE m3u_m3uaccount SET name=$2 WHERE id=$1 AND account_type='STD' \
-                     AND NOT locked AND is_active=$6 AND (NOT $6 OR status='idle') \
-                     AND refresh_interval=$3 AND refresh_task_id=$4 AND max_streams=$5 RETURNING id::bigint",
-                )
-                .bind(id)
-                .bind(name)
-                .bind(interval)
-                .bind(task)
-                .bind(max)
-                .bind(active)
-                .fetch_optional(&mut *tx)
-                .await?;
+                let account: Option<i64> = match edit {
+                    QueueFreeProviderEdit::Rename => sqlx::query_scalar(
+                        "UPDATE m3u_m3uaccount SET name=$2 WHERE id=$1 AND account_type='STD' \
+                         AND NOT locked AND is_active=$6 AND (NOT $6 OR status='idle') \
+                         AND refresh_interval=$3 AND refresh_task_id=$4 AND max_streams=$5 RETURNING id::bigint",
+                    )
+                    .bind(id)
+                    .bind(name)
+                    .bind(interval)
+                    .bind(task)
+                    .bind(max)
+                    .bind(was_active)
+                    .fetch_optional(&mut *tx)
+                    .await?,
+                    QueueFreeProviderEdit::Activate => sqlx::query_scalar(
+                        "UPDATE m3u_m3uaccount SET is_active=true,status='idle' WHERE id=$1 AND account_type='STD' \
+                         AND NOT locked AND NOT is_active AND status='disabled' \
+                         AND refresh_interval=$2 AND refresh_task_id=$3 AND max_streams=$4 RETURNING id::bigint",
+                    )
+                    .bind(id)
+                    .bind(interval)
+                    .bind(task)
+                    .bind(max)
+                    .fetch_optional(&mut *tx)
+                    .await?,
+                };
                 let account = account.ok_or_else(unsupported)?;
                 let task_name = format!("m3u_account-refresh-{id}");
                 let present: Option<i64> = sqlx::query_scalar(
@@ -986,7 +1034,7 @@ async fn rename_without_broker(
                 .bind(&task_name)
                 .bind("apps.m3u.tasks.refresh_single_m3u_account")
                 .bind(interval.max(1))
-                .bind(active)
+                .bind(was_active)
                 .fetch_optional(&mut *tx)
                 .await?;
                 if present.is_none() {
@@ -1002,7 +1050,7 @@ async fn rename_without_broker(
                         kwargs: &kwargs,
                         interval_hours: interval,
                         cron: "",
-                        active,
+                        active: next_active,
                         timezone: "UTC",
                     },
                 )
@@ -1031,7 +1079,11 @@ async fn change(
     let id = raw.map(path_key).transpose()?;
     let input = body_object(body)?;
     let broker_missing = auth.core_task_broker.get().is_none();
-    let queue_free_name = broker_missing && partial && id.is_some() && ordinary_name_only(&input);
+    let queue_free_edit = if broker_missing && partial && id.is_some() {
+        queue_free_provider_edit(&input)
+    } else {
+        None
+    };
     let direct_xc = id.is_none() && input.get("account_type").and_then(Value::as_str) == Some("XC");
     let direct_vod = input.get("enable_vod") == Some(&Value::Bool(true));
     let inline_groups = if direct_xc {
@@ -1062,7 +1114,7 @@ async fn change(
     };
     if auth.profile_save_signal.is_none()
         || auth.event_sink.is_none()
-        || (broker_missing && !queue_free_name)
+        || (broker_missing && queue_free_edit.is_none())
     {
         return Err(unsupported());
     }
@@ -1073,10 +1125,12 @@ async fn change(
         let mut handed_off = false;
         let outcome=async{
             let (old,old_cron)=if let Some(id)=id{
-                let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT CASE WHEN octet_length(to_jsonb(a)::text)<=1048576 THEN to_jsonb(a) END AS raw,COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week),'') AS cron FROM m3u_m3uaccount a LEFT JOIN django_celery_beat_periodictask t ON t.id=a.refresh_task_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=t.crontab_id WHERE a.id=$1").bind(id).fetch_optional(c).await})).await??.ok_or_else(|| if queue_free_name { unsupported() } else { missing() })?;
+                let row=session.run(move|c|Box::pin(async move{sqlx::query("SELECT CASE WHEN octet_length(to_jsonb(a)::text)<=1048576 THEN to_jsonb(a) END AS raw,COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week),'') AS cron FROM m3u_m3uaccount a LEFT JOIN django_celery_beat_periodictask t ON t.id=a.refresh_task_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=t.crontab_id WHERE a.id=$1").bind(id).fetch_optional(c).await})).await??.ok_or_else(|| if queue_free_edit.is_some() { unsupported() } else { missing() })?;
                 let raw:Option<Value>=row.try_get("raw")?;let old=raw.ok_or_else(unsupported)?;
                 let cron:String=row.try_get("cron")?;
-                if queue_free_name && !existing_std_interval_account(&old, &cron) { return Err(unsupported()); }
+                if queue_free_edit.is_some_and(|edit| !eligible_queue_free_edit(edit, &old, &cron)) {
+                    return Err(unsupported());
+                }
                 if old["locked"]==true{return Err(locked())}
                 (old,cron)
             }else{(defaults(),String::new())};
@@ -1090,9 +1144,9 @@ async fn change(
                 }
                 Ok::<_,StoreError>(())
             })).await??;
-            if queue_free_name {
+            if let Some(edit) = queue_free_edit {
                 let account = id.ok_or_else(unsupported)?;
-                let response = rename_without_broker(&session, account, &old, validated).await?;
+                let response = edit_without_broker(&session, account, &old, validated, edit).await?;
                 return Ok((account, None, (StatusCode::OK, response)));
             }
             let saved=validated.saved;let cron=validated.cron;
@@ -1387,7 +1441,7 @@ mod tests {
         old["refresh_interval"] = json!(4);
         old["custom_properties"] = json!({"hash_key":"name,url","owned_fixture_marker":"preserve"});
         let input = Map::from_iter([("name".into(), json!("Owned renamed standard provider"))]);
-        assert!(ordinary_name_only(&input));
+        assert_eq!(queue_free_provider_edit(&input), Some(QueueFreeProviderEdit::Rename));
         for active in [false, true] {
             old["is_active"] = json!(active);
             assert!(existing_std_interval_account(&old, ""));
@@ -1399,13 +1453,39 @@ mod tests {
             assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
         }
         let extra = Map::from_iter([("name".into(), json!("Owned name")), ("hash_key".into(), json!("name"))]);
-        assert!(!ordinary_name_only(&extra));
+        assert_eq!(queue_free_provider_edit(&extra), None);
         assert!(!existing_std_interval_account(&old, "0 7 * * *"));
         old["refresh_interval"] = json!(0);
         assert!(!existing_std_interval_account(&old, ""));
         old["refresh_interval"] = json!(4);
         old["status"] = json!("fetching");
         assert!(!existing_std_interval_account(&old, ""));
+    }
+
+    #[test]
+    fn flags_off_std_activation_requires_the_ordinary_disabled_interval_account() {
+        let mut old = defaults();
+        old["status"] = json!("disabled");
+        old["is_active"] = json!(false);
+        old["refresh_task_id"] = json!(7);
+        old["refresh_interval"] = json!(4);
+        let input = Map::from_iter([("is_active".into(), json!(true))]);
+        let edit = QueueFreeProviderEdit::Activate;
+        assert_eq!(queue_free_provider_edit(&input), Some(edit));
+        assert!(eligible_queue_free_edit(edit, &old, ""));
+        assert!(!eligible_queue_free_edit(edit, &old, "0 7 * * *"));
+        let mut expected = old.clone();
+        expected["is_active"] = json!(true);
+        expected["status"] = json!("idle");
+        let validated = validate(input, &old, "", true, false).unwrap();
+        assert_eq!(validated.saved, expected);
+        assert!(!validated.hash_changed && validated.expiration.is_none());
+        assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
+        assert!(!eligible_queue_free_edit(edit, &expected, ""));
+        assert_eq!(queue_free_provider_edit(&Map::from_iter([("is_active".into(), json!(false))])), None);
+        assert_eq!(queue_free_provider_edit(&Map::from_iter([
+            ("is_active".into(), json!(true)), ("name".into(), json!("Owned name"))
+        ])), None);
     }
 
     #[test]

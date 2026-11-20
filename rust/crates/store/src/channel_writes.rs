@@ -18,9 +18,11 @@ use sqlx::{PgConnection, Postgres, QueryBuilder, Row, Transaction};
 use std::{collections::HashMap, net::SocketAddr};
 use uuid::Uuid;
 mod assign_numbers;
+mod edit_bulk;
 mod from_stream;
 mod reorder;
 pub(crate) use assign_numbers::handle as assign_numbers;
+pub(crate) use edit_bulk::handle as edit_bulk;
 pub(crate) use from_stream::handle as create_from_stream;
 pub(crate) use reorder::handle as reorder;
 
