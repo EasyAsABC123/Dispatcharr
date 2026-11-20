@@ -12,15 +12,14 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Latest packaged checks
 
-The exact `c2a35f9d` package passed **9 of 127 required coordinator
-nodes** across two Compose runs. Six covered clean install, the safe
-operator CLI, Current64 and Grid43, credential hashes, and configured
-proxy authentication. Three covered shared MPEG-TS, delayed restart
-with all replicas down, and bounded retention with 100 late readers.
-All nine verified independent cleanup. The remaining 118 required
-nodes lack passing coordinator evidence on this image. Full release
-parity, soak, rollback, and equivalent-work performance acceptance
-remain open. [Current coordinator coverage](rust-m9-c2a3-coordinator-coverage.md)
+The exact `c2a35f9d` package passed **11 of 127 required coordinator
+nodes** across four Compose runs. The six operator, Guide and authentication
+checks and the three shared MPEG-TS checks retained exact cleanup. Full
+packaged Main passed 1,024 checks across 18 suites and decoded 75 MPEG-TS
+frames. The two browser arms verified live playback, Stats and 112 shipped React
+assets. The remaining 116 required nodes lack passing evidence
+on this image. Release workflow, soak, rollback, and equivalent-work
+performance remain open. [Current coordinator coverage](rust-m9-c2a3-coordinator-coverage.md)
 
 The exact `c6061adb` image passed the 18-suite Main baseline with
 1,024 checks and 75 decoded
