@@ -47,6 +47,38 @@ fn positive(name: &str, default: usize) -> Result<usize, String> {
     Ok(value)
 }
 
+fn version_startup_owned(
+    owner: Option<&std::ffi::OsStr>,
+    version: bool,
+    selected: bool,
+    refresh: bool,
+    broker: Option<&std::ffi::OsStr>,
+    backend: Option<&std::ffi::OsStr>,
+) -> Result<bool, &'static str> {
+    use std::ffi::OsStr;
+
+    let Some(owner) = owner else {
+        return Ok(false);
+    };
+    if owner != OsStr::new("rust") {
+        return Err("RUST_VERSION_STARTUP_OWNER must be rust when configured");
+    }
+    if !version || selected || refresh {
+        return Err("Rust Version startup requires standalone RUST_VERSION_TASKS_ENABLED=1");
+    }
+    let explicit_url = |value: Option<&OsStr>| {
+        value
+            .and_then(OsStr::to_str)
+            .is_some_and(|url| !url.is_empty() && url.len() <= 4096 && url.trim() == url)
+    };
+    if !explicit_url(broker) || !explicit_url(backend) {
+        return Err(
+            "Rust Version startup requires explicit CELERY_BROKER_URL and CELERY_RESULT_BACKEND",
+        );
+    }
+    Ok(true)
+}
+
 fn database_url() -> Result<String, String> {
     database_config::url()
 }
@@ -748,6 +780,14 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         _ => return Err("RUST_VERSION_TASKS_ENABLED must be 0 or 1".into()),
     };
     let version_tasks_enabled = version_tasks_enabled || selected_jobs_enabled;
+    let version_startup = version_startup_owned(
+        env::var_os("RUST_VERSION_STARTUP_OWNER").as_deref(),
+        version_tasks_enabled,
+        selected_jobs_enabled,
+        refresh_enabled,
+        env::var_os("CELERY_BROKER_URL").as_deref(),
+        env::var_os("CELERY_RESULT_BACKEND").as_deref(),
+    )?;
     let original_m3u_refresh_all = m3u_refresh_all_config::prepare(
         auth.clone(),
         selected_jobs_enabled,
@@ -1225,9 +1265,19 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     eprintln!("Dispatcharr Rust port listening on {bind}; migration parity is incomplete");
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
     if let Some(version) = version_tasks.as_ref().filter(|_| !selected_jobs_enabled) {
-        if version.start().is_err() {
+        let started = if version_startup {
+            let cache = cache_url
+                .as_deref()
+                .ok_or("Enabled version tasks require Redis configuration")?;
+            version
+                .start_with_startup(cache, auth.producer_identity_source())
+                .await
+        } else {
+            version.start().map_err(|_| "Version task intake failed")
+        };
+        if let Err(error) = started {
             let _ = version.shutdown(Duration::from_secs(4)).await;
-            return Err("Version task intake failed".into());
+            return Err(error.into());
         }
     }
     if let Some(selected) = &selected_jobs {
@@ -1729,6 +1779,52 @@ fn main() -> std::process::ExitCode {
             eprintln!("Dispatcharr Rust startup failed: {error}");
             std::process::ExitCode::FAILURE
         }
+    }
+}
+
+#[cfg(test)]
+mod version_startup_tests {
+    use super::version_startup_owned;
+    use std::ffi::OsStr;
+
+    #[test]
+    fn ordinary_version_startup_requires_explicit_exclusive_config() {
+        let owner = Some(OsStr::new("rust"));
+        let broker = Some(OsStr::new("redis://owned/1"));
+        let backend = Some(OsStr::new("redis://owned/2"));
+
+        assert_eq!(
+            version_startup_owned(None, false, false, false, None, None),
+            Ok(false)
+        );
+        assert_eq!(
+            version_startup_owned(None, true, true, true, None, None),
+            Ok(false)
+        );
+        assert_eq!(
+            version_startup_owned(owner, true, false, false, broker, backend),
+            Ok(true)
+        );
+        for (version, selected, refresh) in [
+            (false, false, false),
+            (true, true, false),
+            (true, false, true),
+        ] {
+            assert!(
+                version_startup_owned(owner, version, selected, refresh, broker, backend).is_err()
+            );
+        }
+        assert!(version_startup_owned(owner, true, false, false, None, backend).is_err());
+        assert!(version_startup_owned(owner, true, false, false, broker, None).is_err());
+        assert!(version_startup_owned(
+            Some(OsStr::new("unknown")),
+            true,
+            false,
+            false,
+            broker,
+            backend
+        )
+        .is_err());
     }
 }
 

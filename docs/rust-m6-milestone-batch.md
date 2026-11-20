@@ -66,3 +66,12 @@ still requires owned process exit; this is not long-running recovery.
 Performance must compare equivalent useful work across the complete service
 boundary after functional acceptance. Historical live-stream gains do not apply
 to this job candidate.
+
+## Ordinary Version startup
+
+The exact c74 image passed the paired Original and ordinary Rust startup and
+sequential restart. Each backend published one Version job and completed one
+release request, one notice and one event. The second startup preserved the
+observed Redis guard expiry and did not publish another job. The first
+Original-only fixture failure remains recorded.
+[Configuration and evidence](rust-m6-ordinary-version-startup.md)

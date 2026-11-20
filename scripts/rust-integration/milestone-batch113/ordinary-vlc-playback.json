@@ -1,0 +1,217 @@
+{
+  "candidate": {
+    "build_manifest_sha256": "f6263c4599f14bb9a18205210aaa6f0eedbb4ecef8c5a7114bf70fe20bdf6902",
+    "image_id": "sha256:01e513496e3ae02f8416ece3a07f2d5857e2998b5271f8138e9ed434a0685983",
+    "revision": "c74ea312bdc791ad12f5e43298b56bd9b81a19b5"
+  },
+  "credit": "Original Dispatcharr, VLC, FFmpeg and dependency authors retain all credit for their work.",
+  "first_Native_attempt": {
+    "Main_exit": 0,
+    "VLC_proxy_active_sockets_after_stop": 0,
+    "VLC_proxy_stop": {
+      "actual_exit": 0,
+      "all_original_process_generations_absent": true,
+      "stderr_EOF": true,
+      "stdout_EOF": true
+    },
+    "controller": {
+      "actual_exit": 1,
+      "process_group_settled": true,
+      "stderr_EOF": true,
+      "stdout_EOF": true
+    },
+    "exact_container_absences": 3,
+    "exact_host_generation_absences": 3,
+    "exact_owned_cleanup": true,
+    "fixture_failure": {
+      "actual_exit": 1,
+      "journal_error": "ValueError:Monitor16MiB",
+      "role": "plugin-startup-observer",
+      "terminal_barrier_observed": false
+    },
+    "idle_input_retired": true,
+    "media": {
+      "active": {
+        "actual_provider_slots": 1,
+        "actual_recording_ffmpeg_count": 0,
+        "actual_upstream_connections": 1
+      },
+      "actual_client_count": 2,
+      "actual_input_process_count": 1,
+      "actual_origin_connection_delta": 1,
+      "decoders": [
+        {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stderr_bytes": 0,
+          "stdout_EOF": true,
+          "video_and_audio": true,
+          "video_frames": 74
+        },
+        {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stderr_bytes": 0,
+          "stdout_EOF": true,
+          "video_and_audio": true,
+          "video_frames": 74
+        }
+      ],
+      "readers": [
+        {
+          "bytes": 1279340,
+          "content_type": "video/mp2t",
+          "ended": true,
+          "http_status": 200,
+          "sync_errors": 0
+        },
+        {
+          "bytes": 1279340,
+          "content_type": "video/mp2t",
+          "ended": true,
+          "http_status": 200,
+          "sync_errors": 0
+        }
+      ]
+    },
+    "ordinary_Main": true,
+    "readiness": {
+      "backend": "rust",
+      "parity_complete": false,
+      "status": "ready"
+    }
+  },
+  "full_M3_accepted": false,
+  "original": {
+    "leaf_sha256": "9495cadbb061a73c5ba0b73aa33969b9544d7880a4c0e305225a5c959b5de174",
+    "media": {
+      "active": {
+        "actual_provider_slots": 1,
+        "actual_recording_ffmpeg_count": 0,
+        "actual_upstream_connections": 1
+      },
+      "actual_client_count": 2,
+      "actual_input_process_count": 1,
+      "actual_origin_connection_delta": 1,
+      "decoders": [
+        {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stderr_bytes": 0,
+          "stdout_EOF": true,
+          "video_and_audio": true,
+          "video_frames": 74
+        },
+        {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stderr_bytes": 0,
+          "stdout_EOF": true,
+          "video_and_audio": true,
+          "video_frames": 74
+        }
+      ],
+      "readers": [
+        {
+          "bytes": 1535208,
+          "content_type": "video/mp2t",
+          "ended": true,
+          "http_status": 200,
+          "sync_errors": 0
+        },
+        {
+          "bytes": 1279340,
+          "content_type": "video/mp2t",
+          "ended": true,
+          "http_status": 200,
+          "sync_errors": 0
+        }
+      ]
+    },
+    "parent_controller_actual_exit": 1,
+    "parent_exact_cleanup": true,
+    "parent_separate_Original_Redirect_leaf_failed": true,
+    "parent_sha256": "ef0354375e72a841e0109d4534edf2c6bafe3c3b28ddbea5a7d5c8eaf5ed340b",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "source_replayed": false,
+    "upstream_retired_after_Source_shutdown": true
+  },
+  "performance_verified": false,
+  "scope": "Two authenticated MPEG-TS live readers sharing one VLC input on ordinary Native Main.",
+  "successful_Native_retry": {
+    "Main_exit": 0,
+    "VLC_proxy_active_sockets_after_stop": 0,
+    "VLC_proxy_stop": {
+      "actual_exit": 0,
+      "all_original_process_generations_absent": true,
+      "stderr_EOF": true,
+      "stdout_EOF": true
+    },
+    "controller": {
+      "actual_exit": 0,
+      "process_group_settled": true,
+      "stderr_EOF": true,
+      "stdout_EOF": true
+    },
+    "exact_container_absences": 3,
+    "exact_host_generation_absences": 3,
+    "exact_owned_cleanup": true,
+    "idle_input_retired": true,
+    "media": {
+      "active": {
+        "actual_provider_slots": 1,
+        "actual_recording_ffmpeg_count": 0,
+        "actual_upstream_connections": 1
+      },
+      "actual_client_count": 2,
+      "actual_input_process_count": 1,
+      "actual_origin_connection_delta": 1,
+      "decoders": [
+        {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stderr_bytes": 0,
+          "stdout_EOF": true,
+          "video_and_audio": true,
+          "video_frames": 74
+        },
+        {
+          "actual_exit": 0,
+          "process_group_settled": true,
+          "stderr_EOF": true,
+          "stderr_bytes": 0,
+          "stdout_EOF": true,
+          "video_and_audio": true,
+          "video_frames": 74
+        }
+      ],
+      "readers": [
+        {
+          "bytes": 1279340,
+          "content_type": "video/mp2t",
+          "ended": true,
+          "http_status": 200,
+          "sync_errors": 0
+        },
+        {
+          "bytes": 1279340,
+          "content_type": "video/mp2t",
+          "ended": true,
+          "http_status": 200,
+          "sync_errors": 0
+        }
+      ]
+    },
+    "ordinary_Main": true,
+    "readiness": {
+      "backend": "rust",
+      "parity_complete": false,
+      "status": "ready"
+    }
+  }
+}

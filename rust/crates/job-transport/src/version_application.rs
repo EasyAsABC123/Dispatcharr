@@ -6,7 +6,8 @@ use crate::{
     version_worker::{Error, Run, Worker},
 };
 use dispatcharr_contracts::UpdateEventSink;
-use dispatcharr_store::Store;
+use dispatcharr_output_store::transport::{RedisTransport, TransportConfig};
+use dispatcharr_store::{ProducerIdentitySource, Store};
 use std::{
     sync::{Arc, Mutex},
     time::Duration,
@@ -97,6 +98,64 @@ impl Application {
     pub fn state(&self) -> State {
         self.inner.state.borrow().clone()
     }
+    /// The caller has explicitly assigned the default queue to this application.
+    /// Keep the old consumer-only entry point for existing callers.
+    pub async fn start_with_startup(
+        &self,
+        cache: &str,
+        identity: ProducerIdentitySource,
+    ) -> Result<(), &'static str> {
+        use crate::version_protocol::{STARTUP_LOCK, STARTUP_LOCK_SECONDS, TASK};
+
+        let guard = RedisTransport::connect(
+            cache,
+            TransportConfig {
+                max_operations: 1,
+                max_queued_operations: 1,
+                command_timeout: Config::default().command_timeout,
+            },
+        )
+        .await
+        .map_err(|_| "Version startup lock initialization failed")?;
+        let producer = identity
+            .current()
+            .map_err(|_| "Version startup producer identity failed")?;
+        let raw = crate::normal_recording_publication::startup_frame(
+            TASK,
+            uuid::Uuid::new_v4(),
+            producer.reply_to,
+            &producer.origin,
+        )
+        .map_err(|_| "Version startup frame initialization failed")?;
+        self.start()?;
+        let owner = Arc::new(Caller {
+            _application: self.inner.clone(),
+        });
+        let ttl = STARTUP_LOCK_SECONDS.to_string();
+        // The ordinary opt-in needs positive lock authority before publication.
+        // Leave the Source TTL in place after every settled or uncertain publish.
+        let (claim, owner): (Option<String>, _) = guard
+            .command(
+                "return redis.call('SET',KEYS[1],'1','NX','EX',ARGV[1])",
+                &[STARTUP_LOCK.to_owned()],
+                &[ttl.as_bytes()],
+                owner,
+            )
+            .await
+            .map_err(|_| "Version startup lock did not settle")?;
+        match claim.as_deref() {
+            None => Ok(()),
+            Some("OK") => self
+                .inner
+                .jobs
+                .publish_startup(&raw, owner)
+                .await
+                .map(|_| ())
+                .map_err(|_| "Version startup root did not settle"),
+            Some(_) => Err("Version startup lock reply invalid"),
+        }
+    }
+
     pub fn start(&self) -> Result<(), &'static str> {
         let mut lifecycle = self
             .inner

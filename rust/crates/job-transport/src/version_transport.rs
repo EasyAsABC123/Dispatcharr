@@ -63,6 +63,17 @@ impl VersionJobs {
             Err(e) => Err(map(e)),
         }
     }
+    pub(crate) async fn publish_startup(
+        &self,
+        raw: &[u8],
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Published, Error> {
+        let id = crate::version_protocol::parse(raw)
+            .map_err(|_| Error::UnsupportedTask)?
+            .task_id;
+        super::normal_recovery_transport::publish_startup_root(&self.jobs, raw, id, owner).await
+    }
+
     pub(crate) async fn write(
         &self,
         message: &crate::version_protocol::Message,

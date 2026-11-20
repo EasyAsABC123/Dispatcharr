@@ -2,6 +2,35 @@
 //! Original Dispatcharr/Celery authors retain all algorithm/protocol credit.
 use super::*;
 pub(crate) const RECOVERY_TASK: &str = "apps.channels.tasks.recover_recordings_on_startup";
+
+pub(super) async fn publish_startup_root(
+    jobs: &Jobs,
+    raw: &[u8],
+    id: Uuid,
+    owner: Arc<dyn Send + Sync>,
+) -> Result<Published, Error> {
+    let maximum = jobs.inner.config.max_queued_jobs.to_string();
+    match jobs
+        .inner
+        .broker
+        .command_classified::<i64, _>(
+            PUBLISH,
+            &["celery".into(), "_kombu.binding.celery".into()],
+            &[raw, maximum.as_bytes()],
+            jobs.lease(owner)?,
+        )
+        .await
+    {
+        Ok((n, _)) if n > 0 => Ok(Published {
+            task_id: id,
+            queue_length: n as u64,
+        }),
+        Ok((-2, _)) => Err(Error::Capacity),
+        Ok(_) => Err(Error::Corrupt),
+        Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(id)),
+        Err(error) => Err(map(error)),
+    }
+}
 #[derive(Clone, Debug)]
 pub(crate) struct RecoveryMessage {
     pub(crate) task_id: Uuid,
@@ -89,28 +118,7 @@ impl RecoveryJobs {
                 .map_err(|_| Error::UnsupportedTask)?
                 .task_id
         };
-        let maximum = self.jobs.inner.config.max_queued_jobs.to_string();
-        match self
-            .jobs
-            .inner
-            .broker
-            .command_classified::<i64, _>(
-                PUBLISH,
-                &["celery".into(), "_kombu.binding.celery".into()],
-                &[raw, maximum.as_bytes()],
-                self.jobs.lease(owner)?,
-            )
-            .await
-        {
-            Ok((n, _)) if n > 0 => Ok(Published {
-                task_id: id,
-                queue_length: n as u64,
-            }),
-            Ok((-2, _)) => Err(Error::Capacity),
-            Ok(_) => Err(Error::Corrupt),
-            Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(id)),
-            Err(error) => Err(map(error)),
-        }
+        publish_startup_root(&self.jobs, raw, id, owner).await
     }
     pub(crate) async fn write(
         &self,

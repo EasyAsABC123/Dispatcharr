@@ -41,6 +41,11 @@ work. Rust used about 83% less CPU and 71% less peak working memory. The
 passed three additional equivalent-work pairs. Median paired CPU and peak
 working memory fell 82.6% and 71.0%, respectively.
 
+The [ordinary Main VLC check](rust-m3-ordinary-vlc-playback.md) verified two
+authenticated MPEG-TS readers sharing one VLC input, upstream connection
+and provider slot on the exact shared package. Both readers decoded video
+and audio, and Main stopped cleanly with exact owned cleanup.
+
 The [Candidate107 VOD and XMLTV results](rust-milestone-batch107.md) verify
 calendar seek ranges, alternate-provider capacity and remote source creation.
 The [Candidate107 resource comparison](rust-m4-performance.md#candidate107-playback-comparison)

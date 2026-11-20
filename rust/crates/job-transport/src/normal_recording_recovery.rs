@@ -685,8 +685,8 @@ impl Worker {
             ),
             (
                 1,
-                "core:version_check_dispatch_lock",
-                "core.tasks.check_for_version_update",
+                crate::version_protocol::STARTUP_LOCK,
+                crate::version_protocol::TASK,
             ),
         ] {
             if index == 0 {
@@ -714,7 +714,12 @@ impl Worker {
             let allowed = match &self.inner.service.cache {
                 Some(cache) => {
                     let mut command = redis::cmd("SET");
-                    command.arg(key).arg("1").arg("NX").arg("EX").arg(300);
+                    command
+                        .arg(key)
+                        .arg("1")
+                        .arg("NX")
+                        .arg("EX")
+                        .arg(crate::version_protocol::STARTUP_LOCK_SECONDS);
                     match cache
                         .command::<Option<String>>(command, owner.clone())
                         .await
