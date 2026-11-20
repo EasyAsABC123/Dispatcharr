@@ -54,6 +54,10 @@ It recorded 1,023 passing checks and one response-body mismatch for a
 malformed settings ID. Cleanup passed. The coordinator exited 2 with
 this node failed. The nine C74 passes remain scoped to C74.
 
+The [735 operator and guide acceptance](rust-735-group-acceptance.md) passed four required nodes
+on 735. It verified 11 clean-install checks, 17 safe CLI cases, 64 current
+programme cases and 43 guide grid cases with verified cleanup.
+
 The [735 permissions and management baseline](rust-735-baseline-acceptance.md) passed all 1,024 checks
 across 18 suites with verified cleanup. It matched the exact HTTP 404
 body for the malformed settings ID. The coordinator recorded one passing
