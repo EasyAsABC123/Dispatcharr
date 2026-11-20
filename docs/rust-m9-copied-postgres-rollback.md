@@ -101,3 +101,29 @@ were empty. Full M9 and production rollback remain open. Original
 Dispatcharr and dependency authors retain full credit.
 
 [Redacted c606 copied rollback receipt](../scripts/rust-integration/milestone-batch113/c606-scoped-copied-rollback.json)
+
+## 82414407 copied rollback rehearsal
+
+One pinned Original donor supplied a 244,634-byte PostgreSQL archive to the
+Original-only control and the trial. The control retired before the trial
+started. Native used a separate database for its channel edit and stopped
+before Original resumed on the trial's same loopback front door. Both
+applications returned the restored authenticated channel. The Native copy
+kept its edit, and the restored media fixture bytes matched across owners.
+
+Four read-only PostgreSQL observations in each restored arm confirmed that
+the same four Original startup timestamp cells advanced within each arm's
+measured startup interval. The complete observed pre-restart state
+matched the restored seed. All other observed SQL fields, row
+multiplicities, schema and sequence values matched, and the authenticated
+read added no SQL change after readiness.
+
+The independent complete fingerprint comparator exited **1** after those
+timestamp changes. The scoped copied rehearsal exited **0**. All three
+Compose projects recorded teardown exit 0, retired their nine owned
+containers and seven tracked host process generations, and had empty
+container, network and volume inventories. Full M9 and production rollback
+remain open. Original Dispatcharr, Django and dependency authors retain
+full credit.
+
+[Redacted 82414407 copied rollback receipt](../scripts/rust-integration/milestone-batch113/82414407-scoped-copied-rollback.json)
