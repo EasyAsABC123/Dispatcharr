@@ -85,12 +85,12 @@ all 16 paired cases on the shared image. The
 phases on XMLTV, the programme grid, and Xtream short EPG. Both respective
 Compose projects retired exactly.
 
-The [C74 package checks](rust-c74-clean-install-operator.md) passed four
-required nodes across two runs on the same image. The first covered 11
-stock React fresh-install and 17 safe operator checks. The second covered
-22 shipped `createsuperuser` cases and 154 strict API comparisons. Each
-run exited 2 because it bound two required nodes. The full integrated
-package and resource gates remain open.
+The [C74 package checks](rust-c74-clean-install-operator.md) passed five
+required nodes across three runs on the same image. The checks covered
+11 stock React fresh-install, 17 safe operator, 22 shipped
+`createsuperuser`, 154 strict API and 64 fresh paired current-programme
+cases. Each run exited 2 with the larger roster still open. The full
+integrated package and resource gates remain open.
 
 The [stock React Group Manager retry](rust-m5-stock-group-manager.md) passed
 ordinary Native login, cancel and both cleanup modes with exact SQL and

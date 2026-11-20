@@ -29,3 +29,16 @@ same cases. Both nodes passed execution, evaluation, and cleanup. This
 coordinator run recorded two passed nodes and 125 blocked nodes with actual
 exit 2. Exact CLI byte parity remains open.
 [Validation receipt](../scripts/rust-integration/milestone-batch113/c74-createsuperuser22-typed154.json)
+
+## Packaged current-programme requests
+
+A third run on the exact C74 image passed all 64 current-programme cases
+against fresh pinned Original captures. The fixture used real current
+programme windows. Each case matched the HTTP status, content type, body
+length and body digest through production Main. The package terminated
+cleanly without an OOM and independent project inventories were empty.
+
+The execution, evaluation and cleanup commands each exited 0. The
+coordinator recorded one passed node, 126 blocked nodes and literal exit
+2. The five required nodes verified on C74 span three runs.
+[Current-programme receipt](../scripts/rust-integration/milestone-batch113/c74-packaged-current64.json)
