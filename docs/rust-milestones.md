@@ -57,6 +57,11 @@ calendar seek ranges, alternate-provider capacity and remote source creation.
 The [e765 VOD and catch-up Range pair](rust-m4-e765-ordinary-seek-calendar.md)
 matched 20 authenticated HTTP 206 responses and one upstream request per case
 and backend. All eight Compose roles retired and both projects were empty.
+
+The [8241 VOD and catch-up Range pair](rust-m4-8241-ordinary-seek-calendar.md)
+verified the ten ordinary cases again on this exact image. All 20
+authenticated responses returned HTTP 206 with matching bodies, one
+upstream request per backend per case and complete project cleanup.
 The [Candidate107 resource comparison](rust-m4-performance.md#candidate107-playback-comparison)
 passed 12 VOD and catch-up pairs with matched work. Median paired CPU fell
 39–73% and working memory fell 32–36% depending on the workload.

@@ -1,0 +1,54 @@
+{
+  "candidate_manifest_sha256": "df4ae40af85a6a11f1aef934aa7d1c2d117531d9d7473588a02c554acbe60da1",
+  "candidate_revision": "82414407934a2ac19f01949df302e9715f667261",
+  "credit": "Original Dispatcharr, FFmpeg, and dependency contributors retain full credit.",
+  "fixture_freeze_sha256": "2fc6b047acf1a2c0729dbe1a6963f1e5155b0ec0f1e98237a2d930c4f1e20333",
+  "full_M3_accepted": false,
+  "host_execution_sha256": "4900acca0474139ee677cccd902b3c4035f2795dd98d5c1d622c2d3206d9a7fd",
+  "literal_controller_exit": 0,
+  "performance_verified": false,
+  "physical_report_sha256": "1459af7f56586256f086539753cfb1eb2595283cb6df4bbd17eb722102583ddb",
+  "scope": "Two authenticated fMP4 viewers sharing an ordinary external FFmpeg profile",
+  "trials": [
+    {
+      "backend": "Original",
+      "decoder_exit_codes": [
+        0,
+        0
+      ],
+      "decoder_video_frame_counts": [
+        74,
+        75
+      ],
+      "exact_observed_CIDs_retired": 2,
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "independent_cleanup": true,
+      "shared_complete_fragments": 6,
+      "shared_remux_processes": 1,
+      "shared_transcode_processes": 1,
+      "simultaneous_readers": 2,
+      "survivor_produced_new_media": true,
+      "upstream_connections": 1
+    },
+    {
+      "backend": "Native",
+      "decoder_exit_codes": [
+        0,
+        0
+      ],
+      "decoder_video_frame_counts": [
+        74,
+        75
+      ],
+      "exact_observed_CIDs_retired": 3,
+      "image_id": "sha256:f51af34055df3a3b10b3aaf84624d638d1691d5778ce7169a8e8acc04ab14fd3",
+      "independent_cleanup": true,
+      "shared_complete_fragments": 6,
+      "shared_remux_processes": 1,
+      "shared_transcode_processes": 1,
+      "simultaneous_readers": 2,
+      "survivor_produced_new_media": true,
+      "upstream_connections": 1
+    }
+  ]
+}
