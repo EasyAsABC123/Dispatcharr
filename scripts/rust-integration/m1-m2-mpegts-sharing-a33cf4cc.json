@@ -1,0 +1,43 @@
+{
+  "fixture_sha256": "3b66a35d2bb66517533e3858270ef7c4c8cd3b3bbbe78772118b02a1e4b8adcb",
+  "formal_coordinator_status_awarded": false,
+  "literal_exit": 0,
+  "manifest_sha256": "997dd6bb7331e469fcc4419f8eb8aebafd5347259de7f70ddf7ee204a12775f3",
+  "ordinary_playback": {
+    "cases": [
+      "ordinary_reader_disconnect",
+      "ordinary_operator_stop"
+    ],
+    "follower_continued_after_first_reader_closed": true,
+    "matched_audio_video_decoders": 4,
+    "operator_stop_ended_both_viewers": true,
+    "provider_slots_per_case": 1,
+    "rust_workers": 2,
+    "simultaneous_authenticated_viewers_per_case": 2,
+    "upstream_connections_per_case": 1
+  },
+  "original_credit": "The original Dispatcharr authors and contributors retain full application and behavior credit.",
+  "owned_cleanup_sha256": "5b74c8d96e625d2acc059b6b1c0d9e6fc21d586ed5b06c24dadc19002b6cda9a",
+  "per_role_playback": {
+    "first_worker_viewer": "admin",
+    "operator_stop_caller": "admin",
+    "role_order_per_workflow_case": [
+      {
+        "admin_HTTP_status": 200,
+        "case": "shared-demand",
+        "standard_HTTP_status": 200
+      },
+      {
+        "admin_HTTP_status": 200,
+        "case": "stop",
+        "standard_HTTP_status": 200
+      }
+    ],
+    "second_worker_viewer": "standard",
+    "separate_authenticated_users": true
+  },
+  "performance_measured": false,
+  "review_sha256": "509c8f7ff43c9cbd726f0f8ad16bf6050735fa6fccf7703c52f58d94f187dd9e",
+  "revision": "a33cf4cc8af0a7753592fc7cca643a73d758c037",
+  "terminal_scope_sha256": "69d333b66efd0a191a77b5adc568b2dc72e5334536ec5ac07ef4c7f3f8154410"
+}

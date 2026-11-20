@@ -1,0 +1,118 @@
+{
+  "actual_exit": 0,
+  "approved_review_sha256": "509c8f7ff43c9cbd726f0f8ad16bf6050735fa6fccf7703c52f58d94f187dd9e",
+  "candidate_revision": "a33cf4cc8af0a7753592fc7cca643a73d758c037",
+  "credits": "All application and behavior credit belongs to the original Dispatcharr authors and contributors.",
+  "full_M5_or_M7_accepted": false,
+  "generated_guide_output_exercised": false,
+  "literal_POST_Allow": {
+    "native": [
+      null,
+      null
+    ],
+    "original": [
+      "POST, OPTIONS",
+      "POST, OPTIONS"
+    ]
+  },
+  "manifest_sha256": "997dd6bb7331e469fcc4419f8eb8aebafd5347259de7f70ddf7ee204a12775f3",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owned_cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "paired_effects": {
+    "cases": [
+      {
+        "action": "assign-local-dummy",
+        "after_SQL_sha256": "e4ea389b2cb777f47c8b17bd2825635eca8a4f25f340374d8c580fb98d145da3",
+        "before_SQL_sha256": "42a77b88fa7d46a6ecf71d1b8aa93e8fa8ba86f48c864e8666a54f6611516f28",
+        "ordered_details": [
+          {
+            "both_raw_and_effective": "assign-local-dummy",
+            "detail": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "kind": "managed",
+            "media_and_overlay_preserved": true
+          },
+          {
+            "both_raw_and_effective": "assign-local-dummy",
+            "detail": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "kind": "manual",
+            "media_and_overlay_preserved": true
+          }
+        ],
+        "post": {
+          "mime": "application/json",
+          "status": 200
+        },
+        "typed": {
+          "channels_updated": 2,
+          "programs_refreshed": 0,
+          "success": true
+        }
+      },
+      {
+        "action": "clear-explicit-null",
+        "after_SQL_sha256": "42a77b88fa7d46a6ecf71d1b8aa93e8fa8ba86f48c864e8666a54f6611516f28",
+        "before_SQL_sha256": "e4ea389b2cb777f47c8b17bd2825635eca8a4f25f340374d8c580fb98d145da3",
+        "ordered_details": [
+          {
+            "both_raw_and_effective": "clear-explicit-null",
+            "detail": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "kind": "managed",
+            "media_and_overlay_preserved": true
+          },
+          {
+            "both_raw_and_effective": "clear-explicit-null",
+            "detail": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "kind": "manual",
+            "media_and_overlay_preserved": true
+          }
+        ],
+        "post": {
+          "mime": "application/json",
+          "status": 200
+        },
+        "typed": {
+          "channels_updated": 2,
+          "programs_refreshed": 0,
+          "success": true
+        }
+      }
+    ],
+    "no_cache_generation_or_queue_depth_change": true,
+    "no_remote_or_imported_guide": true,
+    "raw_body_or_credentials_retained": false,
+    "same_unchanged_fixture_after_clear": true
+  },
+  "paired_freeze_sha256": "beb07ae3e0d657975e4fc3db0b778589c2586cf56a715027f04c0546f46d7fb0",
+  "paired_receipt_sha256": "8ff9fa4fac07e12855a8b29103cfde61cd3ea432fc9aec3075ee708e9d6360f4",
+  "performance_verified": false,
+  "scope": "normal React Batch Set EPG dummy assignment and explicit null clear"
+}

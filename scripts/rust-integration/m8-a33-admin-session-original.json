@@ -1,0 +1,46 @@
+{
+  "Chromium_or_Playwright_executed": false,
+  "actual_exit": 0,
+  "audited_native": "a33cf4cc8af0a7753592fc7cca643a73d758c037",
+  "canonical_admin_CSRF_node_complete": false,
+  "credits": "The original Dispatcharr and Django authors and contributors retain full application and framework credit.",
+  "native_admin_creation_available": false,
+  "observed": {
+    "all_scoped_settings_and_admin_logs_unchanged": true,
+    "cookie_auth_only": true,
+    "database_session_links_owned_actor": true,
+    "login_HTTP": 302,
+    "login_form_HTTP": 200,
+    "logout_HTTP": 200,
+    "only_own_last_login_persisted": true,
+    "positive_steps": [
+      "login-form-GET",
+      "login-with-CSRF-POST",
+      "settings-page-GET",
+      "logout-with-CSRF-POST"
+    ],
+    "raw_page_credentials_cookie_or_session_data_retained": false,
+    "real_login_rotates_CSRF_and_sets_session": true,
+    "same_origin_submissions": true,
+    "session_cookie_http_only_same_site_lax": true,
+    "session_removed_and_browser_cookie_expired": true,
+    "settings_HTTP": 200
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owned_cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "performance_verified": false,
+  "scope": "direct Original same-origin administrator login settings read and logout",
+  "source_freeze_sha256": "4bdad8a26ba68af1a21013c01a556dc301ca1536aeb08027e723de83891db538",
+  "source_receipt_sha256": "4343516f7976b2834e6a865a522591dd92e64c22816f9927e1d06c371e1a3816"
+}
