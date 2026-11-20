@@ -13,7 +13,7 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | Executable Original HTTP assignments | 797 | Partial Original definitions across 798 operation work items. One work item awaits assignment. |
 | Unresolved methods with an executable Original fixture | 321 | Observed under 322 unresolved method/action declarations |
 | Non-HTTP candidate identities | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
-| Typed executable Original non-HTTP assignments | 227 | Partial observations for 145 migrations, 50 Django class registrations, 27 tasks, two commands, one model test, one synthetic consumer and one WebSocket route. 23 candidates await assignment. |
+| Typed executable Original non-HTTP assignments | 250 | Partial observations for 145 migrations, 50 Django class registrations, 27 task behaviors, 20 task registrations, two command executions, three command registrations, one model test, one synthetic consumer and one WebSocket route. |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
 | Operations with partial case bindings | 11 | 403 scoped packaged observations; remaining role/input coverage stays open |
 | Fully audited register operation rows | 0 | Register-to-case mapping has not been completed; existing reports retain their actual passes |

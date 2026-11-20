@@ -187,6 +187,10 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(retained_migration_recorder_contracts.dependencies())
         import retained_model_registry_contracts
         refs.update(retained_model_registry_contracts.dependencies())
+        import retained_task_registry_contracts
+        refs.update(retained_task_registry_contracts.dependencies())
+        import retained_management_registration_contracts
+        refs.update(retained_management_registration_contracts.dependencies())
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)

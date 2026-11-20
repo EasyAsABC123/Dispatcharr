@@ -12,13 +12,14 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Starting point
 
-The network-disabled M0 SDK passed all 113 tests, reproduced its register exactly,
+The network-disabled M0 SDK passed all 119 tests, reproduced its register exactly,
 and verified partial Original coverage for 797 of 798 HTTP declarations and
-227 of 250 typed operations. The 50 new typed observations record Django
-class registration and model metadata. A separate packaged Original run
-verified the anonymous React root and both baked assets with an explicit
-disposable login locale. The SDK binds that capture to the original root declaration.
-[SDK receipt](../scripts/rust-contracts/sdk-live-typed227.json)
+all 250 typed declarations. The new observations cover Celery task registration
+and Django command discovery. Existing observations cover Django model and
+schema migration behavior. A separate packaged Original run verified the
+anonymous React root and both baked assets with an explicit disposable login
+locale. The SDK binds that capture to the original root declaration.
+[SDK receipt](../scripts/rust-contracts/sdk-live-typed250.json)
 [Original packaged root](rust-m0-original-aio-root.md)
 
 The historical media comparisons established one upstream for 100 simultaneous

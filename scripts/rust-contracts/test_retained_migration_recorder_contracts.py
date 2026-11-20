@@ -24,6 +24,10 @@ class MigrationRecorder(unittest.TestCase):
         register = json.loads((ROOT / "docs/rust-contract-register.json").read_bytes())
         typed = register["non_HTTP_candidates"]
         import retained_model_registry_contracts as model_registry
+        import retained_task_registry_contracts as task_registry
+        import retained_management_registration_contracts as command_registry
+        command_registry.restore_before(ROOT, typed)
+        task_registry.restore_before(ROOT, typed)
         model_registry.restore_before(ROOT, typed)
         selected = [entry["executable_Source_contract"] for entry in typed if entry["source"]["kind"] == "migration"]
         self.assertEqual(len(typed), 250)

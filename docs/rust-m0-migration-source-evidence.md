@@ -36,3 +36,32 @@ typed candidates. The 797 HTTP assignments are unchanged. There are zero
 fully verified operations and candidates. Original ORM behavior, Native
 model and data parity, performance and full M0 remain open.
 [SDK receipt](../scripts/rust-contracts/sdk-live-typed227.json)
+
+## Original Celery and Django command registrations
+
+The pinned Original Celery registry exposed 20 additional callables across
+six source modules. The owned probe recorded their names, signatures,
+declared limits, and source coordinates. In a separate run, Django's
+command registry returned the owning installed apps for `proxy`,
+`dropdb`, and `kill_processes`. That probe did not load command modules
+or invoke management commands. Both probes ran with networking disabled,
+exited zero, and verified exact cleanup. Neither dispatched work or
+produced external effects.
+
+The SDK reproduced the register byte-for-byte and passed all 119 ordered
+tests in network-disabled Docker Compose. The controller and all three
+phases exited zero, and independent verification confirmed that the
+container and its Compose resources were absent after cleanup.
+
+All 250 typed declarations now have partial Original evidence. The 797 of
+798 partial Original HTTP assignments are unchanged. The later DRF-router
+recording HLS GET declaration remains unassigned. The earlier integer URL
+pattern handles the retained ordinary requests. There are zero fully verified operations and
+candidates. Task and command execution, matching Native behavior,
+performance, and full M0 acceptance remain open.
+[Celery bindings](../scripts/rust-contracts/retained-task-registry/bindings.json)
+[Django command registration bindings](../scripts/rust-contracts/retained-management-registration/bindings.json)
+[SDK receipt](../scripts/rust-contracts/sdk-live-typed250.json)
+
+The original Dispatcharr, Django, and Celery authors and contributors retain
+full credit.

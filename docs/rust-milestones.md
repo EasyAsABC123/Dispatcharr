@@ -12,14 +12,13 @@ alone does not establish application parity or an application performance gain.
 The [complete parity plan](rust-complete-parity-plan.md) assigns parallel work
 across M0–M9 and proposes M10/M11 as separate rollout stages.
 
-The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-typed227.json)
-passed all 113 tests, reproduced the register byte-for-byte, and verified cleanup.
+The [current network-disabled SDK](../scripts/rust-contracts/sdk-live-typed250.json)
+passed all 119 tests, reproduced the register byte-for-byte and verified cleanup.
 The register has partial Original coverage for 797 of 798 HTTP declarations
-and 227 of 250 typed declarations. The
-[Original migration and registry observations](rust-m0-migration-source-evidence.md)
-cover 145 project migrations and 50 Django class registrations. The
-[earlier SDK receipt](../scripts/rust-contracts/sdk-live-typed177.json) retains
-the 110-case result. Full role and Native parity remain open.
+and all 250 typed declarations. The new [registration evidence](rust-m0-migration-source-evidence.md)
+covers 20 Celery tasks and three Django management commands in the pinned
+Original runtime. The earlier [113-case SDK](../scripts/rust-contracts/sdk-live-typed227.json)
+covers the prior registry. Full role and Native parity remain open.
 
 The [Original packaged React root](rust-m0-original-aio-root.md) returned
 HTTP 200 with the exact baked index and both linked assets under the explicit

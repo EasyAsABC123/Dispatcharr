@@ -9,7 +9,7 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
-    "scripts/rust-contracts/executable-source-inputs.json": "2d5259ae8198136adbfee38a7dc48f8d773eb80007aae6ab5ae6755040d4019e",
+    "scripts/rust-contracts/executable-source-inputs.json": "fa245defee78d70956a0a7bf8828a182b973103a4eac74dca770defe44e24f47",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -79,7 +79,9 @@
     "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json": "5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9",
     "scripts/rust-contracts/retained-root7-binding.json": "d0f98082a29c3cff6abfeb522a0a4a0cb2f9e59a7a23ffa3f0d9e29160d6f191",
     "scripts/rust-contracts/retained-migration-recorder/bindings.json": "64864beefa9d909f657e7e2f18cea08461c9ea7fb0b1e67f949444b86c5a79c2",
-    "scripts/rust-contracts/retained-model-registry/bindings.json": "941b684cb4734cf68ae91c844f9362ee8268c733d85c6a39c6bb88b865776109"
+    "scripts/rust-contracts/retained-model-registry/bindings.json": "941b684cb4734cf68ae91c844f9362ee8268c733d85c6a39c6bb88b865776109",
+    "scripts/rust-contracts/retained-task-registry/bindings.json": "e0f0e76d05d2b7a116233e76a39a1ca9910270769fc628ec3a9aabb4771af5bf",
+    "scripts/rust-contracts/retained-management-registration/bindings.json": "97ab015b80d30b40acfeb2b5f473fb4d918c22e9cfcd7c6c531c6ac8c7b86710"
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
@@ -434,6 +436,16 @@
         "path": "scripts/rust-contracts/retained-model-registry/bindings.json",
         "sha256": "941b684cb4734cf68ae91c844f9362ee8268c733d85c6a39c6bb88b865776109",
         "kind": "retained_original_django_model_registry_non_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-task-registry/bindings.json",
+        "sha256": "e0f0e76d05d2b7a116233e76a39a1ca9910270769fc628ec3a9aabb4771af5bf",
+        "kind": "retained_original_celery_registration_non_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/retained-management-registration/bindings.json",
+        "sha256": "97ab015b80d30b40acfeb2b5f473fb4d918c22e9cfcd7c6c531c6ac8c7b86710",
+        "kind": "retained_original_django_management_registration_non_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -1036,7 +1048,7 @@
   },
   "executable_Source_non_HTTP_mapping": {
     "state": "typed partial Original migration/model/task/management/consumer observations, not HTTP or Native verification",
-    "candidates": 227,
+    "candidates": 250,
     "fully_verified_added": 0
   },
   "runtime_discovery_metadata": {
@@ -350412,9 +350424,72 @@
         "name": "reschedule_upcoming_recordings_for_offset_change",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-7e9d45f88cd3cb8ab8ff",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/channels/tasks.py",
+          "line": 1019,
+          "name": "reschedule_upcoming_recordings_for_offset_change",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+          "bound": false,
+          "parameter_count": 0,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "5419c2d58be6224c99cb513aa233e5a62478883f24ee4dd8c76e55050bd5bf32",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-f7ba4ddb084a9bad742b",
@@ -350425,9 +350500,72 @@
         "name": "rebuild_recurring_rule",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-f7ba4ddb084a9bad742b",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/channels/tasks.py",
+          "line": 1152,
+          "name": "rebuild_recurring_rule",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.channels.tasks.rebuild_recurring_rule",
+          "bound": false,
+          "parameter_count": 2,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "4a22d84d32e9b91b8a2a419aaaa863a9cb12b851e346f0549ddf53bef24b52c0",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-28e73dbbafb9d9b259a3",
@@ -350533,9 +350671,72 @@
         "name": "purge_recurring_rule",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-5dffa68b5a8c880c40c1",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/channels/tasks.py",
+          "line": 1170,
+          "name": "purge_recurring_rule",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.channels.tasks.purge_recurring_rule",
+          "bound": false,
+          "parameter_count": 1,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "1e88a12fb0c25cd73389bc312cbd73b306d384f47325a08f02adbfb5409f1833",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-bf5b6446943290a55a07",
@@ -350546,9 +350747,72 @@
         "name": "_safe_name",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-bf5b6446943290a55a07",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/channels/tasks.py",
+          "line": 1174,
+          "name": "_safe_name",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.channels.tasks._safe_name",
+          "bound": false,
+          "parameter_count": 1,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "7bd0c36187888c28971065f336f37a4c25668b02f6b3c1e202c869aac6c37ff8",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-0f29552aefd3a49114ee",
@@ -351065,9 +351329,72 @@
         "name": "bulk_create_channels_from_streams",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-b6d3e5196b9fdf4d22f4",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/channels/tasks.py",
+          "line": 3957,
+          "name": "bulk_create_channels_from_streams",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.channels.tasks.bulk_create_channels_from_streams",
+          "bound": true,
+          "parameter_count": 4,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "f8430f219af5a74c446813dd3c62a6ad78d630c37f561c896cc033eea06ccaf9",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-5fb6aee2109e9610a953",
@@ -351078,9 +351405,72 @@
         "name": "set_channels_names_from_epg",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-5fb6aee2109e9610a953",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/channels/tasks.py",
+          "line": 4287,
+          "name": "set_channels_names_from_epg",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.channels.tasks.set_channels_names_from_epg",
+          "bound": true,
+          "parameter_count": 2,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "307720c70baf5d9db7baac454cec4381e25f773c53a5f250867dc553df19af6d",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-dbc05325b5fec6965cf2",
@@ -351091,9 +351481,72 @@
         "name": "set_channels_logos_from_epg",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-dbc05325b5fec6965cf2",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/channels/tasks.py",
+          "line": 4386,
+          "name": "set_channels_logos_from_epg",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.channels.tasks.set_channels_logos_from_epg",
+          "bound": true,
+          "parameter_count": 3,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "713f6f6076aafe1367fac9d97bea1ed5264c641ca1a233d9daf804b5c1532acd",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-7b8d35e77b886d865574",
@@ -351104,9 +351557,72 @@
         "name": "set_channels_tvg_ids_from_epg",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-7b8d35e77b886d865574",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/channels/tasks.py",
+          "line": 4554,
+          "name": "set_channels_tvg_ids_from_epg",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "92fd879189109310b58b9cdd684b4e00cb5e1d62b6931e975ab41f68ab8a6279",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.channels.tasks.set_channels_tvg_ids_from_epg",
+          "bound": true,
+          "parameter_count": 2,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "63723d1916ad46896f7b813ac5ad30686b4551a17461794127163334b09d23e5",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-a51371f02eb8e3a45640",
@@ -354898,9 +355414,72 @@
         "name": "fetch_sd_guide_for_epg",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-a07b431c4d32fca11993",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/epg/sd_tasks.py",
+          "line": 505,
+          "name": "fetch_sd_guide_for_epg",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "98909ed0e5ecd7bbeabb27d3de993e0f5323d5198288911c1406c510762aa60d",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.epg.tasks.fetch_sd_guide_for_epg",
+          "bound": false,
+          "parameter_count": 3,
+          "time_limit": 3600,
+          "soft_time_limit": 3500
+        },
+        "observation_sha256": "16fe6938a891bc6f5b8d46264bd8b53b926ee7a3f51e32be20fe0c1dc866fd44",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-be4caac220021ac7dd32",
@@ -355473,9 +356052,72 @@
         "name": "refresh_all_epg_data",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-51a728331140b3e4a5e8",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/epg/tasks.py",
+          "line": 482,
+          "name": "refresh_all_epg_data",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "deb4792a39ed93c57da435ecc2a4fcdf5b4dad8f4e087d3afdb5d4f2b7932ff9",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.epg.tasks.refresh_all_epg_data",
+          "bound": false,
+          "parameter_count": 0,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "a2852ab7af21cb0036ea082a28985fc079c0446538b4101625704af998252dda",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-442405cebe0695fa65ba",
@@ -360398,9 +361040,72 @@
         "name": "process_groups",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-9447b1e37de998be5e88",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/m3u/tasks.py",
+          "line": 748,
+          "name": "process_groups",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.m3u.tasks.process_groups",
+          "bound": false,
+          "parameter_count": 3,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "7ff04339468d12e396521f25536a6d656bd0ba250671b400adfa8c9e816b0115",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-da2be1cbd1c100963945",
@@ -362554,9 +363259,72 @@
         "name": "refresh_account_profiles",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-36118078e913ece60848",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/m3u/tasks.py",
+          "line": 3278,
+          "name": "refresh_account_profiles",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.m3u.tasks.refresh_account_profiles",
+          "bound": false,
+          "parameter_count": 1,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "9050497ad89160bf519feb6bd061d04813bc461939dbedecb3b5bd0362fdf2c8",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-8f06d250259fa82da431",
@@ -362567,9 +363335,72 @@
         "name": "refresh_account_info",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-8f06d250259fa82da431",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/m3u/tasks.py",
+          "line": 3389,
+          "name": "refresh_account_info",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "921e0fea7273c0ce7d1b1380a4f675718fbc5cdb3bb0d38005cdae2b73cce981",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.m3u.tasks.refresh_account_info",
+          "bound": false,
+          "parameter_count": 1,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "ef873f8e8fd3ce25061496d86f9813e237d1325427a182f803dcd0ad2ee82a02",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-b7a0c27875c0e36a3f31",
@@ -364931,9 +365762,68 @@
         "line": 7,
         "name": "Command"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Django_management_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Django_management_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "management_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Django-management-registration": {
+          "id": "Original-1241b3-Django-management-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Django": "6.0.9",
+          "network_mode": "none",
+          "exact_owned_cleanup": true,
+          "runtime_compose_sha256": "f6b118f62c34096073ce0564e8e6d6931b2e3da0870f336dd75c93332817ab52",
+          "command_modules_loaded": false,
+          "management_commands_started": false,
+          "external_effects_executed": false,
+          "files_sha256": {
+            "scripts/rust-contracts/retained-management-registration/declarations.json": "9150720002dbe7370da06eb3cd9698f8645f465625c77a47c40b88e8a782da53",
+            "scripts/rust-contracts/retained-management-registration/observations.json": "6f43a2c088b6655d68fcc9461410bb513b732fcdd5a36857f4051d213098cee8",
+            "scripts/rust-contracts/retained-management-registration/execution.json": "b13f84cb8b04f6f81023bfffaf95a6cc43b9483bbcb4bd4039373f3b2068cd68",
+            "scripts/rust-contracts/retained-management-registration/probe.py": "2a449567ff162ea1d718af1567c5e3ddd39f16859cd8cd2250753c6f4c20a389",
+            "scripts/rust-contracts/retained-management-registration/provenance.json": "4ab46a9ff6d5e21d5e60c2d05b54911ed1435bae9d7efebca416481ae4ae5f79"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Django command discovery reports this exact command and installed app owner.",
+        "The observed registry entry matches the pinned source coordinate without an import or command invocation."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-8738db7f5c7a632f8932",
+        "source": {
+          "kind": "management_command",
+          "path": "apps/proxy/management/commands/proxy.py",
+          "line": 7,
+          "name": "Command"
+        },
+        "original_file_sha256": "866327fa1c45cef22c8b83c139f178b12f8508d78db89382522523228bee7f13",
+        "fixture_ids": [
+          "Original-1241b3-Django-management-registration"
+        ],
+        "observation": {
+          "command": "proxy",
+          "owner": "apps.proxy"
+        },
+        "observation_sha256": "b760badfd8cddddcb987dfed9cc233afab33c89efd49dd6cf192097b283bf953",
+        "assertions": [
+          "Pinned Original Django command discovery reports this exact command and installed app owner.",
+          "The observed registry entry matches the pinned source coordinate without an import or command invocation."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Django_management_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "management_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-ca631f742f76c9d0b508",
@@ -367238,9 +368128,72 @@
         "name": "process_movie_batch",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-3260073d0c423b157cfe",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/vod/tasks.py",
+          "line": 476,
+          "name": "process_movie_batch",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "8bed587b6a113caf26039f1ee3e133a0c3a4d51f4909b4e7282956a6b0e5681d",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.vod.tasks.process_movie_batch",
+          "bound": false,
+          "parameter_count": 5,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "a24bd4908856d88fdb263fd2355df53c142f4e013626bfbd5e55b1d2f8b9ef9a",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-510f88ae4db95dd85ed6",
@@ -367251,9 +368204,72 @@
         "name": "process_series_batch",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-510f88ae4db95dd85ed6",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/vod/tasks.py",
+          "line": 846,
+          "name": "process_series_batch",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "8bed587b6a113caf26039f1ee3e133a0c3a4d51f4909b4e7282956a6b0e5681d",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.vod.tasks.process_series_batch",
+          "bound": false,
+          "parameter_count": 5,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "7d0fbf453f01a700b9ce9aff35aec9ada10c4ab264ab7c6a393d296162311aeb",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-3be97df658b7aa18633b",
@@ -367264,9 +368280,72 @@
         "name": "batch_refresh_series_episodes",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-3be97df658b7aa18633b",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/vod/tasks.py",
+          "line": 1845,
+          "name": "batch_refresh_series_episodes",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "8bed587b6a113caf26039f1ee3e133a0c3a4d51f4909b4e7282956a6b0e5681d",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.vod.tasks.batch_refresh_series_episodes",
+          "bound": false,
+          "parameter_count": 2,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "5ef33e6a06d01314a12b0e670b3a22e85b6a86a28655c8e20718d18e071d3e4d",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-22a4d69de13e976678c7",
@@ -367277,9 +368356,72 @@
         "name": "cleanup_orphaned_vod_content",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-22a4d69de13e976678c7",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/vod/tasks.py",
+          "line": 2723,
+          "name": "cleanup_orphaned_vod_content",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "8bed587b6a113caf26039f1ee3e133a0c3a4d51f4909b4e7282956a6b0e5681d",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.vod.tasks.cleanup_orphaned_vod_content",
+          "bound": false,
+          "parameter_count": 3,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "7cbe75692c0407492b9a9071c76ced342fd7177bdd74cee870610ff27cdc5dae",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-45a550bc3de95f01b5e2",
@@ -367290,9 +368432,72 @@
         "name": "refresh_movie_advanced_data",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-45a550bc3de95f01b5e2",
+        "source": {
+          "kind": "task_candidate",
+          "path": "apps/vod/tasks.py",
+          "line": 3309,
+          "name": "refresh_movie_advanced_data",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "8bed587b6a113caf26039f1ee3e133a0c3a4d51f4909b4e7282956a6b0e5681d",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "apps.vod.tasks.refresh_movie_advanced_data",
+          "bound": false,
+          "parameter_count": 2,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "e3abef916496e6b919be6f2c0c5030ac4a6861df971ed3abd72328d1fee47181",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-28156bb1f8d7874a97af",
@@ -367302,9 +368507,68 @@
         "line": 8,
         "name": "Command"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Django_management_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Django_management_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "management_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Django-management-registration": {
+          "id": "Original-1241b3-Django-management-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Django": "6.0.9",
+          "network_mode": "none",
+          "exact_owned_cleanup": true,
+          "runtime_compose_sha256": "f6b118f62c34096073ce0564e8e6d6931b2e3da0870f336dd75c93332817ab52",
+          "command_modules_loaded": false,
+          "management_commands_started": false,
+          "external_effects_executed": false,
+          "files_sha256": {
+            "scripts/rust-contracts/retained-management-registration/declarations.json": "9150720002dbe7370da06eb3cd9698f8645f465625c77a47c40b88e8a782da53",
+            "scripts/rust-contracts/retained-management-registration/observations.json": "6f43a2c088b6655d68fcc9461410bb513b732fcdd5a36857f4051d213098cee8",
+            "scripts/rust-contracts/retained-management-registration/execution.json": "b13f84cb8b04f6f81023bfffaf95a6cc43b9483bbcb4bd4039373f3b2068cd68",
+            "scripts/rust-contracts/retained-management-registration/probe.py": "2a449567ff162ea1d718af1567c5e3ddd39f16859cd8cd2250753c6f4c20a389",
+            "scripts/rust-contracts/retained-management-registration/provenance.json": "4ab46a9ff6d5e21d5e60c2d05b54911ed1435bae9d7efebca416481ae4ae5f79"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Django command discovery reports this exact command and installed app owner.",
+        "The observed registry entry matches the pinned source coordinate without an import or command invocation."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-28156bb1f8d7874a97af",
+        "source": {
+          "kind": "management_command",
+          "path": "core/management/commands/dropdb.py",
+          "line": 8,
+          "name": "Command"
+        },
+        "original_file_sha256": "36c5c0cf50da8eca5e8734eaabf2ac38771c7f92825133730a89381d5bb8deee",
+        "fixture_ids": [
+          "Original-1241b3-Django-management-registration"
+        ],
+        "observation": {
+          "command": "dropdb",
+          "owner": "core"
+        },
+        "observation_sha256": "533f744dcf15c6ae65ca1aa75baa0a13ef6c86b1e6677a70bb4d8654c9592123",
+        "assertions": [
+          "Pinned Original Django command discovery reports this exact command and installed app owner.",
+          "The observed registry entry matches the pinned source coordinate without an import or command invocation."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Django_management_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "management_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-d379ec88e7a6c81f1ca6",
@@ -367314,9 +368578,68 @@
         "line": 6,
         "name": "Command"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Django_management_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Django_management_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "management_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Django-management-registration": {
+          "id": "Original-1241b3-Django-management-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Django": "6.0.9",
+          "network_mode": "none",
+          "exact_owned_cleanup": true,
+          "runtime_compose_sha256": "f6b118f62c34096073ce0564e8e6d6931b2e3da0870f336dd75c93332817ab52",
+          "command_modules_loaded": false,
+          "management_commands_started": false,
+          "external_effects_executed": false,
+          "files_sha256": {
+            "scripts/rust-contracts/retained-management-registration/declarations.json": "9150720002dbe7370da06eb3cd9698f8645f465625c77a47c40b88e8a782da53",
+            "scripts/rust-contracts/retained-management-registration/observations.json": "6f43a2c088b6655d68fcc9461410bb513b732fcdd5a36857f4051d213098cee8",
+            "scripts/rust-contracts/retained-management-registration/execution.json": "b13f84cb8b04f6f81023bfffaf95a6cc43b9483bbcb4bd4039373f3b2068cd68",
+            "scripts/rust-contracts/retained-management-registration/probe.py": "2a449567ff162ea1d718af1567c5e3ddd39f16859cd8cd2250753c6f4c20a389",
+            "scripts/rust-contracts/retained-management-registration/provenance.json": "4ab46a9ff6d5e21d5e60c2d05b54911ed1435bae9d7efebca416481ae4ae5f79"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Django command discovery reports this exact command and installed app owner.",
+        "The observed registry entry matches the pinned source coordinate without an import or command invocation."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-d379ec88e7a6c81f1ca6",
+        "source": {
+          "kind": "management_command",
+          "path": "core/management/commands/kill_processes.py",
+          "line": 6,
+          "name": "Command"
+        },
+        "original_file_sha256": "ca30402c6926298ef6a2a45c4ac680ae5177f6d95a8cca323191392527bcb19f",
+        "fixture_ids": [
+          "Original-1241b3-Django-management-registration"
+        ],
+        "observation": {
+          "command": "kill_processes",
+          "owner": "core"
+        },
+        "observation_sha256": "e1c46415e9c2354d63f8488e703a884eea83f2f335ba2eea7fd5769b5969468c",
+        "assertions": [
+          "Pinned Original Django command discovery reports this exact command and installed app owner.",
+          "The observed registry entry matches the pinned source coordinate without an import or command invocation."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Django_management_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "management_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-d3f0c1a5a06af4e695a5",
@@ -376848,9 +378171,72 @@
         "name": "beat_periodic_task",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-895853e17f0d94b6ad60",
+        "source": {
+          "kind": "task_candidate",
+          "path": "core/tasks.py",
+          "line": 55,
+          "name": "beat_periodic_task",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "5e20b3a7395c9d78cc45f3b07abc1becc7d744a3f37e09735eac512ae537dcbc",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "core.tasks.beat_periodic_task",
+          "bound": false,
+          "parameter_count": 0,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "4bb925a060a55fd6db77af232c469a38a74708e4908728585a7689aace7d94f4",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-a5dea1db3aa833bf0187",
@@ -380759,9 +382145,72 @@
         "name": "rehash_streams",
         "callable": "celery.shared_task"
       },
-      "state": "static_candidate_requires_runtime_contract",
-      "result": null,
-      "fully_verified": false
+      "state": "partial_executable_Original_Celery_registration_metadata",
+      "result": {
+        "state": "partial_executable_Original_Celery_registration_metadata",
+        "fully_verified": false,
+        "Native_coverage_increased": false,
+        "task_execution_verified": false
+      },
+      "fully_verified": false,
+      "setup_fixture": {
+        "Original-1241b3-Celery-registration": {
+          "id": "Original-1241b3-Celery-registration",
+          "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+          "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "Celery": "5.6.3",
+          "Django": "6.0.9",
+          "actual_exit": 0,
+          "exact_owned_cleanup": true,
+          "network_mode": "none",
+          "external_effects_executed": false,
+          "guarded_import_observation": "One urllib3 IPv6 availability check received EAFNOSUPPORT before a kernel bind.",
+          "files_sha256": {
+            "scripts/rust-contracts/retained-task-registry/declarations.json": "afdaa580ff8d4024a7e23ae18132a1e8bfe722e0acbed2fc74ef5182bff7da23",
+            "scripts/rust-contracts/retained-task-registry/observations.json": "c18dd0cd5768abd04531351b5c2640e119d608911ad6690da43967247b179747",
+            "scripts/rust-contracts/retained-task-registry/execution.json": "b8bbeb66de13f3875eb23171a52550879d1c3e15b16d6d6387c8164e23dd7877",
+            "scripts/rust-contracts/retained-task-registry/probe.py": "d29b149b31c800a455be42c59ecc57b765324399c1afc149822c185a33918698",
+            "scripts/rust-contracts/retained-task-registry/provenance.json": "5a3dcc4249f4a4a7b67e25f6b7250acd2d04e398768e9944dd7d53d98fcb1f42"
+          }
+        }
+      },
+      "assertions": [
+        "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+        "No task body, management command, or external effect was executed."
+      ],
+      "executable_Source_contract": {
+        "candidate_id": "candidate-3a3d80f355c183143811",
+        "source": {
+          "kind": "task_candidate",
+          "path": "core/tasks.py",
+          "line": 637,
+          "name": "rehash_streams",
+          "callable": "celery.shared_task"
+        },
+        "original_file_sha256": "5e20b3a7395c9d78cc45f3b07abc1becc7d744a3f37e09735eac512ae537dcbc",
+        "fixture_ids": [
+          "Original-1241b3-Celery-registration"
+        ],
+        "observation": {
+          "task_name": "core.tasks.rehash_streams",
+          "bound": false,
+          "parameter_count": 5,
+          "time_limit": null,
+          "soft_time_limit": null
+        },
+        "observation_sha256": "77e516cc1769b56ff3dd9645d2213eb41717e15f3c5aae0f0f87d6010648b943",
+        "assertions": [
+          "Pinned Original Celery registry contains the exact callable, Source coordinate and signature metadata.",
+          "No task body, management command, or external effect was executed."
+        ],
+        "result": {
+          "state": "partial_executable_Original_Celery_registration_metadata",
+          "fully_verified": false,
+          "Native_coverage_increased": false,
+          "task_execution_verified": false
+        },
+        "fully_verified": false
+      }
     },
     {
       "candidate_id": "candidate-3d0b2d3fb3f98d68738d",

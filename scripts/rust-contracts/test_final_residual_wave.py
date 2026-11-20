@@ -10,6 +10,8 @@ import retained_backup_lifecycle_tasks
 import retained_matching51_tasks
 import retained_migration_recorder_contracts as migrations
 import retained_model_registry_contracts as model_registry
+import retained_task_registry_contracts as task_registry
+import retained_management_registration_contracts as command_registry
 import retained_residual_source_contracts as portable
 import retained_root7_contract
 import retained_worker_wire_contracts
@@ -31,13 +33,21 @@ TYPED_COUNT = 11
 
 def dependencies(root):
     return portable.dependencies(root).union(retained_root7_contract.dependencies(), migrations.dependencies(),
-                                             model_registry.dependencies(),
+                                             model_registry.dependencies(), task_registry.dependencies(), command_registry.dependencies(),
                                              *(module.dependencies() for module in TYPED))
 
 
 def restore_pre_final_wave(root, register):
     """Reverse the exact scoped additions before checking historical row digests."""
     inputs = register['executable_Source_mapping']['inputs']
+    command_input = inputs.pop()
+    assert (command_input['kind'], command_input['path']) == (command_registry.KIND, command_registry.INPUT)
+    command_registry.validate(root, source_contracts.checked(root, command_input))
+    command_registry.restore_before(root, register['non_HTTP_candidates'])
+    task_input = inputs.pop()
+    assert (task_input['kind'], task_input['path']) == (task_registry.KIND, task_registry.INPUT)
+    task_registry.validate(root, source_contracts.checked(root, task_input))
+    task_registry.restore_before(root, register['non_HTTP_candidates'])
     model_input = inputs.pop()
     assert (model_input['kind'], model_input['path']) == (model_registry.KIND, model_registry.INPUT)
     model_registry.validate(root, source_contracts.checked(root, model_input))

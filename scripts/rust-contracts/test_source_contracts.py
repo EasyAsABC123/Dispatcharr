@@ -280,6 +280,12 @@ class SourceContracts(unittest.TestCase):
         import retained_migration_recorder_contracts as migrations
         result, rows = self.apply()
         import retained_model_registry_contracts as model_registry
+        import retained_task_registry_contracts as task_registry
+        import retained_management_registration_contracts as command_registry
+        command_input = result['inputs'].pop()
+        self.assertEqual((command_input['kind'], command_input['path']), (command_registry.KIND, command_registry.INPUT))
+        task_input = result['inputs'].pop()
+        self.assertEqual((task_input['kind'], task_input['path']), (task_registry.KIND, task_registry.INPUT))
         model_input = result['inputs'].pop()
         self.assertEqual((model_input['kind'], model_input['path']), (model_registry.KIND, model_registry.INPUT))
         migration_input = result['inputs'].pop()

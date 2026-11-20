@@ -1,0 +1,44 @@
+{
+  "full_M0_accepted": false,
+  "full_source_reduction_sha256": "dd758836dad7fe54027d795909582229ed252b4c1f989da063b2d53855b0c083",
+  "native_management_registration_accepted": false,
+  "original_management_execution_accepted": false,
+  "physical_registration": {
+    "command_import_construction_parser_and_dispatch_guarded": true,
+    "command_modules_loaded": false,
+    "compose_model_sha256": "f6b118f62c34096073ce0564e8e6d6931b2e3da0870f336dd75c93332817ab52",
+    "exact_cleanup": true,
+    "external_effects_executed": false,
+    "guest_exit": 0,
+    "guest_report_sha256": "6f43a2c088b6655d68fcc9461410bb513b732fcdd5a36857f4051d213098cee8",
+    "guest_stderr_bytes": 0,
+    "lookup": "django.core.management.get_commands",
+    "management_commands_started": false,
+    "network_mode": "none",
+    "observed": 3,
+    "other_denied_effect_attempts": {},
+    "owner_receipt_sha256": "b13f84cb8b04f6f81023bfffaf95a6cc43b9483bbcb4bd4039373f3b2068cd68",
+    "owner_terminal_exit": 0,
+    "pre_syscall_fallback": {
+      "api": "socket.bind",
+      "function": "_has_ipv6",
+      "line": 127,
+      "module": "urllib3.util.connection",
+      "result": "EAFNOSUPPORT",
+      "source_sha256": "2633bbdb69731e5ccb5cf4e4afd65605d86c7979cc5633126f50c92d5ad74a74"
+    },
+    "read_only_root_and_source_mounts": true,
+    "seal_sha256": "9dcc5ee06182f2eb5e7e3ecd1521e4ad892f8ede706d5b192bfaf9e6631d6cb7",
+    "unobserved": 0
+  },
+  "schema_version": 1,
+  "scope": "Original Django management command registration ownership and static declaration coordinates",
+  "source": {
+    "celery": "5.6.3",
+    "django": "6.0.9",
+    "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "published_inventory_revision": "1e939f9dc92240230bc6f57dfe932b6567bc38e1",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "sealed_roster_sha256": "9150720002dbe7370da06eb3cd9698f8645f465625c77a47c40b88e8a782da53"
+  }
+}
