@@ -156,6 +156,9 @@ exited 1 after exact cleanup.
 
 The [HDHomeRun JSON-suffix checks](rust-m7-hdhr-json-writes.md) verified 32
 ordinary Native device writes and denials on the pinned Candidate111 image.
+The [device XML and output-profile status comparison](rust-m7-hdhr-device-xml-output-status.md)
+matched six full response digests and selected headers per backend on e852,
+with unchanged scoped SQL and exact Compose cleanup.
 The register now includes the 16 [Original DRF root operations](rust-m0-original-drf-roots.md).
 
 The [development and validation plan](rust-development-and-validation-plan.md) defines parallel implementation/acceptance/tooling lanes, affected-workflow batches and default-off fixture concurrency. Performance measurement remains exclusive.
