@@ -135,25 +135,11 @@ fn programme_metadata(
     if !detail {
         return Ok(());
     }
-    for name in [
-        "categories",
-        "star_ratings",
-        "content_advisory",
-        "content_ratings",
-        "images",
-    ] {
-        value[name] = or_empty(&cp, name);
-    }
-    for name in [
-        "rating",
-        "rating_system",
-        "country",
-        "language",
-        "event_details",
-        "icon",
-    ] {
-        value[name] = get(&cp, name);
-    }
+    // DRF preserves this serializer order in both JSON and the browsable response.
+    value["categories"] = or_empty(&cp, "categories");
+    value["rating"] = get(&cp, "rating");
+    value["rating_system"] = get(&cp, "rating_system");
+    value["star_ratings"] = or_empty(&cp, "star_ratings");
     let credits = object(cp.get("credits"))?;
     value["credits"] = json!({"actors":or_empty(&credits,"actor"),"directors":or_empty(&credits,"director"),"writers":or_empty(&credits,"writer"),"producers":or_empty(&credits,"producer"),"presenters":or_empty(&credits,"presenter")});
     let video = object(cp.get("video"))?;
@@ -161,11 +147,16 @@ fn programme_metadata(
     value["aspect_ratio"] = get(&video, "aspect");
     value["stereo"] = get(object(cp.get("audio"))?.as_ref(), "stereo");
     value["is_previously_shown"] = truthy(cp.get("previously_shown")).into();
+    value["country"] = get(&cp, "country");
+    value["language"] = get(&cp, "language");
     value["production_date"] = get(&cp, "date");
     value["original_air_date"] = get(
         object(cp.get("previously_shown_details"))?.as_ref(),
         "start",
     );
+    value["content_advisory"] = or_empty(&cp, "content_advisory");
+    value["content_ratings"] = or_empty(&cp, "content_ratings");
+    value["event_details"] = get(&cp, "event_details");
     let length = object(cp.get("length"))?;
     value["runtime"] = get(&length, "value");
     value["runtime_units"] = get(&length, "units");
@@ -176,6 +167,8 @@ fn programme_metadata(
     ] {
         value[name] = get(&cp, source);
     }
+    value["icon"] = get(&cp, "icon");
+    value["images"] = or_empty(&cp, "images");
     value["poster_url"] = if truthy(cp.get("sd_icon")) {
         let icon = cp.get("sd_icon").and_then(Value::as_str).ok_or_else(|| {
             StoreError::StatusBody(500, json!({"error":"Original poster URI is not a string"}))
@@ -206,5 +199,81 @@ impl Store {
             let mut rows=sqlx::query(resource.query()).bind(id).bind(None::<i64>).fetch(self.pool());
             while let Some(row)=rows.try_next().await? {yield resource.project(row,id.is_some(),&origin)?;}
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn rich_programme_fields_follow_original_serializer_order() {
+        let properties = json!({
+            "categories": ["Drama"],
+            "rating": "PG",
+            "credits": {"actor": ["One"], "director": ["Two"]},
+            "length": {"value": 62, "units": "minutes"},
+            "images": [{"type": "poster"}]
+        });
+        let mut rich = json!({"id": 1});
+        programme_metadata(&mut rich, Some(&properties), true, "http://localhost").unwrap();
+        let keys = rich
+            .as_object()
+            .unwrap()
+            .keys()
+            .map(String::as_str)
+            .collect::<Vec<_>>();
+        assert_eq!(
+            keys,
+            [
+                "id",
+                "season",
+                "episode",
+                "is_new",
+                "is_live",
+                "is_premiere",
+                "is_finale",
+                "categories",
+                "rating",
+                "rating_system",
+                "star_ratings",
+                "credits",
+                "video_quality",
+                "aspect_ratio",
+                "stereo",
+                "is_previously_shown",
+                "country",
+                "language",
+                "production_date",
+                "original_air_date",
+                "content_advisory",
+                "content_ratings",
+                "event_details",
+                "runtime",
+                "runtime_units",
+                "imdb_id",
+                "tmdb_id",
+                "tvdb_id",
+                "icon",
+                "images",
+                "poster_url",
+            ]
+        );
+        assert_eq!(rich["categories"], json!(["Drama"]));
+        assert_eq!(rich["rating"], "PG");
+        assert_eq!(rich["credits"]["actors"], json!(["One"]));
+        assert_eq!(rich["runtime"], 62);
+        assert_eq!(rich["images"], json!([{"type": "poster"}]));
+
+        let mut slim = json!({"id": 1});
+        programme_metadata(&mut slim, Some(&properties), false, "http://localhost").unwrap();
+        assert_eq!(
+            slim.as_object()
+                .unwrap()
+                .keys()
+                .map(String::as_str)
+                .collect::<Vec<_>>(),
+            &keys[..7]
+        );
     }
 }
