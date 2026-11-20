@@ -116,6 +116,9 @@ The strict post-restart fingerprint still differed.
 The [Candidate110 and Candidate111 rehearsals](rust-m9-copied-postgres-rollback.md)
 reproduced that result. The copied-data cutover and same-session rollback
 worked, and both strict gates recorded the four Original startup writes.
+The [same-seed C74 pair](rust-m9-copied-postgres-rollback.md#c74-same-seed-control-and-copied-cutover)
+isolated the Native edit and verified all other keyed Original fields
+stayed equal. The four startup timestamps still produced strict exit 1.
 
 The [120-second playback and guide diagnostic](rust-m9-playback-refresh-diagnostic.md)
 passed on Candidate91 with ten viewers sharing one owned upstream and

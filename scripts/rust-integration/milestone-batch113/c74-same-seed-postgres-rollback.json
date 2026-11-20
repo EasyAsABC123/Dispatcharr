@@ -1,0 +1,104 @@
+{
+  "C74_manifest_sha256": "f6263c4599f14bb9a18205210aaa6f0eedbb4ecef8c5a7114bf70fe20bdf6902",
+  "Native_edit_confined_to_its_copy": true,
+  "Native_image": "sha256:01e513496e3ae02f8416ece3a07f2d5857e2998b5271f8138e9ed434a0685983",
+  "Native_revision": "c74ea312bdc791ad12f5e43298b56bd9b81a19b5",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "actual_strict_controller_exit": 1,
+  "all_other_keyed_Original_row_fields_equal": true,
+  "credit": "Original Dispatcharr authors and contributors retain full application and algorithm credit.",
+  "exact_cleanup": {
+    "C74_trial": {
+      "cleanup_sha256": "923981bc7b9176780db476e539953a03f47a960522bda4002dad8f226de116f6",
+      "commands_sha256": "b44123cb761253fe5b0b5252e5666755f3a54d737f2c18745cb0f8b2b335b855",
+      "compose_down_exit": 0,
+      "empty_owned_inventories": true,
+      "observed_host_generations_absent": 3,
+      "owned_containers_absent": 5
+    },
+    "Original_control": {
+      "cleanup_sha256": "c688b9cfb52819ba7f1c29389c47237c115ee040b6312bdf8e7a4163c4a3939f",
+      "commands_sha256": "4956ade0d2b90cfed79f70670fea3c976e296247a994b049f13d356839cbc6d3",
+      "compose_down_exit": 0,
+      "empty_owned_inventories": true,
+      "observed_host_generations_absent": 2,
+      "owned_containers_absent": 2
+    },
+    "donor": {
+      "cleanup_sha256": "c688b9cfb52819ba7f1c29389c47237c115ee040b6312bdf8e7a4163c4a3939f",
+      "commands_sha256": "763355f9a70180ee66800d4d1d668325d10f8c80f36b92a1f4bf9ff6751bbd7b",
+      "compose_down_exit": 0,
+      "empty_owned_inventories": true,
+      "observed_host_generations_absent": 2,
+      "owned_containers_absent": 2
+    }
+  },
+  "full_M9_accepted": false,
+  "named_Original_startup_timestamp_cells": [
+    [
+      "backup_schedule",
+      "updated",
+      [
+        "date_changed"
+      ]
+    ],
+    [
+      "beat_schedule_change_marker",
+      "updated",
+      [
+        "last_update"
+      ]
+    ],
+    [
+      "developer_notification",
+      "updated",
+      [
+        "updated_at"
+      ]
+    ],
+    [
+      "plugin_repo_refresh_schedule",
+      "updated",
+      [
+        "date_changed"
+      ]
+    ]
+  ],
+  "performance_verified": false,
+  "prior_attempts": [
+    {
+      "attempt": 1,
+      "compose_down_exit": 1,
+      "controller_cleanup_gate_passed": false,
+      "failed_stage": "donor",
+      "failure": "Relative source path parsed as undefined named volume. Exact parser error reproduced.",
+      "observed_project_inventory_empty": true,
+      "receipt_sha256": "01c763131fca04051004963c312f150eed31b637ac2084fdb86819fa3a08c870",
+      "start_exit": 1,
+      "stderr_sha256": "adeb1d56370a846ba3b47e78f1e7a3780ad4559774df4d3a2a0ce7263d6dbd1f"
+    },
+    {
+      "attempt": 2,
+      "exact_control_cleanup": true,
+      "failed_stage": "original_control",
+      "failure": "Deferred arm exited before guest startup evidence. Missing child mount under a read-only bind was corrected. Exact engine error is unconfirmed.",
+      "original_donor_exact_cleanup": true,
+      "receipt_sha256": "ac766d9d60fb428bf893e34185cfca8dbc919060c3e8368c2f4cc0dc7c0c0cf5",
+      "start_exit": 1,
+      "stderr_sha256": "fc05799eb534bf1dd1e1ee059e953aa7fe3018811890ec7a7e54aaecf25e6da1"
+    }
+  ],
+  "production_rollback_accepted": false,
+  "same_authenticated_session_and_channel_across_trial": true,
+  "same_quiescent_archive_bytes": 244596,
+  "same_quiescent_archive_sha256": "1493da8e87836e0dcf3cc97ab740b1cd0b179b4d42ecf26fb5d5081b49289db2",
+  "same_trial_front_door_and_media": true,
+  "schema_and_sequences_equal": true,
+  "scope": "Synthetic same-seed Original control and C74 copied PostgreSQL cutover with Original fallback.",
+  "scoped_receipt_sha256": "7b27df785488eef11530fffa4eab38d9cce079db9533c37a2baa8548de7dd493",
+  "scoped_same_seed_rehearsal_observed": true,
+  "strict_Original_fingerprint_equal_before_restart": true,
+  "strict_exit_marker_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+  "strict_full_post_restart_fingerprint_equal": false,
+  "strict_ready_and_after_authenticated_read_fingerprints_equal": true
+}
