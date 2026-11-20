@@ -190,6 +190,8 @@ and exact cleanup. The [paired Rust aggregate and individual XMLTV run](rust-m6-
 matched that workflow and the independent single-source refresh on one exact package.
 The wider M6 gate remains open.
 
+The [Original compatibility Beat wrapper](rust-m6-original-compat-beat.md) verified its inline Stats and scanner effects, the linked group child and exact retirement.
+
 The [735 MPEG-TS functional checks](rust-m9-735-functional-streaming.md) passed
 all three required nodes with verified cleanup. The run covered 24 two-worker
 checks, 14 delayed restart checks and 100 retained-history readers with 20

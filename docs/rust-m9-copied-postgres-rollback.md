@@ -72,3 +72,32 @@ and full M9 gates remain open. Original Dispatcharr and dependency authors
 retain full credit.
 
 [Redacted Source-only witness](../scripts/rust-integration/milestone-batch113/original-copied-restart-timestamps.json)
+
+## c606 copied rollback rehearsal
+
+One quiescent pinned Original donor supplied the same transactional
+PostgreSQL archive to an Original-only control and the c606 trial.
+The control retired before the trial. Native served the restored
+session, channel and media on the trial's loopback front door, applied
+the channel edit to its own copy, and stopped normally. The edit
+remained in that copy after Original restarted. Original's database
+matched the complete pre-cutover baseline immediately before its
+restart and returned the previously authenticated channel on the same
+front door.
+
+Four fused read-only PostgreSQL observations in each arm showed that
+the same four Original timestamp cells advanced in each independently
+measured startup interval. Every other observed field, row
+multiplicity, schema component and sequence value matched. The
+authenticated read after readiness added no SQL change. The
+independent strict comparator exited **1** on the complete
+pre-restart and post-readiness fingerprints. The separate
+startup-aware copied rehearsal exited **0**.
+
+All three projects recorded Compose teardown exit 0 and independently
+verified retirement of nine owned containers and seven observed host
+process generations. Their container, network and volume inventories
+were empty. Full M9 and production rollback remain open. Original
+Dispatcharr and dependency authors retain full credit.
+
+[Redacted c606 copied rollback receipt](../scripts/rust-integration/milestone-batch113/c606-scoped-copied-rollback.json)
