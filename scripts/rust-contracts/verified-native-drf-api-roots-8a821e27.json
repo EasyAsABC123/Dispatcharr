@@ -1,0 +1,854 @@
+{
+  "Original_authority_sha256": "585b0f741b6ccc5869ec686e789bb77b9048bdd2a82d7e1b0acba32e4e28d68c",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "candidate_build_manifest_sha256": "7e2f6dc9464c85de26543a434f7051b558b213d11a04fe300c0f3c90288379d9",
+  "candidate_image_id": "sha256:1072f1ef8189ef545fef962777183c1ab13cb2e64fea3c15f279c496520eca46",
+  "candidate_revision": "8a821e27adb01df52898e971661a20a9362c54a1",
+  "credit": "Original Dispatcharr and Django REST Framework contributors retain full credit.",
+  "exact_roles_and_generations_retired": 4,
+  "literal_controller_exit": 0,
+  "literal_paths": 16,
+  "ordinary_JSON_cases": [
+    {
+      "case": "accounts_json",
+      "path": "/api/accounts/.json",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "accounts_json",
+      "path": "/api/accounts/.json",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "accounts_json",
+      "path": "/api/accounts/.json",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "accounts_json",
+      "path": "/api/accounts/.json",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 177,
+        "actual_body_sha256": "dda2d5752b8859cb6eafd4216cd3765b8301ef313e0c74f5b4424cf6d06fa87e",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "accounts_root",
+      "path": "/api/accounts/",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "accounts_root",
+      "path": "/api/accounts/",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "accounts_root",
+      "path": "/api/accounts/",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "accounts_root",
+      "path": "/api/accounts/",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 165,
+        "actual_body_sha256": "8f55087f3c44ef3985df14210cf268b8565a0a95fddf0805f3ee47c2ece30830",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "api_hdhr_json",
+      "path": "/api/hdhr/.json",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "api_hdhr_json",
+      "path": "/api/hdhr/.json",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "api_hdhr_json",
+      "path": "/api/hdhr/.json",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "api_hdhr_json",
+      "path": "/api/hdhr/.json",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 57,
+        "actual_body_sha256": "e1567027201ebf7b44a018b545de4f877b116a25ce0b6cd4d6ec91b0ca458b30",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "channels_json",
+      "path": "/api/channels/.json",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "channels_json",
+      "path": "/api/channels/.json",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "channels_json",
+      "path": "/api/channels/.json",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "channels_json",
+      "path": "/api/channels/.json",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 441,
+        "actual_body_sha256": "c16f08bc10d3d5a67b96939ce5690e98fb9ebdb1e97b600b68a27bc73519c5b0",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "channels_root",
+      "path": "/api/channels/",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "channels_root",
+      "path": "/api/channels/",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "channels_root",
+      "path": "/api/channels/",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "channels_root",
+      "path": "/api/channels/",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 413,
+        "actual_body_sha256": "756fae2f9e844ba4752d1a72c8a208d18129f85a79b309df054d721708502faa",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "connect_json",
+      "path": "/api/connect/.json",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "connect_json",
+      "path": "/api/connect/.json",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "connect_json",
+      "path": "/api/connect/.json",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "connect_json",
+      "path": "/api/connect/.json",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 194,
+        "actual_body_sha256": "f6db1ff8a32cdb74c8f6d0a6106084e740520d1c6439d9a88dd05ca9f52b326e",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "connect_root",
+      "path": "/api/connect/",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "connect_root",
+      "path": "/api/connect/",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "connect_root",
+      "path": "/api/connect/",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "connect_root",
+      "path": "/api/connect/",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 182,
+        "actual_body_sha256": "99a8e491c2208e15f59027a22d4383219ed9df3de646c54a2950029f051eec15",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "core_json",
+      "path": "/api/core/.json",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "core_json",
+      "path": "/api/core/.json",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "core_json",
+      "path": "/api/core/.json",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "core_json",
+      "path": "/api/core/.json",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 329,
+        "actual_body_sha256": "e1dc0bb0481fc680e74bab0de32342f3705c13058a098c44c9c7854230d7a5fb",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "core_root",
+      "path": "/api/core/",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "core_root",
+      "path": "/api/core/",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "core_root",
+      "path": "/api/core/",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "core_root",
+      "path": "/api/core/",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 309,
+        "actual_body_sha256": "fad11e9486af90fb24d4897ed01d3b73dcd63a1fb89152b55f0028a84dd8ac92",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "epg_json",
+      "path": "/api/epg/.json",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "epg_json",
+      "path": "/api/epg/.json",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "epg_json",
+      "path": "/api/epg/.json",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "epg_json",
+      "path": "/api/epg/.json",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 168,
+        "actual_body_sha256": "41a68f3af2a99a586727063a9642aa1e26cb79609c6257cd953df5786ae9dd4d",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "epg_root",
+      "path": "/api/epg/",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "epg_root",
+      "path": "/api/epg/",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "epg_root",
+      "path": "/api/epg/",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "epg_root",
+      "path": "/api/epg/",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 156,
+        "actual_body_sha256": "f7371eb63bf2bf67704a1cfdd55676c9c0c50c1980a5a03bdbbb12b0d08a771b",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "m3u_json",
+      "path": "/api/m3u/.json",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "m3u_json",
+      "path": "/api/m3u/.json",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "m3u_json",
+      "path": "/api/m3u/.json",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "m3u_json",
+      "path": "/api/m3u/.json",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 125,
+        "actual_body_sha256": "689d1cfc20888fd1e5dfb40e21c8f636d57cbdc207aaa611da3015d12159166f",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "m3u_root",
+      "path": "/api/m3u/",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "m3u_root",
+      "path": "/api/m3u/",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "m3u_root",
+      "path": "/api/m3u/",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "m3u_root",
+      "path": "/api/m3u/",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 117,
+        "actual_body_sha256": "1d4510f6d823cdab03cea30f7b8f185091b74544c76ce99fd965d4249d013ac9",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "public_hdhr_json",
+      "path": "/hdhr/.json",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "public_hdhr_json",
+      "path": "/hdhr/.json",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "public_hdhr_json",
+      "path": "/hdhr/.json",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "public_hdhr_json",
+      "path": "/hdhr/.json",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 53,
+        "actual_body_sha256": "0155dd0c20756d622cc605ea4337b1e46aad196e7165df3f598eae10ec35463a",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "vod_json",
+      "path": "/api/vod/.json",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "vod_json",
+      "path": "/api/vod/.json",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "vod_json",
+      "path": "/api/vod/.json",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "vod_json",
+      "path": "/api/vod/.json",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 329,
+        "actual_body_sha256": "0fa94c63ed679429f0c887cadd59e9f1afe5f994743ddb0f6d341b71b334ec5f",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "vod_root",
+      "path": "/api/vod/",
+      "role": "anonymous",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 58,
+        "actual_body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "actual_content_type": "application/json",
+        "actual_status": 401,
+        "authentication_challenge_present": true
+      }
+    },
+    {
+      "case": "vod_root",
+      "path": "/api/vod/",
+      "role": "viewer",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "vod_root",
+      "path": "/api/vod/",
+      "role": "standard",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 63,
+        "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "actual_content_type": "application/json",
+        "actual_status": 403,
+        "authentication_challenge_present": false
+      }
+    },
+    {
+      "case": "vod_root",
+      "path": "/api/vod/",
+      "role": "admin",
+      "typed_expected_JSON_matched": true,
+      "wire": {
+        "actual_body_bytes": 305,
+        "actual_body_sha256": "ebbfbe5186383166337786e3f34a111b284ad9b9995d852614a08bfae2e8a349",
+        "actual_content_type": "application/json",
+        "actual_status": 200,
+        "authentication_challenge_present": false
+      }
+    }
+  ],
+  "owned_resources_absent": true,
+  "owned_role_SQL_unchanged_each_arm": true,
+  "paired_HTTP_cases": 64,
+  "physical_receipt_sha256": "1e6b361e7e8211aa68efa5be19b36a1e239335ab392277baf237d844c8ca8ceb",
+  "response_counts_each_side": {
+    "200": 16,
+    "401": 16,
+    "403": 32
+  }
+}

@@ -1,0 +1,121 @@
+{
+  "all_four_owned_roles_retired": true,
+  "approved_review_sha256": "abbdd3812092f70c883bacc119838e41d19a368c0efa8642f8357dca861b5ab7",
+  "controller_exit": 0,
+  "credits": "The original Dispatcharr and Django authors retain full credit.",
+  "exact_scoped_SQL_reset_before_Native": true,
+  "generic_CRUD_on_each_backend": {
+    "declared_write_and_cleanup_flags": [
+      "typed_fields",
+      "exact_link_and_profile",
+      "PATCH_scoped",
+      "DELETE_restored_SQL"
+    ],
+    "statuses": [
+      201,
+      200,
+      200,
+      204
+    ]
+  },
+  "milestone_accepted": false,
+  "native_image": {
+    "image_id": "sha256:1072f1ef8189ef545fef962777183c1ab13cb2e64fea3c15f279c496520eca46",
+    "source_tree_sha256": "e1d9db9e13fdc07bf18a2884accf8f5b18eff64f4754c67f600a07edd2a32c08"
+  },
+  "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "package_manifest_sha256": "7e2f6dc9464c85de26543a434f7051b558b213d11a04fe300c0f3c90288379d9",
+  "paired_actual_receipt_sha256": "6c8e48844180e8dc7d7fbd7e6eb70c4ad88e474f33c4fda3f760fca5460342e4",
+  "paired_fixture_sha256": "0b6119bab473d8ec8307d08e264fb1afed08b1f97dbdbe8a1324a4efd1ac32d5",
+  "performance_verified": false,
+  "raw_SQL_or_credentials_retained": false,
+  "retained_Original_receipt_sha256": "75bc5f3e761efe4c0255b9a6c69aee64d40a822eb9d24f9435ff3a82f9b09cc7",
+  "single_create_semantics_on_both": [
+    {
+      "Channels_creation_event_exact": true,
+      "action": {
+        "allow": "POST, OPTIONS",
+        "content_type": "application/json",
+        "status": 201
+      },
+      "case": "provider-all",
+      "enabled_memberships": 2,
+      "exact_stream_relation": true,
+      "matched_local_guide": true,
+      "matched_radio": true,
+      "persisted_number": 30.5,
+      "profile_selection": "all",
+      "read": {
+        "content_type": "application/json",
+        "status": 200
+      },
+      "request_channel_number": null,
+      "typed_response_and_refetch_match": true
+    },
+    {
+      "Channels_creation_event_exact": true,
+      "action": {
+        "allow": "POST, OPTIONS",
+        "content_type": "application/json",
+        "status": 201
+      },
+      "case": "auto-selected",
+      "enabled_memberships": 1,
+      "exact_stream_relation": true,
+      "matched_local_guide": false,
+      "matched_radio": false,
+      "persisted_number": 11.0,
+      "profile_selection": "specific",
+      "read": {
+        "content_type": "application/json",
+        "status": 200
+      },
+      "request_channel_number": 0,
+      "typed_response_and_refetch_match": true
+    },
+    {
+      "Channels_creation_event_exact": true,
+      "action": {
+        "allow": "POST, OPTIONS",
+        "content_type": "application/json",
+        "status": 201
+      },
+      "case": "highest-none",
+      "enabled_memberships": 0,
+      "exact_stream_relation": true,
+      "matched_local_guide": false,
+      "matched_radio": false,
+      "persisted_number": 121.0,
+      "profile_selection": "none",
+      "read": {
+        "content_type": "application/json",
+        "status": 200
+      },
+      "request_channel_number": -1,
+      "typed_response_and_refetch_match": true
+    },
+    {
+      "Channels_creation_event_exact": true,
+      "action": {
+        "allow": "POST, OPTIONS",
+        "content_type": "application/json",
+        "status": 201
+      },
+      "case": "specific-reserved-pin",
+      "enabled_memberships": 2,
+      "exact_stream_relation": true,
+      "matched_local_guide": false,
+      "matched_radio": false,
+      "persisted_number": 121.5,
+      "profile_selection": "all",
+      "read": {
+        "content_type": "application/json",
+        "status": 200
+      },
+      "request_channel_number": 120.5,
+      "typed_response_and_refetch_match": true
+    }
+  ],
+  "tested_Native_revision": "8a821e27adb01df52898e971661a20a9362c54a1"
+}
