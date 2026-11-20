@@ -767,27 +767,36 @@ async fn adoption_row(
 
 impl NormalRecordingPublisher {
     pub(crate) fn startup_frame(&self, task: &str, id: Uuid) -> Result<Vec<u8>, Error> {
-        if !matches!(
-            task,
-            "apps.channels.tasks.recover_recordings_on_startup"
-                | "core.tasks.check_for_version_update"
-        ) {
-            return Err(Error::Unsupported("startup task"));
-        }
-        let raw = crate::protocol::encode(
-            &crate::protocol::Task::CreateBackup,
-            id,
-            reply_oid(&self.inner)?,
-            Uuid::new_v4(),
-            &origin()?,
-        )
-        .map_err(|_| Error::Unsupported("startup frame"))?;
-        let mut value: Value =
-            serde_json::from_slice(&raw).map_err(|_| Error::Unsupported("startup frame"))?;
-        value["headers"]["task"] = json!(task);
-        serde_json::to_vec(&value).map_err(|_| Error::Unsupported("startup frame"))
+        startup_frame(task, id, reply_oid(&self.inner)?, &origin()?)
     }
 }
+
+pub(crate) fn startup_frame(
+    task: &str,
+    id: Uuid,
+    reply_to: Uuid,
+    origin: &str,
+) -> Result<Vec<u8>, Error> {
+    if !matches!(
+        task,
+        "apps.channels.tasks.recover_recordings_on_startup" | crate::version_protocol::TASK
+    ) {
+        return Err(Error::Unsupported("startup task"));
+    }
+    let raw = crate::protocol::encode(
+        &crate::protocol::Task::CreateBackup,
+        id,
+        reply_to,
+        Uuid::new_v4(),
+        origin,
+    )
+    .map_err(|_| Error::Unsupported("startup frame"))?;
+    let mut value: Value =
+        serde_json::from_slice(&raw).map_err(|_| Error::Unsupported("startup frame"))?;
+    value["headers"]["task"] = json!(task);
+    serde_json::to_vec(&value).map_err(|_| Error::Unsupported("startup frame"))
+}
+
 impl NormalRecordingPublisher {
     /// Bounded authenticated broker read for direct normal run_once. This grants
     /// no claim/publication authority; adopt_existing and consumer re-peek follow.

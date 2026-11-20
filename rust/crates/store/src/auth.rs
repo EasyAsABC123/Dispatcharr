@@ -76,6 +76,7 @@ pub struct AuthService {
     pub(crate) compact_coordinator:
         Arc<std::sync::OnceLock<std::sync::Weak<dyn crate::compact_numbering::Coordinator>>>,
     pub(crate) store: Store,
+    pub(crate) native_log_liveness: Option<Arc<std::sync::atomic::AtomicBool>>,
     config: AuthConfig,
     attempts: Arc<Mutex<AttemptHistory>>,
     password_workers: Arc<tokio::sync::Semaphore>,
@@ -106,6 +107,7 @@ impl AuthService {
         Self {
             inline_xc_groups: Arc::new(std::sync::OnceLock::new()),
             store,
+            native_log_liveness: None,
             config,
             attempts: Arc::new(Mutex::new(HashMap::new())),
             password_workers: Arc::new(tokio::sync::Semaphore::new(4)),
@@ -126,6 +128,14 @@ impl AuthService {
             stream_files: crate::stream_files::Runtime::new(),
             ip_lookup: crate::ip_lookup::IpLookup::new(crate::IpLookupConfig::default()),
         }
+    }
+
+    pub fn with_native_log_liveness(
+        mut self,
+        liveness: Arc<std::sync::atomic::AtomicBool>,
+    ) -> Self {
+        self.native_log_liveness = Some(liveness);
+        self
     }
 
     /// Read-only identity check for a dedicated retained SQL scope. SQLx0.8.6

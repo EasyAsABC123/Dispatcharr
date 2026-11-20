@@ -160,7 +160,7 @@ fn collector_running(directory: &LogDirectory, role: &str) -> bool {
     running(directory, role).unwrap_or_default()
 }
 
-fn listing(root: &Path, role: &str) -> Result<Listing, StoreError> {
+fn listing(root: &Path, role: &str, native_running: bool) -> Result<Listing, StoreError> {
     let mut files = Vec::new();
     let Some(directory) = LogDirectory::open(root) else {
         return Ok(Listing {
@@ -205,7 +205,7 @@ fn listing(root: &Path, role: &str) -> Result<Listing, StoreError> {
     files.sort_unstable_by(|a, b| (&b.modified, &b.name).cmp(&(&a.modified, &a.name)));
     Ok(Listing {
         files,
-        collector_running: collector_running(&directory, role),
+        collector_running: native_running || collector_running(&directory, role),
     })
 }
 
@@ -308,8 +308,11 @@ async fn dispatch(
         let worker = match request {
             LogRead::Listing => tokio::task::spawn_blocking(move || {
                 // Preserve the listing's original bounded filesystem owner.
+                let native_running = auth.native_log_liveness.as_ref().is_some_and(|owner| {
+                    owner.load(std::sync::atomic::Ordering::Acquire)
+                });
                 let _owner = auth;
-                listing(&root, &role).map(|value| Json(value).into_response())
+                listing(&root, &role, native_running).map(|value| Json(value).into_response())
             }),
             LogRead::Tail { name, query } => {
                 drop(auth);

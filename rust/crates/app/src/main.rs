@@ -7,6 +7,7 @@ mod combined_statistics_wire;
 mod control;
 mod database_config;
 mod m3u_refresh_all_config;
+mod managed_logs;
 mod playback;
 mod plugin_gpg_trace;
 mod plugin_jobs_bridge;
@@ -44,6 +45,38 @@ fn positive(name: &str, default: usize) -> Result<usize, String> {
         return Err(format!("{name} must be positive"));
     }
     Ok(value)
+}
+
+fn version_startup_owned(
+    owner: Option<&std::ffi::OsStr>,
+    version: bool,
+    selected: bool,
+    refresh: bool,
+    broker: Option<&std::ffi::OsStr>,
+    backend: Option<&std::ffi::OsStr>,
+) -> Result<bool, &'static str> {
+    use std::ffi::OsStr;
+
+    let Some(owner) = owner else {
+        return Ok(false);
+    };
+    if owner != OsStr::new("rust") {
+        return Err("RUST_VERSION_STARTUP_OWNER must be rust when configured");
+    }
+    if !version || selected || refresh {
+        return Err("Rust Version startup requires standalone RUST_VERSION_TASKS_ENABLED=1");
+    }
+    let explicit_url = |value: Option<&OsStr>| {
+        value
+            .and_then(OsStr::to_str)
+            .is_some_and(|url| !url.is_empty() && url.len() <= 4096 && url.trim() == url)
+    };
+    if !explicit_url(broker) || !explicit_url(backend) {
+        return Err(
+            "Rust Version startup requires explicit CELERY_BROKER_URL and CELERY_RESULT_BACKEND",
+        );
+    }
+    Ok(true)
 }
 
 fn database_url() -> Result<String, String> {
@@ -201,7 +234,7 @@ async fn combined_stats_legacy_alias(request: axum::extract::Request) -> Respons
         .into_response()
 }
 
-async fn run() -> Result<(), String> {
+async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let admin_location = admin_ingress::configured_location()?;
     let selected_jobs_enabled = selected_jobs::enabled()?;
     let cache_url = redis_config::url()?;
@@ -231,7 +264,8 @@ async fn run() -> Result<(), String> {
     )
     .await
     .map_err(|_| "Database connection failed (credentials omitted)")?;
-    let auth = AuthService::new(store.clone(), auth_config);
+    let auth =
+        AuthService::new(store.clone(), auth_config).with_native_log_liveness(logs.liveness());
     let auth = if let Some(url) = cache_url.as_deref() {
         auth.with_notification_cache(
             dispatcharr_store::NotificationCache::connect(url)
@@ -243,7 +277,9 @@ async fn run() -> Result<(), String> {
     };
     // Original startup warms the system group before HTTP, leaving the
     // display-zone debounce untouched until the first real request.
-    auth.startup_system_settings_group().await;
+    if let Some(system_settings) = auth.startup_system_settings_group().await {
+        logs.seed(&system_settings);
+    }
     let realtime_bus = realtime::bus(cache_url.as_deref()).await?;
     // Attach before every resolver/environment/XC clone so original producers
     // publish through the same bounded process transport.
@@ -744,6 +780,14 @@ async fn run() -> Result<(), String> {
         _ => return Err("RUST_VERSION_TASKS_ENABLED must be 0 or 1".into()),
     };
     let version_tasks_enabled = version_tasks_enabled || selected_jobs_enabled;
+    let version_startup = version_startup_owned(
+        env::var_os("RUST_VERSION_STARTUP_OWNER").as_deref(),
+        version_tasks_enabled,
+        selected_jobs_enabled,
+        refresh_enabled,
+        env::var_os("CELERY_BROKER_URL").as_deref(),
+        env::var_os("CELERY_RESULT_BACKEND").as_deref(),
+    )?;
     let original_m3u_refresh_all = m3u_refresh_all_config::prepare(
         auth.clone(),
         selected_jobs_enabled,
@@ -1221,9 +1265,19 @@ async fn run() -> Result<(), String> {
     eprintln!("Dispatcharr Rust port listening on {bind}; migration parity is incomplete");
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
     if let Some(version) = version_tasks.as_ref().filter(|_| !selected_jobs_enabled) {
-        if version.start().is_err() {
+        let started = if version_startup {
+            let cache = cache_url
+                .as_deref()
+                .ok_or("Enabled version tasks require Redis configuration")?;
+            version
+                .start_with_startup(cache, auth.producer_identity_source())
+                .await
+        } else {
+            version.start().map_err(|_| "Version task intake failed")
+        };
+        if let Err(error) = started {
             let _ = version.shutdown(Duration::from_secs(4)).await;
-            return Err("Version task intake failed".into());
+            return Err(error.into());
         }
     }
     if let Some(selected) = &selected_jobs {
@@ -1712,14 +1766,65 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
 }
 
 #[tokio::main]
-async fn main() {
-    if let Err(error) = plugin_gpg_trace::install_from_environment() {
-        eprintln!("Dispatcharr Rust startup failed: {error}");
-        std::process::exit(1);
+async fn serve(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
+    plugin_gpg_trace::install_from_environment()?;
+    run(logs).await
+}
+
+fn main() -> std::process::ExitCode {
+    let logs = managed_logs::ManagedLogs::start();
+    match serve(&logs) {
+        Ok(()) => std::process::ExitCode::SUCCESS,
+        Err(error) => {
+            eprintln!("Dispatcharr Rust startup failed: {error}");
+            std::process::ExitCode::FAILURE
+        }
     }
-    if let Err(error) = run().await {
-        eprintln!("Dispatcharr Rust startup failed: {error}");
-        std::process::exit(1);
+}
+
+#[cfg(test)]
+mod version_startup_tests {
+    use super::version_startup_owned;
+    use std::ffi::OsStr;
+
+    #[test]
+    fn ordinary_version_startup_requires_explicit_exclusive_config() {
+        let owner = Some(OsStr::new("rust"));
+        let broker = Some(OsStr::new("redis://owned/1"));
+        let backend = Some(OsStr::new("redis://owned/2"));
+
+        assert_eq!(
+            version_startup_owned(None, false, false, false, None, None),
+            Ok(false)
+        );
+        assert_eq!(
+            version_startup_owned(None, true, true, true, None, None),
+            Ok(false)
+        );
+        assert_eq!(
+            version_startup_owned(owner, true, false, false, broker, backend),
+            Ok(true)
+        );
+        for (version, selected, refresh) in [
+            (false, false, false),
+            (true, true, false),
+            (true, false, true),
+        ] {
+            assert!(
+                version_startup_owned(owner, version, selected, refresh, broker, backend).is_err()
+            );
+        }
+        assert!(version_startup_owned(owner, true, false, false, None, backend).is_err());
+        assert!(version_startup_owned(owner, true, false, false, broker, None).is_err());
+        assert!(version_startup_owned(
+            Some(OsStr::new("unknown")),
+            true,
+            false,
+            false,
+            broker,
+            backend
+        )
+        .is_err());
     }
 }
 
