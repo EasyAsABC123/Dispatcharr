@@ -1,6 +1,12 @@
 # SQLite compatibility remains open
 
-SQLite remains part of the requested one-to-one rewrite. The Native application currently uses PostgreSQL and explicitly rejects SQLite as unfinished. The actual unchanged Original production migration command now fails on fresh file-backed SQLite; application, backup/restore and Native SQLite acceptance remain open.
+The pinned Original exposes a file-backed SQLite setting. Its documented Docker
+deployment paths use PostgreSQL. In the tested all-in-one launch, the
+application selected PostgreSQL even though the container started with
+`DB_ENGINE=sqlite`. Direct production SQLite migration failed on an empty file
+and on a verified v0.11.2 copy. Native SQLite and current SQLite application
+and backup/restore acceptance remain open. The isolated historical conversion
+and rollback have their own [acceptance evidence](rust-m8-sqlite-postgres-rehearsal.md).
 
 Original Dispatcharr authors and contributors retain full credit for the application and algorithms. Django, Python/SQLite, PostgreSQL, Celery/Kombu and other dependency authors retain their credit and licenses.
 
@@ -15,7 +21,22 @@ Authority is captured Original commit `1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430`
 | `python manage.py test` | Selects separate `dispatcharr.settings_test`, normally isolated PostgreSQL |
 | Test settings with `TEST_USE_SQLITE=1`, `true` or `yes`, ignoring case | In-memory SQLite `:memory:`; independent of production selection |
 
-The production file selector is real Source code. Selecting an engine alone does not establish that every application operation works on it. The in-memory test fallback cannot qualify file-backed deployment or backup behavior.
+The production selector is in `dispatcharr/settings.py:288–294`.
+The in-memory fallback in `dispatcharr/settings_test.py:17–45`
+belongs to the test runner.
+
+### Documented deployment paths
+
+| Pinned entry point | Database setup |
+|---|---|
+| Docker Quick Start and All-in-One Compose | `docker/Dockerfile:54` launches `docker/entrypoint.sh`. The entrypoint provisions and waits for local PostgreSQL before Django migrate. Its login-shell environment handoff omits `DB_ENGINE`. |
+| Modular Compose | `docker/docker-compose.yml` configures a PostgreSQL 17 service and external PostgreSQL settings for web and Celery. The web entrypoint waits for PostgreSQL. |
+| Dev and Debug Compose | Both use the shared entrypoint's non-modular PostgreSQL setup. |
+| Debian install | The pinned README marks source installations unsupported. The helper provisions PostgreSQL and configures it for web, Celery and Daphne. |
+
+The deployment inventory is a source review. The AIO row also has a physical
+observation below. The review found no documented current SQLite deployment
+path in the pinned Original source tree.
 
 ## Backup behavior and portability uncertainty
 
@@ -50,8 +71,7 @@ set `LANG=C.UTF-8` in the disposable login environment. Both attempts kept the
 pinned Source entrypoint and database environment handoff intact. The
 [selection receipt](../scripts/rust-integration/sqlite-source-aio-2/result.json)
 records actual exits, file hashes, observations and cleanup. It qualifies
-PostgreSQL selection in this all-in-one setup. File-backed SQLite deployments
-still require their own Source acceptance.
+PostgreSQL selection in this all-in-one setup.
 
 ## Actual fresh Source CLI result
 
@@ -61,7 +81,7 @@ The real command exited **1** after **4.506 seconds**, first failing in `apps/ch
 
 Both output streams reached EOF, the CLI process group settled, output was not discarded, the container exited 1 without OOM, and both owned CLI/preflight containers were removed with final labelled-container absence. Attempt 1 is retained separately as a pre-Django file-permission failure; its migration never ran. Attempt 2's unchanged controller report contains an unset `migration_run:false` field; the derived result records actual execution from migration output, traceback and applied-prefix observations, preserving that raw report rather than rewriting it.
 
-The [actual CLI packet](../scripts/rust-integration/sqlite-source-cli-1/result.json) contains the result, raw command output, read-only schema/prefix, failure provenance and cleanup receipts. Original Source application behavior and Native parity remain unqualified beyond this CLI observation.
+The [actual CLI packet](../scripts/rust-integration/sqlite-source-cli-1/result.json) contains the result, raw command output, read-only schema/prefix, failure provenance and cleanup receipts. This direct CLI execution establishes the first fresh-file migration failure.
 
 
 ## Historical migration provenance
@@ -78,15 +98,33 @@ near `m`, and its PostgreSQL `DO` statement failed near `DO`. The full Original
 migration still requires its own application fixture.
 [Provenance receipt](../scripts/rust-integration/sqlite-source-scope/provenance-9a017508.json)
 
+## Actual Original upgrade of a historical SQLite copy
+
+A separate isolated run used the same pinned Original production settings
+and unchanged migration command against a disposable copy of the verified
+v0.11.2 SQLite database. Django migration and the container both exited 1
+at Channels 0038. The copy advanced from 132 to 163 migration records and
+ended at Channels 0037. Its 132 historical records and the immutable
+historical master were preserved. The outer adjudicator exited 0 after
+observing the expected failure and exact cleanup.
+[Current Original copied SQLite result](../scripts/rust-integration/milestone-batch111/backup-filenames-and-original-sqlite.json)
+
+The separate bridge migrated the historical SQLite data to disposable
+PostgreSQL. Current Original applied its ordinary PostgreSQL migrations,
+and ordinary Native Main read the resulting PostgreSQL data. Historical
+Original then read the preserved SQLite rollback copy. The accepted bridge
+covers the retained v0.11.2 dataset and pre-cutover rollback.
+[Historical bridge and rollback](rust-m8-sqlite-postgres-rehearsal.md)
+
 ## Required characterization gates
 
 1. The ordinary Source all-in-one entrypoint observation now captures actual engine selection, startup exits and physical PostgreSQL activity. Keep credentials and raw process environments private.
-2. The real public `python manage.py migrate --noinput` with production settings, exact `DB_ENGINE=sqlite` and fresh owned `/data` has recorded the first failure and read-only applied prefix. Retain these failures when testing other legitimate SQLite data paths.
+2. The real `python manage.py migrate --noinput` with production settings and exact `DB_ENGINE=sqlite` recorded the same first failure with both a fresh owned file and a verified v0.11.2 copy. Retain both actual exits and their separate read-only prefixes.
 3. Run actual REST create/status/download/restore only after unmodified bootstrap succeeds or a legitimate owned SQLite application fixture has verified Original version/history. Otherwise retain failures and mark dependent cells blocked/not_run. No such existing application file is supplied by the captured archive. A usable baseline must then cover same-instance login/settings/channel restoration, real task/migrate results, failure recovery and physical reader/writer/shutdown behavior.
 
 The current Rust gap includes PostgreSQL-specific Store/SQLx types and schema, PostgreSQL backup tools, and PostgreSQL session/server fencing. SQLite requires coherent persistence, migration/history, connection/file/journal and task/Beat/plugin lifecycles across the actual Native application. Adding an archive member cannot establish that compatibility. Source uncertainty does not waive the requirement or authorize a speculative engine implementation.
 
-Static references and the original prepared gates remain in [authority](../scripts/rust-integration/sqlite-source-scope/authority.json), [source hashes](../scripts/rust-integration/sqlite-source-scope/source-hashes.json), and the [historical gated matrix](../scripts/rust-integration/sqlite-source-scope/gated-matrix.json). The actual CLI packet supersedes that matrix's unexecuted fresh-migration cell only. The next gate requires a legitimate complete Source SQLite application fixture with recorded version and migration history before dependent REST backup/restore acceptance. The captured archive supplies no such file. M9’s datastore scope gate remains open. Native equivalence and equivalent-work performance remain blocked; all full milestones remain open.
+Static references and the original prepared gates remain in [authority](../scripts/rust-integration/sqlite-source-scope/authority.json), [source hashes](../scripts/rust-integration/sqlite-source-scope/source-hashes.json), and the [historical gated matrix](../scripts/rust-integration/sqlite-source-scope/gated-matrix.json). The recorded runs supply AIO selection, fresh-file migration and historical-copy migration observations. The next gate requires a legitimately migrated current Source SQLite fixture with recorded version and migration history before dependent REST backup/restore acceptance. The captured archive supplies no such file. M9’s datastore scope gate remains open. Native equivalence and equivalent-work performance remain blocked; all full milestones remain open.
 
 
 ## Verified historical Original SQLite database
@@ -105,8 +143,7 @@ remained. The owner verified the container exited 0 and was removed.
 
 An independent inspector copied the resulting database and checked the
 copy in SQLite immutable mode. Both file hashes matched throughout. This
-qualifies the historical file as input for a future legacy import check.
-The Native SQLite runtime and import remain open, and the current pinned
-Original still has its separate fresh-schema migration failure.
+qualified the historical file for the later SQLite-to-PostgreSQL bridge.
+Current Original SQLite bootstrap and Native SQLite runtime remain open.
 
 [Historical fixture and copy receipt](../scripts/rust-integration/legacy-sqlite-source-v0.11.2.json)
