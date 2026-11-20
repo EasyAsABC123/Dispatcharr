@@ -141,6 +141,10 @@ The [a785 permissions and management baseline](rust-a785-baseline-acceptance.md)
 1,024 checks across 18 suites on the standalone-backup successor image. The
 run decoded 75 video frames and independently verified project cleanup.
 
+The [976f permissions and management baseline](rust-976f-baseline-acceptance.md)
+passed 1,024 checks across 18 suites on the standalone-restore successor
+image, decoded 75 video frames and independently verified project cleanup.
+
 The [735 MPEG-TS functional checks](rust-m9-735-functional-streaming.md) passed
 all three required nodes with verified cleanup. The run covered 24 two-worker
 checks, 14 delayed restart checks and 100 retained-history readers with 20
@@ -1333,6 +1337,10 @@ Pass: another developer can reproduce contracts and measurements using Compose;
 no baseline or tool unavailability remains hidden behind a passing status.
 
 ## M1 — streaming core
+
+The same 33 streaming-core and runtime library tests passed after both
+crates were recompiled at the exact restore-enabled `976f2867` snapshot.
+All 1,496 Rust inputs matched its package. [Exact 976f host receipt](../scripts/rust-integration/m1-976f-bounded-core-host.json)
 
 The exact `a785a2b7` package passed all 17 stream-core and 16 stream-runtime
 library tests after recompiling both crates. All 1,496 Rust inputs matched
