@@ -577,12 +577,12 @@ impl Files {
         Ok(entries)
     }
 
-    fn rotate(&mut self, threshold: u64, keep: usize) -> io::Result<()> {
+    fn rotate(&mut self, threshold: u64, keep: usize) -> io::Result<bool> {
         let live = self.live_path();
         match fs::symlink_metadata(&live) {
             Ok(metadata) if metadata.is_file() && metadata.len() > threshold => {}
-            Ok(_) => return Ok(()),
-            Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(()),
+            Ok(_) => return Ok(false),
+            Err(error) if error.kind() == io::ErrorKind::NotFound => return Ok(false),
             Err(error) => return Err(error),
         }
         self.opened.take();
@@ -596,7 +596,7 @@ impl Files {
         }
         fs::rename(live, root.join(format!("{}.1", self.live)))?;
         self.opened = Some(append(&self.live_path())?);
-        Ok(())
+        Ok(true)
     }
 
     fn prune(&self, keep: usize) -> io::Result<()> {
@@ -617,7 +617,6 @@ impl Files {
             .ok_or_else(|| {
                 io::Error::other("managed log batch exceeds the configured file size")
             })?;
-        self.rotate(before_append, settings.keep)?;
         let live = self.live_path();
         if self.opened.is_none() || !live.exists() {
             self.opened = Some(append(&live)?);
@@ -625,12 +624,24 @@ impl Files {
         let Some(opened) = &mut self.opened else {
             return Err(io::Error::other("managed log file is unavailable"));
         };
-        if opened.metadata()?.len() > before_append {
-            return Err(io::Error::other(
-                "managed log file still exceeds its append bound",
-            ));
+        let current = opened.metadata()?;
+        if current.len() <= before_append {
+            return opened.write_all(bytes);
         }
-        opened.write_all(bytes)
+
+        // The crossing batch belongs to the preceding inode. Move that inode
+        // before writing so a failed rotation cannot grow the active file.
+        let mut crossing = opened.try_clone()?;
+        if self.rotate(before_append, settings.keep)? {
+            let archive = anchor(&self.root).join(format!("{}.1", self.live));
+            let archived = fs::symlink_metadata(archive)?;
+            if archived.dev() == current.dev() && archived.ino() == current.ino() {
+                return crossing.write_all(bytes);
+            }
+        }
+        Err(io::Error::other(
+            "managed log rotation did not archive the live inode",
+        ))
     }
 
     fn write_managed_batch(
@@ -794,14 +805,92 @@ mod tests {
         fs::remove_dir(&archive).unwrap();
         assert!(files.write_managed_batch(b"next\n", settings, &ready));
         assert!(ready.load(Ordering::Acquire));
-        assert_eq!(fs::metadata(&archive).unwrap().len(), settings.maximum - 1);
-        assert_eq!(fs::read(&live).unwrap(), b"next\n");
+        let bytes = fs::read(&archive).unwrap();
+        assert_eq!(bytes.len() as u64, settings.maximum + 4);
+        assert!(bytes.ends_with(b"next\n"));
+        assert!(fs::read(&live).unwrap().is_empty());
         assert!(files
             .write(&vec![b'x'; settings.maximum as usize + 1], settings)
             .is_err());
-        assert_eq!(fs::read(&live).unwrap(), b"next\n");
+        assert!(fs::read(&live).unwrap().is_empty());
         drop(files);
         drop(fd);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn exact_cap_stays_live_and_crossing_batch_finishes_archive_one() {
+        let root = fixture();
+        let live = root.join("dispatcharr.log");
+        let archive = root.join("dispatcharr.log.1");
+        let mut files = Files::open(&root, "").unwrap().unwrap();
+        let settings = Settings::normalized(true, 1, 2, chrono_tz::UTC);
+        let fd = append(&live).unwrap();
+        fd.set_len(settings.maximum - 6).unwrap();
+        let inode = fd.metadata().unwrap().ino();
+
+        files.write(b"exact\n", settings).unwrap();
+        assert_eq!(fs::metadata(&live).unwrap().len(), settings.maximum);
+        assert!(!archive.exists());
+        files.write(b"crossing\n", settings).unwrap();
+        let before = fs::read(&archive).unwrap();
+        assert_eq!(fs::metadata(&archive).unwrap().ino(), inode);
+        assert!(before.ends_with(b"exact\ncrossing\n"));
+        assert_eq!(before.len() as u64, settings.maximum + 9);
+        assert!(fs::read(&live).unwrap().is_empty());
+        files.write(b"following\n", settings).unwrap();
+        assert_eq!(fs::read(live).unwrap(), b"following\n");
+        assert_eq!(fs::read(archive).unwrap(), before);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn crossing_write_failure_leaves_the_rotated_prefix_and_reports_unready() {
+        let root = fixture();
+        let live = root.join("dispatcharr.log");
+        let archive = root.join("dispatcharr.log.1");
+        let mut files = Files::open(&root, "").unwrap().unwrap();
+        let settings = Settings::normalized(true, 1, 2, chrono_tz::UTC);
+        append(&live).unwrap().set_len(settings.maximum).unwrap();
+        // A read-only descriptor makes the crossing write fail after rename.
+        files.opened = Some(File::open(&live).unwrap());
+        let ready = AtomicBool::new(true);
+
+        assert!(!files.write_managed_batch(b"crossing\n", settings, &ready));
+        assert!(!ready.load(Ordering::Acquire));
+        assert_eq!(fs::metadata(&archive).unwrap().len(), settings.maximum);
+        assert!(fs::read(&live).unwrap().is_empty());
+        assert!(files.write_managed_batch(b"following\n", settings, &ready));
+        assert!(ready.load(Ordering::Acquire));
+        assert_eq!(fs::read(&live).unwrap(), b"following\n");
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn oversized_batch_leaves_empty_active_and_backup_role_rotates_only_its_archives() {
+        let root = fixture();
+        let live = root.join("dispatcharr.log-backup");
+        let archive = root.join("dispatcharr.log-backup.1");
+        let mut files = Files::open(&root, "-backup").unwrap().unwrap();
+        let settings = Settings::normalized(true, 1, 3, chrono_tz::UTC);
+        let fd = append(&live).unwrap();
+        assert!(files
+            .write(&vec![b'x'; settings.maximum as usize + 1], settings)
+            .is_err());
+        assert!(fs::read(&live).unwrap().is_empty());
+        assert!(!archive.exists());
+
+        fd.set_len(settings.maximum).unwrap();
+        fs::write(&archive, b"previous backup\n").unwrap();
+        let second = root.join("dispatcharr.log-backup.2");
+        fs::write(&second, b"expired backup\n").unwrap();
+        let unrelated = root.join("dispatcharr.log.1");
+        fs::write(&unrelated, b"main archive\n").unwrap();
+        files.write(b"backup crossing\n", settings).unwrap();
+        assert!(fs::read(archive).unwrap().ends_with(b"backup crossing\n"));
+        assert_eq!(fs::read(second).unwrap(), b"previous backup\n");
+        assert_eq!(fs::read(unrelated).unwrap(), b"main archive\n");
+        assert!(fs::read(live).unwrap().is_empty());
         fs::remove_dir_all(root).unwrap();
     }
 

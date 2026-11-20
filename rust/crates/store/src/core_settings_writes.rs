@@ -549,9 +549,9 @@ async fn finish(mut c: sqlx::pool::PoolConnection<sqlx::Postgres>) -> Result<(),
     Ok(())
 }
 async fn existing(auth: &AuthService, raw: &str) -> Result<Setting, StoreError> {
-    let id = dispatcharr_ingest_core::source_integer_literal(raw)
-        .and_then(|n| n.parse::<i64>().ok())
-        .ok_or_else(missing)?;
+    let literal = dispatcharr_ingest_core::source_integer_literal(raw)
+        .ok_or_else(|| StoreError::StatusBody(404, json!({"detail":"Not found."})))?;
+    let id = literal.parse::<i64>().map_err(|_| missing())?;
     let mut c = auth.store.pool().acquire().await?;
     let result=sqlx::query("SELECT id::bigint AS id,key,name,octet_length(value::text) AS bytes,CASE WHEN octet_length(value::text)<=65536 THEN value::text END AS value_text FROM core_coresettings WHERE id::bigint=$1").bind(id).fetch_optional(&mut*c).await;
     finish(c).await?;
@@ -1406,6 +1406,28 @@ mod tests {
             }),
         }
     }
+    #[tokio::test]
+    async fn malformed_setting_id_uses_generic_not_found_before_sql() {
+        let service = local_service();
+        for (id, expected) in [
+            ("not-a-number", br#"{"detail":"Not found."}"#.as_slice()),
+            (
+                "9223372036854775808",
+                br#"{"detail":"No CoreSettings matches the given query."}"#.as_slice(),
+            ),
+        ] {
+            let response = existing(&service.state.auth, id)
+                .await
+                .unwrap_err()
+                .into_response();
+            assert_eq!(response.status(), StatusCode::NOT_FOUND);
+            let body = axum::body::to_bytes(response.into_body(), OUTPUT_LIMIT)
+                .await
+                .unwrap();
+            assert_eq!(body.as_ref(), expected);
+        }
+    }
+
     #[tokio::test]
     async fn main_composition_reconciles_routes_and_rejects_foreign_budget() {
         let service = local_service();
