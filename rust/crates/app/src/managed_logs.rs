@@ -102,9 +102,19 @@ struct Pending {
     records: VecDeque<Record>,
     bytes: usize,
     dropped: u64,
+    waiting_for_role: bool,
 }
 
 impl Pending {
+    fn suspend_for_role(&mut self) {
+        if !self.waiting_for_role {
+            *self = Self {
+                waiting_for_role: true,
+                ..Self::default()
+            };
+        }
+    }
+
     fn push(&mut self, record: Record) {
         let size = record.body.capacity().max(record.body.len()) + std::mem::size_of::<Record>();
         while self.bytes + size > QUEUE {
@@ -141,6 +151,19 @@ struct State {
     readers_done: AtomicUsize,
     closing: AtomicBool,
     ready: Arc<AtomicBool>,
+}
+
+impl State {
+    fn new(zone: Tz) -> Self {
+        Self {
+            pending: Mutex::new(Pending::default()),
+            seed: Mutex::new(None),
+            effective: Mutex::new(Settings::defaults(zone)),
+            readers_done: AtomicUsize::new(0),
+            closing: AtomicBool::new(false),
+            ready: Arc::new(AtomicBool::new(false)),
+        }
+    }
 }
 
 struct Capture {
@@ -230,14 +253,7 @@ impl ManagedLogs {
             .ok()
             .and_then(|name| name.trim().parse().ok())
             .unwrap_or(chrono_tz::UTC);
-        let state = Arc::new(State {
-            pending: Mutex::new(Pending::default()),
-            seed: Mutex::new(None),
-            effective: Mutex::new(Settings::defaults(boot_zone)),
-            readers_done: AtomicUsize::new(0),
-            closing: AtomicBool::new(false),
-            ready: Arc::new(AtomicBool::new(false)),
-        });
+        let state = Arc::new(State::new(boot_zone));
         let mut logs = Self {
             state,
             writer: None,
@@ -373,13 +389,14 @@ fn enqueue(state: &State, raw: &[u8], cut: bool) {
         return;
     };
     if settings.persist {
-        let record = Record {
-            stamp: Utc::now(),
-            zone: settings.zone,
-            body: file_body(raw, cut),
-        };
         if let Ok(mut pending) = state.pending.lock() {
-            pending.push(record);
+            if !pending.waiting_for_role {
+                pending.push(Record {
+                    stamp: Utc::now(),
+                    zone: settings.zone,
+                    body: file_body(raw, cut),
+                });
+            }
         }
     }
 }
@@ -446,23 +463,53 @@ struct Files {
 }
 
 impl Files {
-    fn open(path: &Path, role: &str) -> io::Result<Self> {
+    fn open(path: &Path, role: &str) -> io::Result<Option<Self>> {
         fs::create_dir_all(path)?;
         let root = directory(&fs::canonicalize(path)?)?;
         let config = create_directory(&anchor(&root).join("config"))?;
         let lock = append(&anchor(&config).join(format!("collector{role}.lock")))?;
         // SAFETY: the lifetime of the owned file retains this nonblocking lease.
         if unsafe { libc::flock(lock.as_raw_fd(), libc::LOCK_EX | libc::LOCK_NB) } < 0 {
-            return Err(io::Error::last_os_error());
+            let error = io::Error::last_os_error();
+            if error.kind() == io::ErrorKind::WouldBlock {
+                return Ok(None);
+            }
+            return Err(error);
         }
-        Ok(Self {
+        Ok(Some(Self {
             root,
             config,
             live: format!("dispatcharr.log{role}"),
             _lock: lock,
             stamp: None,
             opened: None,
-        })
+        }))
+    }
+
+    fn acquire(
+        root: &Path,
+        role: &str,
+        zone: Tz,
+        settings: &mut Settings,
+        state: &State,
+    ) -> io::Result<Option<Self>> {
+        let Some(mut files) = Self::open(root, role)? else {
+            if let Ok(mut pending) = state.pending.lock() {
+                pending.suspend_for_role();
+            }
+            return Ok(None);
+        };
+        if let Ok(Some(next)) = files.read_settings(zone) {
+            *settings = next;
+        }
+        files.rotate(0, settings.keep)?;
+        if let Ok(mut effective) = state.effective.lock() {
+            *effective = *settings;
+        }
+        if let Ok(mut pending) = state.pending.lock() {
+            pending.waiting_for_role = false;
+        }
+        Ok(Some(files))
     }
 
     fn read_settings(&mut self, zone: Tz) -> io::Result<Option<Settings>> {
@@ -564,15 +611,40 @@ impl Files {
     }
 
     fn write(&mut self, bytes: &[u8], settings: Settings) -> io::Result<()> {
+        let before_append = settings
+            .maximum
+            .checked_sub(bytes.len() as u64)
+            .ok_or_else(|| {
+                io::Error::other("managed log batch exceeds the configured file size")
+            })?;
+        self.rotate(before_append, settings.keep)?;
         let live = self.live_path();
         if self.opened.is_none() || !live.exists() {
             self.opened = Some(append(&live)?);
         }
-        if let Some(opened) = &mut self.opened {
-            opened.write_all(bytes)?;
+        let Some(opened) = &mut self.opened else {
+            return Err(io::Error::other("managed log file is unavailable"));
+        };
+        if opened.metadata()?.len() > before_append {
+            return Err(io::Error::other(
+                "managed log file still exceeds its append bound",
+            ));
         }
-        let _ = self.rotate(settings.maximum, settings.keep);
-        Ok(())
+        opened.write_all(bytes)
+    }
+
+    fn write_managed_batch(
+        &mut self,
+        bytes: &[u8],
+        settings: Settings,
+        ready: &AtomicBool,
+    ) -> bool {
+        let written = self.write(bytes, settings).is_ok();
+        if !written {
+            self.opened.take();
+        }
+        ready.store(written, Ordering::Release);
+        written
     }
 }
 
@@ -593,14 +665,9 @@ fn write_logs(root: PathBuf, role: String, zone: Tz, state: &State) {
     let mut dropped = 0u64;
     loop {
         if files.is_none() {
-            if let Ok(mut opened) = Files::open(&root, &role) {
-                if let Ok(Some(next)) = opened.read_settings(zone) {
-                    settings = next;
-                }
-                if opened.rotate(0, settings.keep).is_ok() {
-                    files = Some(opened);
-                    state.ready.store(true, Ordering::Release);
-                }
+            if let Ok(Some(opened)) = Files::acquire(&root, &role, zone, &mut settings, state) {
+                files = Some(opened);
+                state.ready.store(true, Ordering::Release);
             }
         }
         if let Some(opened) = &mut files {
@@ -635,13 +702,10 @@ fn write_logs(root: PathBuf, role: String, zone: Tz, state: &State) {
                         record.body
                     );
                 }
-                if opened.write(output.as_bytes(), settings).is_ok() {
+                if opened.write_managed_batch(output.as_bytes(), settings, &state.ready) {
                     dropped = 0;
-                    state.ready.store(true, Ordering::Release);
                 } else {
                     dropped = dropped.saturating_add(batch.len() as u64);
-                    opened.opened.take();
-                    state.ready.store(false, Ordering::Release);
                 }
             }
         }
@@ -682,9 +746,9 @@ mod tests {
         let root = fixture();
         fs::write(root.join("dispatcharr.log"), b"last generation\n").unwrap();
         fs::write(root.join("dispatcharr.log-celery"), b"independent\n").unwrap();
-        let mut main = Files::open(&root, "").unwrap();
-        assert!(Files::open(&root, "").is_err());
-        let other = Files::open(&root, "-celery").unwrap();
+        let mut main = Files::open(&root, "").unwrap().unwrap();
+        assert!(Files::open(&root, "").unwrap().is_none());
+        let other = Files::open(&root, "-celery").unwrap().unwrap();
         let new_config = root.join("config/collector.next");
         fs::write(
             &new_config,
@@ -708,6 +772,73 @@ mod tests {
             b"independent\n"
         );
         drop(main);
+        drop(other);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn rotation_failure_blocks_append_until_owned_file_can_rotate() {
+        let root = fixture();
+        let live = root.join("dispatcharr.log");
+        let archive = root.join("dispatcharr.log.1");
+        let mut files = Files::open(&root, "").unwrap().unwrap();
+        let settings = Settings::normalized(true, 1, 2, chrono_tz::UTC);
+        let fd = append(&live).unwrap();
+        fd.set_len(settings.maximum - 1).unwrap();
+        fs::create_dir(&archive).unwrap();
+        let ready = AtomicBool::new(true);
+        assert!(!files.write_managed_batch(b"next\n", settings, &ready));
+        assert!(!ready.load(Ordering::Acquire));
+        assert_eq!(fs::metadata(&live).unwrap().len(), settings.maximum - 1);
+
+        fs::remove_dir(&archive).unwrap();
+        assert!(files.write_managed_batch(b"next\n", settings, &ready));
+        assert!(ready.load(Ordering::Acquire));
+        assert_eq!(fs::metadata(&archive).unwrap().len(), settings.maximum - 1);
+        assert_eq!(fs::read(&live).unwrap(), b"next\n");
+        assert!(files
+            .write(&vec![b'x'; settings.maximum as usize + 1], settings)
+            .is_err());
+        assert_eq!(fs::read(&live).unwrap(), b"next\n");
+        drop(files);
+        drop(fd);
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn confirmed_same_role_standby_has_no_file_backlog_on_takeover() {
+        let root = fixture();
+        let zone = chrono_tz::UTC;
+        let first = Files::open(&root, "").unwrap().unwrap();
+        let other = Files::open(&root, "-celery").unwrap().unwrap();
+        let state = State::new(zone);
+        let mut settings = Settings::defaults(zone);
+        enqueue(&state, b"before role admission", false);
+        assert!(Files::acquire(&root, "", zone, &mut settings, &state)
+            .unwrap()
+            .is_none());
+        enqueue(&state, b"during confirmed standby", false);
+        {
+            let pending = state.pending.lock().unwrap();
+            assert!(pending.waiting_for_role);
+            assert!(pending.records.is_empty());
+            assert_eq!((pending.bytes, pending.dropped), (0, 0));
+        }
+
+        drop(first);
+        let next = Files::acquire(&root, "", zone, &mut settings, &state)
+            .unwrap()
+            .unwrap();
+        enqueue(&state, b"after takeover", false);
+        {
+            let mut pending = state.pending.lock().unwrap();
+            assert!(!pending.waiting_for_role);
+            let (dropped, mut batch) = pending.take();
+            assert_eq!(dropped, 0);
+            assert_eq!(batch.len(), 1);
+            assert_eq!(batch.pop().unwrap().body, "after takeover");
+        }
+        drop(next);
         drop(other);
         fs::remove_dir_all(root).unwrap();
     }
