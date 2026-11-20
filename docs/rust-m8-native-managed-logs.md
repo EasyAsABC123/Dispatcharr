@@ -34,3 +34,21 @@ tail, exact console readiness line and clean SIGTERM, with all four owned
 roles retired. The test used the ordinary startup configuration. The
 separately staged Version startup option remained disabled.
 [Native verification receipt](../scripts/rust-integration/milestone-batch113/native-managed-logs.json)
+
+## Stored logs on a read-only mount
+
+The exact corrected `c74ea312bdc7` package passed all 29 System Logs cases
+against pinned Original. Both backends mounted the same pre-populated log
+directory read-only. The eight listing, 13 cursor tail and eight download
+cases matched in status, response body and headers, including allowed
+and denied roles, two Unicode attachment encodings and the 24 MiB tail
+view cap. Each of the 58 requests left its fixture snapshot unchanged.
+The listing returned the expected inactive collector state on the read-only
+mount. The 18 foundation checks also passed.
+
+The controller exited 0 with both EOFs and its process group settled.
+Teardown independently verified the absence of all four owned containers
+and their original host processes. Project container, network and volume
+inventories were empty. Active rotation, settings transitions and full M8
+acceptance retain their separate gates.
+[Read-only System Logs receipt](../scripts/rust-integration/milestone-batch113/read-only-system-logs.json)

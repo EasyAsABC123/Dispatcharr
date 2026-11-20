@@ -70,6 +70,8 @@ fresh-ID cases. Provider-slot release timing remains open.
 The [Native managed-log check](rust-m8-native-managed-logs.md) verified
 startup-file production, authenticated list and tail, and clean process
 shutdown. Focused Rust controls cover failed rotation and standby ownership.
+The same package passed 29 paired stored System Logs cases on one
+read-only mount, with exact responses, unchanged files and clean teardown.
 
 The [stock backup missing-settings replay](rust-m8-backup-missing-row.md)
 matched permissions, response bytes, row creation and cache invalidation
