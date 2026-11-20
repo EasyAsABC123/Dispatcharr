@@ -209,6 +209,11 @@ The [114558 React live playback and Stats run](rust-114558-react-live-stats.md)
 repeated the two browser arms on the exact Guide successor package and
 verified all 112 shipped React assets and independent process and Compose cleanup.
 
+The [c606 React live playback and Stats run](rust-c606-react-live-stats.md)
+repeated the same two browser arms on the newer exact package. Both decoded
+live MPEG-TS, returned the active channel in Stats, and closed playback through
+the UI. All 112 shipped React asset hashes and independent teardown matched.
+
 The [trusted plugin action replay](rust-m8-selected-trusted-plugin-actions.md)
 matched the decoded results and selected headers for echo and scalar with
 selected workers and verified exact compatibility-host retirement.

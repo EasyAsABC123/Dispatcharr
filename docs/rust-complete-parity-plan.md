@@ -10,6 +10,27 @@ parity and cutover rehearsal gate. **M10 and M11 below are proposed release
 stages**. They make a controlled rollout and the decision to switch defaults
 explicit. They do not change the existing M0–M9 acceptance criteria.
 
+## Latest packaged checks
+
+The exact `c6061adb` image passed the 18-suite Main baseline with
+1,024 checks and 75 decoded
+MPEG-TS frames. The paired browser run returned the active channel in
+Stats, played advancing video, and matched 112 shipped React assets.
+Both scopes verified cleanup. [Packaged Main baseline](../scripts/rust-integration/milestone-batch113/c606-18-suite-baseline.json)
+[Live React and Stats](rust-c606-react-live-stats.md)
+
+All 33 stream-core and stream-runtime tests passed on the exact
+`c6061adb` Rust inputs, including shared payload retention and 100
+simultaneous readers. [Bounded streaming core receipt](../scripts/rust-integration/milestone-batch113/c606-bounded-core-host.json)
+
+The packaged operator CLI matched four Original commands across fully
+applied and one-pending migration states. The same image matched
+all three paired Guide detail GETs. [Migration inspection](rust-native-showmigrations.md)
+[Guide detail evidence](rust-m7-browsable-guide-original.md)
+
+Two of the 127 required coordinator nodes passed in the recorded
+`c6061adb` runs. Full release parity and performance acceptance remain open.
+
 ## Starting point
 
 The network-disabled M0 SDK passed all 119 tests, reproduced its register exactly,
