@@ -18,8 +18,10 @@ use sqlx::{PgConnection, Postgres, QueryBuilder, Row, Transaction};
 use std::{collections::HashMap, net::SocketAddr};
 use uuid::Uuid;
 mod assign_numbers;
+mod from_stream;
 mod reorder;
 pub(crate) use assign_numbers::handle as assign_numbers;
+pub(crate) use from_stream::handle as create_from_stream;
 pub(crate) use reorder::handle as reorder;
 
 type Body = Result<Json<Value>, JsonRejection>;
@@ -679,6 +681,90 @@ async fn response(
     }
     Ok(result)
 }
+fn channel_defaults() -> Map<String, Value> {
+    json!({
+        "name": "", "logo_id": null, "channel_group_id": null, "tvg_id": null,
+        "tvc_guide_stationid": null, "epg_data_id": null, "stream_profile_id": null,
+        "uuid": Uuid::new_v4().to_string(), "user_level": 0, "is_adult": false,
+        "auto_created": false, "auto_created_by_id": null, "is_catchup": false,
+        "catchup_days": 0, "is_radio": false, "hidden_from_output": false,
+        "created_at": now(), "updated_at": now(),
+    })
+    .as_object()
+    .expect("channel defaults object")
+    .clone()
+}
+
+async fn create_rows(
+    auth: &AuthService,
+    tx: &mut Transaction<'_, Postgres>,
+    data: &mut Map<String, Value>,
+    validated: Validated,
+    profiles: Option<&Value>,
+    stock_manual_guide: bool,
+    owner: crate::compact_numbering::Owner,
+) -> Result<(i64, Option<Value>), StoreError> {
+    let created_guide = if let Some(epg) = data["epg_data_id"].as_i64() {
+        let target = guide_target(auth, tx, Some(epg), stock_manual_guide).await?;
+        if stock_manual_guide {
+            if !matches!(target, GuideTarget::CacheOnly) {
+                return Err(guide_unsupported());
+            }
+            let triggers: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled <> 'D' AND tgrelid IN ('dispatcharr_channels_channelstream'::regclass,'dispatcharr_channels_channelprofilemembership'::regclass))")
+                .fetch_one(&mut **tx).await?;
+            if triggers {
+                return Err(guide_unsupported());
+            }
+        }
+        Some(target)
+    } else {
+        None
+    };
+    if let Some(epg) = validated
+        .overrides
+        .as_ref()
+        .and_then(|value| value.get("epg_data_id"))
+        .and_then(Value::as_i64)
+    {
+        guide_target(auth, tx, Some(epg), false).await?;
+    }
+    if !data.contains_key("channel_number") {
+        data.insert("channel_number".into(), next_number(tx).await?);
+    }
+    if data["channel_group_id"].is_null() {
+        data.insert("channel_group_id".into(), default_group(tx).await?);
+    }
+    if data["auto_created"] != true && created_guide.is_none() {
+        mark_group(tx, &data["channel_group_id"]).await?;
+    }
+    let selected = COLUMNS
+        .split(',')
+        .map(|field| format!("x.{field}"))
+        .collect::<Vec<_>>()
+        .join(",");
+    let id = sqlx::query_scalar(&format!(
+        "INSERT INTO dispatcharr_channels_channel({COLUMNS})
+         SELECT {selected} FROM jsonb_populate_record(NULL::dispatcharr_channels_channel,$1) x RETURNING id"
+    ))
+    .bind(Value::Object(data.clone()))
+    .fetch_one(&mut **tx)
+    .await?;
+    if let Some(target) = created_guide {
+        guide_after_save(auth, target, owner.clone()).await?;
+        if data["auto_created"] != true {
+            mark_group(tx, &data["channel_group_id"]).await?;
+        }
+    }
+    if let Some(stream_ids) = validated.streams {
+        streams(tx, id, stream_ids).await?;
+    }
+    if let Some(value) = validated.overrides {
+        overrides(auth, owner.clone(), tx, id, &value, false).await?;
+    }
+    let profile_error = profile_memberships(tx, id, profiles).await?;
+    Ok((id, profile_error))
+}
+
 pub(crate) async fn create(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -706,9 +792,9 @@ async fn create_owned(
     let user = auth.account_user(peer, headers.clone(), true).await?;
     let base = channels::base_url(&headers, &uri)?;
     let body = body_object(body)?;
-    let validated = validation(&auth, &body, false).await?;
-    let mut data=json!({"name":"","logo_id":null,"channel_group_id":null,"tvg_id":null,"tvc_guide_stationid":null,"epg_data_id":null,"stream_profile_id":null,"uuid":Uuid::new_v4().to_string(),"user_level":0,"is_adult":false,"auto_created":false,"auto_created_by_id":null,"is_catchup":false,"catchup_days":0,"is_radio":false,"hidden_from_output":false,"created_at":now(),"updated_at":now()}).as_object().expect("object").clone();
-    data.extend(validated.scalars);
+    let mut validated = validation(&auth, &body, false).await?;
+    let mut data = channel_defaults();
+    data.extend(std::mem::take(&mut validated.scalars));
     let guide_coupled = !data["epg_data_id"].is_null()
         || validated
             .overrides
@@ -740,55 +826,23 @@ async fn create_owned(
     }
     let default_number = !data.contains_key("channel_number");
     let mut connection = auth.store.pool().acquire().await?;
-    let work=async {
-    use sqlx::Connection;
-    let mut tx = connection.begin().await?;
-    let created_guide = if let Some(epg) = data["epg_data_id"].as_i64() {
-        let target = guide_target(&auth, &mut tx, Some(epg), stock_manual_guide).await?;
-        if stock_manual_guide {
-            if !matches!(target, GuideTarget::CacheOnly) {
-                return Err(guide_unsupported());
-            }
-            let triggers: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled <> 'D' AND tgrelid IN ('dispatcharr_channels_channelstream'::regclass,'dispatcharr_channels_channelprofilemembership'::regclass))")
-                .fetch_one(&mut *tx).await?;
-            if triggers {
-                return Err(guide_unsupported());
-            }
-        }
-        Some(target)
-    } else {
-        None
-    };
-    if let Some(epg)=validated.overrides.as_ref().and_then(|v|v.get("epg_data_id")).and_then(Value::as_i64){guide_target(&auth,&mut tx,Some(epg),false).await?;}
-    if !data.contains_key("channel_number") {
-        data.insert("channel_number".into(), next_number(&mut tx).await?);
+    let work = async {
+        use sqlx::Connection;
+        let mut tx = connection.begin().await?;
+        let (id, profile_error) = create_rows(
+            &auth,
+            &mut tx,
+            &mut data,
+            validated,
+            body.get("channel_profile_ids"),
+            stock_manual_guide,
+            owner,
+        )
+        .await?;
+        tx.commit().await?;
+        Ok::<_, StoreError>((id, profile_error))
     }
-    if data["channel_group_id"].is_null() {
-        data.insert("channel_group_id".into(), default_group(&mut tx).await?);
-    }
-    if data["auto_created"] != true && created_guide.is_none() {
-        mark_group(&mut tx, &data["channel_group_id"]).await?;
-    }
-    let selected = COLUMNS
-        .split(',')
-        .map(|field| format!("x.{field}"))
-        .collect::<Vec<_>>()
-        .join(",");
-    let id:i64=sqlx::query_scalar(&format!("INSERT INTO dispatcharr_channels_channel({COLUMNS}) SELECT {selected} FROM jsonb_populate_record(NULL::dispatcharr_channels_channel,$1) x RETURNING id")).bind(Value::Object(data.clone())).fetch_one(&mut *tx).await?;
-    if let Some(target)=created_guide {
-        guide_after_save(&auth,target,owner.clone()).await?;
-        if data["auto_created"] != true { mark_group(&mut tx,&data["channel_group_id"]).await?; }
-    }
-    if let Some(stream_ids) = validated.streams {
-        streams(&mut tx, id, stream_ids).await?;
-    }
-    if let Some(value) = validated.overrides {
-        overrides(&auth, owner.clone(), &mut tx, id, &value, false).await?;
-    }
-    let profile_error = profile_memberships(&mut tx, id, body.get("channel_profile_ids")).await?;
-    tx.commit().await?;
-    Ok::<_,StoreError>((id,profile_error))
-    }.await;
+    .await;
     use sqlx::Connection;
     let ready = connection.ping().await;
     let closed = connection.close().await;

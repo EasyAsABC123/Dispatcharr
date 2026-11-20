@@ -913,6 +913,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route("/api/channels/channels/ids/", get(ids))
         .route(
+            "/api/channels/channels/from-stream/",
+            post(crate::channel_writes::create_from_stream),
+        )
+        .route(
             "/api/channels/channels/assign/",
             post(crate::channel_writes::assign_numbers),
         )

@@ -6,6 +6,7 @@ mod combined_statistics_html;
 mod combined_statistics_wire;
 mod control;
 mod database_config;
+mod drf_api_roots;
 mod m3u_refresh_all_config;
 mod managed_logs;
 mod manual_backup_config;
@@ -1156,6 +1157,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             refresh_tvg: epg_tvg.clone().filter(|_| !selected_jobs_enabled),
         })
         .merge(auth_routes)
+        .merge(drf_api_roots::router(auth.clone()))
         .merge(stream_regex.router())
         .merge(combined_statistics.router())
         .route("/proxy/stats", any(combined_stats_legacy_alias))
