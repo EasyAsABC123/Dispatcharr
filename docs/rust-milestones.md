@@ -20,13 +20,18 @@ captures qualified another 108 role checks across 27 operations.
 The [Redis write retry and shared playback checks](rust-migration-shared-playback-checks.md)
 verified the same-writer retry after a rejected write, the joined transport
 switch, and two equivalent fMP4 viewers sharing one upstream. The paired HLS
-screen passed with 33.30% less CPU and 47.18% less peak working memory. The
-100-viewer
-pilot passed. Its measured phases reached the end, but the selected media
-spans failed the fixed equal-work bound before any resource result qualified.
+screen passed with 33.30% less CPU and 47.18% less peak working memory.
+The [cross-replica fMP4 check](rust-m3-live-format-continuation.md) also passed
+with one upstream and one provider slot. The initial 100-viewer comparison
+missed the equal-work bound. The [anchored diagnostic](rust-m2-100-viewer-anchor.md)
+then met that bound on both implementations. Six fresh measured phases are
+required for the 100-viewer resource comparison.
 
 The [Candidate107 VOD and XMLTV results](rust-milestone-batch107.md) verify
 calendar seek ranges, alternate-provider capacity and remote source creation.
+The [Candidate107 resource comparison](rust-m4-performance.md#candidate107-playback-comparison)
+passed 12 VOD and catch-up pairs with matched work. Median paired CPU fell
+39–73% and working memory fell 32–36% depending on the workload.
 The [Candidate108 API results](rust-milestone-batch108.md) verify Core JSON
 routes, the stock React channel-guide edit and legacy backup schedule reads.
 
@@ -47,13 +52,20 @@ The [instrumented rollback replay](rust-cutover-candidate87-row-attribution.md)
 found zero Original row changes during Native use. A standalone Original
 restart reproduced the same four timestamp updates in the paired replay.
 The strict post-restart fingerprint still differed.
+The [Candidate110 and Candidate111 rehearsals](rust-m9-copied-postgres-rollback.md)
+reproduced that result. The copied-data cutover and same-session rollback
+worked, and both strict gates recorded the four Original startup writes.
 
 The [120-second playback and guide diagnostic](rust-m9-playback-refresh-diagnostic.md)
 passed on Candidate91 with ten viewers sharing one owned upstream and
 20 decoded clips. A second trial on Candidate94 passed with the longer
 H.264/AAC origin and two distinct XMLTV jobs during ten-viewer playback.
 A third resource trial passed the full 120 seconds with the one-slot provider,
-complete resource censuses and exact cleanup. The two-hour soak remains open.
+complete resource censuses and exact cleanup. The
+[Candidate110 two-hour soak](rust-m9-guide-lock-diagnostic.md#two-hour-playback-and-refresh-soak)
+passed with ten viewers, one upstream and provider slot, twelve completed
+refreshes, and 140 audio/video decodes. The integrated M9 release gate remains
+open.
 
 The [five-minute password regression](rust-m9-playback-refresh-diagnostic.md)
 passed on Candidate103 with zero and ten viewers. The viewing cohort
@@ -65,6 +77,11 @@ verified three one-viewer pairs. Median paired whole-stack CPU fell 45.05%
 and peak working set fell 62.99% with equal delivery. Native returned
 six HTTP 503 responses in the first ten-viewer warmup, and the controller
 exited 1 after exact cleanup.
+
+The [HDHomeRun JSON-suffix checks](rust-m7-hdhr-json-writes.md) verified 32
+ordinary Native device writes and denials on the pinned Candidate111 image.
+The 16 newly captured [Original DRF root operations](rust-m0-original-drf-roots.md)
+await the next register and SDK validation.
 
 The [development and validation plan](rust-development-and-validation-plan.md) defines parallel implementation/acceptance/tooling lanes, affected-workflow batches and default-off fixture concurrency. Performance measurement remains exclusive.
 
