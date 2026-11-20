@@ -25,3 +25,21 @@ covers one already trusted module without owned tasks. Migration receiver
 execution and enabled-plugin restore in Rust remain separate.
 
 [Redacted Original restore result](../scripts/rust-integration/milestone-batch113/original-trusted-taskless-plugin-restore.json)
+
+## Registry metadata and task inventories
+
+A fresh pinned Original run repeated the same taskless restore and
+qualified five read-only checkpoints. The restored row kept the archived name, version and description.
+The fixture preserved the same archived row ID, creation timestamp and
+unmanaged local provenance. The row's update timestamp stayed unchanged.
+
+The same claimed restore worker reported its registered task inventory
+before and after. No probe found an owned task, suspended schedule or
+periodic reference for the module. The worker task inventory and the archived periodic inventory matched their compared snapshots. The two Compose projects
+retired all four owned roles and the controller exited 0.
+
+The observed row and task inventories apply to the one trusted module.
+This scope leaves migration receiver execution, Rust enabled-plugin
+restore and full M8 acceptance open.
+
+[Redacted Original properties receipt](../scripts/rust-integration/milestone-batch113/original-trusted-taskless-plugin-properties.json)
