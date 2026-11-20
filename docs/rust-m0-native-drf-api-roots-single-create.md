@@ -12,6 +12,7 @@ and retired all four container and process identities. The requests used
 `Accept: application/json`. Browsable HTML, other media ranges, other
 methods and requests to the linked resources remain outside this result.
 [Redacted receipt](../scripts/rust-contracts/verified-native-drf-api-roots-8a821e27.json)
+[Case crosswalk to the canonical register](rust-m0-drf-json-root-case-crosswalk.md)
 
 Original Dispatcharr and Django REST Framework contributors retain full
 credit. [Dispatcharr upstream](https://github.com/Dispatcharr/Dispatcharr)

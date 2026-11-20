@@ -1,0 +1,159 @@
+{
+  "actual_exit": 0,
+  "candidate_image": "sha256:8d2dc87c735f9940c15e6c582767e4193d45aea5d07497a97efe397ff0438474",
+  "candidate_manifest_sha256": "cda655e2c269bd0ebaa1b0fc34f622e9545b7f7adfaa7f1e4d3892b2d82069ee",
+  "candidate_revision": "34b5198793164aee8077665d73bff9f697904014",
+  "credits": "Original Dispatcharr contributors retain full application and protocol credit.",
+  "exact_roles_retired": 8,
+  "frozen_product_review_sha256": "93a3aab8588c6ded2b9ef34fb6234ce7b11efdb301c54d754f944e8533a6cae6",
+  "full_M4_accepted": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "paired_cases": 10,
+  "performance_verified": false,
+  "plans": [
+    {
+      "actual_exit": 0,
+      "cases": [
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "offset-wins",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "seek-wins",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "timestamp-shadows-time",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "fallback-time",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "invalid-ignored",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        }
+      ],
+      "changed_route_sources_since_prior": [
+        "rust/crates/vod-http/src/engine.rs",
+        "rust/crates/vod-http/src/offset.rs",
+        "rust/crates/vod-http/src/resolver.rs",
+        "rust/crates/vod-http/src/sessions.rs"
+      ],
+      "exact_empty_project": true,
+      "paired_cases": 5,
+      "raw_compose_receipt_sha256": "2f1892620259250b5eacb806487128437b0f7fad3bd9e6bce9d7651972ec6a24",
+      "raw_previous_context_sha256": "fd62c3a5086aa441991b29824f203e9d75dac38b113156bf6ea3450fb89b06a9",
+      "roles_retired": 4,
+      "scope": "numeric",
+      "source_Rust_total_HTTP_206": 10
+    },
+    {
+      "actual_exit": 0,
+      "cases": [
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "primary-wins",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "duplicate-start-and-local-clock",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "invalid-start-keeps-provider-path",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "week-date-and-empty-seek",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        },
+        {
+          "body_sha256": "0363e777d579d67b7e9e95eaffbb5957afb71e067c1354b59e8b5229936f34bd",
+          "bytes": 65536,
+          "case": "end-only-and-time-fallback",
+          "ordinary_metadata_matched": true,
+          "range": "bytes 0-65535/4299455",
+          "requests_per_backend": 1,
+          "status": 206,
+          "upstream_query_matched": true
+        }
+      ],
+      "changed_route_sources_since_prior": [
+        "rust/Cargo.lock",
+        "rust/crates/store/src/lib.rs",
+        "rust/crates/vod-http/src/engine.rs",
+        "rust/crates/vod-http/src/sessions.rs"
+      ],
+      "exact_empty_project": true,
+      "paired_cases": 5,
+      "raw_compose_receipt_sha256": "8e5bdfd7e7085847684ecca847583d079293d248fbfa3a967ee6f3d41876bee1",
+      "raw_previous_context_sha256": "9ae222462b18931146eb220e03d42a6e319be81bae58932c61b62738f1859f9c",
+      "roles_retired": 4,
+      "scope": "calendar",
+      "source_Rust_total_HTTP_206": 10
+    }
+  ],
+  "prior_8241_statuses_transferred": false,
+  "raw_group_receipt_sha256": "cf0566b3e138ed08aa3fd87cd4212b93d12584be8becabf703106a80ee2b5343",
+  "reviewed_direct_source_paths": [
+    "rust/crates/vod-http/src/engine.rs"
+  ],
+  "scope": "ordinary packaged direct VOD numeric seek and calendar byte ranges",
+  "total_actual_HTTP_206": 20,
+  "total_actual_owned_origin_requests": 20
+}
