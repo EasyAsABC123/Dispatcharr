@@ -17,6 +17,8 @@ use std::{
 };
 use tokio::sync::{watch, Notify, OwnedSemaphorePermit, Semaphore};
 
+pub(crate) mod programme_hop;
+
 /// Maps contain source metadata only; no Debug implementation because provider
 /// URLs can contain credentials. The pool adds its private ownership fence.
 pub struct ArchivePoolRequest {
@@ -67,6 +69,8 @@ struct Entry {
     lifecycle: AtomicU64,
     handoff_pending: AtomicBool,
     retained_provider: AtomicBool,
+    programme_hop: Mutex<Option<String>>,
+    programme_hop_drained: AtomicBool,
     reopened: Notify,
     active: AtomicBool,
     streaming: AtomicBool,
@@ -89,6 +93,8 @@ impl Entry {
             lifecycle: AtomicU64::new(0),
             handoff_pending: AtomicBool::new(false),
             retained_provider: AtomicBool::new(false),
+            programme_hop: Mutex::new(None),
+            programme_hop_drained: AtomicBool::new(false),
             reopened: Notify::new(),
             active: AtomicBool::new(true),
             streaming: AtomicBool::new(false),
@@ -937,6 +943,10 @@ impl ArchivePool {
                     tokio::time::sleep(Duration::from_millis(5)).await
                 }
                 2 => {
+                    let programme_hop = entry.programme_hop.lock().unwrap();
+                    if programme_hop.is_some() {
+                        return Err(StoreError::StatusBody(503, json!("Stream slot busy")));
+                    }
                     if entry
                         .lifecycle
                         .compare_exchange(
@@ -1400,20 +1410,28 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
     let handoff =
         entry.handoff_pending.load(Ordering::SeqCst) && entry.streaming.load(Ordering::SeqCst);
     entry.retained_provider.store(handoff, Ordering::SeqCst);
-    let lease = entry.lease.lock().unwrap().take();
-    let released = match lease.as_ref() {
-        Some(lease) if !handoff => match lease.release_retained_result().await {
+    let hop_target = if handoff {
+        entry.programme_hop.lock().unwrap().clone()
+    } else {
+        None
+    };
+    // Leave a retained lease in the entry until the exact drained epoch
+    // is won by the next playback or by this finalizer.
+    let ordinary_lease = if handoff {
+        None
+    } else {
+        entry.lease.lock().unwrap().take()
+    };
+    let released = match ordinary_lease.as_ref() {
+        Some(lease) => match lease.release_retained_result().await {
             Ok(true) => true,
             _ => {
                 inner.cleanup_failed.store(true, Ordering::SeqCst);
                 false
             }
         },
-        _ => false,
+        None => false,
     };
-    if handoff {
-        *entry.lease.lock().unwrap() = lease.clone();
-    }
     entry.active.store(false, Ordering::SeqCst);
     let streaming = entry.streaming.load(Ordering::SeqCst);
     let mut remove_api = false;
@@ -1445,6 +1463,7 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
                     .to_string()
                     .as_bytes(),
                     if released { b"1" } else { b"0" },
+                    hop_target.as_deref().unwrap_or("").as_bytes(),
                 ],
                 (),
             )
@@ -1452,6 +1471,8 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
             .unwrap_or((0, ()));
         if result != 1 {
             inner.cleanup_failed.store(true, Ordering::SeqCst);
+        } else if hop_target.is_some() {
+            entry.programme_hop_drained.store(true, Ordering::SeqCst);
         }
         // Existing source pools suppress native grace for every transfer under
         // two seconds, including a large startup read. Preserve that branch.
@@ -1505,7 +1526,12 @@ async fn finish(inner: Arc<Inner>, entry: Arc<Entry>) {
     if result < 0 {
         inner.cleanup_failed.store(true, Ordering::SeqCst);
     }
-    if let Some(lease) = lease.as_ref().filter(|_| handoff) {
+    let retained_lease = if handoff {
+        entry.lease.lock().unwrap().take()
+    } else {
+        None
+    };
+    if let Some(lease) = retained_lease {
         if lease.release_retained_result().await.is_err() {
             inner.cleanup_failed.store(true, Ordering::SeqCst);
         }
@@ -1672,6 +1698,9 @@ end
 if ARGV[9]=='1' then redis.call('HSET',KEYS[1],'rust_idle_ready','1')
 else redis.call('HDEL',KEYS[1],'rust_idle_ready') end
 redis.call('HSET',KEYS[1],'busy',ARGV[4]=='1' and '1' or '0','last_activity',ARGV[2]);redis.call('EXPIRE',KEYS[1],ARGV[4]=='1' and 600 or 60)
+if ARGV[10] and ARGV[10]~='' and ARGV[4]=='1' then
+ redis.call('HSET',KEYS[1],'rust_programme_hop_ready',ARGV[10])
+end
 return 1
 "#;
 const CLEANUP: &str = r#"

@@ -635,6 +635,14 @@ impl Lease {
         self.release_observed(false).await
     }
 
+    /// Stop renewing a retained owner whose archive cleanup could not be
+    /// confirmed. The existing fenced expiry ledger reaps its reservation.
+    pub fn expire_after_unconfirmed_cleanup(&self) {
+        self.inner.release_started.store(true, Ordering::Release);
+        self.inner.stop.send_replace(true);
+        self.inner.lost.send_replace(true);
+    }
+
     /// An owned archive finalizer may publish idle only after the actual fenced
     /// release result. Admission is still bounded by the normal command limit.
     pub async fn release_retained_result(&self) -> Result<bool, Error> {
