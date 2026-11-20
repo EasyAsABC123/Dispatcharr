@@ -3,9 +3,12 @@
 use crate::{
     logo_task::Clock,
     scanner_files::{Error, Owner, Service},
-    transport::{ScannerFilesPorts, ScannerIoError},
+    transport::{ScannerFilesPorts, ScannerIoError, ScannerRoot},
 };
-use std::{sync::Arc, time::Duration};
+use std::{
+    sync::{Arc, OnceLock},
+    time::Duration,
+};
 use tokio::sync::{oneshot, Semaphore};
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Run {
@@ -24,6 +27,7 @@ struct Inner {
     ports: ScannerFilesPorts,
     clock: Arc<dyn Clock>,
     registry: Option<crate::scanner_parents::Registry>,
+    compat_stats: OnceLock<crate::stats_worker::StatsWorker>,
     slot: Arc<Semaphore>,
 }
 impl Worker {
@@ -34,6 +38,7 @@ impl Worker {
                 ports,
                 clock,
                 registry: None,
+                compat_stats: OnceLock::new(),
                 slot: Arc::new(Semaphore::new(1)),
             }),
         }
@@ -50,6 +55,16 @@ impl Worker {
             .registry = Some(registry);
         worker
     }
+    pub(crate) fn bind_compat_stats(
+        &self,
+        stats: crate::stats_worker::StatsWorker,
+    ) -> Result<(), Error> {
+        self.inner
+            .compat_stats
+            .set(stats)
+            .map_err(|_| Error::Operational)
+    }
+
     pub fn stop_admission(&self) {
         self.inner.slot.close();
     }
@@ -112,7 +127,7 @@ impl Worker {
         match self
             .inner
             .service
-            .preflight_scanner(candidate.message.task_id, owner.clone())
+            .preflight_scanner(candidate.root.task_id(), owner.clone())
             .await
         {
             Err(Error::Unsupported) => return Ok(Run::UnsupportedHead),
@@ -122,19 +137,35 @@ impl Worker {
         if let Some(registry) = &self.inner.registry {
             registry.preflight().map_err(|_| Error::Capacity)?;
         }
+        let stats = match candidate.root {
+            ScannerRoot::Scan(_) => None,
+            ScannerRoot::CompatBeat(_) => {
+                let Some(worker) = self.inner.compat_stats.get() else {
+                    return Ok(Run::UnsupportedHead);
+                };
+                Some(
+                    worker
+                        .admit_inline(owner.clone())
+                        .map_err(|error| match error {
+                            crate::stats_worker::Error::Closed => Error::Closed,
+                            crate::stats_worker::Error::Capacity => Error::Capacity,
+                            _ => Error::Operational,
+                        })?,
+                )
+            }
+        };
         self.inner.ports.begin_run()?;
-        let message = self.inner.ports.claim(candidate).await?;
-        let outcome = self
-            .inner
-            .service
-            .run(message.task_id, now, owner.clone())
-            .await?;
+        let task_id = self.inner.ports.claim(candidate).await?.task_id();
+        if let Some(effect) = stats {
+            effect.emit().await.map_err(|_| Error::Operational)?;
+        }
+        let outcome = self.inner.service.run(task_id, now, owner.clone()).await?;
         let failed = outcome.failure.is_some();
-        let bytes = outcome.metadata(message.task_id)?;
+        let bytes = outcome.metadata(task_id)?;
         match self
             .inner
             .ports
-            .write(message.task_id, bytes, owner.clone())
+            .write(task_id, bytes, owner.clone())
             .await?
         {
             false => Ok(Run::AlreadySucceeded),
@@ -143,7 +174,7 @@ impl Worker {
                 if let Some(registry) = &self.inner.registry {
                     registry
                         .record(
-                            message.task_id,
+                            task_id,
                             &outcome.children,
                             self.inner.ports.committed_publications()?,
                             owner,

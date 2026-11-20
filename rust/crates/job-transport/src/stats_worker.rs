@@ -107,6 +107,18 @@ struct Inner {
 pub struct StatsWorker {
     inner: Arc<Inner>,
 }
+
+/// One admitted use of the existing Stats effects inside a claimed Scanner root.
+pub(crate) struct InlineStats {
+    worker: StatsWorker,
+    owner: Arc<Owner>,
+}
+impl InlineStats {
+    pub(crate) async fn emit(self) -> Result<(), Error> {
+        self.worker.emit_owned(self.owner).await
+    }
+}
+
 impl StatsWorker {
     #[cfg(test)]
     pub fn new_fixture(
@@ -166,6 +178,36 @@ impl StatsWorker {
         expected: Option<Arc<[u8]>>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Run, Error> {
+        let owner = self.admit(caller)?;
+        let worker = self.clone();
+        tokio::spawn(async move {
+            let Some(message) = worker
+                .inner
+                .jobs
+                .claim_selected(expected.as_deref(), owner.clone())
+                .await
+                .map_err(Error::Transport)?
+            else {
+                return Ok(Run::Empty);
+            };
+            worker.emit_owned(owner.clone()).await?;
+            let written = worker
+                .inner
+                .jobs
+                .write_stats_success_fixture(&message, owner)
+                .await
+                .map_err(Error::Transport)?;
+            Ok(if written {
+                Run::Completed(message.task_id)
+            } else {
+                Run::AlreadySucceeded(message.task_id)
+            })
+        })
+        .await
+        .map_err(|_| Error::Panic)?
+    }
+
+    fn admit(&self, caller: Arc<dyn Send + Sync>) -> Result<Arc<Owner>, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -178,31 +220,42 @@ impl StatsWorker {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
-        let owner = Arc::new(Owner {
+        Ok(Arc::new(Owner {
             _slot: slot,
             _caller: caller,
+        }))
+    }
+
+    pub(crate) fn admit_inline(&self, caller: Arc<dyn Send + Sync>) -> Result<InlineStats, Error> {
+        Ok(InlineStats {
+            worker: self.clone(),
+            owner: self.admit(caller)?,
+        })
+    }
+
+    async fn emit_owned(&self, owner: Arc<Owner>) -> Result<(), Error> {
+        let inner = &self.inner;
+        let value = source_event_projection(inner.source.build(owner.clone()).await?)?;
+        let text = python_json(&value, inner.maximum)?;
+        drop(value);
+        let event =
+            json!({"type":"update","data":{"success":true,"type":"channel_stats","stats":text}});
+        let (done, settled) = oneshot::channel();
+        let attempt = Arc::new(Attempt {
+            done: Some(done),
+            _caller: owner,
         });
-        let inner = self.inner.clone();
-        tokio::spawn(async move {
-            let Some(message) = inner.jobs.claim_selected(expected.as_deref(),owner.clone()).await.map_err(Error::Transport)? else { return Ok(Run::Empty) };
-            let value = source_event_projection(inner.source.build(owner.clone()).await?)?;
-            let text = python_json(&value, inner.maximum)?;
-            drop(value);
-            let event = json!({"type":"update","data":{"success":true,"type":"channel_stats","stats":text}});
-            let (done, settled) = oneshot::channel();
-            let attempt = Arc::new(Attempt { done: Some(done), _caller: owner.clone() });
-            let sent = inner.sink.send_retained("updates", event, attempt.clone()).await;
-            drop(attempt);
-            // send_retained may return a logical error before its supervised
-            // Redis reply. The physical owner receipt must settle first.
-            settled.await.map_err(|_| Error::Event)?;
-            match sent {
-                Ok(()) | Err(UpdateEventError::Unavailable) => {},
-                Err(_) => return Err(Error::Event),
-            }
-            let written = inner.jobs.write_stats_success_fixture(&message, owner).await.map_err(Error::Transport)?;
-            Ok(if written { Run::Completed(message.task_id) } else { Run::AlreadySucceeded(message.task_id) })
-        }).await.map_err(|_| Error::Panic)?
+        let sent = inner
+            .sink
+            .send_retained("updates", event, attempt.clone())
+            .await;
+        drop(attempt);
+        // A logical timeout never lets the Scanner begin before the Stats send settles.
+        settled.await.map_err(|_| Error::Event)?;
+        match sent {
+            Ok(()) | Err(UpdateEventError::Unavailable) => Ok(()),
+            Err(_) => Err(Error::Event),
+        }
     }
     /// Drain this family only. The application closes shared Jobs once every
     /// family has settled; an idle family must not close another's publisher.

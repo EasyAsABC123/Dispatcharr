@@ -7,6 +7,21 @@ use crate::{
 use base64::{engine::general_purpose::STANDARD, Engine};
 use serde_json::{json, Value};
 use uuid::Uuid;
+pub(crate) const COMPAT_BEAT: &str = "core.tasks.beat_periodic_task";
+
+pub(crate) fn compat_beat_identity(bytes: &[u8]) -> Result<Uuid, ProtocolError> {
+    if bytes.len() > protocol::MAX_ENVELOPE {
+        return Err(ProtocolError::Capacity);
+    }
+    let mut frame: Value = serde_json::from_slice(bytes).map_err(|_| invalid())?;
+    crate::periodic_headers::take(&mut frame)?.ok_or_else(invalid)?;
+    crate::worker::no_argument_root_identity(
+        &frame,
+        crate::worker::ImmediateNoArgumentTask::ScannerCompatBeat,
+    )
+    .map_err(|_| invalid())
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Kind {
     M3uGroups,
@@ -128,6 +143,27 @@ pub fn parse_native(bytes: &[u8]) -> Result<Message, ProtocolError> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn compatibility_beat_admits_only_the_observed_ordinary_root() {
+        let root = Uuid::new_v4();
+        let template = protocol::encode(
+            &Task::CreateBackup,
+            root,
+            Uuid::new_v4(),
+            Uuid::new_v4(),
+            "owned",
+        )
+        .unwrap();
+        let mut frame: Value = serde_json::from_slice(&template).unwrap();
+        frame["headers"]["task"] = json!(COMPAT_BEAT);
+        let bytes = |frame: &Value| serde_json::to_vec(frame).unwrap();
+        assert!(compat_beat_identity(&bytes(&frame)).is_err());
+        frame["headers"]["periodic_task_name"] = json!("owned-compat-stats-scanner");
+        assert_eq!(compat_beat_identity(&bytes(&frame)), Ok(root));
+        frame["headers"]["task"] = json!("core.tasks.scan_and_process_files");
+        assert!(compat_beat_identity(&bytes(&frame)).is_err());
+    }
+
     #[test]
     fn captured_source217_children_match_all_typed_headers_bodies_and_relations() {
         let source: Value = serde_json::from_str(include_str!(

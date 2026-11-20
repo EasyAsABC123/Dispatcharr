@@ -1716,6 +1716,7 @@ pub(crate) use cleanup_reservation_transport::Reservation as CleanupReservation;
 
 #[path = "scanner_files_io.rs"]
 mod scanner_files_io;
+pub(crate) use scanner_files_io::ScannerRoot;
 pub use scanner_files_io::{ScannerFilesPorts, ScannerIoError, ScannerRoute, ScannerServer};
 
 #[path = "scanner_refresh_io.rs"]

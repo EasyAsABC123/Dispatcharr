@@ -2,7 +2,8 @@
 //! Original Dispatcharr/Celery authors retain all application/protocol credit.
 //! Starts no scheduler; missing families cannot be advertised as prepared.
 pub use crate::normal_default_families::{
-    prepare_defaults, prepare_stats, Error as FamilyPreparationError, PreparedDefaults,
+    prepare_defaults, prepare_stats, prepare_stats_with_inline, Error as FamilyPreparationError,
+    PreparedDefaults,
 };
 use crate::{
     milestone_dispatch::{self, Disposition, Family, Handler, Lifecycle, Prepared, Queue},

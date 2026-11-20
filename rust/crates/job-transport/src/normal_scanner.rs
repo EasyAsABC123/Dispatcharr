@@ -202,6 +202,15 @@ impl Prepared {
         self.xc.bind_sd(capability.clone())?;
         self.remote.bind_sd(capability)
     }
+    pub fn bind_compat_stats(
+        &self,
+        stats: crate::stats_worker::StatsWorker,
+    ) -> Result<(), Disposition> {
+        self.scanner.bind_compat_stats(stats).map_err(|_| {
+            Disposition::Operational("Compatibility scanner Stats binding failed".into())
+        })
+    }
+
     pub fn registry(&self) -> Registry {
         self.registry.clone()
     }

@@ -275,6 +275,7 @@ pub(crate) fn create_identity(bytes: &[u8]) -> Result<Uuid, Error> {
 pub(crate) enum ImmediateNoArgumentTask {
     CreateBackup,
     XmltvAggregate,
+    ScannerCompatBeat,
 }
 
 pub(crate) fn no_argument_root_identity(
@@ -285,6 +286,7 @@ pub(crate) fn no_argument_root_identity(
     let name = match task {
         ImmediateNoArgumentTask::CreateBackup => "apps.backups.tasks.create_backup_task",
         ImmediateNoArgumentTask::XmltvAggregate => crate::refresh_aggregate::NAME,
+        ImmediateNoArgumentTask::ScannerCompatBeat => crate::scanner_files_protocol::COMPAT_BEAT,
     };
     let fields = |v: &Value, names: &[&str]| {
         v.as_object()

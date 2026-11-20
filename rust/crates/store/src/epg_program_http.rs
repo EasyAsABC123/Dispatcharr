@@ -431,20 +431,45 @@ pub(crate) fn json_negotiation(headers: &HeaderMap, uri: &Uri) -> Result<(), Sto
     }
     Ok(())
 }
+const PROGRAMME_LIST_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
+const PROGRAMME_DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
+
 async fn respond(
     state: EpgProgramReads,
     peer: SocketAddr,
     headers: HeaderMap,
+    method: Method,
     id: Option<String>,
     uri: Uri,
 ) -> Result<Response, StoreError> {
     json_negotiation(&headers, &uri)?;
+    let explicit_json = matches!(method, Method::GET | Method::HEAD)
+        && uri.query().is_none()
+        && headers
+            .get("accept")
+            .is_some_and(|value| value == "application/json");
     let origin = origin(&state.auth, peer, &headers);
     let data = state.read(peer, headers, id.as_deref(), origin).await?;
-    Ok(Response::builder()
-        .header("content-type", "application/json")
-        .body(Body::from(data))
-        .expect("static programme headers"))
+    let mut response = Response::builder().header("content-type", "application/json");
+    if explicit_json {
+        response = response
+            .header("vary", "Accept, origin")
+            .header(
+                "allow",
+                if id.is_some() {
+                    PROGRAMME_DETAIL_ALLOW
+                } else {
+                    PROGRAMME_LIST_ALLOW
+                },
+            )
+            .header("content-length", data.len().to_string());
+    }
+    let body = if explicit_json && method == Method::HEAD {
+        Body::empty()
+    } else {
+        Body::from(data)
+    };
+    Ok(response.body(body).expect("valid programme headers"))
 }
 async fn list(
     State(state): State<EpgProgramReads>,
@@ -466,16 +491,11 @@ async fn list(
         if user.user_level < 1 {
             return Err(StoreError::PermissionDenied);
         }
-        let template = match (user.user_level >= 10, format_alias, &method) {
-            (true, true, _) => programme_html::Template::AdminFormatAlias,
-            (true, false, _) => programme_html::Template::Admin,
-            (false, true, _) => programme_html::Template::StandardFormatAlias,
-            (false, false, &Method::GET) => programme_html::Template::Standard,
-            (false, _, _) => {
-                return Err(StoreError::Unsupported(
-                    "This Guide browsable HTML representation is not yet implemented",
-                ));
-            }
+        let template = match (user.user_level >= 10, format_alias) {
+            (true, true) => programme_html::Template::AdminFormatAlias,
+            (true, false) => programme_html::Template::Admin,
+            (false, true) => programme_html::Template::StandardFormatAlias,
+            (false, false) => programme_html::Template::Standard,
         };
         let origin = origin(&state.auth, peer, &headers);
         let programmes = state.read_authorized(None, origin.clone()).await?;
@@ -488,7 +508,7 @@ async fn list(
             programmes,
         );
     }
-    respond(state, peer, headers, None, uri).await
+    respond(state, peer, headers, method, None, uri).await
 }
 async fn detail(
     State(state): State<EpgProgramReads>,
@@ -500,9 +520,10 @@ async fn detail(
 ) -> Result<Response, StoreError> {
     let accept = headers.get("accept");
     let bare_html = uri.query().is_none() && accept.is_some_and(|value| value == "text/html");
-    let format_alias =
-        uri.query() == Some("format=api") && accept.is_some_and(|value| value == "*/*");
-    if method == Method::GET && (bare_html || format_alias) {
+    let format_alias = method == Method::GET
+        && uri.query() == Some("format=api")
+        && accept.is_some_and(|value| value == "*/*");
+    if (matches!(method, Method::GET | Method::HEAD) && bare_html) || format_alias {
         let user = state
             .auth
             .account_user(peer, headers.clone(), false)
@@ -511,11 +532,11 @@ async fn detail(
             return Err(StoreError::PermissionDenied);
         }
         let path = uri.path();
-        let template = match (user.user_level >= 10, format_alias) {
-            (true, true) => programme_html::Template::AdminDetailFormatAlias(path),
-            (true, false) => programme_html::Template::AdminDetail(path),
-            (false, false) => programme_html::Template::StandardDetail(path),
-            (false, true) => {
+        let template = match (user.user_level >= 10, format_alias, &method) {
+            (true, true, _) => programme_html::Template::AdminDetailFormatAlias(path),
+            (true, false, _) => programme_html::Template::AdminDetail(path),
+            (false, false, &Method::GET) => programme_html::Template::StandardDetail(path),
+            (false, _, _) => {
                 return Err(StoreError::Unsupported(
                     "Guide browsable HTML is not yet implemented",
                 ));
@@ -532,7 +553,7 @@ async fn detail(
             programme,
         );
     }
-    respond(state, peer, headers, Some(id), uri).await
+    respond(state, peer, headers, method, Some(id), uri).await
 }
 
 #[cfg(test)]

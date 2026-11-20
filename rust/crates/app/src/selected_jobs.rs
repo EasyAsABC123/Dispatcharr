@@ -420,7 +420,7 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected default family initialization failed")?;
-        let stats = jobs::normal_queue::prepare_stats(
+        let (stats, inline_stats) = jobs::normal_queue::prepare_stats_with_inline(
             &broker,
             &backend,
             crate::statistics::task_source(engine),
@@ -429,6 +429,9 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected live statistics initialization failed")?;
+        scanner
+            .bind_compat_stats(inline_stats)
+            .map_err(|_| "Selected compatibility scanner Stats initialization failed")?;
         let mut entries: Vec<(Family, Arc<dyn Handler>)> = vec![
             (
                 Family::ProgrammeIndex,

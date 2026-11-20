@@ -240,9 +240,9 @@ pub(super) fn response(
         }))
     };
     let allow = if template.detail_path().is_some() {
-        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        super::PROGRAMME_DETAIL_ALLOW
     } else {
-        "GET, POST, HEAD, OPTIONS"
+        super::PROGRAMME_LIST_ALLOW
     };
     Response::builder()
         .header("content-type", "text/html; charset=utf-8")
@@ -391,6 +391,57 @@ mod tests {
         assert!(!html.contains("<textarea"));
         assert!(!html.contains("data-method=\"DELETE\""));
         assert!(!html.contains("@@GUIDE_"));
+    }
+
+    #[tokio::test]
+    async fn detail_admin_and_list_standard_head_add_method_byte_without_entity() {
+        let headers = HeaderMap::new();
+        let programme = Bytes::from_static(
+            br#"{"id":7,"start_time":"2026-04-13T11:00:00Z","end_time":"2026-04-13T11:30:00Z","title":"Programme","sub_title":null,"description":null,"tvg_id":null,"season":null,"episode":null,"is_new":false,"is_live":false,"is_premiere":false,"is_finale":false}"#,
+        );
+        let origin = "http://guide.example.invalid";
+        for (template, data, allow) in [
+            (
+                Template::AdminDetail("/api/epg/programs/7/"),
+                programme,
+                super::super::PROGRAMME_DETAIL_ALLOW,
+            ),
+            (
+                Template::Standard,
+                Bytes::from_static(br#"[{"id":7,"title":"Programme"}]"#),
+                super::super::PROGRAMME_LIST_ALLOW,
+            ),
+        ] {
+            let get = response(
+                &headers,
+                Method::GET,
+                template,
+                "guide-user",
+                origin,
+                data.clone(),
+            )
+            .unwrap();
+            let head =
+                response(&headers, Method::HEAD, template, "guide-user", origin, data).unwrap();
+            let (headers, body) = head.into_parts();
+            let get_bytes = axum::body::to_bytes(get.into_body(), MAXIMUM_RENDERED_BYTES)
+                .await
+                .unwrap();
+            assert_eq!(
+                headers.headers["content-length"]
+                    .to_str()
+                    .unwrap()
+                    .parse::<usize>()
+                    .unwrap(),
+                get_bytes.len() + 1
+            );
+            assert_eq!(headers.headers["allow"], allow);
+            assert_eq!(headers.headers["vary"], "Accept, origin, Cookie");
+            assert!(axum::body::to_bytes(body, MAXIMUM_RENDERED_BYTES)
+                .await
+                .unwrap()
+                .is_empty());
+        }
     }
 
     #[tokio::test]

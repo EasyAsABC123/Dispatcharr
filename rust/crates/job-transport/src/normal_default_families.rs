@@ -172,16 +172,30 @@ pub async fn prepare_stats(
     events: Arc<dyn UpdateEventSink>,
     maximum: usize,
 ) -> Result<Arc<dyn Handler>, Error> {
+    prepare_stats_with_inline(broker, backend, source, events, maximum)
+        .await
+        .map(|(handler, _)| handler)
+}
+
+/// The handler and scanner's inline Stats capability share one admitted worker.
+pub async fn prepare_stats_with_inline(
+    broker: &str,
+    backend: &str,
+    source: Arc<dyn crate::stats_worker::Source>,
+    events: Arc<dyn UpdateEventSink>,
+    maximum: usize,
+) -> Result<(Arc<dyn Handler>, crate::stats_worker::StatsWorker), Error> {
     let jobs = StatsJobs::connect(broker, backend, Config::default())
         .await
         .map_err(|_| Error::Transport)?;
     let worker = crate::stats_worker::StatsWorker::new(jobs.clone(), source, events, maximum)
         .map_err(|_| Error::Configuration)?;
-    Ok(Arc::new(FamilyBundle {
-        worker: Arc::new(NormalWorker::Stats(worker)),
+    let handler = Arc::new(FamilyBundle {
+        worker: Arc::new(NormalWorker::Stats(worker.clone())),
         ports: Ports::Stats(jobs),
         stop: None,
-    }))
+    });
+    Ok((handler, worker))
 }
 struct RecurringHandler {
     worker: RecordingWorker,

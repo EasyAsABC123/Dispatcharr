@@ -250,7 +250,9 @@ pub fn classify(raw: &[u8]) -> Option<Family> {
             Family::RescheduleOffsets
         }
         "apps.channels.tasks.recover_recordings_on_startup" => Family::StartupRecovery,
-        "core.tasks.scan_and_process_files" => Family::Scanner,
+        "core.tasks.scan_and_process_files" | crate::scanner_files_protocol::COMPAT_BEAT => {
+            Family::Scanner
+        }
         "apps.m3u.tasks.refresh_m3u_groups" => Family::M3uGroups,
         "apps.m3u.tasks.refresh_single_m3u_account" => Family::M3uSingle,
         "apps.m3u.tasks.refresh_m3u_accounts" => Family::M3uAll,

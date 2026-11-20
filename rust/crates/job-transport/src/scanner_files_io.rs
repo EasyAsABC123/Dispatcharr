@@ -62,8 +62,20 @@ struct PortsInner {
 pub struct ScannerFilesPorts {
     inner: Arc<PortsInner>,
 }
+#[derive(Clone, Copy)]
+pub(crate) enum ScannerRoot {
+    Scan(Uuid),
+    CompatBeat(Uuid),
+}
+impl ScannerRoot {
+    pub(crate) fn task_id(self) -> Uuid {
+        match self {
+            Self::Scan(task_id) | Self::CompatBeat(task_id) => task_id,
+        }
+    }
+}
 pub(crate) struct ScannerCandidate {
-    pub message: default_protocol::Message,
+    pub root: ScannerRoot,
     bytes: Vec<u8>,
     held: Arc<Lease>,
     origin: Arc<Inner>,
@@ -230,6 +242,23 @@ impl ScannerFilesPorts {
         if state != 1 {
             return Err(ScannerIoError::Unsupported);
         }
+        let compat = if expected.is_some()
+            && self.inner.route == ScannerRoute::Default
+            && self.inner.identity.is_some()
+        {
+            scanner_files_protocol::compat_beat_identity(&bytes).ok()
+        } else {
+            None
+        };
+        if let Some(task_id) = compat {
+            return Ok(Some(ScannerCandidate {
+                root: ScannerRoot::CompatBeat(task_id),
+                bytes,
+                held,
+                origin: jobs.inner.clone(),
+                route: self.inner.route,
+            }));
+        }
         let message = if self.inner.route == ScannerRoute::Default {
             default_protocol::parse(&bytes)
         } else {
@@ -252,7 +281,7 @@ impl ScannerFilesPorts {
             return Err(ScannerIoError::Unsupported);
         }
         Ok(Some(ScannerCandidate {
-            message,
+            root: ScannerRoot::Scan(message.task_id),
             bytes,
             held,
             origin: jobs.inner.clone(),
@@ -262,7 +291,7 @@ impl ScannerFilesPorts {
     pub(crate) async fn claim(
         &self,
         candidate: ScannerCandidate,
-    ) -> Result<default_protocol::Message, ScannerIoError> {
+    ) -> Result<ScannerRoot, ScannerIoError> {
         let jobs = &self.inner.jobs;
         if !Arc::ptr_eq(&jobs.inner, &candidate.origin) || self.inner.route != candidate.route {
             return Err(ScannerIoError::Unsupported);
@@ -278,7 +307,7 @@ impl ScannerFilesPorts {
             )
             .await;
         match reply {
-            Ok((1, _)) => Ok(candidate.message),
+            Ok((1, _)) => Ok(candidate.root),
             Ok((0, _)) => Err(ScannerIoError::Transport(Error::ClaimRace)),
             _ => Err(ScannerIoError::Operational),
         }
