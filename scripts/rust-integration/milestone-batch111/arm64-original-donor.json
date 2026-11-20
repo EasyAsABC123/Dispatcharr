@@ -1,0 +1,56 @@
+{
+  "arm64_packages_built": false,
+  "arm64_runtime_qualified": false,
+  "comskip": {
+    "ELF": {
+      "class": "ELF64",
+      "endianness": "little",
+      "interpreter": "/lib/ld-linux-aarch64.so.1",
+      "machine": "AArch64"
+    },
+    "binary_bytes": 332800,
+    "binary_mode": "0755",
+    "binary_path": "/usr/local/bin/comskip",
+    "binary_sha256": "75bc4daf372684c366fbd86a3d53106f12d1be571a63ed4d55bc28d400ab4692",
+    "dependency_license_closure_verified": false,
+    "exact_corresponding_source_verified": false,
+    "layer_compressed_bytes": 169044,
+    "layer_diff_id": "sha256:54cf1303ea3b4147d0224d7d7d8e715afe659fb3d0f6dcf4257f1b7bdc3165a4",
+    "layer_digest": "sha256:ba50f4bf6f93d9ce0aed9bfde9a3b8286d7863a58c36d0158ab2a51cfc520e7e",
+    "upstream_license": "GPL-2.0-or-later"
+  },
+  "controlled_rollout_executed": false,
+  "credit": "Original Dispatcharr authors and contributors, Comskip, FFmpeg, and dependency authors",
+  "native_arm64_comskip_executed": false,
+  "offline": {
+    "architecture_on_validation_host": "x86_64",
+    "evidence_sha256": {
+      "comskip-elf.json": "20fff2c871c47efc776c14a215e30439fd269a954c02e02e870ae6f9c5626b88",
+      "metadata.json": "875af2c33712a5f9032211bcfdf4de2fa76d7b9a48b503fb9a9b8b37bae23f48",
+      "overlay-e449.json": "4a43fbf98dba5aece333a7ab54a3668aa435ed620dda0e26bb5db11a5e7b3fd1",
+      "platform-amd64-offline.json": "627296e02c8ab6bac9eed466d016c169303da5460c1cb36cad675e9015ebb81e",
+      "platform-arm64-offline.json": "ebac05fd90cf33f4f5c84be03825d0e600f342bba3ac9fd4dff6dfcfa7fe6db2"
+    },
+    "local_aarch64_binfmt_registered": false,
+    "local_qemu_aarch64_in_path": false,
+    "positive_donor_binding": true,
+    "validated_platform_plans": [
+      "amd64",
+      "arm64"
+    ],
+    "verified_against_dockerfile_and_collector_preimages": true,
+    "workspace_reference": "e44907c7ceda67b22a633377e13fb7373efd8488"
+  },
+  "original": {
+    "amd64_sibling_manifest": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "arm64_config": "sha256:aa357ada16661964a9af41fe289964ae8008460b60efcdbbad60c4383e7d3b43",
+    "arm64_manifest": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "build": "base-20261103010601",
+    "published_arm64_index": "sha256:cac1940e7959f381aafe1024125c9520dc2f0b1cab9b471f401d4644bdabbf44",
+    "published_index": "sha256:46d27844c5303e36802e436bd4e2dcf8277eca1ebe51334e786b479a46ba303f",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "performance_verified": false,
+  "repository": "ghcr.io/dispatcharr/dispatcharr",
+  "scope": "offline_original_arm64_donor_and_comskip_elf_identity"
+}
