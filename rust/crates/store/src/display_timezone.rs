@@ -220,23 +220,24 @@ impl AuthService {
     }
     /// Original normal startup warms the system group without touching the
     /// request display-zone debounce. Startup failures keep the existing fallback.
-    pub async fn startup_system_settings_group(&self) {
+    pub async fn startup_system_settings_group(&self) -> Option<Value> {
         let permit = match self.request_writer_permit.clone() {
             Some(permit) => permit,
             None => match self.user_agent_workers.clone().try_acquire_owned() {
                 Ok(permit) => Arc::new(permit),
-                Err(_) => return,
+                Err(_) => return None,
             },
         };
         let auth = self.clone();
         // Keep the same original writer owner through physical SQL/cache work
         // even if the startup observer is dropped. No new budget is created.
-        let _ = tokio::spawn(async move {
-            if let Ok(scoped) = auth.with_request_writer_permit(permit) {
-                let _ = scoped.callback_system_settings().await;
-            }
+        tokio::spawn(async move {
+            let scoped = auth.with_request_writer_permit(permit).ok()?;
+            scoped.callback_system_settings().await.ok()
         })
-        .await;
+        .await
+        .ok()
+        .flatten()
     }
     /// Explicit inert pre-auth hook. Main/API middleware activation is separate.
     /// Must run even for anonymous/malformed requests; never call only after auth.

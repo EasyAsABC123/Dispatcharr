@@ -62,6 +62,10 @@ four paired cohorts. Same-ID requests reused their sessions and fresh
 Native IDs had their own stats rows. Original returned 503 in both
 fresh-ID cases. Provider-slot release timing remains open.
 
+The [Native managed-log check](rust-m8-native-managed-logs.md) verified
+startup-file production, authenticated list and tail, and clean process
+shutdown. Focused Rust controls cover failed rotation and standby ownership.
+
 The [stock backup missing-settings replay](rust-m8-backup-missing-row.md)
 matched permissions, response bytes, row creation and cache invalidation
 when disabling the schedule. Both owned fixtures retired cleanly.

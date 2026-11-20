@@ -7,6 +7,7 @@ mod combined_statistics_wire;
 mod control;
 mod database_config;
 mod m3u_refresh_all_config;
+mod managed_logs;
 mod playback;
 mod plugin_gpg_trace;
 mod plugin_jobs_bridge;
@@ -201,7 +202,7 @@ async fn combined_stats_legacy_alias(request: axum::extract::Request) -> Respons
         .into_response()
 }
 
-async fn run() -> Result<(), String> {
+async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let admin_location = admin_ingress::configured_location()?;
     let selected_jobs_enabled = selected_jobs::enabled()?;
     let cache_url = redis_config::url()?;
@@ -231,7 +232,8 @@ async fn run() -> Result<(), String> {
     )
     .await
     .map_err(|_| "Database connection failed (credentials omitted)")?;
-    let auth = AuthService::new(store.clone(), auth_config);
+    let auth =
+        AuthService::new(store.clone(), auth_config).with_native_log_liveness(logs.liveness());
     let auth = if let Some(url) = cache_url.as_deref() {
         auth.with_notification_cache(
             dispatcharr_store::NotificationCache::connect(url)
@@ -243,7 +245,9 @@ async fn run() -> Result<(), String> {
     };
     // Original startup warms the system group before HTTP, leaving the
     // display-zone debounce untouched until the first real request.
-    auth.startup_system_settings_group().await;
+    if let Some(system_settings) = auth.startup_system_settings_group().await {
+        logs.seed(&system_settings);
+    }
     let realtime_bus = realtime::bus(cache_url.as_deref()).await?;
     // Attach before every resolver/environment/XC clone so original producers
     // publish through the same bounded process transport.
@@ -1712,14 +1716,19 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
 }
 
 #[tokio::main]
-async fn main() {
-    if let Err(error) = plugin_gpg_trace::install_from_environment() {
-        eprintln!("Dispatcharr Rust startup failed: {error}");
-        std::process::exit(1);
-    }
-    if let Err(error) = run().await {
-        eprintln!("Dispatcharr Rust startup failed: {error}");
-        std::process::exit(1);
+async fn serve(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
+    plugin_gpg_trace::install_from_environment()?;
+    run(logs).await
+}
+
+fn main() -> std::process::ExitCode {
+    let logs = managed_logs::ManagedLogs::start();
+    match serve(&logs) {
+        Ok(()) => std::process::ExitCode::SUCCESS,
+        Err(error) => {
+            eprintln!("Dispatcharr Rust startup failed: {error}");
+            std::process::ExitCode::FAILURE
+        }
     }
 }
 
