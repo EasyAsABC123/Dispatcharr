@@ -1,0 +1,191 @@
+{
+  "M0_accepted": false,
+  "Original": {
+    "OCI_configuration": "sha256:e6dd7702028a8540782053a8433a77db47f4713ba92c296c572e5deef9b3b3cc",
+    "OCI_index": "sha256:ceb66020eebaf5d4a319fdb580e06c9a22f36813ad02d862ee438b72e0353f1a",
+    "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "baked_frontend_layer_sha256": "d6d5796ecb66ca1c8c0dfb69bebb7cdeceee51a13d9024948aac1ad7ada81d87",
+    "local_build_actual": {
+      "actual_exit": 0,
+      "settled": true,
+      "sha256": "6a1280b2acbb5f73ec8012347acd77d7fa211184eb02e218f773cabed97461fd",
+      "stdout_stderr_EOF": true
+    },
+    "local_build_manifest_sha256": "c00b7d95bb7df15a50d363cef1be0b6e3c642d1c44149ba37205f2ae79fb9b4b",
+    "network_mode": "none",
+    "original_source_copy_layer_sha256": "bef096b250b05e284ef55bafad0ec26c0289b5681cdf88ae6b22cd79956a2cba",
+    "original_source_directory_mode": "0755",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "selected_OCI_manifest": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3",
+    "stock_entrypoint": true,
+    "unmounted_application_and_assets": true
+  },
+  "SDK_assignment_candidate": {
+    "contract_id": "route-a21d90b60c8d5e9c908b:METHOD_UNRESOLVED",
+    "method": "GET",
+    "partial_Original": true,
+    "role": "anonymous"
+  },
+  "actual": {
+    "attempt": 7,
+    "cleanup_sha256": "1ea39352aca6265bf4da48695e735940b1a11b33060f4c68594dfb4320abd16e",
+    "controller_exit": 0,
+    "exact_owned_Original_container_and_generation_retired": true,
+    "owned_resources_after_cleanup": {
+      "container": 0,
+      "network": 0,
+      "volume": 0
+    },
+    "phase_results": {
+      "cleanup": {
+        "actual_exit": 0,
+        "settled": true,
+        "sha256": "229c177daa321b194466690c1a5fa88df2b2fe5c2956651109a5cefa7645f922",
+        "stdout_stderr_EOF": true
+      },
+      "create": {
+        "actual_exit": 0,
+        "settled": true,
+        "sha256": "ab2ba82e890de10166c5d9b07c39289f27ed01bb3f75fd19f106e8b7a80179ec",
+        "stdout_stderr_EOF": true
+      },
+      "probe": {
+        "actual_exit": 0,
+        "settled": true,
+        "sha256": "868d48da60114baaa2a8834d1313b71d7a9d49c49d98b94f30d5d07f1801afb8",
+        "stdout_stderr_EOF": true
+      },
+      "readiness": {
+        "actual_exit": 0,
+        "settled": true,
+        "sha256": "ecc4ab2807c20ef3a53e8c286c858ba836ac00fce6d251481edd44ae82e2e29c",
+        "stdout_stderr_EOF": true
+      },
+      "startup": {
+        "actual_exit": 0,
+        "settled": true,
+        "sha256": "2533f46db3cc5b5d9ba162e3b6b8fcac96c1fd2c98c8cf6e9598c1b8f25b8217",
+        "stdout_stderr_EOF": true
+      }
+    },
+    "probe_sha256": "3ed4615701deff8605482d4daa2adb7206b5ee4842f88c16a69d617a25cf7663",
+    "receipt_sha256": "4e67e3a74bde612b51aeebd80902a8f2ccdc7c5c017f1ac50f6ed5397023eb37",
+    "root_wire_and_resolver": {
+      "actual_content_type": "text/html",
+      "actual_html_bytes": 858,
+      "actual_html_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+      "actual_location": null,
+      "actual_location_present": false,
+      "actual_resolver": {
+        "action": null,
+        "handler": "django.views.generic.base.TemplateView",
+        "ordinal": 589,
+        "pattern": "",
+        "view_name": "django.views.generic.base.TemplateView"
+      },
+      "actual_status": 200,
+      "checkpoint": "complete",
+      "contract_id": "route-a21d90b60c8d5e9c908b:METHOD_UNRESOLVED",
+      "django_version": "6.0.9",
+      "exact_related_assets": [
+        {
+          "actual_bytes": 2654224,
+          "actual_content_type": "application/javascript",
+          "actual_sha256": "010b81d1bb1557f5374d6eb2c0bf3f61fd122833029dbd98b321eb5dd1cfd058",
+          "actual_status": 200,
+          "kind": "module",
+          "path": "/assets/index-msm8qEOi.js",
+          "redirect_present": false,
+          "same_stock_file": true
+        },
+        {
+          "actual_bytes": 227833,
+          "actual_content_type": "text/css",
+          "actual_sha256": "5dafb4056775922dd4dc8423bb3e2e50d00170e2bc1ab73c22cda50321fbb33c",
+          "actual_status": 200,
+          "kind": "stylesheet",
+          "path": "/assets/index-Ds5qLkMK.css",
+          "redirect_present": false,
+          "same_stock_file": true
+        }
+      ],
+      "host": "127.0.0.1:9191",
+      "method": "GET",
+      "path": "/",
+      "resolver_declared_name_empty": true,
+      "resolver_kwargs_empty": true,
+      "resolver_method_declaration": null,
+      "resolver_packaged_index": true,
+      "resolver_passed": true,
+      "resolver_url_name": null,
+      "role": "anonymous",
+      "stock_index_sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+      "wire_passed": true
+    },
+    "same_container_generation_before_and_after_probe": true
+  },
+  "credit": "Original Dispatcharr authors and contributors retain full application, React and deployment credit.",
+  "current_SDK_changed": false,
+  "fully_verified": false,
+  "login_fixture": {
+    "OS_file": "/etc/environment",
+    "actual_phase_results": {
+      "copy-base-os-environment": {
+        "actual_exit": 0,
+        "settled": true,
+        "sha256": "b3dfb315c94dc38e237bb3975081467060ff67cfbf6355d7cbd88ea51d16ac71",
+        "stdout_stderr_EOF": true
+      },
+      "copy-utf8-os-environment": {
+        "actual_exit": 0,
+        "settled": true,
+        "sha256": "d4f48273a1c75ae1492ddedf8f69136bb18186d8b541c02c3091c284802de1ef",
+        "stdout_stderr_EOF": true
+      },
+      "verify-os-environment-round-trip": {
+        "actual_exit": 0,
+        "settled": true,
+        "sha256": "bc481884607424c28ff08af93041f90f1249e3c649a18a94325113a983fc8d0e",
+        "stdout_stderr_EOF": true
+      }
+    },
+    "before_sha256": "3d88795b8d42b87bbbf91f8d30dae43b6db9ecd4b1eb93a883062352c902ff5d",
+    "default_login_locale_qualified": false,
+    "fresh_data_tmpfs": true,
+    "single_added_entry": "LANG=C.UTF-8",
+    "verified_roundtrip_sha256": "a1e4b29183cf1e30cbe2c457f15c50b3f5260518ec9a23d7fb7325cd38a5fd09"
+  },
+  "performance_verified": false,
+  "prior_attempts": [
+    {
+      "attempt": 3,
+      "controller_exit": 1,
+      "exact_teardown": true,
+      "probe_exit": 137,
+      "receipt_sha256": "7605bffa93b540a7e11826d996a579922cd42ba99ffe25ee130e4da57d60141c"
+    },
+    {
+      "Original_container_OOMKilled": false,
+      "Original_container_exit": 1,
+      "PostgreSQL_template_encoding": "SQL_ASCII",
+      "attempt": 5,
+      "diagnostic_controller_exit": 0,
+      "diagnostic_receipt_sha256": "593e6130a3946d657047d204880853e57c2effda05e88c745c71985876cb8126",
+      "exact_teardown": true,
+      "observed_login_locale": "C",
+      "readiness_exit": 137,
+      "requested_database_encoding": "UTF8",
+      "scope": "startup diagnosis before application HTTP"
+    },
+    {
+      "attempt": 6,
+      "controller_exit": 1,
+      "exact_teardown": true,
+      "probe_exit": 1,
+      "probe_failure": "resolver witness assertion before root HTTP",
+      "readiness_exit": 0,
+      "receipt_sha256": "64da4f9aa4ab8d4113bec9c061bb1a4c6595e3e29f9857ebadb2043a1518d8f8"
+    }
+  ],
+  "scope": "Pinned Original all-in-one anonymous root and exact baked assets, with an explicit disposable OS login locale."
+}

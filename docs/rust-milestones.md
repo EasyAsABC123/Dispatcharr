@@ -17,6 +17,12 @@ passed all 33 tests, reproduced the register byte-for-byte, and verified cleanup
 The register has partial Original coverage for 796 of 798 HTTP declarations
 and 32 of 250 typed declarations. Full role and Native parity remain open.
 
+The [Original packaged React root](rust-m0-original-aio-root.md) returned
+HTTP 200 with the exact baked index and both linked assets under the explicit
+disposable OS login locale fixture. The deployed resolver and exact teardown
+also passed. The result awaits a successor SDK binding for the single Original
+GET.
+
 The [Redis write retry and shared playback checks](rust-migration-shared-playback-checks.md)
 verified the same-writer retry after a rejected write, the joined transport
 switch, and two equivalent fMP4 viewers sharing one upstream. The paired HLS
