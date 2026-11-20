@@ -1,0 +1,108 @@
+{
+  "compared_contexts": [
+    {
+      "authenticated_and_unauthenticated_contexts": [
+        "admin",
+        "anonymous",
+        "manager",
+        "manager-empty",
+        "manager-unassigned",
+        "no-dvr",
+        "standard",
+        "view-only",
+        "xc"
+      ],
+      "backend": "Original",
+      "large_list": {
+        "body_bytes": 127490,
+        "content_length": 127490,
+        "content_type": "application/json",
+        "ordered_rule_cases_sha256": "8cde621f49bd7b48992dc6a0d13562c0ced4c47f62f9610176af45745d3060f8",
+        "status": 200
+      },
+      "ordered_rows": 519,
+      "probe_sha256": "6873643810f258b49e0cb4e2722d7a0ae5c2ac5998e3e1a9de842923d6eabf28",
+      "retired_owned_roles": 2
+    },
+    {
+      "authenticated_and_unauthenticated_contexts": [
+        "admin",
+        "anonymous",
+        "manager",
+        "manager-empty",
+        "manager-unassigned",
+        "no-dvr",
+        "standard",
+        "view-only",
+        "xc"
+      ],
+      "backend": "NativeOrdinary",
+      "large_list": {
+        "body_bytes": 127490,
+        "content_length": 127490,
+        "content_type": "application/json",
+        "ordered_rule_cases_sha256": "8cde621f49bd7b48992dc6a0d13562c0ced4c47f62f9610176af45745d3060f8",
+        "status": 200
+      },
+      "ordered_rows": 519,
+      "probe_sha256": "9dea8bf2c83b395e97b1d46b47b2ce880d90da0aa4467c3227729c25a4d3f09a",
+      "retired_owned_roles": 4
+    },
+    {
+      "authenticated_and_unauthenticated_contexts": [
+        "admin",
+        "anonymous",
+        "manager",
+        "manager-empty",
+        "manager-unassigned",
+        "no-dvr",
+        "standard",
+        "view-only",
+        "xc"
+      ],
+      "backend": "NativeSelected",
+      "large_list": {
+        "body_bytes": 127490,
+        "content_length": 127490,
+        "content_type": "application/json",
+        "ordered_rule_cases_sha256": "8cde621f49bd7b48992dc6a0d13562c0ced4c47f62f9610176af45745d3060f8",
+        "status": 200
+      },
+      "ordered_rows": 519,
+      "probe_sha256": "7d11b2a7850d5ae4c4ca7b438453d110ca67bfe3397a020cbaf519a3db544caa",
+      "retired_owned_roles": 4
+    }
+  ],
+  "credit": "Original Dispatcharr authors and contributors",
+  "exact_candidate": {
+    "image_id": "sha256:ce96b3f58404a0667b2520f2ca3fce1ae36ee356f23459803f81342e460271cb",
+    "manifest_sha256": "17d29b842ad10380ecfcf40b42969ec8a5578fd663d5d079ca96f908d9817251",
+    "revision": "00daafd23810bfa9f5c02bed30d38086a80708f9",
+    "source_archive_sha256": "42cb7cf64c9b82cc5040b0086e2ed41db526776eb6c632d73051068c175c3869",
+    "source_tree_sha256": "44e5c254ce0d7cdae115291af50aadf2379f3939387d76022bc482eac727fbcd",
+    "sources": {
+      "rust/crates/store/src/recording_http.rs": "7ca541bd4c5df2286c77d3b6826426a44d5ff409aec465531ac20fb562e5c893",
+      "rust/crates/store/src/recording_http/recurring.rs": "67ebbaa8d367acdfeff89adeb30e63321d3b15838fcc45584bb80699245a1b9c",
+      "rust/crates/store/src/recording_playback.rs": "476fb7b68945c3ad5628ac7b9835773b49520d09d9bf8013f227be94db398ae2"
+    },
+    "tag": "dispatcharr-rust-candidate:batch112-00daafd23810"
+  },
+  "exact_field_order": true,
+  "no_sql_or_beat_effect": true,
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "package_actual_exit": 0,
+  "performance_verified": false,
+  "rule_creation_or_workers_verified": false,
+  "runtime_actual_exit": 0,
+  "runtime_raw_report_sha256": "f641290c4e5827ac461b94ccf447d8e6e83fa0673e3ca6b10c6e5d9e09590f79",
+  "scope": "recurring-rule-collection-GET-and-HEAD",
+  "toolchain_gates": [
+    "Rustfmt",
+    "locked Main binaries",
+    "recurring unit tests",
+    "strict Clippy",
+    "exact local package"
+  ],
+  "whole_milestone_accepted": false
+}
