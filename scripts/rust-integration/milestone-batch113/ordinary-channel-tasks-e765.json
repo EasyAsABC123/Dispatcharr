@@ -1,0 +1,183 @@
+{
+  "Original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "actual_controller_exit": 0,
+  "broker_ready_and_unacked_empty": true,
+  "candidate": "e7651a6d1e5e63a3a890ec4c7ef454d325cd9a02",
+  "candidate_image_id": "sha256:4a6c8b7cfd998052d5f842f29cad815242bb5b2e4ae7afb948598d3eab97747e",
+  "candidate_manifest_sha256": "6a2879ab6d838810add1257c639685b2dcbcb4d0f73b7ca355503d6ef1723118",
+  "credit": "Original Dispatcharr, Celery, Django and PostgreSQL authors and contributors retain full credit.",
+  "default_stock_activation_accepted": false,
+  "earlier_Native_ran": false,
+  "earlier_controller_exit": 1,
+  "earlier_independent_exact_retirement_sha256": "c489ce7be3eb6d560172cbb1f58b04ba19bfbb38c250ad4a0c45cbe6655f8109",
+  "earlier_inventory_normalization_required": true,
+  "full_M6_accepted": false,
+  "lanes": {
+    "native": {
+      "evidence_sha256": {
+        "command-executions.json": "e5cda411147b8773bf70ddccf5f15920adc61240623aa45817d9fb3b4ce3f155",
+        "exact-host-identities.json": "066b73602b79dcb2e03b2a304fc5cf407f8f19311b5ca93671d180c6b9b91582",
+        "observed.json": "d994bc9be41b14eec5c3a3e88e75b1efe397494b38b2b643e41da5414ace2977",
+        "state.json": "64b55942de39662aab60a8f0f1e5f0144cd262d3115f71f1a48ebb1908a70d41"
+      },
+      "exact_cleanup": true,
+      "role_exits": {
+        "baseline": 0,
+        "worker": 0
+      }
+    },
+    "original": {
+      "evidence_sha256": {
+        "command-executions.json": "68aaf110587bf9c236b97cecb39a9bdc697364deda67842c4604e5994e8035e9",
+        "exact-host-identities.json": "605792ad6b6052d3bb82b13738ae0e3f684372dbf4f0c7f43ed3a13b12ea3323",
+        "observed.json": "d994bc9be41b14eec5c3a3e88e75b1efe397494b38b2b643e41da5414ace2977",
+        "state.json": "8b33603cb4a8ced5ef02d74df5df81c8e0afc270256d9f1e758ceecef9f43e92"
+      },
+      "exact_cleanup": true,
+      "role_exits": {
+        "baseline": 0,
+        "web": 0,
+        "worker": 0
+      }
+    }
+  },
+  "observed_ordinary_cases": {
+    "normal_bulk": {
+      "SQL": {
+        "channel": {
+          "after": 7,
+          "before": 6,
+          "changed": true
+        },
+        "channelprofilemembership": {
+          "after": 0,
+          "before": 0,
+          "changed": false
+        },
+        "channelstream": {
+          "after": 1,
+          "before": 0,
+          "changed": true
+        },
+        "logo": {
+          "after": 2,
+          "before": 1,
+          "changed": true
+        }
+      },
+      "backend": {
+        "created_count": 1,
+        "error_count": 0,
+        "errors": [],
+        "status": "completed"
+      },
+      "event_type": "bulk_channel_creation_progress",
+      "events": 6,
+      "status": 202
+    },
+    "normal_logos": {
+      "SQL": {
+        "channel": {
+          "after": 6,
+          "before": 6,
+          "changed": true
+        },
+        "channelprofilemembership": {
+          "after": 0,
+          "before": 0,
+          "changed": false
+        },
+        "channelstream": {
+          "after": 0,
+          "before": 0,
+          "changed": false
+        },
+        "logo": {
+          "after": 1,
+          "before": 0,
+          "changed": true
+        }
+      },
+      "backend": {
+        "created_logos_count": 1,
+        "error_count": 0,
+        "errors": [],
+        "status": "completed",
+        "updated_count": 1
+      },
+      "event_type": "epg_logo_setting_progress",
+      "events": 3,
+      "status": 200
+    },
+    "normal_names": {
+      "SQL": {
+        "channel": {
+          "after": 6,
+          "before": 6,
+          "changed": true
+        },
+        "channelprofilemembership": {
+          "after": 0,
+          "before": 0,
+          "changed": false
+        },
+        "channelstream": {
+          "after": 0,
+          "before": 0,
+          "changed": false
+        },
+        "logo": {
+          "after": 0,
+          "before": 0,
+          "changed": false
+        }
+      },
+      "backend": {
+        "error_count": 0,
+        "errors": [],
+        "status": "completed",
+        "updated_count": 1
+      },
+      "event_type": "epg_name_setting_progress",
+      "events": 3,
+      "status": 200
+    },
+    "normal_tvg": {
+      "SQL": {
+        "channel": {
+          "after": 6,
+          "before": 6,
+          "changed": true
+        },
+        "channelprofilemembership": {
+          "after": 0,
+          "before": 0,
+          "changed": false
+        },
+        "channelstream": {
+          "after": 0,
+          "before": 0,
+          "changed": false
+        },
+        "logo": {
+          "after": 0,
+          "before": 0,
+          "changed": false
+        }
+      },
+      "backend": {
+        "error_count": 0,
+        "errors": [],
+        "status": "completed",
+        "updated_count": 1
+      },
+      "event_type": "epg_tvg_id_setting_progress",
+      "events": 3,
+      "status": 200
+    }
+  },
+  "outer_receipt_sha256": "fcbfe1045230bc08baefe3a1acabb927e23af74425cd25b536cf6d19b0a82541",
+  "owned_network_scope": "loopback in isolated Compose namespace",
+  "performance_verified": false,
+  "same_image_retry": true
+}

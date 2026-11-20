@@ -166,6 +166,10 @@ The [976f scheduler setup and daily Version run](rust-m6-976f-scheduler-startup.
 observed six stock Beat rows and one actual Version result per backend, with
 selected Main readiness and independent cleanup. The wider M6 graph remains open.
 
+The [e765 ordinary channel-maintenance pair](rust-m6-e765-ordinary-channel-tasks.md)
+matched four authenticated job outcomes through HTTP, Redis, Channels and SQL
+with exact cleanup. The first controller exit 1 remains recorded separately.
+
 The [735 MPEG-TS functional checks](rust-m9-735-functional-streaming.md) passed
 all three required nodes with verified cleanup. The run covered 24 two-worker
 checks, 14 delayed restart checks and 100 retained-history readers with 20
