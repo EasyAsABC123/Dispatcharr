@@ -1,0 +1,47 @@
+name: Native ARM64 private combined package and Compose
+"on":
+  push:
+    branches: [validation/m10-arm64-combined-compose-29a02d10-2]
+    paths:
+      - '.github/workflows/native-arm64-combined-assembly.yml'
+      - 'scripts/rust-platform-contracts/native-arm64-combined-assembly/**'
+permissions:
+  contents: read
+concurrency:
+  group: m10-arm64-combined-compose-29a02d10
+  cancel-in-progress: false
+jobs:
+  assembly:
+    if: github.repository == 'EasyAsABC123/Dispatcharr' && github.ref == 'refs/heads/validation/m10-arm64-combined-compose-29a02d10-2' && !github.event.deleted
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 2
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/native-arm64-combined-assembly.yml
+            /scripts/rust-platform-contracts/native-arm64-combined-assembly/
+      - name: Assemble and inspect the exact private native package
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD^)" = "29a02d10e0c4de683fd0021b8a665637cec55202"
+          area="$PWD/scripts/rust-platform-contracts/native-arm64-combined-assembly"
+          work=$(mktemp -d "$RUNNER_TEMP/dispatcharr-combined-arm64.XXXXXXXX")
+          trap 'rm -rf -- "$work"' EXIT
+          python3 -B "$area/orchestrate.py" --recipe-bundle "$area/recipes" \
+            --scratch "$work/stages" --out "$work/candidate" --source-revision "$GITHUB_SHA" \
+            --job "$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT" --evidence "$RUNNER_TEMP/native-arm64-combined-evidence"
+      - name: Retain text-only private assembly evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: native-arm64-combined-assembly-evidence
+          path: ${{ runner.temp }}/native-arm64-combined-evidence/
+          if-no-files-found: error
+          retention-days: 14
