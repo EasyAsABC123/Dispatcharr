@@ -760,14 +760,29 @@ pub(crate) fn request(peer: SocketAddr, headers: HeaderMap) -> PlaybackRequest {
     }
 }
 
-async fn direct_token_allow(mut response: Response) -> Response {
+fn with_direct_token_allow(mut response: Response) -> Response {
+    response.headers_mut().insert(
+        axum::http::header::ALLOW,
+        axum::http::HeaderValue::from_static("POST, OPTIONS"),
+    );
+    response
+}
+
+async fn direct_token_allow(response: Response) -> Response {
     if response.status() == StatusCode::OK {
-        response.headers_mut().insert(
-            axum::http::header::ALLOW,
-            axum::http::HeaderValue::from_static("POST, OPTIONS"),
-        );
+        return with_direct_token_allow(response);
     }
     response
+}
+
+fn direct_token_login_response(result: Result<TokenPair, StoreError>) -> Response {
+    match result {
+        Ok(pair) => Json(pair).into_response(),
+        // The Original DRF view finalizes handled serializer errors with the
+        // same route Allow header as a successful JSON form.
+        Err(error @ StoreError::InvalidInput(_)) => with_direct_token_allow(error.into_response()),
+        Err(error) => error.into_response(),
+    }
 }
 
 async fn login(
@@ -786,10 +801,7 @@ async fn login(
                 .into_response()
         }
     };
-    match service.login(&request(peer, headers), body).await {
-        Ok(pair) => Json(pair).into_response(),
-        Err(error) => error.into_response(),
-    }
+    direct_token_login_response(service.login(&request(peer, headers), body).await)
 }
 
 async fn login_alias(
@@ -1005,6 +1017,30 @@ mod tests {
                 .unwrap();
             assert_eq!(serde_json::from_slice::<Value>(&body).unwrap(), payload);
         }
+    }
+
+    #[tokio::test]
+    async fn direct_token_missing_form_preserves_body_and_reports_allowed_methods() {
+        let expected = json!({
+            "username":["This field is required."],
+            "password":["This field is required."]
+        });
+        let response = direct_token_login_response(Err(StoreError::InvalidInput(expected.clone())));
+        assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+        assert_eq!(
+            response.headers()[axum::http::header::ALLOW],
+            "POST, OPTIONS"
+        );
+        let body = axum::body::to_bytes(response.into_body(), 256)
+            .await
+            .unwrap();
+        assert_eq!(serde_json::from_slice::<Value>(&body).unwrap(), expected);
+
+        let policy_error = direct_token_login_response(Err(StoreError::Forbidden));
+        assert_eq!(policy_error.status(), StatusCode::FORBIDDEN);
+        assert!(!policy_error
+            .headers()
+            .contains_key(axum::http::header::ALLOW));
     }
 
     fn service() -> AuthService {
