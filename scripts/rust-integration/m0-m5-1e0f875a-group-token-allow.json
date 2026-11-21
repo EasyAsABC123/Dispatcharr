@@ -1,0 +1,83 @@
+{
+  "paired": {
+    "Native_SQLite_parity_verified": false,
+    "Original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "actual_exit": 0,
+    "alias_or_error_scope_exercised": false,
+    "authorization_scope": "one ordinary administrator login before and after each web restart",
+    "both_backend_SQL_boundaries_verified": true,
+    "both_backend_typed_group_shapes_match": true,
+    "build_manifest_sha256": "a5c7f32ebeee238258ac9d00ee62c03eb2b5be6d86ce7a03f0585df53964f3c5",
+    "candidate_image_id": "sha256:ffa29d6db5eb0fcb368bd9d0325307f8a6092d5c09a6d0938099927016fa33de",
+    "candidate_revision": "1e0f875a2b680682b3a53d5b62fcac19632d6587",
+    "cases": {
+      "claim": 200,
+      "create": 201,
+      "delete": 204,
+      "deleted_read": 404,
+      "detail": 200,
+      "fresh_login": 200,
+      "list": 200,
+      "login": 200,
+      "patch": 200,
+      "put": 200,
+      "restart_read": 200,
+      "unclaim": 200
+    },
+    "credit": "Original Dispatcharr, Django, PostgreSQL and dependency contributors.",
+    "direct_token_success_allow": {
+      "fresh_login": "POST, OPTIONS",
+      "login": "POST, OPTIONS"
+    },
+    "exact_owned_container_generations_retired": 5,
+    "fixed_group_allow": [
+      "create",
+      "put",
+      "delete",
+      "deleted_read",
+      "unclaim"
+    ],
+    "fixture_receipt_sha256": "4ad6fb44a831308f088bc3d5dc13f217cae6bde63a4b633833e497163a827d01",
+    "graceful_native_main_generations": 2,
+    "graceful_stock_web_generations": 2,
+    "group_allow": {
+      "claim": "POST, OPTIONS",
+      "create": "GET, POST, HEAD, OPTIONS",
+      "delete": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "deleted_read": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "detail": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "list": "GET, POST, HEAD, OPTIONS",
+      "patch": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "put": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "restart_read": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "unclaim": "POST, OPTIONS"
+    },
+    "login_route": "POST /api/accounts/token/",
+    "performance_verified": false,
+    "persisted_readback_after_each_restart": true,
+    "previous_6dbd_scope_receipt_sha256": "04621c51743046582cc0a9d5d52ff69ab92c5780d544cb166a25c083419f21ea",
+    "provider_demotion_or_bulk_cleanup_exercised": false,
+    "review_sha256": "1d24b30471b52be2ffc776a4d979dc3ae6f6c0db26661904982fcabdd5e0e13a",
+    "unchanged_PG_process_generation_and_independent_groups": true,
+    "wire_Allow_differences": {},
+    "workload_seal_sha256": "a0249e46874ece506e6d82378beec520627e4acef7b454dbc3099286979c283a"
+  },
+  "publication": {
+    "host_workspace": {
+      "failed": 0,
+      "ignored": 814,
+      "passed": 1500
+    },
+    "image_id": "sha256:ffa29d6db5eb0fcb368bd9d0325307f8a6092d5c09a6d0938099927016fa33de",
+    "manifest_sha256": "a5c7f32ebeee238258ac9d00ee62c03eb2b5be6d86ce7a03f0585df53964f3c5",
+    "paired_receipt_sha256": "702c6276b04463bce33e29b49bc4105f97fea0a3db5998893f85b705bdda84a7",
+    "parent": "0cc983ec1acf2b1ea8958ccc9bd2cf12535ff225",
+    "postimage_sha256": {
+      "rust/crates/store/src/auth.rs": "cb05457ae6cbee7f6fd9c029145fb1e213898da4b6ba2312ed9e068986328893",
+      "rust/crates/store/src/channel_groups.rs": "63df46960973a010cc22aa1483804fb00c5d62ea1ab82bdd88a9cb73a13228d8"
+    },
+    "protected_inputs": 497,
+    "revision": "1e0f875a2b680682b3a53d5b62fcac19632d6587",
+    "workspace_log_sha256": "b0be06703886a0987d16ff419b30ee9527be794955899a3969fdacaed77e52bb"
+  }
+}
