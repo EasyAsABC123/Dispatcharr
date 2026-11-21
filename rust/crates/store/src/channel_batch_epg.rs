@@ -5,6 +5,7 @@ use axum::{
     body::to_bytes,
     extract::{ConnectInfo, Request, State},
     http::header,
+    response::{IntoResponse, Response},
     Json,
 };
 use serde_json::{json, Map, Value};
@@ -116,7 +117,7 @@ pub(super) async fn set(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<Response, StoreError> {
     let permit = auth.task_sql_writer()?;
     let auth = auth.with_request_writer_permit(permit)?;
     tokio::spawn(async move {
@@ -146,9 +147,11 @@ pub(super) async fn set(
         for guide_id in programmes {
             crate::core_settings_special_broker::publish_tvg_programmes(&auth, guide_id).await?;
         }
-        Ok(Json(
-            json!({"success": true, "channels_updated": updated, "programs_refreshed": programs_refreshed}),
-        ))
+        Ok((
+            [(header::ALLOW, "POST, OPTIONS")],
+            Json(json!({"success": true, "channels_updated": updated, "programs_refreshed": programs_refreshed})),
+        )
+            .into_response())
     })
     .await
     .map_err(|_| StoreError::UnhandledRestFault)?

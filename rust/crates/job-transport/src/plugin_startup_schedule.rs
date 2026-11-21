@@ -43,6 +43,33 @@ fn plan(value: Option<Value>) -> Result<Plan, Error> {
     })
 }
 async fn setup(connection: &mut PgConnection) -> Result<(), Error> {
+    // Keep the session lock through the separate interval and periodic-row
+    // writes. A transaction advisory lock would release too early. The lock
+    // transaction bounds the wait without changing the caller's SQL settings.
+    let mut lock = connection.begin().await?;
+    sqlx::query("SET LOCAL lock_timeout = '5s'")
+        .execute(&mut *lock)
+        .await?;
+    sqlx::query("SELECT pg_advisory_lock(hashtext('dispatcharr.plugin.repository_schedule'), 0)")
+        .execute(&mut *lock)
+        .await?;
+
+    let observed = match lock.commit().await {
+        Ok(()) => synchronize_rows(connection).await,
+        Err(error) => Err(Error::from(error)),
+    };
+    let released: bool = sqlx::query_scalar(
+        "SELECT pg_advisory_unlock(hashtext('dispatcharr.plugin.repository_schedule'), 0)",
+    )
+    .fetch_one(&mut *connection)
+    .await?;
+    if !released {
+        return Err(Error::Configuration("plugin repository schedule lock was not retained"));
+    }
+    observed
+}
+
+async fn synchronize_rows(connection: &mut PgConnection) -> Result<(), Error> {
     let row:Option<(i32,Option<String>)>=sqlx::query_as("SELECT octet_length(value::text),CASE WHEN octet_length(value::text)<=65536 THEN value::text END FROM core_coresettings WHERE key='plugin_repo_settings'").fetch_optional(&mut *connection).await?;
     let value = match row {
         None => None,
@@ -138,6 +165,25 @@ impl Scheduler {
 /// Reuse the exact startup scheduling body on an already-admitted HTTP task SQL
 /// session. No Scheduler timer, checkout, client or separate writer is started.
 pub struct PluginRepositoryScheduleAdapter;
+
+impl PluginRepositoryScheduleAdapter {
+    /// Plain Main owns the boot-time row sync while its worker and Beat
+    /// flags are off. Reuse the ordinary HTTP scheduler callback on the same
+    /// Auth writer budget and close the actual connection before returning.
+    pub async fn initialize_core(
+        &self,
+        auth: &dispatcharr_store::AuthService,
+    ) -> Result<(), dispatcharr_store::StoreError> {
+        let owner = Arc::new(());
+        let session = auth.borrow_task_sql_session(owner.clone()).await?;
+        let observed =
+            dispatcharr_store::PluginRepositorySchedule::synchronize(self, session.clone(), owner)
+                .await;
+        session.close().await?;
+        observed
+    }
+}
+
 impl dispatcharr_store::PluginRepositorySchedule for PluginRepositoryScheduleAdapter {
     fn synchronize<'a>(
         &'a self,

@@ -1057,17 +1057,26 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     // explicitly unsupported transports and signatures.
     let plugin_repositories =
         dispatcharr_store::PluginRepositories::new(auth.clone()).with_unsigned_manifest_fetches();
+    let plugin_schedule = Arc::new(
+        dispatcharr_job_transport::normal_beat::PluginRepositoryScheduleAdapter,
+    );
     let plugin_actions = dispatcharr_store::PluginActions::prepare(
         auth.clone(),
         std::env::var_os("DISPATCHARR_PLUGINS_DIR")
             .map(std::path::PathBuf::from)
             .unwrap_or_else(|| "/data/plugins".into()),
     )
-    .with_repository_schedule(Arc::new(
-        dispatcharr_job_transport::normal_beat::PluginRepositoryScheduleAdapter,
-    ));
+    .with_repository_schedule(plugin_schedule.clone());
     if plugin_actions.startup_discover(Arc::new(())).await.is_err() {
         eprintln!("Plugin discovery requires compatible runtime or unavailable startup resources");
+    }
+    if !selected_jobs_enabled
+        && !std::env::var("DISPATCHARR_SKIP_PLUGIN_AUTODISCOVERY")
+            .ok()
+            .is_some_and(|value| matches!(value.to_ascii_lowercase().as_str(), "1" | "true" | "yes"))
+        && plugin_schedule.initialize_core(&auth).await.is_err()
+    {
+        eprintln!("Could not set up plugin repository refresh schedule");
     }
     let core_compact = if selected_jobs_enabled {
         None
