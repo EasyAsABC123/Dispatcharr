@@ -21,11 +21,12 @@ absent or unexercised quantities null, including whole-stream dropped packets.
 [Source2 metrics](../scripts/rust-baseline/supplemental-metrics/source2/README.md) ·
 [Scenario budgets](rust-m0-current-reconciliation.md)
 
-The generated register contains 797 partial Original HTTP assignments across
-798 work items, 250 typed partial non-HTTP assignments, and 322 unresolved
-method declarations. The remaining plain DRF recording HLS GET is shadowed
-for app-issued decimal IDs in the existing resolver witness. That witness
-observed resolution only. It adds no HTTP result or wider identifier proof.
+The generated register contains 798 partial Original HTTP assignments
+across 798 work items, 250 typed partial non-HTTP assignments, and 322
+unresolved method declarations. The new stock HTTP fixture attaches
+four authenticated missing-recording observations to the plain DRF HLS
+GET. The separate resolver witness still places application-issued
+decimal playback URLs on the earlier explicit route.
 [Register](rust-contract-register.md) ·
 [Recording HLS precedence](rust-m0-recording-hls-router-reachability.md)
 

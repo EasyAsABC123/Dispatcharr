@@ -10,7 +10,7 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | Routes with unresolved method/action mapping | 322 | Explicit unknown-method items; no GET/POST guess |
 | Runtime operation work items | 798 | Includes those 322 placeholders; not 798 verified endpoints |
 | OpenAPI operations | 362 | Separate discovery view; do not add to route totals |
-| Executable Original HTTP assignments | 797 | Partial Original definitions across 798 operation work items. One work item awaits assignment. |
+| Executable Original HTTP assignments | 798 | All 798 work items have a partial Original fixture. Complete endpoint and role coverage remain open. |
 | Unresolved method placeholders with a partial Original fixture definition | 322 | The original method/action declarations remain open. |
 | Non-HTTP candidate identities | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
 | Typed executable Original non-HTTP assignments | 250 | Partial observations for 145 migrations, 50 Django class registrations, 31 task behaviors, 16 registration-only tasks, two command executions, three command registrations, one model test, one synthetic consumer and one WebSocket route. |
@@ -39,11 +39,11 @@ The next mapping step is case-level: bind a source/native test and its frozen re
 
 [The pinned method inspection](rust-runtime-methods.json) adds static handler candidates for 166 of the 322 method-unresolved routes; 156 still have no such candidate. The 322 original unresolved method/action placeholders remain unchanged. A fixture attachment records the scope of a partial Original case. Successful dispatch, authorization, CSRF and response contracts require separate observations. Dynamic permission-method references are retained for later case mapping.
 
-The plain DRF recording HLS GET is the one operation awaiting an HTTP
-fixture assignment. The register’s separate resolver disposition records
-12 ordinary decimal-ID resolutions to the earlier explicit route, with zero HTTP
-requests, view invocations or SQL statements. The historical operation row
-retains its exact hash and unset result. Wider identifier grammar remains open.
+The plain DRF recording HLS GET now has a partial Original assignment
+for four authenticated missing-recording requests. The separate resolver
+disposition still records 12 ordinary decimal-ID resolutions to the
+earlier explicit route, with zero HTTP requests, view invocations or SQL
+statements. The new assignment leaves wider input and role coverage open.
 [Recording HLS precedence](rust-m0-recording-hls-router-reachability.md)
 
 The inspector walks the exact same 592 routes without instantiating/executing their views. A SQL execution wrapper rejects queries during inspection; the successful probe recorded zero inspection SQL statements and zero inspection view invocations. The owned setup separately performs its usual web readiness request. The fixture was removed, and the original source archive matched the pinned hash.

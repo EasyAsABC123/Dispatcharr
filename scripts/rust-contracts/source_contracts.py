@@ -430,6 +430,9 @@ def apply(root, rows, bindings):
             validate_matching_source51(root, value)
         elif reference['kind'] == 'captured_original_Source53_stations_Source55_aggregate_admin_HTTP':
             validate_station_aggregate_source53_55(root, value)
+        elif reference['kind'] == 'captured_original_plain_recording_hls_admin_HTTP':
+            import recording_hls_source_contracts
+            recording_hls_source_contracts.validate(root, value, bindings)
         else:
             raise AssertionError('unsupported Source input kind; add a reviewed validator')
         if reference['kind'] in ['retained_original_auth51_plugin35_resolver_scoped_HTTP', 'retained_original_SD25_resolver_scoped_HTTP', 'retained_original_stored_epg_104_framework']:
@@ -521,7 +524,7 @@ def apply(root, rows, bindings):
                                      'retained_original_Connect_saved_webhook_test_HTTP', 'retained_original_selected_single_Set_EPG_HTTP', 'retained_original_batch_Set_EPG_HTTP', 'retained_original_System_Logs_and_regex_preview_GET', 'retained_original_Live_TS_global_stop_HTTP', 'retained_original_Live_TS_detail_and_targeted_stop_HTTP', 'retained_original_canonical_management_HTTP', 'retained_original_exact_VOD_split_HTTP', 'retained_original_Image57_accounts_canonical_HTTP', 'retained_original_Image57_M3U_canonical_HTTP', 'retained_original_provider_and_core_admin_HTTP', 'retained_original_C98_HDHomeRun_ingress_HTTP', 'retained_original_Core_profile_literal_JSON_HTTP', 'retained_original_HDHomeRun_literal_devices_and_discovery_HTTP', 'retained_original_C106_Connect_exact_canonical_and_JSON_HTTP', 'retained_original_logo_library_and_M3U_child_literal_HTTP', 'retained_original_EPG_library_and_VOD_logo_literal_HTTP'):
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
-            if reference['kind'] in ('retained_original_residual_frozen_HTTP', 'retained_original_packaged_Root7_HTTP'):
+            if reference['kind'] in ('retained_original_residual_frozen_HTTP', 'retained_original_packaged_Root7_HTTP', 'captured_original_plain_recording_hls_admin_HTTP'):
                 operation['role_matrix']['state'] = 'partial_Original_real_HTTP_capture_assignment'
                 operation['role_matrix']['observed_roles'] = copy.deepcopy(contract['observed_roles'])
             operation['coverage_state'] = 'partial_executable_Source_contract'

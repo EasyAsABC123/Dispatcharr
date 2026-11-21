@@ -1,5 +1,6 @@
 """Public-only rejection/preservation controls for partial Source mapping."""
 import copy
+import recording_hls_source_contracts as plain_hls
 import hashlib
 import json
 from pathlib import Path
@@ -263,7 +264,7 @@ class SourceContracts(unittest.TestCase):
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
         import test_final_residual_wave
-        for name in test_final_residual_wave.dependencies(ROOT):
+        for name in test_final_residual_wave.dependencies(ROOT) | plain_hls.dependencies():
             p = self.root / name
             p.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(ROOT / name, p)
@@ -279,6 +280,7 @@ class SourceContracts(unittest.TestCase):
         import retained_root7_contract as root7
         import retained_migration_recorder_contracts as migrations
         result, rows = self.apply()
+        plain_hls.restore_before(self.root, rows, result)
         import retained_model_registry_contracts as model_registry
         import retained_task_registry_contracts as task_registry
         import retained_management_registration_contracts as command_registry
@@ -325,12 +327,28 @@ class SourceContracts(unittest.TestCase):
 
     def test_exact_partial_assignments(self):
         result, rows = self.apply()
-        self.assertEqual(result['operations'], 797)
+        self.assertEqual(result['operations'], 798)
         assigned = [o for r in rows for o in r['operations'] if 'executable_Source_contract' in o]
-        self.assertEqual(len(assigned), 797)
+        self.assertEqual(len(assigned), 798)
         self.assertEqual(sum(o['method'] is None for o in assigned), 322)
-        self.assertEqual(sum(o['result']['new_Source_cases_this_task'] for o in assigned), 78)
+        self.assertEqual(sum(o['result']['new_Source_cases_this_task'] for o in assigned), 82)
         self.assertTrue(all(not o['fully_verified'] for r in rows for o in r['operations']))
+
+    def test_plain_recording_hls_assigns_only_measured_admin_GET(self):
+        result, rows = self.apply()
+        operation, = (item for row in rows for item in row['operations']
+                      if item['contract_id'] == plain_hls.ROUTE)
+        item = operation['executable_Source_contract']
+        self.assertEqual([case['source_index'] for case in item['cases']], [2, 3, 4, 5])
+        self.assertEqual(operation['role_matrix']['observed_roles'], ['admin'])
+        self.assertFalse(operation['role_matrix']['complete'] or operation['fully_verified'])
+        binding = json.loads((self.root / plain_hls.BINDING).read_bytes())
+        binding['contracts'][0]['cases'][0]['record_sha256'] = '0' * 64
+        with self.assertRaises(AssertionError):
+            plain_hls.validate(self.root, binding, None)
+        plain_hls.restore_before(self.root, rows, result)
+        self.assertEqual(operation['coverage_state'], 'not_yet_mapped')
+        self.assertEqual(result['operations'], 797)
 
     def test_retained_xc_refresh_adds_only_observed_post_reference(self):
         import m0_source_assignments
@@ -354,8 +372,8 @@ class SourceContracts(unittest.TestCase):
         self.assertEqual(operation, xc.reference(self.root)["prior_operation"])
         self.assertEqual(sum("executable_Source_contract" in op for row in rows for op in row["operations"]), 795)
         audit = m0_source_assignments.generate(self.root)
-        self.assertEqual(audit["counts"]["executable_Source_partial_operations"], 797)
-        self.assertEqual(audit["counts"]["operations_without_executable_Source_assignment"], 1)
+        self.assertEqual(audit["counts"]["executable_Source_partial_operations"], 798)
+        self.assertEqual(audit["counts"]["operations_without_executable_Source_assignment"], 0)
         self.assertEqual(audit["counts"]["method_unresolved_with_Source_fixture"], 322)
         self.assertEqual(audit["counts"]["fully_verified_operations"], 0)
 

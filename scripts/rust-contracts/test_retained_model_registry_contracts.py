@@ -1,6 +1,8 @@
 """Guard exact Django registration assignments and their Original-only scope."""
 from collections import Counter
 import copy
+import recording_hls_source_contracts as plain_hls
+from test_final_residual_wave import restore_profile_group_projection
 import hashlib
 import json
 from pathlib import Path
@@ -24,6 +26,8 @@ class ModelRegistration(unittest.TestCase):
         binding = json.loads((ROOT / subject.INPUT).read_bytes())
         subject.validate(ROOT, binding)
         register = json.loads((ROOT / "docs/rust-contract-register.json").read_bytes())
+        plain_hls.restore_before(ROOT, register["runtime_routes"], register["executable_Source_mapping"])
+        restore_profile_group_projection(ROOT, register["runtime_routes"], register["executable_Source_mapping"])
         typed = register["non_HTTP_candidates"]
         import retained_task_registry_contracts as task_registry
         import retained_management_registration_contracts as command_registry

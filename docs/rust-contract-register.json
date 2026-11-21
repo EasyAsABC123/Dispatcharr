@@ -18,7 +18,7 @@
     "scripts/rust-integration/m0-channel-profile-json-aliases-paired.json": "e79c1402cab049c41fe34966c21658fd933cea6ad99cc77f09c59a4c0553e820",
     "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
     "scripts/rust-integration/m5-2025258-group-manager-stock-options.json": "b85e9f079bcfa739e72e6769305691770381c1eabeb968b029b0a80b3f782c32",
-    "scripts/rust-contracts/executable-source-inputs.json": "fa245defee78d70956a0a7bf8828a182b973103a4eac74dca770defe44e24f47",
+    "scripts/rust-contracts/executable-source-inputs.json": "e6e0634cf52234f6915b3ff0683c0417fa2d61f0200b8e906423d94ceb29decf",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
     "scripts/rust-contracts/accounts-settings/bindings.json": "62dd57ce7e41dc8892b1fbfe6a5e30b7e33743dc01bd8bb527592db314b183cd",
@@ -90,7 +90,8 @@
     "scripts/rust-contracts/retained-migration-recorder/bindings.json": "64864beefa9d909f657e7e2f18cea08461c9ea7fb0b1e67f949444b86c5a79c2",
     "scripts/rust-contracts/retained-model-registry/bindings.json": "941b684cb4734cf68ae91c844f9362ee8268c733d85c6a39c6bb88b865776109",
     "scripts/rust-contracts/retained-task-registry/bindings.json": "e0f0e76d05d2b7a116233e76a39a1ca9910270769fc628ec3a9aabb4771af5bf",
-    "scripts/rust-contracts/retained-management-registration/bindings.json": "97ab015b80d30b40acfeb2b5f473fb4d918c22e9cfcd7c6c531c6ac8c7b86710"
+    "scripts/rust-contracts/retained-management-registration/bindings.json": "97ab015b80d30b40acfeb2b5f473fb4d918c22e9cfcd7c6c531c6ac8c7b86710",
+    "scripts/rust-contracts/recording-hls-plain-get-bindings.json": "c55548e3489eb9e0b1a43ec2d71c9fa2f8685ab98d58b9b847377393f3c84ed9"
   },
   "Source_resolver_dispositions": {
     "route-37da04e4eae7ba9df918:GET": {
@@ -110,7 +111,7 @@
   },
   "executable_Source_mapping": {
     "state": "partial executable Source definitions, not endpoint verification",
-    "operations": 797,
+    "operations": 798,
     "inputs": [
       {
         "path": "scripts/rust-contracts/executable-source-bindings.json",
@@ -471,6 +472,11 @@
         "path": "scripts/rust-contracts/retained-management-registration/bindings.json",
         "sha256": "97ab015b80d30b40acfeb2b5f473fb4d918c22e9cfcd7c6c531c6ac8c7b86710",
         "kind": "retained_original_django_management_registration_non_HTTP"
+      },
+      {
+        "path": "scripts/rust-contracts/recording-hls-plain-get-bindings.json",
+        "sha256": "c55548e3489eb9e0b1a43ec2d71c9fa2f8685ab98d58b9b847377393f3c84ed9",
+        "kind": "captured_original_plain_recording_hls_admin_HTTP"
       }
     ],
     "fully_verified_added": 0,
@@ -77868,15 +77874,184 @@
           "owning_milestone": "M5",
           "milestone_assignment": "proposed work ownership, not acceptance",
           "role_matrix": {
-            "state": "unmapped",
-            "required_roles": []
+            "state": "partial_Original_real_HTTP_capture_assignment",
+            "required_roles": [],
+            "observed_fixture_definitions": {
+              "admin": {
+                "active": true,
+                "authenticated": true,
+                "credential": "owned_Bearer",
+                "staff": true,
+                "superuser": true,
+                "user_level": 10
+              }
+            },
+            "complete": false,
+            "observed_roles": [
+              "admin"
+            ]
           },
-          "setup_fixture": null,
-          "assertions": [],
-          "coverage_state": "not_yet_mapped",
+          "setup_fixture": {
+            "baseline_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "baseline_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+            "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "id": "pinned-Original-recording-hls-plain-GET",
+            "receipt": {
+              "path": "scripts/rust-integration/m0-recording-hls-plain-get-original.json",
+              "sha256": "8bce98227f38e4935894ed241c7d613c3105a2fb438b9322eef3a74324b8470b"
+            },
+            "roles": {
+              "admin": {
+                "active": true,
+                "authenticated": true,
+                "credential": "owned_Bearer",
+                "staff": true,
+                "superuser": true,
+                "user_level": 10
+              }
+            },
+            "setup": [
+              "Start exact stock Original in its isolated Compose fixture.",
+              "Verify admin Bearer credentials through the owned recording-list route.",
+              "Check Django resolver metadata and verify both numeric recording keys are absent.",
+              "Observe both ordinary numeric controls and the four matched plain HLS reads.",
+              "Verify unchanged Recording/User rows and retire all owned role generations."
+            ]
+          },
+          "assertions": [
+            "Django resolved all four fixed examples to the exact declared plain DRF GET.",
+            "The same bounded requests returned the captured status and wire metadata.",
+            "The recording and actor rows and the final owned resource inventory matched the expected state."
+          ],
+          "coverage_state": "partial_executable_Source_contract",
           "related_evidence": [],
-          "result": null,
-          "fully_verified": false
+          "result": {
+            "Native_application_qualified": false,
+            "Source_cases_passed": 4,
+            "complete_role_matrix": false,
+            "new_Source_cases_this_task": 4,
+            "performance_verified": false,
+            "state": "fresh_Original_scoped_HTTP_observed_Native_unmeasured"
+          },
+          "fully_verified": false,
+          "executable_Source_contract": {
+            "assertions": [
+              "Django resolved all four fixed examples to the exact declared plain DRF GET.",
+              "The same bounded requests returned the captured status and wire metadata.",
+              "The recording and actor rows and the final owned resource inventory matched the expected state."
+            ],
+            "cases": [
+              {
+                "HTTP_method_observed": "GET",
+                "label": "alphabetic-missing",
+                "record_json_pointer": "/observed/cases/2",
+                "record_sha256": "a42141f7e1f2504275eff76e210be4c79d057f7fdc0242bde2ecd63aea9bc05f",
+                "response": {
+                  "allow": null,
+                  "body_bytes": 145,
+                  "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+                  "content_length": 145,
+                  "has_auth_challenge": false,
+                  "has_redirect_location": false,
+                  "mime": "text/html",
+                  "status": 500,
+                  "vary": "origin"
+                },
+                "role": "admin",
+                "source_index": 2
+              },
+              {
+                "HTTP_method_observed": "GET",
+                "label": "signed-positive-missing",
+                "record_json_pointer": "/observed/cases/3",
+                "record_sha256": "b2612adb940d8dd0f645e456299a84c16fe76161e5cd488296de457b6a9b1c48",
+                "response": {
+                  "allow": "GET, HEAD, OPTIONS",
+                  "body_bytes": 23,
+                  "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+                  "content_length": 23,
+                  "has_auth_challenge": false,
+                  "has_redirect_location": false,
+                  "mime": "application/json",
+                  "status": 404,
+                  "vary": "Accept, origin"
+                },
+                "role": "admin",
+                "source_index": 3
+              },
+              {
+                "HTTP_method_observed": "GET",
+                "label": "signed-negative-missing",
+                "record_json_pointer": "/observed/cases/4",
+                "record_sha256": "2744665e30492b1f2a93b1126f97b4107c92241a9245d64fefb9f2614b88c300",
+                "response": {
+                  "allow": "GET, HEAD, OPTIONS",
+                  "body_bytes": 23,
+                  "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+                  "content_length": 23,
+                  "has_auth_challenge": false,
+                  "has_redirect_location": false,
+                  "mime": "application/json",
+                  "status": 404,
+                  "vary": "Accept, origin"
+                },
+                "role": "admin",
+                "source_index": 4
+              },
+              {
+                "HTTP_method_observed": "GET",
+                "label": "unicode-decimal-missing",
+                "record_json_pointer": "/observed/cases/5",
+                "record_sha256": "63f467cb0bafec39d3c0673c4971d22a3be758bbd92472613fda7dc6b4678af2",
+                "response": {
+                  "allow": "GET, HEAD, OPTIONS",
+                  "body_bytes": 23,
+                  "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+                  "content_length": 23,
+                  "has_auth_challenge": false,
+                  "has_redirect_location": false,
+                  "mime": "application/json",
+                  "status": 404,
+                  "vary": "Accept, origin"
+                },
+                "role": "admin",
+                "source_index": 5
+              }
+            ],
+            "contract_id": "route-37da04e4eae7ba9df918:GET",
+            "fixture_id": "pinned-Original-recording-hls-plain-GET",
+            "fully_verified": false,
+            "method": "GET",
+            "observed_roles": [
+              "admin"
+            ],
+            "owning_milestone": "M5",
+            "pattern_exact": "api/channels/^recordings/(?P<pk>[^/.]+)/hls/(?P<seg_path>.+)/$",
+            "remaining": [
+              "Other roles and input shapes",
+              "Native runtime parity"
+            ],
+            "result": {
+              "Native_application_qualified": false,
+              "Source_cases_passed": 4,
+              "complete_role_matrix": false,
+              "new_Source_cases_this_task": 4,
+              "performance_verified": false,
+              "state": "fresh_Original_scoped_HTTP_observed_Native_unmeasured"
+            },
+            "source_action": "hls",
+            "source_handler": "apps.channels.api_views.RecordingViewSet",
+            "source_role_specs": {
+              "admin": {
+                "active": true,
+                "authenticated": true,
+                "credential": "owned_Bearer",
+                "staff": true,
+                "superuser": true,
+                "user_level": 10
+              }
+            }
+          }
         }
       ]
     },

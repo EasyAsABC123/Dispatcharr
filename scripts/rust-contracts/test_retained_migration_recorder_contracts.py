@@ -1,6 +1,8 @@
 """Portable migration evidence, projection and scope controls."""
 from collections import Counter
 import copy
+import recording_hls_source_contracts as plain_hls
+from test_final_residual_wave import restore_profile_group_projection
 import hashlib
 import json
 from pathlib import Path
@@ -22,6 +24,8 @@ class MigrationRecorder(unittest.TestCase):
         published = json.loads((ROOT / subject.INPUT).read_bytes())
         subject.validate(ROOT, published)
         register = json.loads((ROOT / "docs/rust-contract-register.json").read_bytes())
+        plain_hls.restore_before(ROOT, register["runtime_routes"], register["executable_Source_mapping"])
+        restore_profile_group_projection(ROOT, register["runtime_routes"], register["executable_Source_mapping"])
         typed = register["non_HTTP_candidates"]
         import retained_model_registry_contracts as model_registry
         import retained_task_registry_contracts as task_registry

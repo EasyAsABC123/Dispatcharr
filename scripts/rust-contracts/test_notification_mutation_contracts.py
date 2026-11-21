@@ -237,6 +237,7 @@ class NotificationMutationControls(unittest.TestCase):
   # kind/ID, and checks every regenerated assignment field against the full row.
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_text())
   mapping=source_contracts.apply(ROOT,historical,bindings)
+  final_wave.profile_group.apply(ROOT,historical,mapping)
   self.assertEqual(historical,new['runtime_routes'])
   self.assertEqual(mapping,new['executable_Source_mapping'])
   self.assertEqual(subject.digest([{k:v for k,v in r.items()if k!='operations'}for r in new['runtime_routes']]),old['routes_structural_projection_sha256'])
@@ -301,6 +302,7 @@ class NotificationMutationControls(unittest.TestCase):
   expected += retained_logo_m3u_contracts.load(ROOT)['operation_count']
   expected += retained_epg_vod_logo_contracts.load(ROOT)['operation_count']
   expected += final_wave.HTTP_COUNT + 1  # Packaged Original Root-7.
+  expected += 1  # Packaged Original plain Recording HLS GET.
   self.assertEqual(mapping['operations'],expected)
   self.assertEqual(sum(o['method']is None for o in ops.values()),322);self.assertTrue(all(o['fully_verified']is False for o in ops.values()));self.assertEqual(sum('executable_Source_contract'in o for o in ops.values()),expected)
   self.assertEqual({key for key,o in ops.items()if 'executable_Source_contract'in o and o['executable_Source_contract'].get('fixture_id')=='retained-Original-notification-mutations-Source2-48'},selected)

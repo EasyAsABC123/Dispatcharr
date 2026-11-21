@@ -11,6 +11,7 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+import recording_hls_source_contracts as plain_hls
 
 # These portable Source-input classes are included in the existing SDK module.
 from test_source_contracts import SourceContracts
@@ -56,6 +57,7 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(item['attestation']['path'] for item in self.bindings.get('evidence_datasets', []))
         import scanner_task_contracts
         refs.update(scanner_task_contracts.dependencies())
+        refs.update(plain_hls.dependencies())
         import channel_guide_contracts
         refs.update(channel_guide_contracts.dependencies())
         import dvr_import_contracts
@@ -245,7 +247,9 @@ class CapturedEvidenceRegister(unittest.TestCase):
         self.assertEqual(disposition[key]['literal_Original_resolver_cases'], 12)
         self.assertEqual(disposition[key]['literal_HTTP_requests'], 0)
         self.assertFalse(disposition[key]['wider_identifier_grammar_qualified'])
-        self.assertNotIn('executable_Source_contract', operations[key])
+        attachment = operations[key]['executable_Source_contract']
+        self.assertEqual(attachment['observed_roles'], ['admin'])
+        self.assertEqual([case['source_index'] for case in attachment['cases']], [2, 3, 4, 5])
         self.assertEqual(actual['runtime_routes'], self.baseline['runtime_routes'])
         scoped = {
             op['contract_id']: len(op['scoped_Original_role_method_observations'])
@@ -264,7 +268,7 @@ class CapturedEvidenceRegister(unittest.TestCase):
                          ['collection', 'detail', 'claim-custom', 'unallocated-detail', 'unallocated-claim-custom'])
         self.assertTrue(all(row['observed_method'] == 'OPTIONS' and row['contract_id'] is None
                             and row['fully_verified'] is False for row in group_cases))
-        self.assertIsNone(operations[key]['result'])
+        self.assertEqual(operations[key]['result']['Source_cases_passed'], 4)
         self.assertFalse(operations[key]['fully_verified'])
         self.assertEqual(actual['openapi_operations'], self.baseline['openapi_operations'])
         self.assertEqual(actual['non_HTTP_candidates'], self.baseline['non_HTTP_candidates'])

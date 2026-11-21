@@ -1,5 +1,7 @@
 """Verify the three Original registrations and preserve previous assignments."""
 import copy
+import recording_hls_source_contracts as plain_hls
+from test_final_residual_wave import restore_profile_group_projection
 import json
 import unittest
 
@@ -16,6 +18,8 @@ class ManagementRegistration(unittest.TestCase):
         stored = json.loads((ROOT / subject.INPUT).read_bytes())
         subject.validate(ROOT, stored)
         document = json.loads((ROOT / "docs/rust-contract-register.json").read_bytes())
+        plain_hls.restore_before(ROOT, document["runtime_routes"], document["executable_Source_mapping"])
+        restore_profile_group_projection(ROOT, document["runtime_routes"], document["executable_Source_mapping"])
         typed = document["non_HTTP_candidates"]
         self.assertEqual(len(typed), 250)
         self.assertTrue(all("executable_Source_contract" in row and not row["fully_verified"] for row in typed))

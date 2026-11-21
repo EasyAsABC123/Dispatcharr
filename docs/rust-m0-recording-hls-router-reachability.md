@@ -52,12 +52,35 @@ The four historical framework cases attached to the format-suffix
 registration by static request sites use the ordinary numeric playlist
 and segment paths. Their request observations remain valid, with the
 explicit route supplying the dispatch for those paths. The register
-retains all 798 declaration identities and 797 partial Source assignments,
-with the plain DRF GET still unmapped. This resolver result qualifies its
-shadowing disposition for the issued URL shape. Native already has a
+retained all 798 declaration identities and 797 partial Source assignments
+at the earlier resolver checkpoint. This result qualifies the plain
+GET's shadowing disposition for the issued URL shape. Native already has a
 single playback route for that shape. The evidence leaves whole M0
 acceptance open.
 [Contract register](rust-contract-register.md)
+
+## Authenticated missing-recording requests
+
+A later pinned Original fixture checked fresh Django resolution and
+six authenticated GETs through the owned stock HTTP listener. The
+administrator's recording-list request passed first. Recording and
+actor rows remained unchanged. The controller and strict reducer
+exited 0, and both owned role generations retired.
+
+| Missing ID case | First registration | HTTP status | Media type |
+| --- | --- | --- | --- |
+| canonical missing | explicit | 404 | application/json |
+| zero padded missing | explicit | 404 | application/json |
+| alphabetic missing | plain DRF | 500 | text/html |
+| signed positive missing | plain DRF | 404 | application/json |
+| signed negative missing | plain DRF | 404 | application/json |
+| unicode decimal missing | plain DRF | 404 | application/json |
+
+Only the four plain DRF observations attach to the new work item.
+The numeric and recording-list controls remain in the receipt. The
+register now has 798 partial Original assignments. Role coverage,
+Native parity and full M0 remain open.
+[Fresh stock HTTP receipt](../scripts/rust-integration/m0-recording-hls-plain-get-original.json)
 
 The original Dispatcharr and Django authors retain full credit.
 [Attribution](../ATTRIBUTION.md)

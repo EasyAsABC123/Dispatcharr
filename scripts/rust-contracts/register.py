@@ -60,9 +60,15 @@ def recording_hls_resolver_dispositions(rows):
                 assert op["method"] == "GET" and op["source_action"] == "hls"
                 if key == plain:
                     target = op
-    assert target is not None and target["coverage_state"] == "not_yet_mapped"
-    assert target["result"] is None and target["fully_verified"] is False
-    assert "executable_Source_contract" not in target
+    assert target is not None and target["fully_verified"] is False
+    if "executable_Source_contract" in target:
+        from recording_hls_source_contracts import KIND, RECEIPT, projected_binding
+        attachment = projected_binding((ROOT / RECEIPT).read_bytes())
+        assert attachment["binding_kind"] == KIND
+        assert target["coverage_state"] == "partial_executable_Source_contract"
+        assert target["executable_Source_contract"] == attachment["contracts"][0]
+    else:
+        assert target["coverage_state"] == "not_yet_mapped" and target["result"] is None
     disposition = {
         "scope": "application-issued decimal recording playback URLs",
         "observed": "earlier explicit route selected",

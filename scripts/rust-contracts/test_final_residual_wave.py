@@ -1,5 +1,6 @@
 """Portable controls for the final composed Original evidence manifest."""
 import copy
+import recording_hls_source_contracts as plain_hls
 from hashlib import sha256
 from pathlib import Path
 import json
@@ -15,6 +16,7 @@ import retained_task_registry_contracts as task_registry
 import retained_management_registration_contracts as command_registry
 import retained_residual_source_contracts as portable
 import retained_root7_contract
+import retained_react_profile_group_contracts as profile_group
 import retained_worker_wire_contracts
 import source_contracts
 
@@ -35,11 +37,36 @@ TYPED_COUNT = 11
 def dependencies(root):
     return portable.dependencies(root).union(retained_root7_contract.dependencies(), migrations.dependencies(),
                                              model_registry.dependencies(), task_registry.dependencies(), command_registry.dependencies(),
-                                             *(module.dependencies() for module in TYPED))
+                                             plain_hls.dependencies(), profile_group.INPUT_SHA256, *(module.dependencies() for module in TYPED))
+
+
+def restore_profile_group_projection(root, routes, summary):
+    # Remove only the exact later role and OPTIONS observations.
+    selected = {value[1] for value in profile_group.PROFILES.values()}
+    scoped = [row for row in routes if row['route_id'] in selected]
+    assert len(scoped) == 4
+    expected_rows = copy.deepcopy(routes)
+    profile_group.profiles(root, expected_rows)
+    expected = [row for row in expected_rows if row['route_id'] in selected]
+    field = 'scoped_Original_role_method_observations'
+    for actual_route, expected_route in zip(scoped, expected, strict=True):
+        actual, = [op for op in actual_route['operations'] if op['method'] == 'GET']
+        expected_op, = [op for op in expected_route['operations'] if op['method'] == 'GET']
+        assert actual.pop(field) == expected_op[field]
+    observed = summary['unmapped_method_Source_observations']
+    later = [row for row in observed if row.get('evidence', {}).get('path') == profile_group.GROUP]
+    if later:
+        expected_group = {}
+        profile_group.groups(root, routes, expected_group)
+        assert later == expected_group['unmapped_method_Source_observations']
+        assert observed[-len(later):] == later
+        del observed[-len(later):]
 
 
 def restore_pre_final_wave(root, register):
     """Reverse the exact scoped additions before checking historical row digests."""
+    plain_hls.restore_before(root, register['runtime_routes'], register['executable_Source_mapping'])
+    restore_profile_group_projection(root, register['runtime_routes'], register['executable_Source_mapping'])
     inputs = register['executable_Source_mapping']['inputs']
     command_input = inputs.pop()
     assert (command_input['kind'], command_input['path']) == (command_registry.KIND, command_registry.INPUT)
@@ -121,6 +148,7 @@ def apply_before_residual_wave(root, rows, bindings):
     projection = json.loads((root / 'docs/rust-contract-register.json').read_bytes())
     projection['runtime_routes'] = rows
     projection['executable_Source_mapping'] = source_contracts.apply(root, rows, bindings)
+    profile_group.apply(root, rows, projection['executable_Source_mapping'])
     restore_before_residual_wave(root, projection)
     return projection['executable_Source_mapping']
 
