@@ -1,0 +1,9 @@
+# Configured recurring recording purge on cc494917
+
+Pinned Original and the exact packaged Rust backend each ran the configured daily purge through their real scheduler and worker. The preceding hourly maintenance created a future recording and its clocked booking. Beat then published the purge once on the default queue with the configured rule operand. The purge returned the integer `1` without children, and each arm observed one purge refresh event and three workflow publications in total. Both queues drained and the owned processes retired. [Exact paired receipt](../scripts/rust-integration/m6-cc494917-configured-recurring-purge.json)
+
+The purge removed only the matching future recording, its clocked task and the now-unused clock. The past recording from that rule, the other rule's future recording and booking, and both rules were preserved. No future recording media dispatched in this scope. The Rust arm used Selected jobs and Beat. The default job graph and full M6 acceptance remain open.
+
+The first independent Stock attempt exited 1 before the purge was armed. It observed the initial booking's refresh event, but compared the full Channels envelope against the application payload. The corrected Source attempt checked the routing envelope and matched the application event before running the configured purge. The first failure and exact cleanup remain in the receipt. The first paired campaign on this same image passed Original and exited 1 in Native fixture setup because the helper did not carry the required schedule constant. Native Main had yet to start. Both roles and projects retired. The corrected fixture then reran Original and Native afresh on the same immutable image.
+
+Formatting, strict Clippy and 1,515 enabled workspace tests passed. Comparative performance remains open. Original Dispatcharr, Django, Celery, django-celery-beat, Redis and dependency contributors retain full credit. [Original attribution](../ATTRIBUTION.md)
