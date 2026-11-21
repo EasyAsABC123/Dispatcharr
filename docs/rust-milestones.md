@@ -9,6 +9,27 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The latest executed formal matrix is still the `e740306c` package. It recorded
+26 passed, 100 blocked and one retained Original result across 127 required
+nodes. Every milestone still has open acceptance work. The scopes below track
+newer package results individually. The next comparative resource measurement
+follows functional acceptance. [Recorded matrix](../scripts/rust-integration/m9-e740306c-formal-matrix.json)
+
+The [live provider retry](rust-m2-provider-capacity-retry.md) matched the
+ordinary full-slot HTTP 503 response. Both backends delivered media after a
+normal last-viewer close and a fresh request following slot retirement. An
+active-handler overlap observed on Native during one global-stop repeat is
+under investigation.
+
+The [shared Core repository refresh](rust-m6-core-saved-plugin-refresh.md)
+routed a saved plugin schedule through the existing worker and recorded a
+single successful result and durable tick. The [Version HTTP 503 pair](rust-m6-a8ea333d-core-version503.md)
+qualified the daily failure-response behavior on a8ea333d.
+
+The [native ARM64 copied SQLite preview](rust-m10-3843b61a-native-arm64-copied-sqlite.md)
+passed a same-image restart on lappy. The copied database retained the saved
+app data, the existing bearer and token refresh.
+
 The [shared Core restore](rust-m8-core-postgres-restore.md) restored an
 Original PostgreSQL archive and a Rust recovery archive in order, with exact
 scoped SQL, fresh login and settings/channel readback. The same image kept
