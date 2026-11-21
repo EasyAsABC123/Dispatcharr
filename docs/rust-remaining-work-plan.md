@@ -36,7 +36,7 @@ required-node receipts remain tied to that package.
 | M7 | Current M3U, XMLTV, programme Grid, and Xtream exports passed. Full protocol, realtime, and integration acceptance remains open. [Current export evidence](rust-m7-fdede54c-ordinary-exports.md) |
 | M8 | Private Main preserved the saved value and signed session across restart. Wider admin capabilities, plugin behavior, and operational acceptance remain open. [Private admin evidence](rust-m8-2581-private-admin-settings-restart.md) |
 | M9 | The current short and prefix stages passed. The current two-hour result, required matrix, strict cold rollback, and final matched-work performance comparison remain open. [Current soak admission](rust-m9-fdede54c-canonical-soak-short-prefix.md) |
-| M10 | The native ARM64 PostgreSQL helper and donor-ABI Comskip replacement smoke passed. Full ARM64 package and controlled rollout remain open. [Native donor ABI evidence](rust-m10-native-arm64-comskip-donor-abi.md) |
+| M10 | The native ARM64 PostgreSQL helper, donor-ABI Comskip smoke, and reproducible collector intake passed. Full ARM64 package and controlled rollout remain open. [Native collector evidence](rust-m10-native-arm64-comskip-collector.md) |
 | M11 | The default switch and operator handoff depend on release acceptance and a rollout decision. |
 
 The original Dispatcharr authors and dependency contributors retain full credit.
