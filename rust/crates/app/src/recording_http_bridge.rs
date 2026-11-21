@@ -159,6 +159,31 @@ impl RecordingJobs for Bridge {
                 .map_err(publication_error)
         })
     }
+    fn supports_recurring_task_booking(&self) -> bool {
+        true
+    }
+    fn schedule_recurring_from_task(
+        &self,
+        recording: i64,
+        parent: RecordingChannelId,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<Option<RecordingChannelId>, Effect>> {
+        Box::pin(async move {
+            self.admit_scheduling(owner.clone()).await?;
+            let published = self
+                .publisher
+                .schedule_recurring_booking_child(recording, parent, owner)
+                .await
+                .map_err(publication_error)?;
+            if !matches!(
+                published.task,
+                dispatcharr_job_transport::normal_recording_publication::BookingTask::Periodic { .. }
+            ) {
+                return Err(Effect::Unsettled);
+            }
+            Ok(published.artwork)
+        })
+    }
     fn revoke(
         &self,
         task: String,

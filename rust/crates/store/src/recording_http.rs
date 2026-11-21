@@ -26,7 +26,9 @@ use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 
 pub(super) mod recurring;
-pub use recurring::{execute_recurring_purge, preflight_recurring_purge};
+pub use recurring::{
+    execute_recurring_purge, preflight_recurring_purge, CONFIGURED_REBUILD_HORIZON_DAYS,
+};
 pub type RecordingChannelId = Uuid;
 pub type RecordingTaskConnection = sqlx::PgConnection;
 const SLOTS: usize = 4;
@@ -109,6 +111,17 @@ pub trait RecordingJobs: Send + Sync {
         _recording: i64,
         _owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
+        Box::pin(async { Err(RecordingEffectError::Unsupported) })
+    }
+    fn supports_recurring_task_booking(&self) -> bool {
+        false
+    }
+    fn schedule_recurring_from_task(
+        &self,
+        _recording: i64,
+        _parent: Uuid,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<Option<Uuid>, RecordingEffectError>> {
         Box::pin(async { Err(RecordingEffectError::Unsupported) })
     }
     fn revoke(

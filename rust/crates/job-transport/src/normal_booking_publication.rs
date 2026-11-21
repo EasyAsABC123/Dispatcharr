@@ -56,6 +56,18 @@ impl NormalRecordingPublisher {
         self.schedule_booking_context(recording, None, true, caller)
             .await
     }
+    /// Future recurring save signal from the actual configured parent.
+    /// Preserve attributes from the committed row; an expired appointment
+    /// does not fall through to a DVR media publication in this scoped path.
+    pub async fn schedule_recurring_booking_child(
+        &self,
+        recording: i64,
+        parent: Uuid,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<BookingPublication, Error> {
+        self.schedule_booking_context(recording, Some(parent), true, caller)
+            .await
+    }
     pub async fn schedule_booking_child(
         &self,
         recording: i64,
@@ -90,6 +102,14 @@ impl NormalRecordingPublisher {
         tokio::spawn(async move {
             let row = booking_row(inner.pool.clone(), recording, recurring, owner.clone()).await?;
             let now = Utc::now();
+            if recurring
+                && parent.is_some()
+                && (row.start <= now || row.task_key.as_ref().is_some_and(|key| !key.is_empty()))
+            {
+                return Err(Error::Unsupported(
+                    "configured rebuild requires a new future booking",
+                ));
+            }
             let task = if row.task_key.as_ref().is_some_and(|key| !key.is_empty())
                 || !(row.start > now - chrono::Duration::seconds(1) || row.end > now)
             {

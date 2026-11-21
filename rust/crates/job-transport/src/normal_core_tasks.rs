@@ -9,7 +9,10 @@ use base64::{engine::general_purpose::STANDARD, Engine};
 use dispatcharr_contracts::{BoxFuture, UpdateEventSink};
 use dispatcharr_store::{
     core_task_rehash::Request,
-    recording_http::{execute_recurring_purge, preflight_recurring_purge, RecordingJobs},
+    recording_http::{
+        execute_recurring_purge, preflight_recurring_purge, RecordingHttp, RecordingJobs,
+        CONFIGURED_REBUILD_HORIZON_DAYS,
+    },
     AuthService, Store,
 };
 use serde_json::{json, Value};
@@ -27,6 +30,7 @@ pub(crate) enum Kind {
     Rehash(Request),
     Offsets,
     RecurringPurge(i64),
+    RecurringRebuild { rule: i64, schedule: String },
 }
 impl Kind {
     fn family(&self) -> Family {
@@ -34,6 +38,7 @@ impl Kind {
             Self::Rehash(_) => Family::RehashStreams,
             Self::Offsets => Family::RescheduleOffsets,
             Self::RecurringPurge(_) => Family::RecurringPurge,
+            Self::RecurringRebuild { .. } => Family::RecurringRebuild,
         }
     }
 }
@@ -79,6 +84,39 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
             ));
             frame["headers"]["argsrepr"] = json!("()");
             Kind::RecurringPurge(rule)
+        }
+        Some("apps.channels.tasks.rebuild_recurring_rule") => {
+            let bytes = STANDARD
+                .decode(frame["body"].as_str().ok_or(())?)
+                .map_err(|_| ())?;
+            let body = crate::clocked_recording_envelope::json_value(&bytes).map_err(|_| ())?;
+            let args = body[0]
+                .as_array()
+                .filter(|args| args.len() == 1)
+                .ok_or(())?;
+            let rule = args[0].as_i64().filter(|id| *id > 0).ok_or(())?;
+            let horizon = CONFIGURED_REBUILD_HORIZON_DAYS;
+            let saved_name = frame["headers"]["periodic_task_name"].as_str().ok_or(())?;
+            let expected_args = format!("[{rule}]");
+            let expected_tuple = format!("({rule},)");
+            let expected_kwargs = format!("{{'horizon_days': {horizon}}}");
+            if body
+                != json!([[rule], {"horizon_days":horizon}, {"callbacks":null,"errbacks":null,"chain":null,"chord":null}])
+                || saved_name.is_empty()
+                || saved_name.len() > 255
+                || !matches!(frame["headers"]["argsrepr"].as_str(), Some(repr) if repr == expected_args || repr == expected_tuple)
+                || frame["headers"]["kwargsrepr"].as_str() != Some(expected_kwargs.as_str())
+            {
+                return Err(());
+            }
+            let schedule = saved_name.to_owned();
+            frame["body"] =
+                json!(STANDARD.encode(serde_json::to_vec(
+                &json!([[], {}, {"callbacks":null,"errbacks":null,"chain":null,"chord":null}])
+            ).map_err(|_| ())?));
+            frame["headers"]["argsrepr"] = json!("()");
+            frame["headers"]["kwargsrepr"] = json!("{}");
+            Kind::RecurringRebuild { rule, schedule }
         }
         Some("core.tasks.rehash_streams") => {
             let bytes = STANDARD
@@ -173,6 +211,7 @@ struct Inner {
     store: Store,
     auth: AuthService,
     recordings: Arc<dyn RecordingJobs>,
+    recording_http: RecordingHttp,
     events: Arc<dyn UpdateEventSink>,
     revoked: Revoked,
     closed: AtomicBool,
@@ -189,6 +228,7 @@ impl Prepared {
         store: Store,
         auth: AuthService,
         recordings: Arc<dyn RecordingJobs>,
+        recording_http: RecordingHttp,
         events: Arc<dyn UpdateEventSink>,
         revoked: Revoked,
     ) -> Result<Self, D> {
@@ -205,6 +245,7 @@ impl Prepared {
                 store,
                 auth,
                 recordings,
+                recording_http,
                 events,
                 revoked,
                 closed: AtomicBool::new(false),
@@ -218,6 +259,7 @@ impl Prepared {
             Family::RehashStreams,
             Family::RescheduleOffsets,
             Family::RecurringPurge,
+            Family::RecurringRebuild,
         ]
         .into_iter()
         .map(|family| {
@@ -279,6 +321,8 @@ impl Worker {
                     dispatcharr_store::core_task_rehash::preflight(&inner.auth).await
                 }
                 Kind::RecurringPurge(rule) => preflight_recurring_purge(&inner.store, *rule).await,
+                Kind::RecurringRebuild { rule, schedule } => inner.recording_http
+                    .preflight_configured_recurring_rebuild(*rule, schedule, owner.clone()).await,
                 Kind::Offsets => {
                     inner
                         .recordings
@@ -335,6 +379,12 @@ impl Worker {
                             .map_err(|error| D::Operational(format!("Recurring purge effects {error:?}")))?),
                             Vec::new(),
                         ),
+                        Kind::RecurringRebuild { rule, schedule } => {
+                            let report = inner.recording_http
+                                .execute_configured_recurring_rebuild(*rule, schedule, message.id, owner.clone())
+                                .await.map_err(|error| D::Operational(format!("Recurring rebuild effects {error:?}")))?;
+                            (report.value, report.children)
+                        }
                         Kind::Offsets => {
                             let report = dispatcharr_store::core_task_offsets::execute(
                                 inner.store.clone(),
@@ -423,6 +473,60 @@ impl Lifecycle for Worker {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn configured_rebuild_requires_exact_saved_rule_and_two_day_horizon() {
+        let task = Uuid::new_v4();
+        let raw = crate::protocol::encode(
+            &crate::protocol::Task::CreateBackup,
+            task,
+            Uuid::new_v4(),
+            Uuid::new_v4(),
+            "rust@configured-rebuild",
+        )
+        .unwrap();
+        let mut frame: Value = serde_json::from_slice(&raw).unwrap();
+        frame["headers"]["task"] = json!("apps.channels.tasks.rebuild_recurring_rule");
+        frame["headers"]["periodic_task_name"] = json!("owned-recurring-rebuild");
+        frame["headers"]["argsrepr"] = json!("[27]");
+        frame["headers"]["kwargsrepr"] = json!("{'horizon_days': 2}");
+
+        let body = |args: Value, kwargs: Value| {
+            STANDARD.encode(
+                serde_json::to_vec(&json!([args,kwargs,
+                {"callbacks":null,"errbacks":null,"chain":null,"chord":null}]))
+                .unwrap(),
+            )
+        };
+        frame["body"] = json!(body(json!([27]), json!({"horizon_days":2})));
+        let bytes = serde_json::to_vec(&frame).unwrap();
+        let message = parse(&bytes).unwrap();
+        assert_eq!(message.id, task);
+        assert_eq!(message.kind.family(), Family::RecurringRebuild);
+        assert!(
+            matches!(message.kind, Kind::RecurringRebuild { rule: 27, schedule }
+                         if schedule == "owned-recurring-rebuild")
+        );
+        assert_eq!(
+            crate::milestone_dispatch::classify(&bytes),
+            Some(Family::RecurringRebuild)
+        );
+
+        for (args, kwargs) in [
+            (json!(["27"]), json!({"horizon_days":2})),
+            (json!([true]), json!({"horizon_days":2})),
+            (json!([27, 2]), json!({})),
+            (json!([27]), json!({"horizon_days":14})),
+            (json!([27]), json!({"horizon_days":"2"})),
+            (json!([27]), json!({"horizon_days":2,"extra":true})),
+        ] {
+            let mut refused = frame.clone();
+            refused["body"] = json!(body(args, kwargs));
+            assert!(parse(&serde_json::to_vec(&refused).unwrap()).is_err());
+        }
+        frame["headers"]["periodic_task_name"] = Value::Null;
+        assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err());
+    }
+
     #[test]
     fn configured_recurring_purge_requires_one_saved_numeric_operand_and_no_children() {
         let id = Uuid::new_v4();

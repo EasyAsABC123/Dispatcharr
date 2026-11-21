@@ -27,6 +27,9 @@ use serde_json::{json, Map, Value};
 use sqlx::{postgres::PgRow, Connection, PgConnection, Postgres, QueryBuilder, Row};
 use std::{collections::BTreeSet, net::SocketAddr, sync::Arc, time::Duration};
 
+pub const CONFIGURED_REBUILD_HORIZON_DAYS: i64 = 2;
+const HTTP_REBUILD_HORIZON_DAYS: i64 = 14;
+
 pub(crate) const PATH: &str = "/api/channels/recurring-rules/{id}/";
 pub(crate) const COLLECTION: &str = "/api/channels/recurring-rules/";
 const SELECT: &str = "SELECT r.id::bigint AS id,r.channel_id::bigint AS channel_id,r.name,
@@ -454,6 +457,7 @@ fn rebuild_plan(
     zone: Tz,
     channel_name: &str,
     now: DateTime<Utc>,
+    horizon_days: i64,
 ) -> Result<Option<Vec<Appointment>>, StoreError> {
     let days = match &rule.days {
         Value::Array(values) => values
@@ -477,7 +481,7 @@ fn rebuild_plan(
     // Fourteen days is only the fallback when there is no explicit end.
     let end_day = match rule.end_date {
         Some(end) => end,
-        None => (now + chrono::Duration::days(14))
+        None => (now + chrono::Duration::days(horizon_days))
             .with_timezone(&zone)
             .date_naive(),
     };
@@ -563,6 +567,7 @@ async fn plan_on(
     connection: &mut PgConnection,
     auth: &AuthService,
     rule: &Rule,
+    horizon_days: i64,
 ) -> Result<Option<Vec<Appointment>>, StoreError> {
     if !rule.enabled {
         return Ok(None);
@@ -578,7 +583,7 @@ async fn plan_on(
             .bind(rule.channel)
             .fetch_one(connection)
             .await?;
-    rebuild_plan(rule, zone, &channel_name, Utc::now())
+    rebuild_plan(rule, zone, &channel_name, Utc::now(), horizon_days)
 }
 
 async fn purge_rows(connection: &mut PgConnection, rule_id: i64) -> Result<Vec<PgRow>, StoreError> {
@@ -719,6 +724,140 @@ pub async fn execute_recurring_purge(
     Ok(removed)
 }
 
+async fn configured_rebuild(
+    connection: &mut PgConnection,
+    auth: &AuthService,
+    rule_id: i64,
+    schedule: &str,
+) -> Result<(Rule, Vec<PgRow>, Vec<Appointment>), StoreError> {
+    let saved: Option<(String, String)> = sqlx::query_as(
+        "SELECT args,kwargs FROM django_celery_beat_periodictask
+         WHERE name=$1 AND task='apps.channels.tasks.rebuild_recurring_rule'
+           AND enabled AND queue IS NULL AND exchange IS NULL AND routing_key IS NULL
+           AND octet_length(args)<=1024 AND octet_length(kwargs)<=1024",
+    )
+    .bind(schedule)
+    .fetch_optional(&mut *connection)
+    .await?;
+    let Some((args, kwargs)) = saved else {
+        return Err(unsupported_rebuild());
+    };
+    if serde_json::from_str::<Value>(&args).ok() != Some(json!([rule_id]))
+        || serde_json::from_str::<Value>(&kwargs).ok()
+            != Some(json!({"horizon_days":CONFIGURED_REBUILD_HORIZON_DAYS}))
+    {
+        return Err(unsupported_rebuild());
+    }
+    let mut query = QueryBuilder::<Postgres>::new(SELECT);
+    query
+        .push(" AND r.id=")
+        .push_bind(rule_id)
+        .push(" FOR UPDATE OF r");
+    let rule = Rule::decode(query.build().fetch_one(&mut *connection).await?)?;
+    // Stage only the copied two-day horizon and one normal replacement.
+    // Broader calendar and legacy/immediate cancellation paths have no
+    // configured-task witness yet. Keep their admission explicit.
+    if !rule.enabled || rule.end_date.is_some() {
+        return Err(unsupported_rebuild());
+    }
+    let appointments = plan_on(connection, auth, &rule, CONFIGURED_REBUILD_HORIZON_DAYS)
+        .await?
+        .filter(|items| items.len() == 1)
+        .ok_or_else(unsupported_rebuild)?;
+    let rows = configured_purge_rows(connection, rule_id).await?;
+    if rows.len() != 1 {
+        return Err(unsupported_rebuild());
+    }
+    Ok((rule, rows, appointments))
+}
+
+impl RecordingHttp {
+    pub async fn preflight_configured_recurring_rebuild(
+        &self,
+        rule_id: i64,
+        schedule: &str,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<(), StoreError> {
+        if !self.state.jobs.supports_recurring_task_booking() {
+            return Err(unsupported_rebuild());
+        }
+        self.state
+            .jobs
+            .admit_scheduling(owner)
+            .await
+            .map_err(effect)?;
+        let mut tx = self.state.auth.store.pool().begin().await?;
+        let prepared = configured_rebuild(&mut tx, &self.state.auth, rule_id, schedule).await;
+        tx.rollback().await?;
+        prepared.map(|_| ())
+    }
+
+    pub async fn execute_configured_recurring_rebuild(
+        &self,
+        rule_id: i64,
+        schedule: &str,
+        task: uuid::Uuid,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<crate::core_task_offsets::Report, StoreError> {
+        // Use the same Selected Main writer gate as HTTP rule detail mutations.
+        // Keep it until booking/artwork/refresh settles, and release the SQL
+        // transaction before the grounded booking port rereads the inserted row.
+        let _recurring = self.state.recurring_writer.lock().await;
+        let auth = self.state.auth.clone().with_retained_scope(owner.clone());
+        let _writer = auth.task_sql_writer()?;
+        self.state
+            .jobs
+            .admit_scheduling(owner.clone())
+            .await
+            .map_err(effect)?;
+        let mut tx = auth.store.pool().begin().await?;
+        let result = async {
+            let (rule, rows, appointments) =
+                configured_rebuild(&mut tx, &auth, rule_id, schedule).await?;
+            delete_purge_rows(&mut tx, &rows).await?;
+            let inserted: [i64; 1] = insert_bookings(&mut tx, &rule, appointments)
+                .await?
+                .try_into()
+                .map_err(|_| unsupported_rebuild())?;
+            Ok::<_, StoreError>(inserted[0])
+        }
+        .await;
+        let recording = match result {
+            Ok(id) => {
+                tx.commit().await?;
+                id
+            }
+            Err(error) => {
+                tx.rollback().await?;
+                return Err(error);
+            }
+        };
+        let refresh =
+            json!({"type":"update","data":{"success":true,"type":"recordings_refreshed"}});
+        crate::core_task_offsets::retained_event(
+            self.state.events.clone(),
+            refresh.clone(),
+            owner.clone(),
+        )
+        .await?;
+        let child = match self
+            .state
+            .jobs
+            .schedule_recurring_from_task(recording, task, owner.clone())
+            .await
+        {
+            Ok(child) => child,
+            Err(RecordingEffectError::SettledFailure) => None,
+            Err(error) => return Err(effect(error)),
+        };
+        crate::core_task_offsets::retained_event(self.state.events.clone(), refresh, owner).await?;
+        Ok(crate::core_task_offsets::Report {
+            value: json!(1),
+            children: child.into_iter().map(|id| id.to_string()).collect(),
+        })
+    }
+}
+
 fn input(body: &Bytes, media: &str) -> Result<Map<String, Value>, StoreError> {
     if body.is_empty() {
         return Ok(Map::new());
@@ -776,7 +915,7 @@ async fn database(
                     let mut next =
                         validate_update(&mut tx, user, &old, changes, method == Method::PATCH)
                             .await?;
-                    let plan = plan_on(&mut tx, auth, &next).await?;
+                    let plan = plan_on(&mut tx, auth, &next, HTTP_REBUILD_HORIZON_DAYS).await?;
                     if plan.as_ref().is_some_and(|rows| !rows.is_empty()) {
                         if !owner.state.jobs.supports_recurring_booking() {
                             return Err(unsupported_rebuild());
@@ -959,6 +1098,7 @@ mod tests {
             chrono_tz::America::New_York,
             "Owned channel",
             rule.created,
+            HTTP_REBUILD_HORIZON_DAYS,
         )
         .unwrap()
         .unwrap();
@@ -986,16 +1126,58 @@ mod tests {
     }
 
     #[test]
+    fn configured_two_day_horizon_reuses_next_slot_without_adding_later_occurrences() {
+        let mut rule = calendar_rule();
+        rule.start_date = None;
+        rule.end_date = None;
+        rule.days = json!([4]);
+        let scoped = rebuild_plan(
+            &rule,
+            chrono_tz::UTC,
+            "Owned",
+            rule.created,
+            CONFIGURED_REBUILD_HORIZON_DAYS,
+        )
+        .unwrap()
+        .unwrap();
+        let habitual = rebuild_plan(
+            &rule,
+            chrono_tz::UTC,
+            "Owned",
+            rule.created,
+            HTTP_REBUILD_HORIZON_DAYS,
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(scoped.len(), 1);
+        assert_eq!(habitual.len(), 2);
+        assert_eq!(scoped[0].start, habitual[0].start);
+        assert_eq!(scoped[0].properties, habitual[0].properties);
+    }
+
+    #[test]
     fn missing_end_uses_14_days_and_calendar_admission_is_bounded() {
         let mut rule = calendar_rule();
         rule.end_date = None;
-        assert!(rebuild_plan(&rule, chrono_tz::UTC, "Owned", rule.created)
-            .unwrap()
-            .is_none());
+        assert!(rebuild_plan(
+            &rule,
+            chrono_tz::UTC,
+            "Owned",
+            rule.created,
+            HTTP_REBUILD_HORIZON_DAYS
+        )
+        .unwrap()
+        .is_none());
         rule.end_date = NaiveDate::from_ymd_opt(2030, 1, 1);
         rule.days = json!([0, 1, 2, 3, 4, 5, 6]);
         assert!(matches!(
-            rebuild_plan(&rule, chrono_tz::UTC, "Owned", rule.created),
+            rebuild_plan(
+                &rule,
+                chrono_tz::UTC,
+                "Owned",
+                rule.created,
+                HTTP_REBUILD_HORIZON_DAYS
+            ),
             Err(StoreError::Unsupported(_))
         ));
     }

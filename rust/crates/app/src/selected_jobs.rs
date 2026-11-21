@@ -324,11 +324,17 @@ impl SelectedJobs {
         );
         auth.bind_recording_jobs(recording_jobs.clone())
             .map_err(|_| "Selected recording HTTP Collector binding failed")?;
+        let recording_http = dispatcharr_store::recording_http::RecordingHttp::prepare(
+            auth.clone(),
+            recording_jobs.clone(),
+            events.clone(),
+        );
         let core_tasks = jobs::normal_core_tasks::Prepared::new(
             shared_jobs.clone(),
             store.clone(),
             auth.clone(),
             recording_jobs.clone(),
+            recording_http.clone(),
             events.clone(),
             revoked.clone(),
         )
@@ -372,11 +378,6 @@ impl SelectedJobs {
         );
         let comskip_http =
             dispatcharr_store::comskip_http::ComskipHttp::prepare(Arc::new(comskip.clone()));
-        let recording_http = dispatcharr_store::recording_http::RecordingHttp::prepare(
-            auth.clone(),
-            recording_jobs.clone(),
-            events.clone(),
-        );
         let xml_cache = env::var("RUST_EPG_CACHE_DIR")
             .map(PathBuf::from)
             .unwrap_or_else(|_| media_root.join("cached_epg"));
