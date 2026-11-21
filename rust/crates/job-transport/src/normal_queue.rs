@@ -249,6 +249,10 @@ impl CoreScheduledWorker {
         store: &dispatcharr_store::Store,
         events: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
         version_options: crate::version_service::Options,
+        plugin_refresh: Option<(
+            dispatcharr_store::AuthService,
+            crate::normal_revocation::Revoked,
+        )>,
         poll: Duration,
     ) -> Result<Self, Error> {
         let jobs = backup.scheduled_jobs();
@@ -273,14 +277,24 @@ impl CoreScheduledWorker {
         )
         .map_err(|_| Error::Configuration)?;
         let actual: Arc<dyn Handler> = backup.clone();
-        let mut families = BTreeMap::new();
-        for (family, inner) in [
+        let plugin_refresh = plugin_refresh
+            .map(|(auth, revoked)| {
+                crate::normal_plugin_repos::Prepared::new(jobs.clone(), auth, revoked)
+            })
+            .transpose()
+            .map_err(|_| Error::Configuration)?;
+        let entries = [
             (Family::BackupCreate, actual.clone()),
             (Family::BackupScheduled, actual),
             (Family::BackendCleanup, cleanup),
             (Family::AccountExpiration, expiration),
             (Family::VersionCheck, version),
-        ] {
+        ];
+        let mut families = BTreeMap::new();
+        for (family, inner) in entries
+            .into_iter()
+            .chain(plugin_refresh.map(|prepared| prepared.entry()))
+        {
             let maximum = inner.maximum_concurrency();
             validate_family_admission(family, maximum, inner.supports_selected_head())?;
             families.insert(
@@ -312,6 +326,10 @@ impl CoreScheduledWorker {
             stop: Arc::new(Lifetime(watch::channel(false).0)),
             poll,
         })
+    }
+
+    pub(crate) fn owns_plugin_refresh(&self) -> bool {
+        self.families.contains_key(&Family::PluginRefresh)
     }
 
     pub(crate) fn jobs(&self) -> crate::transport::Jobs {

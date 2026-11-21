@@ -1641,7 +1641,7 @@ async fn run_upstream(
         }
     }
 
-    if !session
+    let numeric_channel = if !session
         .source
         .metadata
         .iter()
@@ -1649,26 +1649,26 @@ async fn run_upstream(
         && uuid::Uuid::parse_str(&session.source.channel_id)
             .is_ok_and(|id| id.to_string() == session.source.channel_id)
     {
-        if let (Some(coordinator), Some(numeric)) = (
-            &inner.coordinator,
-            session
-                .source
-                .metadata
-                .iter()
-                .find(|(key, _)| key == "channel_id")
-                .and_then(|(_, value)| value.parse::<i64>().ok()),
-        ) {
-            match coordinator
-                .observe_redirect_assignment(
-                    numeric,
-                    &session.source.channel_id,
-                    Arc::new((session.clone(), worker.clone())),
-                )
-                .await
-            {
-                Ok(value) => initial_assignment = value,
-                Err(error) => assignment_error = Some(coordination_error(error)),
-            }
+        session
+            .source
+            .metadata
+            .iter()
+            .find(|(key, _)| key == "channel_id")
+            .and_then(|(_, value)| value.parse::<i64>().ok())
+    } else {
+        None
+    };
+    if let (Some(coordinator), Some(numeric)) = (&inner.coordinator, numeric_channel) {
+        match coordinator
+            .observe_redirect_assignment(
+                numeric,
+                &session.source.channel_id,
+                Arc::new((session.clone(), worker.clone())),
+            )
+            .await
+        {
+            Ok(value) => initial_assignment = value,
+            Err(error) => assignment_error = Some(coordination_error(error)),
         }
     }
     if session
@@ -1735,6 +1735,11 @@ async fn run_upstream(
     let mut attempts = 0u64;
     let mut retained_source_slot = false;
     let mut last_candidate = None;
+    let mut capacity_wait = (numeric_channel.is_some()
+        && session.native_initializing.load(Ordering::Acquire)
+        && lease.is_some()
+        && initial_assignment.is_none())
+    .then(|| crate::retry::ProviderCapacityWait::new(Instant::now()));
     let mut input = InputAccumulator::new(inner.config.chunk_bytes);
     let mut last_error = PlaybackError::new(502, "Upstream did not provide stream data");
     'session: loop {
@@ -1751,6 +1756,7 @@ async fn run_upstream(
         let keep_source_slot = std::mem::take(&mut retained_source_slot);
         let source_borrowed = initial_assignment.is_some();
         let bytes_at_admission = session.received_bytes.load(Ordering::Relaxed);
+        let mut provider_full = false;
         let reservation = if !supported_input_url(candidate) {
             Err(PlaybackError::new(
                 502,
@@ -1786,10 +1792,13 @@ async fn run_upstream(
                     dispatcharr_coordination::Error::ProfileFull
                     | dispatcharr_coordination::Error::CredentialFull
                     | dispatcharr_coordination::Error::CredentialConflict,
-                ) => Err(PlaybackError::new(
-                    503,
-                    "All active M3U profiles have reached maximum connection limits",
-                )),
+                ) => {
+                    provider_full = true;
+                    Err(PlaybackError::new(
+                        503,
+                        crate::retry::PROVIDER_CAPACITY_ERROR,
+                    ))
+                }
                 Err(error) => {
                     last_error = coordination_error(error);
                     break 'session;
@@ -1803,6 +1812,9 @@ async fn run_upstream(
         } else {
             Ok(())
         };
+        if !provider_full {
+            capacity_wait = None;
+        }
         match reservation {
             Err(error) => last_error = error,
             Ok(()) => {
@@ -1978,6 +1990,20 @@ async fn run_upstream(
         if let Some(next) = retry.next_candidate(&candidates, opened_url) {
             current = next;
             continue;
+        }
+        if let Some(wait) = &mut capacity_wait {
+            let now = Instant::now();
+            if let Some(delay) = wait.next_delay(now) {
+                tokio::select! {
+                    _ = stop.changed() => break,
+                    _ = lost.changed() => break,
+                    _ = time::sleep(delay) => {},
+                }
+                retry.tried.clear();
+                current = 0;
+                continue;
+            }
+            last_error.body["waited"] = format!("{}s", wait.elapsed(now).as_secs()).into();
         }
         // Like Python cold startup, never cycle the exhausted candidate list
         // before media succeeds. Healthy playback permits bounded cooldown wraps.

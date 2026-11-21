@@ -19,6 +19,23 @@ pub fn enabled() -> Result<bool, String> {
     }
 }
 
+pub fn plugin_refresh_enabled(core_enabled: bool) -> Result<bool, String> {
+    plugin_refresh_enabled_for(
+        env::var_os("RUST_CORE_PLUGIN_REFRESH_OWNER").as_deref(),
+        core_enabled,
+    )
+}
+
+fn plugin_refresh_enabled_for(value: Option<&OsStr>, core_enabled: bool) -> Result<bool, String> {
+    match value {
+        None => Ok(false),
+        Some(value) if value == OsStr::new("rust") && core_enabled => Ok(true),
+        Some(_) => {
+            Err("RUST_CORE_PLUGIN_REFRESH_OWNER requires rust and the Core schedule owner".into())
+        }
+    }
+}
+
 pub fn restore_grace(core_enabled: bool, shutdown: Duration) -> Result<Option<Duration>, String> {
     match env::var_os("RUST_CORE_BACKUP_RESTORE_OWNER") {
         None => Ok(None),
@@ -50,12 +67,14 @@ pub struct CoreScheduledJobs {
     scheduler: Scheduler,
 }
 impl CoreScheduledJobs {
+    #[allow(clippy::too_many_arguments)]
     pub async fn prepare(
         store: Store,
         auth: AuthService,
         cache: Option<&str>,
         events: Arc<dyn UpdateEventSink>,
         version: dispatcharr_job_transport::version_service::Options,
+        plugin_refresh: bool,
         competing_owner: bool,
     ) -> Result<Self, String> {
         if competing_owner {
@@ -77,6 +96,7 @@ impl CoreScheduledJobs {
             cache,
             events,
             version,
+            plugin_refresh,
             database,
             runtime,
             root,
@@ -99,15 +119,18 @@ impl CoreScheduledJobs {
         cache: &str,
         events: Arc<dyn UpdateEventSink>,
         version: dispatcharr_job_transport::version_service::Options,
+        plugin_refresh: bool,
         database: dispatcharr_job_transport::normal_backup::PgConfig,
         runtime: dispatcharr_job_transport::normal_backup::Runtime,
         root: std::path::PathBuf,
         scratch: std::path::PathBuf,
     ) -> Result<Self, String> {
         let identity = auth.producer_identity_source();
+        let revoked = Revoked::new();
+        let plugin_refresh = plugin_refresh.then(|| (auth.clone(), revoked.clone()));
         let application = Application::prepare(
             jobs,
-            Revoked::new(),
+            revoked,
             store.clone(),
             auth,
             cache.to_owned(),
@@ -124,6 +147,7 @@ impl CoreScheduledJobs {
             &store,
             events,
             version,
+            plugin_refresh,
             Duration::from_millis(100),
         )
         .map_err(|_| "Core scheduled worker configuration failed")?;
@@ -227,4 +251,15 @@ fn core_restore_requires_its_owner_and_a_full_admission_budget() {
         restore_grace_for(rust, true, Duration::from_secs(240)),
         Ok(Duration::from_secs(120))
     );
+}
+
+#[cfg(test)]
+#[test]
+fn core_plugin_refresh_requires_its_explicit_owner() {
+    let rust = OsStr::new("rust");
+    assert_eq!(plugin_refresh_enabled_for(None, true), Ok(false));
+    assert_eq!(plugin_refresh_enabled_for(None, false), Ok(false));
+    assert_eq!(plugin_refresh_enabled_for(Some(rust), true), Ok(true));
+    assert!(plugin_refresh_enabled_for(Some(rust), false).is_err());
+    assert!(plugin_refresh_enabled_for(Some(OsStr::new("yes")), true).is_err());
 }

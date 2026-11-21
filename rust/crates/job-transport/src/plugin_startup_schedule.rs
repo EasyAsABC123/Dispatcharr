@@ -2,7 +2,7 @@
 //! Original Dispatcharr/django-celery-beat authors retain all algorithm credit.
 use super::*;
 type ExistingSchedule = (i64, Option<i64>, Option<i64>, Option<i64>, Option<i64>);
-const NAME: &str = "plugin-repo-refresh-task";
+pub(super) const NAME: &str = "plugin-repo-refresh-task";
 #[derive(Debug, PartialEq)]
 enum Plan {
     Delete,

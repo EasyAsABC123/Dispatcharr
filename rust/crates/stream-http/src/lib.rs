@@ -9,6 +9,7 @@ pub use engine::{
     EngineConfig, HealthSettingsSource, HealthTimeouts, MediaFrame, MediaStream, StreamEngine,
     StreamStatus,
 };
+pub use routes::provider_capacity_error_response;
 
 mod status;
 

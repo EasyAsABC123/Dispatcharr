@@ -2,6 +2,45 @@ use dispatcharr_contracts::PlaybackCandidate;
 use std::{collections::HashSet, time::Duration};
 use tokio::time::Instant;
 
+pub(super) const PROVIDER_CAPACITY_ERROR: &str =
+    "All active M3U profiles have reached maximum connection limits";
+
+/// Source's short admission retry applies before any input opens, when every
+/// available provider reports its connection limit reached.
+pub(super) struct ProviderCapacityWait {
+    started: Instant,
+    delay: Duration,
+    final_attempt: bool,
+}
+
+impl ProviderCapacityWait {
+    pub(super) fn new(started: Instant) -> Self {
+        Self {
+            started,
+            delay: Duration::from_millis(100),
+            final_attempt: false,
+        }
+    }
+
+    pub(super) fn elapsed(&self, now: Instant) -> Duration {
+        now.saturating_duration_since(self.started)
+    }
+
+    pub(super) fn next_delay(&mut self, now: Instant) -> Option<Duration> {
+        let remaining = Duration::from_secs(3).saturating_sub(self.elapsed(now));
+        if remaining.is_zero() || self.final_attempt {
+            return None;
+        }
+        if remaining <= self.delay {
+            self.final_attempt = true;
+            return Some(Duration::ZERO);
+        }
+        let delay = self.delay;
+        self.delay += Duration::from_millis(25);
+        Some(delay)
+    }
+}
+
 /// Port of StreamManager's failure-idle and stable-playback bookkeeping.
 pub(crate) struct RetryState {
     pub failures: usize,
@@ -76,6 +115,25 @@ impl RetryState {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn provider_capacity_wait_has_one_final_attempt_without_sleep() {
+        let start = Instant::now();
+        let mut retry = ProviderCapacityWait::new(start);
+        let mut now = start;
+        for delay in (100..=375).step_by(25) {
+            let delay = Duration::from_millis(delay);
+            assert_eq!(retry.next_delay(now), Some(delay));
+            now += delay;
+        }
+        assert_eq!(retry.elapsed(now), Duration::from_millis(2850));
+        assert_eq!(retry.next_delay(now), Some(Duration::ZERO));
+        assert_eq!(retry.next_delay(now), None);
+        assert_eq!(
+            ProviderCapacityWait::new(start).next_delay(start + Duration::from_secs(3)),
+            None
+        );
+    }
 
     #[test]
     fn failures_accumulate_and_reset_only_after_idle_window() {

@@ -39,6 +39,9 @@ pub fn router(
         })
 }
 fn error(reason: PlaybackError) -> Response {
+    if let Some(response) = dispatcharr_stream_http::provider_capacity_error_response(&reason) {
+        return response;
+    }
     let unauthorized = reason.status == 401;
     let mut response = (
         StatusCode::from_u16(reason.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),
@@ -142,6 +145,26 @@ async fn dispatch_resolution(
 mod tests {
     use super::*;
     use dispatcharr_contracts::{PlaybackRedirectPlan, PlaybackViewer, UserLimitPolicy};
+
+    #[tokio::test]
+    async fn ordinary_capacity_error_keeps_original_wire_format() {
+        let response = error(PlaybackError {
+            status: 503,
+            body: serde_json::json!({
+                "error": "All active M3U profiles have reached maximum connection limits",
+                "waited": "2s",
+            }),
+        });
+        assert_eq!(response.status(), StatusCode::SERVICE_UNAVAILABLE);
+        assert_eq!(response.headers()["content-type"], "application/json");
+        let body = axum::body::to_bytes(response.into_body(), 1024)
+            .await
+            .unwrap();
+        assert_eq!(
+            body.as_ref(),
+            br#"{"error": "All active M3U profiles have reached maximum connection limits", "waited": "2s"}"#
+        );
+    }
 
     #[tokio::test]
     async fn xc_dispatcher_uses_shared_redirect_engine() {

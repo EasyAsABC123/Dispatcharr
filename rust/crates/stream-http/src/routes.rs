@@ -80,7 +80,30 @@ fn request(
     })
 }
 
+/// Render the ordinary live provider-capacity response at every TS entry point.
+pub fn provider_capacity_error_response(error: &PlaybackError) -> Option<Response> {
+    let waited = error.body.get("waited").filter(|value| {
+        error.status == 503
+            && error.body["error"].as_str() == Some(crate::retry::PROVIDER_CAPACITY_ERROR)
+            && value.is_string()
+    })?;
+    // Django's ordinary live-capacity JsonResponse includes its default
+    // separator spaces. `waited` is still encoded as a JSON string.
+    let reason = crate::retry::PROVIDER_CAPACITY_ERROR;
+    Some(
+        (
+            StatusCode::SERVICE_UNAVAILABLE,
+            [(header::CONTENT_TYPE, "application/json")],
+            format!(r#"{{"error": "{reason}", "waited": {waited}}}"#),
+        )
+            .into_response(),
+    )
+}
+
 fn error(error: PlaybackError) -> Response {
+    if let Some(response) = provider_capacity_error_response(&error) {
+        return response;
+    }
     let unauthorized = error.status == 401;
     let mut response = (
         StatusCode::from_u16(error.status).unwrap_or(StatusCode::INTERNAL_SERVER_ERROR),

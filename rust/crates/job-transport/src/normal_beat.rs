@@ -101,20 +101,27 @@ enum ScheduleScope {
     All,
     Backup,
     Core,
+    CoreWithPluginRefresh,
 }
 impl ScheduleScope {
+    fn is_core(self) -> bool {
+        matches!(self, Self::Core | Self::CoreWithPluginRefresh)
+    }
+
     fn row_identity(self) -> (Option<&'static str>, Option<&'static str>) {
         match self {
             Self::All => (None, None),
             Self::Backup => (Some(BACKUP_PERIODIC_NAME), Some(BACKUP_PERIODIC_TASK)),
-            Self::Core => (Some(CLEANUP_PERIODIC_TASK), Some(CLEANUP_PERIODIC_TASK)),
+            Self::Core | Self::CoreWithPluginRefresh => {
+                (Some(CLEANUP_PERIODIC_TASK), Some(CLEANUP_PERIODIC_TASK))
+            }
         }
     }
     fn admits(self, entry: &Entry) -> bool {
         if self == Self::All {
             return true;
         }
-        if self == Self::Core {
+        if self.is_core() {
             let cleanup = entry.name == CLEANUP_PERIODIC_TASK
                 && entry.task == CLEANUP_PERIODIC_TASK
                 && entry.interval.is_none()
@@ -130,7 +137,16 @@ impl ScheduleScope {
                     .as_ref()
                     .is_some_and(|(every, period)| *every == DAILY_SECONDS && period == "seconds")
                 && entry.expire_seconds.is_none();
-            return (cleanup || daily)
+            let plugin_refresh = self == Self::CoreWithPluginRefresh
+                && entry.name == plugin_startup_schedule::NAME
+                && entry.task == crate::normal_plugin_repos::TASK
+                && entry.crontab.is_none()
+                && entry
+                    .interval
+                    .as_ref()
+                    .is_some_and(|(every, period)| *every > 0 && period == "hours")
+                && entry.expire_seconds.is_none();
+            return (cleanup || daily || plugin_refresh)
                 && !entry.one_off
                 && entry.start_time.is_none()
                 && entry.expires.is_none()
@@ -301,10 +317,12 @@ impl Scheduler {
                 cache: Mutex::new(Cache::default()),
                 lifecycle: Lifecycle::new(),
                 maximum_sleep,
-                scope: if backup_worker.is_some() {
-                    ScheduleScope::Core
-                } else {
-                    ScheduleScope::All
+                scope: match &backup_worker {
+                    Some(worker) if worker.owns_plugin_refresh() => {
+                        ScheduleScope::CoreWithPluginRefresh
+                    }
+                    Some(_) => ScheduleScope::Core,
+                    None => ScheduleScope::All,
                 },
                 backup_worker,
             }),
@@ -324,7 +342,7 @@ impl Scheduler {
         tokio::spawn(async move {
             let _owner = owner;
             let mut connection = inner.pool.acquire().await?.detach();
-            let observed = if inner.scope == ScheduleScope::Core {
+            let observed = if inner.scope.is_core() {
                 install_default(
                     &mut connection,
                     CLEANUP_PERIODIC_TASK,
@@ -414,7 +432,7 @@ impl Scheduler {
         tokio::spawn(async move {
             let mut connection = inner.pool.acquire().await?.detach();
             let observed = async {
-                if inner.scope == ScheduleScope::Core
+                if inner.scope.is_core()
                     && crate::normal_backup_schedule::try_lock_due_occurrence(&mut connection)
                         .await?
                 {
@@ -878,6 +896,9 @@ candidates AS MATERIALIZED (
             AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
                         WHERE i.id=p.interval_id AND i.every=$12::integer AND i.period='seconds')
             AND ((p.name=$8::text AND p.task=$9::text) OR (p.name=$10::text AND p.task=$11::text)))
+        OR (p.name=$13::text AND p.task=$14::text AND p.crontab_id IS NULL
+            AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
+                        WHERE i.id=p.interval_id AND i.every>0 AND i.period='hours'))
    )))
    AND (p.clocked_id IS NULL OR cl.clocked_time IS NULL OR cl.clocked_time <= $1::timestamptz)
    AND (p.crontab_id IS NULL OR cr.id IS NULL OR NOT (cr.hour=ANY($3::text[])) OR z.hour_offset IS NULL
@@ -943,10 +964,16 @@ async fn load(
     // before LIMIT/serialization budget, not after an unrelated enabled-row cap.
     let filters = QueryFilters::new(now)?;
     let (name, task) = scope.row_identity();
-    let expiration = (scope == ScheduleScope::Core)
+    let expiration = scope
+        .is_core()
         .then_some((EXPIRATION_PERIODIC_NAME, EXPIRATION_PERIODIC_TASK));
-    let version = (scope == ScheduleScope::Core)
+    let version = scope
+        .is_core()
         .then_some((VERSION_PERIODIC_NAME, crate::version_protocol::TASK));
+    let plugin_refresh = (scope == ScheduleScope::CoreWithPluginRefresh).then_some((
+        plugin_startup_schedule::NAME,
+        crate::normal_plugin_repos::TASK,
+    ));
     let rows = sqlx::query(LOAD_QUERY)
         .bind(filters.cutoff)
         .bind(&filters.hours)
@@ -960,6 +987,8 @@ async fn load(
         .bind(version.map(|(name, _)| name))
         .bind(version.map(|(_, task)| task))
         .bind(DAILY_SECONDS)
+        .bind(plugin_refresh.map(|(name, _)| name))
+        .bind(plugin_refresh.map(|(_, task)| task))
         .fetch_all(&mut *connection)
         .await?;
     let budget = rows.first().ok_or(Error::Capacity)?;
@@ -1602,6 +1631,61 @@ mod tests {
         );
         entry.interval = Some((1, "days".into()));
         assert!(!ScheduleScope::Core.admits(&entry));
+    }
+
+    #[tokio::test]
+    async fn core_plugin_schedule_uses_the_same_plain_repository_refresh_worker_frame() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
+            .unwrap();
+        let auth = dispatcharr_store::AuthService::new(
+            dispatcharr_store::Store::from_pool(pool),
+            dispatcharr_store::AuthConfig::new("unused-metadata-only".into()).unwrap(),
+        );
+        let mut entry = model(crate::normal_plugin_repos::TASK);
+        entry.name = plugin_startup_schedule::NAME.into();
+        entry.interval = Some((6, "hours".into()));
+        let scope = ScheduleScope::CoreWithPluginRefresh;
+        assert!(scope.admits(&entry));
+        assert!(!ScheduleScope::Core.admits(&entry));
+        assert!(!ScheduleScope::Backup.admits(&entry));
+
+        let id = Uuid::new_v4();
+        let publication =
+            prepare_publication(&entry, id, &auth.producer_identity_source()).unwrap();
+        let bytes = publication.bytes();
+        let parsed = crate::normal_plugin_repos::parse(bytes).unwrap();
+        assert_eq!(publication.redis_queue(), "celery");
+        assert_eq!(parsed.id, id);
+        assert_eq!(parsed.eta, None);
+        assert_eq!(
+            crate::milestone_dispatch::classify(bytes),
+            Some(crate::milestone_dispatch::Family::PluginRefresh)
+        );
+        let envelope: Value = serde_json::from_slice(bytes).unwrap();
+        assert_eq!(
+            envelope["headers"]["periodic_task_name"],
+            plugin_startup_schedule::NAME
+        );
+
+        entry.interval = Some((3, "hours".into()));
+        assert!(scope.admits(&entry));
+        let mut changed = entry.clone();
+        changed.name = "different-saved-refresh-row".into();
+        assert!(!scope.admits(&changed));
+        changed = entry.clone();
+        changed.interval = Some((180, "minutes".into()));
+        assert!(!scope.admits(&changed));
+        changed.interval = Some((0, "hours".into()));
+        assert!(!scope.admits(&changed));
+        changed = entry.clone();
+        changed.routing_key = Some("other".into());
+        assert!(!scope.admits(&changed));
+        changed = entry.clone();
+        changed.kwargs = json!({"unexpected": true});
+        assert!(!scope.admits(&changed));
+        entry.one_off = true;
+        assert!(!scope.admits(&entry));
     }
 
     #[test]

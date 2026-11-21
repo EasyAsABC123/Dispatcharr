@@ -22,12 +22,14 @@ pub(crate) struct Message {
     pub id: Uuid,
     pub eta: Option<chrono::DateTime<chrono::Utc>>,
 }
+pub(crate) const TASK: &str = "apps.plugins.tasks.refresh_plugin_repos";
+
 pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     if raw.is_empty() || raw.len() > crate::protocol::MAX_ENVELOPE {
         return Err(());
     }
     let mut frame = crate::clocked_recording_envelope::json_value(raw).map_err(|_| ())?;
-    if frame["headers"]["task"] != "apps.plugins.tasks.refresh_plugin_repos" {
+    if frame["headers"]["task"] != TASK {
         return Err(());
     }
     // Never ACK-and-sleep or hold the FIFO head until ETA as if that matched
@@ -71,7 +73,7 @@ fn startup_frame(
     .map_err(|_| D::Operational("Plugin startup base frame invalid".into()))?;
     let mut frame: Value = serde_json::from_slice(&base)
         .map_err(|_| D::Operational("Plugin startup base frame JSON invalid".into()))?;
-    frame["headers"]["task"] = json!("apps.plugins.tasks.refresh_plugin_repos");
+    frame["headers"]["task"] = json!(TASK);
     frame["headers"]["eta"] =
         json!((now + chrono::Duration::seconds(10))
             .to_rfc3339_opts(chrono::SecondsFormat::Micros, false));
@@ -190,7 +192,7 @@ impl Prepared {
     }
     async fn run(&self, expected: Option<Arc<[u8]>>, caller: Arc<dyn Send + Sync>) -> Result<D, D> {
         if self.inner.closed.load(Ordering::Acquire) {
-            return Err(D::Operational("Plugin refresh admission closed".into()));
+            return Ok(D::NotDue);
         }
         let slot = match self.inner.slots.clone().try_acquire_owned() {
             Ok(v) => v,
@@ -237,7 +239,7 @@ impl Prepared {
                 admission.close().await.map_err(|_| {
                     D::Operational("Plugin refresh preclaim SQL close failed".into())
                 })?;
-                return Err(D::Operational("Plugin refresh closed before claim".into()));
+                return Ok(D::NotDue);
             }
             let message = match inner
                 .jobs

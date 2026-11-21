@@ -280,6 +280,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     if selected_jobs_enabled && core_scheduled_jobs_enabled {
         return Err("Configure one application queue owner".into());
     }
+    let core_plugin_refresh =
+        core_scheduled_jobs::plugin_refresh_enabled(core_scheduled_jobs_enabled)?;
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
     let core_restore_grace =
         core_scheduled_jobs::restore_grace(core_scheduled_jobs_enabled, shutdown_timeout)?;
@@ -1138,6 +1140,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
                         .clone(),
                 ),
                 version_task_options(),
+                core_plugin_refresh,
                 selected_jobs_enabled
                     || refresh_enabled
                     || version_tasks_enabled
