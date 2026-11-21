@@ -20,10 +20,11 @@ capability inventory and historical component checkpoint.
 ## Acceptance evidence by package
 
 The `0f79dc28` application passed both required immediate forced XMLTV
-workflows with six successful task results per backend. Its exact host
-workspace passed formatting, strict Clippy and 1,491 tests.
+workflows with six successful task results per backend. Its host and isolated
+Compose workspaces passed formatting, strict Clippy and 1,491 tests each.
 [Forced XMLTV](rust-m6-0f79dc28-forced-xmltv-series.md) ·
-[Host workspace](rust-m0-0f79dc28-workspace-host.md)
+[Host workspace](rust-m0-0f79dc28-workspace-host.md) ·
+[Compose verifier](rust-m0-0f79dc28-compose-workspace.md)
 
 The `d426d322` application passed Channel Profile JSON aliases and ordinary
 VOD logo metadata, media and category reads. Packaging verified the React
@@ -44,7 +45,7 @@ a two-hour playback soak, and warm copied-data fallback.
 
 | Milestone | Verified scope and remaining acceptance |
 | --- | --- |
-| M0 | Portable Original baseline reductions passed, including the bounded Source2 metrics attachment. Exact `0f79dc28` host formatting, strict Clippy and 1,491 Cargo tests passed. Compose workspace verification and broader executable role and method evidence remain open. [Baseline review](rust-m0-baseline-progress.md) · [Host workspace](rust-m0-0f79dc28-workspace-host.md) |
+| M0 | Portable Original baseline reductions passed, including the bounded Source2 metrics attachment. Exact `0f79dc28` host and Compose workspace formatting, strict Clippy and 1,491 Cargo tests passed. Broader executable role and method evidence remains open. [Baseline review](rust-m0-baseline-progress.md) · [Host workspace](rust-m0-0f79dc28-workspace-host.md) · [Compose verifier](rust-m0-0f79dc28-compose-workspace.md) |
 | M1 | On `d426d322`, two-worker sharing, disconnect and ordinary stop, retained history across ten channels and paced readers passed. The bounded history test served 100 late reads. Broader lifecycle and buffer acceptance remain open. [Current viewing evidence](rust-m1-m3-d426d322-ordinary-viewing.md) |
 | M2 | On `d426d322`, each backend served 100 simultaneous authenticated viewers with A/V decode and one active upstream connection during overlap. Current matched resource comparison remains open. [Current functional playback](rust-m1-m3-d426d322-ordinary-viewing.md) · [Earlier performance measurements](rust-m2-100-viewer-measured.md) |
 | M3 | On `d426d322`, both backends served two concurrent viewers through one upstream per HLS and fragmented MP4 run. Both decoded A/V and the remaining fMP4 viewer progressed after the first disconnected. Broader profile acceptance remains open. [Current viewing evidence](rust-m1-m3-d426d322-ordinary-viewing.md) |
