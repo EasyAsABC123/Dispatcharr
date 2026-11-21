@@ -1,5 +1,5 @@
 {
-  "application_input_count": 2022,
+  "application_input_count": 2023,
   "application_input_scope": [
     "ATTRIBUTION.md",
     "LICENSE",
@@ -12,8 +12,8 @@
     "rust/vendor",
     "rust/runtime"
   ],
-  "application_input_tree_sha256": "1acc1ca78eef4f050808caf07a5ec18c99fa823c4356412471434b7a1bd3f560",
-  "application_revision": "cf64fbfe776c9470cc62bc90c2e21216f9df204a",
+  "application_input_tree_sha256": "c73544e9a2901eb61b21bdea7275497259f585b9715ddf69745d5ddf0ae9f15c",
+  "application_revision": "9116a8cc54cebe988ab939de70e4f761d45a3db7",
   "assembled_runtime_verified": false,
   "components": {
     "comskip": {
@@ -1543,11 +1543,11 @@
         "/out/dispatcharr-rs": "usr/local/bin/dispatcharr-rs"
       },
       "prior_evidence": [],
-      "prior_standalone_terminal": "passed",
+      "prior_standalone_terminal": "pending",
       "recipe": {
         "kind": "retained-artifact",
-        "path": "m10-cf64fbfe-arm64-copied-data-actions-1/tree/scripts/rust-platform-contracts/native-arm64-combined-assembly/recipes/rust/SHA256SUMS",
-        "sha256": "17040bb24f5aab1a4b8d54c9f6c50b612efb237d34dc8d1ef8bef9fd590c9ed6"
+        "path": "recipes/rust/SHA256SUMS",
+        "sha256": "73044a2346ec3b16c62a82c72b9266795b7c2654b79d6b5cafcf6b5e8eed5d85"
       },
       "required_files": [
         "usr/local/bin/dispatcharr-rs",
@@ -1638,122 +1638,129 @@
     "exact process and container retirement"
   ],
   "same_job_source_rebind": {
-    "cf64_rebuild_required": true,
-    "copied_data_controller_preflight_sha256": "11518abdc638765229d5f83a25089374f1caccc2d0030767b01043b6e8d3bb8a",
-    "predecessor_controller": {
-      "application": "21da6d0a7cbe0cd5cb8b757881b89e36f755be9f",
-      "artifact_sha256": "aa23c7b6f7473e3f7a655d627fca03904e92af6247246b5e8b46b772022f4709",
-      "complete_ordinary_compose_checks": 12,
-      "copied_result_transferred": false,
-      "job": 136815075183,
-      "literal_workload_controller_exit": 0,
-      "run": 44893810107
-    },
-    "prior_history": {
-      "compiled_21da6d0a_in_this_job_required": true,
-      "exact_review_map_sha256": "4b368171072aa8824ea140091321342451508ff00be40486925e3ce20513cff4",
-      "history": {
-        "ancestor_d426_evidence_run_only": [
-          {
-            "application_revision": "d426d322b27a197aaaaa057ef73dfb53c516c452",
-            "artifact_id": 14698131535,
-            "artifact_sha256": "0581183020a7d40edb2f5fac1ea134c5781f8851e91abcf96b5076568e18ccdb",
-            "compiler_source_tree_sha256": "3abf6730458363ceaaacc4981da92ca26bf04b68c828d5288f9e010dad9f11f0",
-            "job": 136772046987,
-            "native_executable_receipt_sha256": "3b0a5f60a335fb34d34b4b39aaaf83ad96c4692954a74209961f0a4e5e52197d",
-            "revision": "12829d297a79e1b7409190987e79bb82e4d4dafa",
-            "run": 44879696241,
-            "terminal": {
-              "controller_exit": 0,
-              "last_phase": "qualified",
-              "owned_containers_tag_and_workspace_retired": true
+    "history": {
+      "cf64_rebuild_required": true,
+      "copied_data_controller_preflight_sha256": "11518abdc638765229d5f83a25089374f1caccc2d0030767b01043b6e8d3bb8a",
+      "predecessor_controller": {
+        "application": "21da6d0a7cbe0cd5cb8b757881b89e36f755be9f",
+        "artifact_sha256": "aa23c7b6f7473e3f7a655d627fca03904e92af6247246b5e8b46b772022f4709",
+        "complete_ordinary_compose_checks": 12,
+        "copied_result_transferred": false,
+        "job": 136815075183,
+        "literal_workload_controller_exit": 0,
+        "run": 44893810107
+      },
+      "prior_history": {
+        "compiled_21da6d0a_in_this_job_required": true,
+        "exact_review_map_sha256": "4b368171072aa8824ea140091321342451508ff00be40486925e3ce20513cff4",
+        "history": {
+          "ancestor_d426_evidence_run_only": [
+            {
+              "application_revision": "d426d322b27a197aaaaa057ef73dfb53c516c452",
+              "artifact_id": 14698131535,
+              "artifact_sha256": "0581183020a7d40edb2f5fac1ea134c5781f8851e91abcf96b5076568e18ccdb",
+              "compiler_source_tree_sha256": "3abf6730458363ceaaacc4981da92ca26bf04b68c828d5288f9e010dad9f11f0",
+              "job": 136772046987,
+              "native_executable_receipt_sha256": "3b0a5f60a335fb34d34b4b39aaaf83ad96c4692954a74209961f0a4e5e52197d",
+              "revision": "12829d297a79e1b7409190987e79bb82e4d4dafa",
+              "run": 44879696241,
+              "terminal": {
+                "controller_exit": 0,
+                "last_phase": "qualified",
+                "owned_containers_tag_and_workspace_retired": true
+              }
             }
-          }
-        ],
-        "compiled_0f79_in_this_job_required": true,
-        "exact_0f79_DRF_repair_and_port_discovery_failure": {
-          "artifact_sha256": "d7232f7ce4ddf343604dfd647221240937c928dd567e034b2759f64d7c557dec",
-          "controller_exit": 1,
-          "exact_native_nonroot_drf_metadata_count": 27,
-          "literal_port_discovery_timeout": true,
-          "main_running_and_listening": true,
-          "owned_schema_migrations": 184,
-          "owned_schema_tables": 62,
-          "private_image_and_compose_exact_cleanup": true,
-          "revision": "c2c25ac090994cc370edc2da4c844ab2050569b4",
-          "run": 44888035763,
-          "source_image_retired_before_retry": true,
-          "startup_failure_line_seen": false
-        },
-        "previous_arm64_image": {
-          "app_revision": "d426d322b27a197aaaaa057ef73dfb53c516c452",
-          "artifact_sha256": "bb82cebcd003ef1e671b4a213570fb1e29c0dd329280882dc21c3bba07de05a8",
-          "compose_cleanup": true,
-          "confirmed_initialization_checkpoint": "schema-created",
-          "controller_exit": 1,
-          "failure_checkpoint": "initialize-on-port",
-          "revision": "146d35c5b86d36d919f71e6289667507ad81bbce",
-          "run": 44883627069,
-          "wrapper_smoke_exit": 0
-        },
-        "previous_clean_install_pass_and_overlay_lookup_failure": {
-          "all_owned_objects_retired": true,
-          "app_revision": "0f79dc28f8718a05a6b28dc554be958e3e295b47",
-          "artifact_sha256": "477de7ca206adf9f740bf1c984d1742e7c01c1579e971f08e4da7a4a138741d7",
-          "clean_install_http_and_sql_checks_passed": [
-            "ordinary-topology-and-internal-network",
-            "clean-empty-database",
-            "initialization-off-exits-without-ddl",
-            "native-only-roles",
-            "initialized-original-schema",
-            "frontend-index-served",
-            "normal-first-admin-form-available",
-            "normal-first-admin-initialized",
-            "normal-login-created-admin",
-            "restart-preserves-schema-and-closes-setup"
           ],
-          "controller_exit": 1,
-          "job": 136804165914,
-          "known_origin_lookup_failure": "The base Compose file has no media-fixture service.",
-          "known_origin_lookup_stderr_sha256": "5998bbc0f49f13232ae69eea16574cad2fe85afae2a80fc12e5cc3e003d216e8",
-          "package_components_completed": 9,
-          "package_exact_drf_metadata_count": 27,
-          "package_read_only_nonroot_wrapper_smoke_exit": 0,
-          "run": 44890206380,
-          "single_upstream_decode_scope_qualified": false,
-          "validation_revision": "370eda32aa65833f4d76a1f04b883a9bd2e9050f"
+          "compiled_0f79_in_this_job_required": true,
+          "exact_0f79_DRF_repair_and_port_discovery_failure": {
+            "artifact_sha256": "d7232f7ce4ddf343604dfd647221240937c928dd567e034b2759f64d7c557dec",
+            "controller_exit": 1,
+            "exact_native_nonroot_drf_metadata_count": 27,
+            "literal_port_discovery_timeout": true,
+            "main_running_and_listening": true,
+            "owned_schema_migrations": 184,
+            "owned_schema_tables": 62,
+            "private_image_and_compose_exact_cleanup": true,
+            "revision": "c2c25ac090994cc370edc2da4c844ab2050569b4",
+            "run": 44888035763,
+            "source_image_retired_before_retry": true,
+            "startup_failure_line_seen": false
+          },
+          "previous_arm64_image": {
+            "app_revision": "d426d322b27a197aaaaa057ef73dfb53c516c452",
+            "artifact_sha256": "bb82cebcd003ef1e671b4a213570fb1e29c0dd329280882dc21c3bba07de05a8",
+            "compose_cleanup": true,
+            "confirmed_initialization_checkpoint": "schema-created",
+            "controller_exit": 1,
+            "failure_checkpoint": "initialize-on-port",
+            "revision": "146d35c5b86d36d919f71e6289667507ad81bbce",
+            "run": 44883627069,
+            "wrapper_smoke_exit": 0
+          },
+          "previous_clean_install_pass_and_overlay_lookup_failure": {
+            "all_owned_objects_retired": true,
+            "app_revision": "0f79dc28f8718a05a6b28dc554be958e3e295b47",
+            "artifact_sha256": "477de7ca206adf9f740bf1c984d1742e7c01c1579e971f08e4da7a4a138741d7",
+            "clean_install_http_and_sql_checks_passed": [
+              "ordinary-topology-and-internal-network",
+              "clean-empty-database",
+              "initialization-off-exits-without-ddl",
+              "native-only-roles",
+              "initialized-original-schema",
+              "frontend-index-served",
+              "normal-first-admin-form-available",
+              "normal-first-admin-initialized",
+              "normal-login-created-admin",
+              "restart-preserves-schema-and-closes-setup"
+            ],
+            "controller_exit": 1,
+            "job": 136804165914,
+            "known_origin_lookup_failure": "The base Compose file has no media-fixture service.",
+            "known_origin_lookup_stderr_sha256": "5998bbc0f49f13232ae69eea16574cad2fe85afae2a80fc12e5cc3e003d216e8",
+            "package_components_completed": 9,
+            "package_exact_drf_metadata_count": 27,
+            "package_read_only_nonroot_wrapper_smoke_exit": 0,
+            "run": 44890206380,
+            "single_upstream_decode_scope_qualified": false,
+            "validation_revision": "370eda32aa65833f4d76a1f04b883a9bd2e9050f"
+          },
+          "previous_exact_0f79_startup_failure": {
+            "app_revision": "0f79dc28f8718a05a6b28dc554be958e3e295b47",
+            "artifact_sha256": "5bf43e1c90e9600ec4a2adcf9c058a8b660897d0c729b88fedeb1c27bfb5731d",
+            "component_controllers_zero": 9,
+            "compose_failure_checkpoint": "initialize-on-port",
+            "confirmed_complete_log_sha256": "a0997562e6028e6386f98b4dfb166bda5bbe8a142753a12f7a676f9192c8632d",
+            "confirmed_startup_error": "Pinned static assets: Pinned static metadata changed",
+            "confirmed_startup_error_sha256": "2a5f8f859185a58cb0cf4a2c3f6f7cd38b653b4959665bbc290995c7003f2f76",
+            "controller_exit": 1,
+            "observed_schema_migrations": 184,
+            "observed_schema_tables": 62,
+            "overall_cleanup": true,
+            "revision": "16c37e52ffddbfa80d00e7b66554d4bf8bb0911a",
+            "run": 44886019085
+          }
         },
-        "previous_exact_0f79_startup_failure": {
+        "predecessor_controller": {
           "app_revision": "0f79dc28f8718a05a6b28dc554be958e3e295b47",
-          "artifact_sha256": "5bf43e1c90e9600ec4a2adcf9c058a8b660897d0c729b88fedeb1c27bfb5731d",
-          "component_controllers_zero": 9,
-          "compose_failure_checkpoint": "initialize-on-port",
-          "confirmed_complete_log_sha256": "a0997562e6028e6386f98b4dfb166bda5bbe8a142753a12f7a676f9192c8632d",
-          "confirmed_startup_error": "Pinned static assets: Pinned static metadata changed",
-          "confirmed_startup_error_sha256": "2a5f8f859185a58cb0cf4a2c3f6f7cd38b653b4959665bbc290995c7003f2f76",
-          "controller_exit": 1,
-          "observed_schema_migrations": 184,
-          "observed_schema_tables": 62,
-          "overall_cleanup": true,
-          "revision": "16c37e52ffddbfa80d00e7b66554d4bf8bb0911a",
-          "run": 44886019085
+          "artifact_sha256": "6becacddfee5eee255db557ae588e3bc7d0c6c8ff7021a349fb97707e0b8df14",
+          "checks": 12,
+          "compose_exit": 0,
+          "controller_exit": 0,
+          "decoders": 2,
+          "exact_retirement": true,
+          "job": 136809763466,
+          "revision": "359775f6c8f93fe9048ceca416fa35fc869ed69a",
+          "run": 44892036200,
+          "same_app_result_transfer": false
         }
       },
-      "predecessor_controller": {
-        "app_revision": "0f79dc28f8718a05a6b28dc554be958e3e295b47",
-        "artifact_sha256": "6becacddfee5eee255db557ae588e3bc7d0c6c8ff7021a349fb97707e0b8df14",
-        "checks": 12,
-        "compose_exit": 0,
-        "controller_exit": 0,
-        "decoders": 2,
-        "exact_retirement": true,
-        "job": 136809763466,
-        "revision": "359775f6c8f93fe9048ceca416fa35fc869ed69a",
-        "run": 44892036200,
-        "same_app_result_transfer": false
-      }
+      "source_map_sha256": "7dd8ff8cd52ab6e9579379a1ae44cf56d1d04d3684a25b6aab503e0c48369d17"
     },
-    "source_map_sha256": "7dd8ff8cd52ab6e9579379a1ae44cf56d1d04d3684a25b6aab503e0c48369d17"
+    "prior_app_accepted_only": "cf64fbfe776c9470cc62bc90c2e21216f9df204a",
+    "prior_native_cli_test_run": 44898962488,
+    "prior_results_transferred": false,
+    "review_map_sha256": "516ca2ce9b7a4ba46ffcfb18f1f1d5a37b943b91e5863ecd44a0322b2c841137",
+    "status": "fresh-native-cli-validation-required"
   },
   "schema": 1,
   "verification_only_packaging": {
@@ -1764,5 +1771,5 @@
     ],
     "sha256": "092a511e51ca1d553c9d05f81981f0e4b4e4521e46737b87f2bfb97214226b6e"
   },
-  "verified_docs_parent": "5b1827c5fecd581de9bdbee006b0778104e89b5e"
+  "verified_docs_parent": "b716045fb1ec3462c078cfa35a0aa219972cdd0f"
 }

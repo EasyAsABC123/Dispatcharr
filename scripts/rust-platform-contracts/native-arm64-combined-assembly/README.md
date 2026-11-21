@@ -1,6 +1,6 @@
 # Opt-in local native ARM64 package
 
-This command uses the same nine-component assembler and final Dockerfile as the verified ARM64 Compose work. It rebuilds the pinned application revision `cf64fbfe` from the committed Git objects and the reviewed text receipts in this directory. Run it on a native Linux ARM64 host with a rootful local Docker engine and BuildKit, Python 3.11 or later, Git, Bash, tar, curl, and dpkg-deb. The repository must contain the pinned source and docs-parent Git objects. Use a local engine reserved for this build so other builds do not share its intermediate image lifecycle.
+This command uses the same nine-component assembler and final Dockerfile as the verified ARM64 Compose work. It rebuilds the pinned application revision `9116a8cc` from the committed Git objects and the reviewed text receipts in this directory. Run it on a native Linux ARM64 host with a rootful local Docker engine and BuildKit, Python 3.11 or later, Git, Bash, tar, curl, and dpkg-deb. The repository must contain the pinned source and docs-parent Git objects. Use a local engine reserved for this build so other builds do not share its intermediate image lifecycle.
 
 From the repository with these files committed, run the engine-free source and credit check.
 
