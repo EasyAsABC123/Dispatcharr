@@ -1,0 +1,27 @@
+diff --git a/rust/Dockerfile.app b/rust/Dockerfile.app
+--- a/rust/Dockerfile.app
++++ b/rust/Dockerfile.app
+@@ -37,4 +37,5 @@
+ 
+ FROM rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f AS build
++ARG TARGETARCH
+ COPY --from=taskless-restore-helper /taskless-out/taskless-helper.digest /tmp/taskless-helper.digest
+ WORKDIR /workspace
+@@ -49,6 +50,6 @@
+ # Deterministic source tar mtimes are zero; refresh ALL local compile-input
+ # mtimes inside every uncached Cargo RUN so changed bytes cannot look fresh.
+-RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked \
+-    --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked \
++RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-${TARGETARCH},target=/tmp/dispatcharr-target,sharing=locked \
++    --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-${TARGETARCH},target=/usr/local/cargo/registry,sharing=locked \
+     mkdir -p "$CARGO_TARGET_DIR" /out && \
+     find rust/crates rust/vendor -type f -exec touch {} + && \
+@@ -60,6 +61,6 @@
+ 
+ FROM build AS xmltv-parser-tests
+-RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked \
+-    --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked \
++RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-${TARGETARCH},target=/tmp/dispatcharr-target,sharing=locked \
++    --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-${TARGETARCH},target=/usr/local/cargo/registry,sharing=locked \
+     find rust/crates rust/vendor -type f -exec touch {} + && \
+     touch rust/Cargo.toml rust/Cargo.lock rust/rust-toolchain.toml rust/runtime/drf-static-source-1.json && \
