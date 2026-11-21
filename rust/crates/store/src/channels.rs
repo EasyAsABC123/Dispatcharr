@@ -29,6 +29,7 @@ const FIELDS: &[&str] = &[
     "tvg_id",
     "tvc_guide_stationid",
     "epg_data_id",
+    "streams",
     "stream_profile_id",
     "uuid",
     "logo_id",
@@ -160,22 +161,52 @@ pub(crate) fn serialize(
     let streams = streams
         .as_array()
         .ok_or_else(|| StoreError::Unsupported("Malformed stream relation"))?;
+    let account_name = row.try_get("account_name")?;
+    Ok(serialize_channel(
+        &raw,
+        ov,
+        streams,
+        account_name,
+        include_streams,
+        admin,
+        base,
+    ))
+}
+
+fn serialize_channel(
+    raw: &Value,
+    ov: Option<Value>,
+    streams: &[Value],
+    account_name: Option<String>,
+    include_streams: bool,
+    admin: bool,
+    base: &Url,
+) -> Value {
     let mut value = Map::new();
     for field in FIELDS {
-        let item = if *field == "channel_number" {
-            float(raw[*field].clone())
-        } else {
-            raw[*field].clone()
+        // Stock replaces the streams serializer in place, keeping its position
+        // for both a relation ID list and an expanded stream list.
+        let (name, item) = match *field {
+            "channel_number" => (*field, float(raw[*field].clone())),
+            "streams" => (
+                *field,
+                Value::Array(
+                    streams
+                        .iter()
+                        .map(|value| {
+                            if include_streams {
+                                stream(value, admin, base)
+                            } else {
+                                value["raw"]["id"].clone()
+                            }
+                        })
+                        .collect(),
+                ),
+            ),
+            "auto_created_by_id" => ("auto_created_by", raw[*field].clone()),
+            _ => (*field, raw[*field].clone()),
         };
-        value.insert(
-            if *field == "auto_created_by_id" {
-                "auto_created_by"
-            } else {
-                field
-            }
-            .to_string(),
-            item,
-        );
+        value.insert(name.into(), item);
     }
     let override_value = ov
         .map(|ov| {
@@ -193,45 +224,35 @@ pub(crate) fn serialize(
             Value::Object(result)
         })
         .unwrap_or(Value::Null);
-    for field in OVERRIDE_FIELDS {
-        let overridden = &override_value[*field];
-        let raw = if *field == "channel_number" {
-            float(raw[*field].clone())
-        } else {
-            raw[*field].clone()
-        };
-        value.insert(
-            format!("effective_{field}"),
-            if overridden.is_null() {
-                raw
-            } else {
-                overridden.clone()
-            },
-        );
-    }
-    value.insert("override".into(), override_value);
     value.insert(
         "auto_created_by_name".into(),
-        row.try_get::<Option<String>, _>("account_name")?
-            .map_or(Value::Null, Value::from),
+        account_name.map_or(Value::Null, Value::from),
     );
+    value.insert("override".into(), override_value);
     value.insert(
-        "streams".into(),
-        Value::Array(
+        "source_stream".into(),
+        if raw["auto_created"] == true {
             streams
-                .iter()
+                .first()
                 .map(|value| {
-                    if include_streams {
-                        stream(value, admin, base)
-                    } else {
-                        value["raw"]["id"].clone()
-                    }
+                    json!({"id": value["raw"]["id"], "name": value["raw"]["name"],
+                           "account_id": value["raw"]["m3u_account_id"], "account_name": value["account_name"]})
                 })
-                .collect(),
-        ),
+                .unwrap_or(Value::Null)
+        } else {
+            Value::Null
+        },
     );
-    value.insert("source_stream".into(),if raw["auto_created"]==true{streams.first().map(|value|json!({"id":value["raw"]["id"],"name":value["raw"]["name"],"account_id":value["raw"]["m3u_account_id"],"account_name":value["account_name"]})).unwrap_or(Value::Null)}else{Value::Null});
-    Ok(Value::Object(value))
+    for field in OVERRIDE_FIELDS {
+        let overridden = &value["override"][*field];
+        let item = if overridden.is_null() {
+            value[*field].clone()
+        } else {
+            overridden.clone()
+        };
+        value.insert(format!("effective_{field}"), item);
+    }
+    Value::Object(value)
 }
 pub(crate) fn scope<'a>(query: &mut QueryBuilder<'a, Postgres>, user: &User) {
     if user.user_level >= 10 {
@@ -1161,6 +1182,64 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn channel_json_uses_the_stock_serializer_order_for_normal_rows() {
+        let stock: Value = serde_json::from_slice(DETAIL_OPTIONS).unwrap();
+        let stock_fields: Vec<_> = stock["actions"]["PUT"].as_object().unwrap().keys().collect();
+        let base = Url::parse("http://localhost:9192").unwrap();
+        let manual = serialize_channel(
+            &json!({"id": 60, "name": "Owned manual", "channel_number": 214,
+                    "channel_group_id": 10, "auto_created": false}),
+            None,
+            &[],
+            None,
+            false,
+            true,
+            &base,
+        );
+        assert_eq!(manual["streams"], json!([]));
+        assert_eq!(manual["auto_created_by_name"], Value::Null);
+        assert_eq!(manual["override"], Value::Null);
+        assert_eq!(manual["source_stream"], Value::Null);
+        assert_eq!(manual["channel_group_id"], json!(10));
+        assert_eq!(manual["effective_channel_group_id"], json!(10));
+        assert_eq!(manual["effective_channel_number"], json!(214.0));
+
+        let raw = json!({"id": 61, "name": "Owned managed", "channel_number": 215,
+                         "channel_group_id": 11, "auto_created": true, "auto_created_by_id": 5});
+        let streams = [json!({"raw": {"id": 41, "name": "Owned stream", "m3u_account_id": 5,
+                                      "url": "http://origin/stream.ts"},
+                              "account_name": "Owned provider"})];
+        let managed = serialize_channel(
+            &raw,
+            Some(json!({"channel_number": 19.5, "is_radio": false})),
+            &streams,
+            Some("Owned provider".into()),
+            false,
+            true,
+            &base,
+        );
+        assert_eq!(managed["streams"], json!([41]));
+        assert_eq!(managed["auto_created_by"], json!(5));
+        assert_eq!(managed["auto_created_by_name"], json!("Owned provider"));
+        assert_eq!(managed["source_stream"], json!({"id": 41, "name": "Owned stream",
+            "account_id": 5, "account_name": "Owned provider"}));
+        assert_eq!(managed["channel_number"], json!(215.0));
+        assert_eq!(managed["effective_channel_number"], json!(19.5));
+        assert_eq!(managed["effective_channel_group_id"], json!(11));
+        assert_eq!(managed["effective_is_radio"], json!(false));
+
+        let expanded = serialize_channel(&raw, None, &streams, None, true, false, &base);
+        assert_eq!(expanded["streams"][0]["id"], json!(41));
+        assert!(expanded["streams"][0].get("url").is_none());
+        for channel in [manual, managed, expanded] {
+            let wire = serde_json::to_vec(&channel).unwrap();
+            let body: Value = serde_json::from_slice(&wire).unwrap();
+            let fields: Vec<_> = body.as_object().unwrap().keys().collect();
+            assert_eq!(fields, stock_fields);
+        }
+    }
 
     #[tokio::test]
     async fn channel_detail_options_serves_the_exact_static_source_metadata() {

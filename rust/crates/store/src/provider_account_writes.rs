@@ -934,19 +934,27 @@ fn queue_free_provider_edit(input: &Map<String, Value>) -> Option<QueueFreeProvi
     }
 }
 
-fn existing_std_interval_account(old: &Value, previous_cron: &str) -> bool {
+fn existing_queue_free_interval_account(old: &Value, previous_cron: &str) -> bool {
     let eligible_activity = old["is_active"] == false
         || (old["is_active"] == true
             && old["status"] == "idle"
             && old["refresh_interval"].as_i64().is_some_and(|hours| hours > 0));
-    old["account_type"] == "STD"
-        && eligible_activity
+    eligible_activity
         && old["locked"] == false
         && old["refresh_task_id"].as_i64().is_some_and(|id| id > 0)
         && previous_cron.is_empty()
 }
 
+fn existing_std_interval_account(old: &Value, previous_cron: &str) -> bool {
+    old["account_type"] == "STD" && existing_queue_free_interval_account(old, previous_cron)
+}
+
 fn eligible_queue_free_edit(edit: QueueFreeProviderEdit, old: &Value, previous_cron: &str) -> bool {
+    if edit == QueueFreeProviderEdit::Deactivate && old["account_type"] == "XC" {
+        return old["is_active"] == true
+            && old["custom_properties"]["enable_vod"] == true
+            && existing_queue_free_interval_account(old, previous_cron);
+    }
     existing_std_interval_account(old, previous_cron)
         && match edit {
             QueueFreeProviderEdit::Rename => true,
@@ -1018,6 +1026,7 @@ async fn edit_without_broker(
         .as_i64()
         .and_then(|value| i32::try_from(value).ok())
         .ok_or_else(unsupported)?;
+    let account_type = old["account_type"].as_str().ok_or_else(unsupported)?.to_owned();
     session
         .run(move |c| {
             Box::pin(async move {
@@ -1050,9 +1059,11 @@ async fn edit_without_broker(
                     .fetch_optional(&mut *tx)
                     .await?,
                     QueueFreeProviderEdit::Deactivate => sqlx::query_scalar(
-                        "WITH eligible AS (SELECT id FROM m3u_m3uaccount WHERE id=$1 AND account_type='STD' \
+                        "WITH eligible AS (SELECT id FROM m3u_m3uaccount WHERE id=$1 AND account_type=$5 \
                          AND NOT locked AND is_active AND status='idle' AND refresh_interval=$2 \
-                         AND refresh_task_id=$3 AND max_streams=$4 FOR UPDATE NOWAIT) \
+                         AND refresh_task_id=$3 AND max_streams=$4 \
+                         AND (account_type='STD' OR (account_type='XC' AND custom_properties->'enable_vod'='true'::jsonb)) \
+                         FOR UPDATE NOWAIT) \
                          UPDATE m3u_m3uaccount AS account SET is_active=false,status='disabled' \
                          FROM eligible WHERE account.id=eligible.id RETURNING account.id::bigint",
                     )
@@ -1060,6 +1071,7 @@ async fn edit_without_broker(
                     .bind(interval)
                     .bind(task)
                     .bind(max)
+                    .bind(account_type)
                     .fetch_optional(&mut *tx)
                     .await?,
                 };
@@ -1595,6 +1607,45 @@ mod tests {
         assert!(!validated.hash_changed && validated.expiration.is_none());
         assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
         assert!(!eligible_queue_free_edit(edit, &old, ""));
+    }
+
+    #[test]
+    fn flags_off_xc_deactivation_only_changes_activity_and_status_for_existing_vod() {
+        let mut old = defaults();
+        old["account_type"] = json!("XC");
+        old["is_active"] = json!(true);
+        old["status"] = json!("idle");
+        old["refresh_task_id"] = json!(7);
+        old["refresh_interval"] = json!(4);
+        old["custom_properties"] = json!({
+            "enable_vod":true, "auto_enable_new_groups_vod":false,
+            "auto_enable_new_groups_series":true, "owned_fixture_marker":"preserve"
+        });
+        let input = Map::from_iter([("is_active".into(), json!(false))]);
+        let edit = QueueFreeProviderEdit::Deactivate;
+        assert_eq!(queue_free_provider_edit(&input), Some(edit));
+        assert!(eligible_queue_free_edit(edit, &old, ""));
+        let validated = validate(input, &old, "", true, false).unwrap();
+        let mut expected = old.clone();
+        expected["is_active"] = json!(false);
+        expected["status"] = json!("disabled");
+        assert_eq!(validated.saved, expected);
+        assert!(!validated.hash_changed && validated.expiration.is_none());
+        assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
+        assert!(!eligible_queue_free_edit(QueueFreeProviderEdit::Rename, &old, ""));
+        assert!(!eligible_queue_free_edit(QueueFreeProviderEdit::Activate, &old, ""));
+        assert!(!eligible_queue_free_edit(edit, &old, "0 7 * * *"));
+        for (name, value) in [
+            ("locked", json!(true)),
+            ("status", json!("fetching")),
+            ("refresh_interval", json!(0)),
+            ("refresh_task_id", Value::Null),
+            ("custom_properties", json!({"enable_vod":false})),
+        ] {
+            let mut outside = old.clone();
+            outside[name] = value;
+            assert!(!eligible_queue_free_edit(edit, &outside, ""), "{name}");
+        }
     }
 
     #[test]
