@@ -445,3 +445,8 @@ mod calendar_tz;
 pub(crate) fn normal_query_offset(zone: &str) -> Result<i32, Error> {
     calendar_schedule::query_hour_offset(zone)
 }
+
+/// Catalogue used for the bounded PostgreSQL scheduler prefilter.
+pub(crate) fn normal_query_offsets() -> impl ExactSizeIterator<Item = (&'static str, i32)> {
+    calendar_tz::query_offsets()
+}

@@ -1,7 +1,7 @@
 //! Provider setup ported from Dispatcharr's catch-up view/helpers.
 //! Original Dispatcharr authors and contributors retain all application credit.
 use dispatcharr_contracts::UserLimitPolicy;
-use dispatcharr_store::{ChannelIdentity, Store, StoreError, User};
+use dispatcharr_store::{AuthService, ChannelIdentity, Store, StoreError, User};
 use dispatcharr_timeshift_core::{
     candidate_urls, client_duration_window, parse_timestamp, programme_age_days,
     provider_timestamp, utc_timestamp, ProviderCredentials, DEFAULT_DURATION_MINUTES,
@@ -200,13 +200,6 @@ impl SqlCatchupResolver {
             };
             let search: String = row.try_get("search_pattern")?;
             let replacement: String = row.try_get("replace_pattern")?;
-            if !((search.is_empty() || replacement.is_empty())
-                || (search == "^(.*)$" && replacement == "$1"))
-            {
-                return Err(StoreError::Unsupported(
-                    "Catch-up credential transforms are not implemented",
-                ));
-            }
             if row.try_get::<Option<i64>, _>("server_group_id")?.is_some() {
                 return Err(StoreError::Unsupported(
                     "Catch-up server-group credentials are not implemented",
@@ -219,10 +212,9 @@ impl SqlCatchupResolver {
             ) else {
                 continue;
             };
-            if username.is_empty() || password.is_empty() {
-                continue;
-            }
-            let Some(server_url) = normalized_server(&server) else {
+            let Some(credentials) =
+                archive_profile_credentials(&server, username, password, &search, &replacement)?
+            else {
                 continue;
             };
             let default_properties: Option<Value> = row.try_get("default_properties")?;
@@ -232,11 +224,6 @@ impl SqlCatchupResolver {
                 .and_then(|value| value.get("timezone"))
                 .and_then(Value::as_str);
             let local_timestamp = provider_timestamp(&timestamp, zone);
-            let credentials = ProviderCredentials {
-                server_url,
-                username,
-                password,
-            };
             let urls = candidate_urls(&credentials, &stream, &local_timestamp, duration_window);
             candidates.push(CatchupCandidate {
                 stream_id: row.try_get("stream_id")?,
@@ -305,6 +292,51 @@ impl SqlCatchupResolver {
 fn id(value: Option<&Value>) -> Option<i64> {
     value.and_then(|value| value.as_i64().or_else(|| value.as_str()?.parse().ok()))
 }
+fn archive_profile_credentials(
+    server: &str,
+    username: String,
+    password: String,
+    search: &str,
+    replacement: &str,
+) -> Result<Option<ProviderCredentials>, StoreError> {
+    if username.is_empty() || password.is_empty() {
+        return Ok(None);
+    }
+    let Some(server_url) = normalized_server(server) else {
+        return Ok(None);
+    };
+    if search.is_empty() || replacement.is_empty() || (search == "^(.*)$" && replacement == "$1") {
+        return Ok(Some(ProviderCredentials {
+            server_url,
+            username,
+            password,
+        }));
+    }
+    let Some((server_url, username, password, _)) = AuthService::resolve_vod_profile_credentials(
+        &server_url,
+        &username,
+        &password,
+        search,
+        replacement,
+        None,
+        0,
+    )?
+    else {
+        return Ok(None);
+    };
+    if !url::Url::parse(&server_url)
+        .is_ok_and(|provider| matches!(provider.scheme(), "http" | "https") && provider.has_host())
+    {
+        return Err(StoreError::Unsupported(
+            "Catch-up transformed provider URL scheme is not implemented",
+        ));
+    }
+    Ok(Some(ProviderCredentials {
+        server_url,
+        username,
+        password,
+    }))
+}
 fn normalized_server(value: &str) -> Option<String> {
     let mut url = url::Url::parse(value.trim()).ok()?;
     if !matches!(url.scheme(), "http" | "https") {
@@ -324,4 +356,53 @@ fn normalized_server(value: &str) -> Option<String> {
     url.set_query(None);
     url.set_fragment(None);
     Some(url.to_string().trim_end_matches('/').into())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn assigned_profile_transforms_both_archive_credential_segments() {
+        let resolved = archive_profile_credentials(
+            "http://origin.invalid/owned/player_api.php",
+            "before-fixture".into(),
+            "before-fixture".into(),
+            r"/live/before-(?<viewer>[a-z]+)/before-(?<login>[a-z]+)/1234[.]ts$",
+            "/live/$<viewer>/$<login>/1234.ts",
+        )
+        .unwrap()
+        .unwrap();
+        let urls = candidate_urls(&resolved, "sample", "2026-11-09:11-00", 30);
+        assert_eq!(
+            urls[0],
+            "http://origin.invalid/owned/timeshift/fixture/fixture/30/2026-11-09:11-00/sample.ts"
+        );
+    }
+
+    #[test]
+    fn identity_keeps_existing_archive_normalization_and_no_match_skips_the_profile() {
+        let base = "https://origin.invalid/example/player_api.php;local?from=test";
+        let resolved = archive_profile_credentials(
+            base,
+            "ordinary-viewer".into(),
+            "ordinary-login".into(),
+            "^(.*)$",
+            "$1",
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(resolved.server_url, "https://origin.invalid/example");
+        assert_eq!(resolved.username, "ordinary-viewer");
+        assert_eq!(resolved.password, "ordinary-login");
+        assert!(archive_profile_credentials(
+            base,
+            "ordinary-viewer".into(),
+            "ordinary-login".into(),
+            r"/not-an-owned-profile$",
+            "/live/fixture/fixture/1234.ts"
+        )
+        .unwrap()
+        .is_none());
+    }
 }

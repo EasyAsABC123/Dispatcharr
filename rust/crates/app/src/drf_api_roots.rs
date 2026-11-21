@@ -31,6 +31,8 @@ const CONNECT_HTML: &str = include_str!("../datasets/drf-root-html/connect.html.
 const ACTOR_SLOT: &str = "@@DRF_ROOT_ACTOR@@";
 const CSRF_SLOT: &str = "@@DRF_ROOT_CSRF@@";
 const HOST_SLOT: &str = "@@DRF_ROOT_HOST@@";
+const GET_REQUEST_LINE: &str = r#"<pre class="prettyprint"><b>GET</b>"#;
+const HEAD_REQUEST_LINE: &str = r#"<pre class="prettyprint"><b>HEAD</b>"#;
 
 const DIRECTORIES: &[Directory] = &[
     Directory {
@@ -134,7 +136,7 @@ fn browsable_template(
     uri: &axum::http::Uri,
     headers: &HeaderMap,
 ) -> Option<&'static str> {
-    if method != Method::GET || uri.query().is_some() {
+    if uri.query().is_some() {
         return None;
     }
     let mut accepts = headers.get_all(header::ACCEPT).iter();
@@ -146,11 +148,13 @@ fn browsable_template(
     if !authorization.starts_with("Bearer ") {
         return None;
     }
-    match uri.path() {
-        "/api/channels/" => Some(CHANNELS_HTML),
-        "/api/m3u/" => Some(M3U_HTML),
-        "/api/core/" => Some(CORE_HTML),
-        "/api/connect/" => Some(CONNECT_HTML),
+    match (method, uri.path()) {
+        (&Method::GET, "/api/channels/") => Some(CHANNELS_HTML),
+        (&Method::GET, "/api/m3u/") => Some(M3U_HTML),
+        (&Method::GET, "/api/core/") => Some(CORE_HTML),
+        (&Method::GET, "/api/connect/") => Some(CONNECT_HTML),
+        (&Method::HEAD, "/api/core/") if accept == "text/html" => Some(CORE_HTML),
+        (&Method::HEAD, "/api/connect/") if accept == "text/html" => Some(CONNECT_HTML),
         _ => None,
     }
 }
@@ -188,14 +192,24 @@ fn directory_html(
     actor: &str,
     origin: &str,
     headers: &HeaderMap,
+    method: &Method,
 ) -> Result<Response, ()> {
     let cookie = headers
         .get(header::COOKIE)
         .and_then(|value| value.to_str().ok());
     let (_, masked, set_cookie) = dispatcharr_store::source_browsable_csrf(cookie);
+    let head = method == Method::HEAD;
+    let head_template;
+    let template = if head {
+        let (before, after) = template.split_once(GET_REQUEST_LINE).ok_or(())?;
+        head_template = format!("{before}{HEAD_REQUEST_LINE}{after}");
+        &head_template
+    } else {
+        template
+    };
     let body = render_template(template, actor, origin, &masked)?;
     let length = HeaderValue::from_str(&body.len().to_string()).map_err(|_| ())?;
-    let mut response = Html(body).into_response();
+    let mut response = Html(if head { Vec::new() } else { body }).into_response();
     let headers = response.headers_mut();
     headers.insert(header::ALLOW, ALLOW);
     headers.insert(
@@ -299,7 +313,7 @@ async fn directory_response(
             };
             let origin = dispatcharr_output_http::source_output_origin(&auth, &request);
             if let Some(template) = browsable_template(&method, &uri, &headers) {
-                return directory_html(template, &actor.username, &origin, &headers)
+                return directory_html(template, &actor.username, &origin, &headers, &method)
                     .unwrap_or_else(|()| {
                         StoreError::Unsupported("API directory HTML exceeded its bounds")
                             .into_response()
@@ -363,11 +377,17 @@ mod tests {
                     browsable_template(&Method::GET, &path.parse().unwrap(), &headers),
                     Some(template)
                 );
-                for method in [Method::HEAD, Method::OPTIONS] {
-                    assert!(
-                        browsable_template(&method, &path.parse().unwrap(), &headers).is_none()
-                    );
-                }
+                let expected_head = (accept == "text/html"
+                    && matches!(path, "/api/core/" | "/api/connect/"))
+                .then_some(template);
+                assert_eq!(
+                    browsable_template(&Method::HEAD, &path.parse().unwrap(), &headers),
+                    expected_head
+                );
+                assert!(
+                    browsable_template(&Method::OPTIONS, &path.parse().unwrap(), &headers)
+                        .is_none()
+                );
             }
             for path in [
                 "/api/channels/.json",
@@ -409,9 +429,14 @@ mod tests {
             assert_eq!(template.matches(HOST_SLOT).count(), links);
             let mut observed = Vec::new();
             for _ in 0..2 {
-                let response =
-                    directory_html(template, username, "http://localhost", &HeaderMap::new())
-                        .unwrap();
+                let response = directory_html(
+                    template,
+                    username,
+                    "http://localhost",
+                    &HeaderMap::new(),
+                    &Method::GET,
+                )
+                .unwrap();
                 assert_eq!(response.status(), axum::http::StatusCode::OK);
                 assert_eq!(response.headers()[header::ALLOW], ALLOW);
                 assert_eq!(
@@ -465,6 +490,38 @@ mod tests {
                 links
             );
             assert!(!escaped.contains("http://https://"));
+        }
+    }
+
+    #[tokio::test]
+    async fn core_and_connect_head_render_the_request_line_without_sending_an_entity() {
+        for (template, get_length) in [(CORE_HTML, 10743), (CONNECT_HTML, 10457)] {
+            assert_eq!(template.matches(GET_REQUEST_LINE).count(), 1);
+            let response = directory_html(
+                template,
+                "owned-api-root-browser-admin",
+                "http://localhost",
+                &HeaderMap::new(),
+                &Method::HEAD,
+            )
+            .unwrap();
+            assert_eq!(response.status(), StatusCode::OK);
+            let headers = response.headers();
+            assert_eq!(headers[header::ALLOW], ALLOW);
+            assert_eq!(headers[header::CONTENT_TYPE], "text/html; charset=utf-8");
+            assert_eq!(headers[header::VARY], "Accept, origin, Cookie");
+            assert_eq!(
+                headers[header::CONTENT_LENGTH],
+                (get_length + 1).to_string()
+            );
+            assert!(headers[header::SET_COOKIE]
+                .to_str()
+                .unwrap()
+                .starts_with("csrftoken="));
+            assert!(axum::body::to_bytes(response.into_body(), 32 * 1024)
+                .await
+                .unwrap()
+                .is_empty());
         }
     }
 

@@ -130,18 +130,20 @@ fn source_timezone(properties: &Value) -> Result<Tz, StoreError> {
         return Ok(chrono_tz::UTC);
     };
     let requested = value.as_str().ok_or_else(unsupported)?;
-    // pytz resolves names regardless of ASCII case. Source catches unknown
-    // zones and substitutes UTC.
-    Ok(requested.parse().unwrap_or_else(|_| {
+    Ok(timezone(requested).unwrap_or(chrono_tz::UTC))
+}
+
+fn timezone(name: &str) -> Option<Tz> {
+    // pytz resolves IANA names regardless of ASCII case.
+    name.parse().ok().or_else(|| {
         chrono_tz::TZ_VARIANTS
             .iter()
             .copied()
-            .find(|zone| zone.name().eq_ignore_ascii_case(requested))
-            .unwrap_or(chrono_tz::UTC)
-    }))
+            .find(|zone| zone.name().eq_ignore_ascii_case(name))
+    })
 }
-/// Title and optional date captures use the existing no-time timeline.
-/// UTC time-only captures produce one event on the request's UTC day.
+
+/// A timed event uses the date capture or the request day in the source zone.
 pub fn supported(properties: &Value) -> bool {
     validate(properties).is_ok()
 }
@@ -149,17 +151,10 @@ fn validate(properties: &Value) -> Result<Tz, StoreError> {
     if !properties.is_object() || string(properties, "title_pattern")?.is_empty() {
         return Err(unsupported());
     }
-    let time = string(properties, "time_pattern")?;
-    let date = string(properties, "date_pattern")?;
+    string(properties, "time_pattern")?;
+    string(properties, "date_pattern")?;
     let timezone = source_timezone(properties)?;
-    let display_timezone = string(properties, "output_timezone")?;
-    if !time.is_empty() {
-        let zone = string(properties, "timezone")?;
-        let utc_or_default = |value: &str| value.is_empty() || value.eq_ignore_ascii_case("UTC");
-        if !date.is_empty() || !utc_or_default(zone) || !utc_or_default(display_timezone) {
-            return Err(unsupported());
-        }
-    }
+    string(properties, "output_timezone")?;
     duration(properties)?;
     for key in [
         "title_template",
@@ -377,22 +372,28 @@ pub async fn prepare(
     // Output XML's channel element uses only title captures. Programme
     // templates use time/date captures, then computed aliases and clock fields.
     let time_pattern = string(properties, "time_pattern")?;
-    let pattern = if time_pattern.is_empty() {
-        string(properties, "date_pattern")?
-    } else {
-        time_pattern
-    };
-    let extra_groups = if pattern.is_empty() {
+    let date_pattern = string(properties, "date_pattern")?;
+    let time_groups = if time_pattern.is_empty() {
         None
     } else {
-        captures(scope, pattern, name).await?
+        captures(scope, time_pattern, name).await?
     };
-    let kickoff = match extra_groups.as_ref().filter(|_| !time_pattern.is_empty()) {
+    let date_groups = if date_pattern.is_empty() {
+        None
+    } else {
+        captures(scope, date_pattern, name).await?
+    };
+    let kickoff = match time_groups.as_ref() {
         Some(groups) => timed::time_info(groups)?,
         None => None,
     };
+    let dated = match (kickoff, date_groups.as_ref()) {
+        (Some(_), Some(groups)) => timed::captured_date(groups, window.start.date_naive())?,
+        _ => None,
+    };
+    let extra_matches = time_groups.is_some() || date_groups.is_some();
     let logo_template = string(properties, "channel_logo_url")?;
-    let title_logo = if extra_groups.is_some() && !logo_template.is_empty() && !groups.is_empty() {
+    let title_logo = if extra_matches && !logo_template.is_empty() && !groups.is_empty() {
         let mut logo_groups = groups.clone();
         aliases(scope, &mut logo_groups).await?;
         Some(template(logo_template, &logo_groups, true, limit)?)
@@ -400,8 +401,7 @@ pub async fn prepare(
         None
     };
 
-    let extra_matches = extra_groups.is_some();
-    if let Some(extra) = extra_groups {
+    for extra in time_groups.into_iter().chain(date_groups) {
         merge_groups(&mut groups, extra);
     }
     aliases(scope, &mut groups).await?;
@@ -423,7 +423,18 @@ pub async fn prepare(
     let duration = duration(properties)?;
     let runtime = Duration::try_minutes(duration).ok_or_else(capacity)?;
     if let Some(kickoff) = kickoff {
-        timed::clock_fields(&mut groups, window.clock, kickoff, runtime);
+        let date = dated.unwrap_or(window.clock.date_naive());
+        let output = string(properties, "output_timezone")?;
+        let display_timezone = (!output.is_empty()).then(|| timezone(output)).flatten();
+        let (date, kickoff) = match display_timezone {
+            Some(zone) => {
+                let displayed =
+                    timed::localize(source_timezone, date.and_time(kickoff))?.with_timezone(&zone);
+                (displayed.date_naive(), displayed.time())
+            }
+            None => (date, kickoff),
+        };
+        timed::clock_fields(&mut groups, date, kickoff, runtime);
     }
     let title_text = string(properties, "title_template")?;
     let title = if title_text.is_empty() {
@@ -534,7 +545,7 @@ pub async fn prepare(
     };
     let programmes = match (kickoff, fillers) {
         (Some(start), Some((upcoming, ended))) => Programmes::Timed(Box::new(timed::Timed::new(
-            shared, start, runtime, upcoming, ended,
+            shared, start, dated, runtime, upcoming, ended,
         )?)),
         _ => Programmes::Custom(shared),
     };
@@ -772,7 +783,7 @@ mod tests {
             "title_pattern": "(?<title>Owned)",
             "date_pattern": "(?<month>[A-Za-z]+) (?<day>[0-9]+)"
         })));
-        assert!(!supported(&json!({
+        assert!(supported(&json!({
             "title_pattern": "(?<title>Owned)",
             "date_pattern": "(?<day>[0-9]+)",
             "time_pattern": "(?<hour>[0-9]+):[0-9]+"

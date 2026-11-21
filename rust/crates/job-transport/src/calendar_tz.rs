@@ -1,4 +1,4 @@
-//! Exact pinned Original system TZif data, bounded known-zone decoder.
+//! Bounded decoder for the pinned Original runtime timezone catalogue.
 //! IANA/tzdata contributors retain data credit; Original authors retain credit.
 //! No host tzdb fallback, POSIX-tail extrapolation or unbounded date authority.
 use super::Error;
@@ -87,46 +87,25 @@ fn parse(data: &[u8], utc: bool) -> Result<Zone, Error> {
         utc,
     })
 }
-static UTC: OnceLock<Result<Zone, Error>> = OnceLock::new();
-static NY: OnceLock<Result<Zone, Error>> = OnceLock::new();
-static LH: OnceLock<Result<Zone, Error>> = OnceLock::new();
-static KTM: OnceLock<Result<Zone, Error>> = OnceLock::new();
-static PARIS: OnceLock<Result<Zone, Error>> = OnceLock::new();
-static HONOLULU: OnceLock<Result<Zone, Error>> = OnceLock::new();
+include!("../datasets/tzdb-2026e/calendar-catalogue.rs");
+static BUNDLE: &[u8] = include_bytes!("../datasets/tzdb-2026e/calendar-catalogue.tzif");
+static CACHE: [OnceLock<Result<Zone, Error>>; RANGES.len()] =
+    [const { OnceLock::new() }; RANGES.len()];
+
 fn zone(name: &str) -> Result<&'static Zone, Error> {
-    let (value, data, utc): (&OnceLock<Result<Zone, Error>>, &[u8], bool) = match name {
-        "UTC" => (&UTC, include_bytes!("../datasets/tzdb-2026e/UTC"), true),
-        "America/New_York" => (
-            &NY,
-            include_bytes!("../datasets/tzdb-2026e/America-New_York"),
-            false,
-        ),
-        "Australia/Lord_Howe" => (
-            &LH,
-            include_bytes!("../datasets/tzdb-2026e/Australia-Lord_Howe"),
-            false,
-        ),
-        "Asia/Kathmandu" => (
-            &KTM,
-            include_bytes!("../datasets/tzdb-2026e/Asia-Kathmandu"),
-            false,
-        ),
-        "Europe/Paris" => (
-            &PARIS,
-            include_bytes!("../datasets/tzdb-2026e/Europe-Paris"),
-            false,
-        ),
-        "Pacific/Honolulu" => (
-            &HONOLULU,
-            include_bytes!("../datasets/tzdb-2026e/Pacific-Honolulu"),
-            false,
-        ),
-        _ => return Err(Error::Unsupported),
-    };
-    value
-        .get_or_init(|| parse(data, utc))
+    let key = NAMES
+        .binary_search_by(|(known, _, _)| known.cmp(&name))
+        .map_err(|_| Error::Unsupported)?;
+    let index = NAMES[key].1;
+    let (start, end, utc) = RANGES[index];
+    CACHE[index]
+        .get_or_init(|| parse(&BUNDLE[start..end], utc))
         .as_ref()
         .map_err(|_| Error::Unsupported)
+}
+
+pub(super) fn query_offsets() -> impl ExactSizeIterator<Item = (&'static str, i32)> {
+    NAMES.iter().map(|(name, _, offset)| (*name, *offset))
 }
 impl Zone {
     fn offset(&self, time: DateTime<Utc>) -> Result<i32, Error> {
@@ -186,4 +165,60 @@ pub(super) fn resolve(name: &str, wall: NaiveDateTime) -> Result<DateTime<Utc>, 
         previous = next;
     }
     Err(Error::Unsupported)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn saved_timezone_catalogue_is_sorted_bounded_and_matches_the_decoder() {
+        let january = DateTime::from_timestamp(1672574400, 0).unwrap();
+        assert!((401..=768).contains(&NAMES.len()));
+        assert!(BUNDLE.len() <= 8 * 1024 * 1024);
+        assert!(NAMES.windows(2).all(|pair| pair[0].0 < pair[1].0));
+        assert!(RANGES.windows(2).all(|pair| pair[0].1 == pair[1].0));
+        let mut all_ranges_visited = vec![false; RANGES.len()];
+        for &(name, range, planner_offset) in NAMES {
+            let (start, end, utc) = RANGES[range];
+            assert!(start < end && end <= BUNDLE.len());
+            assert_eq!(name == "UTC", utc);
+            assert_eq!(planner_offset, -offset(name, january).unwrap() / 3600);
+            assert_eq!(
+                resolve(name, local(name, january).unwrap()).unwrap(),
+                january
+            );
+            all_ranges_visited[range] = true;
+        }
+        assert!(all_ranges_visited.into_iter().all(|visited| visited));
+        assert!(offset("america/chicago", january).is_err());
+        assert_eq!(query_offsets().len(), NAMES.len());
+    }
+
+    #[test]
+    fn saved_timezone_catalogue_handles_dst_fractional_and_alias_cases() {
+        let unix = |stamp: &str| {
+            DateTime::parse_from_rfc3339(stamp)
+                .unwrap()
+                .with_timezone(&Utc)
+        };
+        let march_gap = unix("2026-03-08T02:30:00Z").naive_utc();
+        let november_fold = unix("2026-11-01T01:30:00Z").naive_utc();
+        assert_eq!(
+            resolve("America/Chicago", march_gap).unwrap(),
+            unix("2026-03-08T08:30:00Z")
+        );
+        assert_eq!(
+            resolve("America/Chicago", november_fold).unwrap(),
+            unix("2026-11-01T06:30:00Z")
+        );
+        let winter = unix("2026-01-05T12:00:00Z");
+        assert_eq!(offset("Pacific/Chatham", winter).unwrap(), 49500);
+        assert_eq!(offset("America/St_Johns", winter).unwrap(), -12600);
+        assert_eq!(
+            offset("US/Eastern", winter).unwrap(),
+            offset("America/New_York", winter).unwrap()
+        );
+        assert!(offset("America/Chicago", unix("2038-01-01T12:00:00Z")).is_err());
+    }
 }

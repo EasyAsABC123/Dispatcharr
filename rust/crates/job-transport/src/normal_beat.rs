@@ -13,7 +13,7 @@ use serde_json::{json, Value};
 use sqlx::{Connection, PgConnection, PgPool, Row};
 use std::{
     collections::{BTreeMap, HashSet},
-    sync::{Arc, Mutex as StateMutex},
+    sync::{Arc, Mutex as StateMutex, OnceLock},
     time::Duration,
 };
 use tokio::sync::{watch, Mutex, OwnedSemaphorePermit, Semaphore};
@@ -593,12 +593,18 @@ SELECT b.rows,b.bytes,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.crontab_spec END AS crontab_spec,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.clocked_time END AS clocked_time
 FROM budget b LEFT JOIN candidates c ON b.rows<=256 AND b.bytes<=1048576"#;
+struct ZoneHours {
+    names: Vec<&'static str>,
+    offsets: Vec<i32>,
+}
+static ZONE_HOURS: OnceLock<ZoneHours> = OnceLock::new();
+
 struct QueryFilters {
     cutoff: DateTime<Utc>,
     hours: Vec<i32>,
     numeric_hours: Vec<String>,
-    zones: Vec<String>,
-    offsets: Vec<i32>,
+    zones: &'static [&'static str],
+    offsets: &'static [i32],
 }
 impl QueryFilters {
     fn new(now: DateTime<Utc>) -> Result<Self, Error> {
@@ -613,29 +619,15 @@ impl QueryFilters {
             .map(|h| h.to_string())
             .chain((0..10).map(|h| format!("{h:02}")))
             .collect();
-        let zones = [
-            "UTC",
-            "America/New_York",
-            "Australia/Lord_Howe",
-            "Asia/Kathmandu",
-            "Europe/Paris",
-            "Pacific/Honolulu",
-        ]
-        .into_iter()
-        .map(str::to_owned)
-        .collect::<Vec<_>>();
-        let offsets = zones
-            .iter()
-            .map(|zone| {
-                database_schedule::normal_query_offset(zone)
-                    .map_err(|_| Error::Configuration("crontab query timezone profile"))
-            })
-            .collect::<Result<Vec<_>, _>>()?;
+        let ZoneHours { names, offsets } = ZONE_HOURS.get_or_init(|| {
+            let (names, offsets) = database_schedule::normal_query_offsets().unzip();
+            ZoneHours { names, offsets }
+        });
         Ok(Self {
             cutoff,
             hours,
             numeric_hours,
-            zones,
+            zones: names,
             offsets,
         })
     }
@@ -652,8 +644,8 @@ async fn load(
         .bind(filters.cutoff)
         .bind(&filters.hours)
         .bind(&filters.numeric_hours)
-        .bind(&filters.zones)
-        .bind(&filters.offsets)
+        .bind(filters.zones)
+        .bind(filters.offsets)
         .fetch_all(&mut *connection)
         .await?;
     let budget = rows.first().ok_or(Error::Capacity)?;
@@ -1166,7 +1158,7 @@ mod tests {
         let index = filters
             .zones
             .iter()
-            .position(|zone| zone == "Pacific/Honolulu")
+            .position(|zone| *zone == "Pacific/Honolulu")
             .unwrap();
         assert_eq!(filters.offsets[index], 10);
         assert!(filters
@@ -1198,6 +1190,66 @@ mod tests {
                 .unwrap()
                 .due
         );
+    }
+    #[test]
+    fn saved_timezone_catalogue_drives_existing_sql_window_and_reload() {
+        let winter = DateTime::parse_from_rfc3339("2026-01-05T10:30:00Z")
+            .unwrap()
+            .with_timezone(&Utc);
+        let summer = DateTime::parse_from_rfc3339("2026-07-06T09:30:00Z")
+            .unwrap()
+            .with_timezone(&Utc);
+        let first = QueryFilters::new(winter).unwrap();
+        let second = QueryFilters::new(summer).unwrap();
+        assert!(std::ptr::eq(first.zones, second.zones));
+        assert!(std::ptr::eq(first.offsets, second.offsets));
+        for (name, known) in [
+            ("America/Chicago", 6),
+            ("America/St_Johns", 3),
+            ("Asia/Kathmandu", -5),
+            ("Pacific/Chatham", -13),
+            ("US/Eastern", 5),
+            ("Africa/Casablanca", -1),
+        ] {
+            let index = first.zones.binary_search(&name).unwrap();
+            assert_eq!(first.offsets[index], known);
+            assert_eq!(database_schedule::normal_query_offset(name).unwrap(), known);
+        }
+        for (now, filters) in [(winter, first), (summer, second)] {
+            let chicago = filters.zones.binary_search(&"America/Chicago").unwrap();
+            assert!(filters
+                .hours
+                .contains(&((4 + filters.offsets[chicago]) % 24)));
+            assert!(!filters
+                .hours
+                .contains(&((18 + filters.offsets[chicago]) % 24)));
+            let mut entry = model("celery.backend_cleanup");
+            entry.last_run_at = now - chrono::Duration::minutes(1);
+            entry.interval = None;
+            entry.expire_seconds = Some(43200);
+            entry.crontab = Some((
+                "30".into(),
+                "4".into(),
+                "*".into(),
+                "*".into(),
+                "*".into(),
+                "America/Chicago".into(),
+            ));
+            let mut cached = Cached {
+                entry,
+                clocked: None,
+                when: 0.0,
+                identity: Arc::new(()),
+            };
+            assert!(decision(&cached, now).unwrap().due);
+            assert!(
+                !decision(&cached, now - chrono::Duration::seconds(1))
+                    .unwrap()
+                    .due
+            );
+            cached.entry.last_run_at = now;
+            assert!(!decision(&cached, now).unwrap().due);
+        }
     }
     #[test]
     fn named_fields_keep_the_existing_numeric_calendar_constructor_unchanged() {
