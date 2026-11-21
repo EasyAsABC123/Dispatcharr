@@ -1,0 +1,118 @@
+{
+  "amd64": {
+    "actual_exit": 0,
+    "image_id": "sha256:cce26df7d4c8cca2d8990b346269cec2d8900571a143dfef5b5f5fdf645e6a76",
+    "manifest_sha256": "6756f35e43be5ee6f242a6e319cfde025dc9f1ca2dcbd9463f4620d2956bc47f"
+  },
+  "application_revision": "9116a8cc54cebe988ab939de70e4f761d45a3db7",
+  "arm64": {
+    "artifact_file_sha256": {
+      "preflight.json": "d1bd4e98cc230018334bad314ed6a66e2af64ce4337db21feaea33f1e7a2b6da",
+      "qualified-local-image.json": "18f220e579d0157ae6c2a47db0ce14f8f190c457866c2c429ca896f31936bdac",
+      "same-image-compose.json": "afb56f6ccf1b2750ecb62c826863c10b515aaedb0c9aee5018eb9736b756a5f9",
+      "terminal.json": "b281b79b232a0a4db5751806210fe909d5234b72dad9a73ea17d2c45c473d0c1"
+    },
+    "preflight": {
+      "application_revision": "9116a8cc54cebe988ab939de70e4f761d45a3db7",
+      "application_tree_sha256": "c73544e9a2901eb61b21bdea7275497259f585b9715ddf69745d5ddf0ae9f15c",
+      "credits_checked": 13,
+      "engine_architecture_required": "linux/arm64",
+      "engine_invoked": false,
+      "official_source_image": "ghcr.io/dispatcharr/dispatcharr@sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+      "sealed_text_files": 90
+    },
+    "qualified_image": {
+      "component_exports": 9,
+      "image_config": "sha256:ece7f104fe471b9e3cba06dba041d3f7bf20f5460a4c47973d52389b502e137d",
+      "image_pushed": false,
+      "independent_nonroot_readonly_smoke_exit": 0,
+      "local_build_scratch_removed": true,
+      "original_license_notice_verified": true,
+      "pinned_drf_metadata_files": 27,
+      "platform": "linux/arm64",
+      "preexisting_engine_images_retained": true,
+      "source_revision": "9116a8cc54cebe988ab939de70e4f761d45a3db7",
+      "source_tree_sha256": "c73544e9a2901eb61b21bdea7275497259f585b9715ddf69745d5ddf0ae9f15c",
+      "test_owned_local_image_removed": true,
+      "uid": 65532
+    },
+    "same_image_compose": {
+      "actual_exit": 0,
+      "browser_executed": false,
+      "candidate_image_config": "sha256:ece7f104fe471b9e3cba06dba041d3f7bf20f5460a4c47973d52389b502e137d",
+      "candidate_smoke_receipt_sha256": "493c3be1440de3bc6a439a233a207a8a773fe133adaa335580fc298705fbd4d1",
+      "checks": [
+        "ordinary-topology-and-internal-network",
+        "clean-empty-database",
+        "initialization-off-exits-without-ddl",
+        "native-only-roles",
+        "initialized-original-schema",
+        "frontend-index-served",
+        "normal-first-admin-form-available",
+        "normal-first-admin-initialized",
+        "normal-login-created-admin",
+        "restart-preserves-schema-and-closes-setup",
+        "one-active-origin-two-authenticated-readers",
+        "both-readers-decoded-and-origin-retired"
+      ],
+      "copied_postgres_data": {
+        "archive": {
+          "archive_removed": true,
+          "custom_archive_bytes": 241273,
+          "custom_archive_sha256": "90861b59ca6dad5c898a6b0bd2daff657a3279c8278aca0e72cf0e409e3327e4",
+          "dump_exit": 0,
+          "restore_exit": 0
+        },
+        "copied_scope": {
+          "actors": 1,
+          "channel_streams": 1,
+          "fingerprint": "25a563049ba493fcdd645ab94d8b7a0f",
+          "migrations": 184
+        },
+        "copy_initialization_disabled": true,
+        "fresh_copy_cache": true,
+        "normal_copied_account_login": true,
+        "normal_shutdown_source": true,
+        "ordinary_copied_channel_read": true,
+        "schema_tables": 62,
+        "source_scoped_data_and_login_retained": true
+      },
+      "decoders": [
+        {
+          "audio_video_decoded": true,
+          "packet_aligned_bytes": 197400
+        },
+        {
+          "audio_video_decoded": true,
+          "packet_aligned_bytes": 197400
+        }
+      ],
+      "exact_cleanup": true,
+      "http_transport": "owned-rootful-internal-bridge",
+      "performance_measured": false,
+      "phase": "complete",
+      "published_host_port": false,
+      "redistribution_qualified": false,
+      "scope": "native ARM64 Compose clean-install HTTP/SQL and two-viewer MPEG-TS"
+    },
+    "terminal": {
+      "cli_build_exit": 0,
+      "cli_preflight_exit": 0,
+      "controller_exit": 0,
+      "exact_cleanup": true,
+      "image_pushed": false,
+      "last_phase": "complete",
+      "private_build_log_sha256": "7e35e8b4b7174b831eaac8793029161382ceca011181ef914b22b933a0a76b41",
+      "redistribution_qualified": false
+    }
+  },
+  "credit": "Original Dispatcharr authors and all dependency contributors retain full credit.",
+  "hosted_run": {
+    "job_id": 136891926384,
+    "literal_exit": 0,
+    "run_id": 44919393171,
+    "url": "https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44919393171",
+    "verified_validation_commit": "c82e4eb6810bd9b8dc8b5aa3ec0a79f6219f338d",
+    "verified_validation_parent": "3efd9a2005d87adf556869c160057920ee3f94e4"
+  }
+}
