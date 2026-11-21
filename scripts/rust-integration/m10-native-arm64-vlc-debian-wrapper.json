@@ -1,0 +1,111 @@
+{
+  "debian": {
+    "config": "sha256:5b6c2c6cbc90b6085e3f9b3086110b1eccedb643374137bfdcd1d2f5c78f6cd1",
+    "exact_debian_layers": 1,
+    "manifest": "sha256:ec8534cda2cb30f29f44f23e135297af7a1496f2990fd8e4e84aa36b081a757a",
+    "platform": "linux/arm64"
+  },
+  "ffmpeg_installed_tool_notice_gaps": [
+    "ffmpeg",
+    "ffprobe"
+  ],
+  "first_attempt": {
+    "build_exit": 0,
+    "cleanup": {
+      "exact_container_and_inventory_absence": true,
+      "exact_ephemeral_image_absence": true
+    },
+    "controller_exit": 1,
+    "host_failure": {
+      "assertion": "guessed VLC version prefix differs from wrapper stdout",
+      "checked_vlc_file_hashes": 792,
+      "file": "verify.py",
+      "host_media_qualified": false,
+      "line": 38,
+      "raw_banner_retained": false
+    },
+    "retained_terminal_file_sha256": {
+      "actual-exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "build-exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "cleanup.json": "f647c8a957620aa2ebd199c07b34e9943659fd85a89750bc01a15277ff24ca24",
+      "debian-identity.json": "53e85869bfdbaa286c663a84eb9a9fed18b19c82ee50cac70db8c4b690b58f0e",
+      "oci-identity.json": "3406e8e377c7f250f85c1c3df3494160777a0960cec3600aaf10db87f69b571e",
+      "terminal-phase": "1445c47ba4fbe78cf019a0fd7bfdf677983790bd132138d1a8bf1610f44c55ec",
+      "unit-image.json": "5caa78a6ebadbd496440067999912de0d680e4303ffa0bcb9a967431c90cd500",
+      "validation-commit": "19f55ad90a9d901b197435607e0b3b7b013e2bd1f16d8d90f084d95749e1e812",
+      "validation-parent": "df5f2cd050ed990847c35f44d6cf528a26d1724cebf59309547c0e78f7f48973",
+      "wrapped-media.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "wrapper-exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "run": 44872878694,
+    "terminal_phase": "wrapper-evidence",
+    "validation_commit": "058b98c0d46f82c96bac2038354eea4f9607a85f",
+    "wrapper_exit": 0
+  },
+  "generated_input_sha256": "562fa93972763130c3079330b5e028a1e248ff98d59202129164d20a8c67d0b1",
+  "github": {
+    "archive_sha256": "4fe689bfe0acc3d9c62fcd3b528bb7d7b35ff836550a1abb3c949f91b38939b7",
+    "artifact": 14694428338,
+    "branch": "validation/m10-arm64-vlc-debian-9c9c08b2-2",
+    "job": 136752036449,
+    "run": 44873182717,
+    "runner": "ubuntu-24.04-arm",
+    "url": "https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44873182717",
+    "wrapped_media_sha256": "c449f20b06e830966960aad629455a76545a1aebb8e0f8d70eeb48103fdd06ff"
+  },
+  "image_published": false,
+  "original_donor": {
+    "OCI_diffid_SHA256": "6fb7a5b77449c48fdf92aeb9eb8ec812b1902af77a8a8d57b22da02e2f934b39",
+    "OCI_layers": 17,
+    "config": "sha256:aa357ada16661964a9af41fe289964ae8008460b60efcdbbad60c4383e7d3b43",
+    "descriptor_reported_by_engine": false,
+    "donor": "ghcr.io/dispatcharr/dispatcharr@sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "manifest": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "native_platform": "linux/arm64"
+  },
+  "receiving_commit": "8608216fd78d127726bce05c7d6f7741dae1858f",
+  "standalone_image": {
+    "collector_only_layers": 2,
+    "exact_debian_layers": 1,
+    "id": "sha256:bad625f92a41bdad3ea5915f6cd5cf62fe27fa2cf36656f01f12a2a6b50d05d3",
+    "platform": "linux/arm64"
+  },
+  "terminal": {
+    "build_exit": 0,
+    "controller_exit": 0,
+    "exact_container_and_inventory_absence": true,
+    "exact_ephemeral_image_absence": true,
+    "phase": "complete",
+    "wrapper_exit": 0
+  },
+  "validation_commit": "c681bf653513bc8c0d0b96d37a8856bce6d71ec9",
+  "validation_parent": "9c9c08b2c569805e7a17909b21a04b63b0023ba7",
+  "wrapped_media": {
+    "audio_codec": "mp2",
+    "audio_frames": 298,
+    "credit": "Original Dispatcharr, VideoLAN, FFmpeg, Ubuntu, Debian and dependency authors retain full credit.",
+    "distribution_qualified": false,
+    "duration_seconds": 7.810922,
+    "exact_donor_vlc_files": 792,
+    "ffmpeg_wrapper_versions": [
+      "ffmpeg version 9.0.2-Dispatcharr Copyright (c) 2000-2026 the FFmpeg developers",
+      "ffprobe version 9.0.2-Dispatcharr Copyright (c) 2007-2026 the FFmpeg developers"
+    ],
+    "full_arm64_package_verified": false,
+    "height": 240,
+    "input_unchanged": true,
+    "output_bytes": 747676,
+    "output_sha256": "569673402002603190f96c7021a073f706e61dbc5a9a0679ca0e67f67d1053ed",
+    "preserved_donor_notice_gap": [
+      "/lib/ld-linux-aarch64.so.1"
+    ],
+    "same_donor_interpreter_notice_sha256": "c31d10900fdb95d1889005145a2205bb75e3bc018d3ec8265b81364901748e09",
+    "scope": "native Debian VLC and cvlc wrapper smoke",
+    "uid": 65532,
+    "video_and_audio_decode_completed": true,
+    "video_codec": "mpeg2video",
+    "video_frames": 195,
+    "vlc_version": "VLC version 3.0.23 Vetinari (3.0.23-2-0-g79128878dd)",
+    "width": 320
+  }
+}
