@@ -12,6 +12,13 @@ explicit. They do not change the existing M0–M9 acceptance criteria.
 
 ## Latest packaged checks
 
+On `526260cd`, M2 matched live MPEG-TS fallback with two authenticated
+viewers across three clean upstream EOFs. M8 passed five trusted plugin
+lifecycle steps with Original's response headers in Selected compatibility
+mode. Both scopes verified cleanup. M2 sharing and resource acceptance and
+M8 default operation and broader plugin compatibility remain open.
+[Packaged M2 and M8 evidence](rust-m2-m8-526260cd-finite-live-fallback-and-plugin-vary.md)
+
 The exact `ca752176` package matched both the plain and verbosity-2
 migration plans byte for byte. Its channel reorder comparison matched five
 typed admin actions and six ordered reads, with the same SQL transitions
