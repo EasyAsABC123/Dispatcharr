@@ -1836,3 +1836,20 @@ The [native ARM64 guarded restore helper](rust-m10-native-arm64-guarded-helper.m
 built on the pinned Linux ARM64 runner and passed the same-image non-root
 runtime, loader closure, notices, and exact container retirement checks.
 Full ARM64 application and copied-data release checks remain open.
+
+The [fdede54c paired channel serialization](rust-m5-fdede54c-channel-json-order.md)
+matched Stock's top-level order for both ordinary Channel detail responses.
+The [default Main XC deactivation pair](rust-m6-fdede54c-xc-deactivation.md)
+preserved existing VOD data and matched two notification events with no
+new jobs. Both scopes verified exact owned-Compose cleanup.
+
+The [2581 Guide Current gate](rust-m9-2581d75b-current-packaged.md) passed 64
+paired wire cases on that image. The [d608 memory attribution replay](rust-m9-d608-six-minute-soak-memory-attribution.md)
+passed the unchanged 64 MiB idle check, with 25.7 MiB growth, 20 decoded clips,
+and all five roles retired. The prior failed prefix remains part of the record.
+The [private 2581 admin restart](rust-m8-2581-private-admin-settings-restart.md)
+preserved the saved value and the same signed session across two loopback-only
+Main generations. The same-image AIO check retained the default login redirect.
+The [pinned Comskip candidate](rust-m10-native-arm64-comskip-candidate.md)
+completed a native ARM64 generated-media smoke test at its verified source
+revision. Full ARM64 packaging remains open.

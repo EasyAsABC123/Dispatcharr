@@ -1,0 +1,110 @@
+{
+  "comskip": {
+    "direct_DT_NEEDED": [
+      "ld-linux-aarch64.so.1",
+      "libargtable2.so.0",
+      "libavcodec.so.60",
+      "libavformat.so.60",
+      "libavutil.so.58",
+      "libc.so.6",
+      "libswscale.so.7"
+    ],
+    "resolved_dependency_count": 135,
+    "resolved_dependency_origins": {
+      "signed-ubuntu-package": 44,
+      "ubuntu-arm64-runner": 91
+    },
+    "runtime_closure_sha256": "a01f00713042f1284b6636aeae1fb0f6cc2c49adfd80e6cd7d7573771aba7173",
+    "sha256": "7e5a18d9bcf2a16f3cc9637cf7f99183de6f7045ab42b26cd219feed6ed0bd64",
+    "version": "0.83.001"
+  },
+  "credit": "Original Dispatcharr, Erik Kaashoek and Comskip contributors, and Ubuntu and dependency authors retain full credit.",
+  "distribution_qualified": false,
+  "ffmpeg_generator_sha256": "dbb8cc21c4b4e0e9bbb750cf74f7af6b023199e1b311eb2f6aec31c9722ceb88",
+  "ffmpeg_library_versions": {
+    "libavcodec": "60.31.102",
+    "libavformat": "60.16.100",
+    "libavutil": "58.29.100",
+    "libswscale": "7.5.100"
+  },
+  "fixture_ffmpeg_and_ffprobe_loader_exit": 0,
+  "full_ARM64_package_verified": false,
+  "github": {
+    "artifact_id": 14690225891,
+    "branch": "validation/m10-arm64-comskip-a140b6ac-3",
+    "controller_exit": 0,
+    "job_id": 136716611706,
+    "native_receipt_sha256": "e4c609dde6aad1534ce69e0c7e1d4fc64866770cce5a5b08a7e6b1b6045752b4",
+    "run_conclusion": "success",
+    "run_id": 44861799369,
+    "terminal_phase": "complete",
+    "text_artifact_sha256": "b43444b7810e80e7a5e965a98dcd8c111a1b63d343799572a071deb3a8774df0",
+    "validation_parent": "d905583ee891260684ecb126a5c5427016c15383",
+    "validation_revision": "36a4c5d40e7604f79c2b32a0c4daaa3d6ab07dbb"
+  },
+  "historical_donor_source_identified": false,
+  "media": {
+    "codec_names": [
+      "mp2",
+      "mpeg2video"
+    ],
+    "detector_exit": 1,
+    "duration_seconds": 8.0196,
+    "empty_EDL": true,
+    "help_exit": 2,
+    "input_unchanged": true,
+    "sha256": "09c7abc53eab6ed775e9d6eb8b2af5074e7a6261165a28d865da64dd399a6500"
+  },
+  "original_binary_reproduced": false,
+  "platform": {
+    "ELF": "ELF64 AArch64",
+    "dpkg_architecture": "arm64",
+    "gcc_target": "aarch64-linux-gnu",
+    "gcc_version": "13.3.0",
+    "native_uname": "aarch64",
+    "runner": "ubuntu-24.04-arm"
+  },
+  "retained_terminal_failures": [
+    {
+      "exit": 127,
+      "job_id": 136714436721,
+      "phase": "detector",
+      "revision": "5772c6714c9901d5d825bcc8b2fca75ccea22e38",
+      "run_id": 44861100744,
+      "unresolved_sonames": [
+        "libpulsecommon-16.1.so"
+      ]
+    },
+    {
+      "exit": 127,
+      "job_id": 136715586549,
+      "phase": "fixture-loader",
+      "revision": "17e85ed0acc89bcfafd792d690715cf369a0c0f9",
+      "run_id": 44861462348,
+      "unresolved_sonames": [
+        "libblas.so.3",
+        "liblapack.so.3"
+      ]
+    }
+  ],
+  "scope": "native Linux ARM64 hosted source build and synthetic MPEG-TS check of the pinned Comskip replacement candidate",
+  "signed_Ubuntu_inputs": {
+    "downloaded_packages": 93,
+    "index_manifest_sha256": "dd5ab0a40a97d8a2177c731ee972c46c2382f373136605fb62e933e34726c80b",
+    "indexes": 3,
+    "package_manifest_sha256": "905f70700ec14263e8fd0d99c8ba493c45331896a8abf801a3308f5e86849a93"
+  },
+  "source": {
+    "compatibility_patch_command_sha256": "8c4a74a51cb06820c1bce908602cedd5f978124482960831d693c120657207a5",
+    "credit": "Original Dispatcharr, Comskip and dependency authors retain full credit.",
+    "directories": 4,
+    "files": 42,
+    "git_tree": "9e05f1ec66b6599ea1977fdb448c6ed57beb0fe5",
+    "original_recipe_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "original_recipe_sha256": "3195943a1d2dc301c986d55eddc44d14b1fb46b01495251a7b4f006d6270375b",
+    "patched_mpeg2dec_sha256": "84cbe059a233f65a79bc639bc787f8e03dda055a10343773bf775459b11053b5",
+    "revision": "a140b6ac8bc8f596729e9052819affc779c3b377",
+    "source_archive_sha256": "5563d65c0cc5f76883e26b9e460348b4826cc496d10f8d53b25e7648e47f87c2",
+    "upstream_license_sha256": "db296f2f7f35bca3a174efb0eb392b3b17bd94b341851429a3dff411b1c2fc73"
+  }
+}

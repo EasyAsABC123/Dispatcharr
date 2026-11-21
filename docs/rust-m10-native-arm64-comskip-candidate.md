@@ -1,0 +1,11 @@
+# Native ARM64 test of the pinned Comskip replacement
+
+GitHub's native Ubuntu 24.04 ARM64 runner built Comskip 0.83.001 at upstream revision `a140b6ac8bc8f596729e9052819affc779c3b377`. The run verified the source archive, all 42 tracked files, upstream license and the original Dispatcharr FFmpeg compatibility edit. The kernel reported AArch64, GCC 13.3.0 targeted `aarch64-linux-gnu`, and the resulting executable and its linked dependencies were native AArch64 ELF. [Successful ARM64 job](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44861799369/job/136716611706) · [Pinned upstream source](https://github.com/erikkaashoek/Comskip/tree/a140b6ac8bc8f596729e9052819affc779c3b377) · [Prior source qualification](rust-m10-pinned-comskip-source-candidate.md)
+
+FFmpeg generated 8.0196 seconds of MPEG-TS with MPEG-2 video and MP2 audio. Comskip returned its expected help status 2 and no-commercials status 1, produced an empty EDL and preserved the input digest. The controller exited 0. The text artifact records three verified Ubuntu indexes, 93 downloaded packages and 135 resolved dependencies, with 44 from privately extracted Ubuntu packages and 91 from the runner. GitHub's artifact digest matched the downloaded archive. [Redacted receipt](../scripts/rust-integration/m10-native-arm64-comskip-candidate.json)
+
+Both preceding hosted attempts reached compilation and exited 127 during fixture startup or linkage. The first could not resolve `libpulsecommon-16.1.so`. The second could not resolve `libblas.so.3` and `liblapack.so.3`. The successful run added the private package subdirectories to the validation process's library search and verified both media tools' linkage before generating the fixture. [First attempt](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44861100744) · [Second attempt](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44861462348)
+
+This result applies to a source-built replacement candidate on Ubuntu. Qualification of the complete Dispatcharr ARM64 package, its Debian distribution dependency and notice closure, broader media behavior and exact corresponding source for the historical donor remain open.
+
+The original Dispatcharr authors, Erik Kaashoek and Comskip contributors, and Ubuntu and dependency authors retain full credit. [Attribution](../ATTRIBUTION.md)
