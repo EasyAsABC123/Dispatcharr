@@ -20,6 +20,7 @@ use futures_util::{stream, StreamExt};
 use serde_json::json;
 use std::{
     collections::HashMap,
+    future::{poll_fn, Future},
     io,
     net::SocketAddr,
     sync::{atomic::Ordering, Arc},
@@ -377,11 +378,12 @@ impl VodEngine {
         // Upstream EOF can leave a frame queued for the downstream body.
         // Keep the reader Ticket through that frame's body completion.
         let (finish_body, body_finished) = tokio::sync::oneshot::channel();
+        let scoped_cancellation = ticket.source_blocks();
         let task = tokio::spawn(pump(
             upstream,
             ticket,
             sender,
-            self.inner.config.frame_bytes,
+            self.inner.config.clone(),
             retry,
             body_started,
             body_finished,
@@ -389,7 +391,7 @@ impl VodEngine {
         let state = BodyState {
             receiver,
             stop,
-            _cancel: CancelTask(task),
+            _scoped_cancel: scoped_cancellation.then(|| CancelTask(task)),
             start_body: Some(start_body),
             finish_body: Some(finish_body),
             progress,
@@ -456,12 +458,16 @@ impl Drop for CancelTask {
         self.0.abort();
     }
 }
+
 struct BodyState {
+    // Drop completion first, so closing the receiver can distinguish a
+    // client departure from a finished body even on another runtime thread.
+    finish_body: Option<tokio::sync::oneshot::Sender<()>>,
     receiver: tokio::sync::mpsc::Receiver<Result<Bytes, io::Error>>,
     stop: tokio::sync::watch::Receiver<bool>,
-    _cancel: CancelTask,
+    // Recovery keeps its established hard cancellation and ledger ownership.
+    _scoped_cancel: Option<CancelTask>,
     start_body: Option<tokio::sync::oneshot::Sender<()>>,
-    finish_body: Option<tokio::sync::oneshot::Sender<()>>,
     progress: crate::sessions::Progress,
     pending_bytes: usize,
     remaining: Option<u64>,
@@ -522,14 +528,56 @@ impl RetryRequest {
 }
 type ProviderStream =
     std::pin::Pin<Box<dyn futures_util::Stream<Item = Result<Bytes, reqwest::Error>> + Send>>;
+
+async fn provider_pull<F: Future>(
+    next: F,
+    downstream_closed: impl Future<Output = ()>,
+    stop: &mut tokio::sync::watch::Receiver<bool>,
+    read_timeout: Duration,
+    claim_departure: impl FnOnce() -> Option<tokio::sync::oneshot::Receiver<()>>,
+) -> Option<F::Output> {
+    if *stop.borrow() {
+        return None;
+    }
+    let mut next = std::pin::pin!(next);
+    let mut began = None;
+    tokio::select! {
+        biased;
+        _ = stop.changed() => return None,
+        _ = downstream_closed => {},
+        result = poll_fn(|cx| {
+            let result = next.as_mut().poll(cx);
+            if result.is_pending() {
+                began.get_or_insert_with(tokio::time::Instant::now);
+            }
+            result
+        }) => return Some(result),
+    }
+    // Only a genuinely pending poll can outlive the body. Keep that exact
+    // future inside the same pump and deadline, ignoring bytes or errors.
+    // This path never resumes the pump, opens another response or sends data.
+    let deadline = began?.checked_add(read_timeout)?;
+    if *stop.borrow() || tokio::time::Instant::now() >= deadline {
+        return None;
+    }
+    let replacement = claim_departure()?;
+    tokio::select! {
+        biased;
+        _ = stop.changed() => {},
+        _ = replacement => {},
+        _ = tokio::time::timeout_at(deadline, next) => {},
+    }
+    None
+}
+
 async fn pump(
     upstream: reqwest::Response,
     ticket: Ticket,
     sender: tokio::sync::mpsc::Sender<Result<Bytes, io::Error>>,
-    frame_bytes: usize,
+    config: VodConfig,
     retry: RetryRequest,
     body_started: tokio::sync::oneshot::Receiver<()>,
-    body_finished: tokio::sync::oneshot::Receiver<()>,
+    mut body_finished: tokio::sync::oneshot::Receiver<()>,
 ) {
     let mut stop = ticket.session.stop.subscribe();
     let source_blocks = ticket.source_blocks();
@@ -543,7 +591,12 @@ async fn pump(
     if !started || *stop.borrow() {
         return;
     }
-    ticket.begin_body().await;
+    tokio::select! {
+        biased;
+        _ = stop.changed() => return,
+        _ = sender.closed() => return,
+        _ = ticket.begin_body() => {},
+    }
     let mut failures = 0;
     let mut sent_bytes = 0u64;
     let range_start = retry
@@ -557,7 +610,15 @@ async fn pump(
         if *stop.borrow() {
             return;
         }
-        let next = tokio::select! { result=upstream.next()=>result, _=stop.changed()=>return };
+        let Some(next) = provider_pull(upstream.next(), sender.closed(), &mut stop, config.read_timeout, || {
+            if source_blocks || !matches!(body_finished.try_recv(), Err(tokio::sync::oneshot::error::TryRecvError::Closed)) {
+                return None;
+            }
+            ticket.departing_pull()
+        }).await else { return };
+        if sender.is_closed() {
+            return;
+        }
         let Some(next) = next else {
             clean_eof = true;
             return;
@@ -580,7 +641,12 @@ async fn pump(
                     let Some(offset) = range_start.checked_add(sent_bytes) else {
                         return;
                     };
-                    let response = tokio::select! { result=retry.reopen(offset,ticket.session.content_length.load(Ordering::Relaxed))=>result, _=stop.changed()=>return };
+                    let response = tokio::select! {
+                        biased;
+                        _=stop.changed()=>return,
+                        _=sender.closed()=>return,
+                        result=retry.reopen(offset,ticket.session.content_length.load(Ordering::Relaxed))=>result,
+                    };
                     if let Ok(response) = response {
                         upstream = Box::pin(response.bytes_stream());
                         break;
@@ -593,8 +659,8 @@ async fn pump(
             // Preserve each Source8192-byte logical boundary even when provider
             // network fragments or the configured frame size are irregular.
             // This only splits owned Bytes; it adds no accumulation buffer.
-            let boundary=if source_blocks {8192-(sent_bytes%8192)as usize}else{frame_bytes};
-            let frame = chunk.split_to(chunk.len().min(frame_bytes).min(boundary));
+            let boundary=if source_blocks {8192-(sent_bytes%8192)as usize}else{config.frame_bytes};
+            let frame = chunk.split_to(chunk.len().min(config.frame_bytes).min(boundary));
             let count = frame.len() as u64;
             if *stop.borrow() {
                 return;
@@ -608,7 +674,9 @@ async fn pump(
         }
     }
     }.await;
-    settle_pump_body(sender, body_finished, &mut stop, clean_eof || source_blocks).await;
+    if !sender.is_closed() {
+        settle_pump_body(sender, body_finished, &mut stop, clean_eof || source_blocks).await;
+    }
 }
 
 async fn settle_pump_body(
@@ -627,6 +695,113 @@ async fn settle_pump_body(
 mod normal_eof_ownership {
     use super::*;
     use std::task::Poll;
+
+    #[tokio::test]
+    async fn closure_before_the_first_read_never_claims_a_departing_pull() {
+        let (_owner, mut stop) = tokio::sync::watch::channel(false);
+        let result: Option<()> = provider_pull(
+            async { panic!("unpolled provider read started") },
+            std::future::ready(()),
+            &mut stop,
+            Duration::from_secs(1),
+            || panic!("unstarted read retained"),
+        )
+        .await;
+        assert_eq!(result, None);
+    }
+
+    #[tokio::test]
+    async fn a_departing_read_waits_for_the_same_provider_future_and_discards_its_value() {
+        let (_owner, mut stop) = tokio::sync::watch::channel(false);
+        let (close, mut closed) = tokio::sync::mpsc::channel::<()>(1);
+        let (origin, input) = tokio::sync::oneshot::channel();
+        let (_joined, replacement) = tokio::sync::oneshot::channel();
+        let read = provider_pull(
+            input,
+            close.closed(),
+            &mut stop,
+            Duration::from_secs(1),
+            || Some(replacement),
+        );
+        tokio::pin!(read);
+        assert_eq!(futures_util::poll!(&mut read), Poll::Pending);
+        closed.close();
+        assert_eq!(futures_util::poll!(&mut read), Poll::Pending);
+        origin.send(b"owned input").unwrap();
+        assert_eq!(read.await, None);
+    }
+
+    #[tokio::test]
+    async fn a_departed_nonlast_viewer_does_not_retain_its_provider_read() {
+        let (_owner, mut stop) = tokio::sync::watch::channel(false);
+        let (close, mut closed) = tokio::sync::mpsc::channel::<()>(1);
+        let (origin, input) = tokio::sync::oneshot::channel::<()>();
+        let read = provider_pull(
+            input,
+            close.closed(),
+            &mut stop,
+            Duration::from_secs(1),
+            || None,
+        );
+        tokio::pin!(read);
+        assert_eq!(futures_util::poll!(&mut read), Poll::Pending);
+        closed.close();
+        assert_eq!(read.await, None);
+        assert!(origin.is_closed());
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn departed_pull_stall_is_bounded_from_first_read_poll() {
+        let (_owner, mut stop) = tokio::sync::watch::channel(false);
+        let (close, mut closed) = tokio::sync::mpsc::channel::<()>(1);
+        let (origin, input) = tokio::sync::oneshot::channel::<()>();
+        let (_joined, replacement) = tokio::sync::oneshot::channel();
+        let read = provider_pull(
+            input,
+            close.closed(),
+            &mut stop,
+            Duration::from_secs(10),
+            || Some(replacement),
+        );
+        tokio::pin!(read);
+        assert_eq!(futures_util::poll!(&mut read), Poll::Pending);
+        tokio::time::advance(Duration::from_secs(8)).await;
+        closed.close();
+        assert_eq!(futures_util::poll!(&mut read), Poll::Pending);
+        tokio::time::advance(Duration::from_secs(2)).await;
+        assert_eq!(read.await, None);
+        assert!(origin.is_closed());
+    }
+
+    #[tokio::test]
+    async fn hard_stop_and_replacement_cancel_the_departing_pull() {
+        for hard_stop in [true, false] {
+            let (owner, mut stop) = tokio::sync::watch::channel(false);
+            let (close, mut closed) = tokio::sync::mpsc::channel::<()>(1);
+            let (origin, input) = tokio::sync::oneshot::channel::<()>();
+            let (joined, replacement) = tokio::sync::oneshot::channel();
+            let read = provider_pull(
+                input,
+                close.closed(),
+                &mut stop,
+                Duration::from_secs(10),
+                || Some(replacement),
+            );
+            tokio::pin!(read);
+            assert_eq!(futures_util::poll!(&mut read), Poll::Pending);
+            closed.close();
+            assert_eq!(futures_util::poll!(&mut read), Poll::Pending);
+            if hard_stop {
+                owner.send_replace(true);
+                assert_eq!(read.await, None);
+                drop(joined);
+            } else {
+                drop(joined);
+                assert_eq!(read.await, None);
+            }
+            assert!(origin.is_closed());
+        }
+    }
 
     #[tokio::test]
     async fn a_buffered_final_frame_holds_the_retiring_pump_until_body_completion() {
@@ -649,19 +824,20 @@ mod normal_eof_ownership {
     }
 
     #[tokio::test]
-    async fn a_dropped_body_can_abort_a_pump_waiting_at_clean_eof() {
+    async fn a_dropped_body_releases_a_pump_waiting_at_clean_eof() {
         let (sender, mut body) = tokio::sync::mpsc::channel(1);
-        let (_body_completed, body_finished) = tokio::sync::oneshot::channel();
+        let (body_completed, body_finished) = tokio::sync::oneshot::channel();
         let (_session_stop, mut stop) = tokio::sync::watch::channel(false);
         let (body_owner, owner_retired) = tokio::sync::oneshot::channel::<()>();
-        let cancel = CancelTask(tokio::spawn(async move {
+        let task = tokio::spawn(async move {
             let _owned = body_owner;
             settle_pump_body(sender, body_finished, &mut stop, true).await;
-        }));
+        });
 
         assert!(body.recv().await.is_none());
-        drop(cancel);
+        drop(body_completed);
         assert!(owner_retired.await.is_err());
+        task.await.unwrap();
     }
 
     #[tokio::test]

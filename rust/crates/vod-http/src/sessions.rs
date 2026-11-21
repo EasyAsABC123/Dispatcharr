@@ -21,7 +21,7 @@ use std::{
     },
     time::{Duration, SystemTime, UNIX_EPOCH},
 };
-use tokio::sync::{watch, Mutex, OwnedSemaphorePermit, Semaphore};
+use tokio::sync::{oneshot, watch, Mutex, OwnedSemaphorePermit, Semaphore};
 
 fn millis() -> u64 {
     SystemTime::now()
@@ -93,6 +93,7 @@ struct State {
     reserved: bool,
     closed: bool,
     epoch: u64,
+    departing_pull: Option<oneshot::Sender<()>>,
 }
 pub(crate) struct Session {
     pub id: String,
@@ -637,6 +638,7 @@ impl SessionPool {
                             reserved: false,
                             closed: false,
                             epoch: 0,
+                            departing_pull: None,
                         }),
                         _slot: previous._slot.clone(),
                     });
@@ -772,6 +774,7 @@ impl SessionPool {
                 reserved: true,
                 closed: false,
                 epoch: 0,
+                departing_pull: None,
             }),
             _slot: previous._slot.clone(),
         });
@@ -997,6 +1000,9 @@ impl SessionPool {
                 state.reserved = true;
             }
             session.last_request.store(millis(), Ordering::Relaxed);
+            // The new viewer owns its own upstream response. End any detached
+            // pull on the departing ticket without cancelling this admission.
+            state.departing_pull = None;
             state.active += 1;
             state.epoch += 1;
             drop(state);
@@ -1195,6 +1201,7 @@ impl SessionPool {
                 reserved: true,
                 closed: false,
                 epoch: 0,
+                departing_pull: None,
             }),
             _slot: slot,
         });
@@ -1450,6 +1457,28 @@ fn scope_hook(pool: &Inner, event: Transition) -> Option<Arc<dyn StopHook>> {
 }
 
 impl Ticket {
+    pub(crate) fn departing_pull(&self) -> Option<oneshot::Receiver<()>> {
+        // Recovery owns a separate generation ledger. This path uses only
+        // the local legacy reservation, whose active count moves under state.
+        if self.session.scope.get().is_some() || !self.body_started.load(Ordering::Acquire) {
+            return None;
+        }
+        let pool = self.pool.upgrade()?;
+        let mut state = self.session.state.try_lock().ok()?;
+        if *pool.stopped.borrow()
+            || *self.session.stop.borrow()
+            || state.active != 1
+            || !state.reserved
+            || state.closed
+            || state.departing_pull.is_some()
+        {
+            return None;
+        }
+        let (joined, cancelled) = oneshot::channel();
+        state.departing_pull = Some(joined);
+        Some(cancelled)
+    }
+
     pub(crate) fn source_blocks(&self) -> bool {
         self.session.scope.get().is_some()
     }
@@ -1571,6 +1600,9 @@ impl Drop for Ticket {
                     return;
                 }
                 state.active -= 1;
+                if state.active == 0 {
+                    state.departing_pull = None;
+                }
                 state.epoch += 1;
                 let epoch = state.epoch;
                 let mut connection = pool.connection.clone();
