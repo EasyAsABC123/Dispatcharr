@@ -1,0 +1,135 @@
+{
+  "backup": {
+    "authority_sha256": "edcd768096be6cbbe3cd5b60dd98d5ed8662e18859eb950dbb2e483f09608c7b",
+    "candidate_revision": "d0a80aa585516ac81d583e6c5c80a0b50a6bd5be",
+    "crash_atomicity_verified": false,
+    "credit": "The original Dispatcharr, Celery, Kombu, django-celery-beat and dependency authors retain full credit.",
+    "effects_each": {
+      "actual_result_id_matched": true,
+      "actual_result_state": "SUCCESS",
+      "archive_format": "PostgreSQL format 2",
+      "disable_PUT": 200,
+      "durable_run_count": 1,
+      "old_archive_seeded_by_stock_management": true,
+      "older_archives_removed": 1,
+      "repeat_schedule_PUT": 200,
+      "restart_before_due": true,
+      "retained_archives": 1,
+      "schedule_PUT": 200,
+      "scheduled_publications": 1,
+      "scoped_SQL_unchanged": true
+    },
+    "exact_cleanup": true,
+    "formal_nodes_claimed": 0,
+    "full_default_job_graph_qualified": false,
+    "image_id": "sha256:44516d4c7ffed370302241fb668bb7b513fd534646dfad92bde9f182be381ab9",
+    "literal_controller_exit": 0,
+    "manual_create_route_qualified": false,
+    "native_status_route_qualified": false,
+    "paired_raw_sha256": "1c6ba111088b753e58568a8bf3752ca885061810ab5d975a01f53caeac5757b6",
+    "performance_measured": false,
+    "preview_configuration": "RUST_CORE_SCHEDULE_OWNER=rust",
+    "scope": "ordinary scoped Core receiver and same-owner Beat"
+  },
+  "backup_independent": {
+    "candidate": "d0a80aa585516ac81d583e6c5c80a0b50a6bd5be",
+    "crash_atomicity_verified": false,
+    "engine_calls_by_reducer": 0,
+    "independent_runtime_proof": {
+      "Native": {
+        "effect_witness_sha256": "78289c794fa1a12da9e23bd3eebc659a63e05b3156167a38eeac851c25c5ce5d",
+        "exact_retired_owned_containers": 5,
+        "independent_cleanup_sha256": "409ae7441e42ca7a343d940246dd8435587952a9e7ad77773f75c86f178bfbcf",
+        "ordinary_disable_passed": true,
+        "ordinary_due_publication_after_restart": true,
+        "producer_journal_sha256": "bc51cdf571978ea7f2974779344cfdf29adca96e68e01c955c43497d3b8fa8b5",
+        "successful_scheduled_backup_rotated_old_archive": true,
+        "unrelated_SQL_unchanged": true
+      },
+      "Original": {
+        "effect_witness_sha256": "d68c1ba104ef3d9ef22a5e1b390eeb7ca0e83fd79cc44e495914f67227010b7d",
+        "exact_retired_owned_containers": 2,
+        "independent_cleanup_sha256": "103607d48716ea010f2364e2ecd66ae0056c8f220bbf018c3b5480d99fcc2392",
+        "ordinary_disable_passed": true,
+        "ordinary_due_publication_after_restart": true,
+        "producer_journal_sha256": "9dfd8269c04389eeb3cfde88b24e3bad1cfba1189170f20d9bc2ab5bc8541cbc",
+        "successful_scheduled_backup_rotated_old_archive": true,
+        "unrelated_SQL_unchanged": true
+      }
+    },
+    "manifest_sha256": "46c80360812dc4f111bd0988093feb01168bf34c3b77dcea0baf0cc0c8542002",
+    "shared_exact_image": "sha256:44516d4c7ffed370302241fb668bb7b513fd534646dfad92bde9f182be381ab9",
+    "strict_campaign_proof_sha256": "a25b8b07bf7fbcc673ba7879b867d8deb6e422dfe32c74b10aced8fb1a9ae3d0"
+  },
+  "cleanup": {
+    "BackendCleanup_exact_leaf_map_sha256": "76c252474c240cf0f5cd9ff24937de8059955de9b42076b373cb1ed45e77d87b",
+    "Core_shared_scheduler_and_consumer_observed": true,
+    "Native_actual_Core_startup_journal_receipt_sha256": "e29a07200c2bfa691035d5c9cf9d2ef78f9c1cdda4c25334786be840977a2111",
+    "Native_ready_before_and_after_sha256": "d5348b1806d86b8e5568970e57071a21acac28aa34e40a3e11d17b86c09f5578",
+    "Original_utc_authority_sha256": "e4fadef6511c90bce5bca1ea03dcd58b66a62746519a5b2e7d42f807e1a003ce",
+    "Selected_or_external_worker_active_in_Native": false,
+    "build_manifest_sha256": "46c80360812dc4f111bd0988093feb01168bf34c3b77dcea0baf0cc0c8542002",
+    "business_scope": {
+      "children": 0,
+      "expiry_seconds": 43200,
+      "other_rows_unchanged": true,
+      "query_hour_offset": 0,
+      "queue": "celery",
+      "queues_empty": true,
+      "root_publications": 1,
+      "saved_runs": 1,
+      "schedule_zone": "UTC",
+      "task": "celery.backend_cleanup",
+      "terminal_result": null,
+      "terminal_status": "SUCCESS"
+    },
+    "candidate": "d0a80aa585516ac81d583e6c5c80a0b50a6bd5be",
+    "canonical_installed_periodic_row": "celery.backend_cleanup",
+    "comparative_performance": false,
+    "credit": "Original Dispatcharr, Celery, Django and django-celery-beat authors retain full credit.",
+    "exact_owned_container_retirement": {
+      "Native": 3,
+      "Original": 2
+    },
+    "formal_rows_promoted": 0,
+    "full_M6": false,
+    "lanes": {
+      "Native": {
+        "actual_exit": 0,
+        "cleanup_sha256": "a11474fd80cab20f5ea97a6e861898bcf66158b795cc1a2be96020dc38dfbaf4",
+        "image": "sha256:44516d4c7ffed370302241fb668bb7b513fd534646dfad92bde9f182be381ab9",
+        "lane_sha256": "5290848de45296a863de6c2a725f9a7976061d6aa554a7470cf819bc3b01b143",
+        "wire_sha256": "577ec8cf567b81402e10996fe7ba395b01fd2f589997198d40ab251676e851d5"
+      },
+      "Original": {
+        "actual_exit": 0,
+        "cleanup_sha256": "6df511e6689bbb023c15972cd973068fd506e1b2762257bf4450b6c2974202d9",
+        "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "lane_sha256": "428e8121a852504d9ad70f7fc45a42c640d6c13327b2bdb7a5e46a368dc1ef34",
+        "wire_sha256": "75f9852c7b12186cd64ad66012f8192450c6a47d4a108fdef87f90f948fbdd09"
+      }
+    },
+    "native_default_activation_claimed": false,
+    "preview": "RUST_CORE_SCHEDULE_OWNER=rust",
+    "prior_observer_attempt": {
+      "Native_business_started": false,
+      "Native_startup_publications_in_actual_journal": 0,
+      "Original_canonical_cleanup_completed": true,
+      "actual_physical_exit": 1,
+      "exact_owned_cleanup": true,
+      "failed_Native_execution_sha256": "6818d3c1a3cd3d0e9fa9ee251877df92fb789ebf0dea535f34a15b90f1845885",
+      "selected_only_observer_was_waiting_for_unregistered_roots": true
+    },
+    "review_sha256": "87029661c81a38954b6aa4d4e76a2b09febc2a073c90f0afa19e1bfcc006b4eb"
+  },
+  "host_workspace": {
+    "failed": 0,
+    "ignored": 814,
+    "passed": 1547,
+    "targets": 193
+  },
+  "independent_proof_sha256": {
+    "backup": "a25b8b07bf7fbcc673ba7879b867d8deb6e422dfe32c74b10aced8fb1a9ae3d0",
+    "cleanup": "fcdf753bb96af1ac331c1df69f63c3e3624d3735248ba14465654fda035b1bc1"
+  }
+}
