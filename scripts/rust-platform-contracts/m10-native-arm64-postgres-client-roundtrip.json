@@ -1,0 +1,97 @@
+{
+  "accepted_attempt": {
+    "artifact_id": 14694851961,
+    "artifact_sha256": "64b672879f94802975ce2f7ba90ce94b054cdc011a8245d2cd4a96901fa68c97",
+    "branch": "validation/m10-arm64-postgres-roundtrip-0ad0b34f-3",
+    "build_exit": 0,
+    "client_exit": 0,
+    "controller_exit": 0,
+    "exact_cleanup": {
+      "exact_ephemeral_image_absence": true,
+      "exact_two_containers_and_network_absent": true
+    },
+    "exact_fixture_scram_rule_loaded": true,
+    "head": "7b5b1fb79b8bfc2bbabafefa81498a98307ea0ed",
+    "job_id": 136753525307,
+    "raw_roundtrip_receipt_sha256": "2751e0bd5eb1ac3b01aa986709637d719606346754b246d6f6d51380d3439f41",
+    "roundtrip": {
+      "archive_bytes": 1872,
+      "archive_sha256": "06795fbcab2c42cd7d99e327a393e0477219948fa2feed0c0b975d6cc9dd84ba",
+      "client_exit": 0,
+      "credential_values_serialized": false,
+      "db_major_minor": "17.11",
+      "distribution_qualified": false,
+      "exact_three_rows": true,
+      "exact_two_constraint_types": true,
+      "full_arm64_package_verified": false,
+      "retained_wrappers_sha256": "04456807c73b1c5898cda0bcdbe9d51447c97f8c67ea8bd1b6320964aff0b44c",
+      "scope": "ordinary generated PostgreSQL roundtrip through native Debian clients on an internal fixture network",
+      "server_exit": 0,
+      "single_transaction_restore": true
+    },
+    "run_id": 44873669389,
+    "temporary_client_image": {
+      "collector_only_layers": 1,
+      "exact_debian_layers": 1,
+      "id": "sha256:d91f1731667af6b1b7db9c98dcecd50a6dd45e874d6a8c118ffc955efaa61962",
+      "platform": "linux/arm64"
+    },
+    "terminal_phase": "complete"
+  },
+  "credit": "Original Dispatcharr, PostgreSQL, Ubuntu, Debian and dependency authors retain full credit.",
+  "distribution_qualified": false,
+  "full_ARM64_application_verified": false,
+  "prior_hosted_failures": [
+    {
+      "artifact_id": 14694502240,
+      "artifact_sha256": "4d28a22ebfce3ef6ad1d2881d3f68a3f0f78f345b9c88c742e181b938c86f186",
+      "branch": "validation/m10-arm64-postgres-roundtrip-0ad0b34f-1",
+      "build_exit": 0,
+      "client_exit": 1,
+      "client_subphase_observed": false,
+      "controller_exit": 1,
+      "exact_cleanup": {
+        "exact_ephemeral_image_absence": true,
+        "exact_two_containers_and_network_absent": true
+      },
+      "head": "87035d63db04b149c172e32a0f9ff5a81885b3e4",
+      "job_id": 136750444035,
+      "run_id": 44872667384,
+      "terminal_phase": "ordinary-psql-dump-restore"
+    },
+    {
+      "artifact_id": 14694667656,
+      "artifact_sha256": "9b8143851a82052b342111bb06e7cae267e8eaa099d05d6d83fe50448b3c8de4",
+      "branch": "validation/m10-arm64-postgres-roundtrip-0ad0b34f-2",
+      "build_exit": 0,
+      "client_exit": 1,
+      "controller_exit": 1,
+      "diagnostic": {
+        "client_subphase": "server-version",
+        "diagnostic_classes": [
+          "postgres_connection",
+          "fixture_authentication",
+          "postgres_command_error"
+        ],
+        "literal_client_exit": 1,
+        "raw_client_streams_retained": false,
+        "stderr_bytes": 235,
+        "stderr_sha256": "b378f7d03694e1c8cbc131a63ec944e063910029b05e3ff4c6a7b02d114f5e8d",
+        "stdout_bytes": 0,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "exact_cleanup": {
+        "exact_ephemeral_image_absence": true,
+        "exact_two_containers_and_network_absent": true
+      },
+      "head": "1d95d7aab8c86e67609e8fbbe518fa5c916fee9e",
+      "job_id": 136751919254,
+      "run_id": 44873145017,
+      "terminal_phase": "ordinary-psql-dump-restore"
+    }
+  ],
+  "published_wrapper_receipt_sha256": "088820146359266a45f54df6fbb39625beefd2f61f8941c0542fca206e53b75e",
+  "receiving_ref": "96e49a903c7b4eb61b543b6d572d40b4b273d2b1",
+  "user_or_production_data_used": false,
+  "validation_parent": "0ad0b34fcaaf8f669138fb580236bca8117ad3ce"
+}
