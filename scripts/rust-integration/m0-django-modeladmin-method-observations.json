@@ -1,0 +1,3473 @@
+{
+  "Native_or_runtime_parity_claimed": false,
+  "application_at_register_snapshot": "fdede54c54ccb19300c01031537803a0b553f581",
+  "by_callback": {
+    "add_view": {
+      "actual_GET_200_rows": 26,
+      "actual_POST_302_with_typed_SQL_effect_rows": 22,
+      "method_null_rows": 26,
+      "retained_GET_500_rows": 0,
+      "retained_POST_200_form_rows": 3
+    },
+    "change_view": {
+      "actual_GET_200_rows": 27,
+      "actual_POST_302_with_typed_SQL_effect_rows": 24,
+      "method_null_rows": 27,
+      "retained_GET_500_rows": 0,
+      "retained_POST_200_form_rows": 2
+    },
+    "changelist_view": {
+      "actual_GET_200_rows": 24,
+      "actual_POST_302_with_typed_SQL_effect_rows": 0,
+      "method_null_rows": 26,
+      "retained_GET_500_rows": 2,
+      "retained_POST_200_form_rows": 0
+    },
+    "delete_view": {
+      "actual_GET_200_rows": 27,
+      "actual_POST_302_with_typed_SQL_effect_rows": 26,
+      "method_null_rows": 27,
+      "retained_GET_500_rows": 0,
+      "retained_POST_200_form_rows": 0
+    },
+    "history_view": {
+      "actual_GET_200_rows": 27,
+      "actual_POST_302_with_typed_SQL_effect_rows": 0,
+      "method_null_rows": 27,
+      "retained_GET_500_rows": 0,
+      "retained_POST_200_form_rows": 0
+    }
+  },
+  "credit": "The original Dispatcharr and Django authors and contributors retain full credit.",
+  "existing_passive_view_candidate_rows": 166,
+  "full_M0_accepted": false,
+  "method_declarations_changed": 0,
+  "model_admin_rows": 133,
+  "new_Original_requests": 0,
+  "ordinary_GET_rows_with_observed_200": 131,
+  "ordinary_POST_rows_with_observed_302_and_SQL_effect": 72,
+  "original_Django": "6.0.9",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "pinned_source_files": {
+    "actual_source_contract_bindings": {
+      "scripts/rust-contracts/retained-admin-models/bindings.json": "549a30ca43da1120ed4a3108d314a1ff79123ecc1d890f6acb8b24b683fc7e66",
+      "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json": "5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9"
+    },
+    "original_dependency_spec": "34cd68fa05cd034188f53be270337110d42482d294753ee65bf97c82ac1340f6",
+    "original_router": "98266b2fc6ce2e495dfc6840589691b1ab67015d49c3596c6ddb764ec593429f",
+    "register": "ca7074f08ecb7ba19439ce434cc20d2ca3b97249f5c2bb159bfc435863a93f06",
+    "runtime_resolver": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6"
+  },
+  "register_method_null_rows": 322,
+  "retained_ModelAdmin_nonzero_controller": 1,
+  "retained_history_ordinary_probe_exit": 0,
+  "rows": [
+    {
+      "contract_work_id": "route-5c091d9a07e64f219ff1:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/accounts/user/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 129,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:accounts_user_changelist",
+      "resolver_ordinal": 425,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-c365dabb71a230bab130:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/accounts/user/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:accounts_user_history",
+      "resolver_ordinal": 427,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-4b474c98e7a34c42479c:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/accounts/user/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 285,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 286,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:accounts_user_delete",
+      "resolver_ordinal": 428,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-ff6b53908d4fc9679a42:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/accounts/user/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 130,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 131,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:accounts_user_change",
+      "resolver_ordinal": 429,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-8367f0a4bafadacc8759:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/auth/group/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 4,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:auth_group_changelist",
+      "resolver_ordinal": 431,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-1cebdaf023c93413a0bc:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/auth/group/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 5,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 6,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:auth_group_add",
+      "resolver_ordinal": 432,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-db1d57de6685a832321f:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/auth/group/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:auth_group_history",
+      "resolver_ordinal": 433,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-f04db7225d5106b16c90:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/auth/group/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 283,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 284,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:auth_group_delete",
+      "resolver_ordinal": 434,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-8baa3bef4ea333f882f8:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/auth/group/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 7,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 8,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:auth_group_change",
+      "resolver_ordinal": 435,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-f20a10dec9735626aee6:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/stream/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 44,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:dispatcharr_channels_stream_changelist",
+      "resolver_ordinal": 437,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-671533c13c076fac3d1d:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/stream/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "blocked_or_expectation_failed_after_capture",
+          "retained_fixture_source_index": 45,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:dispatcharr_channels_stream_add",
+      "resolver_ordinal": 438,
+      "retained_nonqualifying_original_results": {
+        "POST_200": 1
+      },
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-abdc380de5eab7be1fe6:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/stream/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:dispatcharr_channels_stream_history",
+      "resolver_ordinal": 439,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-e4385cc9e8ba342ad694:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/stream/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 255,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 256,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:dispatcharr_channels_stream_delete",
+      "resolver_ordinal": 440,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-901bc003a16558695a72:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/stream/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "blocked_or_expectation_failed_after_capture",
+          "retained_fixture_source_index": 47,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:dispatcharr_channels_stream_change",
+      "resolver_ordinal": 441,
+      "retained_nonqualifying_original_results": {
+        "POST_200": 1
+      },
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-8fc6eba83180c2c34159:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/channel/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 49,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:dispatcharr_channels_channel_changelist",
+      "resolver_ordinal": 443,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-5ca818cf695fdff2e0f3:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/channel/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 50,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 51,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:dispatcharr_channels_channel_add",
+      "resolver_ordinal": 444,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-a66a654e22405cee728f:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/channel/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:dispatcharr_channels_channel_history",
+      "resolver_ordinal": 445,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-0daf1b9daf311d11bc8d:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/channel/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 253,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 254,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:dispatcharr_channels_channel_delete",
+      "resolver_ordinal": 446,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-a673568cc23963155054:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/channel/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 52,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 53,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:dispatcharr_channels_channel_change",
+      "resolver_ordinal": 447,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-a5b8698834c56384ef41:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/channelgroup/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 24,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:dispatcharr_channels_channelgroup_changelist",
+      "resolver_ordinal": 449,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-92308261af84c6f52fda:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/channelgroup/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 25,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 26,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:dispatcharr_channels_channelgroup_add",
+      "resolver_ordinal": 450,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-c7b48b1060795c51e721:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:dispatcharr_channels_channelgroup_history",
+      "resolver_ordinal": 451,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-0d61178d509a67594a0e:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 263,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 264,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:dispatcharr_channels_channelgroup_delete",
+      "resolver_ordinal": 452,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-2761318fe3e368167295:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 27,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 28,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:dispatcharr_channels_channelgroup_change",
+      "resolver_ordinal": 453,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-a6b1208e24baf41219aa:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/epg/epgsource/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 54,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:epg_epgsource_changelist",
+      "resolver_ordinal": 455,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-6b1d4d4954a6c0ee7f3c:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/epg/epgsource/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 55,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 56,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:epg_epgsource_add",
+      "resolver_ordinal": 456,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-1136fc2362211c7d319e:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/epg/epgsource/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:epg_epgsource_history",
+      "resolver_ordinal": 457,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-d87c79784f20fac7f1ec:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/epg/epgsource/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 251,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 252,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:epg_epgsource_delete",
+      "resolver_ordinal": 458,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-41abd99ecb8c577d9801:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/epg/epgsource/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 57,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 58,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:epg_epgsource_change",
+      "resolver_ordinal": 459,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-c007525492332fdcf3ed:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/epg/programdata/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 59,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:epg_programdata_changelist",
+      "resolver_ordinal": 461,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-45b5868955756d1bb107:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/epg/programdata/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 60,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 61,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:epg_programdata_add",
+      "resolver_ordinal": 462,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-48e0bb2e5522492eeae1:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/epg/programdata/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:epg_programdata_history",
+      "resolver_ordinal": 463,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-294f23fa979d80ddc263:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/epg/programdata/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 249,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 250,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:epg_programdata_delete",
+      "resolver_ordinal": 464,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-0ce7f843890fdf888d76:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/epg/programdata/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 62,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 63,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:epg_programdata_change",
+      "resolver_ordinal": 465,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-6e6cd5627ca14d73d423:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/hdhr/hdhrdevice/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 64,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:hdhr_hdhrdevice_changelist",
+      "resolver_ordinal": 467,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-09a705366769a47d8256:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/hdhr/hdhrdevice/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 65,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 66,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:hdhr_hdhrdevice_add",
+      "resolver_ordinal": 468,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-c6e765f96d017041ddd9:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/hdhr/hdhrdevice/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:hdhr_hdhrdevice_history",
+      "resolver_ordinal": 469,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-97e392582e55a48ef739:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/hdhr/hdhrdevice/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 273,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 274,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:hdhr_hdhrdevice_delete",
+      "resolver_ordinal": 470,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-090f71a88010d591e725:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/hdhr/hdhrdevice/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 67,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 68,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:hdhr_hdhrdevice_change",
+      "resolver_ordinal": 471,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-3ff88c19479cab7df6c3:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3uaccount/",
+      "ordinary_original_HTTP_observations": [],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:m3u_m3uaccount_changelist",
+      "resolver_ordinal": 473,
+      "retained_nonqualifying_original_results": {
+        "GET_500": 1
+      },
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-91c1a735f21577094824:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3uaccount/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "blocked_or_expectation_failed_after_capture",
+          "retained_fixture_source_index": 30,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:m3u_m3uaccount_add",
+      "resolver_ordinal": 474,
+      "retained_nonqualifying_original_results": {
+        "POST_200": 1
+      },
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-1ea13f70e2a87c7065af:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3uaccount/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:m3u_m3uaccount_history",
+      "resolver_ordinal": 475,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-a3c05c83840db19d00c1:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3uaccount/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 261,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 262,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:m3u_m3uaccount_delete",
+      "resolver_ordinal": 476,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-66555b628a3f80496e9b:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3uaccount/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "blocked_or_expectation_failed_after_capture",
+          "retained_fixture_source_index": 32,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:m3u_m3uaccount_change",
+      "resolver_ordinal": 477,
+      "retained_nonqualifying_original_results": {
+        "POST_200": 1
+      },
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-be3499f4e3fb827773f7:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3ufilter/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 34,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:m3u_m3ufilter_changelist",
+      "resolver_ordinal": 479,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-69bb5bc53dcff214110b:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3ufilter/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 35,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 36,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:m3u_m3ufilter_add",
+      "resolver_ordinal": 480,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-038c316b256a6a110ab7:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3ufilter/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:m3u_m3ufilter_history",
+      "resolver_ordinal": 481,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-0ec6365ff777aabf84dd:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3ufilter/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 257,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 258,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:m3u_m3ufilter_delete",
+      "resolver_ordinal": 482,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-bcce4c6cd5fbd737b392:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3ufilter/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 37,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 38,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:m3u_m3ufilter_change",
+      "resolver_ordinal": 483,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-9be40186b684012ccf36:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/servergroup/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 19,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:m3u_servergroup_changelist",
+      "resolver_ordinal": 485,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-7d6ce10709e493abffdd:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/servergroup/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 20,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 21,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:m3u_servergroup_add",
+      "resolver_ordinal": 486,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-6f206f81536346c82700:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/servergroup/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:m3u_servergroup_history",
+      "resolver_ordinal": 487,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-22e3c01ebd345257611a:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/servergroup/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 269,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 270,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:m3u_servergroup_delete",
+      "resolver_ordinal": 488,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-b06865f43d7273c5e68d:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/servergroup/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 22,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 23,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:m3u_servergroup_change",
+      "resolver_ordinal": 489,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-bc280e2e44efc286250c:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3uaccountprofile/",
+      "ordinary_original_HTTP_observations": [],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:m3u_m3uaccountprofile_changelist",
+      "resolver_ordinal": 491,
+      "retained_nonqualifying_original_results": {
+        "GET_500": 1
+      },
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-cb4f57f4f9898e406f71:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3uaccountprofile/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 40,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 41,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:m3u_m3uaccountprofile_add",
+      "resolver_ordinal": 492,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-4a6e1f5254fe6e74e965:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:m3u_m3uaccountprofile_history",
+      "resolver_ordinal": 493,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-9661c94b6f1488ba1c4d:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 259,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 260,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:m3u_m3uaccountprofile_delete",
+      "resolver_ordinal": 494,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-96601c0fd831be339e88:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 42,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 43,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:m3u_m3uaccountprofile_change",
+      "resolver_ordinal": 495,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-81cf0f77d941073f9776:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/vodcategory/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 69,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:vod_vodcategory_changelist",
+      "resolver_ordinal": 497,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-32ca959c97f7d9a9a9f3:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/vodcategory/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 70,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 71,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:vod_vodcategory_add",
+      "resolver_ordinal": 498,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-6e4d2a7652d79940f5a6:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/vodcategory/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:vod_vodcategory_history",
+      "resolver_ordinal": 499,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-99888579bf3250e24a7b:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/vodcategory/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 247,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 248,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:vod_vodcategory_delete",
+      "resolver_ordinal": 500,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-3533967e5d8c0cd2b8eb:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/vodcategory/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 72,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 73,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:vod_vodcategory_change",
+      "resolver_ordinal": 501,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-4b59773cf78a372b48af:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/series/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 79,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:vod_series_changelist",
+      "resolver_ordinal": 503,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-4b350c37b5c44c29fa4e:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/series/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 80,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 81,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:vod_series_add",
+      "resolver_ordinal": 504,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-d42a2a2bfdff4637393b:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/series/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:vod_series_history",
+      "resolver_ordinal": 505,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-65515aac8f096c5e5391:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/series/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 245,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 246,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:vod_series_delete",
+      "resolver_ordinal": 506,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-88b08440b0a344b3ee5e:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/series/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 82,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 83,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:vod_series_change",
+      "resolver_ordinal": 507,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-8ef0521afc33c8da138f:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/movie/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 74,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:vod_movie_changelist",
+      "resolver_ordinal": 509,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-571426a94492058183a7:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/movie/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 75,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 76,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:vod_movie_add",
+      "resolver_ordinal": 510,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-7fec72328d793b977aa8:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/movie/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:vod_movie_history",
+      "resolver_ordinal": 511,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-f3e0ba8b22869145a32d:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/movie/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 243,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 244,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:vod_movie_delete",
+      "resolver_ordinal": 512,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-ffb7acf7d5bc21942c35:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/movie/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 77,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 78,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:vod_movie_change",
+      "resolver_ordinal": 513,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-86576893cc9043464a49:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/episode/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 84,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:vod_episode_changelist",
+      "resolver_ordinal": 515,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-be0cc7f95ea1c69881f8:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/episode/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "blocked_or_expectation_failed_after_capture",
+          "retained_fixture_source_index": 85,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:vod_episode_add",
+      "resolver_ordinal": 516,
+      "retained_nonqualifying_original_results": {
+        "POST_200": 1
+      },
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-e584f288e95db15fd771:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/episode/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:vod_episode_history",
+      "resolver_ordinal": 517,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-348a8373f63b5e5e1872:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/episode/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 241,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 242,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:vod_episode_delete",
+      "resolver_ordinal": 518,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-aa568fe9cd77d14c612a:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/episode/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 87,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 88,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:vod_episode_change",
+      "resolver_ordinal": 519,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-6920775bd43a2208dc11:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3umovierelation/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 89,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:vod_m3umovierelation_changelist",
+      "resolver_ordinal": 521,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-e075d5e8f9d344fa0670:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3umovierelation/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 90,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 91,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:vod_m3umovierelation_add",
+      "resolver_ordinal": 522,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-5b315dc1974aba99350c:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3umovierelation/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:vod_m3umovierelation_history",
+      "resolver_ordinal": 523,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-0a322b42663caca999b2:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3umovierelation/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 237,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 238,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:vod_m3umovierelation_delete",
+      "resolver_ordinal": 524,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-73fa58abe7585327f798:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3umovierelation/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 92,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 93,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:vod_m3umovierelation_change",
+      "resolver_ordinal": 525,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-357ac3accd93287f8251:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3useriesrelation/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 94,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:vod_m3useriesrelation_changelist",
+      "resolver_ordinal": 527,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-4cb27a0f6cde217bf977:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3useriesrelation/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 95,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 96,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:vod_m3useriesrelation_add",
+      "resolver_ordinal": 528,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-f8e850a4fd215aa195f5:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3useriesrelation/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:vod_m3useriesrelation_history",
+      "resolver_ordinal": 529,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-4e93168724931ecc8eac:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3useriesrelation/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 239,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 240,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:vod_m3useriesrelation_delete",
+      "resolver_ordinal": 530,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-7ba9347cd0125c72780e:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3useriesrelation/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 97,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 98,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:vod_m3useriesrelation_change",
+      "resolver_ordinal": 531,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-5903b274c578e7988cd7:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3uepisoderelation/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 99,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:vod_m3uepisoderelation_changelist",
+      "resolver_ordinal": 533,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-81978795a1f814abf8be:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3uepisoderelation/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 100,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 101,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:vod_m3uepisoderelation_add",
+      "resolver_ordinal": 534,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-e7df9dcb0652c59f6989:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3uepisoderelation/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:vod_m3uepisoderelation_history",
+      "resolver_ordinal": 535,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-4a28414e299a5556cf23:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3uepisoderelation/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 235,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 236,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:vod_m3uepisoderelation_delete",
+      "resolver_ordinal": 536,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-d63260ce13795dc139f5:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/vod/m3uepisoderelation/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 102,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 103,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:vod_m3uepisoderelation_change",
+      "resolver_ordinal": 537,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-ce0c994dd63aefe40a2e:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/useragent/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 9,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:core_useragent_changelist",
+      "resolver_ordinal": 539,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-cf7071d568431fc0b587:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/useragent/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 10,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 11,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:core_useragent_add",
+      "resolver_ordinal": 540,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-7e96f03aa039499fa89d:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/useragent/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:core_useragent_history",
+      "resolver_ordinal": 541,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-8cf3aff432416e18e116:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/useragent/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 267,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 268,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:core_useragent_delete",
+      "resolver_ordinal": 542,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-32cf1aadb61b98cfda0e:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/useragent/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 12,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 13,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:core_useragent_change",
+      "resolver_ordinal": 543,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-7e0fafc9a3c875397537:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/streamprofile/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 14,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:core_streamprofile_changelist",
+      "resolver_ordinal": 545,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-a75af30030d311d82500:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/streamprofile/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 15,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 16,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:core_streamprofile_add",
+      "resolver_ordinal": 546,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-52967d8fb9ceb7545ec5:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/streamprofile/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:core_streamprofile_history",
+      "resolver_ordinal": 547,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-03d6154cf3dfc70b2123:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/streamprofile/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 265,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 266,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:core_streamprofile_delete",
+      "resolver_ordinal": 548,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-f0458e80bf451af080c7:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/streamprofile/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 17,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 18,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:core_streamprofile_change",
+      "resolver_ordinal": 549,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-8155486783175b286fb4:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/coresettings/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 104,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:core_coresettings_changelist",
+      "resolver_ordinal": 551,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-d791760748c66e296001:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/coresettings/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 105,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 106,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:core_coresettings_add",
+      "resolver_ordinal": 552,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-5021dd27c20e673cb70c:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/coresettings/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:core_coresettings_history",
+      "resolver_ordinal": 553,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-1c8b4fa7787d1caa1c2f:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/coresettings/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 271,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 272,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:core_coresettings_delete",
+      "resolver_ordinal": 554,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-7af6cb531f698a4abd73:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/core/coresettings/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 107,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 108,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:core_coresettings_change",
+      "resolver_ordinal": 555,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-34936962b1d2c22b6cd9:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/periodictask/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 4,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:django_celery_beat_periodictask_add",
+      "resolver_ordinal": 558,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-admin-documentation-reads-source-1-f2ac7c452c51d2428139944bcc7ccac8713d363633e595ade03bc5d01790f4c2"
+    },
+    {
+      "contract_work_id": "route-33a1d9ce41095a926ef3:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/periodictask/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:django_celery_beat_periodictask_history",
+      "resolver_ordinal": 559,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-5d605ec541128ca2a482:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/periodictask/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 4,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:django_celery_beat_periodictask_delete",
+      "resolver_ordinal": 560,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-admin-documentation-reads-source-1-f2ac7c452c51d2428139944bcc7ccac8713d363633e595ade03bc5d01790f4c2"
+    },
+    {
+      "contract_work_id": "route-a060cb2f0b931aa5a0bf:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/periodictask/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 4,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:django_celery_beat_periodictask_change",
+      "resolver_ordinal": 561,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-admin-documentation-reads-source-1-f2ac7c452c51d2428139944bcc7ccac8713d363633e595ade03bc5d01790f4c2"
+    },
+    {
+      "contract_work_id": "route-739e614a7c2da9c6d7f2:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/clockedschedule/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 114,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:django_celery_beat_clockedschedule_changelist",
+      "resolver_ordinal": 563,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-51495b11f4b4c9cc740f:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/clockedschedule/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 115,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 116,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:django_celery_beat_clockedschedule_add",
+      "resolver_ordinal": 564,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-cd01830f8cb95d29be7e:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:django_celery_beat_clockedschedule_history",
+      "resolver_ordinal": 565,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-1e73985130fd9851a7a8:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 277,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 278,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:django_celery_beat_clockedschedule_delete",
+      "resolver_ordinal": 566,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-ce8e28c9f6b548d34e88:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 117,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 118,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:django_celery_beat_clockedschedule_change",
+      "resolver_ordinal": 567,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-a0e522bd839e05bb35b7:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/crontabschedule/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 119,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:django_celery_beat_crontabschedule_changelist",
+      "resolver_ordinal": 569,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-2f8ef06110a5ffd61b71:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/crontabschedule/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 120,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 121,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:django_celery_beat_crontabschedule_add",
+      "resolver_ordinal": 570,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-ee14c0bc185a96d86558:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:django_celery_beat_crontabschedule_history",
+      "resolver_ordinal": 571,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-250e897ed680aed29e42:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 279,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 280,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:django_celery_beat_crontabschedule_delete",
+      "resolver_ordinal": 572,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-fcf3fbe4915aa097a741:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 122,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 123,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:django_celery_beat_crontabschedule_change",
+      "resolver_ordinal": 573,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-90fe51dfe2a7908a1420:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/solarschedule/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 124,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:django_celery_beat_solarschedule_changelist",
+      "resolver_ordinal": 575,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-cc91f938b4cf3b4e93fd:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/solarschedule/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 125,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 126,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:django_celery_beat_solarschedule_add",
+      "resolver_ordinal": 576,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-7c10852159b0623f0c35:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:django_celery_beat_solarschedule_history",
+      "resolver_ordinal": 577,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-9280b92ad1b37181be60:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 281,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 282,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:django_celery_beat_solarschedule_delete",
+      "resolver_ordinal": 578,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-342857a65f05d27b54ac:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 127,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 128,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:django_celery_beat_solarschedule_change",
+      "resolver_ordinal": 579,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-0b9bb6292c466244e6ba:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/intervalschedule/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": true,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 109,
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "resolver_name": "admin:django_celery_beat_intervalschedule_changelist",
+      "resolver_ordinal": 581,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-74675f81bba31a6d0c57:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/intervalschedule/add/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 110,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 111,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.add_view",
+      "resolver_name": "admin:django_celery_beat_intervalschedule_add",
+      "resolver_ordinal": 582,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-f396b717a0dbe68d4298:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/history/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 5,
+          "method": "GET",
+          "recorded_role": "admin",
+          "status": 200
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.history_view",
+      "resolver_name": "admin:django_celery_beat_intervalschedule_history",
+      "resolver_ordinal": 583,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-residual-source/capture-5a0af21a777fd43ecb5090a102b0a58f5204cff509847e9618f089ef488a35a9.json",
+      "source_fixture_id": "Original-residual-m0-original-admin-history-2-d178be2b87760d83af5193f2ff1a6f474fea3fab1f15f8e99037daa498665a05"
+    },
+    {
+      "contract_work_id": "route-0f560824bf03f3882120:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/delete/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 2,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 275,
+          "status": 200
+        },
+        {
+          "case_position": 3,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 276,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "resolver_name": "admin:django_celery_beat_intervalschedule_delete",
+      "resolver_ordinal": 584,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    },
+    {
+      "contract_work_id": "route-436e0a00f4a2a4e82e3d:METHOD_UNRESOLVED",
+      "declaration_stays_null": true,
+      "literal_route_pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/change/",
+      "ordinary_original_HTTP_observations": [
+        {
+          "case_position": 1,
+          "method": "GET",
+          "recorded_role": "superuser",
+          "recorded_semantic_workflow_witness": false,
+          "retained_case_outcome": "observed",
+          "retained_fixture_source_index": 112,
+          "status": 200
+        },
+        {
+          "case_position": 2,
+          "method": "POST",
+          "recorded_role": "superuser",
+          "retained_fixture_source_index": 113,
+          "status": 302,
+          "typed_fixture_SQL_effect_witnessed": true
+        }
+      ],
+      "pinned_view": "django.contrib.admin.options.ModelAdmin.change_view",
+      "resolver_name": "admin:django_celery_beat_intervalschedule_change",
+      "resolver_ordinal": 585,
+      "retained_nonqualifying_original_results": {},
+      "source_binding": "scripts/rust-contracts/retained-admin-models/bindings.json",
+      "source_fixture_id": "Original-admin-model-callbacks-actual"
+    }
+  ]
+}
