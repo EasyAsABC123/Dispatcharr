@@ -917,6 +917,7 @@ enum QueueFreeProviderEdit {
     Rename,
     Activate,
     Deactivate,
+    ChangeInterval(i32),
 }
 
 fn queue_free_provider_edit(input: &Map<String, Value>) -> Option<QueueFreeProviderEdit> {
@@ -925,6 +926,13 @@ fn queue_free_provider_edit(input: &Map<String, Value>) -> Option<QueueFreeProvi
     }
     if input.get("name").is_some_and(Value::is_string) {
         Some(QueueFreeProviderEdit::Rename)
+    } else if let Some(hours) = input
+        .get("refresh_interval")
+        .and_then(Value::as_i64)
+        .and_then(|hours| i32::try_from(hours).ok())
+        .filter(|hours| *hours > 0)
+    {
+        Some(QueueFreeProviderEdit::ChangeInterval(hours))
     } else {
         match input.get("is_active").and_then(Value::as_bool) {
             Some(true) => Some(QueueFreeProviderEdit::Activate),
@@ -963,7 +971,9 @@ fn eligible_queue_free_edit(edit: QueueFreeProviderEdit, old: &Value, previous_c
                     && old["status"] == "disabled"
                     && old["refresh_interval"].as_i64().is_some_and(|hours| hours > 0)
             }
-            QueueFreeProviderEdit::Deactivate => old["is_active"] == true,
+            QueueFreeProviderEdit::Deactivate | QueueFreeProviderEdit::ChangeInterval(_) => {
+                old["is_active"] == true
+            }
         }
 }
 
@@ -994,6 +1004,7 @@ async fn edit_without_broker(
     let mut expected = old.clone();
     match edit {
         QueueFreeProviderEdit::Rename => expected["name"] = validated.saved["name"].clone(),
+        QueueFreeProviderEdit::ChangeInterval(hours) => expected["refresh_interval"] = json!(hours),
         QueueFreeProviderEdit::Activate => {
             expected["is_active"] = json!(true);
             expected["status"] = json!("idle");
@@ -1033,6 +1044,12 @@ async fn edit_without_broker(
                 // Acquire the account before its linked task and recheck
                 // the pre-edit settings in the same transaction.
                 let mut tx = c.begin().await?;
+                let changing_interval = matches!(edit, QueueFreeProviderEdit::ChangeInterval(_));
+                if changing_interval {
+                    sqlx::query("SET LOCAL lock_timeout = '5s'")
+                        .execute(&mut *tx)
+                        .await?;
+                }
                 let account: Option<i64> = match edit {
                     QueueFreeProviderEdit::Rename => sqlx::query_scalar(
                         "UPDATE m3u_m3uaccount SET name=$2 WHERE id=$1 AND account_type='STD' \
@@ -1058,6 +1075,18 @@ async fn edit_without_broker(
                     .bind(max)
                     .fetch_optional(&mut *tx)
                     .await?,
+                    QueueFreeProviderEdit::ChangeInterval(hours) => sqlx::query_scalar(
+                        "UPDATE m3u_m3uaccount SET refresh_interval=$5 WHERE id=$1 AND account_type='STD' \
+                         AND NOT locked AND is_active AND status='idle' AND refresh_interval=$2 \
+                         AND refresh_task_id=$3 AND max_streams=$4 RETURNING id::bigint",
+                    )
+                    .bind(id)
+                    .bind(interval)
+                    .bind(task)
+                    .bind(max)
+                    .bind(hours)
+                    .fetch_optional(&mut *tx)
+                    .await?,
                     QueueFreeProviderEdit::Deactivate => sqlx::query_scalar(
                         "WITH eligible AS (SELECT id FROM m3u_m3uaccount WHERE id=$1 AND account_type=$5 \
                          AND NOT locked AND is_active AND status='idle' AND refresh_interval=$2 \
@@ -1078,25 +1107,35 @@ async fn edit_without_broker(
                 let account = account.ok_or_else(unsupported)?;
                 let task_name = format!("m3u_account-refresh-{id}");
                 let deactivating = edit == QueueFreeProviderEdit::Deactivate;
+                let kwargs = format!("{{\"account_id\": {id}}}");
                 let task_lock = "SELECT t.id::bigint FROM django_celery_beat_periodictask t \
                      JOIN django_celery_beat_intervalschedule i ON i.id=t.interval_id \
                      WHERE t.id=$1 AND t.name=$2 AND t.task=$3 AND t.enabled=$5 \
                      AND i.every=$4 AND i.period='hours' FOR UPDATE OF t";
                 let scoped_task_lock;
-                let task_lock = if deactivating {
+                let task_lock = if changing_interval {
+                    "SELECT t.id::bigint FROM django_celery_beat_periodictask t \
+                     JOIN django_celery_beat_intervalschedule i ON i.id=t.interval_id \
+                     WHERE t.id=$1 AND t.name=$2 AND t.task=$3 AND t.enabled=$5 \
+                     AND i.every=$4 AND i.period='hours' AND t.args='[]' AND t.kwargs=$6 \
+                     AND t.crontab_id IS NULL AND t.clocked_id IS NULL AND t.solar_id IS NULL \
+                     AND NOT t.one_off FOR UPDATE OF t"
+                } else if deactivating {
                     scoped_task_lock = format!("{task_lock} NOWAIT FOR SHARE OF i NOWAIT");
                     &scoped_task_lock
                 } else {
                     task_lock
                 };
-                let present: Option<i64> = sqlx::query_scalar(task_lock)
-                .bind(task)
-                .bind(&task_name)
-                .bind("apps.m3u.tasks.refresh_single_m3u_account")
-                .bind(interval.max(1))
-                .bind(was_active)
-                .fetch_optional(&mut *tx)
-                .await?;
+                let mut task_query = sqlx::query_scalar(task_lock)
+                    .bind(task)
+                    .bind(&task_name)
+                    .bind("apps.m3u.tasks.refresh_single_m3u_account")
+                    .bind(interval.max(1))
+                    .bind(was_active);
+                if changing_interval {
+                    task_query = task_query.bind(&kwargs);
+                }
+                let present: Option<i64> = task_query.fetch_optional(&mut *tx).await?;
                 if present.is_none() {
                     return Err(unsupported());
                 }
@@ -1112,15 +1151,28 @@ async fn edit_without_broker(
                 } else {
                     Vec::new()
                 };
+                let next_interval = match edit {
+                    QueueFreeProviderEdit::ChangeInterval(hours) => hours,
+                    _ => interval,
+                };
+                if next_interval != interval {
+                    // Cadence edits can share either interval row. Order the
+                    // keys consistently, including when moving in opposite directions.
+                    for hours in [interval.min(next_interval), interval.max(next_interval)] {
+                        sqlx::query("SELECT pg_advisory_xact_lock(hashtext('dispatcharr.provider-cadence-hours'), $1)")
+                            .bind(hours)
+                            .execute(&mut *tx)
+                            .await?;
+                    }
+                }
                 update_default_capacity(&mut tx, account, max).await?;
-                let kwargs = format!("{{\"account_id\": {id}}}");
                 let scheduled = crate::provider_schedule::upsert(
                     &mut tx,
                     crate::provider_schedule::Spec {
                         name: &task_name,
                         task: "apps.m3u.tasks.refresh_single_m3u_account",
                         kwargs: &kwargs,
-                        interval_hours: interval,
+                        interval_hours: next_interval,
                         cron: "",
                         active: next_active,
                         timezone: "UTC",
@@ -1557,6 +1609,60 @@ mod tests {
         old["refresh_interval"] = json!(4);
         old["status"] = json!("fetching");
         assert!(!existing_std_interval_account(&old, ""));
+    }
+
+    #[test]
+    fn flags_off_std_cadence_admits_only_one_positive_integer_field() {
+        for (value, expected) in [
+            (json!(7), Some(QueueFreeProviderEdit::ChangeInterval(7))),
+            (json!(0), None),
+            (json!(-1), None),
+            (json!(i64::from(i32::MAX) + 1), None),
+            (json!("7"), None),
+            (json!(7.5), None),
+            (json!(true), None),
+        ] {
+            assert_eq!(
+                queue_free_provider_edit(&Map::from_iter([("refresh_interval".into(), value)])),
+                expected
+            );
+        }
+        let mixed = Map::from_iter([
+            ("refresh_interval".into(), json!(7)),
+            ("name".into(), json!("other")),
+        ]);
+        assert_eq!(queue_free_provider_edit(&mixed), None);
+    }
+
+    #[test]
+    fn flags_off_std_cadence_preserves_other_state_for_an_active_interval_account() {
+        let mut old = defaults();
+        old["is_active"] = json!(true);
+        old["status"] = json!("idle");
+        old["refresh_task_id"] = json!(7);
+        old["refresh_interval"] = json!(4);
+        old["custom_properties"] = json!({"hash_key":"name,url","owned_fixture_marker":"preserve"});
+        let edit = QueueFreeProviderEdit::ChangeInterval(7);
+        assert!(eligible_queue_free_edit(edit, &old, ""));
+        assert!(!eligible_queue_free_edit(edit, &old, "0 7 * * *"));
+        for (key, value) in [
+            ("is_active", json!(false)),
+            ("account_type", json!("XC")),
+            ("locked", json!(true)),
+            ("status", json!("fetching")),
+            ("refresh_task_id", Value::Null),
+            ("refresh_interval", json!(0)),
+        ] {
+            let mut other = old.clone();
+            other[key] = value;
+            assert!(!eligible_queue_free_edit(edit, &other, ""), "{key}");
+        }
+        let input = Map::from_iter([("refresh_interval".into(), json!(7))]);
+        let validated = validate(input, &old, "", true, false).unwrap();
+        old["refresh_interval"] = json!(7);
+        assert_eq!(validated.saved, old);
+        assert!(!validated.hash_changed && validated.expiration.is_none());
+        assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
     }
 
     #[test]
