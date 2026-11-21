@@ -1,0 +1,87 @@
+{
+  "Native_measured": false,
+  "cases": {
+    "after-accept-before-sync": {
+      "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "Original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "credit": "Original Dispatcharr, Celery, Django and dependency authors retain full credit.",
+      "effects": {
+        "accepted_after_restart": 1,
+        "accepted_before_restart": 1,
+        "beat_abrupt_actual_exit": -9,
+        "boundary": "after-accept-before-sync",
+        "bounded_restart_observation_seconds": 25,
+        "durable_count_after_fresh_stop": 1,
+        "final_disable_200": true,
+        "successful_results": 2,
+        "typed_original_arm": true,
+        "unchanged_durable_count_at_placement": true,
+        "unrelated_SQL_unchanged": true
+      },
+      "exact_cleanup": true,
+      "fresh_saved_count_matches_fresh_accepted_publications": true,
+      "independently_reduced_stdout_sha256": "3b3d1f7228ddf382b26b3a0acc064f10d1b4d46eed9947ffb084bfe04d93c7c7",
+      "literal_controller_exit": 0,
+      "native_measured": false,
+      "performance_measured": false,
+      "private_witness_sha256": "614cb9cf0375a507201ef958bdf0ffc2892b59c1fff3ea6c3991ffd44826e066",
+      "proof_interprets_only_bounded_restart": true
+    },
+    "before-publish": {
+      "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "Original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "credit": "Original Dispatcharr, Celery, Django and dependency authors retain full credit.",
+      "effects": {
+        "accepted_after_restart": 1,
+        "accepted_before_restart": 0,
+        "beat_abrupt_actual_exit": -9,
+        "boundary": "before-publish",
+        "bounded_restart_observation_seconds": 25,
+        "durable_count_after_fresh_stop": 1,
+        "final_disable_200": true,
+        "successful_results": 1,
+        "typed_original_arm": true,
+        "unchanged_durable_count_at_placement": true,
+        "unrelated_SQL_unchanged": true
+      },
+      "exact_cleanup": true,
+      "fresh_saved_count_matches_fresh_accepted_publications": true,
+      "independently_reduced_stdout_sha256": "c09fc1994f08fc4a7c41140bb2f9300b7026b1007db97a480e3cdc9ad8b703b2",
+      "literal_controller_exit": 0,
+      "native_measured": false,
+      "performance_measured": false,
+      "private_witness_sha256": "c09aec89598b44642c3adf2149a295bd681a92e2dcf9f2499dd7ef69ef7d959c",
+      "proof_interprets_only_bounded_restart": true
+    }
+  },
+  "performance_measured": false,
+  "prior_literal_failures": [
+    {
+      "boundary": "before-publish",
+      "exact_cleanup": true,
+      "fixture_failure": "host marker unreadable",
+      "literal_exit": 1,
+      "recorded_checkpoint_sha256": "09b92cd2177c6ee425208bef25d9e0240f22c48c0ec0bbc5981340e87a0f69fa",
+      "runner_generation": 1
+    },
+    {
+      "boundary": "before-publish",
+      "exact_cleanup": true,
+      "fixture_failure": "additional SIGTERM recorded",
+      "literal_exit": 1,
+      "recorded_checkpoint_sha256": "0b1f3226dda559ecd13abd4239839ffa1ffe71bd363896d8c73755e4298886ed",
+      "runner_generation": 2
+    },
+    {
+      "boundary": "after-accept-before-sync",
+      "exact_cleanup": true,
+      "fixture_failure": "additional SIGTERM recorded",
+      "literal_exit": 1,
+      "recorded_checkpoint_sha256": "0b1f3226dda559ecd13abd4239839ffa1ffe71bd363896d8c73755e4298886ed",
+      "runner_generation": 2
+    }
+  ],
+  "qualification": "owned Original Beat interruption and bounded unmodified restart",
+  "receiving_ref_at_render": "7edb02369ff818a7f892c28ac67cb8ad5bb193cf",
+  "runner_seal_sha256": "847f214a0a2810302992fc09ca0e743c00088a05f961c80fb15e9161fd7cbe25"
+}
