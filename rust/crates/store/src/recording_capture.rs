@@ -9,7 +9,7 @@ use uuid::Uuid;
 #[path = "recording_connect_events.rs"]
 mod connect;
 #[path = "recording_event_enrichment.rs"]
-mod enrichment;
+pub(crate) mod enrichment;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Stage {

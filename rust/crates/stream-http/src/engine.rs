@@ -189,6 +189,7 @@ pub(crate) struct Inner {
     config: EngineConfig,
     source_http_retry_backoff: bool,
     health_settings: Option<Arc<dyn HealthSettingsSource>>,
+    live_client_connect: Option<Arc<dyn dispatcharr_contracts::LiveClientConnectObserver>>,
     profiles: Option<Arc<output_profiles::Profiles>>,
     sessions: Mutex<HashMap<String, Arc<Session>>>,
     slots: Arc<Semaphore>,
@@ -339,6 +340,7 @@ impl StreamEngine {
                 config,
                 source_http_retry_backoff: false,
                 health_settings: None,
+                live_client_connect: None,
                 profiles: None,
                 sessions: Mutex::new(HashMap::new()),
                 slots,
@@ -388,6 +390,17 @@ impl StreamEngine {
             Some(source) => Ok(source.snapshot().await?.initialization),
             None => Ok(fallback),
         }
+    }
+
+    pub fn with_live_client_connect(
+        mut self,
+        observer: Arc<dyn dispatcharr_contracts::LiveClientConnectObserver>,
+    ) -> Result<Self, PlaybackError> {
+        let inner = Arc::get_mut(&mut self.inner).ok_or_else(|| {
+            PlaybackError::new(500, "Connect observer must be bound before engine sharing")
+        })?;
+        inner.live_client_connect = Some(observer);
+        Ok(self)
     }
 
     /// Authorization/resolution must run before calling this method for each viewer.
@@ -478,6 +491,17 @@ impl StreamEngine {
         } else {
             None
         };
+        let connect = self.inner.live_client_connect.as_ref().and_then(|_| {
+            let viewer = source.viewer.as_ref()?.clone();
+            let client = client.as_ref()?;
+            viewer.user_id?;
+            Some(dispatcharr_contracts::LiveClientConnectEvent {
+                channel_id: source.channel_id.clone(),
+                channel_name: source.channel_name.clone(),
+                client_id: client.id().to_owned(),
+                viewer,
+            })
+        });
         let (session, viewer, created) = {
             let mut sessions = self.inner.sessions.lock().unwrap();
             if let Some(session) = sessions.get(&key) {
@@ -667,6 +691,7 @@ impl StreamEngine {
         let source_health_settings = self.inner.health_settings.clone();
         let stream = async_stream::stream! {
             let mut state = state;
+            let mut connect = connect;
             let mut stopped=state.client.as_ref().map(ClientLease::stopped);
             let mut last_media=Instant::now();
             let mut source_keepalive=source_keepalive::SourceKeepalive::new();
@@ -721,6 +746,9 @@ impl StreamEngine {
                 };
                 match next {
                     Ok(Some(chunk)) => {
+                        if let Some(event) = connect.take() {
+                            observe_client_connect(&state._guard, event).await;
+                        }
                         last_media=Instant::now();
                         source_keepalive.received();
                         if let Some(client)=&state.client {client.record_bytes(chunk.as_ref().len());}
@@ -1291,6 +1319,36 @@ async fn run_follower(
         }
         tokio::select! {_=stop.changed()=>return PlaybackError::new(503,"Stream stopped"),_=time::sleep(inner.config.flush_interval)=>{}}
     }
+}
+
+async fn observe_client_connect(
+    guard: &ViewerGuard,
+    event: dispatcharr_contracts::LiveClientConnectEvent,
+) {
+    let Some(inner) = guard.inner.upgrade() else {
+        return;
+    };
+    let Some(observer) = inner.live_client_connect.clone() else {
+        return;
+    };
+    let owner = {
+        // Shutdown takes the same registry lock after closing slots. It cannot
+        // certify retirement between successful admission and marking the work.
+        let sessions = inner.sessions.lock().unwrap();
+        if inner.slots.is_closed()
+            || *guard.session.stop.borrow()
+            || !sessions
+                .get(&guard.key)
+                .is_some_and(|active| Arc::ptr_eq(active, &guard.session))
+        {
+            return;
+        }
+        inner.workers.fetch_add(1, Ordering::AcqRel);
+        Arc::new(WorkerCount(inner.clone()))
+    };
+    // The event owns only the worker count and immutable viewer fields. A
+    // webhook cannot keep a disconnected viewer or a provider slot alive.
+    observer.before_media(event, owner).await;
 }
 
 struct WorkerCount(Arc<Inner>);

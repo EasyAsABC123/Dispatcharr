@@ -4,7 +4,7 @@ mod profile_command;
 pub use profile_command::{CommandError, StreamCommand};
 mod source_ip;
 pub use source_ip::SourceIpAddr;
-use std::{future::Future, net::IpAddr, pin::Pin, time::Duration};
+use std::{future::Future, net::IpAddr, pin::Pin, sync::Arc, time::Duration};
 
 pub type BoxFuture<'a, T> = Pin<Box<dyn Future<Output = T> + Send + 'a>>;
 
@@ -168,6 +168,22 @@ pub struct PlaybackViewer {
     pub user_agent: String,
     pub stream_limit: u32,
     pub limit_policy: UserLimitPolicy,
+}
+
+/// An authenticated raw TS viewer whose body has reached useful media.
+pub struct LiveClientConnectEvent {
+    pub channel_id: String,
+    pub channel_name: String,
+    pub client_id: String,
+    pub viewer: PlaybackViewer,
+}
+
+pub trait LiveClientConnectObserver: Send + Sync {
+    fn before_media(
+        &self,
+        event: LiveClientConnectEvent,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, ()>;
 }
 
 /// An actual active pre-delivery OutputProfile resolved under the existing

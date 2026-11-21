@@ -469,6 +469,10 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             .map_err(|_| "Dynamic proxy health must be bound before engine sharing")?,
         None => engine,
     };
+    let live_client_connect = Arc::new(dispatcharr_store::LiveClientConnect::new(auth.clone()));
+    let engine = engine
+        .with_live_client_connect(live_client_connect.clone())
+        .map_err(|_| "Live Connect observer unavailable")?;
     let engine = match outputs.as_ref() {
         Some(outputs) => engine
             .with_output_profiles(outputs.clone(), Arc::new(()))
@@ -1380,6 +1384,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         core_repack: core_repack.clone(),
         ordinary_recording_playback: ordinary_recording_playback.clone(),
         original_m3u_refresh_all: original_m3u_refresh_all.clone(),
+        live_client_connect: live_client_connect.clone(),
         engine,
         clients,
         hls,
@@ -1465,6 +1470,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
                 .as_ref()
                 .is_some_and(dispatcharr_store::xc_account_http::Repack::was_used)
             || auth.stream_files_were_used()
+            || live_client_connect.was_used()
             || stream_regex.was_used()
             || ordinary_recording_playback
                 .as_ref()
@@ -1545,6 +1551,7 @@ struct ShutdownServices {
     ordinary_recording_playback: Option<dispatcharr_store::RecordingPlayback>,
     original_m3u_refresh_all: Option<dispatcharr_job_transport::transport::OriginalM3uRefreshAll>,
     engine: StreamEngine,
+    live_client_connect: Arc<dispatcharr_store::LiveClientConnect>,
     clients: Option<ClientStore>,
     hls: Option<dispatcharr_hls_http::HlsGateway>,
     fmp4: Option<dispatcharr_fmp4_http::Fmp4Gateway>,
@@ -1585,6 +1592,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         ordinary_recording_playback,
         original_m3u_refresh_all,
         engine,
+        live_client_connect,
         clients,
         hls,
         fmp4,
@@ -1902,6 +1910,9 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         eprintln!(
             "Statistics drain deadline reached; process termination may close pending callbacks"
         );
+    }
+    if !live && live_client_connect.was_used() {
+        return Err("Live Connect drain incomplete".into());
     }
     if (selected_mode || manual_restore_grace.is_some()) && (incomplete || !statistics_drained) {
         return Err(

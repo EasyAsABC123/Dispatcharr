@@ -114,8 +114,29 @@ pub async fn dispatch(
     if !matches!(
         event.as_str(),
         "epg_refresh" | "epg_error" | "recording_start" | "recording_end"
-    ) || !payload.is_object()
-    {
+    ) {
+        return Err(Error::Unsupported("Connect EPG event/payload unsupported"));
+    }
+    dispatch_observed(event, payload, session, templates, owner).await
+}
+
+pub(crate) async fn dispatch_live_client_connect(
+    payload: Value,
+    session: TaskSqlSession,
+    templates: Arc<dyn Templates>,
+    owner: Owner,
+) -> Result<Report, Error> {
+    dispatch_observed("client_connect".into(), payload, session, templates, owner).await
+}
+
+async fn dispatch_observed(
+    event: String,
+    payload: Value,
+    session: TaskSqlSession,
+    templates: Arc<dyn Templates>,
+    owner: Owner,
+) -> Result<Report, Error> {
+    if !payload.is_object() {
         return Err(Error::Unsupported("Connect EPG event/payload unsupported"));
     }
     if serde_json::to_vec(&payload)
