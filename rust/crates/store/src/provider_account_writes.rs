@@ -1,6 +1,6 @@
 //! Source M3U account lifecycle draft. All original Dispatcharr/Django/Celery
 //! application and algorithm credit remains with the original authors.
-//! Bounded JSON STD and XC writes. Multipart uploads and VOD content collectors are separate.
+//! Bounded JSON STD/XC writes and ordinary owned XC content-relation collection.
 use crate::{
     admin_writes::{body_object, boolean, character, integer, parse_datetime},
     core_settings_special_budget::Scratch,
@@ -1407,6 +1407,12 @@ pub(crate) async fn patch(
     }
 }
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum DeleteScope {
+    ChannelCollector,
+    InactiveXcContent,
+}
+
 /// Source account Collector executes inside the already-open channel atomic.
 /// No second transaction, pool, file deletion, or API replay is introduced.
 pub(crate) async fn delete_in_collector(
@@ -1415,10 +1421,20 @@ pub(crate) async fn delete_in_collector(
     id: i64,
     owner: Owner,
 ) -> Result<(), StoreError> {
+    collect_account(c, auth, id, owner, DeleteScope::ChannelCollector).await
+}
+
+async fn collect_account(
+    c: &mut PgConnection,
+    auth: AuthService,
+    id: i64,
+    owner: Owner,
+    scope: DeleteScope,
+) -> Result<(), StoreError> {
     if c.protocol_transaction_is_idle().await? {
         return Err(unsupported());
     }
-    let delete_vod_categories = delete_preflight(c, id).await?;
+    let delete_vod_categories = delete_preflight(c, id, scope).await?;
     // The Source Collector bulk-deletes profiles, then sends their post_delete
     // receivers in reverse primary-key order. Preserve that boundary rather
     // than invoking standalone delete (which opens an inner transaction).
@@ -1461,6 +1477,17 @@ pub(crate) async fn delete_in_collector(
             .execute(&mut *c)
             .await?;
     }
+    if scope == DeleteScope::InactiveXcContent {
+        // Django collects provider relation rows and leaves the shared and
+        // newly orphaned catalogue rows in place until ordinary pruning.
+        for statement in [
+            "DELETE FROM vod_m3uepisoderelation WHERE m3u_account_id=$1",
+            "DELETE FROM vod_m3useriesrelation WHERE m3u_account_id=$1",
+            "DELETE FROM vod_m3umovierelation WHERE m3u_account_id=$1",
+        ] {
+            sqlx::query(statement).bind(id).execute(&mut *c).await?;
+        }
+    }
     sqlx::query("DELETE FROM m3u_m3uaccount WHERE id=$1")
         .bind(id)
         .execute(&mut *c)
@@ -1468,7 +1495,11 @@ pub(crate) async fn delete_in_collector(
     crate::provider_schedule::legacy_delete(c, &format!("m3u_account-refresh-{id}")).await?;
     Ok(())
 }
-async fn delete_preflight(c: &mut PgConnection, id: i64) -> Result<bool, StoreError> {
+async fn delete_preflight(
+    c: &mut PgConnection,
+    id: i64,
+    scope: DeleteScope,
+) -> Result<bool, StoreError> {
     no_custom_triggers(c).await?;
     let account: Option<(bool, String)> =
         sqlx::query_as("SELECT locked,account_type FROM m3u_m3uaccount WHERE id=$1")
@@ -1501,7 +1532,7 @@ async fn delete_preflight(c: &mut PgConnection, id: i64) -> Result<bool, StoreEr
         }
     }
     let vod:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM vod_m3umovierelation WHERE m3u_account_id=$1 UNION ALL SELECT 1 FROM vod_m3useriesrelation WHERE m3u_account_id=$1 UNION ALL SELECT 1 FROM vod_m3uepisoderelation WHERE m3u_account_id=$1) OR (NOT $2 AND EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation WHERE m3u_account_id=$1))").bind(id).bind(xc).fetch_one(&mut*c).await?;
-    if vod {
+    if vod != (scope == DeleteScope::InactiveXcContent) {
         return Err(unsupported());
     }
     let profiles: i64 =
@@ -1525,6 +1556,132 @@ async fn delete_preflight(c: &mut PgConnection, id: i64) -> Result<bool, StoreEr
     }
     Ok(xc)
 }
+struct VodCollectorReference {
+    target: String,
+    referencing: String,
+    referencing_column: String,
+    target_column: String,
+    columns: i32,
+    target_columns: i32,
+    delete_action: String,
+    deferrable: bool,
+    initially_deferred: bool,
+}
+
+impl sqlx::FromRow<'_, sqlx::postgres::PgRow> for VodCollectorReference {
+    fn from_row(row: &sqlx::postgres::PgRow) -> Result<Self, sqlx::Error> {
+        Ok(Self {
+            target: row.try_get("target")?,
+            referencing: row.try_get("referencing")?,
+            referencing_column: row.try_get("referencing_column")?,
+            target_column: row.try_get("target_column")?,
+            columns: row.try_get("columns")?,
+            target_columns: row.try_get("target_columns")?,
+            delete_action: row.try_get("delete_action")?,
+            deferrable: row.try_get("deferrable")?,
+            initially_deferred: row.try_get("initially_deferred")?,
+        })
+    }
+}
+
+fn known_vod_collector_graph(references: &[VodCollectorReference]) -> bool {
+    matches!(references, [reference]
+        if reference.target == "vod_m3useriesrelation"
+            && reference.referencing == "vod_m3uepisoderelation"
+            && reference.referencing_column == "series_relation_id"
+            && reference.target_column == "id"
+            && reference.columns == 1 && reference.target_columns == 1
+            && reference.delete_action == "a" && reference.deferrable && reference.initially_deferred)
+}
+
+async fn inactive_xc_content_scope(c: &mut PgConnection, id: i64) -> Result<(), StoreError> {
+    // Lock before validating absence of channel side effects and collecting
+    // dependent relation rows. Commit still checks the pinned deferred FKs.
+    let target: Option<(bool, String, bool)> = sqlx::query_as(
+        "SELECT locked, account_type, is_active FROM m3u_m3uaccount WHERE id=$1 FOR UPDATE",
+    )
+    .bind(id)
+    .fetch_optional(&mut *c)
+    .await?;
+    let (is_locked, kind, active) = target.ok_or_else(missing)?;
+    if is_locked {
+        return Err(locked());
+    }
+    if kind != "XC" || active {
+        return Err(unsupported());
+    }
+    let unsupported_graph: bool = sqlx::query_scalar(
+        "SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channel WHERE auto_created_by_id=$1)
+         OR EXISTS(SELECT 1 FROM dispatcharr_channels_stream WHERE m3u_account_id=$1)
+         OR EXISTS(SELECT 1 FROM vod_m3uvodcategoryrelation WHERE m3u_account_id=$1)
+         OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled<>'D'
+                   AND tgrelid IN('vod_m3uepisoderelation'::regclass,'vod_m3useriesrelation'::regclass,'vod_m3umovierelation'::regclass))",
+    )
+    .bind(id)
+    .fetch_one(&mut *c)
+    .await?;
+    if unsupported_graph {
+        return Err(unsupported());
+    }
+    // The only reverse relation of a provider series relation is its owned
+    // episode relation. Foreign-owned links need their own scoped proof.
+    let reverse: Vec<VodCollectorReference> = sqlx::query_as(
+        "SELECT f.confrelid::regclass::text AS target, f.conrelid::regclass::text AS referencing,
+                a.attname::text AS referencing_column, p.attname::text AS target_column,
+                cardinality(f.conkey) AS columns, cardinality(f.confkey) AS target_columns,
+                f.confdeltype::text AS delete_action,
+                f.condeferrable AS deferrable, f.condeferred AS initially_deferred
+         FROM pg_constraint f
+         JOIN pg_attribute a ON a.attrelid=f.conrelid AND a.attnum=f.conkey[1]
+         JOIN pg_attribute p ON p.attrelid=f.confrelid AND p.attnum=f.confkey[1]
+         WHERE f.contype='f' AND f.confrelid IN
+           ('vod_m3uepisoderelation'::regclass,'vod_m3useriesrelation'::regclass,'vod_m3umovierelation'::regclass)
+         LIMIT 2",
+    )
+    .fetch_all(&mut *c)
+    .await?;
+    if !known_vod_collector_graph(&reverse) {
+        return Err(unsupported());
+    }
+    // These rows are the direct FK parents of the Episode relationships.
+    sqlx::query(
+        "SELECT id FROM vod_m3useriesrelation WHERE m3u_account_id=$1 ORDER BY id FOR UPDATE",
+    )
+    .bind(id)
+    .execute(&mut *c)
+    .await?;
+    let foreign_episodes: bool = sqlx::query_scalar(
+        "SELECT EXISTS(SELECT 1 FROM vod_m3uepisoderelation e JOIN vod_m3useriesrelation s
+         ON e.series_relation_id=s.id WHERE s.m3u_account_id=$1 AND e.m3u_account_id<>$1)",
+    )
+    .bind(id)
+    .fetch_one(c)
+    .await?;
+    if foreign_episodes {
+        return Err(unsupported());
+    }
+    Ok(())
+}
+
+async fn delete_inactive_xc_content(
+    session: &TaskSqlSession,
+    auth: AuthService,
+    id: i64,
+    owner: Owner,
+) -> Result<(), StoreError> {
+    session
+        .run(move |connection| {
+            Box::pin(async move {
+                let mut tx = connection.begin().await?;
+                inactive_xc_content_scope(&mut tx, id).await?;
+                collect_account(&mut tx, auth, id, owner, DeleteScope::InactiveXcContent).await?;
+                tx.commit().await?;
+                Ok(())
+            })
+        })
+        .await?
+}
+
 pub(crate) async fn delete(
     State(auth): State<AuthService>,
     Path(raw): Path<String>,
@@ -1538,12 +1695,16 @@ pub(crate) async fn delete(
     if auth.profile_save_signal.is_none() {
         return Err(unsupported());
     }
-    let jobs = auth.recording_collector_jobs()?.ok_or_else(unsupported)?;
+    let jobs = auth.recording_collector_jobs()?;
     let owner: Owner = Arc::new(auth.clone());
     let session = auth.borrow_task_sql_session(owner.clone()).await?;
     let operation = tokio::spawn(async move {
         let outcome=async{
-            session.run(move|c|Box::pin(async move{delete_preflight(c,id).await})).await??;
+            let Some(jobs) = jobs else {
+                delete_inactive_xc_content(&session, auth, id, owner).await?;
+                return Ok(Json(json!({"deleted_channels":0})));
+            };
+            session.run(move|c|Box::pin(async move{delete_preflight(c,id,DeleteScope::ChannelCollector).await})).await??;
             let mut selection=auth.prepare_task_channel_deletion(session.clone(),jobs,owner).await?;
             // Bounded keyset pages populate ONE SQL-backed selection; stop all
             // captured UUIDs outside the atomic, then perform one Collector.
@@ -1569,6 +1730,46 @@ pub(crate) async fn delete(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn vod_collector_requires_exactly_the_pinned_reverse_reference() {
+        let known = || VodCollectorReference {
+            target: "vod_m3useriesrelation".into(),
+            referencing: "vod_m3uepisoderelation".into(),
+            referencing_column: "series_relation_id".into(),
+            target_column: "id".into(),
+            columns: 1,
+            target_columns: 1,
+            delete_action: "a".into(),
+            deferrable: true,
+            initially_deferred: true,
+        };
+        assert!(known_vod_collector_graph(&[known()]));
+        assert!(!known_vod_collector_graph(&[]));
+        for extra in [
+            VodCollectorReference {
+                delete_action: "c".into(),
+                deferrable: false,
+                ..known()
+            },
+            VodCollectorReference {
+                columns: 2,
+                target_columns: 2,
+                ..known()
+            },
+            VodCollectorReference {
+                target: "vod_m3umovierelation".into(),
+                ..known()
+            },
+            VodCollectorReference {
+                target: "vod_m3uepisoderelation".into(),
+                ..known()
+            },
+        ] {
+            assert!(!known_vod_collector_graph(&[extra]));
+        }
+        assert!(!known_vod_collector_graph(&[known(), known()]));
+    }
+
     #[test]
     fn account_hash_clear_merges_properties_and_typed_preferences() {
         let mut old = defaults();
