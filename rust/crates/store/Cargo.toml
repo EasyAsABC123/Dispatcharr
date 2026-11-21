@@ -4,6 +4,9 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 
+[features]
+sqlite-historical-upgrade = ["sqlx/sqlite"]
+
 [dependencies]
 dispatcharr-contracts = { path = "../contracts" }
 dispatcharr-upstream-http = {path="../upstream-http"}

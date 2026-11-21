@@ -1,0 +1,38 @@
+{
+  "dispatcharr_channels_channel": [
+    "CREATE TABLE \"dispatcharr_channels_channel\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"channel_number\" real NULL, \"tvg_id\" varchar(255) NULL, \"stream_profile_id\" bigint NULL REFERENCES \"core_streamprofile\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"channel_group_id\" bigint NULL REFERENCES \"dispatcharr_channels_channelgroup\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"name\" varchar(512) NOT NULL, \"uuid\" char(32) NOT NULL UNIQUE, \"epg_data_id\" bigint NULL REFERENCES \"epg_epgdata\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"logo_id\" bigint NULL REFERENCES \"dispatcharr_channels_logo\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"tvc_guide_stationid\" varchar(255) NULL, \"user_level\" integer NOT NULL, \"auto_created\" bool NOT NULL, \"auto_created_by_id\" bigint NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"is_adult\" bool NOT NULL, \"hidden_from_output\" bool NOT NULL, \"is_catchup\" bool NOT NULL, \"catchup_days\" integer unsigned NOT NULL CHECK (\"catchup_days\" >= 0), \"is_radio\" bool NOT NULL)",
+    "CREATE INDEX \"dispatcharr_channels_channel_auto_created_by_id_a6b916de\" ON \"dispatcharr_channels_channel\" (\"auto_created_by_id\")",
+    "CREATE INDEX \"dispatcharr_channels_channel_channel_group_id_d0fffbce\" ON \"dispatcharr_channels_channel\" (\"channel_group_id\")",
+    "CREATE INDEX \"dispatcharr_channels_channel_channel_number_4f2bc3a9\" ON \"dispatcharr_channels_channel\" (\"channel_number\")",
+    "CREATE INDEX \"dispatcharr_channels_channel_epg_data_id_f313c37a\" ON \"dispatcharr_channels_channel\" (\"epg_data_id\")",
+    "CREATE INDEX \"dispatcharr_channels_channel_hidden_from_output_4dbadc0b\" ON \"dispatcharr_channels_channel\" (\"hidden_from_output\")",
+    "CREATE INDEX \"dispatcharr_channels_channel_is_adult_f94fb5b3\" ON \"dispatcharr_channels_channel\" (\"is_adult\")",
+    "CREATE INDEX \"dispatcharr_channels_channel_is_catchup_483e3554\" ON \"dispatcharr_channels_channel\" (\"is_catchup\")",
+    "CREATE INDEX \"dispatcharr_channels_channel_logo_id_3f8eca21\" ON \"dispatcharr_channels_channel\" (\"logo_id\")",
+    "CREATE INDEX \"dispatcharr_channels_channel_stream_profile_id_298925ef\" ON \"dispatcharr_channels_channel\" (\"stream_profile_id\")"
+  ],
+  "dispatcharr_channels_channelgroupm3uaccount": [
+    "CREATE TABLE \"dispatcharr_channels_channelgroupm3uaccount\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"enabled\" bool NOT NULL, \"channel_group_id\" bigint NOT NULL REFERENCES \"dispatcharr_channels_channelgroup\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"auto_channel_sync\" bool NOT NULL, \"auto_sync_channel_start\" real NULL, \"is_stale\" bool NOT NULL, \"last_seen\" datetime NOT NULL, \"auto_sync_channel_end\" real NULL)",
+    "CREATE INDEX \"dispatcharr_channels_channelgroupm3uaccount_channel_group_id_349e35c9\" ON \"dispatcharr_channels_channelgroupm3uaccount\" (\"channel_group_id\")",
+    "CREATE UNIQUE INDEX \"dispatcharr_channels_channelgroupm3uaccount_channel_group_id_m3u_account_id_cf87bca4_uniq\" ON \"dispatcharr_channels_channelgroupm3uaccount\" (\"channel_group_id\", \"m3u_account_id\")",
+    "CREATE INDEX \"dispatcharr_channels_channelgroupm3uaccount_is_stale_b63df151\" ON \"dispatcharr_channels_channelgroupm3uaccount\" (\"is_stale\")",
+    "CREATE INDEX \"dispatcharr_channels_channelgroupm3uaccount_last_seen_95fe9986\" ON \"dispatcharr_channels_channelgroupm3uaccount\" (\"last_seen\")",
+    "CREATE INDEX \"dispatcharr_channels_channelgroupm3uaccount_m3u_account_id_a771580d\" ON \"dispatcharr_channels_channelgroupm3uaccount\" (\"m3u_account_id\")"
+  ],
+  "dispatcharr_channels_channelstream": [
+    "CREATE TABLE \"dispatcharr_channels_channelstream\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"order\" integer unsigned NOT NULL CHECK (\"order\" >= 0), \"channel_id\" bigint NOT NULL REFERENCES \"dispatcharr_channels_channel\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"stream_id\" bigint NOT NULL REFERENCES \"dispatcharr_channels_stream\" (\"id\") DEFERRABLE INITIALLY DEFERRED, CONSTRAINT \"unique_channel_stream\" UNIQUE (\"channel_id\", \"stream_id\"))",
+    "CREATE INDEX \"dispatcharr_channels_channelstream_channel_id_55646015\" ON \"dispatcharr_channels_channelstream\" (\"channel_id\")",
+    "CREATE INDEX \"dispatcharr_channels_channelstream_stream_id_e116b43d\" ON \"dispatcharr_channels_channelstream\" (\"stream_id\")"
+  ],
+  "m3u_m3uaccount": [
+    "CREATE TABLE \"m3u_m3uaccount\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL UNIQUE, \"max_streams\" integer unsigned NOT NULL CHECK (\"max_streams\" >= 0), \"is_active\" bool NOT NULL, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NULL, \"user_agent_id\" bigint NULL REFERENCES \"core_useragent\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"server_group_id\" bigint NULL REFERENCES \"m3u_servergroup\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"locked\" bool NOT NULL, \"stream_profile_id\" bigint NULL REFERENCES \"core_streamprofile\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"refresh_interval\" integer NOT NULL, \"refresh_task_id\" integer NULL REFERENCES \"django_celery_beat_periodictask\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"file_path\" varchar(255) NULL, \"stale_stream_days\" integer unsigned NOT NULL CHECK (\"stale_stream_days\" >= 0), \"account_type\" varchar NOT NULL, \"password\" varchar(255) NULL, \"username\" varchar(255) NULL, \"last_message\" text NULL, \"status\" varchar(20) NOT NULL, \"priority\" integer unsigned NOT NULL CHECK (\"priority\" >= 0), \"server_url\" varchar(1000) NULL)",
+    "CREATE INDEX \"m3u_m3uaccount_refresh_task_id_5a66b2fe\" ON \"m3u_m3uaccount\" (\"refresh_task_id\")",
+    "CREATE INDEX \"m3u_m3uaccount_server_group_id_4bac86ea\" ON \"m3u_m3uaccount\" (\"server_group_id\")",
+    "CREATE INDEX \"m3u_m3uaccount_stream_profile_id_3b509102\" ON \"m3u_m3uaccount\" (\"stream_profile_id\")",
+    "CREATE INDEX \"m3u_m3uaccount_user_agent_id_580db728\" ON \"m3u_m3uaccount\" (\"user_agent_id\")"
+  ],
+  "m3u_m3uaccountprofile": [
+    "CREATE TABLE \"m3u_m3uaccountprofile\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"is_default\" bool NOT NULL, \"max_streams\" integer unsigned NOT NULL CHECK (\"max_streams\" >= 0), \"is_active\" bool NOT NULL, \"search_pattern\" varchar(255) NOT NULL, \"replace_pattern\" varchar(255) NOT NULL, \"current_viewers\" integer unsigned NOT NULL CHECK (\"current_viewers\" >= 0), \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"exp_date\" datetime NULL, CONSTRAINT \"unique_account_name\" UNIQUE (\"m3u_account_id\", \"name\"))",
+    "CREATE INDEX \"m3u_m3uaccountprofile_m3u_account_id_7ec08551\" ON \"m3u_m3uaccountprofile\" (\"m3u_account_id\")"
+  ]
+}

@@ -1,0 +1,60 @@
+[
+  {
+    "core_coresettings": [
+      "CREATE TABLE \"core_coresettings\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"key\" varchar(255) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"value\" varchar(255) NOT NULL)"
+    ],
+    "core_notificationdismissal": [],
+    "core_systemnotification": []
+  },
+  {
+    "core_coresettings": [
+      "CREATE TABLE \"core_coresettings\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"value\" text NOT NULL CHECK ((JSON_VALID(\"value\") OR \"value\" IS NULL)), \"key\" varchar(255) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL)"
+    ],
+    "core_notificationdismissal": [],
+    "core_systemnotification": []
+  },
+  {
+    "core_coresettings": [
+      "CREATE TABLE \"core_coresettings\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"value\" text NOT NULL CHECK ((JSON_VALID(\"value\") OR \"value\" IS NULL)), \"key\" varchar(255) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL)"
+    ],
+    "core_notificationdismissal": [
+      "CREATE TABLE \"core_notificationdismissal\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"dismissed_at\" datetime NOT NULL, \"action_taken\" varchar(50) NULL, \"user_id\" bigint NOT NULL REFERENCES \"accounts_user\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"notification_id\" bigint NOT NULL REFERENCES \"core_systemnotification\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"core_notifi_user_id_93e02e_idx\" ON \"core_notificationdismissal\" (\"user_id\", \"notification_id\")",
+      "CREATE INDEX \"core_notificationdismissal_notification_id_6cce0b6b\" ON \"core_notificationdismissal\" (\"notification_id\")",
+      "CREATE INDEX \"core_notificationdismissal_user_id_cec67307\" ON \"core_notificationdismissal\" (\"user_id\")",
+      "CREATE UNIQUE INDEX \"core_notificationdismissal_user_id_notification_id_c50b872d_uniq\" ON \"core_notificationdismissal\" (\"user_id\", \"notification_id\")"
+    ],
+    "core_systemnotification": [
+      "CREATE TABLE \"core_systemnotification\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"notification_key\" varchar(255) NOT NULL UNIQUE, \"notification_type\" varchar(50) NOT NULL, \"priority\" varchar(20) NOT NULL, \"source\" varchar(20) NOT NULL, \"title\" varchar(255) NOT NULL, \"message\" text NOT NULL, \"action_data\" text NOT NULL CHECK ((JSON_VALID(\"action_data\") OR \"action_data\" IS NULL)), \"is_active\" bool NOT NULL, \"admin_only\" bool NOT NULL, \"expires_at\" datetime NULL, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL)",
+      "CREATE INDEX \"core_system_is_acti_afab03_idx\" ON \"core_systemnotification\" (\"is_active\", \"created_at\" DESC)",
+      "CREATE INDEX \"core_system_notific_2179e3_idx\" ON \"core_systemnotification\" (\"notification_type\", \"is_active\")",
+      "CREATE INDEX \"core_system_source_a35829_idx\" ON \"core_systemnotification\" (\"source\", \"is_active\")",
+      "CREATE INDEX \"core_systemnotification_expires_at_16f24d62\" ON \"core_systemnotification\" (\"expires_at\")",
+      "CREATE INDEX \"core_systemnotification_is_active_46d192ca\" ON \"core_systemnotification\" (\"is_active\")",
+      "CREATE INDEX \"core_systemnotification_notification_type_15d8a684\" ON \"core_systemnotification\" (\"notification_type\")",
+      "CREATE INDEX \"core_systemnotification_source_679a564f\" ON \"core_systemnotification\" (\"source\")"
+    ]
+  },
+  {
+    "core_coresettings": [
+      "CREATE TABLE \"core_coresettings\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"value\" text NOT NULL CHECK ((JSON_VALID(\"value\") OR \"value\" IS NULL)), \"key\" varchar(255) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL)"
+    ],
+    "core_notificationdismissal": [
+      "CREATE TABLE \"core_notificationdismissal\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"dismissed_at\" datetime NOT NULL, \"action_taken\" varchar(50) NULL, \"user_id\" bigint NOT NULL REFERENCES \"accounts_user\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"notification_id\" bigint NOT NULL REFERENCES \"core_systemnotification\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"core_notifi_user_id_93e02e_idx\" ON \"core_notificationdismissal\" (\"user_id\", \"notification_id\")",
+      "CREATE INDEX \"core_notificationdismissal_notification_id_6cce0b6b\" ON \"core_notificationdismissal\" (\"notification_id\")",
+      "CREATE INDEX \"core_notificationdismissal_user_id_cec67307\" ON \"core_notificationdismissal\" (\"user_id\")",
+      "CREATE UNIQUE INDEX \"core_notificationdismissal_user_id_notification_id_c50b872d_uniq\" ON \"core_notificationdismissal\" (\"user_id\", \"notification_id\")"
+    ],
+    "core_systemnotification": [
+      "CREATE TABLE \"core_systemnotification\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"notification_key\" varchar(255) NOT NULL UNIQUE, \"notification_type\" varchar(50) NOT NULL, \"priority\" varchar(20) NOT NULL, \"source\" varchar(20) NOT NULL, \"title\" varchar(255) NOT NULL, \"message\" text NOT NULL, \"action_data\" text NOT NULL CHECK ((JSON_VALID(\"action_data\") OR \"action_data\" IS NULL)), \"is_active\" bool NOT NULL, \"admin_only\" bool NOT NULL, \"expires_at\" datetime NULL, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL)",
+      "CREATE INDEX \"core_system_is_acti_afab03_idx\" ON \"core_systemnotification\" (\"is_active\", \"created_at\" DESC)",
+      "CREATE INDEX \"core_system_notific_2179e3_idx\" ON \"core_systemnotification\" (\"notification_type\", \"is_active\")",
+      "CREATE INDEX \"core_system_source_a35829_idx\" ON \"core_systemnotification\" (\"source\", \"is_active\")",
+      "CREATE INDEX \"core_systemnotification_expires_at_16f24d62\" ON \"core_systemnotification\" (\"expires_at\")",
+      "CREATE INDEX \"core_systemnotification_is_active_46d192ca\" ON \"core_systemnotification\" (\"is_active\")",
+      "CREATE INDEX \"core_systemnotification_notification_type_15d8a684\" ON \"core_systemnotification\" (\"notification_type\")",
+      "CREATE INDEX \"core_systemnotification_source_679a564f\" ON \"core_systemnotification\" (\"source\")"
+    ]
+  }
+]

@@ -10,11 +10,61 @@ use dispatcharr_store::{
     Store,
 };
 use std::{sync::Arc, time::Duration};
+#[cfg(feature = "sqlite-historical-upgrade")]
+fn sqlite_upgrade(args: &[String]) -> i32 {
+    use std::path::Path;
+
+    let [command, input_flag, input, output_flag, output, tail @ ..] = args else {
+        eprintln!(
+            "Expected sqlite_upgrade_copy --input FILE --output FILE [--display-timezone ZONE]"
+        );
+        return 2;
+    };
+    let timezone = match tail {
+        [] => "UTC",
+        [flag, value] if flag == "--display-timezone" => value,
+        _ => return 2,
+    };
+    if command != "sqlite_upgrade_copy" || input_flag != "--input" || output_flag != "--output" {
+        return 2;
+    }
+    let Ok(runtime) = tokio::runtime::Builder::new_current_thread()
+        .enable_all()
+        .build()
+    else {
+        return 1;
+    };
+    match runtime.block_on(dispatcharr_store::sqlite_operator_copy::upgrade_copy(
+        Path::new(input),
+        Path::new(output),
+        timezone,
+    )) {
+        Ok(()) => {
+            println!("SQLite compatibility copy completed with 184 migration records.");
+            0
+        }
+        Err(error) => {
+            eprintln!("{error}");
+            1
+        }
+    }
+}
+
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
     if args == ["--help"] {
         println!("Native Dispatcharr safe operator\nUsage: dispatcharr-operator reset_network_access\n       dispatcharr-operator reset_user_network [--user USERNAME]\n       dispatcharr-operator createsuperuser --noinput [--username USERNAME] [--email EMAIL]\n       dispatcharr-operator showmigrations [APP] [--list] [--verbosity 2]\n       dispatcharr-operator showmigrations --plan [--verbosity 2]\nOnly these safe commands and flags are supported. Django global flags are not emulated.");
+        #[cfg(feature = "sqlite-historical-upgrade")]
+        println!("       dispatcharr-operator sqlite_upgrade_copy --input FILE --output FILE [--display-timezone ZONE]");
         return;
+    }
+
+    #[cfg(feature = "sqlite-historical-upgrade")]
+    if args
+        .first()
+        .is_some_and(|first| first == "sqlite_upgrade_copy")
+    {
+        std::process::exit(sqlite_upgrade(&args));
     }
 
     let runtime = tokio::runtime::Builder::new_current_thread()

@@ -5,6 +5,9 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 
+[features]
+sqlite-historical-upgrade = ["dispatcharr-store/sqlite-historical-upgrade"]
+
 [dependencies]
 chrono = "0.4"
 chrono-tz = "0.10"

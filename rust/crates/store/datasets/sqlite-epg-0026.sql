@@ -1,0 +1,1 @@
+CREATE TABLE "epg_epgsourceindex" ("source_id" bigint NOT NULL PRIMARY KEY REFERENCES "epg_epgsource" ("id") DEFERRABLE INITIALLY DEFERRED, "data" text NULL CHECK ((JSON_VALID("data") OR "data" IS NULL)), "updated_at" datetime NOT NULL)

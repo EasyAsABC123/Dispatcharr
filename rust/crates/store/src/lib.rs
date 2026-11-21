@@ -628,3 +628,9 @@ pub mod vod_ingestion;
 
 pub mod comskip_http;
 pub mod comskip_task;
+
+#[cfg(feature = "sqlite-historical-upgrade")]
+mod sqlite_accounts_upgrade;
+
+#[cfg(feature = "sqlite-historical-upgrade")]
+pub use sqlite_accounts_upgrade::operator_copy as sqlite_operator_copy;

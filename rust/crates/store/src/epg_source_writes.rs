@@ -398,11 +398,36 @@ fn sd_logo_style_patch(
     Ok(properties)
 }
 
-async fn update_sd_logo_style(
+enum SdUpdate {
+    LogoStyle(Map<String, Value>),
+    SetActive(bool),
+}
+
+fn sd_update(
+    input: Map<String, Value>,
+    old: &Value,
+    cron: &str,
+    partial: bool,
+) -> Result<SdUpdate, StoreError> {
+    if let Some(active) = input.get("is_active").and_then(Value::as_bool) {
+        if partial
+            && input.len() == 1
+            && old["is_active"].as_bool() == Some(!active)
+            && old["refresh_interval"] == 24
+            && cron.is_empty()
+        {
+            return Ok(SdUpdate::SetActive(active));
+        }
+        return Err(unsupported());
+    }
+    sd_logo_style_patch(input, old, cron, partial).map(SdUpdate::LogoStyle)
+}
+
+async fn update_sd_settings(
     session: &TaskSqlSession,
     id: i64,
     old: Value,
-    properties: Map<String, Value>,
+    action: SdUpdate,
 ) -> Result<(), StoreError> {
     session
         .run(move |connection| {
@@ -419,32 +444,51 @@ async fn update_sd_logo_style(
                     return Err(unsupported());
                 }
                 let task_id = old["refresh_task_id"].as_i64().ok_or_else(unsupported)?;
+                // The logo-style operation always starts from an inactive source.
+                let expected_enabled = old["is_active"].as_bool().ok_or_else(unsupported)?;
+                let enabling = matches!(action, SdUpdate::SetActive(true));
                 let task_matches: Option<bool> = sqlx::query_scalar(
-                    "SELECT NOT p.enabled FROM django_celery_beat_periodictask p
+                    "SELECT p.enabled = $5 FROM django_celery_beat_periodictask p
                        JOIN django_celery_beat_intervalschedule i ON i.id=p.interval_id
                        WHERE p.id=$1 AND p.name=$2 AND p.task='apps.epg.tasks.refresh_epg_data'
                          AND p.crontab_id IS NULL AND p.solar_id IS NULL AND p.clocked_id IS NULL
                          AND i.every=24 AND i.period='hours'
                          AND p.args=$3 AND p.kwargs=$4
+                         AND (NOT $6 OR (p.last_run_at IS NULL AND p.start_time IS NULL AND NOT p.one_off))
                        FOR UPDATE OF p",
                 )
                 .bind(task_id)
                 .bind(format!("epg_source-refresh-{id}"))
                 .bind("[]")
                 .bind(format!("{{\"source_id\": {id}}}"))
+                .bind(expected_enabled)
+                .bind(enabling)
                 .fetch_optional(&mut *transaction)
                 .await?;
                 if task_matches != Some(true) {
                     return Err(unsupported());
                 }
 
-                sqlx::query("UPDATE epg_epgsource SET custom_properties=$2 WHERE id=$1")
-                    .bind(id)
-                    .bind(sqlx::types::Json(properties))
-                    .execute(&mut *transaction)
-                    .await?;
-                // Original serializer save also maintains the existing disabled Beat task.
-                schedule_refresh_on_connection(&mut transaction, id, false, 24, "", "UTC").await?;
+                match action {
+                    SdUpdate::LogoStyle(properties) => {
+                        sqlx::query("UPDATE epg_epgsource SET custom_properties=$2 WHERE id=$1")
+                            .bind(id)
+                            .bind(sqlx::types::Json(properties))
+                            .execute(&mut *transaction)
+                            .await?;
+                    }
+                    SdUpdate::SetActive(active) => {
+                        let status = if active { "idle" } else { "disabled" };
+                        sqlx::query("UPDATE epg_epgsource SET is_active=$2,status=$3 WHERE id=$1")
+                            .bind(id)
+                            .bind(active)
+                            .bind(status)
+                            .execute(&mut *transaction)
+                            .await?;
+                    }
+                }
+                // The Original model save synchronizes the same existing Beat task.
+                schedule_refresh_on_connection(&mut transaction, id, enabling, 24, "", "UTC").await?;
                 transaction.commit().await?;
                 Ok(())
             })
@@ -647,8 +691,8 @@ async fn change(
             let old:Value=row.try_get("raw")?;let old_cron:String=row.try_get("cron")?;
             let input = body_object(body)?;
             if old["source_type"] == "schedules_direct" {
-                let properties = sd_logo_style_patch(input, &old, &old_cron, partial)?;
-                update_sd_logo_style(&session, id, old, properties).await?;
+                let action = sd_update(input, &old, &old_cron, partial)?;
+                update_sd_settings(&session, id, old, action).await?;
                 return Ok((project(&session, id, Some(old_cron)).await?, true));
             }
             let Validated {saved,cron,url_changed}=validate(input,&old,&old_cron,partial)?;
@@ -871,6 +915,40 @@ mod tests {
         }
         old["is_active"] = json!(true);
         assert!(sd_logo_style_patch(command.clone(), &old, "", true).is_err());
+    }
+
+    #[test]
+    fn schedules_direct_active_switch_accepts_only_boolean_transitions_on_the_observed_interval() {
+        let mut old =
+            json!({"source_type":"schedules_direct", "is_active":true, "refresh_interval":24});
+        let command = json!({"is_active":false});
+        let command = command.as_object().unwrap();
+        assert!(matches!(
+            sd_update(command.clone(), &old, "", true),
+            Ok(SdUpdate::SetActive(false))
+        ));
+        assert!(sd_update(command.clone(), &old, "", false).is_err());
+        assert!(sd_update(command.clone(), &old, "17 4 29 2 *", true).is_err());
+        for outside in [
+            json!({"is_active":true}),
+            json!({"is_active":"false"}),
+            json!({"is_active":false,"status":"idle"}),
+        ] {
+            assert!(sd_update(outside.as_object().unwrap().clone(), &old, "", true).is_err());
+        }
+        old["refresh_interval"] = json!(12);
+        assert!(sd_update(command.clone(), &old, "", true).is_err());
+        old["refresh_interval"] = json!(24);
+        old["is_active"] = json!(false);
+        assert!(sd_update(command.clone(), &old, "", true).is_err());
+        let body = json!({"is_active":true});
+        let activate = body.as_object().unwrap();
+        assert!(matches!(
+            sd_update(activate.clone(), &old, "", true),
+            Ok(SdUpdate::SetActive(true))
+        ));
+        assert!(sd_update(activate.clone(), &old, "", false).is_err());
+        assert!(sd_update(activate.clone(), &old, "17 4 29 2 *", true).is_err());
     }
 
     #[test]

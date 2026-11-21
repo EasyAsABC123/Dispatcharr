@@ -1,0 +1,238 @@
+[
+  {
+    "dispatcharr_channels_logo": [
+      "CREATE TABLE \"dispatcharr_channels_logo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" text NOT NULL UNIQUE)"
+    ],
+    "vod_episode": [
+      "CREATE TABLE \"vod_episode\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"air_date\" date NULL, \"rating\" varchar(10) NULL, \"duration_secs\" integer NULL, \"season_number\" integer NULL, \"episode_number\" integer NULL, \"tmdb_id\" varchar(50) NULL, \"imdb_id\" varchar(50) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"series_id\" bigint NOT NULL REFERENCES \"vod_series\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"vod_episode_imdb_id_d6347c38\" ON \"vod_episode\" (\"imdb_id\")",
+      "CREATE INDEX \"vod_episode_series_id_e881a362\" ON \"vod_episode\" (\"series_id\")",
+      "CREATE UNIQUE INDEX \"vod_episode_series_id_season_number_episode_number_73053ba7_uniq\" ON \"vod_episode\" (\"series_id\", \"season_number\", \"episode_number\")",
+      "CREATE INDEX \"vod_episode_tmdb_id_4ae776e8\" ON \"vod_episode\" (\"tmdb_id\")"
+    ],
+    "vod_m3uepisoderelation": [
+      "CREATE TABLE \"vod_m3uepisoderelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"stream_id\" varchar(255) NOT NULL, \"container_extension\" varchar(10) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"episode_id\" bigint NOT NULL REFERENCES \"vod_episode\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3uepisoderelation_episode_id_29a32719\" ON \"vod_m3uepisoderelation\" (\"episode_id\")",
+      "CREATE INDEX \"vod_m3uepisoderelation_m3u_account_id_dbd6665b\" ON \"vod_m3uepisoderelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3uepisoderelation_m3u_account_id_stream_id_67fe9dd6_uniq\" ON \"vod_m3uepisoderelation\" (\"m3u_account_id\", \"stream_id\")"
+    ],
+    "vod_m3umovierelation": [
+      "CREATE TABLE \"vod_m3umovierelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"stream_id\" varchar(255) NOT NULL, \"container_extension\" varchar(10) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"last_advanced_refresh\" datetime NULL, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"movie_id\" bigint NOT NULL REFERENCES \"vod_movie\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"category_id\" bigint NULL REFERENCES \"vod_vodcategory\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3umovierelation_category_id_c5b05222\" ON \"vod_m3umovierelation\" (\"category_id\")",
+      "CREATE INDEX \"vod_m3umovierelation_m3u_account_id_3a37eda8\" ON \"vod_m3umovierelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3umovierelation_m3u_account_id_stream_id_093ead38_uniq\" ON \"vod_m3umovierelation\" (\"m3u_account_id\", \"stream_id\")",
+      "CREATE INDEX \"vod_m3umovierelation_movie_id_7b56ea3e\" ON \"vod_m3umovierelation\" (\"movie_id\")"
+    ],
+    "vod_m3useriesrelation": [
+      "CREATE TABLE \"vod_m3useriesrelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"external_series_id\" varchar(255) NOT NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"last_episode_refresh\" datetime NULL, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"series_id\" bigint NOT NULL REFERENCES \"vod_series\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"category_id\" bigint NULL REFERENCES \"vod_vodcategory\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3useriesrelation_category_id_4e3f07bd\" ON \"vod_m3useriesrelation\" (\"category_id\")",
+      "CREATE INDEX \"vod_m3useriesrelation_m3u_account_id_c8c5bce1\" ON \"vod_m3useriesrelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3useriesrelation_m3u_account_id_external_series_id_ab7db0bb_uniq\" ON \"vod_m3useriesrelation\" (\"m3u_account_id\", \"external_series_id\")",
+      "CREATE INDEX \"vod_m3useriesrelation_series_id_6cc73ead\" ON \"vod_m3useriesrelation\" (\"series_id\")"
+    ],
+    "vod_movie": [
+      "CREATE TABLE \"vod_movie\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"year\" integer NULL, \"rating\" varchar(10) NULL, \"genre\" varchar(255) NULL, \"duration_secs\" integer NULL, \"tmdb_id\" varchar(50) NULL UNIQUE, \"imdb_id\" varchar(50) NULL UNIQUE, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"logo_id\" bigint NULL REFERENCES \"dispatcharr_channels_logo\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE UNIQUE INDEX \"unique_movie_name_year_no_external_id\" ON \"vod_movie\" (\"name\", \"year\") WHERE (\"tmdb_id\" IS NULL AND \"imdb_id\" IS NULL)",
+      "CREATE INDEX \"vod_movie_logo_id_c9c89b1b\" ON \"vod_movie\" (\"logo_id\")"
+    ],
+    "vod_series": [
+      "CREATE TABLE \"vod_series\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"year\" integer NULL, \"rating\" varchar(10) NULL, \"genre\" varchar(255) NULL, \"tmdb_id\" varchar(50) NULL UNIQUE, \"imdb_id\" varchar(50) NULL UNIQUE, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"logo_id\" bigint NULL REFERENCES \"dispatcharr_channels_logo\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE UNIQUE INDEX \"unique_series_name_year_no_external_id\" ON \"vod_series\" (\"name\", \"year\") WHERE (\"tmdb_id\" IS NULL AND \"imdb_id\" IS NULL)",
+      "CREATE INDEX \"vod_series_logo_id_9edbac2d\" ON \"vod_series\" (\"logo_id\")"
+    ],
+    "vod_vodlogo": []
+  },
+  {
+    "dispatcharr_channels_logo": [
+      "CREATE TABLE \"dispatcharr_channels_logo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" text NOT NULL UNIQUE)"
+    ],
+    "vod_episode": [
+      "CREATE TABLE \"vod_episode\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"air_date\" date NULL, \"rating\" varchar(10) NULL, \"duration_secs\" integer NULL, \"season_number\" integer NULL, \"episode_number\" integer NULL, \"tmdb_id\" varchar(50) NULL, \"imdb_id\" varchar(50) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"series_id\" bigint NOT NULL REFERENCES \"vod_series\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"vod_episode_imdb_id_d6347c38\" ON \"vod_episode\" (\"imdb_id\")",
+      "CREATE INDEX \"vod_episode_series_id_e881a362\" ON \"vod_episode\" (\"series_id\")",
+      "CREATE UNIQUE INDEX \"vod_episode_series_id_season_number_episode_number_73053ba7_uniq\" ON \"vod_episode\" (\"series_id\", \"season_number\", \"episode_number\")",
+      "CREATE INDEX \"vod_episode_tmdb_id_4ae776e8\" ON \"vod_episode\" (\"tmdb_id\")"
+    ],
+    "vod_m3uepisoderelation": [
+      "CREATE TABLE \"vod_m3uepisoderelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"stream_id\" varchar(255) NOT NULL, \"container_extension\" varchar(10) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"episode_id\" bigint NOT NULL REFERENCES \"vod_episode\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3uepisoderelation_episode_id_29a32719\" ON \"vod_m3uepisoderelation\" (\"episode_id\")",
+      "CREATE INDEX \"vod_m3uepisoderelation_m3u_account_id_dbd6665b\" ON \"vod_m3uepisoderelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3uepisoderelation_m3u_account_id_stream_id_67fe9dd6_uniq\" ON \"vod_m3uepisoderelation\" (\"m3u_account_id\", \"stream_id\")"
+    ],
+    "vod_m3umovierelation": [
+      "CREATE TABLE \"vod_m3umovierelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"stream_id\" varchar(255) NOT NULL, \"container_extension\" varchar(10) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"last_advanced_refresh\" datetime NULL, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"movie_id\" bigint NOT NULL REFERENCES \"vod_movie\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"category_id\" bigint NULL REFERENCES \"vod_vodcategory\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3umovierelation_category_id_c5b05222\" ON \"vod_m3umovierelation\" (\"category_id\")",
+      "CREATE INDEX \"vod_m3umovierelation_m3u_account_id_3a37eda8\" ON \"vod_m3umovierelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3umovierelation_m3u_account_id_stream_id_093ead38_uniq\" ON \"vod_m3umovierelation\" (\"m3u_account_id\", \"stream_id\")",
+      "CREATE INDEX \"vod_m3umovierelation_movie_id_7b56ea3e\" ON \"vod_m3umovierelation\" (\"movie_id\")"
+    ],
+    "vod_m3useriesrelation": [
+      "CREATE TABLE \"vod_m3useriesrelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"external_series_id\" varchar(255) NOT NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"last_episode_refresh\" datetime NULL, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"series_id\" bigint NOT NULL REFERENCES \"vod_series\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"category_id\" bigint NULL REFERENCES \"vod_vodcategory\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3useriesrelation_category_id_4e3f07bd\" ON \"vod_m3useriesrelation\" (\"category_id\")",
+      "CREATE INDEX \"vod_m3useriesrelation_m3u_account_id_c8c5bce1\" ON \"vod_m3useriesrelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3useriesrelation_m3u_account_id_external_series_id_ab7db0bb_uniq\" ON \"vod_m3useriesrelation\" (\"m3u_account_id\", \"external_series_id\")",
+      "CREATE INDEX \"vod_m3useriesrelation_series_id_6cc73ead\" ON \"vod_m3useriesrelation\" (\"series_id\")"
+    ],
+    "vod_movie": [
+      "CREATE TABLE \"vod_movie\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"year\" integer NULL, \"rating\" varchar(10) NULL, \"genre\" varchar(255) NULL, \"duration_secs\" integer NULL, \"tmdb_id\" varchar(50) NULL UNIQUE, \"imdb_id\" varchar(50) NULL UNIQUE, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"logo_id\" bigint NULL REFERENCES \"vod_vodlogo\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE UNIQUE INDEX \"unique_movie_name_year_no_external_id\" ON \"vod_movie\" (\"name\", \"year\") WHERE (\"tmdb_id\" IS NULL AND \"imdb_id\" IS NULL)",
+      "CREATE INDEX \"vod_movie_logo_id_c9c89b1b\" ON \"vod_movie\" (\"logo_id\")"
+    ],
+    "vod_series": [
+      "CREATE TABLE \"vod_series\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"year\" integer NULL, \"rating\" varchar(10) NULL, \"genre\" varchar(255) NULL, \"tmdb_id\" varchar(50) NULL UNIQUE, \"imdb_id\" varchar(50) NULL UNIQUE, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"logo_id\" bigint NULL REFERENCES \"vod_vodlogo\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE UNIQUE INDEX \"unique_series_name_year_no_external_id\" ON \"vod_series\" (\"name\", \"year\") WHERE (\"tmdb_id\" IS NULL AND \"imdb_id\" IS NULL)",
+      "CREATE INDEX \"vod_series_logo_id_9edbac2d\" ON \"vod_series\" (\"logo_id\")"
+    ],
+    "vod_vodlogo": [
+      "CREATE TABLE \"vod_vodlogo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" text NOT NULL UNIQUE)"
+    ]
+  },
+  {
+    "dispatcharr_channels_logo": [
+      "CREATE TABLE \"dispatcharr_channels_logo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" text NOT NULL UNIQUE)"
+    ],
+    "vod_episode": [
+      "CREATE TABLE \"vod_episode\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"air_date\" date NULL, \"rating\" varchar(10) NULL, \"duration_secs\" integer NULL, \"season_number\" integer NULL, \"episode_number\" integer NULL, \"tmdb_id\" varchar(50) NULL, \"imdb_id\" varchar(50) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"series_id\" bigint NOT NULL REFERENCES \"vod_series\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"vod_episode_imdb_id_d6347c38\" ON \"vod_episode\" (\"imdb_id\")",
+      "CREATE INDEX \"vod_episode_series_id_e881a362\" ON \"vod_episode\" (\"series_id\")",
+      "CREATE UNIQUE INDEX \"vod_episode_series_id_season_number_episode_number_73053ba7_uniq\" ON \"vod_episode\" (\"series_id\", \"season_number\", \"episode_number\")",
+      "CREATE INDEX \"vod_episode_tmdb_id_4ae776e8\" ON \"vod_episode\" (\"tmdb_id\")"
+    ],
+    "vod_m3uepisoderelation": [
+      "CREATE TABLE \"vod_m3uepisoderelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"stream_id\" varchar(255) NOT NULL, \"container_extension\" varchar(10) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"episode_id\" bigint NOT NULL REFERENCES \"vod_episode\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL, \"series_relation_id\" bigint NULL REFERENCES \"vod_m3useriesrelation\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"vod_m3uepisoderelation_episode_id_29a32719\" ON \"vod_m3uepisoderelation\" (\"episode_id\")",
+      "CREATE INDEX \"vod_m3uepisoderelation_m3u_account_id_dbd6665b\" ON \"vod_m3uepisoderelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3uepisoderelation_m3u_account_id_stream_id_67fe9dd6_uniq\" ON \"vod_m3uepisoderelation\" (\"m3u_account_id\", \"stream_id\")",
+      "CREATE INDEX \"vod_m3uepisoderelation_series_relation_id_c2ff56f2\" ON \"vod_m3uepisoderelation\" (\"series_relation_id\")"
+    ],
+    "vod_m3umovierelation": [
+      "CREATE TABLE \"vod_m3umovierelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"stream_id\" varchar(255) NOT NULL, \"container_extension\" varchar(10) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"last_advanced_refresh\" datetime NULL, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"movie_id\" bigint NOT NULL REFERENCES \"vod_movie\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"category_id\" bigint NULL REFERENCES \"vod_vodcategory\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3umovierelation_category_id_c5b05222\" ON \"vod_m3umovierelation\" (\"category_id\")",
+      "CREATE INDEX \"vod_m3umovierelation_m3u_account_id_3a37eda8\" ON \"vod_m3umovierelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3umovierelation_m3u_account_id_stream_id_093ead38_uniq\" ON \"vod_m3umovierelation\" (\"m3u_account_id\", \"stream_id\")",
+      "CREATE INDEX \"vod_m3umovierelation_movie_id_7b56ea3e\" ON \"vod_m3umovierelation\" (\"movie_id\")"
+    ],
+    "vod_m3useriesrelation": [
+      "CREATE TABLE \"vod_m3useriesrelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"external_series_id\" varchar(255) NOT NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"last_episode_refresh\" datetime NULL, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"series_id\" bigint NOT NULL REFERENCES \"vod_series\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"category_id\" bigint NULL REFERENCES \"vod_vodcategory\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3useriesrelation_category_id_4e3f07bd\" ON \"vod_m3useriesrelation\" (\"category_id\")",
+      "CREATE INDEX \"vod_m3useriesrelation_m3u_account_id_c8c5bce1\" ON \"vod_m3useriesrelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3useriesrelation_m3u_account_id_external_series_id_ab7db0bb_uniq\" ON \"vod_m3useriesrelation\" (\"m3u_account_id\", \"external_series_id\")",
+      "CREATE INDEX \"vod_m3useriesrelation_series_id_6cc73ead\" ON \"vod_m3useriesrelation\" (\"series_id\")"
+    ],
+    "vod_movie": [
+      "CREATE TABLE \"vod_movie\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"year\" integer NULL, \"rating\" varchar(10) NULL, \"genre\" varchar(255) NULL, \"duration_secs\" integer NULL, \"tmdb_id\" varchar(50) NULL UNIQUE, \"imdb_id\" varchar(50) NULL UNIQUE, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"logo_id\" bigint NULL REFERENCES \"vod_vodlogo\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE UNIQUE INDEX \"unique_movie_name_year_no_external_id\" ON \"vod_movie\" (\"name\", \"year\") WHERE (\"tmdb_id\" IS NULL AND \"imdb_id\" IS NULL)",
+      "CREATE INDEX \"vod_movie_logo_id_c9c89b1b\" ON \"vod_movie\" (\"logo_id\")"
+    ],
+    "vod_series": [
+      "CREATE TABLE \"vod_series\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"year\" integer NULL, \"rating\" varchar(10) NULL, \"genre\" varchar(255) NULL, \"tmdb_id\" varchar(50) NULL UNIQUE, \"imdb_id\" varchar(50) NULL UNIQUE, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"logo_id\" bigint NULL REFERENCES \"vod_vodlogo\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE UNIQUE INDEX \"unique_series_name_year_no_external_id\" ON \"vod_series\" (\"name\", \"year\") WHERE (\"tmdb_id\" IS NULL AND \"imdb_id\" IS NULL)",
+      "CREATE INDEX \"vod_series_logo_id_9edbac2d\" ON \"vod_series\" (\"logo_id\")"
+    ],
+    "vod_vodlogo": [
+      "CREATE TABLE \"vod_vodlogo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" text NOT NULL UNIQUE)"
+    ]
+  },
+  {
+    "dispatcharr_channels_logo": [
+      "CREATE TABLE \"dispatcharr_channels_logo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" text NOT NULL UNIQUE)"
+    ],
+    "vod_episode": [
+      "CREATE TABLE \"vod_episode\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"air_date\" date NULL, \"rating\" varchar(10) NULL, \"duration_secs\" integer NULL, \"season_number\" integer NULL, \"episode_number\" integer NULL, \"tmdb_id\" varchar(50) NULL, \"imdb_id\" varchar(50) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"series_id\" bigint NOT NULL REFERENCES \"vod_series\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"vod_episode_imdb_id_d6347c38\" ON \"vod_episode\" (\"imdb_id\")",
+      "CREATE INDEX \"vod_episode_series_id_e881a362\" ON \"vod_episode\" (\"series_id\")",
+      "CREATE UNIQUE INDEX \"vod_episode_series_id_season_number_episode_number_73053ba7_uniq\" ON \"vod_episode\" (\"series_id\", \"season_number\", \"episode_number\")",
+      "CREATE INDEX \"vod_episode_tmdb_id_4ae776e8\" ON \"vod_episode\" (\"tmdb_id\")"
+    ],
+    "vod_m3uepisoderelation": [
+      "CREATE TABLE \"vod_m3uepisoderelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"stream_id\" varchar(255) NOT NULL, \"container_extension\" varchar(10) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"episode_id\" bigint NOT NULL REFERENCES \"vod_episode\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL, \"series_relation_id\" bigint NULL REFERENCES \"vod_m3useriesrelation\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"vod_m3uepisoderelation_episode_id_29a32719\" ON \"vod_m3uepisoderelation\" (\"episode_id\")",
+      "CREATE INDEX \"vod_m3uepisoderelation_m3u_account_id_dbd6665b\" ON \"vod_m3uepisoderelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3uepisoderelation_m3u_account_id_stream_id_67fe9dd6_uniq\" ON \"vod_m3uepisoderelation\" (\"m3u_account_id\", \"stream_id\")",
+      "CREATE INDEX \"vod_m3uepisoderelation_series_relation_id_c2ff56f2\" ON \"vod_m3uepisoderelation\" (\"series_relation_id\")"
+    ],
+    "vod_m3umovierelation": [
+      "CREATE TABLE \"vod_m3umovierelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"stream_id\" varchar(255) NOT NULL, \"container_extension\" varchar(10) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"last_advanced_refresh\" datetime NULL, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"movie_id\" bigint NOT NULL REFERENCES \"vod_movie\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"category_id\" bigint NULL REFERENCES \"vod_vodcategory\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3umovierelation_category_id_c5b05222\" ON \"vod_m3umovierelation\" (\"category_id\")",
+      "CREATE INDEX \"vod_m3umovierelation_m3u_account_id_3a37eda8\" ON \"vod_m3umovierelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3umovierelation_m3u_account_id_stream_id_093ead38_uniq\" ON \"vod_m3umovierelation\" (\"m3u_account_id\", \"stream_id\")",
+      "CREATE INDEX \"vod_m3umovierelation_movie_id_7b56ea3e\" ON \"vod_m3umovierelation\" (\"movie_id\")"
+    ],
+    "vod_m3useriesrelation": [
+      "CREATE TABLE \"vod_m3useriesrelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"external_series_id\" varchar(255) NOT NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"last_episode_refresh\" datetime NULL, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"series_id\" bigint NOT NULL REFERENCES \"vod_series\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"category_id\" bigint NULL REFERENCES \"vod_vodcategory\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3useriesrelation_category_id_4e3f07bd\" ON \"vod_m3useriesrelation\" (\"category_id\")",
+      "CREATE INDEX \"vod_m3useriesrelation_m3u_account_id_c8c5bce1\" ON \"vod_m3useriesrelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3useriesrelation_m3u_account_id_external_series_id_ab7db0bb_uniq\" ON \"vod_m3useriesrelation\" (\"m3u_account_id\", \"external_series_id\")",
+      "CREATE INDEX \"vod_m3useriesrelation_series_id_6cc73ead\" ON \"vod_m3useriesrelation\" (\"series_id\")"
+    ],
+    "vod_movie": [
+      "CREATE TABLE \"vod_movie\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"year\" integer NULL, \"rating\" varchar(10) NULL, \"genre\" varchar(255) NULL, \"duration_secs\" integer NULL, \"tmdb_id\" varchar(50) NULL UNIQUE, \"imdb_id\" varchar(50) NULL UNIQUE, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"logo_id\" bigint NULL REFERENCES \"vod_vodlogo\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"is_adult\" bool NOT NULL)",
+      "CREATE UNIQUE INDEX \"unique_movie_name_year_no_external_id\" ON \"vod_movie\" (\"name\", \"year\") WHERE (\"tmdb_id\" IS NULL AND \"imdb_id\" IS NULL)",
+      "CREATE INDEX \"vod_movie_is_adult_a63dfa81\" ON \"vod_movie\" (\"is_adult\")",
+      "CREATE INDEX \"vod_movie_logo_id_c9c89b1b\" ON \"vod_movie\" (\"logo_id\")"
+    ],
+    "vod_series": [
+      "CREATE TABLE \"vod_series\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"year\" integer NULL, \"rating\" varchar(10) NULL, \"genre\" varchar(255) NULL, \"tmdb_id\" varchar(50) NULL UNIQUE, \"imdb_id\" varchar(50) NULL UNIQUE, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"logo_id\" bigint NULL REFERENCES \"vod_vodlogo\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE UNIQUE INDEX \"unique_series_name_year_no_external_id\" ON \"vod_series\" (\"name\", \"year\") WHERE (\"tmdb_id\" IS NULL AND \"imdb_id\" IS NULL)",
+      "CREATE INDEX \"vod_series_logo_id_9edbac2d\" ON \"vod_series\" (\"logo_id\")"
+    ],
+    "vod_vodlogo": [
+      "CREATE TABLE \"vod_vodlogo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" text NOT NULL UNIQUE)"
+    ]
+  },
+  {
+    "dispatcharr_channels_logo": [
+      "CREATE TABLE \"dispatcharr_channels_logo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" text NOT NULL UNIQUE)"
+    ],
+    "vod_episode": [
+      "CREATE TABLE \"vod_episode\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"air_date\" date NULL, \"rating\" varchar(10) NULL, \"duration_secs\" integer NULL, \"season_number\" integer NULL, \"episode_number\" integer NULL, \"tmdb_id\" varchar(50) NULL, \"imdb_id\" varchar(50) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"series_id\" bigint NOT NULL REFERENCES \"vod_series\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"vod_episode_imdb_id_d6347c38\" ON \"vod_episode\" (\"imdb_id\")",
+      "CREATE INDEX \"vod_episode_series_id_e881a362\" ON \"vod_episode\" (\"series_id\")",
+      "CREATE UNIQUE INDEX \"vod_episode_series_id_season_number_episode_number_73053ba7_uniq\" ON \"vod_episode\" (\"series_id\", \"season_number\", \"episode_number\")",
+      "CREATE INDEX \"vod_episode_tmdb_id_4ae776e8\" ON \"vod_episode\" (\"tmdb_id\")"
+    ],
+    "vod_m3uepisoderelation": [
+      "CREATE TABLE \"vod_m3uepisoderelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"stream_id\" varchar(255) NOT NULL, \"container_extension\" varchar(10) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"episode_id\" bigint NOT NULL REFERENCES \"vod_episode\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL, \"series_relation_id\" bigint NULL REFERENCES \"vod_m3useriesrelation\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"vod_m3uepisoderelation_episode_id_29a32719\" ON \"vod_m3uepisoderelation\" (\"episode_id\")",
+      "CREATE INDEX \"vod_m3uepisoderelation_m3u_account_id_dbd6665b\" ON \"vod_m3uepisoderelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3uepisoderelation_m3u_account_id_stream_id_67fe9dd6_uniq\" ON \"vod_m3uepisoderelation\" (\"m3u_account_id\", \"stream_id\")",
+      "CREATE INDEX \"vod_m3uepisoderelation_series_relation_id_c2ff56f2\" ON \"vod_m3uepisoderelation\" (\"series_relation_id\")"
+    ],
+    "vod_m3umovierelation": [
+      "CREATE TABLE \"vod_m3umovierelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"stream_id\" varchar(255) NOT NULL, \"container_extension\" varchar(10) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"last_advanced_refresh\" datetime NULL, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"movie_id\" bigint NOT NULL REFERENCES \"vod_movie\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"category_id\" bigint NULL REFERENCES \"vod_vodcategory\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3umovierelation_category_id_c5b05222\" ON \"vod_m3umovierelation\" (\"category_id\")",
+      "CREATE INDEX \"vod_m3umovierelation_m3u_account_id_3a37eda8\" ON \"vod_m3umovierelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3umovierelation_m3u_account_id_stream_id_093ead38_uniq\" ON \"vod_m3umovierelation\" (\"m3u_account_id\", \"stream_id\")",
+      "CREATE INDEX \"vod_m3umovierelation_movie_id_7b56ea3e\" ON \"vod_m3umovierelation\" (\"movie_id\")"
+    ],
+    "vod_m3useriesrelation": [
+      "CREATE TABLE \"vod_m3useriesrelation\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"external_series_id\" varchar(255) NOT NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"last_episode_refresh\" datetime NULL, \"m3u_account_id\" bigint NOT NULL REFERENCES \"m3u_m3uaccount\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"series_id\" bigint NOT NULL REFERENCES \"vod_series\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"category_id\" bigint NULL REFERENCES \"vod_vodcategory\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"last_seen\" datetime NOT NULL)",
+      "CREATE INDEX \"vod_m3useriesrelation_category_id_4e3f07bd\" ON \"vod_m3useriesrelation\" (\"category_id\")",
+      "CREATE INDEX \"vod_m3useriesrelation_m3u_account_id_c8c5bce1\" ON \"vod_m3useriesrelation\" (\"m3u_account_id\")",
+      "CREATE UNIQUE INDEX \"vod_m3useriesrelation_m3u_account_id_external_series_id_ab7db0bb_uniq\" ON \"vod_m3useriesrelation\" (\"m3u_account_id\", \"external_series_id\")",
+      "CREATE INDEX \"vod_m3useriesrelation_series_id_6cc73ead\" ON \"vod_m3useriesrelation\" (\"series_id\")"
+    ],
+    "vod_movie": [
+      "CREATE TABLE \"vod_movie\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"year\" integer NULL, \"rating\" varchar(10) NULL, \"genre\" varchar(255) NULL, \"duration_secs\" integer NULL, \"imdb_id\" varchar(50) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"logo_id\" bigint NULL REFERENCES \"vod_vodlogo\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"is_adult\" bool NOT NULL, \"language\" varchar(2) NOT NULL, \"tmdb_id\" varchar(50) NULL)",
+      "CREATE UNIQUE INDEX \"unique_movie_imdb_id_language\" ON \"vod_movie\" (\"imdb_id\", \"language\") WHERE \"imdb_id\" IS NOT NULL",
+      "CREATE UNIQUE INDEX \"unique_movie_name_year_language_no_external_id\" ON \"vod_movie\" (\"name\", \"year\", \"language\") WHERE (\"tmdb_id\" IS NULL AND \"imdb_id\" IS NULL)",
+      "CREATE UNIQUE INDEX \"unique_movie_tmdb_id_language\" ON \"vod_movie\" (\"tmdb_id\", \"language\") WHERE \"tmdb_id\" IS NOT NULL",
+      "CREATE INDEX \"vod_movie_imdb_id_cf11b779\" ON \"vod_movie\" (\"imdb_id\")",
+      "CREATE INDEX \"vod_movie_is_adult_a63dfa81\" ON \"vod_movie\" (\"is_adult\")",
+      "CREATE INDEX \"vod_movie_logo_id_c9c89b1b\" ON \"vod_movie\" (\"logo_id\")",
+      "CREATE INDEX \"vod_movie_tmdb_id_89bf1a57\" ON \"vod_movie\" (\"tmdb_id\")"
+    ],
+    "vod_series": [
+      "CREATE TABLE \"vod_series\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"uuid\" char(32) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"description\" text NULL, \"year\" integer NULL, \"rating\" varchar(10) NULL, \"genre\" varchar(255) NULL, \"imdb_id\" varchar(50) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"logo_id\" bigint NULL REFERENCES \"vod_vodlogo\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"language\" varchar(2) NOT NULL, \"tmdb_id\" varchar(50) NULL)",
+      "CREATE UNIQUE INDEX \"unique_series_imdb_id_language\" ON \"vod_series\" (\"imdb_id\", \"language\") WHERE \"imdb_id\" IS NOT NULL",
+      "CREATE UNIQUE INDEX \"unique_series_name_year_language_no_external_id\" ON \"vod_series\" (\"name\", \"year\", \"language\") WHERE (\"tmdb_id\" IS NULL AND \"imdb_id\" IS NULL)",
+      "CREATE UNIQUE INDEX \"unique_series_tmdb_id_language\" ON \"vod_series\" (\"tmdb_id\", \"language\") WHERE \"tmdb_id\" IS NOT NULL",
+      "CREATE INDEX \"vod_series_imdb_id_82c8f673\" ON \"vod_series\" (\"imdb_id\")",
+      "CREATE INDEX \"vod_series_logo_id_9edbac2d\" ON \"vod_series\" (\"logo_id\")",
+      "CREATE INDEX \"vod_series_tmdb_id_6872ed6c\" ON \"vod_series\" (\"tmdb_id\")"
+    ],
+    "vod_vodlogo": [
+      "CREATE TABLE \"vod_vodlogo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" text NOT NULL UNIQUE)"
+    ]
+  }
+]

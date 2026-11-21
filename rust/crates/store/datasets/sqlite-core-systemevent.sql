@@ -1,0 +1,6 @@
+CREATE TABLE "core_systemevent" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "event_type" varchar(50) NOT NULL, "timestamp" datetime NOT NULL, "channel_id" char(32) NULL, "channel_name" varchar(255) NULL, "details" text NOT NULL CHECK ((JSON_VALID("details") OR "details" IS NULL)))
+CREATE INDEX "core_system_event_t_4267d9_idx" ON "core_systemevent" ("event_type", "timestamp" DESC)
+CREATE INDEX "core_system_timesta_c6c3d1_idx" ON "core_systemevent" ("timestamp" DESC)
+CREATE INDEX "core_systemevent_channel_id_d4beb5ea" ON "core_systemevent" ("channel_id")
+CREATE INDEX "core_systemevent_event_type_4b96dbbc" ON "core_systemevent" ("event_type")
+CREATE INDEX "core_systemevent_timestamp_42015ffa" ON "core_systemevent" ("timestamp")

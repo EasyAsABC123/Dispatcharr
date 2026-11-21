@@ -1,0 +1,174 @@
+[
+  {
+    "epg_epgdata": [
+      "CREATE TABLE \"epg_epgdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"tvg_id\" varchar(255) NULL, \"epg_source_id\" bigint NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"icon_url\" varchar(500) NULL, \"name\" varchar(512) NOT NULL)",
+      "CREATE INDEX \"epg_epgdata_epg_source_id_194a02dc\" ON \"epg_epgdata\" (\"epg_source_id\")",
+      "CREATE INDEX \"epg_epgdata_tvg_id_228d3b9f\" ON \"epg_epgdata\" (\"tvg_id\")",
+      "CREATE UNIQUE INDEX \"epg_epgdata_tvg_id_epg_source_id_d0a49d70_uniq\" ON \"epg_epgdata\" (\"tvg_id\", \"epg_source_id\")"
+    ],
+    "epg_epgsource": [
+      "CREATE TABLE \"epg_epgsource\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL UNIQUE, \"source_type\" varchar(20) NOT NULL, \"url\" varchar(1000) NULL, \"api_key\" varchar(255) NULL, \"is_active\" bool NOT NULL, \"file_path\" varchar(1024) NULL, \"refresh_interval\" integer NOT NULL, \"refresh_task_id\" integer NULL REFERENCES \"django_celery_beat_periodictask\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NULL, \"status\" varchar(20) NOT NULL, \"last_message\" text NULL, \"extracted_file_path\" varchar(1024) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"priority\" integer unsigned NOT NULL CHECK (\"priority\" >= 0), \"programme_index\" text NULL CHECK ((JSON_VALID(\"programme_index\") OR \"programme_index\" IS NULL)))",
+      "CREATE INDEX \"epg_epgsource_refresh_task_id_56cffd0b\" ON \"epg_epgsource\" (\"refresh_task_id\")"
+    ],
+    "epg_epgsourceindex": [],
+    "epg_programdata": [
+      "CREATE TABLE \"epg_programdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"start_time\" datetime NOT NULL, \"end_time\" datetime NOT NULL, \"title\" varchar(255) NOT NULL, \"description\" text NULL, \"tvg_id\" varchar(255) NULL, \"epg_id\" bigint NOT NULL REFERENCES \"epg_epgdata\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"sub_title\" text NULL)",
+      "CREATE INDEX \"epg_programdata_epg_id_830719b5\" ON \"epg_programdata\" (\"epg_id\")"
+    ],
+    "epg_sdprogrammd5": [],
+    "epg_sdschedulemd5": []
+  },
+  {
+    "epg_epgdata": [
+      "CREATE TABLE \"epg_epgdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"tvg_id\" varchar(255) NULL, \"epg_source_id\" bigint NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"icon_url\" varchar(500) NULL, \"name\" varchar(512) NOT NULL)",
+      "CREATE INDEX \"epg_epgdata_epg_source_id_194a02dc\" ON \"epg_epgdata\" (\"epg_source_id\")",
+      "CREATE INDEX \"epg_epgdata_tvg_id_228d3b9f\" ON \"epg_epgdata\" (\"tvg_id\")",
+      "CREATE UNIQUE INDEX \"epg_epgdata_tvg_id_epg_source_id_d0a49d70_uniq\" ON \"epg_epgdata\" (\"tvg_id\", \"epg_source_id\")"
+    ],
+    "epg_epgsource": [
+      "CREATE TABLE \"epg_epgsource\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL UNIQUE, \"source_type\" varchar(20) NOT NULL, \"url\" varchar(1000) NULL, \"is_active\" bool NOT NULL, \"file_path\" varchar(1024) NULL, \"refresh_interval\" integer NOT NULL, \"refresh_task_id\" integer NULL REFERENCES \"django_celery_beat_periodictask\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NULL, \"status\" varchar(20) NOT NULL, \"last_message\" text NULL, \"extracted_file_path\" varchar(1024) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"priority\" integer unsigned NOT NULL CHECK (\"priority\" >= 0), \"programme_index\" text NULL CHECK ((JSON_VALID(\"programme_index\") OR \"programme_index\" IS NULL)), \"password\" varchar(255) NULL, \"username\" varchar(255) NULL)",
+      "CREATE INDEX \"epg_epgsource_refresh_task_id_56cffd0b\" ON \"epg_epgsource\" (\"refresh_task_id\")"
+    ],
+    "epg_epgsourceindex": [],
+    "epg_programdata": [
+      "CREATE TABLE \"epg_programdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"start_time\" datetime NOT NULL, \"end_time\" datetime NOT NULL, \"title\" varchar(255) NOT NULL, \"description\" text NULL, \"tvg_id\" varchar(255) NULL, \"epg_id\" bigint NOT NULL REFERENCES \"epg_epgdata\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"sub_title\" text NULL, \"program_id\" varchar(64) NULL)",
+      "CREATE INDEX \"epg_programdata_epg_id_830719b5\" ON \"epg_programdata\" (\"epg_id\")"
+    ],
+    "epg_sdprogrammd5": [
+      "CREATE TABLE \"epg_sdprogrammd5\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"program_id\" varchar(64) NOT NULL, \"md5\" varchar(22) NOT NULL, \"epg_source_id\" bigint NOT NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"epg_sdprogrammd5_epg_source_id_7bb64712\" ON \"epg_sdprogrammd5\" (\"epg_source_id\")",
+      "CREATE UNIQUE INDEX \"epg_sdprogrammd5_epg_source_id_program_id_2c568d9f_uniq\" ON \"epg_sdprogrammd5\" (\"epg_source_id\", \"program_id\")"
+    ],
+    "epg_sdschedulemd5": [
+      "CREATE TABLE \"epg_sdschedulemd5\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"station_id\" varchar(20) NOT NULL, \"date\" date NOT NULL, \"md5\" varchar(22) NOT NULL, \"last_modified\" datetime NOT NULL, \"epg_source_id\" bigint NOT NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"epg_sdsched_epg_sou_0d700e_idx\" ON \"epg_sdschedulemd5\" (\"epg_source_id\", \"station_id\")",
+      "CREATE INDEX \"epg_sdschedulemd5_epg_source_id_4f75c39f\" ON \"epg_sdschedulemd5\" (\"epg_source_id\")",
+      "CREATE UNIQUE INDEX \"epg_sdschedulemd5_epg_source_id_station_id_date_2fef8348_uniq\" ON \"epg_sdschedulemd5\" (\"epg_source_id\", \"station_id\", \"date\")"
+    ]
+  },
+  {
+    "epg_epgdata": [
+      "CREATE TABLE \"epg_epgdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"tvg_id\" varchar(255) NULL, \"epg_source_id\" bigint NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"icon_url\" varchar(500) NULL, \"name\" varchar(512) NOT NULL)",
+      "CREATE INDEX \"epg_epgdata_epg_source_id_194a02dc\" ON \"epg_epgdata\" (\"epg_source_id\")",
+      "CREATE INDEX \"epg_epgdata_tvg_id_228d3b9f\" ON \"epg_epgdata\" (\"tvg_id\")",
+      "CREATE UNIQUE INDEX \"epg_epgdata_tvg_id_epg_source_id_d0a49d70_uniq\" ON \"epg_epgdata\" (\"tvg_id\", \"epg_source_id\")"
+    ],
+    "epg_epgsource": [
+      "CREATE TABLE \"epg_epgsource\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL UNIQUE, \"source_type\" varchar(20) NOT NULL, \"url\" varchar(1000) NULL, \"is_active\" bool NOT NULL, \"file_path\" varchar(1024) NULL, \"refresh_interval\" integer NOT NULL, \"refresh_task_id\" integer NULL REFERENCES \"django_celery_beat_periodictask\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NULL, \"status\" varchar(20) NOT NULL, \"last_message\" text NULL, \"extracted_file_path\" varchar(1024) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"priority\" integer unsigned NOT NULL CHECK (\"priority\" >= 0), \"programme_index\" text NULL CHECK ((JSON_VALID(\"programme_index\") OR \"programme_index\" IS NULL)), \"password\" varchar(255) NULL, \"username\" varchar(255) NULL)",
+      "CREATE INDEX \"epg_epgsource_refresh_task_id_56cffd0b\" ON \"epg_epgsource\" (\"refresh_task_id\")"
+    ],
+    "epg_epgsourceindex": [],
+    "epg_programdata": [
+      "CREATE TABLE \"epg_programdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"start_time\" datetime NOT NULL, \"end_time\" datetime NOT NULL, \"title\" varchar(255) NOT NULL, \"description\" text NULL, \"tvg_id\" varchar(255) NULL, \"epg_id\" bigint NOT NULL REFERENCES \"epg_epgdata\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"sub_title\" text NULL, \"program_id\" varchar(64) NULL)",
+      "CREATE INDEX \"epg_prog_epg_id_idx\" ON \"epg_programdata\" (\"epg_id\", \"id\")",
+      "CREATE INDEX \"epg_programdata_epg_id_830719b5\" ON \"epg_programdata\" (\"epg_id\")"
+    ],
+    "epg_sdprogrammd5": [
+      "CREATE TABLE \"epg_sdprogrammd5\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"program_id\" varchar(64) NOT NULL, \"md5\" varchar(22) NOT NULL, \"epg_source_id\" bigint NOT NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"epg_sdprogrammd5_epg_source_id_7bb64712\" ON \"epg_sdprogrammd5\" (\"epg_source_id\")",
+      "CREATE UNIQUE INDEX \"epg_sdprogrammd5_epg_source_id_program_id_2c568d9f_uniq\" ON \"epg_sdprogrammd5\" (\"epg_source_id\", \"program_id\")"
+    ],
+    "epg_sdschedulemd5": [
+      "CREATE TABLE \"epg_sdschedulemd5\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"station_id\" varchar(20) NOT NULL, \"date\" date NOT NULL, \"md5\" varchar(22) NOT NULL, \"last_modified\" datetime NOT NULL, \"epg_source_id\" bigint NOT NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"epg_sdsched_epg_sou_0d700e_idx\" ON \"epg_sdschedulemd5\" (\"epg_source_id\", \"station_id\")",
+      "CREATE INDEX \"epg_sdschedulemd5_epg_source_id_4f75c39f\" ON \"epg_sdschedulemd5\" (\"epg_source_id\")",
+      "CREATE UNIQUE INDEX \"epg_sdschedulemd5_epg_source_id_station_id_date_2fef8348_uniq\" ON \"epg_sdschedulemd5\" (\"epg_source_id\", \"station_id\", \"date\")"
+    ]
+  },
+  {
+    "epg_epgdata": [
+      "CREATE TABLE \"epg_epgdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"tvg_id\" varchar(255) NULL, \"epg_source_id\" bigint NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"icon_url\" varchar(500) NULL, \"name\" varchar(512) NOT NULL)",
+      "CREATE INDEX \"epg_epgdata_epg_source_id_194a02dc\" ON \"epg_epgdata\" (\"epg_source_id\")",
+      "CREATE INDEX \"epg_epgdata_tvg_id_228d3b9f\" ON \"epg_epgdata\" (\"tvg_id\")",
+      "CREATE UNIQUE INDEX \"epg_epgdata_tvg_id_epg_source_id_d0a49d70_uniq\" ON \"epg_epgdata\" (\"tvg_id\", \"epg_source_id\")"
+    ],
+    "epg_epgsource": [
+      "CREATE TABLE \"epg_epgsource\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL UNIQUE, \"source_type\" varchar(20) NOT NULL, \"url\" varchar(1000) NULL, \"is_active\" bool NOT NULL, \"file_path\" varchar(1024) NULL, \"refresh_interval\" integer NOT NULL, \"refresh_task_id\" integer NULL REFERENCES \"django_celery_beat_periodictask\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NULL, \"status\" varchar(20) NOT NULL, \"last_message\" text NULL, \"extracted_file_path\" varchar(1024) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"priority\" integer unsigned NOT NULL CHECK (\"priority\" >= 0), \"password\" varchar(255) NULL, \"username\" varchar(255) NULL)",
+      "CREATE INDEX \"epg_epgsource_refresh_task_id_56cffd0b\" ON \"epg_epgsource\" (\"refresh_task_id\")"
+    ],
+    "epg_epgsourceindex": [
+      "CREATE TABLE \"epg_epgsourceindex\" (\"source_id\" bigint NOT NULL PRIMARY KEY REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"data\" text NULL CHECK ((JSON_VALID(\"data\") OR \"data\" IS NULL)), \"updated_at\" datetime NOT NULL)"
+    ],
+    "epg_programdata": [
+      "CREATE TABLE \"epg_programdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"start_time\" datetime NOT NULL, \"end_time\" datetime NOT NULL, \"title\" varchar(255) NOT NULL, \"description\" text NULL, \"tvg_id\" varchar(255) NULL, \"epg_id\" bigint NOT NULL REFERENCES \"epg_epgdata\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"sub_title\" text NULL, \"program_id\" varchar(64) NULL)",
+      "CREATE INDEX \"epg_prog_epg_id_idx\" ON \"epg_programdata\" (\"epg_id\", \"id\")",
+      "CREATE INDEX \"epg_programdata_epg_id_830719b5\" ON \"epg_programdata\" (\"epg_id\")"
+    ],
+    "epg_sdprogrammd5": [
+      "CREATE TABLE \"epg_sdprogrammd5\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"program_id\" varchar(64) NOT NULL, \"md5\" varchar(22) NOT NULL, \"epg_source_id\" bigint NOT NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"epg_sdprogrammd5_epg_source_id_7bb64712\" ON \"epg_sdprogrammd5\" (\"epg_source_id\")",
+      "CREATE UNIQUE INDEX \"epg_sdprogrammd5_epg_source_id_program_id_2c568d9f_uniq\" ON \"epg_sdprogrammd5\" (\"epg_source_id\", \"program_id\")"
+    ],
+    "epg_sdschedulemd5": [
+      "CREATE TABLE \"epg_sdschedulemd5\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"station_id\" varchar(20) NOT NULL, \"date\" date NOT NULL, \"md5\" varchar(22) NOT NULL, \"last_modified\" datetime NOT NULL, \"epg_source_id\" bigint NOT NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"epg_sdsched_epg_sou_0d700e_idx\" ON \"epg_sdschedulemd5\" (\"epg_source_id\", \"station_id\")",
+      "CREATE INDEX \"epg_sdschedulemd5_epg_source_id_4f75c39f\" ON \"epg_sdschedulemd5\" (\"epg_source_id\")",
+      "CREATE UNIQUE INDEX \"epg_sdschedulemd5_epg_source_id_station_id_date_2fef8348_uniq\" ON \"epg_sdschedulemd5\" (\"epg_source_id\", \"station_id\", \"date\")"
+    ]
+  },
+  {
+    "epg_epgdata": [
+      "CREATE TABLE \"epg_epgdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"tvg_id\" varchar(255) NULL, \"epg_source_id\" bigint NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"icon_url\" varchar(500) NULL, \"name\" varchar(512) NOT NULL)",
+      "CREATE INDEX \"epg_epgdata_epg_source_id_194a02dc\" ON \"epg_epgdata\" (\"epg_source_id\")",
+      "CREATE INDEX \"epg_epgdata_tvg_id_228d3b9f\" ON \"epg_epgdata\" (\"tvg_id\")",
+      "CREATE UNIQUE INDEX \"epg_epgdata_tvg_id_epg_source_id_d0a49d70_uniq\" ON \"epg_epgdata\" (\"tvg_id\", \"epg_source_id\")"
+    ],
+    "epg_epgsource": [
+      "CREATE TABLE \"epg_epgsource\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL UNIQUE, \"source_type\" varchar(20) NOT NULL, \"url\" varchar(1000) NULL, \"is_active\" bool NOT NULL, \"file_path\" varchar(1024) NULL, \"refresh_interval\" integer NOT NULL, \"refresh_task_id\" integer NULL REFERENCES \"django_celery_beat_periodictask\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NULL, \"status\" varchar(20) NOT NULL, \"last_message\" text NULL, \"extracted_file_path\" varchar(1024) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"priority\" integer unsigned NOT NULL CHECK (\"priority\" >= 0), \"password\" varchar(255) NULL, \"username\" varchar(255) NULL)",
+      "CREATE INDEX \"epg_epgsource_refresh_task_id_56cffd0b\" ON \"epg_epgsource\" (\"refresh_task_id\")"
+    ],
+    "epg_epgsourceindex": [
+      "CREATE TABLE \"epg_epgsourceindex\" (\"source_id\" bigint NOT NULL PRIMARY KEY REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"data\" text NULL CHECK ((JSON_VALID(\"data\") OR \"data\" IS NULL)), \"updated_at\" datetime NOT NULL)"
+    ],
+    "epg_programdata": [
+      "CREATE TABLE \"epg_programdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"start_time\" datetime NOT NULL, \"end_time\" datetime NOT NULL, \"title\" varchar(255) NOT NULL, \"description\" text NULL, \"tvg_id\" varchar(255) NULL, \"epg_id\" bigint NOT NULL REFERENCES \"epg_epgdata\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"sub_title\" text NULL, \"program_id\" varchar(64) NULL)",
+      "CREATE INDEX \"epg_prog_epg_id_idx\" ON \"epg_programdata\" (\"epg_id\", \"id\")",
+      "CREATE INDEX \"epg_prog_epg_start_end_idx\" ON \"epg_programdata\" (\"epg_id\", \"start_time\", \"end_time\")",
+      "CREATE INDEX \"epg_programdata_epg_id_830719b5\" ON \"epg_programdata\" (\"epg_id\")"
+    ],
+    "epg_sdprogrammd5": [
+      "CREATE TABLE \"epg_sdprogrammd5\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"program_id\" varchar(64) NOT NULL, \"md5\" varchar(22) NOT NULL, \"epg_source_id\" bigint NOT NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"epg_sdprogrammd5_epg_source_id_7bb64712\" ON \"epg_sdprogrammd5\" (\"epg_source_id\")",
+      "CREATE UNIQUE INDEX \"epg_sdprogrammd5_epg_source_id_program_id_2c568d9f_uniq\" ON \"epg_sdprogrammd5\" (\"epg_source_id\", \"program_id\")"
+    ],
+    "epg_sdschedulemd5": [
+      "CREATE TABLE \"epg_sdschedulemd5\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"station_id\" varchar(20) NOT NULL, \"date\" date NOT NULL, \"md5\" varchar(22) NOT NULL, \"last_modified\" datetime NOT NULL, \"epg_source_id\" bigint NOT NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"epg_sdsched_epg_sou_0d700e_idx\" ON \"epg_sdschedulemd5\" (\"epg_source_id\", \"station_id\")",
+      "CREATE INDEX \"epg_sdschedulemd5_epg_source_id_4f75c39f\" ON \"epg_sdschedulemd5\" (\"epg_source_id\")",
+      "CREATE UNIQUE INDEX \"epg_sdschedulemd5_epg_source_id_station_id_date_2fef8348_uniq\" ON \"epg_sdschedulemd5\" (\"epg_source_id\", \"station_id\", \"date\")"
+    ]
+  },
+  {
+    "epg_epgdata": [
+      "CREATE TABLE \"epg_epgdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"tvg_id\" varchar(255) NULL, \"epg_source_id\" bigint NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"icon_url\" varchar(500) NULL, \"name\" varchar(512) NOT NULL)",
+      "CREATE INDEX \"epg_epgdata_epg_source_id_194a02dc\" ON \"epg_epgdata\" (\"epg_source_id\")",
+      "CREATE INDEX \"epg_epgdata_tvg_id_228d3b9f\" ON \"epg_epgdata\" (\"tvg_id\")",
+      "CREATE UNIQUE INDEX \"epg_epgdata_tvg_id_epg_source_id_d0a49d70_uniq\" ON \"epg_epgdata\" (\"tvg_id\", \"epg_source_id\")"
+    ],
+    "epg_epgsource": [
+      "CREATE TABLE \"epg_epgsource\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL UNIQUE, \"source_type\" varchar(20) NOT NULL, \"url\" varchar(1000) NULL, \"is_active\" bool NOT NULL, \"file_path\" varchar(1024) NULL, \"refresh_interval\" integer NOT NULL, \"refresh_task_id\" integer NULL REFERENCES \"django_celery_beat_periodictask\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NULL, \"status\" varchar(20) NOT NULL, \"last_message\" text NULL, \"extracted_file_path\" varchar(1024) NULL, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"priority\" integer unsigned NOT NULL CHECK (\"priority\" >= 0), \"password\" varchar(255) NULL, \"username\" varchar(255) NULL)",
+      "CREATE INDEX \"epg_epgsource_refresh_task_id_56cffd0b\" ON \"epg_epgsource\" (\"refresh_task_id\")"
+    ],
+    "epg_epgsourceindex": [
+      "CREATE TABLE \"epg_epgsourceindex\" (\"source_id\" bigint NOT NULL PRIMARY KEY REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"data\" text NULL CHECK ((JSON_VALID(\"data\") OR \"data\" IS NULL)), \"updated_at\" datetime NOT NULL)"
+    ],
+    "epg_programdata": [
+      "CREATE TABLE \"epg_programdata\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"start_time\" datetime NOT NULL, \"end_time\" datetime NOT NULL, \"title\" varchar(255) NOT NULL, \"description\" text NULL, \"tvg_id\" varchar(255) NULL, \"epg_id\" bigint NOT NULL REFERENCES \"epg_epgdata\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"custom_properties\" text NULL CHECK ((JSON_VALID(\"custom_properties\") OR \"custom_properties\" IS NULL)), \"sub_title\" text NULL, \"program_id\" varchar(64) NULL)",
+      "CREATE INDEX \"epg_prog_epg_end_idx\" ON \"epg_programdata\" (\"epg_id\", \"end_time\")",
+      "CREATE INDEX \"epg_prog_epg_id_idx\" ON \"epg_programdata\" (\"epg_id\", \"id\")",
+      "CREATE INDEX \"epg_prog_epg_start_end_idx\" ON \"epg_programdata\" (\"epg_id\", \"start_time\", \"end_time\")",
+      "CREATE INDEX \"epg_programdata_epg_id_830719b5\" ON \"epg_programdata\" (\"epg_id\")"
+    ],
+    "epg_sdprogrammd5": [
+      "CREATE TABLE \"epg_sdprogrammd5\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"program_id\" varchar(64) NOT NULL, \"md5\" varchar(22) NOT NULL, \"epg_source_id\" bigint NOT NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"epg_sdprogrammd5_epg_source_id_7bb64712\" ON \"epg_sdprogrammd5\" (\"epg_source_id\")",
+      "CREATE UNIQUE INDEX \"epg_sdprogrammd5_epg_source_id_program_id_2c568d9f_uniq\" ON \"epg_sdprogrammd5\" (\"epg_source_id\", \"program_id\")"
+    ],
+    "epg_sdschedulemd5": [
+      "CREATE TABLE \"epg_sdschedulemd5\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"station_id\" varchar(20) NOT NULL, \"date\" date NOT NULL, \"md5\" varchar(22) NOT NULL, \"last_modified\" datetime NOT NULL, \"epg_source_id\" bigint NOT NULL REFERENCES \"epg_epgsource\" (\"id\") DEFERRABLE INITIALLY DEFERRED)",
+      "CREATE INDEX \"epg_sdsched_epg_sou_0d700e_idx\" ON \"epg_sdschedulemd5\" (\"epg_source_id\", \"station_id\")",
+      "CREATE INDEX \"epg_sdschedulemd5_epg_source_id_4f75c39f\" ON \"epg_sdschedulemd5\" (\"epg_source_id\")",
+      "CREATE UNIQUE INDEX \"epg_sdschedulemd5_epg_source_id_station_id_date_2fef8348_uniq\" ON \"epg_sdschedulemd5\" (\"epg_source_id\", \"station_id\", \"date\")"
+    ]
+  }
+]

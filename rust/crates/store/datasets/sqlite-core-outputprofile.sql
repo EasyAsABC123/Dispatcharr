@@ -1,0 +1,1 @@
+CREATE TABLE "core_outputprofile" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(255) NOT NULL UNIQUE, "command" varchar(255) NOT NULL, "parameters" text NOT NULL, "locked" bool NOT NULL, "is_active" bool NOT NULL)

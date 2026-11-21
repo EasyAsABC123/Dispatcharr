@@ -1,0 +1,22 @@
+[
+  [
+    "output",
+    "Media Server (AC3 Audio)",
+    "-fflags +discardcorrupt+genpts+nobuffer -probesize 512K -analyzeduration 0 -i pipe:0 -map 0 -c:v copy -c:a ac3 -b:a 384k -c:s copy -max_muxing_queue_size 4096 -flush_packets 1 -mpegts_flags +pat_pmt_at_frames+resend_headers+initial_discontinuity -f mpegts pipe:1"
+  ],
+  [
+    "output",
+    "Web Player (AAC Audio)",
+    "-fflags +discardcorrupt+genpts+nobuffer -probesize 512K -analyzeduration 0 -i pipe:0 -map 0 -c:v copy -c:a aac -b:a 192k -ac 2 -c:s copy -max_muxing_queue_size 4096 -flush_packets 1 -mpegts_flags +pat_pmt_at_frames+resend_headers+initial_discontinuity -f mpegts pipe:1"
+  ],
+  [
+    "stream",
+    "ffmpeg",
+    "-fflags +genpts+discardcorrupt -user_agent {userAgent} -i {streamUrl} -map 0 -c copy -mpegts_flags +pat_pmt_at_frames+resend_headers+initial_discontinuity -f mpegts pipe:1"
+  ],
+  [
+    "stream",
+    "streamlink",
+    "--http-header User-Agent={userAgent} --ffmpeg-fout mpegts --stdout {streamUrl} best"
+  ]
+]

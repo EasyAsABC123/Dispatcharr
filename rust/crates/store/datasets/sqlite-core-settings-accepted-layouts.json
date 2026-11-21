@@ -1,0 +1,8 @@
+[
+  [
+    "CREATE TABLE \"core_coresettings\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"value\" text NOT NULL CHECK ((JSON_VALID(\"value\") OR \"value\" IS NULL)), \"key\" varchar(255) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL)"
+  ],
+  [
+    "CREATE TABLE \"core_coresettings\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"key\" varchar(255) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"value\" text NOT NULL CHECK ((JSON_VALID(\"value\") OR \"value\" IS NULL)))"
+  ]
+]

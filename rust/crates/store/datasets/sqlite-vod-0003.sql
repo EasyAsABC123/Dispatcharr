@@ -1,0 +1,12 @@
+CREATE TABLE "new__vod_movie" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "uuid" char(32) NOT NULL UNIQUE, "name" varchar(255) NOT NULL, "description" text NULL, "year" integer NULL, "rating" varchar(10) NULL, "genre" varchar(255) NULL, "duration_secs" integer NULL, "tmdb_id" varchar(50) NULL UNIQUE, "imdb_id" varchar(50) NULL UNIQUE, "custom_properties" text NULL CHECK ((JSON_VALID("custom_properties") OR "custom_properties" IS NULL)), "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, "logo_id" bigint NULL REFERENCES "vod_vodlogo" ("id") DEFERRABLE INITIALLY DEFERRED)
+INSERT INTO "new__vod_movie" ("id", "uuid", "name", "description", "year", "rating", "genre", "duration_secs", "tmdb_id", "imdb_id", "custom_properties", "created_at", "updated_at", "logo_id") SELECT "id", "uuid", "name", "description", "year", "rating", "genre", "duration_secs", "tmdb_id", "imdb_id", "custom_properties", "created_at", "updated_at", "logo_id" FROM "vod_movie"
+DROP TABLE "vod_movie"
+ALTER TABLE "new__vod_movie" RENAME TO "vod_movie"
+CREATE UNIQUE INDEX "unique_movie_name_year_no_external_id" ON "vod_movie" ("name", "year") WHERE ("tmdb_id" IS NULL AND "imdb_id" IS NULL)
+CREATE INDEX "vod_movie_logo_id_c9c89b1b" ON "vod_movie" ("logo_id")
+CREATE TABLE "new__vod_series" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "uuid" char(32) NOT NULL UNIQUE, "name" varchar(255) NOT NULL, "description" text NULL, "year" integer NULL, "rating" varchar(10) NULL, "genre" varchar(255) NULL, "tmdb_id" varchar(50) NULL UNIQUE, "imdb_id" varchar(50) NULL UNIQUE, "custom_properties" text NULL CHECK ((JSON_VALID("custom_properties") OR "custom_properties" IS NULL)), "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, "logo_id" bigint NULL REFERENCES "vod_vodlogo" ("id") DEFERRABLE INITIALLY DEFERRED)
+INSERT INTO "new__vod_series" ("id", "uuid", "name", "description", "year", "rating", "genre", "tmdb_id", "imdb_id", "custom_properties", "created_at", "updated_at", "logo_id") SELECT "id", "uuid", "name", "description", "year", "rating", "genre", "tmdb_id", "imdb_id", "custom_properties", "created_at", "updated_at", "logo_id" FROM "vod_series"
+DROP TABLE "vod_series"
+ALTER TABLE "new__vod_series" RENAME TO "vod_series"
+CREATE UNIQUE INDEX "unique_series_name_year_no_external_id" ON "vod_series" ("name", "year") WHERE ("tmdb_id" IS NULL AND "imdb_id" IS NULL)
+CREATE INDEX "vod_series_logo_id_9edbac2d" ON "vod_series" ("logo_id")

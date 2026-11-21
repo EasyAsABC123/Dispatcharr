@@ -1,0 +1,2 @@
+CREATE TABLE "core_streamprofile" ("id" integer NOT NULL PRIMARY KEY AUTOINCREMENT, "name" varchar(255) NOT NULL, "command" varchar(255) NOT NULL, "parameters" text NOT NULL, "is_active" bool NOT NULL, "locked" bool NOT NULL, "user_agent_id" bigint NULL REFERENCES "core_useragent" ("id") DEFERRABLE INITIALLY DEFERRED)
+CREATE INDEX "core_streamprofile_user_agent_id_1ea2e018" ON "core_streamprofile" ("user_agent_id")

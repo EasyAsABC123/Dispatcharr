@@ -1,0 +1,35 @@
+[
+  {
+    "plugins_pluginconfig": [
+      "CREATE TABLE \"plugins_pluginconfig\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"key\" varchar(128) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"version\" varchar(64) NOT NULL, \"description\" text NOT NULL, \"enabled\" bool NOT NULL, \"ever_enabled\" bool NOT NULL, \"settings\" text NOT NULL CHECK ((JSON_VALID(\"settings\") OR \"settings\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL)"
+    ],
+    "plugins_pluginrepo": []
+  },
+  {
+    "plugins_pluginconfig": [
+      "CREATE TABLE \"plugins_pluginconfig\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"key\" varchar(128) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"version\" varchar(64) NOT NULL, \"description\" text NOT NULL, \"enabled\" bool NOT NULL, \"ever_enabled\" bool NOT NULL, \"settings\" text NOT NULL CHECK ((JSON_VALID(\"settings\") OR \"settings\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"source_repo_id\" bigint NULL REFERENCES \"plugins_pluginrepo\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"slug\" varchar(128) NOT NULL, \"installed_version_is_prerelease\" bool NOT NULL, \"deprecated\" bool NOT NULL)",
+      "CREATE INDEX \"plugins_pluginconfig_source_repo_id_308dcbde\" ON \"plugins_pluginconfig\" (\"source_repo_id\")"
+    ],
+    "plugins_pluginrepo": [
+      "CREATE TABLE \"plugins_pluginrepo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" varchar(200) NOT NULL UNIQUE, \"is_official\" bool NOT NULL, \"enabled\" bool NOT NULL, \"cached_manifest\" text NOT NULL CHECK ((JSON_VALID(\"cached_manifest\") OR \"cached_manifest\" IS NULL)), \"last_fetched\" datetime NULL, \"public_key\" text NOT NULL, \"signature_verified\" bool NULL, \"last_fetch_status\" varchar(255) NOT NULL, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL)"
+    ]
+  },
+  {
+    "plugins_pluginconfig": [
+      "CREATE TABLE \"plugins_pluginconfig\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"key\" varchar(128) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"version\" varchar(64) NOT NULL, \"description\" text NOT NULL, \"enabled\" bool NOT NULL, \"ever_enabled\" bool NOT NULL, \"settings\" text NOT NULL CHECK ((JSON_VALID(\"settings\") OR \"settings\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"source_repo_id\" bigint NULL REFERENCES \"plugins_pluginrepo\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"slug\" varchar(128) NOT NULL, \"installed_version_is_prerelease\" bool NOT NULL, \"deprecated\" bool NOT NULL)",
+      "CREATE INDEX \"plugins_pluginconfig_source_repo_id_308dcbde\" ON \"plugins_pluginconfig\" (\"source_repo_id\")"
+    ],
+    "plugins_pluginrepo": [
+      "CREATE TABLE \"plugins_pluginrepo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" varchar(200) NOT NULL UNIQUE, \"is_official\" bool NOT NULL, \"enabled\" bool NOT NULL, \"cached_manifest\" text NOT NULL CHECK ((JSON_VALID(\"cached_manifest\") OR \"cached_manifest\" IS NULL)), \"last_fetched\" datetime NULL, \"public_key\" text NOT NULL, \"signature_verified\" bool NULL, \"last_fetch_status\" varchar(255) NOT NULL, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL)"
+    ]
+  },
+  {
+    "plugins_pluginconfig": [
+      "CREATE TABLE \"plugins_pluginconfig\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"key\" varchar(128) NOT NULL UNIQUE, \"name\" varchar(255) NOT NULL, \"version\" varchar(64) NOT NULL, \"description\" text NOT NULL, \"enabled\" bool NOT NULL, \"ever_enabled\" bool NOT NULL, \"settings\" text NOT NULL CHECK ((JSON_VALID(\"settings\") OR \"settings\" IS NULL)), \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL, \"source_repo_id\" bigint NULL REFERENCES \"plugins_pluginrepo\" (\"id\") DEFERRABLE INITIALLY DEFERRED, \"slug\" varchar(128) NOT NULL, \"installed_version_is_prerelease\" bool NOT NULL, \"deprecated\" bool NOT NULL, \"owned_tasks\" text NOT NULL CHECK ((JSON_VALID(\"owned_tasks\") OR \"owned_tasks\" IS NULL)), \"suspended_schedules\" text NOT NULL CHECK ((JSON_VALID(\"suspended_schedules\") OR \"suspended_schedules\" IS NULL)))",
+      "CREATE INDEX \"plugins_pluginconfig_source_repo_id_308dcbde\" ON \"plugins_pluginconfig\" (\"source_repo_id\")"
+    ],
+    "plugins_pluginrepo": [
+      "CREATE TABLE \"plugins_pluginrepo\" (\"id\" integer NOT NULL PRIMARY KEY AUTOINCREMENT, \"name\" varchar(255) NOT NULL, \"url\" varchar(200) NOT NULL UNIQUE, \"is_official\" bool NOT NULL, \"enabled\" bool NOT NULL, \"cached_manifest\" text NOT NULL CHECK ((JSON_VALID(\"cached_manifest\") OR \"cached_manifest\" IS NULL)), \"last_fetched\" datetime NULL, \"public_key\" text NOT NULL, \"signature_verified\" bool NULL, \"last_fetch_status\" varchar(255) NOT NULL, \"created_at\" datetime NOT NULL, \"updated_at\" datetime NOT NULL)"
+    ]
+  }
+]
