@@ -35,7 +35,7 @@ required-node receipts remain tied to that package.
 | M6 | Default Main XC deactivation matched the schedule and notification effects with zero admissions. The complete default worker and scheduler graph remains open. [Current deactivation evidence](rust-m6-fdede54c-xc-deactivation.md) |
 | M7 | Current M3U, XMLTV, programme Grid, and Xtream exports passed. Full protocol, realtime, and integration acceptance remains open. [Current export evidence](rust-m7-fdede54c-ordinary-exports.md) |
 | M8 | Private Main preserved the saved value and signed session across restart. Wider admin capabilities, plugin behavior, and operational acceptance remain open. [Private admin evidence](rust-m8-2581-private-admin-settings-restart.md) |
-| M9 | The current short and prefix stages passed. The current two-hour result, required matrix, strict cold rollback, and final matched-work performance comparison remain open. [Current soak admission](rust-m9-fdede54c-canonical-soak-short-prefix.md) |
+| M9 | The current short, prefix, and two-hour playback stages passed. The complete required matrix, strict cold rollback, and matched-work performance comparison remain open. [Current two-hour soak](rust-m9-fdede54c-canonical-soak-full.md) |
 | M10 | Native ARM64 Rust release binaries, the guarded PostgreSQL helper, and scoped media and client components passed. Full ARM64 package and controlled rollout remain open. [Native Rust build](rust-m10-native-arm64-rust-build.md) |
 | M11 | The default switch and operator handoff depend on release acceptance and a rollout decision. |
 
