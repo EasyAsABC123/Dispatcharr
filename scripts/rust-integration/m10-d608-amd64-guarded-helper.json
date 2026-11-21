@@ -1,0 +1,73 @@
+{
+  "application_base": "d608ff758c4a937961439f4389d01040f560122d",
+  "arm64_native_runtime_verified": false,
+  "attribution": "Original Dispatcharr, PostgreSQL, Rust, Debian and dependency authors retain full credit.",
+  "build": {
+    "actual_exit": 0,
+    "build_log_sha256": "cd223b7bd4d5fb5d63cff7f7d35c39e54a81c32a62c7c251c430cd1af37215db",
+    "observed_image_id": "sha256:38125d56a82808201ff722264ad7a52cd4e62feaf639d4c927d0aca72ec5111e",
+    "pinned_builder": "rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f",
+    "platform": "linux/amd64"
+  },
+  "distribution_qualified": false,
+  "draft_source_map_sha256": "12cd17f8c2b2678e3acd5e302dce9d0883c1359e29040a300d746e88c81c50ca",
+  "draft_text_patch_sha256": "1f179aafde222197812d9cc586e796eba859d73f802af00f6bb20534da98c939",
+  "earlier_runtime_attempts": [
+    {
+      "actual_exit": 1,
+      "attempt": 1,
+      "diagnosis": "wrong staged executable name",
+      "evidence_sha256": "f9abfb19a19d9d3af2fdca8f190beca663599ce1cf22d3022e634ea09127d256",
+      "exact_probe_container_absent": true
+    },
+    {
+      "actual_exit": 1,
+      "attempt": 2,
+      "diagnosis": "helper staged outside its absolute library directory",
+      "evidence_sha256": "a25a9a1ce760fd5bb237bd2bfd7a2b5317cdaf0656e0c8a6feefafca40ae01e5",
+      "exact_probe_container_absent": true
+    },
+    {
+      "actual_exit": 1,
+      "attempt": 3,
+      "diagnosis": "tmpfs at /opt lacked executable mount permission",
+      "evidence_sha256": "60b8354a033eb20bf830255b1adb991821feb03cb4fbc143a1a8654ada7649b1",
+      "exact_probe_container_absent": true
+    }
+  ],
+  "full_application_qualified": false,
+  "milestone_accepted": false,
+  "performance_verified": false,
+  "runtime": {
+    "actual_exit": 0,
+    "attempt": 4,
+    "built_private_library_sha256": {
+      "libcrypto.so.3": "9b87c69009a86f732a3668b5d3598b2e52616ad4f44764606b65e5cdbe5f7a5d",
+      "liblz4.so.1": "0f0ce52208a22570370eb2e96d250b3c088cb024f15cb7c48565e749eeab7cd5",
+      "libpq.so.5": "d21d900ed304322e802674f8ab00bf4eea6709cca079e037f78487b42d17e408",
+      "libssl.so.3": "a3035eb28fa9f42630142755c20b5796ce687bddbc601dfcc3e9c5cf18b2726c",
+      "libz.so.1": "7e2a72b4c4b38c61e6962de6e3f4a5e9ae692e732c68deead10a7ce2135a7f68",
+      "libzstd.so.1": "37412b7ac11063c25a375bdff6f4fdb340362f926cd9c3a55962e8a9c9bc702e"
+    },
+    "capabilities_dropped": "ALL",
+    "effective_uid_checked_by_command": true,
+    "elf_dt_rpath": "/opt/dispatcharr-pg-guarded-restore/lib",
+    "elf_interpreter": "/lib64/ld-linux-x86-64.so.2",
+    "elf_machine": "x86-64",
+    "exact_probe_container_absent": true,
+    "gid": 65532,
+    "helper_sha256_matches_build_and_image_digest": "efef6c31a890856198d121c92666daea529c20f2b13a763e71089acb1cd70f3f",
+    "image_id": "sha256:38125d56a82808201ff722264ad7a52cd4e62feaf639d4c927d0aca72ec5111e",
+    "launch_flags_source": "literal operator command used for the retained probe",
+    "loader_missing_dependencies": 0,
+    "network": "none",
+    "resolved_private_libraries": 6,
+    "rootfs_read_only": true,
+    "stderr_empty": true,
+    "stdout_sha256": "e213633a03b9f40718c3410831a0a3dadd0c373013dd6aef218b93a709610796",
+    "temporary_copy_mount": "/opt:rw,exec,mode=1777,size=64m",
+    "uid": 65532,
+    "version": "pg_restore (PostgreSQL) 17.11"
+  },
+  "scope": "private taskless-restore-helper target only"
+}
