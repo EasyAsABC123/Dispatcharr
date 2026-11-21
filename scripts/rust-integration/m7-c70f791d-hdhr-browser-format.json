@@ -1,0 +1,168 @@
+{
+  "application_revision": "c70f791dbae47854cedb634f167d20f4f41f642d",
+  "exact_host_workspace": {
+    "exact_application_inputs": 2038,
+    "targeted_clippy_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "targeted_test_log_sha256": "a3b673763595c2c2274c91e94306c8c1bffcbff1f2bf17e0d83f99f846fd2d02",
+    "test_groups": 193,
+    "whole_workspace_actual_exit": 0,
+    "workspace_test_log_sha256": "0916121a639f8c2fb05f7e626a2adc58e5c9bdc53d19af0ac2bb88ebc801e1e2",
+    "workspace_tests_ignored": 814,
+    "workspace_tests_passed": 1517
+  },
+  "first_same_image_readiness_attempt": {
+    "business_started": false,
+    "checkpoint": "source-http-readiness",
+    "exact_cleanup": true,
+    "exact_missing_startup_controls": {
+      "baseline": "/api/core/version/",
+      "candidate": "/health/ready",
+      "origin": "/health"
+    },
+    "literal_exit": 1,
+    "raw_receipt_sha256": "7173b3b10939cb226b2ce50d2de349b34f0d8b609b45b3853a65c9bf3d9a1fc3"
+  },
+  "fresh_pair": {
+    "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "SQL_unchanged": true,
+    "both_direct_and_format_api": {
+      "/hdhr/device.xml": {
+        "body_bytes": 542,
+        "body_sha256": "312e970a3e02afd0658a9992d7a8f6b542e1f6e3415d246e2273ddc3bada816f",
+        "exact_fresh_Original": true,
+        "headers": {
+          "allow": "GET, HEAD, OPTIONS",
+          "content-length": "542",
+          "content-type": "application/xml",
+          "vary": "Accept, origin"
+        },
+        "source_shape": true,
+        "status": 200
+      },
+      "/hdhr/discover.json": {
+        "body_bytes": 327,
+        "body_sha256": "06f40704d33f78acae85d937ece176c30218332ba335669a3d79c30cb9ae96ca",
+        "exact_fresh_Original": true,
+        "headers": {
+          "allow": "GET, HEAD, OPTIONS",
+          "content-length": "327",
+          "content-type": "application/json",
+          "vary": "Accept, origin"
+        },
+        "source_shape": true,
+        "status": 200
+      },
+      "/hdhr/lineup.json": {
+        "body_bytes": 2721,
+        "body_sha256": "4eb54e2466f513edee8b256fa34411b7ce3fe82fde3c46451e56a6d83a3ce5cc",
+        "exact_fresh_Original": true,
+        "headers": {
+          "allow": "GET, HEAD, OPTIONS",
+          "content-length": "2721",
+          "content-type": "application/json",
+          "vary": "Accept, origin"
+        },
+        "source_shape": true,
+        "status": 200
+      },
+      "/hdhr/lineup_status.json": {
+        "body_bytes": 84,
+        "body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+        "exact_fresh_Original": true,
+        "headers": {
+          "allow": "GET, HEAD, OPTIONS",
+          "content-length": "84",
+          "content-type": "application/json",
+          "vary": "Accept, origin"
+        },
+        "source_shape": true,
+        "status": 200
+      }
+    },
+    "candidate_image": "sha256:6f31a3d0443b5973575095441f95ca7292e9830246a3b0b265e4336590125259",
+    "candidate_revision": "c70f791dbae47854cedb634f167d20f4f41f642d",
+    "exact_cleanup": true,
+    "full_M7_accepted": false,
+    "package_manifest_sha256": "b00dbb0e95a6d5f1b23cd21c67c5d21e1397b88bc0cbd902fbd2df07c013dec0",
+    "performance_verified": false,
+    "raw_scope_receipt_sha256": "952b81d22ac98d12837a5e7f11c53b9e78ab0ba8bd02c8e96265d7b731c39ff5",
+    "requests_per_arm": 8,
+    "stock_authority_sha256": "b24a9133040d06c973276614f87693a84d95a410f37797eea64a04556794a72f",
+    "stock_original_receipt_sha256": "f1686541f84d6644f74067184fac7301af1423a7dcd1ad7b406225cba293cb86"
+  },
+  "full_M7_accepted": false,
+  "gateway_postimage": {
+    "rust/crates/hdhr-http/src/gateway.rs": "7c7a6ac8e3c6ed04b53aad35e31665c81d346eab2db5f4f29a8075e5c71f760a"
+  },
+  "github_receipt_sha256": "a83dc10478fac486196c8cf37b3ab8ab3ce38d502575dbb2b6fb2e305ec8cec0",
+  "github_verified_receiving_revision": "c70f791dbae47854cedb634f167d20f4f41f642d",
+  "image_id": "sha256:6f31a3d0443b5973575095441f95ca7292e9830246a3b0b265e4336590125259",
+  "independent_Stock": {
+    "Native_launched": false,
+    "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "Original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "candidate_reviewed": "659bd067d6e5d46391d9f407a0faa73a755c3a5d",
+    "direct_and_format_api": {
+      "/hdhr/device.xml": {
+        "bytes": 520,
+        "headers": {
+          "Allow": "GET, HEAD, OPTIONS",
+          "Content-Length": "520",
+          "Content-Type": "application/xml",
+          "Vary": "Accept, origin"
+        },
+        "sha256": "9a2ac1d1ee142bb87179cf642514d55eebd9345b91ca80c6e8b978fc43cbdeaa",
+        "status": 200
+      },
+      "/hdhr/discover.json": {
+        "bytes": 305,
+        "headers": {
+          "Allow": "GET, HEAD, OPTIONS",
+          "Content-Length": "305",
+          "Content-Type": "application/json",
+          "Vary": "Accept, origin"
+        },
+        "sha256": "33a2ac4c8a023c768d96d0f0c6b1afcb89e1368391f77532add44643ae0c4384",
+        "status": 200
+      },
+      "/hdhr/lineup.json": {
+        "bytes": 2062,
+        "headers": {
+          "Allow": "GET, HEAD, OPTIONS",
+          "Content-Length": "2062",
+          "Content-Type": "application/json",
+          "Vary": "Accept, origin"
+        },
+        "sha256": "3045456b5f3976ec93e1c10dfcb9aadf34bf495f0ff84f518a44cecb6e7e2048",
+        "status": 200
+      },
+      "/hdhr/lineup_status.json": {
+        "bytes": 84,
+        "headers": {
+          "Allow": "GET, HEAD, OPTIONS",
+          "Content-Length": "84",
+          "Content-Type": "application/json",
+          "Vary": "Accept, origin"
+        },
+        "sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+        "status": 200
+      }
+    },
+    "exact_cleanup": true,
+    "full_m7_accepted": false,
+    "owned_SQL_unchanged": true,
+    "physical_receipt_sha256": "f1686541f84d6644f74067184fac7301af1423a7dcd1ad7b406225cba293cb86"
+  },
+  "package_manifest_sha256": "b00dbb0e95a6d5f1b23cd21c67c5d21e1397b88bc0cbd902fbd2df07c013dec0",
+  "paired_proof_sha256": "9e6e8f0cb3cfac4e658279bad3b9ad4815329f52069147ab99679ea95a5cf8f5",
+  "performance_verified": false,
+  "preceding_659bd_product": {
+    "format_guard_static_mismatch": true,
+    "physical_Native_mismatch_observed": false,
+    "revision": "659bd067d6e5d46391d9f407a0faa73a755c3a5d"
+  },
+  "protected_frontend_and_credit_inputs": 497,
+  "receiving_parent": "e2a18d9182ca663c6b75b5b0d4bf6ba259305239",
+  "review_sha256": "beff4772ca1c4a5f672b67da88e3f3826c977246c024bb55a9c732ccfee13006"
+}
