@@ -1,0 +1,119 @@
+{
+  "credit": "Original Dispatcharr and dependency authors and contributors retain full credit.",
+  "formal_nodes_transferred": 0,
+  "publication": {
+    "delete_proof_sha256": "a7abb72d2944bb7d35a07c8056492eac45022aef2407d801c899bb51a365fb54",
+    "first_interval_reducer": {
+      "actual_exit": 1,
+      "both_physical_runs_passed": true,
+      "stderr_sha256": "fb96f1205da79a0469a86d9e1a432d9bb17584c53d99186ff3d8f2af8df7e87e"
+    },
+    "host_stdout_sha256": "4aa6efe60e7bb40d15b6ea99e9b76a00d807554113ea42796041f97b3c338969",
+    "host_workspace": {
+      "failed": 0,
+      "ignored": 814,
+      "passed": 1498
+    },
+    "image_id": "sha256:28ff2a082e87e0d679f19b0b56f9cb172ef1a199c7eaf84285b6b034f8c218d6",
+    "interval_proof_sha256": "67c89589f503d12d0fd40f00f84ec5b26b08313aa6459f0058594a4b560b23ee",
+    "manifest_sha256": "99682f6b98ab92cb3449752105d8cca21e916c00d0901d9011abad81e8839cd1",
+    "parent": "456150b0029b25ec22b29e50834170566e729f7f",
+    "postimage_sha256": {
+      "rust/crates/store/src/epg_source_writes.rs": "e9aee448a8c81c6f30eef2ccf18959a65e676dd6896f0d728c9e4a0547c1ec33",
+      "rust/crates/store/src/epg_source_writes/xmltv_create.rs": "d4fca17de3a6c4c15a658e61dc91658bd4229b13c360f33ebdcfc6bf9d75c3d3"
+    },
+    "protected_inputs": 497,
+    "revision": "4a7f26dca8c194d710de2a44544c9bba9170926c"
+  },
+  "scope": {
+    "delete": {
+      "actual_exit": 0,
+      "both": {
+        "base_links_cleared": 2,
+        "independent_copy_unchanged": true,
+        "other_rows_and_clocks_exact": true,
+        "override_fallback_retained": true,
+        "override_links_cleared": 2,
+        "same_database_generation": true,
+        "scoped_cascade_including_periodic": true,
+        "wire": {
+          "delete_empty": 204,
+          "deleted_source": 404,
+          "login": 200,
+          "retained_source": 200,
+          "source_before": 200
+        }
+      },
+      "build_manifest_sha256": "99682f6b98ab92cb3449752105d8cca21e916c00d0901d9011abad81e8839cd1",
+      "candidate_revision": "4a7f26dca8c194d710de2a44544c9bba9170926c",
+      "exact_cleanup": true,
+      "image_id": "sha256:28ff2a082e87e0d679f19b0b56f9cb172ef1a199c7eaf84285b6b034f8c218d6",
+      "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "performance_verified": false,
+      "receipt_sha256": "180edda0356879017cd399d8aa8fcb2fca9049317b906f820215992adf6e995a",
+      "receiving_review_sha256": "f995224d06812bf5572396b97bed2c64d546036439d541977ed21b652da90a68"
+    },
+    "interval": {
+      "actual_exit": 0,
+      "both": {
+        "cases": {
+          "active_positive": {
+            "active": true,
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "canonical_schedule_identity": true,
+            "children": [
+              "apps.channels.tasks.evaluate_series_rules",
+              "apps.epg.tasks.build_programme_index_task"
+            ],
+            "http": 201,
+            "interval_hours": 6,
+            "linked_hours": 6,
+            "owned_sql_effects_verified": true,
+            "root_success_null": true,
+            "schedule_enabled": true
+          },
+          "active_zero": {
+            "active": true,
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "canonical_schedule_identity": true,
+            "children": [
+              "apps.channels.tasks.evaluate_series_rules",
+              "apps.epg.tasks.build_programme_index_task"
+            ],
+            "http": 201,
+            "interval_hours": 0,
+            "linked_hours": 1,
+            "owned_sql_effects_verified": true,
+            "root_success_null": true,
+            "schedule_enabled": false
+          },
+          "inactive_positive": {
+            "active": false,
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "canonical_schedule_identity": true,
+            "children": [],
+            "http": 201,
+            "interval_hours": 12,
+            "linked_hours": 12,
+            "owned_sql_effects_verified": true,
+            "root_success_null": null,
+            "schedule_enabled": false
+          }
+        },
+        "owned_origin_fetches": 2,
+        "precise_root_count": 2
+      },
+      "full_M6_accepted": false,
+      "image_id": "sha256:28ff2a082e87e0d679f19b0b56f9cb172ef1a199c7eaf84285b6b034f8c218d6",
+      "manifest_sha256": "99682f6b98ab92cb3449752105d8cca21e916c00d0901d9011abad81e8839cd1",
+      "owned_cleanup": true,
+      "performance_verified": false,
+      "reports_sha256": {
+        "Native": "7cc1fc4598e13065b34f6badaf8d0a8469ce5c44e99a9c1bfa4886acd2333e27",
+        "Original": "6c631ab5fd228228d426e606058df6d85071240d9c55f6a447a046a537c1dd88"
+      },
+      "review_sha256": "f995224d06812bf5572396b97bed2c64d546036439d541977ed21b652da90a68",
+      "revision": "4a7f26dca8c194d710de2a44544c9bba9170926c"
+    }
+  }
+}
