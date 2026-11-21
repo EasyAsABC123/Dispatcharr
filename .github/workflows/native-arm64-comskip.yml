@@ -1,0 +1,45 @@
+name: Native ARM64 pinned Comskip candidate qualification
+
+"on":
+  push:
+    branches: [validation/m10-arm64-comskip-a140b6ac-3]
+    paths:
+      - '.github/workflows/native-arm64-comskip.yml'
+      - 'scripts/rust-platform-contracts/native-arm64-comskip/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m10-arm64-comskip-a140b6ac
+  cancel-in-progress: false
+
+jobs:
+  candidate:
+    if: github.repository == 'EasyAsABC123/Dispatcharr' && github.ref == 'refs/heads/validation/m10-arm64-comskip-a140b6ac-3' && !github.event.deleted
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact validation source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 2
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/native-arm64-comskip.yml
+            /scripts/rust-platform-contracts/native-arm64-comskip/
+            /rust/runtime/comskip-Original-DispatcharrBase
+            /rust/runtime/comskip-source.ini
+      - name: Build and exercise the pinned candidate
+        shell: bash
+        run: bash scripts/rust-platform-contracts/native-arm64-comskip/qualify.sh
+      - name: Retain text evidence only
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: native-arm64-comskip-evidence
+          path: ${{ runner.temp }}/native-arm64-comskip-evidence/
+          if-no-files-found: error
+          retention-days: 14
