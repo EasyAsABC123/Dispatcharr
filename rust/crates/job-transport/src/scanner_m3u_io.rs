@@ -77,6 +77,9 @@ impl M3uPorts {
     pub fn from_shared(jobs: Jobs, cache: RedisTransport) -> Self {
         Self { jobs, cache }
     }
+    pub(crate) fn shared_jobs(&self) -> &Jobs {
+        &self.jobs
+    }
     pub(crate) async fn peek(
         &self,
         scope: &Scope,

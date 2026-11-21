@@ -31,6 +31,7 @@ pub(crate) struct Message {
     pub kind: Kind,
     pub full: bool,
     pub use_cache: bool,
+    pub configured_interval_root: bool,
 }
 pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     if raw.is_empty() || raw.len() > crate::protocol::MAX_ENVELOPE {
@@ -127,6 +128,12 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     if v["headers"]["timelimit"] != expected {
         return Err(());
     }
+    let configured_interval_root = kind == Kind::Single
+        && parent.is_none()
+        && arguments.is_empty()
+        && v["headers"]["periodic_task_name"]
+            .as_str()
+            .is_some_and(|name| name == format!("m3u_account-refresh-{account}"));
     v["headers"]["timelimit"] = json!([null, null]);
     v["headers"]["parent_id"] = Value::Null;
     v["headers"]["root_id"] = json!(id);
@@ -151,6 +158,7 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
             .get("use_cache")
             .and_then(Value::as_bool)
             .unwrap_or(false),
+        configured_interval_root,
     })
 }
 struct Inner {
@@ -1108,6 +1116,7 @@ mod source_controls {
         let direct = parse(&frame(Kind::Single, None, root)).unwrap();
         assert_eq!(direct.root, root);
         assert_eq!(direct.parent, None);
+        assert!(!direct.configured_interval_root);
         let descendant = parse(&frame(Kind::Groups, Some(parent), root)).unwrap();
         assert_eq!(descendant.parent, Some(parent));
         assert_eq!(descendant.root, root);
@@ -1121,9 +1130,14 @@ mod source_controls {
         value["headers"]["kwargsrepr"] = json!("{'account_id': 17}");
         value["headers"]["periodic_task_name"] = json!("m3u_account-refresh-17");
         value["body"]=json!(STANDARD.encode(serde_json::to_vec(&json!([[],{"account_id":17},{"callbacks":null,"errbacks":null,"chain":null,"chord":null}])).unwrap()));
-        assert_eq!(
-            parse(&serde_json::to_vec(&value).unwrap()).unwrap().account,
-            17
+        let observed = parse(&serde_json::to_vec(&value).unwrap()).unwrap();
+        assert_eq!(observed.account, 17);
+        assert!(observed.configured_interval_root);
+        value["headers"]["periodic_task_name"] = json!("another-periodic-account");
+        assert!(
+            !parse(&serde_json::to_vec(&value).unwrap())
+                .unwrap()
+                .configured_interval_root
         );
         value["headers"]["kwargsrepr"] = json!("{'account_id': 18}");
         assert!(parse(&serde_json::to_vec(&value).unwrap()).is_err());

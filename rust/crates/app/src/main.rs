@@ -1078,6 +1078,18 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     {
         eprintln!("Could not set up plugin repository refresh schedule");
     }
+    if let Some(cache) = cache_url.as_ref().filter(|_| !selected_jobs_enabled) {
+        if dispatcharr_job_transport::initialize_operator_backup_schedule(
+            store.clone(),
+            cache.clone(),
+            Arc::new(()),
+        )
+        .await
+        .is_err()
+        {
+            eprintln!("Backup schedule initialization did not settle");
+        }
+    }
     let core_compact = if selected_jobs_enabled {
         None
     } else if let Some(cache) = cache_url.as_ref() {

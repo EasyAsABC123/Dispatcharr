@@ -501,6 +501,24 @@ impl Service {
         kind: Kind,
         caller: Owner,
     ) -> Result<Prepared, Error> {
+        self.prepare_with_authority(id, kind, caller, false).await
+    }
+
+    pub(crate) async fn prepare_periodic(
+        &self,
+        id: i64,
+        caller: Owner,
+    ) -> Result<Prepared, Error> {
+        self.prepare_with_authority(id, Kind::Single, caller, true).await
+    }
+
+    async fn prepare_with_authority(
+        &self,
+        id: i64,
+        kind: Kind,
+        caller: Owner,
+        periodic: bool,
+    ) -> Result<Prepared, Error> {
         if self.inner.closed.load(Ordering::Acquire) {
             return Err(Error::Closed);
         }
@@ -543,12 +561,18 @@ impl Service {
             service: self.inner.normal.then(|| Arc::downgrade(&self.inner)),
         });
         let mut stage = "admission";
-        let result = if self.inner.closed.load(Ordering::Acquire) {
-            Err(Error::Closed)
-        } else {
+        let result = async {
+            if self.inner.closed.load(Ordering::Acquire) {
+                return Err(Error::Closed);
+            }
+            if periodic {
+                stage = "persisted_account_interval";
+                self.check_periodic_account(id).await?;
+            }
             self.prepare_inner(id, kind, owner.clone(), &mut stage)
                 .await
-        };
+        }
+        .await;
         if self.inner.normal && preparation_diagnostics() {
             if let Err(error) = &result {
                 eprintln!(
@@ -601,6 +625,46 @@ impl Service {
         }
         Ok(())
     }
+    async fn check_periodic_account(&self, id: i64) -> Result<(), Error> {
+        // The normal account signal creates a default-lane Interval row. The
+        // persisted FK and stock fields are checked on this same Auth-owned
+        // SQL session before the ordinary file path admission or worker claim.
+        let found: Option<(String, String, String)> = sqlx::query_as(
+            r#"SELECT p.args, p.kwargs, p.headers
+               FROM m3u_m3uaccount a
+               JOIN django_celery_beat_periodictask p ON p.id = a.refresh_task_id
+               JOIN django_celery_beat_intervalschedule i ON i.id = p.interval_id
+               WHERE a.id = $1 AND a.account_type = 'STD' AND a.is_active
+                 AND a.server_url IS NULL AND a.file_path <> ''
+                 AND p.name = $2 AND p.task = $3 AND p.enabled AND NOT p.one_off
+                 AND p.crontab_id IS NULL AND p.solar_id IS NULL AND p.clocked_id IS NULL
+                 AND p.expires IS NULL AND p.expire_seconds IS NULL AND p.start_time IS NULL
+                 AND p.queue IS NULL AND p.exchange IS NULL AND p.routing_key IS NULL AND p.priority IS NULL
+                 AND i.period = 'hours' AND i.every = a.refresh_interval AND i.every > 0
+                 AND octet_length(p.args) <= 64 AND octet_length(p.kwargs) <= 128
+                 AND octet_length(p.headers) <= 64"#,
+        )
+        .bind(id)
+        .bind(format!("m3u_account-refresh-{id}"))
+        .bind(crate::normal_xc_live::SINGLE_TASK_NAME)
+        .fetch_optional(self.executor())
+        .await
+        .map_err(|_| Error::Operational)?;
+        let Some((args, kwargs, headers)) = found else {
+            return Err(Error::Unsupported);
+        };
+        let eq_json = |raw: &str, expected| {
+            serde_json::from_str::<Value>(raw).ok() == Some(expected)
+        };
+        if !eq_json(&args, json!([]))
+            || !eq_json(&kwargs, json!({"account_id": id}))
+            || !eq_json(&headers, json!({}))
+        {
+            return Err(Error::Unsupported);
+        }
+        Ok(())
+    }
+
     async fn prepare_inner(
         &self,
         id: i64,

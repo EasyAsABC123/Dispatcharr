@@ -42,6 +42,60 @@ struct Inner {
     slots: Arc<Semaphore>,
     closed: AtomicBool,
 }
+impl Inner {
+    async fn run_periodic_local(&self, expected: &[u8], owner: Owner) -> Result<Run, Error> {
+        let jobs = self.ports.shared_jobs();
+        let admission = jobs
+            .peek_xc_live(Some(expected), owner.clone())
+            .await
+            .map_err(periodic_head_error)?
+            .ok_or(Error::HeadChanged)?;
+        if !admission.message.configured_interval_root {
+            return Err(Error::Transport(TransportError::UnsupportedTask));
+        }
+        let kind = crate::scanner_m3u_protocol::Kind::Single;
+        let prepared = self
+            .service
+            .prepare_periodic(admission.message.account, owner.clone())
+            .await
+            .map_err(Error::Domain)?;
+        if prepared.output_cache_needed(kind) {
+            self.ports
+                .cache_preflight(owner.clone())
+                .await
+                .map_err(Error::Transport)?;
+        }
+        let message = jobs
+            .claim_xc_live(admission, owner.clone())
+            .await
+            .map_err(periodic_head_error)?;
+        let outcome = self
+            .service
+            .execute_terminal(kind, prepared)
+            .await
+            .map_err(Error::Domain)?;
+        let crate::scanner_m3u::Terminal::Normal(result) = outcome else {
+            return Err(Error::Domain(DomainError::Operational));
+        };
+        let wrote = jobs
+            .write_xc_live(&message, result, Vec::new(), owner)
+            .await
+            .map_err(Error::Transport)?;
+        Ok(if wrote {
+            Run::Completed(message.id)
+        } else {
+            Run::ResultAlreadySucceeded(message.id)
+        })
+    }
+}
+
+fn periodic_head_error(error: TransportError) -> Error {
+    match error {
+        TransportError::ClaimRace => Error::HeadChanged,
+        other => Error::Transport(other),
+    }
+}
+
 #[derive(Clone)]
 pub struct Worker {
     inner: Arc<Inner>,
@@ -133,6 +187,11 @@ impl Worker {
                         .is_some_and(|selected| selected.as_ref() != raw.as_slice())
                     {
                         return Err(Error::HeadChanged);
+                    }
+                    if crate::normal_xc_live::parse(&raw)
+                        .is_ok_and(|message| message.configured_interval_root)
+                    {
+                        return inner.run_periodic_local(&raw, owner).await;
                     }
                     registry
                         .broker_m3u_scope(&raw, owner.clone())
