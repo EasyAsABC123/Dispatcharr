@@ -1,8 +1,36 @@
 # Dispatcharr Rust migration tracker
 
-Migration checkpoints and evidence are tracked on the published migration branch. The current application revision is `2025258fba9aa301a4a87b4ea12391087b5c55a7`. The existing React UI stays part of the compatibility contract. The original Dispatcharr authors and dependency contributors retain full credit. [Attribution](../ATTRIBUTION.md)
+Full parity across M0–M11 remains open. The existing React UI is part of the
+compatibility contract. The original Dispatcharr authors and dependency
+contributors retain full credit. [Attribution](../ATTRIBUTION.md)
 
-**Full parity remains open.** M0–M9 are repository acceptance gates. M10 and M11 are proposed release stages. Eleven of 127 required nodes passed on 2025258f. Four of 127 required nodes passed on fe054fb4. 11 of 127 required nodes passed on d608. Four of 127 required nodes passed on f2db. Six of 127 required nodes passed on a33. Two of 127 required nodes passed on 11dd. Five of 127 required nodes passed on fd04. Three of 127 required nodes passed on 4f9e. Two of 127 required nodes passed on 7cc. Three of 127 required nodes passed on 6e83. Fifteen of 127 required nodes passed in fresh 8a821 Compose campaigns. Eleven earlier passes apply to the ca752 package. Each scoped coordinator exited 2, and each published pass includes successful execution, evaluation and cleanup. The 18 earlier passes belong to the 82414407 package. [Milestone plan](rust-complete-parity-plan.md) · [8a821 coverage](rust-m9-8a821e27-coordinator-coverage.md) · [ca752 coverage](rust-m9-ca752176-expanded-coordinator-coverage.md) · [8241 coverage](rust-m9-8241-coordinator-coverage.md)
+The latest formal Compose wave covers exact application `e740306c`. It
+recorded **26 fresh passes out of 127 required nodes**,
+0 failures, 100 blocked nodes and
+0 unexecuted nodes, with one retained Original
+comparison authority and exact cleanup. The earlier 25 fresh passes on
+`1423e79b` apply to that separate image. [Current formal wave](rust-m9-e740306c-formal-matrix.md) ·
+[Earlier formal wave](rust-m9-1423e79b-formal-matrix.md)
+
+The `e740306c` package also qualified scheduled series and movie refreshes,
+inactive Guide artwork settings, and a copied PostgreSQL warm fallback with
+one acknowledged write. The separate `1423e79b` cold diagnostic matched four
+expected boot timestamp changes and retained the strict equality failure.
+The pinned Original and Rust also passed three scoped realtime and Connect
+checks on `1423e79b`. [Scheduled refreshes and artwork](rust-m6-scheduled-series-movie.md) ·
+[Copied rollback](rust-m9-m10-copied-postgres-rollback.md) ·
+[Realtime and Connect](rust-m7-1423e79b-realtime-connect.md)
+
+The earlier `c6eeee7d` paired media runs verified one upstream with two
+different FFmpeg output profiles and a scheduled recording sharing the
+upstream with active viewers. On native ARM64, `e740306c` passed 12
+ordinary Compose checks, including a PostgreSQL copy and authenticated reads.
+The formal count covers observations on its exact package. [Output profiles](rust-m3-c6eeee7d-distinct-output-profiles.md) ·
+[Scheduled recording](rust-m2-c6eeee7d-recording-start-alias.md) ·
+[Native ARM64](rust-m10-e740306c-native-arm64-cli-compose.md)
+
+The milestone rows below retain scoped historical evidence and the remaining
+acceptance requirements. [Milestone plan](rust-complete-parity-plan.md)
 
 | Milestone | Verified progress | Pending dependency and test entry point |
 | --- | --- | --- |

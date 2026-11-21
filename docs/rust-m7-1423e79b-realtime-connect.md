@@ -1,0 +1,7 @@
+# Realtime and Connect observations on 1423e79b
+
+Pinned Original and the exact Rust package at 1423e79b6090af2ba47a7516ff4b29f39e9222fa each passed five scoped WebSocket cases. The observed cases covered authenticated hello, cached IP state, graceful administrator reconnect, standard-user hello and cached IP, and the status GET that triggers a corresponding WebSocket update. The cases restored the owned users and cache afterwards. [Exact receipt](../scripts/rust-integration/m7-1423e79b-realtime-connect.json)
+
+Separate authenticated MPEG-TS pairs checked Connect audit and delivery. Both delivered one Connect webhook to the owned receiver after its durable audit. With a disconnect recipient enabled they observed one disconnect audit, one webhook, and one delivery row. With that recipient disabled they observed one disconnect audit and zero disconnect deliveries or delivery rows. Both verified useful media, a single provider request, and natural origin retirement.
+
+The first controller exited 1 before launching any physical phase. It reused a retained coordinator module from a different sealed root. A fresh controller corrected module custody and passed all three scopes and their independent cleanup. These are scoped checks on the named image. The full M7 milestone, formal acceptance roster, and performance comparison remain open. Full credit belongs to the original Dispatcharr authors and dependency contributors. [Attribution](../ATTRIBUTION.md)
