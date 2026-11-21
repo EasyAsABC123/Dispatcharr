@@ -882,6 +882,24 @@ impl SessionPool {
             {
                 return Err(dispatcharr_store::StoreError::Forbidden);
             }
+            // Once known, content length is immutable. Reject this ordinary
+            // explicit seek before taking the state mutex: even briefly owning
+            // it could interfere with a departing body's pending provider read.
+            if request.session_id.is_some()
+                && session.scope.get().is_none()
+                && !*session.stop.borrow()
+                && request.playback.header("range").is_some_and(|range| {
+                    crate::engine::range_is_unsatisfiable(
+                        range,
+                        session.content_length.load(Ordering::Relaxed),
+                    )
+                })
+            {
+                return Err(dispatcharr_store::StoreError::StatusBody(
+                    416,
+                    json!(crate::engine::RANGE_NOT_SATISFIABLE),
+                ));
+            }
             drop(registry);
             if let Some(scope) = session.scope.get().cloned() {
                 if !scope.activated() {

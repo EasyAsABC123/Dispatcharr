@@ -862,34 +862,38 @@ async fn stopped(ticket: &Ticket) {
         }
     }
 }
-// Literal compatibility port of RedisBackedVODConnection._validate_range_header.
-fn validate_range(value: &str, total: u64) -> Option<String> {
-    let Some(part) = value.strip_prefix("bytes=") else {
-        return Some(value.into());
-    };
-    let Some((start, end)) = part.split_once('-') else {
-        return Some(value.into());
-    };
+// The original forwards headers it cannot normalize to the provider.
+fn range_bounds(value: &str, total: u64) -> Option<(u64, u64)> {
+    let (start, end) = value.strip_prefix("bytes=")?.split_once('-')?;
     let start = if start.is_empty() {
         0
     } else {
-        match start.parse::<u64>() {
-            Ok(v) => v,
-            Err(_) => return Some(value.into()),
-        }
+        start.parse::<u64>().ok()?
     };
+    let last = total.saturating_sub(1);
     let end = if end.is_empty() {
-        total.saturating_sub(1)
+        last
     } else {
-        match end.parse::<u64>() {
-            Ok(v) => v.min(total.saturating_sub(1)),
-            Err(_) => return Some(value.into()),
-        }
+        end.parse::<u64>().ok()?.min(last)
     };
-    if start >= total || start > end {
-        None
-    } else {
-        Some(format!("bytes={start}-{end}"))
+    Some((start, end))
+}
+
+fn outside_range(start: u64, end: u64, total: u64) -> bool {
+    start >= total || start > end
+}
+
+pub(crate) fn range_is_unsatisfiable(value: &str, total: u64) -> bool {
+    total > 0
+        && range_bounds(value, total).is_some_and(|(start, end)| outside_range(start, end, total))
+}
+
+// Literal compatibility port of RedisBackedVODConnection._validate_range_header.
+fn validate_range(value: &str, total: u64) -> Option<String> {
+    match range_bounds(value, total) {
+        Some((start, end)) if outside_range(start, end, total) => None,
+        Some((start, end)) => Some(format!("bytes={start}-{end}")),
+        None => Some(value.into()),
     }
 }
 fn successful_headers(
@@ -966,6 +970,8 @@ fn compatibility_headers(source: &HeaderMap, range: Option<&str>, total: u64) ->
     }
     headers
 }
+pub(crate) const RANGE_NOT_SATISFIABLE: &str = "Requested Range Not Satisfiable";
+
 fn range_not_satisfiable() -> Response {
     (
         StatusCode::RANGE_NOT_SATISFIABLE,
@@ -973,7 +979,7 @@ fn range_not_satisfiable() -> Response {
             ("content-type", "text/html; charset=utf-8"),
             ("allow", "GET, OPTIONS"),
         ],
-        "Requested Range Not Satisfiable",
+        RANGE_NOT_SATISFIABLE,
     )
         .into_response()
 }
@@ -1080,6 +1086,11 @@ fn session_redirect_response(request: &VodRequest, location: &str) -> Response {
 }
 fn error_response(error: StoreError) -> Response {
     let mut response = match error {
+        StoreError::StatusBody(416, serde_json::Value::String(message))
+            if message == RANGE_NOT_SATISFIABLE =>
+        {
+            return range_not_satisfiable();
+        }
         StoreError::Forbidden => (
             StatusCode::FORBIDDEN,
             [(header::CONTENT_TYPE, "application/json")],
@@ -1594,5 +1605,39 @@ mod provider_redirect_header_tests {
             .await
             .unwrap()
             .is_empty());
+    }
+}
+
+#[cfg(test)]
+mod existing_range_admission {
+    use super::*;
+
+    #[test]
+    fn side_effect_free_gate_matches_ordinary_provider_range_validation() {
+        for (range, rejected, normalized) in [
+            ("bytes=100-", true, None),
+            ("bytes=4-3", true, None),
+            ("bytes=98-200", false, Some("bytes=98-99")),
+            ("bytes=-3", false, Some("bytes=0-3")),
+            ("bytes=1-", false, Some("bytes=1-99")),
+            ("bytes=1-3,4-5", false, Some("bytes=1-3,4-5")),
+            ("bytes=broken", false, Some("bytes=broken")),
+        ] {
+            assert_eq!(range_is_unsatisfiable(range, 100), rejected);
+            assert_eq!(validate_range(range, 100).as_deref(), normalized);
+            assert!(!range_is_unsatisfiable(range, 0));
+        }
+    }
+
+    #[tokio::test]
+    async fn early_admission_416_preserves_literal_existing_response() {
+        let response = error_response(StoreError::StatusBody(416, json!(RANGE_NOT_SATISFIABLE)));
+        let original = range_not_satisfiable();
+        assert_eq!(response.status(), original.status());
+        assert_eq!(response.headers(), original.headers());
+        let body = axum::body::to_bytes(response.into_body(), 128)
+            .await
+            .unwrap();
+        assert_eq!(body, RANGE_NOT_SATISFIABLE);
     }
 }
