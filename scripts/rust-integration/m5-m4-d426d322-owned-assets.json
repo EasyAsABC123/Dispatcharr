@@ -1,0 +1,146 @@
+{
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "candidate": {
+    "image_id": "sha256:7400a868c8024b6d88b47eea5ba464b8578fb6a456335a253c4afa400e74af61",
+    "manifest_sha256": "6cee9711930a84e8d3a23f2073dfbf049934f5b40c945aa2b9987d2181c671d7",
+    "revision": "d426d322b27a197aaaaa057ef73dfb53c516c452",
+    "source_archive_sha256": "ee176387cdda11dc09c7ae0130cf8919661bcc7a9771c1258d0b6c870e5e62ad",
+    "source_tree_sha256": "fbbb8fa426327e77a3e9df1d74963f0dfa0bab77a5eaf7af3911cc0269cccaf9",
+    "tag": "dispatcharr-rust-candidate:read-parity-d426d322b27a"
+  },
+  "credit": "Original Dispatcharr and dependency authors and contributors retain full credit.",
+  "cross_backend_equal": true,
+  "effects": {
+    "opt_in_jobs": false,
+    "owned_SQL_and_files_preserved_until_fixture_cleanup": true
+  },
+  "evidence": {
+    "Native": {
+      "cleanup_sha256": "d1fcffc285d714b2e02e634364ee7993493d037b7749dbf480e02d90cebdf7bd",
+      "exact_retired_roles": 4,
+      "probe_stdout_sha256": "54c134fb8b121962932e9b5a1aad8e27bb8b62fdc0e61158aaef3c80ce8f0497",
+      "receipt_sha256": "c834d2e27c4155b74167d3d53fbbaa44d74788603b34fdde495ad4f0daaf8809"
+    },
+    "Original": {
+      "cleanup_sha256": "25ca3f260435cc4079341bec1e3d4ec9771beba8ab017a1ec42a665b9a22cf48",
+      "exact_retired_roles": 2,
+      "probe_stdout_sha256": "a361cfa1c65eff31d0ab4f46c71684787d6aedfbaf2401c2fa1b3cbda5e4800b",
+      "receipt_sha256": "cf05802ea80a0bcf953a2a630deb0ad61d4c39759160c4aa457d06eb9dce4f97"
+    }
+  },
+  "first_attempt": {
+    "candidate": "fdede54c54ccb19300c01031537803a0b553f581",
+    "controller_exit": 1,
+    "exact_cleanup_both_arms": true,
+    "native_failed_at": "vod-logo-detail",
+    "native_passed_before_failure": [
+      "channel-logo-detail",
+      "channel-logo-file"
+    ],
+    "original_passed_cases": 7,
+    "paired_receipt_sha256": "3d75ffc0c98e8f3f5ad72aac177dd170781a3c12f11d55ae815de42888c6914e",
+    "status_and_body_not_retained": true
+  },
+  "formal_node_count_claimed": 0,
+  "independent_proof_stdout_sha256": "643bbe85fe1116f874bf53da412b7f71001f4e81912bdfb65796af722aff1e4a",
+  "observations": {
+    "channel-logo-detail": {
+      "cache_url": "/api/channels/logos/channel/cache/?v=b2f67f0f",
+      "channel_count": 1,
+      "channel_names": [
+        "Channel: owned-m5-positive-assets-station"
+      ],
+      "id": "channel",
+      "is_used": true,
+      "name": "owned-m5-positive-assets-channel",
+      "url": "/data/logos/owned-m5-positive-assets-channel.png"
+    },
+    "channel-logo-file": {
+      "body_bytes": 68,
+      "body_sha256": "b6468fc1098ff44210d981565f98f2c62e409e617cff260fa8e59354c1fd549c",
+      "headers": {
+        "Cache-Control": "public, max-age=14400",
+        "Content-Disposition": "inline; filename=\"owned-m5-positive-assets-channel.png\"",
+        "Last-Modified": "Mon, 01 Jan 2024 00:00:00 GMT",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "mime": "image/png",
+      "status": 200
+    },
+    "movie-categories": [
+      {
+        "category_type": "movie",
+        "category_type_display": "Movie",
+        "id": "owned-m5-positive-assets-alpha",
+        "m3u_accounts": [],
+        "name": "owned-m5-positive-assets-alpha"
+      },
+      {
+        "category_type": "movie",
+        "category_type_display": "Movie",
+        "id": "owned-m5-positive-assets-zulu",
+        "m3u_accounts": [],
+        "name": "owned-m5-positive-assets-zulu"
+      }
+    ],
+    "series-categories": [
+      {
+        "category_type": "series",
+        "category_type_display": "Series",
+        "id": "owned-m5-positive-assets-alpha",
+        "m3u_accounts": [],
+        "name": "owned-m5-positive-assets-alpha"
+      },
+      {
+        "category_type": "series",
+        "category_type_display": "Series",
+        "id": "owned-m5-positive-assets-zulu",
+        "m3u_accounts": [],
+        "name": "owned-m5-positive-assets-zulu"
+      }
+    ],
+    "vod-logo-detail": {
+      "cache_url": "/api/vod/vodlogos/movie-vod/cache/?v=0b6600c0",
+      "id": "movie-vod",
+      "is_used": true,
+      "item_names": [
+        "Movie: owned-m5-positive-assets-movie"
+      ],
+      "movie_count": 1,
+      "name": "owned-m5-positive-assets-vod",
+      "series_count": 0,
+      "url": "/data/logos/owned-m5-positive-assets-vod.png"
+    },
+    "vod-logo-file": {
+      "body_bytes": 68,
+      "body_sha256": "b6468fc1098ff44210d981565f98f2c62e409e617cff260fa8e59354c1fd549c",
+      "headers": {
+        "Cache-Control": "public, max-age=14400",
+        "Content-Disposition": "inline; filename=\"owned-m5-positive-assets-vod.png\"",
+        "Last-Modified": "Mon, 01 Jan 2024 00:00:00 GMT",
+        "X-Content-Type-Options": "nosniff"
+      },
+      "mime": "image/png",
+      "status": 200
+    },
+    "vod-logo-used-movie-list": [
+      {
+        "cache_url": "/api/vod/vodlogos/movie-vod/cache/?v=0b6600c0",
+        "id": "movie-vod",
+        "is_used": true,
+        "item_names": [
+          "Movie: owned-m5-positive-assets-movie"
+        ],
+        "movie_count": 1,
+        "name": "owned-m5-positive-assets-vod",
+        "series_count": 0,
+        "url": "/data/logos/owned-m5-positive-assets-vod.png"
+      }
+    ]
+  },
+  "paired_controller_exit": 0,
+  "performance_measured": false,
+  "receiving_commit": "681504275f74e6f3b161da2eb6b07ba8982fff14",
+  "strict_scoped_cases_per_backend": 7
+}
