@@ -1051,6 +1051,11 @@ fn reply(status: u16, value: Value) -> Response {
     )
         .into_response()
 }
+fn varies_on_accept(action: Action, status: StatusCode) -> bool {
+    matches!(action, Action::List | Action::Settings | Action::Run)
+        || (matches!(action, Action::Enabled) && status == StatusCode::OK)
+}
+
 async fn response(
     result: Result<Response, StoreError>,
     live: Arc<Live>,
@@ -1073,9 +1078,9 @@ async fn response(
             axum::http::HeaderValue::from_static(allow),
         );
     }
-    // The stock plugin list, settings, and run views negotiate on Accept.
+    // Stock also varies successful enable/disable JSON on Accept.
     // Main adds the CORS origin token during response finalization.
-    if matches!(action, Action::List | Action::Settings | Action::Run) {
+    if varies_on_accept(action, response.status()) {
         response
             .headers_mut()
             .entry(axum::http::header::VARY)
@@ -1168,6 +1173,17 @@ fn parse_enabled(value: &Value) -> Option<bool> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn source_enabled_success_varies_on_accept() {
+        assert!(varies_on_accept(Action::Enabled, StatusCode::OK));
+        assert!(!varies_on_accept(Action::Enabled, StatusCode::NOT_FOUND));
+        assert!(!varies_on_accept(Action::Logo, StatusCode::OK));
+        for action in [Action::List, Action::Settings, Action::Run] {
+            assert!(varies_on_accept(action, StatusCode::OK));
+        }
+    }
+
     #[test]
     fn source_enable_parser_does_not_treat_floats_or_arbitrary_truthy_values_as_boolean() {
         for value in [

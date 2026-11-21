@@ -1,3 +1,4 @@
+use dispatcharr_contracts::PlaybackCandidate;
 use std::{collections::HashSet, time::Duration};
 use tokio::time::Instant;
 
@@ -42,6 +43,26 @@ impl RetryState {
         self.failures = 0;
         self.last_failure = None;
         self.tried.insert(index);
+    }
+
+    pub fn next_candidate(
+        &mut self,
+        candidates: &[PlaybackCandidate],
+        opened_url: Option<&str>,
+    ) -> Option<usize> {
+        for (index, candidate) in candidates.iter().enumerate() {
+            if self.tried.contains(&index) {
+                continue;
+            }
+            // Original marks each alternate considered, including a distinct
+            // stream row that regenerates the outgoing source URL.
+            if opened_url == Some(candidate.url.as_str()) {
+                self.tried.insert(index);
+                continue;
+            }
+            return Some(index);
+        }
+        None
     }
 
     pub fn stable(&mut self, current: usize) {

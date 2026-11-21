@@ -1111,6 +1111,83 @@ async fn midstream_failover_discards_partial_old_packet_and_marks_new_pid() {
 }
 
 #[tokio::test]
+async fn finite_live_eof_retries_current_url_then_skips_its_duplicate_row() {
+    let primary_counts = Arc::new(Counts::default());
+    let backup_counts = Arc::new(Counts::default());
+    let primary = primary_counts.clone();
+    let backup = backup_counts.clone();
+    let router = Router::new()
+        .route(
+            "/finite",
+            get(move || {
+                let counts = primary.clone();
+                async move {
+                    counts.connections.fetch_add(1, Ordering::SeqCst);
+                    counts.active.fetch_add(1, Ordering::SeqCst);
+                    let guard = Active(counts);
+                    Body::from_stream(async_stream::stream! {
+                        let _guard = guard;
+                        for counter in 0..160u8 {
+                            yield Ok::<Bytes, Infallible>(Bytes::from(ts_packet(100, counter)));
+                            time::sleep(Duration::from_millis(2)).await;
+                        }
+                    })
+                }
+            }),
+        )
+        .route(
+            "/backup",
+            get(move || {
+                let counts = backup.clone();
+                async move { packet_origin(counts, 200) }
+            }),
+        );
+    let (base, server) = serve(router).await;
+    let finite_url = format!("{base}/finite");
+    let mut source = source(finite_url.clone(), "finite-eof");
+    source.alternates.push(candidate(finite_url, 2));
+    source
+        .alternates
+        .push(candidate(format!("{base}/backup"), 3));
+    let mut limits = config();
+    limits.source_initialization = true;
+    limits.max_retries = EngineConfig::default().max_retries;
+    let engine = StreamEngine::new(limits).unwrap();
+    let mut original = engine.play(source.clone()).await.unwrap().into_body();
+    let mut rejoin = engine.play(source).await.unwrap().into_body();
+    assert_eq!(primary_counts.connections.load(Ordering::SeqCst), 1);
+
+    async fn read_alternate(body: &mut Body) {
+        loop {
+            let data = body.frame().await.unwrap().unwrap().into_data().unwrap();
+            assert_eq!(data.len() % 188, 0);
+            let mut alternate = false;
+            for packet in data.chunks_exact(188) {
+                assert_eq!(packet[0], 0x47);
+                assert!(matches!(packet[2], 100 | 200));
+                alternate |= packet[2] == 200;
+            }
+            if alternate {
+                return;
+            }
+        }
+    }
+    time::timeout(Duration::from_secs(7), async {
+        tokio::join!(read_alternate(&mut original), read_alternate(&mut rejoin));
+    })
+    .await
+    .unwrap();
+    assert_eq!(primary_counts.connections.load(Ordering::SeqCst), 3);
+    assert_eq!(primary_counts.active.load(Ordering::SeqCst), 0);
+    assert_eq!(backup_counts.connections.load(Ordering::SeqCst), 1);
+    assert_eq!(engine.status()[0].stream_id, 3);
+    drop((original, rejoin));
+    assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
+    wait_for(|| backup_counts.active.load(Ordering::SeqCst) == 0).await;
+    server.abort();
+}
+
+#[tokio::test]
 async fn exhausted_cold_sources_never_wrap_or_busy_spin() {
     let primary = Arc::new(AtomicUsize::new(0));
     let backup = Arc::new(AtomicUsize::new(0));

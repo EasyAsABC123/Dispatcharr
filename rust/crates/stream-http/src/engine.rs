@@ -1829,7 +1829,15 @@ async fn run_upstream(
                 }
             }
         }
-        if let Some(next) = (0..candidates.len()).find(|index| !retry.tried.contains(index)) {
+        // After actual input attempts, Original compares the next source URL
+        // with the outgoing one. An unavailable slot alone supplies no URL to
+        // skip, and same-input retries above retain their existing budget.
+        let opened_url = if inner.config.source_initialization {
+            last_candidate.map(|index| candidates[index].url.as_str())
+        } else {
+            None
+        };
+        if let Some(next) = retry.next_candidate(&candidates, opened_url) {
             current = next;
             continue;
         }
@@ -1838,6 +1846,7 @@ async fn run_upstream(
         if !retry.had_media
             || candidates.len() < 2
             || retry.rotations >= inner.config.max_stream_switches
+            || opened_url.is_some_and(|url| candidates.iter().all(|candidate| candidate.url == url))
         {
             break;
         }
@@ -1849,9 +1858,10 @@ async fn run_upstream(
         }
         retry.tried.clear();
         retry.tried.insert(current);
-        current = (0..candidates.len())
-            .find(|index| !retry.tried.contains(index))
-            .unwrap();
+        let Some(next) = retry.next_candidate(&candidates, opened_url) else {
+            break;
+        };
+        current = next;
     }
     if *lost.borrow() {
         last_error = PlaybackError::new(503, "Channel ownership was lost");
