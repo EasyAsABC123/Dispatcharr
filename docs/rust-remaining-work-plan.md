@@ -21,7 +21,8 @@ capability inventory and historical component checkpoint.
 
 The `d426d322` application passed Channel Profile JSON aliases and ordinary
 VOD logo metadata, media and category reads. Packaging verified the React
-and attribution inputs. Its broader release matrix requires fresh evidence.
+and attribution inputs. Fourteen of its 127 required Compose checks passed.
+[Current required checks](rust-m9-d426d322-required-fourteen.md)
 [Profile JSON aliases](rust-m0-channel-profile-json-aliases-paired.md) ·
 [Asset and category reads](rust-m5-m4-d426d322-owned-assets.md)
 
@@ -30,8 +31,8 @@ cadence edit and four ordinary Core backup schedule boots.
 [Rust cadence](rust-m6-ordinary-active-std-cadence.md) ·
 [Core backup startup](rust-m8-814b9403-core-backup-startup.md)
 
-The 14 required Compose checks, two-hour playback soak, and warm copied-data
-fallback apply to `fdede54c`.
+The earlier `fdede54c` package also passed 14 required Compose checks,
+a two-hour playback soak, and warm copied-data fallback.
 
 | Milestone | Verified scope and remaining acceptance |
 | --- | --- |
@@ -44,8 +45,8 @@ fallback apply to `fdede54c`.
 | M6 | Default Main XC deactivation matched schedule and notification effects on `fdede54c`. The Standard provider 4 → 7 → 4 hour cadence edit passed on `814b9403`. The complete default worker and scheduler graph remains open. [Deactivation](rust-m6-fdede54c-xc-deactivation.md) · [Cadence](rust-m6-ordinary-active-std-cadence.md) |
 | M7 | M3U, XMLTV, programme Grid and Xtream exports passed on `fdede54c` alongside HDHomeRun. Twelve ordinary Connect reads passed on `d426d322`. Full protocol and realtime acceptance remain open. [Exports](rust-m7-fdede54c-ordinary-exports.md) · [Connect](rust-m7-d426d322-connect-positive.md) |
 | M8 | Default backup inventory and download matched on `d426d322`. Private Main preserved the saved value and signed session across restart on its earlier package. Wider admin, plugin and operational acceptance remain open. [Backup inventory and download](rust-m8-d426-postgresql-backup-inventory.md) · [Private admin](rust-m8-2581-private-admin-settings-restart.md) · [AIO login](rust-m8-stock-aio-admin-login.md) |
-| M9 | The `fdede54c` two-hour soak, 14 of 127 required Compose checks and copied-data warm fallback passed. The complete required matrix, strict cold rollback and matched-work performance comparison remain open. [Two-hour soak](rust-m9-fdede54c-canonical-soak-full.md) · [Required Compose tally](rust-m9-fdede54c-ordinary-browser-pair.md) · [Warm fallback](rust-m9-fdede54c-warm-copied-rollback.md) |
-| M10 | Native ARM64 Rust, unchanged React packaging, standalone media and Comskip, PostgreSQL tooling, the GPG parser, the Debian Python dependency host and exact DRF static export passed scoped checks. Integrated package, plugin execution and controlled rollout remain open. [Rust](rust-m10-native-arm64-rust-build.md) · [React](rust-m10-native-arm64-node-frontend.md) · [Comskip](rust-m10-native-arm64-comskip-debian.md) · [Python](rust-m10-native-arm64-python-host-debian.md) |
+| M9 | Fourteen of 127 required Compose checks passed on `d426d322`. The earlier `fdede54c` package passed the two-hour soak and warm copied-data fallback. Complete matrix, strict cold rollback and matched-work performance remain open. [Current Compose tally](rust-m9-d426d322-required-fourteen.md) · [Two-hour soak](rust-m9-fdede54c-canonical-soak-full.md) · [Warm fallback](rust-m9-fdede54c-warm-copied-rollback.md) |
+| M10 | The `d426d322` release executables compiled natively on ARM64. Earlier scoped checks cover unchanged React, media and Comskip, PostgreSQL tooling, the GPG parser, the Debian Python host and DRF static assets. Integrated package, plugin execution and controlled rollout remain open. [Current Rust build](rust-m10-native-arm64-rust-build-d426.md) · [React](rust-m10-native-arm64-node-frontend.md) · [Comskip](rust-m10-native-arm64-comskip-debian.md) · [Python](rust-m10-native-arm64-python-host-debian.md) |
 | M11 | The default switch and operator handoff depend on release acceptance and a rollout decision. |
 
 The original Dispatcharr authors and dependency contributors retain full credit.
