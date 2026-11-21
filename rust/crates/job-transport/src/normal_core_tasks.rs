@@ -13,24 +13,29 @@ use dispatcharr_store::{
         execute_recurring_purge, preflight_recurring_purge, RecordingHttp, RecordingJobs,
         CONFIGURED_REBUILD_HORIZON_DAYS,
     },
-    AuthService, Store,
+    AuthService, ScheduledVod, ScheduledVodError, Store,
 };
 use serde_json::{json, Value};
 use std::{
+    future::Future,
     sync::{
-        atomic::{AtomicBool, Ordering},
+        atomic::{AtomicBool, AtomicU8, Ordering},
         Arc, Mutex,
     },
     time::Duration,
 };
-use tokio::sync::{OwnedSemaphorePermit, Semaphore};
+use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
+pub(crate) const SCHEDULED_MOVIE_ADVANCED: &str = "apps.vod.tasks.refresh_movie_advanced_data";
+pub(crate) const SCHEDULED_SERIES_EPISODES: &str = "apps.vod.tasks.batch_refresh_series_episodes";
 #[derive(Clone, Debug)]
 pub(crate) enum Kind {
     Rehash(Request),
     Offsets,
     RecurringPurge(i64),
     RecurringRebuild { rule: i64, schedule: String },
+    ScheduledSeriesEpisodes(i64),
+    ScheduledMovieAdvanced(i64),
 }
 impl Kind {
     fn family(&self) -> Family {
@@ -39,6 +44,8 @@ impl Kind {
             Self::Offsets => Family::RescheduleOffsets,
             Self::RecurringPurge(_) => Family::RecurringPurge,
             Self::RecurringRebuild { .. } => Family::RecurringRebuild,
+            Self::ScheduledSeriesEpisodes(_) => Family::ScheduledSeriesEpisodes,
+            Self::ScheduledMovieAdvanced(_) => Family::ScheduledMovieAdvanced,
         }
     }
 }
@@ -47,6 +54,35 @@ pub(crate) struct Message {
     pub id: Uuid,
     pub kind: Kind,
 }
+fn saved_numeric_operand(frame: &mut Value) -> Result<i64, ()> {
+    let bytes = STANDARD
+        .decode(frame["body"].as_str().ok_or(())?)
+        .map_err(|_| ())?;
+    let body = crate::clocked_recording_envelope::json_value(&bytes).map_err(|_| ())?;
+    let args = body[0]
+        .as_array()
+        .filter(|args| args.len() == 1)
+        .ok_or(())?;
+    let operand = args[0].as_i64().filter(|id| *id > 0).ok_or(())?;
+    let scheduled_name = frame["headers"]["periodic_task_name"].as_str().ok_or(())?;
+    let expected_repr = format!("({operand},)");
+    let expected_list_repr = format!("[{operand}]");
+    if body != json!([[operand], {}, {"callbacks":null,"errbacks":null,"chain":null,"chord":null}])
+        || scheduled_name.is_empty()
+        || !matches!(frame["headers"]["argsrepr"].as_str(), Some(repr) if repr == expected_repr || repr == expected_list_repr)
+    {
+        return Err(());
+    }
+    frame["body"] = json!(STANDARD.encode(
+        serde_json::to_vec(
+            &json!([[],{},{ "callbacks":null,"errbacks":null,"chain":null,"chord":null }])
+        )
+        .map_err(|_| ())?
+    ));
+    frame["headers"]["argsrepr"] = json!("()");
+    Ok(operand)
+}
+
 pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     if raw.is_empty() || raw.len() > crate::protocol::MAX_ENVELOPE {
         return Err(());
@@ -57,33 +93,13 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
             Kind::Offsets
         }
         Some("apps.channels.tasks.purge_recurring_rule") => {
-            let bytes = STANDARD
-                .decode(frame["body"].as_str().ok_or(())?)
-                .map_err(|_| ())?;
-            let body = crate::clocked_recording_envelope::json_value(&bytes).map_err(|_| ())?;
-            let args = body[0]
-                .as_array()
-                .filter(|args| args.len() == 1)
-                .ok_or(())?;
-            let rule = args[0].as_i64().filter(|id| *id > 0).ok_or(())?;
-            let scheduled_name = frame["headers"]["periodic_task_name"].as_str().ok_or(())?;
-            let expected_repr = format!("({rule},)");
-            let expected_list_repr = format!("[{rule}]");
-            if body
-                != json!([[rule], {}, {"callbacks":null,"errbacks":null,"chain":null,"chord":null}])
-                || scheduled_name.is_empty()
-                || !matches!(frame["headers"]["argsrepr"].as_str(), Some(repr) if repr == expected_repr || repr == expected_list_repr)
-            {
-                return Err(());
-            }
-            frame["body"] = json!(STANDARD.encode(
-                serde_json::to_vec(
-                    &json!([[],{},{ "callbacks":null,"errbacks":null,"chain":null,"chord":null }])
-                )
-                .map_err(|_| ())?
-            ));
-            frame["headers"]["argsrepr"] = json!("()");
-            Kind::RecurringPurge(rule)
+            Kind::RecurringPurge(saved_numeric_operand(&mut frame)?)
+        }
+        Some(SCHEDULED_SERIES_EPISODES) => {
+            Kind::ScheduledSeriesEpisodes(saved_numeric_operand(&mut frame)?)
+        }
+        Some(SCHEDULED_MOVIE_ADVANCED) => {
+            Kind::ScheduledMovieAdvanced(saved_numeric_operand(&mut frame)?)
         }
         Some("apps.channels.tasks.rebuild_recurring_rule") => {
             let bytes = STANDARD
@@ -212,6 +228,7 @@ struct Inner {
     auth: AuthService,
     recordings: Arc<dyn RecordingJobs>,
     recording_http: RecordingHttp,
+    scheduled_vod: ScheduledVod,
     events: Arc<dyn UpdateEventSink>,
     revoked: Revoked,
     closed: AtomicBool,
@@ -223,12 +240,17 @@ pub struct Prepared {
     inner: Arc<Inner>,
 }
 impl Prepared {
+    #[expect(
+        clippy::too_many_arguments,
+        reason = "Selected shares the existing owned service ports"
+    )]
     pub fn new(
         jobs: Jobs,
         store: Store,
         auth: AuthService,
         recordings: Arc<dyn RecordingJobs>,
         recording_http: RecordingHttp,
+        scheduled_vod: ScheduledVod,
         events: Arc<dyn UpdateEventSink>,
         revoked: Revoked,
     ) -> Result<Self, D> {
@@ -246,6 +268,7 @@ impl Prepared {
                 auth,
                 recordings,
                 recording_http,
+                scheduled_vod,
                 events,
                 revoked,
                 closed: AtomicBool::new(false),
@@ -260,6 +283,8 @@ impl Prepared {
             Family::RescheduleOffsets,
             Family::RecurringPurge,
             Family::RecurringRebuild,
+            Family::ScheduledSeriesEpisodes,
+            Family::ScheduledMovieAdvanced,
         ]
         .into_iter()
         .map(|family| {
@@ -277,6 +302,144 @@ struct WorkOwner {
     _caller: Arc<dyn Send + Sync>,
     _inner: Arc<Inner>,
 }
+const CLAIM_PENDING: u8 = 0;
+const CLAIM_STARTED: u8 = 1;
+const CLAIM_CANCELLED: u8 = 2;
+
+enum ScheduledVodTask {
+    Series(i64),
+    Movie(i64),
+}
+async fn run_scheduled_vod<F>(
+    inner: Arc<Inner>,
+    task: ScheduledVodTask,
+    owner: Arc<WorkOwner>,
+    broker_claim: F,
+) -> Result<D, D>
+where
+    F: Future<Output = Result<Message, crate::transport::Error>> + Send + 'static,
+{
+    let (sender, receiver) = oneshot::channel();
+    let claim_state = Arc::new(AtomicU8::new(CLAIM_PENDING));
+    let authorizer = {
+        let inner = inner.clone();
+        let owner = owner.clone();
+        let claim_state = claim_state.clone();
+        move || async move {
+            if inner.closed.load(Ordering::Acquire) {
+                let _ = sender.send(Err(D::Operational(
+                    "Core intake stopped before claim".into(),
+                )));
+                return false;
+            }
+            if claim_state
+                .compare_exchange(
+                    CLAIM_PENDING,
+                    CLAIM_STARTED,
+                    Ordering::AcqRel,
+                    Ordering::Acquire,
+                )
+                .is_err()
+            {
+                return false;
+            }
+            let status = match broker_claim.await {
+                Ok(message) => match inner.revoked.contains(&message.id.to_string()) {
+                    Ok(revoked) => Ok(Some((message, revoked))),
+                    Err(_) => {
+                        retain(&inner, owner);
+                        Err(D::Operational(
+                            "Scheduled VOD revoke membership unsettled".into(),
+                        ))
+                    }
+                },
+                Err(crate::transport::Error::ClaimRace) => Ok(None),
+                Err(_) => {
+                    retain(&inner, owner);
+                    Err(D::Operational("Scheduled VOD claim unsettled".into()))
+                }
+            };
+            let run = matches!(status, Ok(Some((_, false))));
+            let _ = sender.send(status);
+            run
+        }
+    };
+    let claimed = match task {
+        ScheduledVodTask::Series(account) => inner
+            .scheduled_vod
+            .run_series(account, owner.clone(), authorizer)
+            .await
+            .map(|count| {
+                count.map(|count| {
+                    json!(format!(
+                        "Batch episode refresh completed for {count} series"
+                    ))
+                })
+            }),
+        ScheduledVodTask::Movie(relation) => inner
+            .scheduled_vod
+            .run_movie(relation, owner.clone(), authorizer)
+            .await
+            .map(|result| result.map(|result| json!(result))),
+    };
+    let value = match claimed {
+        Ok(result) => result,
+        Err(error)
+            if claim_state
+                .compare_exchange(
+                    CLAIM_PENDING,
+                    CLAIM_CANCELLED,
+                    Ordering::AcqRel,
+                    Ordering::Acquire,
+                )
+                .is_ok() =>
+        {
+            return Err(match error {
+                ScheduledVodError::Capacity => D::Capacity,
+                ScheduledVodError::Unsupported => D::UnsupportedDomain,
+                ScheduledVodError::Unsettled => {
+                    D::Operational("Scheduled VOD admission unsettled".into())
+                }
+            });
+        }
+        Err(_) => {
+            retain(&inner, owner);
+            return Err(D::Operational("Scheduled VOD execution unsettled".into()));
+        }
+    };
+    let Some((message, revoked)) = receiver.await.map_err(|_| {
+        retain(&inner, owner.clone());
+        D::Operational("Scheduled VOD claim reply lost".into())
+    })??
+    else {
+        return Ok(D::HeadChanged);
+    };
+    let value = match (value, revoked) {
+        (None, true) => Value::Null,
+        (Some(result), false) => result,
+        _ => {
+            retain(&inner, owner);
+            return Err(D::Operational(
+                "Scheduled VOD terminal state inconsistent".into(),
+            ));
+        }
+    };
+    if inner
+        .jobs
+        .write_core_task(&message, value, Vec::new(), revoked, owner.clone())
+        .await
+        .is_err()
+    {
+        retain(&inner, owner);
+        return Err(D::Operational("Scheduled VOD backend unsettled".into()));
+    }
+    Ok(if revoked {
+        D::Revoked(message.id)
+    } else {
+        D::Completed(message.id)
+    })
+}
+
 struct Worker {
     inner: Arc<Inner>,
     family: Family,
@@ -316,6 +479,17 @@ impl Worker {
             if candidate.message.kind.family() != family {
                 return Err(D::UnsupportedHead);
             }
+            let scheduled = match candidate.message.kind {
+                Kind::ScheduledSeriesEpisodes(account) => Some(ScheduledVodTask::Series(account)),
+                Kind::ScheduledMovieAdvanced(relation) => Some(ScheduledVodTask::Movie(relation)),
+                _ => None,
+            };
+            if let Some(task) = scheduled {
+                let jobs = inner.jobs.clone();
+                let claim_owner = owner.clone();
+                let claim = async move { jobs.claim_core_task(candidate, claim_owner).await };
+                return run_scheduled_vod(inner, task, owner, claim).await;
+            }
             match &candidate.message.kind {
                 Kind::Rehash(_) => {
                     dispatcharr_store::core_task_rehash::preflight(&inner.auth).await
@@ -323,6 +497,7 @@ impl Worker {
                 Kind::RecurringPurge(rule) => preflight_recurring_purge(&inner.store, *rule).await,
                 Kind::RecurringRebuild { rule, schedule } => inner.recording_http
                     .preflight_configured_recurring_rebuild(*rule, schedule, owner.clone()).await,
+                Kind::ScheduledSeriesEpisodes(_) | Kind::ScheduledMovieAdvanced(_) => unreachable!("separate pre-claim refresh admission"),
                 Kind::Offsets => {
                     inner
                         .recordings
@@ -385,6 +560,7 @@ impl Worker {
                                 .await.map_err(|error| D::Operational(format!("Recurring rebuild effects {error:?}")))?;
                             (report.value, report.children)
                         }
+                        Kind::ScheduledSeriesEpisodes(_) | Kind::ScheduledMovieAdvanced(_) => unreachable!("separate pre-claim refresh admission"),
                         Kind::Offsets => {
                             let report = dispatcharr_store::core_task_offsets::execute(
                                 inner.store.clone(),
@@ -525,6 +701,84 @@ mod tests {
         }
         frame["headers"]["periodic_task_name"] = Value::Null;
         assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err());
+    }
+
+    #[test]
+    fn scheduled_series_only_accepts_the_saved_age_selection() {
+        let id = Uuid::new_v4();
+        let raw = crate::protocol::encode(
+            &crate::protocol::Task::CreateBackup,
+            id,
+            Uuid::new_v4(),
+            Uuid::new_v4(),
+            "fixture@scheduled-series",
+        )
+        .unwrap();
+        let mut frame: Value = serde_json::from_slice(&raw).unwrap();
+        frame["headers"]["task"] = json!(SCHEDULED_SERIES_EPISODES);
+        frame["headers"]["argsrepr"] = json!("[27]");
+        crate::periodic_headers::put(&mut frame, "owned-episode-batch").unwrap();
+        let no_children = json!({"callbacks":null,"errbacks":null,"chain":null,"chord":null});
+        frame["body"] =
+            json!(STANDARD.encode(serde_json::to_vec(&json!([[27], {}, no_children])).unwrap()));
+        let raw = serde_json::to_vec(&frame).unwrap();
+        let parsed = parse(&raw).unwrap();
+        assert_eq!(parsed.id, id);
+        assert!(matches!(parsed.kind, Kind::ScheduledSeriesEpisodes(27)));
+        assert_eq!(
+            crate::milestone_dispatch::classify(&raw),
+            Some(Family::ScheduledSeriesEpisodes)
+        );
+
+        for body in [
+            json!([[27, []], {}, no_children]),
+            json!([[27], {"series_ids":[31]}, no_children]),
+            json!([[0], {}, no_children]),
+            json!([[true], {}, no_children]),
+        ] {
+            frame["body"] = json!(STANDARD.encode(serde_json::to_vec(&body).unwrap()));
+            assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err());
+        }
+    }
+
+    #[test]
+    fn scheduled_movie_uses_default_force_in_the_saved_scope() {
+        let id = Uuid::new_v4();
+        let raw = crate::protocol::encode(
+            &crate::protocol::Task::CreateBackup,
+            id,
+            Uuid::new_v4(),
+            Uuid::new_v4(),
+            "fixture@scheduled-movie",
+        )
+        .unwrap();
+        let mut frame: Value = serde_json::from_slice(&raw).unwrap();
+        frame["headers"]["task"] = json!(SCHEDULED_MOVIE_ADVANCED);
+        frame["headers"]["argsrepr"] = json!("[27]");
+        crate::periodic_headers::put(&mut frame, "owned-movie-recent").unwrap();
+        let children = json!({"callbacks":null,"errbacks":null,"chain":null,"chord":null});
+        let encoded = |args: Value, kwargs: Value| {
+            STANDARD.encode(serde_json::to_vec(&json!([args, kwargs, children])).unwrap())
+        };
+        frame["body"] = json!(encoded(json!([27]), json!({})));
+        let raw = serde_json::to_vec(&frame).unwrap();
+        assert_eq!(parse(&raw).unwrap().id, id);
+        assert!(matches!(
+            parse(&raw).unwrap().kind,
+            Kind::ScheduledMovieAdvanced(27)
+        ));
+        assert_eq!(
+            crate::milestone_dispatch::classify(&raw),
+            Some(Family::ScheduledMovieAdvanced)
+        );
+        for (args, kwargs) in [
+            (json!([27, true]), json!({})),
+            (json!([27]), json!({"force_refresh":true})),
+            (json!([0]), json!({})),
+        ] {
+            frame["body"] = json!(encoded(args, kwargs));
+            assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err());
+        }
     }
 
     #[test]

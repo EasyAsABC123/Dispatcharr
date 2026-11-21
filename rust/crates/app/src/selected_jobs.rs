@@ -124,6 +124,7 @@ impl SelectedJobs {
         engine: &StreamEngine,
         actual: SocketAddr,
         existing: Existing,
+        scheduled_vod: dispatcharr_store::ScheduledVod,
         restore_plugins: dispatcharr_store::PluginActions,
         #[cfg(target_os = "linux")] taskless_helper: Option<
             jobs::normal_backup::VerifiedGuardedHelper,
@@ -335,6 +336,7 @@ impl SelectedJobs {
             auth.clone(),
             recording_jobs.clone(),
             recording_http.clone(),
+            scheduled_vod,
             events.clone(),
             revoked.clone(),
         )

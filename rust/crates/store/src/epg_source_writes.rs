@@ -366,6 +366,92 @@ async fn update_remote_url(
         .await?
 }
 
+fn sd_logo_style_patch(
+    mut input: Map<String, Value>,
+    old: &Value,
+    cron: &str,
+    partial: bool,
+) -> Result<Map<String, Value>, StoreError> {
+    if !partial
+        || old["is_active"] != false
+        || old["refresh_interval"] != 24
+        || !cron.is_empty()
+        || input.len() != 1
+    {
+        return Err(unsupported());
+    }
+    let Some(Value::Object(properties)) = input.remove("custom_properties") else {
+        return Err(unsupported());
+    };
+    let style = properties.get("logo_style").and_then(Value::as_str);
+    if !matches!(style, Some("dark" | "white" | "gray" | "light")) {
+        return Err(unsupported());
+    }
+    let mut expected = old["custom_properties"]
+        .as_object()
+        .cloned()
+        .ok_or_else(unsupported)?;
+    expected.insert("logo_style".into(), json!(style));
+    if expected != properties {
+        return Err(unsupported());
+    }
+    Ok(properties)
+}
+
+async fn update_sd_logo_style(
+    session: &TaskSqlSession,
+    id: i64,
+    old: Value,
+    properties: Map<String, Value>,
+) -> Result<(), StoreError> {
+    session
+        .run(move |connection| {
+            Box::pin(async move {
+                let mut transaction = connection.begin().await?;
+                no_custom_triggers(&mut transaction).await?;
+                let row: Option<Value> = sqlx::query_scalar(
+                    "SELECT to_jsonb(e) FROM epg_epgsource e WHERE id=$1 FOR UPDATE",
+                )
+                .bind(id)
+                .fetch_optional(&mut *transaction)
+                .await?;
+                if row.ok_or_else(missing)? != old {
+                    return Err(unsupported());
+                }
+                let task_id = old["refresh_task_id"].as_i64().ok_or_else(unsupported)?;
+                let task_matches: Option<bool> = sqlx::query_scalar(
+                    "SELECT NOT p.enabled FROM django_celery_beat_periodictask p
+                       JOIN django_celery_beat_intervalschedule i ON i.id=p.interval_id
+                       WHERE p.id=$1 AND p.name=$2 AND p.task='apps.epg.tasks.refresh_epg_data'
+                         AND p.crontab_id IS NULL AND p.solar_id IS NULL AND p.clocked_id IS NULL
+                         AND i.every=24 AND i.period='hours'
+                         AND p.args=$3 AND p.kwargs=$4
+                       FOR UPDATE OF p",
+                )
+                .bind(task_id)
+                .bind(format!("epg_source-refresh-{id}"))
+                .bind("[]")
+                .bind(format!("{{\"source_id\": {id}}}"))
+                .fetch_optional(&mut *transaction)
+                .await?;
+                if task_matches != Some(true) {
+                    return Err(unsupported());
+                }
+
+                sqlx::query("UPDATE epg_epgsource SET custom_properties=$2 WHERE id=$1")
+                    .bind(id)
+                    .bind(sqlx::types::Json(properties))
+                    .execute(&mut *transaction)
+                    .await?;
+                // Original serializer save also maintains the existing disabled Beat task.
+                schedule_refresh_on_connection(&mut transaction, id, false, 24, "", "UTC").await?;
+                transaction.commit().await?;
+                Ok(())
+            })
+        })
+        .await?
+}
+
 async fn dummy_signal(
     session: &TaskSqlSession,
     auth: AuthService,
@@ -559,7 +645,13 @@ async fn change(
                 sqlx::query("SELECT to_jsonb(e) AS raw,COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week),'') AS cron FROM epg_epgsource e LEFT JOIN django_celery_beat_periodictask p ON p.id=e.refresh_task_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=p.crontab_id WHERE e.id=$1").bind(id).fetch_optional(c).await
             })).await??.ok_or_else(missing)?;
             let old:Value=row.try_get("raw")?;let old_cron:String=row.try_get("cron")?;
-            let Validated {saved,cron,url_changed}=validate(body_object(body)?,&old,&old_cron,partial)?;
+            let input = body_object(body)?;
+            if old["source_type"] == "schedules_direct" {
+                let properties = sd_logo_style_patch(input, &old, &old_cron, partial)?;
+                update_sd_logo_style(&session, id, old, properties).await?;
+                return Ok((project(&session, id, Some(old_cron)).await?, true));
+            }
+            let Validated {saved,cron,url_changed}=validate(input,&old,&old_cron,partial)?;
             let dummy=saved["source_type"]=="dummy";
             if dummy && (!old["refresh_task_id"].is_null() || auth.event_sink.is_none() || !captured_dummy_name_domain(&saved)){return Err(unsupported());}
             let zone=if dummy {"UTC".into()}else{schedule_timezone(&session,auth.clone(),&cron).await?};
@@ -615,9 +707,9 @@ pub(crate) async fn patch(
     headers: HeaderMap,
     body: Body,
 ) -> Result<Response, StoreError> {
-    let (body, url_changed) = change(auth, peer, headers, id, body, true).await?;
+    let (body, detail_allow) = change(auth, peer, headers, id, body, true).await?;
     let mut response = body.into_response();
-    if url_changed {
+    if detail_allow {
         response.headers_mut().insert(ALLOW, DETAIL_ALLOW);
     }
     Ok(response)
@@ -744,6 +836,43 @@ mod tests {
     fn old() -> Value {
         json!({"id":3,"name":"Old","source_type":"dummy","url":null,"username":null,"password":null,"is_active":false,"file_path":null,"refresh_interval":0,"priority":0,"status":"idle","last_message":null,"custom_properties":{},"updated_at":null})
     }
+    #[test]
+    fn schedules_direct_logo_style_accepts_react_options_without_changing_other_fields() {
+        let old = json!({"source_type":"schedules_direct", "is_active":false, "refresh_interval":24,
+            "custom_properties":{"logo_style":"dark","fetch_posters":false,"poster_style":"sd_recommended",
+                "sd_extra_debugging":false,"auto_apply_epg_logos":false,"existing":{"keep":7}}});
+        for style in ["dark", "white", "gray", "light"] {
+            let mut expected = old["custom_properties"].clone();
+            expected["logo_style"] = json!(style);
+            let body = json!({"custom_properties": expected});
+            let saved =
+                sd_logo_style_patch(body.as_object().unwrap().clone(), &old, "", true).unwrap();
+            assert_eq!(Value::Object(saved), expected);
+        }
+    }
+
+    #[test]
+    fn schedules_direct_logo_style_keeps_other_updates_outside_scope() {
+        let mut old = json!({"source_type":"schedules_direct", "is_active":false, "refresh_interval":24,
+            "custom_properties":{"logo_style":"dark","fetch_posters":false}});
+        let positive = json!({"custom_properties":{"logo_style":"light","fetch_posters":false}});
+        let command = positive.as_object().unwrap();
+        assert!(sd_logo_style_patch(command.clone(), &old, "", false).is_err());
+        assert!(sd_logo_style_patch(command.clone(), &old, "17 4 29 2 *", true).is_err());
+        for input in [
+            json!({"custom_properties":{"logo_style":"unknown","fetch_posters":false}}),
+            json!({"custom_properties":{"logo_style":"light"}}),
+            json!({"custom_properties":{"logo_style":"light","fetch_posters":true}}),
+            json!({"custom_properties":{"logo_style":"light","fetch_posters":false},"name":"Other"}),
+        ] {
+            assert!(
+                sd_logo_style_patch(input.as_object().unwrap().clone(), &old, "", true).is_err()
+            );
+        }
+        old["is_active"] = json!(true);
+        assert!(sd_logo_style_patch(command.clone(), &old, "", true).is_err());
+    }
+
     #[test]
     fn dummy_rename_clears_only_signal_owned_status_fields() {
         let v=validate(json!({"name":"Renamed","source_type":"dummy","status":"error","last_message":"discard"}).as_object().unwrap().clone(),&old(),"",false).unwrap();

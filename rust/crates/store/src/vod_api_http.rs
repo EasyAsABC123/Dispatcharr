@@ -200,6 +200,10 @@ impl VodReads {
         )
         .router()
     }
+    /// Selected work shares the already-bounded HTTP provider runtime.
+    pub fn scheduled_vod(&self) -> super::ScheduledVod {
+        super::ScheduledVod::new(self.auth.clone(), self.reader.shared_runtime())
+    }
     /// Provider/episode actions share this exact runtime and admission queue.
     /// App attachment and packaged browser acceptance are separate gates.
     pub fn provider_router(&self) -> Router {

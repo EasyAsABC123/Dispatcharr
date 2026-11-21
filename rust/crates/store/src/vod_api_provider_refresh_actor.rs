@@ -210,13 +210,27 @@ async fn finish_phase<T>(connection: OwnedConnection, result: Result<T, Step>) -
     connection.finish().await?;
     result
 }
+/// The saved Celery task reports these Source strings as successful results.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub(super) enum MovieResult {
+    Recent,
+    Refreshed,
+}
+impl MovieResult {
+    pub(super) fn celery_result(self) -> &'static str {
+        match self {
+            Self::Recent => "Advanced data recently fetched, skipping.",
+            Self::Refreshed => "Advanced data refreshed.",
+        }
+    }
+}
 async fn movie_steps(
     work: &ReadWork,
     auth: &crate::AuthService,
     relation_id: i64,
     force: bool,
     clock: Clock,
-) -> Result<(), Step> {
+) -> Result<MovieResult, Step> {
     let mut connection = work.connection(auth.store.pool()).await?;
     let prepared = async {
         let snapshot = sql::movie_task(work, &mut connection, relation_id)
@@ -241,7 +255,7 @@ async fn movie_steps(
     }
     .await;
     let Some((snapshot, attempt, agent)) = finish_phase(connection, prepared).await? else {
-        return Ok(());
+        return Ok(MovieResult::Recent);
     };
     // No SQL/row/scoped Auth survives the transport's header loan boundary.
     let response = match http::fetch_admitted(
@@ -271,7 +285,7 @@ async fn movie_steps(
         }
     };
     let Some(details) = movie::Details::from_owned_response(response) else {
-        return Ok(());
+        return Ok(MovieResult::Refreshed);
     };
     let mut connection = work.connection(auth.store.pool()).await?;
     let result = async {
@@ -294,7 +308,8 @@ async fn movie_steps(
         Ok(())
     }
     .await;
-    finish_phase(connection, result).await
+    finish_phase(connection, result).await?;
+    Ok(MovieResult::Refreshed)
 }
 /// Source task catches its own provider/ORM/conversion failures. Caller MUST
 /// re-read parent/relation afterwards even when this returns Ok after failure.
@@ -306,9 +321,23 @@ pub(super) async fn movie(
     force: bool,
     clock: Clock,
 ) -> Result<(), ReadError> {
+    movie_result(work, auth, relation_id, force, clock)
+        .await
+        .map(|_| ())
+}
+/// The HTTP caller still re-reads persisted state after a caught Source error.
+/// A queue owner must handle a caught error explicitly, before writing a result.
+pub(super) async fn movie_result(
+    work: &ReadWork,
+    auth: &crate::AuthService,
+    relation_id: i64,
+    force: bool,
+    clock: Clock,
+) -> Result<Option<MovieResult>, ReadError> {
     work.check()?;
     match movie_steps(work, auth, relation_id, force, clock).await {
-        Ok(()) | Err(Step::Source) => Ok(()),
+        Ok(result) => Ok(Some(result)),
+        Err(Step::Source) => Ok(None),
         Err(Step::Capacity) => Err(ReadError::Capacity),
         Err(Step::Control(error)) => Err(error),
         Err(Step::Unsupported(message)) => Err(ReadError::Unsupported(message)),
@@ -493,5 +522,22 @@ pub(super) async fn series(
         Err(Step::Capacity) => Err(ReadError::Capacity),
         Err(Step::Control(error)) => Err(error),
         Err(Step::Unsupported(message)) => Err(ReadError::Unsupported(message)),
+    }
+}
+
+#[cfg(test)]
+mod scheduled_movie_tests {
+    use super::*;
+
+    #[test]
+    fn known_celery_movie_results_keep_source_text() {
+        assert_eq!(
+            MovieResult::Recent.celery_result(),
+            "Advanced data recently fetched, skipping."
+        );
+        assert_eq!(
+            MovieResult::Refreshed.celery_result(),
+            "Advanced data refreshed."
+        );
     }
 }

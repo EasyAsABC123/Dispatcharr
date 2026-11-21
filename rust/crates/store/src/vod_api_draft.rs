@@ -33,8 +33,12 @@ pub(crate) use vod_api_http::{json_indent_for_range, json_indent_value};
 mod vod_api_logo_metadata;
 
 pub use vod_api_http::VodReads;
+
+#[path = "vod_api_scheduled_series_episodes.rs"]
+mod vod_api_scheduled_series_episodes;
 pub(crate) use vod_api_owned_read::ReadError;
 pub use vod_api_owned_read::ReadLimits as VodReadLimits;
+pub use vod_api_scheduled_series_episodes::{ScheduledVod, ScheduledVodError};
 pub(crate) use vod_api_unified_html::{
     content as source_browsable_content, cookie as source_browsable_cookie,
     escape as source_browsable_escape,

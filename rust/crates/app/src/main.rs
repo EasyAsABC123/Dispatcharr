@@ -1156,6 +1156,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
                     .local_addr()
                     .map_err(|_| "Actual Main listener address unavailable")?,
                 existing,
+                vod_reads.scheduled_vod(),
                 plugin_actions.clone(),
                 #[cfg(target_os = "linux")]
                 taskless_restore_helper,
