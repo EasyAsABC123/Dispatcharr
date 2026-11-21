@@ -26,6 +26,8 @@ const BROWSER_ACCEPT: &str = concat!(
 );
 const CHANNELS_HTML: &str = include_str!("../datasets/drf-root-html/channels.html.in");
 const M3U_HTML: &str = include_str!("../datasets/drf-root-html/m3u.html.in");
+const CORE_HTML: &str = include_str!("../datasets/drf-root-html/core.html.in");
+const CONNECT_HTML: &str = include_str!("../datasets/drf-root-html/connect.html.in");
 const ACTOR_SLOT: &str = "@@DRF_ROOT_ACTOR@@";
 const CSRF_SLOT: &str = "@@DRF_ROOT_CSRF@@";
 const HOST_SLOT: &str = "@@DRF_ROOT_HOST@@";
@@ -147,6 +149,8 @@ fn browsable_template(
     match uri.path() {
         "/api/channels/" => Some(CHANNELS_HTML),
         "/api/m3u/" => Some(M3U_HTML),
+        "/api/core/" => Some(CORE_HTML),
+        "/api/connect/" => Some(CONNECT_HTML),
         _ => None,
     }
 }
@@ -341,7 +345,7 @@ mod tests {
     }
 
     #[test]
-    fn only_two_captured_bare_admin_get_contexts_use_browsable_html() {
+    fn only_captured_bare_admin_get_contexts_use_browsable_html() {
         let mut headers = HeaderMap::new();
         headers.insert(
             header::AUTHORIZATION,
@@ -349,7 +353,12 @@ mod tests {
         );
         for accept in ["text/html", BROWSER_ACCEPT] {
             headers.insert(header::ACCEPT, HeaderValue::from_static(accept));
-            for (path, template) in [("/api/channels/", CHANNELS_HTML), ("/api/m3u/", M3U_HTML)] {
+            for (path, template) in [
+                ("/api/channels/", CHANNELS_HTML),
+                ("/api/m3u/", M3U_HTML),
+                ("/api/core/", CORE_HTML),
+                ("/api/connect/", CONNECT_HTML),
+            ] {
                 assert_eq!(
                     browsable_template(&Method::GET, &path.parse().unwrap(), &headers),
                     Some(template)
@@ -360,7 +369,15 @@ mod tests {
                     );
                 }
             }
-            for path in ["/api/channels/.json", "/api/m3u/?format=api", "/api/epg/"] {
+            for path in [
+                "/api/channels/.json",
+                "/api/m3u/?format=api",
+                "/api/core/.json",
+                "/api/core/?format=api",
+                "/api/connect/.json",
+                "/api/connect/?format=api",
+                "/api/epg/",
+            ] {
                 assert!(
                     browsable_template(&Method::GET, &path.parse().unwrap(), &headers).is_none()
                 );
@@ -381,7 +398,12 @@ mod tests {
     async fn browsable_success_has_exact_static_bytes_fresh_csrf_and_escaped_slots() {
         let username = "owned-api-root-browser-admin";
         let mask_location = "\"csrfToken\": \"";
-        for (template, bytes, links) in [(CHANNELS_HTML, 11055, 14), (M3U_HTML, 10271, 4)] {
+        for (template, bytes, links) in [
+            (CHANNELS_HTML, 11055, 14),
+            (M3U_HTML, 10271, 4),
+            (CORE_HTML, 10743, 10),
+            (CONNECT_HTML, 10457, 6),
+        ] {
             assert_eq!(template.matches(ACTOR_SLOT).count(), 1);
             assert_eq!(template.matches(CSRF_SLOT).count(), 1);
             assert_eq!(template.matches(HOST_SLOT).count(), links);
@@ -443,6 +465,30 @@ mod tests {
                 links
             );
             assert!(!escaped.contains("http://https://"));
+        }
+    }
+
+    #[test]
+    fn core_and_connect_keep_the_captured_json_link_order() {
+        let origin = "http://localhost";
+        for (prefix, expected) in [
+            (
+                "/api/core/",
+                r#"{"useragents":"http://localhost/api/core/useragents/","streamprofiles":"http://localhost/api/core/streamprofiles/","outputprofiles":"http://localhost/api/core/outputprofiles/","settings":"http://localhost/api/core/settings/","notifications":"http://localhost/api/core/notifications/"}"#,
+            ),
+            (
+                "/api/connect/",
+                r#"{"integrations":"http://localhost/api/connect/integrations/","subscriptions":"http://localhost/api/connect/subscriptions/","logs":"http://localhost/api/connect/logs/"}"#,
+            ),
+        ] {
+            let directory = DIRECTORIES
+                .iter()
+                .find(|directory| directory.prefix == prefix)
+                .unwrap();
+            assert_eq!(
+                serde_json::to_string(&directory_links(directory, origin, false)).unwrap(),
+                expected
+            );
         }
     }
 

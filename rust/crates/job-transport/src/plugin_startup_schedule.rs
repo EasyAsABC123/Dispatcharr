@@ -162,15 +162,7 @@ impl Scheduler {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<(), Error> {
-        if self.inner.closed.load(Ordering::Acquire) || self.inner.started.load(Ordering::Acquire) {
-            return Err(Error::Closed);
-        }
-        let slot = self
-            .inner
-            .slots
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| Error::Capacity)?;
+        let slot = self.inner.lifecycle.reserve(Operation::Initialize)?;
         let inner = self.inner.clone();
         tokio::spawn(async move {
             let _owner = Owner {

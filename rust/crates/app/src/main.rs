@@ -239,6 +239,17 @@ async fn combined_stats_legacy_alias(request: axum::extract::Request) -> Respons
 async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let admin_location = admin_ingress::configured_location()?;
     let selected_jobs_enabled = selected_jobs::enabled()?;
+    // A Selected startup owns real SQL and Redis preparation before the HTTP
+    // server exists. Register once before those operations, then await them
+    // normally. Never use the signal to drop their in-progress futures.
+    let mut selected_stop = if selected_jobs_enabled {
+        Some(LatchedShutdown::register()?)
+    } else {
+        None
+    };
+    if let Some(signal) = &mut selected_stop {
+        let _ = signal.pending().await;
+    }
     let cache_url = redis_config::url()?;
     #[cfg(target_os = "linux")]
     let taskless_restore_helper =
@@ -1367,11 +1378,17 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             return Err(error.into());
         }
     }
-    if let Some(selected) = &selected_jobs {
-        selected.start_after_serving()?;
-    }
-    if let Some(owner) = &manual_backup {
-        owner.start().map_err(|_| "Manual backup intake failed")?;
+    let preready_stop = match &mut selected_stop {
+        Some(signal) => signal.pending().await,
+        None => false,
+    };
+    if !preready_stop {
+        if let Some(selected) = &selected_jobs {
+            selected.start_after_serving()?;
+        }
+        if let Some(owner) = &manual_backup {
+            owner.start().map_err(|_| "Manual backup intake failed")?;
+        }
     }
     let manual_backup_enabled = manual_backup.is_some();
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
@@ -1414,39 +1431,28 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         live_statistics,
         combined_statistics,
     };
+    if preready_stop {
+        drop(listener);
+        drop(app);
+        stop_service_admission(&services);
+        return tokio::time::timeout(shutdown_timeout, shutdown_components(services))
+            .await
+            .map_err(|_| {
+                "Selected preready shutdown deadline expired; physical service drain is unverified"
+                    .to_owned()
+            })?;
+    }
     let signal_services = services.clone();
     let server = axum::serve(
         listener,
         app.into_make_service_with_connect_info::<SocketAddr>(),
     )
     .with_graceful_shutdown(async move {
-        shutdown_signal().await;
-        signal_services.stream_files.stop_stream_file_admission();
-        signal_services.stream_regex.close_admission();
-        signal_services.plugin_actions.stop_admission();
-        if let Some(repack) = &signal_services.core_repack {
-            repack.close_admission();
+        match selected_stop {
+            Some(mut signal) => signal.wait().await,
+            None => shutdown_signal().await,
         }
-        if let Some(owner) = &signal_services.core_compact {
-            owner.close_admission();
-        }
-        if let Some(owner) = &signal_services.manual_backup {
-            owner.stop_admission();
-        }
-        if let Some(m3u) = &signal_services.original_m3u_refresh_all {
-            m3u.close_admission();
-        }
-        if let Some(playback) = &signal_services.ordinary_recording_playback {
-            playback.close_admission();
-        }
-        if let Some(selected) = &signal_services.selected_jobs {
-            selected.stop_producers();
-        } else {
-            if let Some(tvg) = &signal_services.epg_tvg {
-                tvg.stop_channel_publications();
-            }
-            signal_services.engine.shutdown();
-        }
+        stop_service_admission(&signal_services);
         let cleanup = tokio::spawn(shutdown_components(signal_services));
         let _ = shutdown_started.send(cleanup);
         // Return immediately: Axum stops accepting while cleanup runs.
@@ -1520,6 +1526,89 @@ where
         // or closed notice therefore means no published cleanup owner exists.
         Err(tokio::sync::oneshot::error::TryRecvError::Empty)
         | Err(tokio::sync::oneshot::error::TryRecvError::Closed) => fallback.await,
+    }
+}
+
+fn stop_service_admission(services: &ShutdownServices) {
+    services.stream_files.stop_stream_file_admission();
+    services.stream_regex.close_admission();
+    services.plugin_actions.stop_admission();
+    if let Some(repack) = &services.core_repack {
+        repack.close_admission();
+    }
+    if let Some(owner) = &services.core_compact {
+        owner.close_admission();
+    }
+    if let Some(owner) = &services.manual_backup {
+        owner.stop_admission();
+    }
+    if let Some(m3u) = &services.original_m3u_refresh_all {
+        m3u.close_admission();
+    }
+    if let Some(playback) = &services.ordinary_recording_playback {
+        playback.close_admission();
+    }
+    if let Some(selected) = &services.selected_jobs {
+        selected.stop_producers();
+    } else {
+        if let Some(tvg) = &services.epg_tvg {
+            tvg.stop_channel_publications();
+        }
+        services.engine.shutdown();
+    }
+}
+
+// One already registered signal future crosses Selected preparation and the
+// runtime handoff. A checkpoint may poll it once but cannot replace or drop
+// the pending receiver. The normal HTTP shutdown uses the same instance.
+struct LatchedShutdown {
+    signal: std::pin::Pin<Box<dyn std::future::Future<Output = ()> + Send>>,
+    observed: bool,
+}
+
+impl LatchedShutdown {
+    fn from_signal(signal: impl std::future::Future<Output = ()> + Send + 'static) -> Self {
+        Self {
+            signal: Box::pin(signal),
+            observed: false,
+        }
+    }
+
+    #[cfg(unix)]
+    fn register() -> Result<Self, String> {
+        use tokio::signal::unix::{signal, SignalKind};
+        let mut terminate = signal(SignalKind::terminate())
+            .map_err(|_| "Selected startup SIGTERM handler installation failed")?;
+        let mut interrupt = signal(SignalKind::interrupt())
+            .map_err(|_| "Selected startup SIGINT handler installation failed")?;
+        Ok(Self::from_signal(async move {
+            tokio::select! {
+                _ = terminate.recv() => {},
+                _ = interrupt.recv() => {},
+            }
+        }))
+    }
+
+    #[cfg(not(unix))]
+    fn register() -> Result<Self, String> {
+        Ok(Self::from_signal(async {
+            let _ = tokio::signal::ctrl_c().await;
+        }))
+    }
+
+    async fn wait(&mut self) {
+        if !self.observed {
+            self.signal.as_mut().await;
+            self.observed = true;
+        }
+    }
+
+    async fn pending(&mut self) -> bool {
+        tokio::select! {
+            biased;
+            _ = self.wait() => true,
+            _ = std::future::ready(()) => false,
+        }
     }
 }
 
@@ -2010,11 +2099,33 @@ mod version_startup_tests {
 
 #[cfg(test)]
 mod shutdown_owner_tests {
-    use super::finish_shutdown_after_server;
+    use super::{finish_shutdown_after_server, LatchedShutdown};
     use std::sync::{
         atomic::{AtomicUsize, Ordering},
         Arc,
     };
+
+    #[tokio::test]
+    async fn selected_signal_keeps_the_receiver_across_the_startup_checkpoint() {
+        let (request, received) = tokio::sync::oneshot::channel();
+        let mut signal = LatchedShutdown::from_signal(async move { received.await.unwrap() });
+        assert!(!signal.pending().await);
+        request.send(()).unwrap();
+        assert!(signal.pending().await);
+        // The startup path does not re-poll a completed receive future.
+        signal.wait().await;
+        assert!(signal.pending().await);
+    }
+
+    #[tokio::test]
+    async fn selected_runtime_wait_inherits_the_preready_receiver() {
+        let (request, received) = tokio::sync::oneshot::channel();
+        let mut signal = LatchedShutdown::from_signal(async move { received.await.unwrap() });
+        assert!(!signal.pending().await);
+        request.send(()).unwrap();
+        signal.wait().await;
+        assert!(signal.pending().await);
+    }
 
     // Force the same race as actual Main: Axum's graceful callback has sent
     // the real cleanup JoinHandle and returned, so BOTH outer select branches

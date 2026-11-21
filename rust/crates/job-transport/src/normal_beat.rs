@@ -13,10 +13,7 @@ use serde_json::{json, Value};
 use sqlx::{Connection, PgConnection, PgPool, Row};
 use std::{
     collections::{BTreeMap, HashSet},
-    sync::{
-        atomic::{AtomicBool, Ordering},
-        Arc,
-    },
+    sync::{Arc, Mutex as StateMutex},
     time::Duration,
 };
 use tokio::sync::{watch, Mutex, OwnedSemaphorePermit, Semaphore};
@@ -86,13 +83,81 @@ struct Inner {
     jobs: Jobs,
     identity: ProducerIdentitySource,
     cache: Mutex<Cache>,
+    lifecycle: Lifecycle,
+    maximum_sleep: Duration,
+}
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum Admission {
+    Prepared,
+    Started,
+    Closed,
+}
+enum Operation {
+    Initialize,
+    Tick,
+}
+struct Lifecycle {
+    admission: StateMutex<Admission>,
     slots: Arc<Semaphore>,
-    closed: AtomicBool,
-    started: AtomicBool,
     stop: watch::Sender<bool>,
     done: watch::Sender<bool>,
     status: watch::Sender<Status>,
-    maximum_sleep: Duration,
+}
+impl Lifecycle {
+    fn new() -> Self {
+        Self {
+            admission: StateMutex::new(Admission::Prepared),
+            slots: Arc::new(Semaphore::new(1)),
+            stop: watch::channel(false).0,
+            done: watch::channel(true).0,
+            status: watch::channel(Status::Prepared).0,
+        }
+    }
+
+    fn reserve(&self, operation: Operation) -> Result<OwnedSemaphorePermit, Error> {
+        let admission = self.admission.lock().map_err(|_| Error::Supervisor)?;
+        if *admission == Admission::Closed
+            || (*admission == Admission::Started && matches!(operation, Operation::Initialize))
+        {
+            return Err(Error::Closed);
+        }
+        self.slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| Error::Capacity)
+    }
+
+    fn start(&self) -> Result<(), Error> {
+        let mut admission = self.admission.lock().map_err(|_| Error::Supervisor)?;
+        if *admission != Admission::Prepared {
+            return Err(Error::Closed);
+        }
+        // Do not start the timer while setup or a manually admitted tick
+        // owns the SQL/broker slot.
+        let _slot = self
+            .slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| Error::Capacity)?;
+        *admission = Admission::Started;
+        self.done.send_replace(false);
+        self.status.send_replace(Status::Running);
+        Ok(())
+    }
+
+    fn close(&self) {
+        let mut admission = self
+            .admission
+            .lock()
+            .unwrap_or_else(|error| error.into_inner());
+        *admission = Admission::Closed;
+        self.stop.send_replace(true);
+    }
+
+    fn finish(&self, status: Status) {
+        self.status.send_replace(status);
+        self.done.send_replace(true);
+    }
 }
 struct Owner {
     _caller: Arc<dyn Send + Sync>,
@@ -124,12 +189,7 @@ impl Scheduler {
                 jobs,
                 identity,
                 cache: Mutex::new(Cache::default()),
-                slots: Arc::new(Semaphore::new(1)),
-                closed: AtomicBool::new(false),
-                started: AtomicBool::new(false),
-                stop: watch::channel(false).0,
-                done: watch::channel(true).0,
-                status: watch::channel(Status::Prepared).0,
+                lifecycle: Lifecycle::new(),
                 maximum_sleep,
             }),
         })
@@ -138,15 +198,7 @@ impl Scheduler {
     /// defaults before timer start. Existing disabled rows stay disabled except
     /// the explicitly disabled legacy stats row, which is always disabled.
     pub async fn initialize(&self, caller: Arc<dyn Send + Sync>) -> Result<Setup, Error> {
-        if self.inner.closed.load(Ordering::Acquire) || self.inner.started.load(Ordering::Acquire) {
-            return Err(Error::Closed);
-        }
-        let slot = self
-            .inner
-            .slots
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| Error::Capacity)?;
+        let slot = self.inner.lifecycle.reserve(Operation::Initialize)?;
         let owner = Arc::new(Owner {
             _caller: caller,
             _slot: slot,
@@ -166,57 +218,40 @@ impl Scheduler {
         self.status()
     }
     pub fn status(&self) -> Status {
-        self.inner.status.borrow().clone()
+        self.inner.lifecycle.status.borrow().clone()
     }
     pub fn start(&self, caller: Arc<dyn Send + Sync>) -> Result<(), Error> {
-        if self.inner.closed.load(Ordering::Acquire)
-            || self.inner.started.swap(true, Ordering::AcqRel)
-        {
-            return Err(Error::Closed);
-        }
-        self.inner.done.send_replace(false);
-        self.inner.status.send_replace(Status::Running);
+        self.inner.lifecycle.start()?;
         let this = self.clone();
-        let mut stop = self.inner.stop.subscribe();
+        let mut stop = self.inner.lifecycle.stop.subscribe();
         tokio::spawn(async move {
             while !*stop.borrow() {
                 match this.tick_once(caller.clone()).await {
                     Ok(tick) => {
                         let delay = tick.delay_seconds;
-                        this.inner.status.send_replace(Status::Observed(tick));
+                        this.inner
+                            .lifecycle
+                            .status
+                            .send_replace(Status::Observed(tick));
                         if delay > 0.0 {
                             let duration =
                                 Duration::from_secs_f64(delay).min(this.inner.maximum_sleep);
                             tokio::select! {_=tokio::time::sleep(duration)=>{},_=stop.changed()=>{}}
                         }
                     }
+                    Err(Error::Closed) => break,
                     Err(error) => {
-                        this.inner
-                            .status
-                            .send_replace(Status::Fault(Arc::new(error)));
-                        this.inner.done.send_replace(true);
+                        this.inner.lifecycle.finish(Status::Fault(Arc::new(error)));
                         return;
                     }
                 }
             }
-            this.inner.status.send_replace(Status::Stopped);
-            this.inner.done.send_replace(true);
+            this.inner.lifecycle.finish(Status::Stopped);
         });
         Ok(())
     }
     pub async fn tick_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Tick, Error> {
-        if self.inner.closed.load(Ordering::Acquire) {
-            return Err(Error::Closed);
-        }
-        let slot = self
-            .inner
-            .slots
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| Error::Capacity)?;
-        if self.inner.closed.load(Ordering::Acquire) {
-            return Err(Error::Closed);
-        }
+        let slot = self.inner.lifecycle.reserve(Operation::Tick)?;
         let owner = Arc::new(Owner {
             _caller: caller,
             _slot: slot,
@@ -234,13 +269,12 @@ impl Scheduler {
         .map_err(|_| Error::Supervisor)?
     }
     pub fn stop_admission(&self) {
-        self.inner.closed.store(true, Ordering::Release);
-        self.inner.stop.send_replace(true);
+        self.inner.lifecycle.close();
     }
     pub async fn shutdown(&self, budget: Duration) -> Result<(), Error> {
         self.stop_admission();
         let deadline = tokio::time::Instant::now() + budget;
-        let mut done = self.inner.done.subscribe();
+        let mut done = self.inner.lifecycle.done.subscribe();
         tokio::time::timeout_at(deadline, async {
             while !*done.borrow_and_update() {
                 done.changed().await.map_err(|_| Error::Drain)?;
@@ -249,10 +283,11 @@ impl Scheduler {
         })
         .await
         .map_err(|_| Error::Drain)??;
-        let slot = tokio::time::timeout_at(deadline, self.inner.slots.clone().acquire_owned())
-            .await
-            .map_err(|_| Error::Drain)?
-            .map_err(|_| Error::Drain)?;
+        let slot =
+            tokio::time::timeout_at(deadline, self.inner.lifecycle.slots.clone().acquire_owned())
+                .await
+                .map_err(|_| Error::Drain)?
+                .map_err(|_| Error::Drain)?;
         if self.inner.cache.lock().await.dirty.is_empty() {
             drop(slot);
             return Ok(());
@@ -1044,6 +1079,56 @@ fn cron_names(raw: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn scheduler_lifecycle_keeps_dormant_stop_closed() {
+        let lifecycle = Lifecycle::new();
+        lifecycle.close();
+        assert!(matches!(*lifecycle.status.borrow(), Status::Prepared));
+        assert!(*lifecycle.done.borrow());
+        assert!(*lifecycle.stop.borrow());
+        assert!(matches!(lifecycle.start(), Err(Error::Closed)));
+        assert!(matches!(
+            lifecycle.reserve(Operation::Initialize),
+            Err(Error::Closed)
+        ));
+        assert!(matches!(
+            lifecycle.reserve(Operation::Tick),
+            Err(Error::Closed)
+        ));
+    }
+
+    #[test]
+    fn scheduler_lifecycle_owns_setup_before_start_and_timer_before_drain() {
+        let lifecycle = Lifecycle::new();
+        let setup = lifecycle.reserve(Operation::Initialize).unwrap();
+        assert!(matches!(lifecycle.start(), Err(Error::Capacity)));
+        assert!(matches!(*lifecycle.status.borrow(), Status::Prepared));
+        assert!(*lifecycle.done.borrow());
+        drop(setup);
+        lifecycle.start().unwrap();
+        assert!(!*lifecycle.done.borrow());
+        assert!(matches!(*lifecycle.status.borrow(), Status::Running));
+        assert!(matches!(lifecycle.start(), Err(Error::Closed)));
+        assert!(matches!(
+            lifecycle.reserve(Operation::Initialize),
+            Err(Error::Closed)
+        ));
+        let active_tick = lifecycle.reserve(Operation::Tick).unwrap();
+        lifecycle.close();
+        assert!(*lifecycle.stop.borrow());
+        assert!(!*lifecycle.done.borrow());
+        assert!(lifecycle.slots.try_acquire().is_err());
+        assert!(matches!(
+            lifecycle.reserve(Operation::Tick),
+            Err(Error::Closed)
+        ));
+        drop(active_tick);
+        lifecycle.finish(Status::Stopped);
+        assert!(*lifecycle.done.borrow());
+        assert!(matches!(*lifecycle.status.borrow(), Status::Stopped));
+        assert!(lifecycle.slots.try_acquire().is_ok());
+    }
     fn model(task: &str) -> Entry {
         let now = DateTime::parse_from_rfc3339("2026-01-05T12:00:00+00:00")
             .unwrap()
