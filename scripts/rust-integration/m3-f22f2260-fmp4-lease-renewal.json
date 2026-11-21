@@ -1,0 +1,76 @@
+{
+  "candidate_manifest_sha256": "cfb230c65d39097237416f90d576c88c6c0dcd63b50f12304e23d8914dc744eb",
+  "candidate_revision": "f22f2260dae5ae67293c785a54e558ea24103918",
+  "cases": [
+    {
+      "backend": "Original",
+      "complete_cleanup": true,
+      "owned_generation_renewed": true,
+      "renewed_keys": [
+        "profile_owner",
+        "remux_owner",
+        "profile_state",
+        "remux_state",
+        "remux_init"
+      ],
+      "same_origin": true,
+      "strict_av_decodes": 2
+    },
+    {
+      "backend": "Native",
+      "complete_cleanup": true,
+      "owned_generation_renewed": true,
+      "renewed_keys": [
+        "profile_owner",
+        "remux_owner"
+      ],
+      "same_origin": true,
+      "strict_av_decodes": 2
+    }
+  ],
+  "credit": "Original Dispatcharr and dependency authors retain full credit.",
+  "full_M3_passed": false,
+  "observations": [
+    {
+      "backend": "Original",
+      "decode_frames": {
+        "late": 75,
+        "lead": 74
+      },
+      "first_sample_ms": 122,
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "later_sample_ms": 62247,
+      "owned_cleanup": true,
+      "renewed_key_types": [
+        "profile_owner",
+        "remux_owner",
+        "profile_state",
+        "remux_state",
+        "remux_init"
+      ],
+      "upstreams": 1
+    },
+    {
+      "backend": "Native",
+      "decode_frames": {
+        "late": 75,
+        "lead": 74
+      },
+      "first_sample_ms": 126,
+      "image": "sha256:4dcadb57bdca7aec9f5fa110ce91664ac41a5a4ac283d0c80abf3436fb9ca48b",
+      "later_sample_ms": 62256,
+      "owned_cleanup": true,
+      "renewed_key_types": [
+        "profile_owner",
+        "remux_owner"
+      ],
+      "upstreams": 1
+    }
+  ],
+  "owner_actual_exit": 0,
+  "performance_measured": false,
+  "physical_actual_exit": 0,
+  "proof_sha256": "e967638c58fc35284894a37e982d806bb301f13ceff39801bc7d1bc61d394443",
+  "receipt_sha256": "236f4f99064d1568de1896e30b5dda5d002c2c7a8ec6994c7dfc51960c665f92",
+  "reducer_actual_exit": 0
+}
