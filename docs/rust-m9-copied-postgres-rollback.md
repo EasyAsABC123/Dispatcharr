@@ -19,6 +19,8 @@ fingerprint failure for each image. The integrated M9 release gate remains open.
 
 [Exact rollback receipts](../scripts/rust-integration/milestone-batch111/copied-postgres-rollback.json)
 
+The exact d608 replay repeated the same rollback workflow and separately measured the Rust copy's startup writes. [d608ff75 copied-data rehearsal](rust-m9-d608ff75-copied-rollback.md)
+
 ## C74 same-seed control and copied cutover
 
 One quiescent Original donor supplied an identical transactional PostgreSQL

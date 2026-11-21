@@ -1,0 +1,250 @@
+{
+  "build_manifest_sha256": "c5fd0f753eea11c1af9263ca758250b783e404f55a1ff571dd541a6eb562f8d5",
+  "candidate_image_id": "sha256:88006c536b8c7427643f87cfced8e603073bb2231daf59efa3be709063d12f56",
+  "candidate_revision": "d608ff758c4a937961439f4389d01040f560122d",
+  "credits": "The original Dispatcharr authors and dependency contributors retain full credit.",
+  "formal_required_nodes": 127,
+  "fresh_expanded_nodes": [
+    "package/auth-hash",
+    "package/guide-grid-packaged",
+    "package/packaged-cached-provider-info",
+    "package/packaged-provider-actions",
+    "package/provider-modal-browser",
+    "package/shipped-createsuperuser22",
+    "package/shipped-safe17",
+    "package/strict-typed154"
+  ],
+  "groups": {
+    "createsuperuser": {
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/shipped-createsuperuser22": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "b879182941863937671e5f3ff9fe42806cb9a24aeee405964d4edf20543ba5a9",
+          "cleanup_verified": true,
+          "entrypoint": "production-CLI",
+          "metrics": {
+            "cases": 22
+          },
+          "proofs": {
+            "actual_native_scope_sha256": "33a0629b1191df2663ab0c202dec17224f2ddc904770e87c25b65d32bf49ad8c"
+          },
+          "qualification_receipt_sha256": "fabf5f03f854806b81288a2b56afc08f7d807447e1b6b4cfe70f1f3afe905a22"
+        },
+        "package/strict-typed154": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "7b10d22f80998398ef11dde2850a33ac55365eb907fe84ee848bbca5acfdf46e",
+          "cleanup_verified": true,
+          "entrypoint": "offline-comparison",
+          "metrics": {
+            "actual_creation_clock_slots_per_backend": 10,
+            "cases": 22,
+            "strict_typed_comparisons": 154
+          },
+          "proofs": {
+            "actual_native_scope_sha256": "33a0629b1191df2663ab0c202dec17224f2ddc904770e87c25b65d32bf49ad8c"
+          },
+          "qualification_receipt_sha256": "9373e687105e9412bbef8398c0913bc056e5071fdaf165141979e5672674cfbb"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "f62da89166dffeaabce144ca3f4eea75b4917d55836fbd5b828ca7a37e6d27f7",
+      "sealed_binding_sha256": "f3b92024db343f6f9b8e5558e1e9e913f3d3d639480e7843936a59d64cfd6958",
+      "stage_seal_sha256": "7f639056ce1681ac87b81c4df3778613d16abb61531fda4f3f04f540b124ff91",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/shipped-createsuperuser22",
+        "package/strict-typed154"
+      ],
+      "terminal_node_statuses": {
+        "package/shipped-createsuperuser22": "passed",
+        "package/strict-typed154": "passed"
+      }
+    },
+    "guide-grid": {
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/guide-grid-packaged": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "763ddfcd003af8ed4d49ff1c0babaf4f3d21bb2faf5bdc73953a00d9b1ccd831",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "required_wire_cases": 43
+          },
+          "proofs": {
+            "exact_native_wire_sha256": "c2c6b887fc77611d222bcafd9e52389ac43c794ebe482a193b726e4f88fc14ed",
+            "exact_original_wire_sha256": "df3766cebf06d6894eebfe4fbfbf6f2080ef4439a5a009fe65bbeed83961e796",
+            "integration_sha256": "a47245e5e71e02c610176180a2e0fb176321dd75015b1dc4b98e6a60fa3eb566"
+          },
+          "qualification_receipt_sha256": "b61b445745059bc6ad62c572d5dfaafed588c0e63e0d7ba22d399f943461d4e9"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "2670cd28c2342e64c773c4af90fc681a7408b80d61a7af82971d8862baee0ef3",
+      "sealed_binding_sha256": "1e20e23c53450b251789abab82cb7db54ccdbce04009c8562dc9e1be486be5b1",
+      "stage_seal_sha256": "4f129535e31e4f9c8c981d5db6a82809b7fc738c9a5d24caabf2abcf2c65bb0b",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/guide-grid-packaged"
+      ],
+      "terminal_node_statuses": {
+        "package/guide-grid-packaged": "passed"
+      }
+    },
+    "operator-and-auth": {
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/auth-hash": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "c3d6a70577931423014588ba1bc3e50f2a1a22b97b6723b886bce0390a846149",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "checks": 34,
+            "credential_variants": 8,
+            "ordinary_decoded_frames": 75,
+            "owned_credential_rows_retired": 8
+          },
+          "proofs": {
+            "integration_sha256": "b69ea91eb55bd9f7abc5b82dc630f98b73194016fb7ed97318cefb9da9cda797"
+          },
+          "qualification_receipt_sha256": "ae6fc912df8f13d10ec30558d3a3dbbb76c59383007b2e0f64ae3ba7d4ebdf7d"
+        },
+        "package/shipped-safe17": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "9a01d574a151a28430ac2ead060cbffb16c45dc292270915f3980da584920837",
+          "cleanup_verified": true,
+          "entrypoint": "production-CLI",
+          "metrics": {
+            "cases": 17
+          },
+          "proofs": {
+            "proof_sha256": "2122eb3804fce46763c98a69a7ebea98f29216ee1fae4021cd0573ea0dcd5cf8",
+            "retained_Source17_sha256": "680db805e72ac605030de02dea7ae4470cd5b3cb7857a21e1409df44d1091fca"
+          },
+          "qualification_receipt_sha256": "30f2545e1a71cb86ae49a03852ff0197ca1a1c4dfb0625d9198e52f5c57c0d8f"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "4e675231c4ce65d4e5939339cbcd59e5c8dbd6dd4421a63b0c225e1e1c64a31a",
+      "sealed_binding_sha256": "fd227dd441a055ea7b9c463bb70b7dde8a1373a569363de028940b74686640de",
+      "stage_seal_sha256": "38a135458c83c862be67ed2ed6ad0fd721cbf526af5c389f6139ce70b13399e6",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/auth-hash",
+        "package/shipped-safe17"
+      ],
+      "terminal_node_statuses": {
+        "package/auth-hash": "passed",
+        "package/shipped-safe17": "passed"
+      }
+    },
+    "provider": {
+      "cleanup_uncertain": false,
+      "fresh_passed": {
+        "package/packaged-cached-provider-info": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "b6badc32d93c49a76a052010ee017c18c0ca32df321e5fdedfbb90683d149312",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "Native_burst_requests": 10,
+            "Original_burst_requests": 10,
+            "actual_provider_attempts": 0,
+            "ordinary_HTTP_cases": 592,
+            "restored_SQL_tables": 18,
+            "specialized_HTTP_cases": 90
+          },
+          "proofs": {},
+          "qualification_receipt_sha256": "929da2918ba04ae980e5356af464e2e56dfa78492f8e54b566d01df623f05975"
+        },
+        "package/packaged-provider-actions": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "990ac83bf58feff94d7bf01f4b5a05aeeb4630c7f0915326b004c1e3453cb0df",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "fresh_same_state_references": 25,
+            "ordinary_HTTP_cases": 592,
+            "restored_SQL_tables": 18,
+            "specialized_HTTP_cases": 150
+          },
+          "proofs": {},
+          "qualification_receipt_sha256": "ccbfe9adb4b8b384359ae8e6bc7e5979bc2ba7ff7f063d2181a83c7b3389e80f"
+        },
+        "package/provider-modal-browser": {
+          "actual_phase_exit": {
+            "cleanup": 0,
+            "evaluation": 0,
+            "execution": 0
+          },
+          "cleanup_receipt_sha256": "382b86e4974d4b6ab839f4c4393af515985aa9c1feabe7a0c3589b07e539c9b9",
+          "cleanup_verified": true,
+          "entrypoint": "production-Main",
+          "metrics": {
+            "artwork_accesses": 12,
+            "exact_static_assets": 112,
+            "normal_modal_cards_per_arm": 2,
+            "paired_browser_arms": 2,
+            "restoration_verified": true
+          },
+          "proofs": {},
+          "qualification_receipt_sha256": "5dc6505736e50b8fcae4816ec95c85cd98cb58b58a7fb951fbb80c5725dbbf3d"
+        }
+      },
+      "literal_coordinator_exit": 2,
+      "raw_report_sha256": "353cdc72df35ecd2a1512acbf2dc90836a58820bb70e3595504834038c23eeb4",
+      "sealed_binding_sha256": "89a5213798faa58a50f2c79f3074aec560735fd4307affbb8bd675af14923fd3",
+      "stage_seal_sha256": "7454a090f6a580c91cfbc3f0df80059a39db108471142e12b648328bfa13765f",
+      "status": "passed",
+      "targeted_nodes": [
+        "package/packaged-cached-provider-info",
+        "package/packaged-provider-actions",
+        "package/provider-modal-browser"
+      ],
+      "terminal_node_statuses": {
+        "package/packaged-cached-provider-info": "passed",
+        "package/packaged-provider-actions": "passed",
+        "package/provider-modal-browser": "passed"
+      }
+    }
+  },
+  "performance_measured": false,
+  "prior_public_evidence_sha256": "b4972293fc1965f923874a166eb2dafae913151b955fa88bc32ea58cf827e10b",
+  "prior_same_image_verified_required_nodes": [
+    "package/baseline-all",
+    "package/clean-install",
+    "package/live-react-stats"
+  ],
+  "release_accepted": false,
+  "total_distinct_verified_required_nodes": 11
+}
