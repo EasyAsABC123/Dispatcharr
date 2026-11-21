@@ -109,21 +109,58 @@ fn string<'a>(properties: &'a Value, key: &str) -> Result<&'a str, StoreError> {
         _ => Err(unsupported()),
     }
 }
-fn duration(properties: &Value) -> Result<i64, StoreError> {
-    let Some(value) = properties.get("program_duration") else {
-        return Ok(180);
-    };
-    let value = match value {
-        Value::Bool(v) => i64::from(*v),
-        Value::Number(v) if !v.to_string().contains(['.', 'e', 'E']) => {
-            v.as_i64().ok_or_else(unsupported)?
+#[derive(Clone, Copy)]
+enum ProgrammeDuration {
+    Whole(i64),
+    Fractional(f64),
+}
+
+impl ProgrammeDuration {
+    fn minutes(self) -> f64 {
+        match self {
+            Self::Whole(minutes) => minutes as f64,
+            Self::Fractional(minutes) => minutes,
         }
+    }
+
+    fn offset(self, programmes: u32) -> Result<Duration, StoreError> {
+        let micros = match self {
+            Self::Whole(minutes) => minutes
+                .checked_mul(i64::from(programmes))
+                .and_then(|value| value.checked_mul(60_000_000))
+                .ok_or_else(capacity)?,
+            Self::Fractional(minutes) => {
+                // Original uses timedelta(minutes=index * minutes) for offsets
+                // and rounds to microseconds only after that multiplication.
+                let offset = minutes * f64::from(programmes);
+                let whole = offset.trunc() as i64 * 60_000_000;
+                let remainder = (offset.fract() * 60_000_000.0).round_ties_even() as i64;
+                whole + remainder
+            }
+        };
+        Ok(Duration::microseconds(micros))
+    }
+}
+
+fn duration(properties: &Value) -> Result<ProgrammeDuration, StoreError> {
+    let whole = match properties.get("program_duration") {
+        None => 180,
+        Some(Value::Bool(value)) => i64::from(*value),
+        Some(Value::Number(value)) if value.is_f64() => {
+            // The ordinary custom guide editor bounds minutes to 1–1440.
+            let minutes = value.as_f64().ok_or_else(unsupported)?;
+            if !(1.0..=1440.0).contains(&minutes) {
+                return Err(unsupported());
+            }
+            return Ok(ProgrammeDuration::Fractional(minutes));
+        }
+        Some(Value::Number(value)) => value.as_i64().ok_or_else(unsupported)?,
         _ => return Err(unsupported()),
     };
-    if value <= 0 || value.checked_mul(60_000_000).is_none() {
+    if whole <= 0 || whole.checked_mul(60_000_000).is_none() {
         return Err(unsupported());
     }
-    Ok(value)
+    Ok(ProgrammeDuration::Whole(whole))
 }
 fn source_timezone(properties: &Value) -> Result<Tz, StoreError> {
     let Some(value) = properties.get("timezone").filter(|value| !value.is_null()) else {
@@ -421,7 +458,7 @@ pub async fn prepare(
         .transpose()?
         .filter(|v| !v.is_empty());
     let duration = duration(properties)?;
-    let runtime = Duration::try_minutes(duration).ok_or_else(capacity)?;
+    let runtime = duration.offset(1)?;
     if let Some(kickoff) = kickoff {
         let date = dated.unwrap_or(window.clock.date_naive());
         let output = string(properties, "output_timezone")?;
@@ -539,7 +576,7 @@ pub async fn prepare(
         source_timezone,
         window,
         duration,
-        per_day: ((24.0 / (duration as f64 / 60.0)).trunc() as u32).max(1),
+        per_day: ((24.0 / (duration.minutes() / 60.0)).trunc() as u32).max(1),
         day: 0,
         index: 0,
     };
@@ -566,7 +603,7 @@ pub struct NoTime {
     include_date: bool,
     source_timezone: Tz,
     window: Window,
-    duration: i64,
+    duration: ProgrammeDuration,
     per_day: u32,
     day: u32,
     index: u32,
@@ -642,17 +679,11 @@ impl Iterator for NoTime {
                 if start >= end {
                     return Ok(None);
                 }
-                let offset = self
-                    .duration
-                    .checked_mul(i64::from(index))
-                    .ok_or_else(capacity)?;
                 let start = start
-                    .checked_add_signed(Duration::microseconds(
-                        offset.checked_mul(60_000_000).ok_or_else(capacity)?,
-                    ))
+                    .checked_add_signed(self.duration.offset(index)?)
                     .ok_or_else(capacity)?;
                 let stop = start
-                    .checked_add_signed(Duration::microseconds(self.duration * 60_000_000))
+                    .checked_add_signed(self.duration.offset(1)?)
                     .ok_or_else(capacity)?;
                 if start >= end {
                     return Ok(None);
@@ -695,6 +726,37 @@ impl Iterator for Programmes {
 mod tests {
     use super::*;
     #[test]
+    fn source_fractional_minutes_keep_timedelta_microsecond_rounding_and_editor_bounds() {
+        for (minutes, single, third) in [
+            (91.5, 5_490_000_000, 16_470_000_000),
+            (1.000000025, 60_000_002, 180_000_004),
+            (1.000000075, 60_000_004, 180_000_013),
+            (1440.0, 86_400_000_000, 259_200_000_000),
+        ] {
+            let duration = duration(&json!({"program_duration":minutes})).unwrap();
+            assert_eq!(duration.offset(1).unwrap().num_microseconds(), Some(single));
+            assert_eq!(duration.offset(3).unwrap().num_microseconds(), Some(third));
+        }
+        for invalid in [
+            json!(0.5),
+            json!(1440.5),
+            json!("91.5"),
+            json!(0),
+            json!(false),
+        ] {
+            assert!(duration(&json!({"program_duration":invalid})).is_err());
+        }
+        // Decimal admission does not change the previous integer allowance.
+        assert_eq!(
+            duration(&json!({"program_duration":1441}))
+                .unwrap()
+                .offset(1)
+                .unwrap(),
+            Duration::minutes(1441)
+        );
+    }
+
+    #[test]
     fn source_no_time_clamps_start_but_keeps_nondivisor_gap_and_unclipped_stop() {
         let start: DateTime<Utc> = "2026-01-02T00:00:00Z".parse().unwrap();
         let lookback: DateTime<Utc> = "2026-01-02T00:17:19.123456Z".parse().unwrap();
@@ -714,7 +776,7 @@ mod tests {
                 lookback: Some(lookback),
                 cutoff: Some(lookback + Duration::hours(8)),
             },
-            duration: 181,
+            duration: ProgrammeDuration::Whole(181),
             per_day: 7,
             day: 0,
             index: 0,
@@ -764,7 +826,7 @@ mod tests {
                     lookback: None,
                     cutoff: None,
                 },
-                duration: 180,
+                duration: ProgrammeDuration::Whole(180),
                 per_day: 8,
                 day: 0,
                 index: 0,
