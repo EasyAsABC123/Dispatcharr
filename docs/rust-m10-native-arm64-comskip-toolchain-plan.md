@@ -1,0 +1,9 @@
+# ARM64 Comskip replacement build inputs
+
+The native ARM64 validation job read the exact public Original donor's 426 installed packages from a disposable read-only container. The Job verified the pinned image's config and all 17 layers. A private Apt simulation using three signed Ubuntu Resolute indexes from `20261103T010601Z` resolved 51 new packages totaling 68,944,110 archive bytes. The plan preserves all existing installed package versions, including the six donor runtime packages, and proposes zero removals. The guest and controller exited 0 and the exact container retired. [Hosted result](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44865421521/job/136727880625) · [Version and archive hash manifest](../scripts/rust-integration/m10-native-arm64-comskip-toolchain-plan.json)
+
+The selected inputs include GCC 15's package set, Binutils 2.46, Autoconf 2.72, Automake 1.18, make, libtool and pkg-config. Eight directly identified header and adjacent tool archives were independently downloaded and checked against signed index hashes and package controls. This includes the donor-matched glibc `2.43-2ubuntu2.4` from the historical snapshot and the five FFmpeg development packages at `7:8.0.1-3ubuntu2`. [Ubuntu archive signatures](https://documentation.ubuntu.com/security/software-integrity/archive-verification/) · [Ubuntu Snapshot Service](https://snapshot.ubuntu.com/) · [Native Original donor inventory](rust-m10-native-arm64-comskip-donor-inventory.md)
+
+The hosted job only simulated installation. A fresh target-ABI compile and native generated-media check still need to run. The separate historical FFmpeg builder OCI access and production distribution closure remain open.
+
+The original Dispatcharr authors, Erik Kaashoek and Comskip contributors, and FFmpeg, Ubuntu and dependency authors retain full credit. [Attribution](../ATTRIBUTION.md)
