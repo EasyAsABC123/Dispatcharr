@@ -1,10 +1,45 @@
-# Remaining M0 baseline work
+# M0 baseline evidence and remaining work
 
-Original Dispatcharr authors retain all application/algorithm credit and licenses.
-M0 remains open for Source characterization and evidence accounting. It does not
-require completing the later Native milestones first.
+Original Dispatcharr authors retain all application and algorithm credit and
+licenses. The bounded Original scenario collection has published references.
+Formal M0 remains open for the executable contract register and current
+workspace verification.
 
-The [full unchanged Original framework suite](../scripts/rust-baseline/verified-full-baseline.json) passes3,362 tests. Earlier48/526-test runs have narrower, separate scopes. The [closure map](rust-m0-closure-map.md) lists exact remaining characterization work: fixed worker-inclusive resource repetitions, a settings-derived prolonged outage and explicit measurement-field accounting. Valid Source budget failures remain negative observations; they do not require repairing Original or completing all798 Native operations.
+The unchanged pinned Original framework suite passed **3,362 tests** with
+controller and cleanup exits of 0. The earlier 48- and 526-test suites cover
+separate historical subsets. [Full Original test receipt](../scripts/rust-baseline/verified-full-baseline.json)
+
+The three worker-inclusive repetitions are valid observations. Each exceeds
+the unchanged process, FD and socket growth limits. The prolonged-outage
+capture has a valid retained observation and final controller exit 1 from
+report serialization. Source2 records the missing measurement categories in
+its bounded scope. Public-data replay of all three reducers and 13, 14 and 31
+checks respectively passed independently without launching a workload. Keep
+absent or unexercised quantities null, including whole-stream dropped packets.
+[Resource repetitions](../scripts/rust-baseline/concurrent-resource/reference/README.md) ·
+[Prolonged outage](../scripts/rust-baseline/prolonged-outage/README.md) ·
+[Source2 metrics](../scripts/rust-baseline/supplemental-metrics/source2/README.md) ·
+[Scenario budgets](rust-m0-current-reconciliation.md)
+
+The generated register contains 797 partial Original HTTP assignments across
+798 work items, 250 typed partial non-HTTP assignments, and 322 unresolved
+method declarations. The remaining plain DRF recording HLS GET is shadowed
+for app-issued decimal IDs in the existing resolver witness. That witness
+observed resolution only. It adds no HTTP result or wider identifier proof.
+[Register](rust-contract-register.md) ·
+[Recording HLS precedence](rust-m0-recording-hls-router-reachability.md)
+
+Rust 1.90.0 remains pinned. The historical full SDK checks preserve their
+exact source and ignored-test counts. The current d426 package builds
+establish release compilation and packaged behavior in their tested scopes.
+The exact current workspace still needs passing host and Rust-image
+formatting, strict Clippy and locked tests. Run the existing verification
+workflow on the reviewed application snapshot or its verified formatting
+successor. [Workspace verification](rust-current-workspace-verification.md) ·
+[Commands](rust-local-verification.md)
+
+The scenario table and dated observations below retain their original
+checkpoint scope.
 
 The [live benchmark](../scripts/rust-live-perf/image47/README.md) now includes
 nine Source measurement phases at1/10/100 viewers:333 authenticated readers and
@@ -19,7 +54,7 @@ These support the baseline; they are not full worker-graph measurements.
 | Ten distinct channels and configured capacity | Warmed ten-channel Source accounting passes with limit0 explicitly unlimited. Separate configured capacity1 and10 references now verify shared reuse, refusal, release and later admission. They remain Source-only functional gates. |
 | Slow plus fast readers | Qualified same-container accounting now records before/active/local-close/70s-retention states with the existing observer. It remains Source functional evidence, with no isolated resource acceptance. |
 | Stall, failure, stream change and recovery | Stall/failover now have qualified observer/state/cleanup attachments. Interior warning and healthy recovery remain separate. Actual admin POST stream-change and same-container sustained15/60/70 references now pass, separately scoped without CPU/memory acceptance. |
-| Import/EPG refresh during playback | One real bounded Source workload now verifies2 imports/6 tasks/44 durable checks during continuous playback. The [fixed three-run resource reference](../scripts/rust-baseline/concurrent-resource/reference/README.md) now characterizes the four-role cost with valid coverage and preserved Source growth-budget failures. Prolonged-outage and missing measurement-field accounting remain separate. |
+| Import/EPG refresh during playback | One real bounded Source workload now verifies2 imports/6 tasks/44 durable checks during continuous playback. The [fixed three-run resource reference](../scripts/rust-baseline/concurrent-resource/reference/README.md) now characterizes the four-role cost with valid coverage and preserved Source growth-budget failures. The later prolonged-outage and Source2 references are linked above. |
 | Sustained playback followed by disconnect | Reconcile same-run post-close retention/footprint evidence, or add that accounting to the declared sustained workload. An unrelated short cleanup run cannot substitute. |
 
 The [public observer controller](../scripts/rust-baseline/idle-churn/README.md)'s short contract test passed18 offline controls, ten real observer
@@ -72,4 +107,4 @@ New Source-only references cover [capacity1](rust-m0-finite-capacity.md), [capac
 
 [The bounded concurrent Source workflow](rust-m0-concurrent-bounded.md) now passes one real15/120s playback/import run: two imports, six actual task executions,44 durable checks, and physically settled bounded collector pipes. Four initial service censuses were complete with zero denials/races; the inherited merger omission is explicitly unqualified for resource use. The10s observer smoke occurs before workload only. It is not a worker-cost benchmark or M0 completion.
 
-[The three fixed worker-inclusive resource runs](../scripts/rust-baseline/concurrent-resource/reference/README.md) now complete the declared15s warm/120s active imports5/60/70s retention/post-idle schedule without retries or budget changes. All774 resource observations and342 censuses are published;335 eligible censuses and all45 repeated interval-quality checks pass. Each run completes six tasks/44 durable checks and29,936,556 active bytes, with bounded AV decodes, unchanged default database and independent empty cleanup. Process/FD/socket growth is1/144/18 against0/16/16 in every run. Source budget acceptance remains false; these are valid bounded Original observations without a causal leak or Native gain claim. Portable numerical reconstruction/13 corruption controls pass. Remaining M0 work is the settings-derived prolonged outage and the explicitly missing per-PIDRSS/PSS/Redis/media/discontinuity fields, followed by final scope reconciliation.
+[The three fixed worker-inclusive resource runs](../scripts/rust-baseline/concurrent-resource/reference/README.md) now complete the declared15s warm/120s active imports5/60/70s retention/post-idle schedule without retries or budget changes. All774 resource observations and342 censuses are published;335 eligible censuses and all45 repeated interval-quality checks pass. Each run completes six tasks/44 durable checks and29,936,556 active bytes, with bounded AV decodes, unchanged default database and independent empty cleanup. Process/FD/socket growth is1/144/18 against0/16/16 in every run. Source budget acceptance remains false; these are valid bounded Original observations without a causal leak or Native gain claim. Portable numerical reconstruction/13 corruption controls pass. The later outage and Source2 references complete their bounded Source observations. Formal M0 and comparative performance remain open.

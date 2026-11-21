@@ -1,4 +1,10 @@
-# M0 closure map after the proposed three resource repetitions
+# Historical M0 closure map
+
+The three repetitions, prolonged-outage capture and bounded Source2 metric
+attachment have since been published. For their actual exits, scope and
+remaining acceptance work, see the [current M0 baseline](rust-m0-baseline-progress.md)
+and [scenario reconciliation](rust-m0-current-reconciliation.md).
+The historical proposal below records the earlier review and its inputs.
 
 Read-only audit of committed208598ee1872732cbe8a0d846efa5a40b59ae1d2.
 Original Dispatcharr/dependency authors retain credit. No test, build, fixture,

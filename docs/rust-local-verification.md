@@ -64,8 +64,8 @@ checks, a buffer microbenchmark, and the paired Python/Rust helper benchmark.
 Observed verified component checks include the core Compose runner and synthetic
 load-harness selftest; subsequent code changes require a fresh run and evidence
 source-hash match. Consult `verification.json` and the test log for the exact
-workspace test counts and source version covered by each run. The latest
-[verification summary](rust-verification-evidence.json) records 20 passing Rust
+workspace test counts and source version covered by each run. The historical
+[bootstrap verification summary](rust-verification-evidence.json) records 20 passing Rust
 tests (ten core, ten runtime), 20 Python tool tests, and 1,806 differential cases
 in Compose, with successful cleanup. The runtime includes a four-worker stress
 test in which 100 readers each receive all 1,000 published sequences.

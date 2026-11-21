@@ -1,0 +1,57 @@
+{
+  "added_formal_nodes": [
+    "package/complete-refresh-original"
+  ],
+  "build_manifest_sha256": "6cee9711930a84e8d3a23f2073dfbf049934f5b40c945aa2b9987d2181c671d7",
+  "candidate_revision": "d426d322b27a197aaaaa057ef73dfb53c516c452",
+  "corrected_coordinator_exit": 2,
+  "corrected_pair_reducer_exit": 1,
+  "credit": "Original Dispatcharr, Django, Celery and dependency authors retain full credit.",
+  "earlier_same_candidate_receipt_sha256": "b1ee0a4b7fccad2e52e7afdce6790b829dabd90b87e9bb8425e5b0da361ee39c",
+  "earlier_wrapper_failure": {
+    "before_compose": true,
+    "literal_exit": 1,
+    "stderr_sha256": "d4f5d4a2d9d4d4b8bf3ba87d23f70a6825700d2b38f5e18a24baf808a22554af"
+  },
+  "formal_required_nodes": 127,
+  "full_M6_accepted": false,
+  "native_failure": {
+    "cause_confirmed": false,
+    "failure_sha256": "dd26dc0ac5ab21e06ee97e1315986239226badc3559bd73f5e52de4071f5f5fb",
+    "first_import_emitted_refresh_event": true,
+    "first_import_status": 202,
+    "settled_child": "apps.epg.tasks.build_programme_index_task",
+    "source_age_at_dispatch_seconds": 19.833370208740234,
+    "terminal_results_observed": 2,
+    "unsettled_child_at_deadline": "apps.channels.tasks.evaluate_series_rules"
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false,
+  "receiving_commit": "a9477b7370c1e4c7459613bf71d50501cd45522d",
+  "report_sha256": "11a06b22a7bf1d993bb713cf67b72a26a8dcf26e51920d3b8171529afedcb559",
+  "scoped_receipts": [
+    {
+      "independent_exact_cleanup": true,
+      "node": "package/complete-refresh-original",
+      "phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      }
+    },
+    {
+      "independent_exact_cleanup": true,
+      "node": "package/complete-refresh",
+      "phase_exits": {
+        "cleanup": 0,
+        "evaluation": 1,
+        "execution": 1
+      }
+    }
+  ],
+  "source_actual_checks": 40,
+  "source_evaluator_sha256": "0ab333bcd41595e7382702f1f65267b46abd34b8b93d7d96d4b841d5c4282aac",
+  "source_imports": 2,
+  "source_successful_tasks": 6,
+  "verified_same_candidate_union": 15
+}
