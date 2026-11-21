@@ -1819,3 +1819,15 @@ passed 11 of 127 required nodes on one image. The
 [six-minute d608 soak prefix](rust-m9-d608-six-minute-soak-prefix.md)
 retired all owned roles after ten viewers and a completed refresh, and failed
 the idle working-memory limit.
+
+The [stock Django recording route resolver](rust-m0-recording-hls-router-reachability.md)
+selected the earlier numeric recording HLS route in all twelve generated cases.
+The declaration register retains the later alias and its canonical-path
+reachability annotation.
+
+The [stock XC provider deactivation](rust-m6-original-xc-deactivation.md)
+verified normal default-Main comparison authority for the one-field React
+request, including the schedule change, preserved VOD links, and no new jobs.
+The [stock admin restart](rust-m8-original-admin-settings-restart.md)
+retained the saved value and the same signed administrator session across an
+owned web-generation restart. Both Rust runtime comparisons are pending.

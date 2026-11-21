@@ -27,10 +27,36 @@ integration receipt SHA-256 is
 `1168539f3f05403cdabb35c2313bd53280820dc87cfb230eeaa814680ed237f6`.
 Those observations apply to the explicit route.
 
-The router declaration still needs its own documented legitimate request
-that resolves to it and an observed method and role response. The
-register continues to show 797 of 798 HTTP declarations with partial
-Original coverage and leaves this GET unmapped.
+A fresh stock Compose fixture executed Django's resolver with three
+decimal recording IDs across four path shapes. All **12 resolutions**
+selected the explicit registration and captured the integer ID and entire
+segment path. The fixture checked a playlist, a segment, a nested segment,
+and a slash-ended playlist path. The plain DRF pattern also matched the
+slash-ended examples, while the format-suffix pattern matched all 12
+examples. The stock resolver selected the explicit registration first
+every time. The three declarations use the same GET action and
+authenticator definition. The witness ran zero HTTP requests, view
+callbacks, and SQL statements. The controller and independent reduction
+exited 0, and both owned container and process generations retired.
+[Fresh resolver receipt](../scripts/rust-integration/m0-recording-hls-canonical-precedence.json)
+
+The recording worker builds playback URLs from the generated integer
+recording ID, and the playlist uses the same ID in its segment URLs. The
+retained runtime snapshot places the explicit, plain DRF, and format-suffix
+registrations at ordinals 42, 131, and 132. The plain DRF registration is
+shadowed for application-issued decimal recording playback URLs. The
+wider router identifier grammar remains outside this verified scope.
+[Original recording URL producer](https://github.com/Dispatcharr/Dispatcharr/blob/1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430/apps/channels/tasks.py#L2196-L2204)
+
+The four historical framework cases attached to the format-suffix
+registration by static request sites use the ordinary numeric playlist
+and segment paths. Their request observations remain valid, with the
+explicit route supplying the dispatch for those paths. The register
+retains all 798 declaration identities and 797 partial Source assignments,
+with the plain DRF GET still unmapped. This resolver result qualifies its
+shadowing disposition for the issued URL shape. Native already has a
+single playback route for that shape. The evidence leaves whole M0
+acceptance open.
 [Contract register](rust-contract-register.md)
 
 The original Dispatcharr and Django authors retain full credit.
