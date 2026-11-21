@@ -158,7 +158,7 @@ async fn claim_options(
     group_options(auth, peer, headers, uri, GroupOptions::Claim, None).await
 }
 
-fn group_response(body: Json<Value>, allow: Option<&'static str>) -> Response {
+fn group_response(body: impl IntoResponse, allow: Option<&'static str>) -> Response {
     match allow {
         Some(allow) => ([(header::ALLOW, allow)], body).into_response(),
         None => body.into_response(),
@@ -325,8 +325,14 @@ async fn retrieve(
     if user.user_level < 1 {
         return Err(StoreError::PermissionDenied);
     }
-    let body = Json(detail(&auth, &user, id(raw)?).await?);
-    Ok(get_response(body, method, DETAIL_ALLOW))
+    let group = detail(&auth, &user, id(raw)?).await;
+    match group {
+        Ok(value) => Ok(get_response(Json(value), method, DETAIL_ALLOW)),
+        Err(error @ StoreError::StatusBody(404, _)) if method == Method::GET => {
+            Ok(group_response(error, Some(DETAIL_ALLOW)))
+        }
+        Err(error) => Err(error),
+    }
 }
 fn name(body: Map<String, Value>, partial: bool) -> Result<Option<String>, StoreError> {
     match body.get("name") {
@@ -350,7 +356,11 @@ async fn create(
     let id = tx.insert(name).await?;
     tx.mark_custom(id).await?;
     tx.commit().await?;
-    Ok((StatusCode::CREATED, Json(detail(&auth, &user, id).await?)).into_response())
+    let body = Json(detail(&auth, &user, id).await?);
+    Ok(group_response(
+        (StatusCode::CREATED, body),
+        Some(COLLECTION_ALLOW),
+    ))
 }
 async fn update(
     auth: AuthService,
@@ -403,15 +413,16 @@ async fn put_group(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     body: Body,
-) -> Result<Json<Value>, StoreError> {
-    update(auth, raw, peer, headers, body, false).await
+) -> Result<Response, StoreError> {
+    let body = update(auth, raw, peer, headers, body, false).await?;
+    Ok(group_response(body, Some(DETAIL_ALLOW)))
 }
 async fn delete(
     State(auth): State<AuthService>,
     Path(raw): Path<String>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
-) -> Result<StatusCode, StoreError> {
+) -> Result<Response, StoreError> {
     auth.account_user(peer, headers, true).await?;
     let id = id(raw)?;
     let mut tx = GroupWrite::begin(auth.store.pool()).await?;
@@ -428,7 +439,7 @@ async fn delete(
     }
     tx.remove(id).await?;
     tx.commit().await?;
-    Ok(StatusCode::NO_CONTENT)
+    Ok(group_response(StatusCode::NO_CONTENT, Some(DETAIL_ALLOW)))
 }
 async fn claim(
     State(auth): State<AuthService>,
@@ -450,7 +461,7 @@ async fn unclaim(
     Path(raw): Path<String>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers, true).await?;
     let id = id(raw)?;
     let mut tx = GroupWrite::begin(auth.store.pool()).await?;
@@ -462,7 +473,8 @@ async fn unclaim(
     }
     tx.remove_custom_marker(id).await?;
     tx.commit().await?;
-    Ok(Json(detail(&auth, &user, id).await?))
+    let body = Json(detail(&auth, &user, id).await?);
+    Ok(group_response(body, Some(CLAIM_ALLOW)))
 }
 async fn cleanup(
     State(auth): State<AuthService>,
@@ -619,5 +631,32 @@ mod tests {
                 br#"{"id":9}"#
             );
         }
+    }
+
+    #[tokio::test]
+    async fn group_allow_preserves_created_empty_and_missing_responses() {
+        let response = group_response(
+            (StatusCode::CREATED, Json(json!({"id":9}))),
+            Some(COLLECTION_ALLOW),
+        );
+        assert_eq!(response.status(), StatusCode::CREATED);
+        assert_eq!(response.headers()[header::ALLOW], COLLECTION_ALLOW);
+        assert_eq!(
+            to_bytes(response.into_body(), 32).await.unwrap().as_ref(),
+            br#"{"id":9}"#
+        );
+
+        let response = group_response(StatusCode::NO_CONTENT, Some(DETAIL_ALLOW));
+        assert_eq!(response.status(), StatusCode::NO_CONTENT);
+        assert_eq!(response.headers()[header::ALLOW], DETAIL_ALLOW);
+        assert!(to_bytes(response.into_body(), 1).await.unwrap().is_empty());
+
+        let response = group_response(missing(), Some(DETAIL_ALLOW));
+        assert_eq!(response.status(), StatusCode::NOT_FOUND);
+        assert_eq!(response.headers()[header::ALLOW], DETAIL_ALLOW);
+        assert_eq!(
+            to_bytes(response.into_body(), 128).await.unwrap().as_ref(),
+            br#"{"detail":"No ChannelGroup matches the given query."}"#
+        );
     }
 }

@@ -262,7 +262,10 @@ impl AuthService {
         let providers = crate::provider_reads::router(self.clone());
         let connect = crate::connect_reads::router(self.clone());
         Router::new()
-            .route("/api/accounts/token/", post(login))
+            .route(
+                "/api/accounts/token/",
+                post(login).layer(axum::middleware::map_response(direct_token_allow)),
+            )
             .route("/api/accounts/auth/login/", any(route_compat::login))
             .route("/api/accounts/token/refresh/", any(route_compat::refresh))
             .route("/api/accounts/auth/logout/", any(route_compat::logout))
@@ -757,6 +760,16 @@ pub(crate) fn request(peer: SocketAddr, headers: HeaderMap) -> PlaybackRequest {
     }
 }
 
+async fn direct_token_allow(mut response: Response) -> Response {
+    if response.status() == StatusCode::OK {
+        response.headers_mut().insert(
+            axum::http::header::ALLOW,
+            axum::http::HeaderValue::from_static("POST, OPTIONS"),
+        );
+    }
+    response
+}
+
 async fn login(
     State(service): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -968,6 +981,31 @@ impl dispatcharr_contracts::UpdateEventSink for RetainedAuthSink {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn direct_token_allow_updates_only_successful_response_headers() {
+        let payload = json!({"fixture":"body"});
+        for status in [StatusCode::OK, StatusCode::BAD_REQUEST] {
+            let response =
+                direct_token_allow((status, Json(payload.clone())).into_response()).await;
+            assert_eq!(response.status(), status);
+            assert_eq!(
+                response.headers()[axum::http::header::CONTENT_TYPE],
+                "application/json"
+            );
+            assert_eq!(
+                response
+                    .headers()
+                    .get(axum::http::header::ALLOW)
+                    .map(|value| value.to_str().unwrap()),
+                (status == StatusCode::OK).then_some("POST, OPTIONS"),
+            );
+            let body = axum::body::to_bytes(response.into_body(), 128)
+                .await
+                .unwrap();
+            assert_eq!(serde_json::from_slice::<Value>(&body).unwrap(), payload);
+        }
+    }
 
     fn service() -> AuthService {
         let pool = sqlx::postgres::PgPoolOptions::new()
