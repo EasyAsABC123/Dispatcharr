@@ -1,0 +1,192 @@
+diff --git a/rust/Dockerfile.app b/rust/Dockerfile.app
+--- a/rust/Dockerfile.app
++++ b/rust/Dockerfile.app
+@@ -11,15 +11,26 @@
+ RUN npm run build
+ 
+ FROM rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f AS taskless-restore-helper
++ARG TARGETARCH
+ COPY rust/runtime/taskless-guard/ /taskless-inputs/
+-RUN cd /taskless-inputs/debian-generators && sha256sum --strict -c SHA256SUMS \
++RUN case "$TARGETARCH/$(dpkg --print-architecture)" in \
++    amd64/amd64) cd /taskless-inputs/debian-generators && sha256sum --strict -c SHA256SUMS \
+     && set -- \
+     && { command -v m4 >/dev/null || set -- "$@" m4_1.4.19-3_amd64.deb; } \
+     && { command -v bison >/dev/null || set -- "$@" bison_3.8.2+dfsg-1+b1_amd64.deb; } \
+     && { command -v flex >/dev/null || set -- "$@" flex_2.6.4-8.2_amd64.deb; } \
+     && { [ "$#" -eq 0 ] || DEBIAN_FRONTEND=noninteractive dpkg -i "$@"; } \
+-    && m4 --version && bison --version && flex --version
+-RUN cd /taskless-inputs/debian-builder && sha256sum --strict -c SHA256SUMS \
++    && m4 --version && bison --version && flex --version ;; \
++    arm64/arm64) cd /taskless-inputs/debian-arm64 && sha256sum --strict -c SHA256SUMS \
++      && [ "$(dpkg-query -W -f='${db:Status-Status} ${Architecture} ${Version}' m4:arm64)" = 'installed arm64 1.4.19-3' ] \
++      && [ "$(dpkg-deb -W -f='${Package} ${Architecture} ${Version}' bison_3.8.2+dfsg-1+b1_arm64.deb)" = 'bison arm64 2:3.8.2+dfsg-1+b1' ] \
++      && [ "$(dpkg-deb -W -f='${Package} ${Architecture} ${Version}' flex_2.6.4-8.2_arm64.deb)" = 'flex arm64 2.6.4-8.2' ] \
++      && DEBIAN_FRONTEND=noninteractive dpkg -i bison_3.8.2+dfsg-1+b1_arm64.deb flex_2.6.4-8.2_arm64.deb \
++      && m4 --version && bison --version && flex --version ;; \
++    *) echo "guarded helper platform does not match pinned builder" >&2; exit 1 ;; \
++    esac
++RUN case "$TARGETARCH/$(dpkg --print-architecture)" in \
++    amd64/amd64) cd /taskless-inputs/debian-builder && sha256sum --strict -c SHA256SUMS \
+     && { command -v bison || echo 'builder dependency bison unavailable'; } \
+     && { command -v flex || echo 'builder dependency flex unavailable'; } \
+     && { pkg-config --modversion libzstd || echo 'builder dependency libzstd unavailable'; } \
+@@ -29,11 +40,19 @@
+          '') dpkg -i liblz4-1_1.9.4-1_amd64.deb liblz4-dev_1.9.4-1_amd64.deb ;; \
+          *) echo 'pinned LZ4 runtime package does not match builder' >&2; exit 1 ;; \
+        esac \
+-    && pkg-config --modversion liblz4
++    && pkg-config --modversion liblz4 ;; \
++    arm64/arm64) cd /taskless-inputs/debian-arm64 && sha256sum --strict -c SHA256SUMS \
++      && [ "$(dpkg-query -W -f='${db:Status-Status} ${Architecture} ${Version}' liblz4-1:arm64)" = 'installed arm64 1.9.4-1' ] \
++      && [ "$(dpkg-deb -W -f='${Package} ${Architecture} ${Version}' liblz4-dev_1.9.4-1_arm64.deb)" = 'liblz4-dev arm64 1.9.4-1' ] \
++      && pkg-config --modversion libzstd \
++      && dpkg -i liblz4-dev_1.9.4-1_arm64.deb \
++      && [ "$(pkg-config --modversion liblz4)" = '1.9.4' ] ;; \
++    *) echo "guarded helper platform does not match pinned builder" >&2; exit 1 ;; \
++    esac
+ RUN python3 /taskless-inputs/build_helper.py \
+     --tarball /taskless-inputs/postgresql-17.11.tar.bz2 \
+     --checksum /taskless-inputs/postgresql-17.11.tar.bz2.sha256 \
+-    --patch /taskless-inputs/postgresql-helper.patch --output /taskless-out
++    --patch /taskless-inputs/postgresql-helper.patch --output /taskless-out --target-arch "$TARGETARCH"
+ 
+ FROM rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f AS build
+ COPY --from=taskless-restore-helper /taskless-out/taskless-helper.digest /tmp/taskless-helper.digest
+diff --git a/rust/runtime/taskless-guard/build_helper.py b/rust/runtime/taskless-guard/build_helper.py
+--- a/rust/runtime/taskless-guard/build_helper.py
++++ b/rust/runtime/taskless-guard/build_helper.py
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""Build the exact guarded helper in the pinned Debian Bookworm AMD64 builder."""
++"""Build the exact guarded helper in the pinned Debian Bookworm builder."""
+ import argparse
+ import hashlib
+ import json
+@@ -18,7 +18,11 @@
+ NOTICE = Path("/usr/share/doc/dispatcharr/pg-guarded-restore")
+ BUILDER = "rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f"
+ SYSTEM = frozenset(("libc.so.6", "libm.so.6", "libpthread.so.0", "libdl.so.2",
+-                    "librt.so.1", "libresolv.so.2", "ld-linux-x86-64.so.2"))
++                    "librt.so.1", "libresolv.so.2"))
++TARGETS = {
++    "amd64": ({"x86_64", "amd64"}, "Advanced Micro Devices X86-64", "/lib64/ld-linux-x86-64.so.2"),
++    "arm64": ({"aarch64", "arm64"}, "AArch64", "/lib/ld-linux-aarch64.so.1"),
++}
+ 
+ 
+ def sha(path):
+@@ -43,7 +47,7 @@
+     destination.chmod(mode)
+ 
+ 
+-def owner_notice(library):
++def owner_notice(library, arch="amd64"):
+     """Bind installed Debian package metadata to the actual resolved file."""
+     resolved = str(library.resolve(strict=True))
+     paths = {str(library), resolved}
+@@ -63,19 +67,39 @@
+         owners = []
+         for line in result.stdout.splitlines():
+             owner, separator, path = line.partition(": ")
+-            if separator and path == candidate and re.fullmatch(r"[a-z0-9+.-]+(?::amd64)?", owner):
++            if separator and path == candidate and re.fullmatch(r"[a-z0-9+.-]+(?::" + re.escape(arch) + r")?", owner):
+                 owners.append(owner)
+         if len(owners) != 1:
+             raise ValueError(f"expected one Debian package owner for {library.name}")
+         owner = owners[0]
+         installed = run("dpkg-query", "-W", "-f=${db:Status-Status}\t${Architecture}\t${Version}", owner,
+                         timeout=10).split("\t")
+-        assert len(installed) == 3 and installed[0] == "installed" and installed[1] == "amd64"
++        assert len(installed) == 3 and installed[0] == "installed" and installed[1] == arch
+         assert re.fullmatch(r"[a-zA-Z0-9+.:~_-]+", installed[2])
+         notice = Path("/usr/share/doc") / owner.partition(":")[0] / "copyright"
+         assert notice.is_file()
+         return owner, installed[2], candidate, notice
+     raise ValueError(f"no installed Debian package and copyright for {library.name}")
++
++
++def verify_builder(arch):
++    machines, _, _ = TARGETS[arch]
++    if platform.machine() not in machines or run("dpkg", "--print-architecture", timeout=10).strip() != arch:
++        raise ValueError("guarded helper requires the selected native Debian architecture")
++
++
++def verify_arm64_elf(elf, interpreter=None):
++    header = run("readelf", "-hW", str(elf))
++    _, wanted, _ = TARGETS["arm64"]
++    if re.findall(r"(?m)^\s*Class:\s*([^\n]+)", header) != ["ELF64"]:
++        raise ValueError("expected ELF64 for ARM64 guarded helper inputs")
++    if re.findall(r"(?m)^\s*Machine:\s*([^\n]+)", header) != [wanted]:
++        raise ValueError("expected AArch64 ELF machine")
++    if interpreter is not None:
++        program = run("readelf", "-lW", str(elf))
++        actual = re.findall(r"\[Requesting program interpreter: ([^\]]+)\]", program)
++        if actual != [interpreter]:
++            raise ValueError("unexpected guarded helper ARM64 interpreter")
+ 
+ 
+ def verify_linker_path(elf):
+@@ -124,7 +148,10 @@
+ 
+ 
+ def build(args, copyright_bytes):
+-    assert platform.machine() in {"x86_64", "amd64"}
++    arch = args.target_arch
++    verify_builder(arch)
++    interpreter = TARGETS[arch][2]
++    system = SYSTEM | {Path(interpreter).name}
+     assert 'VERSION_CODENAME=bookworm' in Path("/etc/os-release").read_text().splitlines()
+     args.output.mkdir(mode=0o755)
+     out_prefix = args.output / PREFIX.relative_to("/")
+@@ -153,6 +180,8 @@
+                            stdout=log, stderr=subprocess.STDOUT)
+         staged = work / "install" / PREFIX.relative_to("/")
+         elf = staged / "bin/pg_restore"
++        if arch == "arm64":
++            verify_arm64_elf(elf, interpreter)
+         built_version = run(str(elf), "--version",
+                             env={**env, "LD_LIBRARY_PATH": str(staged / "lib")}).strip()
+         assert built_version == "pg_restore (PostgreSQL) 17.11"
+@@ -176,7 +205,9 @@
+                 continue
+             else:
+                 raise ValueError("unrecognized helper link record")
+-            if soname in SYSTEM:
++            if arch == "arm64":
++                verify_arm64_elf(source)
++            if soname in system:
+                 glibc[soname] = sha(source)
+                 continue
+             assert re.fullmatch(r"lib[A-Za-z0-9+._-]+\.so(?:\.[0-9]+)*", soname)
+@@ -185,7 +216,7 @@
+             if soname.startswith("libpq.so."):
+                 assert source.resolve().is_relative_to(staged / "lib")
+                 continue
+-            owner, version, package_path, notice = owner_notice(source)
++            owner, version, package_path, notice = owner_notice(source, arch)
+             package = owner.partition(":")[0]
+             target = out_notice / (package + "-COPYRIGHT")
+             copy_artifact(notice, target, 0o444)
+@@ -193,10 +224,12 @@
+             library_owners[soname] = {"package": owner, "version": version, "path": package_path}
+         assert "libpq.so.5" in copied
+         assert "libc.so.6" in glibc
++        if arch == "arm64":
++            assert Path(interpreter).name in glibc
+         (out_notice / "POSTGRESQL-COPYRIGHT").write_bytes(copyright_bytes)
+         (out_notice / "POSTGRESQL-COPYRIGHT").chmod(0o444)
+         report = {
+-            "builder": BUILDER, "target": "debian-bookworm-linux-amd64", "tool_version": built_version,
++            "builder": BUILDER, "target": f"debian-bookworm-linux-{arch}", "tool_version": built_version,
+             "tarball_sha256": TARBALL_SHA256, "patch_sha256": PATCH_SHA256,
+             "helper_path": str(PREFIX / "bin" / final.name), "helper_sha256": sha(final),
+             "libraries": copied, "glibc_system_dependencies": glibc, "licenses": licenses,
+@@ -212,6 +245,7 @@
+     parser = argparse.ArgumentParser()
+     for name in ("tarball", "checksum", "patch"):
+         parser.add_argument("--" + name, required=True, type=lambda value: Path(value).resolve())
++    parser.add_argument("--target-arch", choices=TARGETS, default="amd64")
+     parser.add_argument("--output", type=lambda value: Path(value).resolve())
+     parser.add_argument("--jobs", type=int, choices=range(1, 9), default=6)
+     parser.add_argument("--check-inputs", action="store_true")
