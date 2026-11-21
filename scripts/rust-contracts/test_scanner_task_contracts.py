@@ -7,6 +7,7 @@ import shutil
 import unittest
 import scanner_task_contracts as module
 import source_contracts
+from typed_registry_test_fixture import assert_typed_idempotence
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -81,13 +82,8 @@ class ScannerTaskControls(unittest.TestCase):
         self.assertTrue(all(r['metadata']['traceback'] and r['metadata']['result']['exc_type'] for r in rows))
 
     def test_exact250_application_idempotent(self):
-        before = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
-        after = copy.deepcopy(before)
-        result = source_contracts.apply_non_HTTP(ROOT, after)
-        self.assertEqual(result['candidates'], 18)
-        self.assertEqual(before, after)
-        self.assertEqual(len(after), 250)
-        self.assertTrue(all(not r['fully_verified'] for r in after))
+        assert_typed_idempotence(self, ROOT, 18)
+
 
     def test_changed_static_identity_rejected(self):
         rows = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']

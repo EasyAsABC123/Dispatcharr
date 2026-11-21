@@ -6,7 +6,7 @@ import re
 import tempfile
 import unittest
 import proxy_plugin_contracts as module
-import source_contracts
+from typed_registry_test_fixture import assert_typed_idempotence
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -163,7 +163,4 @@ class ProxyPluginControls(unittest.TestCase):
                 module.validate(Path(temp), self.value)
 
     def test_nonHTTP250_unchanged(self):
-        before = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
-        after = copy.deepcopy(before)
-        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, after)['candidates'], 21)
-        self.assertEqual(before, after)
+        assert_typed_idempotence(self, ROOT, 21)

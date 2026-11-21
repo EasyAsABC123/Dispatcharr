@@ -160,3 +160,13 @@ COPY scripts/rust-vod-api-contracts/source-vod-http-wire-2.json ./scripts/rust-v
 COPY scripts/rust-job-contracts/verified-source-native-default-stats-1.json ./scripts/rust-job-contracts/verified-source-native-default-stats-1.json
 
 COPY scripts/rust-realtime-contracts/verified-source-wire-1.json ./scripts/rust-realtime-contracts/verified-source-wire-1.json
+
+# Pinned Original recording HLS resolver precedence evidence.
+COPY scripts/rust-integration/m0-recording-hls-canonical-precedence.json ./scripts/rust-integration/m0-recording-hls-canonical-precedence.json
+
+# Public retained Original channel-maintenance task evidence.
+COPY scripts/rust-milestone-batches/m6/channel-failure-source-v1/driver3/tools/guest.py ./scripts/rust-milestone-batches/m6/channel-failure-source-v1/driver3/tools/guest.py
+COPY scripts/rust-milestone-batches/m6/channel-failure-source-v1/driver3/input-sha256.json ./scripts/rust-milestone-batches/m6/channel-failure-source-v1/driver3/input-sha256.json
+COPY scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json ./scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json
+COPY scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/report.json ./scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/report.json
+COPY scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/independent-cleanup.json ./scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/independent-cleanup.json

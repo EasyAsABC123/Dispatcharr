@@ -297,7 +297,6 @@ class SourceContracts(unittest.TestCase):
         return result, rows
 
     def restore_before_residual_wave(self, result, rows):
-        import hashlib
         import test_final_residual_wave as wave
 
         projection = {
@@ -305,18 +304,7 @@ class SourceContracts(unittest.TestCase):
             'non_HTTP_candidates': copy.deepcopy(self.register['non_HTTP_candidates']),
             'executable_Source_mapping': result,
         }
-        wave.restore_pre_final_wave(self.root, projection)
-        del result['inputs'][-(len(wave.TYPED) + 1):]
-        result['operations'] -= wave.HTTP_COUNT + 1
-        # Canonical field bytes from 0c2b9920b180318f591506b31d555bc1aba7780d.
-        before = {
-            'runtime_routes': '4b2a083a493df7be212b52f01e06993c810a5b3a1099cb83efe3bcb5bc13966f',
-            'non_HTTP_candidates': '3ba566ff6cddc0076f4e0ccd4c69b6fd914e53a8a3d7d2de96f4d80878ac5403',
-            'executable_Source_mapping': 'bfb0837cb0f49ecf7b2fa24aeecf7a61ad92653ca6bc3f7004efb6a8cbf56b20',
-        }
-        for key, digest in before.items():
-            canonical = (json.dumps(projection[key], indent=2, ensure_ascii=False) + '\n').encode()
-            self.assertEqual(hashlib.sha256(canonical).hexdigest(), digest, key)
+        wave.restore_before_residual_wave(self.root, projection)
 
     def apply_before_residual_wave(self):
         result, rows = self.apply()

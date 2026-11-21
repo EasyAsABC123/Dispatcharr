@@ -48,6 +48,7 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update({'scripts/rust-contracts/framework-auth/' + name for name in ['bindings.json', 'full-suite-reference.json', 'observations.json', 'original/test_accounts.py', 'original/test_login_rate_limit_inbox.py']})
         account_input = json.loads((REPO / 'scripts/rust-contracts/accounts-settings/bindings.json').read_text())
         refs.add('docs/rust-contract-register.json')
+        refs.add('scripts/rust-integration/m0-recording-hls-canonical-precedence.json')
         refs.add('scripts/rust-contracts/accounts-settings/bindings.json')
         refs.update(x['path'] for x in account_input['authorities'])
         refs.update(x['path'] for x in account_input['original_test_files'])
@@ -235,6 +236,17 @@ class CapturedEvidenceRegister(unittest.TestCase):
         for old, new in zip(self.baseline['runtime_routes'], actual['runtime_routes']):
             self.assertEqual(old['resolver_ordinal'], new['resolver_ordinal'])
             self.assertEqual([(o['contract_id'], o['method'], o['source_action']) for o in old['operations']], [(o['contract_id'], o['method'], o['source_action']) for o in new['operations']])
+        operations = {op['contract_id']: op for route in actual['runtime_routes'] for op in route['operations']}
+        disposition = actual['Source_resolver_dispositions']
+        key = 'route-37da04e4eae7ba9df918:GET'
+        self.assertEqual(set(disposition), {key})
+        self.assertEqual(disposition[key]['literal_Original_resolver_cases'], 12)
+        self.assertEqual(disposition[key]['literal_HTTP_requests'], 0)
+        self.assertFalse(disposition[key]['wider_identifier_grammar_qualified'])
+        self.assertNotIn('executable_Source_contract', operations[key])
+        self.assertEqual(actual['runtime_routes'], self.baseline['runtime_routes'])
+        self.assertIsNone(operations[key]['result'])
+        self.assertFalse(operations[key]['fully_verified'])
         self.assertEqual(actual['openapi_operations'], self.baseline['openapi_operations'])
         self.assertEqual(actual['non_HTTP_candidates'], self.baseline['non_HTTP_candidates'])
         counts = actual['counts']

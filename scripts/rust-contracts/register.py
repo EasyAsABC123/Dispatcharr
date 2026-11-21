@@ -28,6 +28,55 @@ def checked_json(reference):
     assert hashlib.sha256(path.read_bytes()).hexdigest()==reference['sha256']
     return json.loads(path.read_text())
 
+RECORDING_HLS_RESOLVER = {
+    "path": "scripts/rust-integration/m0-recording-hls-canonical-precedence.json",
+    "sha256": "daddfbf65a5bb5fc81e4ab82e243db7a09a0e6f21b07c325995c825b52f6823d",
+}
+
+
+def recording_hls_resolver_dispositions(rows):
+    proof = checked_json(RECORDING_HLS_RESOLVER)
+    explicit = "route-0b392188d7e4e96171af:GET"
+    plain = "route-37da04e4eae7ba9df918:GET"
+    suffix = "route-e72e2d7ae61a3da5f480:GET"
+    ordinals = {explicit: 42, plain: 131, suffix: 132}
+    assert proof["pinned_original"] == "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+    assert proof["literal_exit"] == 0 and proof["fresh_pinned_Original_resolver_execution"] is True
+    assert proof["registration_resolver_ordinals"] == ordinals
+    assert proof["noncanonical_identifier_behavior_qualified"] is proof["runtime_alias_HTTP_observation_added"] is False
+    assert proof["owned_cleanup"]["compose_down_passed"] is True
+    observed = proof["observed"]
+    assert all(observed[key] == 0 for key in ("HTTP_requests", "view_callbacks_executed", "sql_statements"))
+    normal = observed["normal_resolution"]
+    assert tuple(row["case"] for row in normal) == ("playlist", "segment", "nested-segment", "slash-router-shape")
+    assert all(row["decimal_recording_keys"] == 3 and row["first_explicit_match"] is True for row in normal)
+    assert [row["later_router_pattern_matches"] for row in normal] == [False, False, False, True]
+    target = None
+    for route in rows:
+        for op in route["operations"]:
+            key = op["contract_id"]
+            if key in ordinals:
+                assert route["resolver_ordinal"] == ordinals[key]
+                assert op["method"] == "GET" and op["source_action"] == "hls"
+                if key == plain:
+                    target = op
+    assert target is not None and target["coverage_state"] == "not_yet_mapped"
+    assert target["result"] is None and target["fully_verified"] is False
+    assert "executable_Source_contract" not in target
+    disposition = {
+        "scope": "application-issued decimal recording playback URLs",
+        "observed": "earlier explicit route selected",
+        "earlier_contract_id": explicit,
+        "literal_Original_resolver_cases": 12,
+        "literal_HTTP_requests": 0,
+        "literal_view_callbacks": 0,
+        "literal_SQL_statements": 0,
+        "wider_identifier_grammar_qualified": False,
+        "evidence": RECORDING_HLS_RESOLVER.copy(),
+    }
+    return {plain: disposition}
+
+
 def response_wire(value):
     import base64
     data=value['body_text'].encode()if'body_text'in value else base64.b64decode(value['body_base64'],validate=True)
@@ -250,7 +299,8 @@ def build(bindings_path=None,deep_evidence=False):
     retained_channel_task_effects.apply(ROOT,non_http)
     return {'format_version':1,'scope':'Contract work register linking runtime discovery and explicit mapping gaps; not executable parity acceptance',
         'credit':'All application/algorithm credit belongs to original Dispatcharr authors and contributors; AGPL retained.',
-        'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path,*([methods_path]if dispatch is not None else[]),*([bindings_path]if case_bindings is not None else[]),*attestation_paths,*(ROOT/path for path in retained_channel_task_effects.INPUT_SHA256),*([ROOT/'scripts/rust-contracts/executable-source-inputs.json', *[ROOT/item['path'] for item in executable_Source_mapping.get('inputs',[])]] if (ROOT/'scripts/rust-contracts/executable-source-inputs.json').exists() else [])]},
+        'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path,*([methods_path]if dispatch is not None else[]),*([bindings_path]if case_bindings is not None else[]),*attestation_paths,ROOT/RECORDING_HLS_RESOLVER['path'],*(ROOT/path for path in retained_channel_task_effects.INPUT_SHA256),*([ROOT/'scripts/rust-contracts/executable-source-inputs.json', *[ROOT/item['path'] for item in executable_Source_mapping.get('inputs',[])]] if (ROOT/'scripts/rust-contracts/executable-source-inputs.json').exists() else [])]},
+        'Source_resolver_dispositions': recording_hls_resolver_dispositions(rows),
         'executable_Source_mapping':executable_Source_mapping,'executable_Source_non_HTTP_mapping':executable_Source_non_HTTP_mapping,'runtime_discovery_metadata':runtime['metadata'],'case_attestation_bindings':attestations,'case_binding_validation':{'mode':'deep_private_raw_revalidation'if deep_evidence else'committed_sanitized_attestation','is_new_HTTP_replay':False},'limits':['Method/action is unresolved where original runtime discovery returned null; no GET/POST guesses.',
             'Schema authentication is not a role/permission proof; every role matrix still requires case mapping.',
             'Module-associated tests and related scoped reports never mark an entire route fully verified.',

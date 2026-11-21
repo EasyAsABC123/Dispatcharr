@@ -6,6 +6,7 @@ import unittest
 
 import retained_comskip_task_contracts as subject
 import source_contracts
+from typed_registry_test_fixture import historical_typed_registry
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -26,7 +27,10 @@ class RetainedComskipControls(unittest.TestCase):
         subject.restore_pre_comskip_task(ROOT, earlier)
         changed = [old['candidate_id'] for old, new in zip(earlier, expected, strict=True) if old != new]
         self.assertEqual(changed, [subject.IDENTIFIER])
-        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, earlier)['candidates'], 21)
+        with historical_typed_registry(ROOT, 21) as fixture:
+            mapping = source_contracts.apply_non_HTTP(fixture, earlier)
+        self.assertEqual(mapping['candidates'], 21)
+        self.assertEqual(mapping['fully_verified_added'], 0)
         self.assertEqual(earlier, expected)
 
     def test_rejects_reclassifying_failed_controller_or_repeat_effect(self):

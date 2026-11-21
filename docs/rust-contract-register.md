@@ -37,7 +37,14 @@ The next mapping step is case-level: bind a source/native test and its frozen re
 
 ## Runtime handler candidates
 
-[The pinned method inspection](rust-runtime-methods.json) adds static handler candidates for 166 of the 322 method-unresolved routes; 156 still have no such candidate. The 322 original unresolved method/action placeholders remain unchanged. A fixture attachment records the scope of a partial Original case. Successful dispatch, authorization, CSRF and response contracts require separate observations. The one operation awaiting a fixture assignment already has a declared GET method. Dynamic permission-method references are retained for later case mapping.
+[The pinned method inspection](rust-runtime-methods.json) adds static handler candidates for 166 of the 322 method-unresolved routes; 156 still have no such candidate. The 322 original unresolved method/action placeholders remain unchanged. A fixture attachment records the scope of a partial Original case. Successful dispatch, authorization, CSRF and response contracts require separate observations. Dynamic permission-method references are retained for later case mapping.
+
+The plain DRF recording HLS GET is the one operation awaiting an HTTP
+fixture assignment. The register’s separate resolver disposition records
+12 ordinary decimal-ID resolutions to the earlier explicit route, with zero HTTP
+requests, view invocations or SQL statements. The historical operation row
+retains its exact hash and unset result. Wider identifier grammar remains open.
+[Recording HLS precedence](rust-m0-recording-hls-router-reachability.md)
 
 The inspector walks the exact same 592 routes without instantiating/executing their views. A SQL execution wrapper rejects queries during inspection; the successful probe recorded zero inspection SQL statements and zero inspection view invocations. The owned setup separately performs its usual web readiness request. The fixture was removed, and the original source archive matched the pinned hash.
 

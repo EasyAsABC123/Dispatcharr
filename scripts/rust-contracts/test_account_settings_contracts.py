@@ -6,6 +6,7 @@ import shutil
 import tempfile
 import unittest
 import source_contracts
+from typed_registry_test_fixture import assert_typed_idempotence, historical_typed_registry
 import account_settings_contracts as module
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -60,13 +61,8 @@ class AccountSettingsControls(unittest.TestCase):
             module.validate(self.root, self.value)
 
     def test_nonHTTP_apply_preserves_all250_identities(self):
-        before = json.loads((self.root / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
-        after = copy.deepcopy(before)
-        result = source_contracts.apply_non_HTTP(self.root, after)
-        self.assertEqual(result['candidates'], 18)
-        self.assertEqual(before, after)
-        self.assertEqual(len(after), 250)
-        self.assertTrue(all(not item['fully_verified'] for item in after))
+        assert_typed_idempotence(self, ROOT, 18)
+
 
     def test_nonHTTP_apply_rejects_changed_source(self):
         rows = json.loads((self.root / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
@@ -82,14 +78,15 @@ class AccountSettingsControls(unittest.TestCase):
             source_contracts.apply_non_HTTP(self.root, rows)
 
     def test_nonHTTP_apply_rejects_conflicting_inputs(self):
-        p = self.root / 'scripts/rust-contracts/executable-source-inputs.json'
-        value = json.loads(p.read_text())
-        selected = next(x for x in value['inputs'] if x['kind'] == 'pinned_original_account_settings_tests')
-        value['inputs'].append(selected)
-        p.write_text(json.dumps(value))
-        rows = json.loads((self.root / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
-        with self.assertRaisesRegex(AssertionError, 'conflicting nonHTTP'):
-            source_contracts.apply_non_HTTP(self.root, rows)
+        with historical_typed_registry(ROOT, 18) as fixture:
+            p = fixture / 'scripts/rust-contracts/executable-source-inputs.json'
+            value = json.loads(p.read_text())
+            selected = next(x for x in value['inputs'] if x['kind'] == 'pinned_original_account_settings_tests')
+            value['inputs'].append(selected)
+            p.write_text(json.dumps(value))
+            rows = json.loads((fixture / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
+            with self.assertRaisesRegex(AssertionError, 'conflicting nonHTTP'):
+                source_contracts.apply_non_HTTP(fixture, rows)
 
     def test_exact80_historical_successes(self):
         value = module.validate(self.root, self.value)

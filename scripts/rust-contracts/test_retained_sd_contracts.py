@@ -39,7 +39,6 @@ import shutil
 import tempfile
 import unittest
 import retained_sd_contracts as subject
-import source_contracts
 ROOT = Path(__file__).resolve().parents[2]
 
 class RetainedSDControls(unittest.TestCase):
@@ -81,6 +80,8 @@ class RetainedSDControls(unittest.TestCase):
 
     def test_only_two_assignments_preserve_796_full_rows_and_161_prior_definitions(self):
         register = json.loads((ROOT / 'docs/rust-contract-register.json').read_bytes())
+        import test_final_residual_wave as final_wave
+        final_wave.restore_before_residual_wave(ROOT, register)
         import retained_xc_refresh_contracts
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT, register['runtime_routes'])
         retained_paired_read_contracts.restore_pre_paired_reads(ROOT, register['runtime_routes'])
@@ -139,7 +140,7 @@ class RetainedSDControls(unittest.TestCase):
         retained_comskip_task_contracts.restore_pre_comskip_task(ROOT,register['non_HTTP_candidates'])
         for key, name in [('non_HTTP_candidates', 'non_HTTP_candidates_sha256'), ('openapi_operations', 'OpenAPI_operations_sha256'), ('observations_for_methods_not_declared_in_discovery', 'legacy_undeclared_method_observations_sha256')]: self.assertEqual(subject.digest(register[key]), proof[name])
         bindings = json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes())
-        mapping = source_contracts.apply(ROOT, rows, bindings)
+        mapping = final_wave.apply_before_residual_wave(ROOT, rows, bindings)
         retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT, rows)
         retained_paired_read_contracts.restore_pre_paired_reads(ROOT, rows)
         retained_live_stop_contracts.restore_pre_live_stop(ROOT, rows)
@@ -178,7 +179,9 @@ class RetainedSDControls(unittest.TestCase):
         self.assertEqual(rows, current); self.assertEqual(mapping['operations'], 619)
         self.assertEqual(len(mapping['unmapped_method_Source_observations']), 23)
         self.assertEqual(len([x for x in mapping['unmapped_method_Source_observations'] if x['route_id'] == 'route-7e6941c073eccaa2b6dd']), 6)
-        source_contracts.apply(ROOT, rows, bindings)
-        again = copy.deepcopy(rows); source_contracts.apply(ROOT, again, bindings); self.assertEqual(again, rows)
+        final_wave.apply_before_residual_wave(ROOT, rows, bindings)
+        again = copy.deepcopy(rows)
+        final_wave.apply_before_residual_wave(ROOT, again, bindings)
+        self.assertEqual(again, rows)
 
 if __name__ == '__main__': unittest.main()

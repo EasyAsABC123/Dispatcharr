@@ -7,6 +7,7 @@ import tempfile
 import unittest
 import admin_rest_contracts as module
 import source_contracts
+from typed_registry_test_fixture import assert_typed_idempotence
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -146,7 +147,11 @@ class AdminRestControls(unittest.TestCase):
                 module.validate(Path(temp), self.value)
 
     def test_nonHTTP_all250_unchanged_idempotent(self):
+        assert_typed_idempotence(self, ROOT, 21)
+
         before = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
         after = copy.deepcopy(before)
-        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, after)['candidates'], 21)
+        mapping = source_contracts.apply_non_HTTP(ROOT, after)
+        self.assertEqual(mapping['candidates'], 250)
+        self.assertEqual(mapping['fully_verified_added'], 0)
         self.assertEqual(before, after)

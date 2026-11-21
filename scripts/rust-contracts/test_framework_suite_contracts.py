@@ -35,7 +35,6 @@ import retained_c106_connect_replay_contracts
 import retained_logo_m3u_contracts
 import retained_epg_vod_logo_contracts
 import framework_suite_contracts as subject
-import source_contracts
 import retained_xc_refresh_contracts
 ROOT=Path(__file__).resolve().parents[2]
 class FrameworkSuiteControls(unittest.TestCase):
@@ -61,6 +60,8 @@ class FrameworkSuiteControls(unittest.TestCase):
     p.write_bytes(raw)
  def test_ten_additions_preserve_prior163_and788_whole_dictionaries(self):
   r=json.loads((ROOT/'docs/rust-contract-register.json').read_bytes())
+  import test_final_residual_wave as final_wave
+  final_wave.restore_before_residual_wave(ROOT, r)
   retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,r['runtime_routes'])
   retained_paired_read_contracts.restore_pre_paired_reads(ROOT,r['runtime_routes'])
   retained_live_stop_contracts.restore_pre_live_stop(ROOT,r['runtime_routes'])
@@ -118,7 +119,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   self.assertEqual(subject.digest(r['non_HTTP_candidates']),proof['non_HTTP_sha256'])
   self.assertEqual(subject.digest(r['openapi_operations']),proof['OpenAPI_sha256'])
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_bytes())
-  mapping=source_contracts.apply(ROOT,rows,bindings)
+  mapping=final_wave.apply_before_residual_wave(ROOT, rows, bindings)
   self.assertEqual(mapping['operations'],619)
   retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,rows)
   retained_paired_read_contracts.restore_pre_paired_reads(ROOT,rows)
@@ -155,7 +156,7 @@ class FrameworkSuiteControls(unittest.TestCase):
   retained_range_source10_contracts.restore_pre_range(rows)
   retained_source12_contracts.restore_pre_Source12(rows)
   self.assertEqual(rows,current)
-  source_contracts.apply(ROOT,rows,bindings)
+  final_wave.apply_before_residual_wave(ROOT, rows, bindings)
   retained_set_epg_selected_contracts.restore_pre_epg_assignments(ROOT,rows)
   retained_paired_read_contracts.restore_pre_paired_reads(ROOT,rows)
   retained_live_stop_contracts.restore_pre_live_stop(ROOT,rows)

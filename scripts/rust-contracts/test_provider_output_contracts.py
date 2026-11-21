@@ -6,6 +6,7 @@ import tempfile
 import unittest
 import provider_output_contracts as module
 import source_contracts
+from typed_registry_test_fixture import assert_typed_idempotence
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -36,11 +37,8 @@ class ProviderOutputControls(unittest.TestCase):
         self.reject(lambda value: self.output(value).update(method='GET'))
 
     def test_old250_identity_idempotent_apply(self):
-        before = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
-        after = copy.deepcopy(before)
-        self.assertEqual(source_contracts.apply_non_HTTP(ROOT, after)['candidates'], 21)
-        self.assertEqual(before, after)
-        self.assertTrue(all(not row['fully_verified'] for row in after))
+        assert_typed_idempotence(self, ROOT, 21)
+
 
     def test_changed_consumer_source_rejected(self):
         rows = json.loads((ROOT / 'docs/rust-contract-register.json').read_text())['non_HTTP_candidates']
