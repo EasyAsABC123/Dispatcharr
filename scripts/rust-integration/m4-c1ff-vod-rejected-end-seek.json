@@ -1,0 +1,128 @@
+{
+  "Native_local_cancel_physically_proven": false,
+  "behavior_characterization": true,
+  "candidate_revision": "c1ff40056abc819d477ffa8eb82a45b1ebba38d8",
+  "cases": {
+    "131072": {
+      "Native": {
+        "exact_siblings_and_reader_teardown": true,
+        "first_public_state": {
+          "departing_active": "0",
+          "departing_exists": 1,
+          "departing_request_count": "3",
+          "provider_slots": 2
+        },
+        "no_rejected_provider_open": true,
+        "normal_late_status": 200,
+        "observed_successful_origin_write_after_rejection": true,
+        "pending_pull_claimed_from_origin_only": false,
+        "public_states_before_next_successful_write": [
+          [
+            1,
+            1,
+            "0",
+            "3"
+          ],
+          [
+            2,
+            1,
+            "0",
+            "3"
+          ]
+        ],
+        "retained_content_length": 4299455,
+        "same_id_path": true,
+        "status": 416,
+        "surviving_independent_AV_frames": 75
+      },
+      "Original": {
+        "exact_siblings_and_reader_teardown": true,
+        "first_public_state": {
+          "departing_active": "1",
+          "departing_exists": 1,
+          "departing_request_count": "2",
+          "provider_slots": 2
+        },
+        "no_rejected_provider_open": true,
+        "normal_late_status": 200,
+        "observed_successful_origin_write_after_rejection": true,
+        "pending_pull_claimed_from_origin_only": false,
+        "public_states_before_next_successful_write": [
+          [
+            2,
+            1,
+            "1",
+            "2"
+          ]
+        ],
+        "retained_content_length": 4299455,
+        "same_id_path": true,
+        "status": 416,
+        "surviving_independent_AV_frames": 75
+      },
+      "exact_cleanup": true,
+      "raw_receipt_sha256": "3b949d4ca1eac7062fcf01f63bc3e11310664ffc2b6bf0fed672f73af99a7cca",
+      "source_rejection_before_pending_pull_progress": true
+    },
+    "32768": {
+      "Native": {
+        "exact_siblings_and_reader_teardown": true,
+        "first_public_state": {
+          "departing_active": "0",
+          "departing_exists": 1,
+          "departing_request_count": "3",
+          "provider_slots": 2
+        },
+        "no_rejected_provider_open": true,
+        "normal_late_status": 200,
+        "observed_successful_origin_write_after_rejection": false,
+        "pending_pull_claimed_from_origin_only": false,
+        "public_states_before_next_successful_write": [],
+        "retained_content_length": 4299455,
+        "same_id_path": true,
+        "status": 416,
+        "surviving_independent_AV_frames": 75
+      },
+      "Original": {
+        "exact_siblings_and_reader_teardown": true,
+        "first_public_state": {
+          "departing_active": "1",
+          "departing_exists": 1,
+          "departing_request_count": "2",
+          "provider_slots": 2
+        },
+        "no_rejected_provider_open": true,
+        "normal_late_status": 200,
+        "observed_successful_origin_write_after_rejection": true,
+        "pending_pull_claimed_from_origin_only": false,
+        "public_states_before_next_successful_write": [
+          [
+            2,
+            1,
+            "1",
+            "2"
+          ]
+        ],
+        "retained_content_length": 4299455,
+        "same_id_path": true,
+        "status": 416,
+        "surviving_independent_AV_frames": 75
+      },
+      "exact_cleanup": true,
+      "raw_receipt_sha256": "0ab663ad5dbbf3b29566e5db55c91b6203681c858696abc61ea8a6a12442c6ba",
+      "source_rejection_before_pending_pull_progress": true
+    }
+  },
+  "classification": "paired VOD behavior diagnostic with a state mismatch",
+  "full_M4_accepted": false,
+  "literal_controller_exit": 0,
+  "manifest_sha256": "430eaabe4f2c0c32d33e3525bc64e1932e63d36d7f9768cc47d01f7b29b90ab8",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false,
+  "phase_exits": {
+    "physical": 0,
+    "preflight": 0,
+    "proof": 0
+  },
+  "proof_sha256": "8ea11e9e0dc180aba0b546fd3ccf1ed481bf61b1488c88e2c11b59013ddf24cf"
+}
