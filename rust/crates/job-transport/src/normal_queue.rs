@@ -247,6 +247,8 @@ impl CoreScheduledWorker {
     pub fn prepare(
         backup: Arc<crate::normal_backup::Application>,
         store: &dispatcharr_store::Store,
+        events: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
+        version_options: crate::version_service::Options,
         poll: Duration,
     ) -> Result<Self, Error> {
         let jobs = backup.scheduled_jobs();
@@ -257,12 +259,27 @@ impl CoreScheduledWorker {
         }
         let cleanup = crate::normal_default_families::prepare_cleanup(jobs.clone(), store)
             .map_err(|_| Error::Configuration)?;
+        let expiration = crate::normal_default_families::prepare_account_expiration(
+            jobs.clone(),
+            store,
+            events.clone(),
+        )
+        .map_err(|_| Error::Configuration)?;
+        let version = crate::version_application::prepare_shared_handler(
+            store,
+            events,
+            jobs.clone(),
+            version_options,
+        )
+        .map_err(|_| Error::Configuration)?;
         let actual: Arc<dyn Handler> = backup.clone();
         let mut families = BTreeMap::new();
         for (family, inner) in [
             (Family::BackupCreate, actual.clone()),
             (Family::BackupScheduled, actual),
             (Family::BackendCleanup, cleanup),
+            (Family::AccountExpiration, expiration),
+            (Family::VersionCheck, version),
         ] {
             let maximum = inner.maximum_concurrency();
             validate_family_admission(family, maximum, inner.supports_selected_head())?;

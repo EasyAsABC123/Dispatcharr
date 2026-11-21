@@ -52,6 +52,23 @@ fn positive(name: &str, default: usize) -> Result<usize, String> {
     Ok(value)
 }
 
+fn version_task_options() -> dispatcharr_job_transport::version_service::Options {
+    let endpoint = env::var("RUST_VERSION_HTTP_ORIGIN")
+        .map(|origin| format!("{}/owned-version", origin.trim_end_matches('/')))
+        .unwrap_or_else(|_| {
+            "https://api.github.com/repos/Dispatcharr/Dispatcharr/releases/latest".into()
+        });
+    // Bind the stable check to the pinned Original application version.
+    dispatcharr_job_transport::version_service::Options {
+        version: "0.33.0".into(),
+        endpoint,
+        ca_bundle: std::path::PathBuf::from(
+            env::var("RUST_VERSION_CA_BUNDLE")
+                .unwrap_or_else(|_| "/opt/dispatcharr-crypto/trust/cacert.pem".into()),
+        ),
+    }
+}
+
 fn version_startup_owned(
     owner: Option<&std::ffi::OsStr>,
     version: bool,
@@ -854,26 +871,12 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             .ok_or("Enabled version tasks require the realtime publisher")?;
         let broker = env::var("CELERY_BROKER_URL").unwrap_or_else(|_| cache.clone());
         let backend = env::var("CELERY_RESULT_BACKEND").unwrap_or_else(|_| broker.clone());
-        let endpoint = env::var("RUST_VERSION_HTTP_ORIGIN")
-            .map(|origin| format!("{}/owned-version", origin.trim_end_matches('/')))
-            .unwrap_or_else(|_| {
-                "https://api.github.com/repos/Dispatcharr/Dispatcharr/releases/latest".into()
-            });
-        // Coupled to the pinned Original version.py stable build. Development
-        // timestamp checks require their own Source scope and are not implied.
         let app = dispatcharr_job_transport::version_application::Application::prepare(
             store.clone(),
             Arc::new(bus.clone()),
             &broker,
             &backend,
-            dispatcharr_job_transport::version_service::Options {
-                version: "0.33.0".into(),
-                endpoint,
-                ca_bundle: std::path::PathBuf::from(
-                    env::var("RUST_VERSION_CA_BUNDLE")
-                        .unwrap_or_else(|_| "/opt/dispatcharr-crypto/trust/cacert.pem".into()),
-                ),
-            },
+            version_task_options(),
         )
         .await
         .map_err(|_| "Version task initialization failed (credentials omitted)")?;
@@ -1125,6 +1128,13 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
                 store.clone(),
                 auth.clone(),
                 cache_url.as_deref(),
+                Arc::new(
+                    realtime_bus
+                        .as_ref()
+                        .ok_or("Core scheduled jobs require the realtime publisher")?
+                        .clone(),
+                ),
+                version_task_options(),
                 selected_jobs_enabled
                     || refresh_enabled
                     || version_tasks_enabled

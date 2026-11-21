@@ -192,6 +192,8 @@ impl Prepared {
                 Family::BackupCreate,
                 Family::BackupScheduled,
                 Family::BackendCleanup,
+                Family::AccountExpiration,
+                Family::VersionCheck,
             ],
         )
     }

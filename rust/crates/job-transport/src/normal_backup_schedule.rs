@@ -64,6 +64,13 @@ enum Reconciliation {
     NeedsTimezone,
 }
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum ReconcilePolicy {
+    Refresh,
+    PreserveSavedTick,
+    DisableOnly,
+}
+
 // Named task and schedule-key rows can both be absent. The advisory
 // transaction lock serializes this family across application processes.
 async fn lock_schedule(connection: &mut PgConnection) -> Result<(), StoreError> {
@@ -76,8 +83,8 @@ async fn lock_schedule(connection: &mut PgConnection) -> Result<(), StoreError> 
     Ok(())
 }
 
-/// The scoped scheduler owns this physical connection through the Redis reply.
-/// A durable reservation commits before publication, with this lock still held.
+/// The scoped scheduler holds this physical lock through the broker attempt
+/// and the durable SQL tick.
 pub(super) async fn try_lock_due_occurrence(
     connection: &mut PgConnection,
 ) -> Result<bool, sqlx::Error> {
@@ -165,7 +172,17 @@ impl Schedule {
         Self { store, cache }
     }
     pub(crate) async fn initialize(&self, owner: Arc<dyn Send + Sync>) -> Result<(), StoreError> {
-        self.apply(None, owner, None, false).await.map(|_| ())
+        self.apply(None, owner, None, ReconcilePolicy::Refresh)
+            .await
+            .map(|_| ())
+    }
+    pub(crate) async fn initialize_preserving_tick(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<(), StoreError> {
+        self.apply(None, owner, None, ReconcilePolicy::PreserveSavedTick)
+            .await
+            .map(|_| ())
     }
     pub(crate) async fn update(
         &self,
@@ -173,18 +190,20 @@ impl Schedule {
         auth: &AuthService,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Value, StoreError> {
-        self.apply(Some(data), owner, Some(auth), false).await
+        self.apply(Some(data), owner, Some(auth), ReconcilePolicy::Refresh)
+            .await
     }
     async fn apply(
         &self,
         data: Option<Value>,
         owner: Arc<dyn Send + Sync>,
         backup_cache_after_save: Option<&AuthService>,
-        ordinary_disable: bool,
+        policy: ReconcilePolicy,
     ) -> Result<Value, StoreError> {
         // Source reads malformed stored values as DEFAULTS, but PUT merges
         // updates into an empty object. Preserve that distinction before data moves.
         let updating = data.is_some();
+        let ordinary_disable = policy == ReconcilePolicy::DisableOnly;
         let held = owner.clone();
         let mut connection = self.store.pool().acquire().await?;
         let observed = async {
@@ -259,13 +278,13 @@ impl Schedule {
         } else {
             Some(self.timezone(owner.clone()).await?)
         };
-        let result = match self.reconcile(timezone).await? {
+        let result = match self.reconcile(timezone, policy).await? {
             Reconciliation::Complete(config) => config,
             Reconciliation::NeedsTimezone => {
                 // A concurrent save enabled the schedule. Resolve the zone
                 // with no connection or advisory lock held.
                 let timezone = self.timezone(owner).await?;
-                match self.reconcile(Some(timezone)).await? {
+                match self.reconcile(Some(timezone), policy).await? {
                     Reconciliation::Complete(config) => config,
                     Reconciliation::NeedsTimezone => {
                         return Err(failed("Backup schedule timezone unavailable"))
@@ -293,7 +312,11 @@ impl Schedule {
             .ok_or_else(|| failed("Invalid backup schedule timezone"))
     }
 
-    async fn reconcile(&self, timezone: Option<&str>) -> Result<Reconciliation, StoreError> {
+    async fn reconcile(
+        &self,
+        timezone: Option<&str>,
+        policy: ReconcilePolicy,
+    ) -> Result<Reconciliation, StoreError> {
         let mut connection = self.store.pool().acquire().await?;
         let observed = async {
             let mut tx=connection.begin().await?;
@@ -317,7 +340,24 @@ impl Schedule {
                let cron=match found{Some(id)=>id,None=>sqlx::query_scalar("INSERT INTO django_celery_beat_crontabschedule(minute,hour,day_of_month,month_of_year,day_of_week,timezone) VALUES($1,$2,$3,$4,$5,$6) RETURNING id::bigint").bind(parts[0]).bind(parts[1]).bind(parts[2]).bind(parts[3]).bind(parts[4]).bind(canonical).fetch_one(&mut *tx).await?};
                let kwargs=retention_kwargs(&config["retention_count"])?;
                let now = chrono::Utc::now();
-               if let Some((id, _, _)) = old {
+               if let Some((id, interval, saved_cron)) = old {
+                  if policy == ReconcilePolicy::PreserveSavedTick && interval.is_none() && saved_cron == Some(cron) {
+                     let saved: Option<String> = sqlx::query_scalar(concat!(
+                         "SELECT CASE WHEN octet_length(kwargs)<=65536 THEN kwargs END ",
+                         "FROM django_celery_beat_periodictask WHERE id=$1 AND enabled ",
+                         "AND task='apps.backups.tasks.scheduled_backup_task'"
+                     ))
+                     .bind(id)
+                     .fetch_optional(&mut *tx)
+                     .await?
+                     .flatten();
+                     if saved.as_deref().is_some_and(|value| matches_retention(value, &config["retention_count"])) {
+                        // The locked row still matches the saved configuration.
+                        // Its date_changed anchors a first run after a rollback.
+                        tx.commit().await?;
+                        return Ok(Reconciliation::Complete(config));
+                     }
+                  }
                   // The existing row is locked above. Updating by ID preserves
                   // Django's sequence state when only the schedule is saved.
                   sqlx::query(concat!(
@@ -402,6 +442,11 @@ fn retention_kwargs(retention: &Value) -> Result<String, StoreError> {
     Ok(format!("{{\"retention_count\": {count}}}"))
 }
 
+fn matches_retention(saved: &str, retention: &Value) -> bool {
+    serde_json::from_str::<Value>(saved)
+        .is_ok_and(|value| value == json!({"retention_count": retention}))
+}
+
 /// Apply ordinary Original backup settings initialization without a worker,
 /// scheduler loop or job transport.
 pub async fn initialize_operator_backup_schedule(
@@ -433,7 +478,9 @@ impl BackupScheduleDisableApi for BackupScheduleDisable {
             if !ordinary_disable_request(&data, false) {
                 return Err(disable_unavailable());
             }
-            self.0.apply(Some(data), caller, Some(auth), true).await
+            self.0
+                .apply(Some(data), caller, Some(auth), ReconcilePolicy::DisableOnly)
+                .await
         })
     }
 }
@@ -441,6 +488,26 @@ impl BackupScheduleDisableApi for BackupScheduleDisable {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn preserve_saved_tick_accepts_only_equivalent_retention() {
+        let configured = json!(2);
+        assert!(matches_retention(r#"{"retention_count": 2}"#, &configured));
+        assert!(matches_retention(
+            r#"{ "retention_count" : 2 }"#,
+            &configured
+        ));
+        assert!(!matches_retention(r#"{"retention_count": 3}"#, &configured));
+        assert!(!matches_retention(
+            r#"{"retention_count": "2"}"#,
+            &configured
+        ));
+        assert!(!matches_retention(
+            r#"{"retention_count": 2, "extra":true}"#,
+            &configured
+        ));
+        assert!(!matches_retention("invalid", &configured));
+    }
 
     #[test]
     fn startup_defaulting_preserves_the_live_disabled_row() {

@@ -91,34 +91,49 @@ struct Inner {
 const BACKUP_PERIODIC_NAME: &str = "backup-scheduled-task";
 const BACKUP_PERIODIC_TASK: &str = "apps.backups.tasks.scheduled_backup_task";
 const CLEANUP_PERIODIC_TASK: &str = "celery.backend_cleanup";
+const EXPIRATION_PERIODIC_NAME: &str = "check-account-expirations";
+const EXPIRATION_PERIODIC_TASK: &str = "apps.m3u.tasks.check_account_expirations";
+const VERSION_PERIODIC_NAME: &str = "check-version-updates";
+const DAILY_SECONDS: i32 = 86_400;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum ScheduleScope {
     All,
     Backup,
-    Cleanup,
+    Core,
 }
 impl ScheduleScope {
     fn row_identity(self) -> (Option<&'static str>, Option<&'static str>) {
         match self {
             Self::All => (None, None),
             Self::Backup => (Some(BACKUP_PERIODIC_NAME), Some(BACKUP_PERIODIC_TASK)),
-            Self::Cleanup => (Some(CLEANUP_PERIODIC_TASK), Some(CLEANUP_PERIODIC_TASK)),
+            Self::Core => (Some(CLEANUP_PERIODIC_TASK), Some(CLEANUP_PERIODIC_TASK)),
         }
     }
     fn admits(self, entry: &Entry) -> bool {
         if self == Self::All {
             return true;
         }
-        if self == Self::Cleanup {
-            return entry.name == CLEANUP_PERIODIC_TASK
+        if self == Self::Core {
+            let cleanup = entry.name == CLEANUP_PERIODIC_TASK
                 && entry.task == CLEANUP_PERIODIC_TASK
                 && entry.interval.is_none()
                 && entry.crontab.is_some()
+                && entry.expire_seconds == Some(43_200);
+            let daily = matches!(
+                (entry.name.as_str(), entry.task.as_str()),
+                (EXPIRATION_PERIODIC_NAME, EXPIRATION_PERIODIC_TASK)
+                    | (VERSION_PERIODIC_NAME, crate::version_protocol::TASK)
+            ) && entry.crontab.is_none()
+                && entry
+                    .interval
+                    .as_ref()
+                    .is_some_and(|(every, period)| *every == DAILY_SECONDS && period == "seconds")
+                && entry.expire_seconds.is_none();
+            return (cleanup || daily)
                 && !entry.one_off
                 && entry.start_time.is_none()
                 && entry.expires.is_none()
-                && entry.expire_seconds == Some(43_200)
                 && entry.queue.is_none()
                 && entry.exchange.is_none()
                 && entry.routing_key.is_none()
@@ -287,7 +302,7 @@ impl Scheduler {
                 lifecycle: Lifecycle::new(),
                 maximum_sleep,
                 scope: if backup_worker.is_some() {
-                    ScheduleScope::Cleanup
+                    ScheduleScope::Core
                 } else {
                     ScheduleScope::All
                 },
@@ -309,7 +324,7 @@ impl Scheduler {
         tokio::spawn(async move {
             let _owner = owner;
             let mut connection = inner.pool.acquire().await?.detach();
-            let observed = if inner.scope == ScheduleScope::Cleanup {
+            let observed = if inner.scope == ScheduleScope::Core {
                 install_default(
                     &mut connection,
                     CLEANUP_PERIODIC_TASK,
@@ -399,7 +414,7 @@ impl Scheduler {
         tokio::spawn(async move {
             let mut connection = inner.pool.acquire().await?.detach();
             let observed = async {
-                if inner.scope == ScheduleScope::Cleanup
+                if inner.scope == ScheduleScope::Core
                     && crate::normal_backup_schedule::try_lock_due_occurrence(&mut connection)
                         .await?
                 {
@@ -526,8 +541,8 @@ async fn tick_backup(
         delay_seconds: 5.0,
         ..Tick::default()
     };
-    // The detached session keeps its lock through the SQL reservation and
-    // the real Redis result. The outer tick settles the same connection.
+    // The detached session keeps its advisory lock from the due check through
+    // broker settlement and the durable SQL tick.
     let now = Utc::now();
     let (mut entries, invalid) = load(connection, now, ScheduleScope::Backup).await?;
     result.reloaded = true;
@@ -559,7 +574,10 @@ async fn tick_backup(
         .total_run_count
         .checked_add(1)
         .ok_or(Error::Capacity)?;
-    let reserved = sqlx::query(concat!(
+    // Keep the verified row reserved during publication. An abrupt exit can
+    // leave the previous durable tick for restart in both observed windows.
+    let mut transaction = connection.begin().await?;
+    let stored = sqlx::query(concat!(
         "UPDATE django_celery_beat_periodictask ",
         "SET last_run_at=$1,total_run_count=$2,date_changed=$1 ",
         "WHERE enabled AND id=$3 AND name=$4 AND task=$5 AND total_run_count=$6"
@@ -570,21 +588,27 @@ async fn tick_backup(
     .bind(BACKUP_PERIODIC_NAME)
     .bind(BACKUP_PERIODIC_TASK)
     .bind(entry.total_run_count)
-    .execute(&mut *connection)
+    .execute(&mut *transaction)
     .await?;
-    if reserved.rows_affected() != 1 {
+    if stored.rows_affected() != 1 {
+        transaction.rollback().await?;
         return Ok(result);
     }
-    result.synchronized = 1;
     let published = match prepare_publication(&entry, Uuid::new_v4(), &inner.identity) {
         Ok(publication) => inner.jobs.publish_normal_beat(&publication, owner).await,
         Err(_) => Err(transport::Error::Protocol),
     };
-    match published {
-        Ok(publication) => result.published = Some(publication.task_id),
+    let settled = match published {
         Err(error @ transport::Error::AmbiguousPublication(_)) => {
-            return Err(Error::Transport(error))
+            transaction.rollback().await?;
+            return Err(Error::Transport(error));
         }
+        outcome => outcome,
+    };
+    transaction.commit().await?;
+    result.synchronized = 1;
+    match settled {
+        Ok(publication) => result.published = Some(publication.task_id),
         Err(error) => result.publication_error = Some(error),
     }
     Ok(result)
@@ -848,8 +872,13 @@ candidates AS MATERIALIZED (
  LEFT JOIN django_celery_beat_crontabschedule cr ON cr.id=p.crontab_id
  LEFT JOIN zone_offsets z ON z.zone_name=cr.timezone
  WHERE p.enabled
-   AND ($6::text IS NULL OR (p.name=$6 AND p.task=$7::text
-        AND p.interval_id IS NULL AND p.solar_id IS NULL AND p.clocked_id IS NULL AND p.crontab_id IS NOT NULL))
+   AND ($6::text IS NULL OR (p.solar_id IS NULL AND p.clocked_id IS NULL AND (
+        (p.name=$6 AND p.task=$7::text AND p.interval_id IS NULL AND p.crontab_id IS NOT NULL)
+        OR (p.interval_id IS NOT NULL AND p.crontab_id IS NULL
+            AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
+                        WHERE i.id=p.interval_id AND i.every=$12::integer AND i.period='seconds')
+            AND ((p.name=$8::text AND p.task=$9::text) OR (p.name=$10::text AND p.task=$11::text)))
+   )))
    AND (p.clocked_id IS NULL OR cl.clocked_time IS NULL OR cl.clocked_time <= $1::timestamptz)
    AND (p.crontab_id IS NULL OR cr.id IS NULL OR NOT (cr.hour=ANY($3::text[])) OR z.hour_offset IS NULL
         OR CASE WHEN cr.hour=ANY($3::text[]) THEN (cr.hour::integer+z.hour_offset+24)%24 END=ANY($2::integer[]))
@@ -914,6 +943,10 @@ async fn load(
     // before LIMIT/serialization budget, not after an unrelated enabled-row cap.
     let filters = QueryFilters::new(now)?;
     let (name, task) = scope.row_identity();
+    let expiration = (scope == ScheduleScope::Core)
+        .then_some((EXPIRATION_PERIODIC_NAME, EXPIRATION_PERIODIC_TASK));
+    let version = (scope == ScheduleScope::Core)
+        .then_some((VERSION_PERIODIC_NAME, crate::version_protocol::TASK));
     let rows = sqlx::query(LOAD_QUERY)
         .bind(filters.cutoff)
         .bind(&filters.hours)
@@ -922,6 +955,11 @@ async fn load(
         .bind(filters.offsets)
         .bind(name)
         .bind(task)
+        .bind(expiration.map(|(name, _)| name))
+        .bind(expiration.map(|(_, task)| task))
+        .bind(version.map(|(name, _)| name))
+        .bind(version.map(|(_, task)| task))
+        .bind(DAILY_SECONDS)
         .fetch_all(&mut *connection)
         .await?;
     let budget = rows.first().ok_or(Error::Capacity)?;
@@ -1059,7 +1097,7 @@ async fn load(
             }),
         };
         if !scope.admits(&model) {
-            return Err(Error::Configuration("stored backup schedule admission"));
+            return Err(Error::Configuration("stored scoped schedule admission"));
         }
         if model.crontab.is_some()
             && (!(1970..=2037).contains(&model.last_run_at.year())
@@ -1239,14 +1277,14 @@ async fn install_defaults(connection: &mut PgConnection) -> Result<Setup, Error>
             Some(3600),
         ),
         (
-            "check-version-updates",
-            "core.tasks.check_for_version_update",
-            Some(86400),
+            VERSION_PERIODIC_NAME,
+            crate::version_protocol::TASK,
+            Some(DAILY_SECONDS),
         ),
         (
-            "check-account-expirations",
-            "apps.m3u.tasks.check_account_expirations",
-            Some(86400),
+            EXPIRATION_PERIODIC_NAME,
+            EXPIRATION_PERIODIC_TASK,
+            Some(DAILY_SECONDS),
         ),
     ];
     let mut result = Setup::default();
@@ -1482,14 +1520,90 @@ mod tests {
         ));
         entry.expire_seconds = Some(43_200);
         assert_eq!(
-            ScheduleScope::Cleanup.row_identity(),
+            ScheduleScope::Core.row_identity(),
             (Some(CLEANUP_PERIODIC_TASK), Some(CLEANUP_PERIODIC_TASK))
         );
-        assert!(ScheduleScope::Cleanup.admits(&entry));
+        assert!(ScheduleScope::Core.admits(&entry));
         assert!(!ScheduleScope::Backup.admits(&entry));
         entry.name = BACKUP_PERIODIC_NAME.into();
-        assert!(!ScheduleScope::Cleanup.admits(&entry));
+        assert!(!ScheduleScope::Core.admits(&entry));
     }
+    #[test]
+    fn core_expiration_scope_admits_only_the_canonical_saved_daily_task() {
+        let mut entry = model(EXPIRATION_PERIODIC_TASK);
+        entry.name = EXPIRATION_PERIODIC_NAME.into();
+        entry.interval = Some((DAILY_SECONDS, "seconds".into()));
+        assert!(ScheduleScope::Core.admits(&entry));
+        assert!(!ScheduleScope::Backup.admits(&entry));
+
+        let mut changed = entry.clone();
+        changed.interval = Some((60, "seconds".into()));
+        assert!(!ScheduleScope::Core.admits(&changed));
+        changed = entry.clone();
+        changed.name = "different-saved-expiration-row".into();
+        assert!(!ScheduleScope::Core.admits(&changed));
+        changed = entry.clone();
+        changed.kwargs = json!({"unexpected": true});
+        assert!(!ScheduleScope::Core.admits(&changed));
+        entry.one_off = true;
+        assert!(!ScheduleScope::Core.admits(&entry));
+    }
+
+    #[tokio::test]
+    async fn core_daily_tasks_use_the_ordinary_due_frames_and_worker_parsers() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
+            .unwrap();
+        let auth = dispatcharr_store::AuthService::new(
+            dispatcharr_store::Store::from_pool(pool),
+            dispatcharr_store::AuthConfig::new("unused-metadata-only".into()).unwrap(),
+        );
+        let mut entry = model(EXPIRATION_PERIODIC_TASK);
+        entry.name = EXPIRATION_PERIODIC_NAME.into();
+        entry.interval = Some((DAILY_SECONDS, "seconds".into()));
+        assert!(ScheduleScope::Core.admits(&entry));
+        let id = Uuid::new_v4();
+        let publication =
+            prepare_publication(&entry, id, &auth.producer_identity_source()).unwrap();
+        let parsed = crate::default_protocol::parse(publication.bytes()).unwrap();
+        assert_eq!(publication.redis_queue(), "celery");
+        assert_eq!(parsed.task_id, id);
+        assert_eq!(
+            parsed.kind,
+            crate::default_protocol::Kind::InactiveAccountNotifications
+        );
+        let envelope: serde_json::Value = serde_json::from_slice(publication.bytes()).unwrap();
+        assert_eq!(
+            envelope["headers"]["periodic_task_name"],
+            EXPIRATION_PERIODIC_NAME
+        );
+        assert_eq!(envelope["headers"]["parent_id"], Value::Null);
+        assert!(parsed.expires.is_none());
+
+        entry.name = VERSION_PERIODIC_NAME.into();
+        assert!(!ScheduleScope::Core.admits(&entry));
+        entry.task = crate::version_protocol::TASK.into();
+        assert!(ScheduleScope::Core.admits(&entry));
+        assert!(!ScheduleScope::Backup.admits(&entry));
+        let id = Uuid::new_v4();
+        let publication =
+            prepare_publication(&entry, id, &auth.producer_identity_source()).unwrap();
+        assert_eq!(publication.redis_queue(), "celery");
+        assert_eq!(
+            crate::version_protocol::parse(publication.bytes())
+                .unwrap()
+                .task_id,
+            id
+        );
+        let envelope: serde_json::Value = serde_json::from_slice(publication.bytes()).unwrap();
+        assert_eq!(
+            envelope["headers"]["periodic_task_name"],
+            VERSION_PERIODIC_NAME
+        );
+        entry.interval = Some((1, "days".into()));
+        assert!(!ScheduleScope::Core.admits(&entry));
+    }
+
     #[test]
     fn cached_backup_timezone_change_reaches_the_next_honolulu_cron_boundary() {
         // Actual batch11: UTC backup ran05:12; API changed the cached timezone

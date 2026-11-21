@@ -10,6 +10,14 @@ impl VersionJobs {
             jobs: Jobs::connect_series(broker, result, config).await?,
         })
     }
+
+    pub(crate) fn from_defaults(jobs: Jobs) -> Result<Self, Error> {
+        if !jobs.allows_defaults() {
+            return Err(Error::Configuration);
+        }
+        Ok(Self { jobs })
+    }
+
     pub(crate) async fn claim(
         &self,
         caller: Arc<dyn Send + Sync>,

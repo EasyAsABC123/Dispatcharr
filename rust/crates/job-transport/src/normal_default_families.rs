@@ -99,6 +99,30 @@ pub fn prepare_cleanup(jobs: Jobs, store: &Store) -> Result<Arc<dyn Handler>, Er
     Ok(Arc::new(NormalWorker::Default(worker)))
 }
 
+/// Prepare the ordinary account-expiration handler on the caller's shared Jobs.
+pub(crate) fn prepare_account_expiration(
+    jobs: Jobs,
+    store: &Store,
+    events: Arc<dyn UpdateEventSink>,
+) -> Result<Arc<dyn Handler>, Error> {
+    Ok(Arc::new(NormalWorker::Default(account_expiration_worker(
+        jobs, store, events,
+    )?)))
+}
+
+fn account_expiration_worker(
+    jobs: Jobs,
+    store: &Store,
+    events: Arc<dyn UpdateEventSink>,
+) -> Result<DefaultWorker, Error> {
+    let domains = Arc::new(KnownDomains::with_active_notifications(
+        store.pool().clone(),
+        events,
+    ));
+    DefaultWorker::new_normal_family(jobs, domains, Kind::InactiveAccountNotifications)
+        .map_err(|_| Error::Configuration)
+}
+
 pub async fn prepare_defaults(
     store: Store,
     events: Arc<dyn UpdateEventSink>,
@@ -107,10 +131,6 @@ pub async fn prepare_defaults(
     cache: &str,
     completions: ArtworkCompletions,
 ) -> Result<PreparedDefaults, Error> {
-    let domains = Arc::new(KnownDomains::with_active_notifications(
-        store.pool().clone(),
-        events.clone(),
-    ));
     let cleanup_jobs = Jobs::connect_defaults(broker, backend, Config::default())
         .await
         .map_err(|_| Error::Transport)?;
@@ -118,12 +138,7 @@ pub async fn prepare_defaults(
     let account_jobs = Jobs::connect_defaults(broker, backend, Config::default())
         .await
         .map_err(|_| Error::Transport)?;
-    let accounts = DefaultWorker::new_normal_family(
-        account_jobs.clone(),
-        domains,
-        Kind::InactiveAccountNotifications,
-    )
-    .map_err(|_| Error::Configuration)?;
+    let accounts = account_expiration_worker(account_jobs.clone(), &store, events.clone())?;
     let jobs = Jobs::connect_defaults(broker, backend, Config::default())
         .await
         .map_err(|_| Error::Transport)?;

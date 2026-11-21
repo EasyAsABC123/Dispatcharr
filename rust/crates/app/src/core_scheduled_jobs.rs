@@ -1,5 +1,6 @@
 //! One Core Celery receiver and periodic scheduler for admitted ordinary families.
 //! The original Dispatcharr and Celery authors retain full credit.
+use dispatcharr_contracts::UpdateEventSink;
 use dispatcharr_job_transport::{
     normal_backup::Application,
     normal_beat::{Scheduler, Status},
@@ -28,6 +29,8 @@ impl CoreScheduledJobs {
         store: Store,
         auth: AuthService,
         cache: Option<&str>,
+        events: Arc<dyn UpdateEventSink>,
+        version: dispatcharr_job_transport::version_service::Options,
         competing_owner: bool,
     ) -> Result<Self, String> {
         if competing_owner {
@@ -47,6 +50,8 @@ impl CoreScheduledJobs {
             store,
             auth,
             cache,
+            events,
+            version,
             database,
             runtime,
             root,
@@ -67,6 +72,8 @@ impl CoreScheduledJobs {
         store: Store,
         auth: AuthService,
         cache: &str,
+        events: Arc<dyn UpdateEventSink>,
+        version: dispatcharr_job_transport::version_service::Options,
         database: dispatcharr_job_transport::normal_backup::PgConfig,
         runtime: dispatcharr_job_transport::normal_backup::Runtime,
         root: std::path::PathBuf,
@@ -86,13 +93,19 @@ impl CoreScheduledJobs {
             identity.clone(),
         )
         .map_err(|_| "Core scheduled backup preparation failed")?;
+        let application = Arc::new(application);
+        let worker = CoreScheduledWorker::prepare(
+            application.clone(),
+            &store,
+            events,
+            version,
+            Duration::from_millis(100),
+        )
+        .map_err(|_| "Core scheduled worker configuration failed")?;
         application
-            .initialize_schedule(Arc::new(()))
+            .initialize_core_schedule(Arc::new(()))
             .await
             .map_err(|_| "Core backup schedule initialization failed")?;
-        let worker =
-            CoreScheduledWorker::prepare(Arc::new(application), &store, Duration::from_millis(100))
-                .map_err(|_| "Core scheduled worker configuration failed")?;
         let scheduler = Scheduler::prepare_core_schedules(
             store.pool().clone(),
             identity,

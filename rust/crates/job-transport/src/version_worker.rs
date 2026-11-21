@@ -89,6 +89,7 @@ impl Worker {
                 Ok(Some(m)) => m,
                 Ok(None) => return Ok(Run::Empty),
                 Err(TransportError::UnsupportedTask) => return Ok(Run::UnsupportedHead),
+                Err(TransportError::Capacity) => return Err(Error::Capacity),
                 Err(e) => {
                     if matches!(e, TransportError::AmbiguousClaim(_)) {
                         *inner.uncertain.lock().map_err(|_| Error::Supervisor)? = Some(owner);

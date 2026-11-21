@@ -149,12 +149,23 @@ impl Application {
             .map_err(|_| Error::Configuration)
     }
     pub async fn initialize_schedule(&self, owner: Arc<dyn Send + Sync>) -> Result<(), StoreError> {
+        self.schedule_for_worker()?.initialize(owner).await
+    }
+    pub async fn initialize_core_schedule(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<(), StoreError> {
+        self.schedule_for_worker()?
+            .initialize_preserving_tick(owner)
+            .await
+    }
+    fn schedule_for_worker(&self) -> Result<&crate::normal_backup_schedule::Schedule, StoreError> {
         if !self.inner.jobs.allows_defaults() {
             return Err(StoreError::Unsupported(
                 "Backup schedule consumer is not prepared",
             ));
         }
-        self.inner.schedule.initialize(owner).await
+        Ok(&self.inner.schedule)
     }
     pub fn close_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);

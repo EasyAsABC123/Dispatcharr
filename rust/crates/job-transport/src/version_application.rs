@@ -1,7 +1,8 @@
 //! Prepared normal version worker/application lifecycle, with no scheduler.
 //! Original Dispatcharr authors retain all application/algorithm/license credit.
 use crate::{
-    transport::{Config, VersionJobs},
+    milestone_dispatch::{Disposition, Handler, Lifecycle as HandlerLifecycle},
+    transport::{Config, Jobs, VersionJobs},
     version_service::{Options as ServiceOptions, Service},
     version_worker::{Error, Run, Worker},
 };
@@ -13,6 +14,24 @@ use std::{
     time::Duration,
 };
 use tokio::sync::watch;
+
+/// Prepare a version callback for an existing normal queue owner.
+/// The queue owner retains responsibility for closing the shared transport.
+pub fn prepare_shared_handler(
+    store: &Store,
+    sink: Arc<dyn UpdateEventSink>,
+    jobs: Jobs,
+    options: ServiceOptions,
+) -> Result<Arc<dyn Handler>, &'static str> {
+    let jobs = VersionJobs::from_defaults(jobs).map_err(|_| "Invalid shared version transport")?;
+    let service = Service::prepare(store.pool().clone(), sink, options)
+        .map_err(|_| "Invalid stable-version service configuration")?;
+    Ok(Arc::new(NormalHandler {
+        worker: Worker::prepare(jobs, service),
+        standalone: None,
+    }))
+}
+
 #[derive(Clone, Debug)]
 pub enum State {
     Prepared,
@@ -93,7 +112,10 @@ impl Application {
             }
             lifecycle.started = true;
         }
-        Ok(Arc::new(NormalHandler { app: self }))
+        Ok(Arc::new(NormalHandler {
+            worker: self.inner.worker.clone(),
+            standalone: Some(self),
+        }))
     }
     pub fn state(&self) -> State {
         self.inner.state.borrow().clone()
@@ -230,49 +252,47 @@ impl Application {
 }
 
 struct NormalHandler {
-    app: Application,
+    worker: Worker,
+    standalone: Option<Application>,
 }
-impl crate::milestone_dispatch::Lifecycle for NormalHandler {
+impl HandlerLifecycle for NormalHandler {
     fn begin_drain(&self, budget: Duration) {
-        self.app.inner.worker.begin_drain(budget);
+        self.worker.begin_drain(budget);
     }
     fn shutdown(
         &self,
         timeout: Duration,
-    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), crate::milestone_dispatch::Disposition>>
-    {
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), Disposition>> {
         Box::pin(async move {
-            if self.app.shutdown(timeout).await {
+            let drained = match &self.standalone {
+                Some(app) => app.shutdown(timeout).await,
+                None => self.worker.shutdown(timeout).await.is_ok(),
+            };
+            if drained {
                 Ok(())
             } else {
-                Err(crate::milestone_dispatch::Disposition::Operational(
+                Err(Disposition::Operational(
                     "normal family drain incomplete".into(),
                 ))
             }
         })
     }
 }
-impl crate::milestone_dispatch::Handler for NormalHandler {
+impl Handler for NormalHandler {
     fn supports_selected_head(&self) -> bool {
         true
     }
     fn run_once(
         &self,
         owner: Arc<dyn Send + Sync>,
-    ) -> dispatcharr_contracts::BoxFuture<
-        '_,
-        Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>,
-    > {
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<Disposition, Disposition>> {
         Box::pin(self.execute(None, owner))
     }
     fn run_selected(
         &self,
         expected: Arc<[u8]>,
         owner: Arc<dyn Send + Sync>,
-    ) -> dispatcharr_contracts::BoxFuture<
-        '_,
-        Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>,
-    > {
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<Disposition, Disposition>> {
         Box::pin(self.execute(Some(expected), owner))
     }
 }
@@ -281,11 +301,9 @@ impl NormalHandler {
         &self,
         expected: Option<Arc<[u8]>>,
         owner: Arc<dyn Send + Sync>,
-    ) -> Result<crate::milestone_dispatch::Disposition, crate::milestone_dispatch::Disposition>
-    {
-        use crate::milestone_dispatch::Disposition as D;
-        let inner = self.app.inner.clone();
-        match inner.worker.run_expected(expected, owner).await {
+    ) -> Result<Disposition, Disposition> {
+        use Disposition as D;
+        match self.worker.run_expected(expected, owner).await {
             Ok(Run::Empty) => Ok(D::Empty),
             Ok(Run::UnsupportedHead) => Ok(D::UnsupportedHead),
             Ok(Run::Completed(id, _) | Run::AlreadySucceeded(id, _)) => Ok(D::Completed(id)),
