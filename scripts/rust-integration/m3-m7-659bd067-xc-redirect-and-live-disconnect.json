@@ -1,0 +1,403 @@
+{
+  "first_disconnect_fixture_exit": 1,
+  "first_redirect_source": {
+    "actual_exit": 1,
+    "failure": "VLC fixture missing local reader",
+    "receipt_sha256": "9934e607e2e2cb670e8303ab033a41ecfc9ecd7bc8e9f40899f3ba5ecbd230db"
+  },
+  "formal_nodes_transferred": 0,
+  "performance_verified": false,
+  "publication": {
+    "host_workspace": {
+      "failed": 0,
+      "ignored": 814,
+      "passed": 1509
+    },
+    "image_id": "sha256:91658abe4d6dc14d364b3988f5cba4efd15c054e917757439e34705abcae8b9c",
+    "manifest_sha256": "13f160bf893908115015fc0703ca7777f767402b3951f5ef354ab47fb74b8ba6",
+    "parent": "4b243e0951de8164e0a41a1d428a788a87ae8d19",
+    "postimage_sha256": {
+      "rust/crates/app/src/playback.rs": "9d164472776065a3e428141daca65b4a192ab16d80748e47658f49a5569a28fb",
+      "rust/crates/clients/src/admission.rs": "0b49ef8125d72cb1725277470c318f7fb9e9742a0d8da0a4d2bac430584c95bf",
+      "rust/crates/clients/src/lib.rs": "1350853376abb3923b3b12dc7873a2b3311eb2432bc5400a8f262f76d8fe094c",
+      "rust/crates/contracts/src/lib.rs": "04a0b92feb14cc1134155fc322fdcea3643077fe237c785e8e1473c3904f7138",
+      "rust/crates/store/src/epg_connect.rs": "c4bf2a00e4c0725f56c5031e7f8915395e8be74657f9090ccf5476abad179b6f",
+      "rust/crates/store/src/epg_connect_http.rs": "2282fdcc085f864ab51696d0fbd8aef34a5704daeb9dbd2b3f6f6d291a111e17",
+      "rust/crates/store/src/live_client_connect.rs": "4ac5bd2158c6cbbc312229b095b0937ce23c0a4aa83e6e500abedbf5471b270d",
+      "rust/crates/store/src/playback.rs": "da141d6fa648962731b7caa870f6bd7203fc1411e5b1ca991caec5eb65545f04",
+      "rust/crates/store/src/redirect_playback.rs": "0ab9995db5cf721b9833453982feacd5a7caba8030a8b726f228f225ced53a0a",
+      "rust/crates/stream-http/src/engine.rs": "b213917cf1f015d67baf7cf7f503818cc8bdb2f413e70754b2e6e5314ba5114c",
+      "rust/crates/xc-http/src/live.rs": "aec51bd4f26944b6e5541f4ab3b3071d927db5a21d2cd82ee9d333f6a49b3bfc"
+    },
+    "preserved_previous_pair_authority": {
+      "failed_first_loopback_only_fixture_probe_sha256": "31b62ded7fa08cdfd9a3533f6c64bf5f4a4904166ad1cb2a015a7977d22d2919",
+      "failed_second_disconnect_delivery_probe_sha256": "61ca6d6e03636286a7956245775d8e1d76ecb0d73e1b146fc26b096bd465fd2d",
+      "original_disconnect_scopes": {
+        "audit-only": "40776f975ae00ad684ea67e38f95dde0b8ec19d3a7c1ce0475f5382d4a443c4e",
+        "webhook": "429cbead00e2a0103e2b5eaa7a8dd8f49ea6dae7d0c8fb2e283ce95947562367"
+      },
+      "previous_same_M3_on_5dcea_sha256": "c57ab76c299cbc24838ef30e3f273639cd167317e0e5700c1cca2b54a8fb44fe",
+      "retained_original_redirect_scope_sha256": "ecec47eaff76fe9e921e97c6689d71990df7c7ac9bc9e75ec04e98c91b5f2065"
+    },
+    "protected_inputs": 497,
+    "revision": "659bd067d6e5d46391d9f407a0faa73a755c3a5d",
+    "scoped_receipts_sha256": {
+      "audit-only": "e7b822c693cb6ea15356268ee798235b8cfaba73e087f4b8a0352f9a870042f4",
+      "redirect": "9b6f67d4d2173a1eb263b9fff090866665555f821e1e6a4726f6e219f9b36151",
+      "webhook": "468c3456f2cd25bc5c22f8f08bb20d247d70e85ffb2b50a92475e22bfdca2cfb"
+    },
+    "workspace_log_sha256": "61267808bcb0a52881052b4055b208476e7b576232e7d27560bd63f622e2d5bc"
+  },
+  "scopes": {
+    "audit-only": {
+      "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "candidate": {
+        "image_id": "sha256:91658abe4d6dc14d364b3988f5cba4efd15c054e917757439e34705abcae8b9c",
+        "manifest_sha256": "13f160bf893908115015fc0703ca7777f767402b3951f5ef354ab47fb74b8ba6",
+        "revision": "659bd067d6e5d46391d9f407a0faa73a755c3a5d",
+        "source_archive_sha256": "f897583cd5adcc764bbc06bc8704740e1428c756c4513526732b12f001c18962",
+        "source_tree_sha256": "6fa86fd3a88ee1129ef2fed7491fe332ff1835bb5f081e0d573d47d01a560cdf",
+        "tag": "dispatcharr-rust-candidate:xc-redirect-ts-disconnect-form-659bd067d6e5"
+      },
+      "credit": "Original Dispatcharr, Django, Requests and dependency authors retain full credit.",
+      "exact_cleanup": {
+        "Native": {
+          "cleanup_sha256": "c97bf9768199c7df108b6439033997acde9e91a9cef62596782dbb9391c42b05",
+          "exact_retired_roles": 4,
+          "probe_stdout_sha256": "1624771cdb6ef173416dbaed7c30380effba12603894e30942ca2be6fab9f8e2",
+          "receipt_sha256": "2465c61f82d1dc89fa3424bb23150a3e5bba55768229edc762940684e375066a"
+        },
+        "Original": {
+          "cleanup_sha256": "bf13fedc85ef878b9662fedecfc332e45b5b60f605e9935aed20b6f99b77129a",
+          "exact_retired_roles": 2,
+          "probe_stdout_sha256": "c27d64b29869800cd2888694734b0649e26e756a4f60dc22bd883339abced0d9",
+          "receipt_sha256": "a5b4f5e0f416e76bab34df6322d180288851b437a092c437975733bbebabb7af"
+        }
+      },
+      "formal_nodes_claimed": 0,
+      "observed": {
+        "HTTP_status": 200,
+        "audit_fields": [
+          "client_id",
+          "client_ip",
+          "user_agent",
+          "username"
+        ],
+        "audit_precedes_delivery": true,
+        "disconnect_DeliveryLog_count": 0,
+        "disconnect_after_connect": true,
+        "disconnect_audit_fields": [
+          "bytes_sent",
+          "client_id",
+          "client_ip",
+          "duration",
+          "user_agent",
+          "username"
+        ],
+        "disconnect_duration_and_bytes_valid": true,
+        "disconnect_recipient_enabled": false,
+        "disconnect_webhook_count": 0,
+        "enriched_fields": [
+          "channel_id",
+          "channel_name",
+          "channel_url",
+          "client_id",
+          "client_ip",
+          "profile_used",
+          "provider_name",
+          "stream_id",
+          "stream_name",
+          "stream_url",
+          "user_agent",
+          "username"
+        ],
+        "linked_client_and_shared_payload": true,
+        "media_bytes": 75200,
+        "natural_origin_retirement": true,
+        "one_SystemEvent": true,
+        "one_disconnect_SystemEvent": true,
+        "one_successful_DeliveryLog": true,
+        "one_webhook": true,
+        "receiver_body_sha256": "a6f8481f8dcd4c53e788c2a827fee39830618b3083aa11a49b2ee68893ed432a",
+        "same_client_channel_actor": true,
+        "stock_provider_requests": 1,
+        "useful_packets_at_least": 40
+      },
+      "paired_controller_exit": 0,
+      "performance_measured": false,
+      "scope": "audit-only",
+      "stock_proof_sha256": "40776f975ae00ad684ea67e38f95dde0b8ec19d3a7c1ce0475f5382d4a443c4e"
+    },
+    "redirect": {
+      "Native": {
+        "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "backend": "Native",
+        "candidate": {
+          "M7_Original": null,
+          "Original": {
+            "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+            "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+            "backend": "Original",
+            "candidate": null,
+            "exact_cleanup": true,
+            "literal_exit": 0,
+            "ordinary_VLC_verified": true,
+            "performance_measured": false,
+            "receipt_sha256": "859188a07d70c4429d071562cfbc2728848fd655ad80fb84a88714d3a3d59e52",
+            "scope": {
+              "final_slots_and_clients_retired": true,
+              "handoffs": {
+                "direct": {
+                  "body_bytes": 0,
+                  "content_type": "text/html",
+                  "exact_location": true,
+                  "get_allowed": true,
+                  "status": 302
+                },
+                "xc": {
+                  "body_bytes": 0,
+                  "content_type": "text/html",
+                  "exact_location": true,
+                  "get_allowed": true,
+                  "status": 302
+                }
+              },
+              "known_location_decode": {
+                "audio_video": true,
+                "bytes": 2097152,
+                "capture_sha256": "6249a5b72318a6ec1e9e558808ca706cc647a7a44c663b8bfad5dd8bb044a39e",
+                "exit": 0,
+                "frames": 74,
+                "settled": true,
+                "stderr_EOF": true,
+                "stderr_bytes": 0,
+                "stdout_EOF": true
+              },
+              "only_owned_follow_and_profile_connections": true,
+              "owned_profile_child_count": 1,
+              "owned_profile_generation_retired": true,
+              "prefollow_clients": 0,
+              "prefollow_new_origin_connections": 0,
+              "prefollow_response_location_sha256": "e77f811729d72053a560aaecd4d069ea0f8e41b2eba7d381080b3880f6e09e71",
+              "prefollow_slots": 0,
+              "status": "passed",
+              "xc_profiled_ts_decode": {
+                "audio_video": true,
+                "bytes": 2097152,
+                "capture_sha256": "465b24804bc9c062b479b3214d7fad032c10bda6b218c699de3e93327c479534",
+                "exit": 0,
+                "frames": 74,
+                "settled": true,
+                "stderr_EOF": true,
+                "stderr_bytes": 0,
+                "stdout_EOF": true
+              }
+            }
+          },
+          "image_id": "sha256:91658abe4d6dc14d364b3988f5cba4efd15c054e917757439e34705abcae8b9c",
+          "manifest_sha256": "13f160bf893908115015fc0703ca7777f767402b3951f5ef354ab47fb74b8ba6",
+          "review_sha256": "fc19c9dd0d2fcc3061e5bb37a1b74822a13f8b88deb23b0bc724522c1d526af6",
+          "revision": "659bd067d6e5d46391d9f407a0faa73a755c3a5d"
+        },
+        "exact_cleanup": true,
+        "literal_exit": 0,
+        "ordinary_VLC_verified": true,
+        "performance_measured": false,
+        "receipt_sha256": "ebefcb2a9272f8fd465215325bd84b6b663b76ad715e684c7d87a96c6c1c5bde",
+        "scope": {
+          "final_slots_and_clients_retired": true,
+          "handoffs": {
+            "direct": {
+              "body_bytes": 0,
+              "content_type": "text/html",
+              "exact_location": true,
+              "get_allowed": false,
+              "status": 302
+            },
+            "xc": {
+              "body_bytes": 0,
+              "content_type": "text/html",
+              "exact_location": true,
+              "get_allowed": true,
+              "status": 302
+            }
+          },
+          "known_location_decode": {
+            "audio_video": true,
+            "bytes": 2097152,
+            "capture_sha256": "6249a5b72318a6ec1e9e558808ca706cc647a7a44c663b8bfad5dd8bb044a39e",
+            "exit": 0,
+            "frames": 74,
+            "settled": true,
+            "stderr_EOF": true,
+            "stderr_bytes": 0,
+            "stdout_EOF": true
+          },
+          "only_owned_follow_and_profile_connections": true,
+          "owned_profile_child_count": 1,
+          "owned_profile_generation_retired": true,
+          "prefollow_clients": 0,
+          "prefollow_new_origin_connections": 0,
+          "prefollow_response_location_sha256": "e77f811729d72053a560aaecd4d069ea0f8e41b2eba7d381080b3880f6e09e71",
+          "prefollow_slots": 0,
+          "status": "passed",
+          "xc_profiled_ts_decode": {
+            "audio_video": true,
+            "bytes": 2097152,
+            "capture_sha256": "465b24804bc9c062b479b3214d7fad032c10bda6b218c699de3e93327c479534",
+            "exit": 0,
+            "frames": 74,
+            "settled": true,
+            "stderr_EOF": true,
+            "stderr_bytes": 0,
+            "stdout_EOF": true
+          }
+        }
+      },
+      "Original": {
+        "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "backend": "Original",
+        "candidate": null,
+        "exact_cleanup": true,
+        "literal_exit": 0,
+        "ordinary_VLC_verified": true,
+        "performance_measured": false,
+        "receipt_sha256": "859188a07d70c4429d071562cfbc2728848fd655ad80fb84a88714d3a3d59e52",
+        "scope": {
+          "final_slots_and_clients_retired": true,
+          "handoffs": {
+            "direct": {
+              "body_bytes": 0,
+              "content_type": "text/html",
+              "exact_location": true,
+              "get_allowed": true,
+              "status": 302
+            },
+            "xc": {
+              "body_bytes": 0,
+              "content_type": "text/html",
+              "exact_location": true,
+              "get_allowed": true,
+              "status": 302
+            }
+          },
+          "known_location_decode": {
+            "audio_video": true,
+            "bytes": 2097152,
+            "capture_sha256": "6249a5b72318a6ec1e9e558808ca706cc647a7a44c663b8bfad5dd8bb044a39e",
+            "exit": 0,
+            "frames": 74,
+            "settled": true,
+            "stderr_EOF": true,
+            "stderr_bytes": 0,
+            "stdout_EOF": true
+          },
+          "only_owned_follow_and_profile_connections": true,
+          "owned_profile_child_count": 1,
+          "owned_profile_generation_retired": true,
+          "prefollow_clients": 0,
+          "prefollow_new_origin_connections": 0,
+          "prefollow_response_location_sha256": "e77f811729d72053a560aaecd4d069ea0f8e41b2eba7d381080b3880f6e09e71",
+          "prefollow_slots": 0,
+          "status": "passed",
+          "xc_profiled_ts_decode": {
+            "audio_video": true,
+            "bytes": 2097152,
+            "capture_sha256": "465b24804bc9c062b479b3214d7fad032c10bda6b218c699de3e93327c479534",
+            "exit": 0,
+            "frames": 74,
+            "settled": true,
+            "stderr_EOF": true,
+            "stderr_bytes": 0,
+            "stdout_EOF": true
+          }
+        }
+      },
+      "performance_measured": false
+    },
+    "webhook": {
+      "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "candidate": {
+        "image_id": "sha256:91658abe4d6dc14d364b3988f5cba4efd15c054e917757439e34705abcae8b9c",
+        "manifest_sha256": "13f160bf893908115015fc0703ca7777f767402b3951f5ef354ab47fb74b8ba6",
+        "revision": "659bd067d6e5d46391d9f407a0faa73a755c3a5d",
+        "source_archive_sha256": "f897583cd5adcc764bbc06bc8704740e1428c756c4513526732b12f001c18962",
+        "source_tree_sha256": "6fa86fd3a88ee1129ef2fed7491fe332ff1835bb5f081e0d573d47d01a560cdf",
+        "tag": "dispatcharr-rust-candidate:xc-redirect-ts-disconnect-form-659bd067d6e5"
+      },
+      "credit": "Original Dispatcharr, Django, Requests and dependency authors retain full credit.",
+      "exact_cleanup": {
+        "Native": {
+          "cleanup_sha256": "372a9b98e2c835df9d0416cfb81fbc4ee22a3215f04060498b4f39b121efcf40",
+          "exact_retired_roles": 4,
+          "probe_stdout_sha256": "c194edf2039b16e410a354926bb5f9bdba7fdfe959abb803f1eee6dc111f1166",
+          "receipt_sha256": "11fdac15d2a9f29c3c67e7b5ab1503c52212316860aa78f99be62c394f66f414"
+        },
+        "Original": {
+          "cleanup_sha256": "fb90070f0e547f2997c4265cd4e61d12238926e89d8dba434be9e364e846e773",
+          "exact_retired_roles": 2,
+          "probe_stdout_sha256": "fd15edc04d874cc96cf259f8147ad592bcee6b80e4a4911edc3d20db82d42b30",
+          "receipt_sha256": "e65c7f5bc62fa0e38ac2c77fe14b02c2b503833dc50fe7f91cad0fe8b6061105"
+        }
+      },
+      "formal_nodes_claimed": 0,
+      "observed": {
+        "HTTP_status": 200,
+        "audit_fields": [
+          "client_id",
+          "client_ip",
+          "user_agent",
+          "username"
+        ],
+        "audit_precedes_delivery": true,
+        "disconnect_DeliveryLog_count": 1,
+        "disconnect_after_connect": true,
+        "disconnect_audit_fields": [
+          "bytes_sent",
+          "client_id",
+          "client_ip",
+          "duration",
+          "user_agent",
+          "username"
+        ],
+        "disconnect_duration_and_bytes_valid": true,
+        "disconnect_recipient_enabled": true,
+        "disconnect_webhook_count": 1,
+        "enriched_fields": [
+          "channel_id",
+          "channel_name",
+          "channel_url",
+          "client_id",
+          "client_ip",
+          "profile_used",
+          "provider_name",
+          "stream_id",
+          "stream_name",
+          "stream_url",
+          "user_agent",
+          "username"
+        ],
+        "linked_client_and_shared_payload": true,
+        "media_bytes": 75200,
+        "natural_origin_retirement": true,
+        "one_SystemEvent": true,
+        "one_disconnect_SystemEvent": true,
+        "one_successful_DeliveryLog": true,
+        "one_webhook": true,
+        "receiver_body_sha256": "a6f8481f8dcd4c53e788c2a827fee39830618b3083aa11a49b2ee68893ed432a",
+        "same_client_channel_actor": true,
+        "stock_provider_requests": 1,
+        "useful_packets_at_least": 40
+      },
+      "paired_controller_exit": 0,
+      "performance_measured": false,
+      "scope": "webhook",
+      "stock_proof_sha256": "429cbead00e2a0103e2b5eaa7a8dd8f49ea6dae7d0c8fb2e283ce95947562367"
+    }
+  },
+  "second_disconnect_product_exit": 1
+}
