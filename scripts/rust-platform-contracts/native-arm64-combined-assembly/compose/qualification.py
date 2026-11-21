@@ -17,9 +17,9 @@ from urllib.request import HTTPRedirectHandler, ProxyHandler, Request, build_ope
 
 HERE = Path(__file__).resolve().parent
 ROOT = Path(subprocess.check_output(["git","-C",str(HERE),"rev-parse","--show-toplevel"],text=True).strip())
-SOURCE = "cf64fbfe776c9470cc62bc90c2e21216f9df204a"
+SOURCE = "e740306c33c0b188591db904ba643d4479e068ea"
 ROLE_PIN_SOURCE = "fdede54c54ccb19300c01031537803a0b553f581"
-PARENT = "5b1827c5fecd581de9bdbee006b0778104e89b5e"
+PARENT = "10d194e2989321ebd332aea4db059bfff0c62c6e"
 CLEAN_TEMPLATE = "63c869eeb778ec178ea2cf1ad4475b5401461c665d37d578a8decf5c93637c22"
 DEBIAN_INDEX = "sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc"
 DEBIAN_ARM = "sha256:ec8534cda2cb30f29f44f23e135297af7a1496f2990fd8e4e84aa36b081a757a"

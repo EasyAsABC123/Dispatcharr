@@ -17,7 +17,7 @@ from build_manifest import CREDIT, git
 
 HERE = Path(__file__).resolve().parent
 HEX = re.compile(r"[0-9a-f]{64}")
-MANIFEST_SHA = "8dc33418c92b8739c0a14cdb5ee1c36bef78d99e995cbddf6637632b25e57a8c"
+MANIFEST_SHA = "749f8523522d3aef1ca7e518a199506d9a37705d57d6ca30b889255094c5eb4c"
 CREDIT_ROOT = "usr/share/doc/dispatcharr"
 HELPER = "opt/dispatcharr-pg-guarded-restore/bin/dispatcharr-pg-guarded-restore"
 MAIN = "usr/local/bin/dispatcharr-rs"

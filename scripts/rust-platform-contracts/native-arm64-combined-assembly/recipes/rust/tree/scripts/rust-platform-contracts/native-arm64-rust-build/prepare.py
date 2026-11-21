@@ -10,9 +10,9 @@ import subprocess
 import tomllib
 
 HERE = Path(__file__).resolve().parent
-BASE = "cf64fbfe776c9470cc62bc90c2e21216f9df204a"
-PARENT = "5b1827c5fecd581de9bdbee006b0778104e89b5e"
-TREE = "d8d8cb5aa9e40db413dee94baa325cafcbfe495f14b9e8e7be46aac7be770d52"
+BASE = "e740306c33c0b188591db904ba643d4479e068ea"
+PARENT = "10d194e2989321ebd332aea4db059bfff0c62c6e"
+TREE = "940f3a5ccdb70ec7d3d85d0316ecf4baec6f1405ef767f3512cf8e2ef519a6c8"
 LOCK = "9bc9661784b91bca0a88fbd9c3313168dfbb4e0b5c0e7115c34d198bc461225c"
 CACHE_PATCH = "54e839c022c3e4cec5c40fcde25d978e832d12c89cc577a847eb6c94aff3f767"
 SCOPE = (
@@ -54,8 +54,8 @@ def source(root, checkout, expected_head):
     changed = git(root, "diff", "--name-only", "-z", PARENT, head).decode().strip("\0").split("\0")
     need(set(changed) == CONTROL_PATHS, "only reviewed workflow/control input changes")
     tree = git(root, "ls-tree", "-rz", head, "--", *SCOPE)
-    need(sha256(tree).hexdigest() == TREE and tree.count(b"\0") == 1471,
-         "exact cf64fbfe compiler inputs including license and attribution")
+    need(sha256(tree).hexdigest() == TREE and tree.count(b"\0") == 1473,
+         "exact e740306c compiler inputs including license and attribution")
     checkout.mkdir(mode=0o700)
     with subprocess.Popen(["git", "-C", str(root), "archive", head, "--", *SCOPE],
                           stdout=subprocess.PIPE) as archive:
@@ -63,7 +63,7 @@ def source(root, checkout, expected_head):
         need(archive.wait() == 0, "exact scoped source archive")
     registry_rows(checkout)
     return {"application_base": BASE, "parent": PARENT, "validation_revision": head,
-            "scoped_git_entries": 1471, "scoped_git_tree_sha256": TREE,
+            "scoped_git_entries": 1473, "scoped_git_tree_sha256": TREE,
             "original_authors_retain_credit": True, "cargo_lock_sha256": LOCK}
 
 

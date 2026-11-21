@@ -13,9 +13,9 @@ from tempfile import TemporaryDirectory
 
 HERE=Path(__file__).resolve().parent
 REPO_PATH=Path("scripts/rust-platform-contracts/native-arm64-combined-assembly")
-APP="cf64fbfe776c9470cc62bc90c2e21216f9df204a"
-PARENT="5b1827c5fecd581de9bdbee006b0778104e89b5e"
-SOURCE_TREE="1acc1ca78eef4f050808caf07a5ec18c99fa823c4356412471434b7a1bd3f560"
+APP="e740306c33c0b188591db904ba643d4479e068ea"
+PARENT="10d194e2989321ebd332aea4db059bfff0c62c6e"
+SOURCE_TREE="6560b4e3eae091e0b89286698f99a61dfb5907674a25d948aafccfa4bf66b8a0"
 
 
 def child_env():
@@ -58,7 +58,7 @@ def preflight():
     tree=[]
     for ref in (APP,PARENT):
         tree.append(git("ls-tree","-rz",ref,"--",*manifest["application_input_scope"]))
-    assert tree[0]==tree[1] and tree[0].count(b"\0")==2022 and sha256(tree[0]).hexdigest()==SOURCE_TREE
+    assert tree[0]==tree[1] and tree[0].count(b"\0")==2024 and sha256(tree[0]).hexdigest()==SOURCE_TREE
     credits=manifest["credits"]
     assert len(credits)==13
     for item in credits.values():

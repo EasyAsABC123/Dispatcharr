@@ -31,7 +31,7 @@ BASES = {
              8, "53078d645b593a5e03a57c4143660ec2554e0c2788c9e27d69bbc488f959a33b"),
 }
 RUST_INDEX = "rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f"
-MANIFEST_REF = "5b1827c5fecd581de9bdbee006b0778104e89b5e"
+MANIFEST_REF = "10d194e2989321ebd332aea4db059bfff0c62c6e"
 COMPAT = ("rust/runtime/collect_regex_host.py", "rust/runtime/collect_python_host.py", "rust/runtime/regex_bridge",
           "rust/runtime/python_host_licenses", "rust/runtime/python_host_exclusions",
           "rust/runtime/plugin_compat_source", "rust/runtime/plugin_bridge")
