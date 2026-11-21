@@ -1,0 +1,276 @@
+{
+  "actual_pair_exit": 0,
+  "combined_review_sha256": "74698a0a7d8b1ca349cd593a655100358b3918bc7431d9c59f961e6c4e0ec6cf",
+  "credit": "The original Dispatcharr, Django, Celery and Kombu authors retain full credit.",
+  "full_M6_accepted": false,
+  "historical_first_attempt": {
+    "application_defect_found": false,
+    "arms": {
+      "Native": {
+        "all_owned_requests_authenticated": true,
+        "broker_journal_sha256": "5fae8489cf2a9c117126b88daaf78cb1303016b18737872b4e443d3ec4b3951d",
+        "exact_cleanup": true,
+        "initial_owned_requests": 0,
+        "initial_private_trace_sha256": "f3ab1a9e79075d9e98c00d288c4512cf8f2e619ac1298c906d78af4dbce9b035",
+        "literal_exit": 1,
+        "matching_typed_worker_SUCCESS": true,
+        "one_root_in_drained_broker": true,
+        "owned_provider_request_sequence": [
+          "authenticate",
+          "get_vod_categories",
+          "get_series_categories",
+          "get_vod_streams",
+          "get_series"
+        ],
+        "previous_typed_SQL_assertions_replayed": true,
+        "terminal_private_trace_sha256": "f836f633783578deb9d14aa5258c3e12e589708ed39f3847558ed83797ce8b88"
+      },
+      "Original": {
+        "all_owned_requests_authenticated": true,
+        "broker_journal_sha256": "f27a4b40ac40d98d536b5785faac982aca4f0905239da4c4c5891ebacc1939fc",
+        "exact_cleanup": true,
+        "initial_owned_requests": 0,
+        "initial_private_trace_sha256": "f3ab1a9e79075d9e98c00d288c4512cf8f2e619ac1298c906d78af4dbce9b035",
+        "literal_exit": 1,
+        "matching_typed_worker_SUCCESS": true,
+        "one_root_in_drained_broker": true,
+        "owned_provider_request_sequence": [
+          "authenticate",
+          "get_vod_categories",
+          "get_series_categories",
+          "get_vod_streams",
+          "get_series"
+        ],
+        "previous_typed_SQL_assertions_replayed": true,
+        "terminal_private_trace_sha256": "8030af913756781f2e5586db361555e2cfa96bfffc54e6182b85a22a047bb174"
+      }
+    },
+    "cause": "the expected action set omitted the ordinary authenticated provider handshake before VOD API actions",
+    "first_exact_cleanup": true,
+    "first_failure_stage": "final owned provider assertion",
+    "first_fixture_sha256": "d10c256a60d82de1fa1d1ba62bd8911e0487331d231aa1555ddaa7ba831474eb",
+    "first_literal_exit": 1,
+    "first_pair_qualified": false,
+    "first_projection_sha256": "8de304da292ebe7de22fe57c66fd9cf7fe02b4874e15a13ceba3654ca4819a89"
+  },
+  "lanes": {
+    "native": {
+      "EOFs": true,
+      "actual_exit": 0,
+      "exact_cleanup": true,
+      "owned_provider_observation": {
+        "all_owned_requests_authenticated": true,
+        "initial_owned_requests": 0,
+        "initial_private_trace_sha256": "f3ab1a9e79075d9e98c00d288c4512cf8f2e619ac1298c906d78af4dbce9b035",
+        "owned_provider_request_sequence": [
+          "authenticate",
+          "get_vod_categories",
+          "get_series_categories",
+          "get_vod_streams",
+          "get_series"
+        ],
+        "terminal_private_trace_sha256": "3d7fd206c58ecce598c02105409e5af9518c7307aa731e6aa9b4874340f90098"
+      },
+      "projection": {
+        "VOD_task": "apps.vod.tasks.refresh_vod_content",
+        "actual_worker_terminal": "SUCCESS",
+        "default_links": [
+          [
+            "movie",
+            false
+          ],
+          [
+            "series",
+            false
+          ]
+        ],
+        "disabled_schedule_identity_preserved": true,
+        "existing_private_echo_values_preserved": true,
+        "movie_relations": 1,
+        "native_selected_beat": false,
+        "one_root_for_account": true,
+        "post_settlement_repeated_true_published_roots": 0,
+        "profile_and_other_provider_state_preserved": true,
+        "provider_actions": {
+          "get_series": 1,
+          "get_series_categories": 1,
+          "get_vod_categories": 1,
+          "get_vod_streams": 1
+        },
+        "provider_request_sequence": [
+          "authenticate",
+          "get_vod_categories",
+          "get_series_categories",
+          "get_vod_streams",
+          "get_series"
+        ],
+        "react_form_request_fields": [
+          "account_type",
+          "cron_expression",
+          "enable_vod",
+          "hash_key",
+          "is_active",
+          "max_streams",
+          "name",
+          "priority",
+          "refresh_interval",
+          "server_group",
+          "server_url",
+          "stale_stream_days",
+          "user_agent",
+          "username"
+        ],
+        "result_matches_owned_completion": true,
+        "retired_ready_and_reserved": true,
+        "schedule_run_count": 0,
+        "series_relations": 0,
+        "wire": [
+          {
+            "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "enabled": false,
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          },
+          {
+            "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "enabled": true,
+            "method": "PATCH",
+            "mime": "application/json",
+            "status": 200
+          },
+          {
+            "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "enabled": true,
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          },
+          {
+            "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "enabled": true,
+            "method": "PATCH",
+            "mime": "application/json",
+            "status": 200
+          }
+        ]
+      },
+      "retired_generations": 3
+    },
+    "source": {
+      "EOFs": true,
+      "actual_exit": 0,
+      "exact_cleanup": true,
+      "owned_provider_observation": {
+        "all_owned_requests_authenticated": true,
+        "initial_owned_requests": 0,
+        "initial_private_trace_sha256": "f3ab1a9e79075d9e98c00d288c4512cf8f2e619ac1298c906d78af4dbce9b035",
+        "owned_provider_request_sequence": [
+          "authenticate",
+          "get_vod_categories",
+          "get_series_categories",
+          "get_vod_streams",
+          "get_series"
+        ],
+        "terminal_private_trace_sha256": "2dfe2debe7145394c7d889e453a601c5afc464a997b784f0c10623b0cba4a5ec"
+      },
+      "projection": {
+        "VOD_task": "apps.vod.tasks.refresh_vod_content",
+        "actual_worker_terminal": "SUCCESS",
+        "default_links": [
+          [
+            "movie",
+            false
+          ],
+          [
+            "series",
+            false
+          ]
+        ],
+        "disabled_schedule_identity_preserved": true,
+        "existing_private_echo_values_preserved": true,
+        "movie_relations": 1,
+        "native_selected_beat": false,
+        "one_root_for_account": true,
+        "post_settlement_repeated_true_published_roots": 0,
+        "profile_and_other_provider_state_preserved": true,
+        "provider_actions": {
+          "get_series": 1,
+          "get_series_categories": 1,
+          "get_vod_categories": 1,
+          "get_vod_streams": 1
+        },
+        "provider_request_sequence": [
+          "authenticate",
+          "get_vod_categories",
+          "get_series_categories",
+          "get_vod_streams",
+          "get_series"
+        ],
+        "react_form_request_fields": [
+          "account_type",
+          "cron_expression",
+          "enable_vod",
+          "hash_key",
+          "is_active",
+          "max_streams",
+          "name",
+          "priority",
+          "refresh_interval",
+          "server_group",
+          "server_url",
+          "stale_stream_days",
+          "user_agent",
+          "username"
+        ],
+        "result_matches_owned_completion": true,
+        "retired_ready_and_reserved": true,
+        "schedule_run_count": 0,
+        "series_relations": 0,
+        "wire": [
+          {
+            "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "enabled": false,
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          },
+          {
+            "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "enabled": true,
+            "method": "PATCH",
+            "mime": "application/json",
+            "status": 200
+          },
+          {
+            "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "enabled": true,
+            "method": "GET",
+            "mime": "application/json",
+            "status": 200
+          },
+          {
+            "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "enabled": true,
+            "method": "PATCH",
+            "mime": "application/json",
+            "status": 200
+          }
+        ]
+      },
+      "retired_generations": 2
+    }
+  },
+  "native_Main_actual_exit": 0,
+  "native_image": "sha256:6fd49d3cd188b931dc4a28ca5525e297002584f9a5073baa2cb2f14da4b1abd7",
+  "native_revision": "2581d75bc4c0ed7f522b08288f335a6db58d141a",
+  "original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "package_manifest_sha256": "7c5721fc0b5a12c796c0cc373248d59a8907dbc53372e9a23e78041c46ab6054",
+  "paired_fixture_sha256": "d966af669e9b4eb700ab8bb440b30734fa0cac8cfc8633bc6956d001ad15f3e4",
+  "paired_raw_projection_sha256": "47a63586a1f9b51e0f94519bb34adb81d286e49a081a41bc66b018a84c0d54d2",
+  "performance_measured": false,
+  "scope": "normal XC settings VOD root and separate ordinary worker settlement per backend",
+  "separate_four_field_stock_producer_sha256": "10d773cb6dd48992354852d3aa325567c3816105c575b3544f89c877d65689a5",
+  "separate_react_generated_stock_producer_sha256": "0032d250a58e44176fd8b7d3a8be6c577bc54c5b43fc2d926adb83adf1a6472e"
+}

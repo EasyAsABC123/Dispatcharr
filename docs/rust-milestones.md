@@ -1809,3 +1809,13 @@ The [Original notification mutation capture](rust-notification-mutations-source.
 The current selected functional checkpoint is [image53](rust-image53-validation.md): all 28 package groups and scoped Main4s/header/notification gates pass, retaining both failed fixture attempts. Fresh live functional checks cover 222 authenticated readers; Source-only qualification covers 111 readers and 177 in-window samples. Comparative image53 resource gains remain pending; image52 gains remain historical and source-bound. The [three Source48 detail-method assignments](../scripts/rust-contracts/notification-mutation-assignments.md) increase partial HTTP definitions from 117 to 120, preserving all 795 unselected operations and existing non-HTTP definitions. No whole milestone or Native CRUD application acceptance is added.
 
 M0 additionally assigns the [three retained Original schema-cache tests](../scripts/rust-contracts/schema-cache/README.md) to one existing schema-view work item. The register has121 partial HTTP Source assignments; all798 operation identities,322 unresolved method declarations and250 non-HTTP candidates remain unchanged. Mocked schema generation, LocMemCache and direct RequestFactory calls do not establish real schema/TCP or Native behavior.
+
+The [2581d75b paired Group Manager OPTIONS run](rust-m5-2581d75b-group-options.md)
+matched five authenticated requests and preserved eight scoped SQL tables.
+The [paired XC VOD editor run](rust-m6-2581d75b-xc-vod-editor.md) matched the
+unchanged React request and its durable worker effects with Selected workers
+and Beat disabled. [The exact Compose candidate](rust-m9-2581d75b-coordinator-coverage.md)
+passed 11 of 127 required nodes on one image. The
+[six-minute d608 soak prefix](rust-m9-d608-six-minute-soak-prefix.md)
+retired all owned roles after ten viewers and a completed refresh, and failed
+the idle working-memory limit.

@@ -1,0 +1,122 @@
+{
+  "candidate_image": "sha256:88006c536b8c7427643f87cfced8e603073bb2231daf59efa3be709063d12f56",
+  "candidate_revision": "d608ff758c4a937961439f4389d01040f560122d",
+  "comparative_performance_measured": false,
+  "credit": "The original Dispatcharr authors and contributors retain full credit.",
+  "evidence_sha256": {
+    "prefix.controller-exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "prefix/evidence/integration.json": "c802eabae7b691b201eac49075c988fa97140984afea120aa80123130fde1236",
+    "prefix/evidence/owned-role-counters.jsonl": "eb34d6ddaf739e2addbfb4892ad0179b860c05e2bbc14c98010e9ecd004eca33",
+    "prefix/evidence/owned-role-summary.json": "acccc40e2b9d5383a78937fc0ac10da88e55dcf186e6c0416ea75d134deb72a8",
+    "prefix/evidence/soak7200/active.jsonl": "a32e069c07314af2b6083ddc9bfd54b2156998f4d6f4e75c936e281da68875a1",
+    "prefix/evidence/soak7200/reader-terminals.json": "7e074f04bf413ba59a0009b58a5f0f5b627b7254ecbd5af5ba8e58ee7375d1a8",
+    "prefix/execution.json": "38f43cb3f460ec58008e537a7b8a4c070ed9059db66d87962b4dc42619988aea",
+    "prefix/independent-cleanup.json": "ed1e4a2efcae98e56efe6d59b28b5580ff42c66aaeaf1d636df771cf307e2f44",
+    "prefix/receipt.json": "cb6e236fb38b637cb5081965704872b2413cb11b30135eb4b91ab6b73f0f8784"
+  },
+  "failed_criterion": "aggregate working-memory median growth",
+  "failure_stage": "post-idle resource qualification before scoped clip decoding",
+  "fixed_progress": {
+    "active_samples": 73,
+    "closed_viewer_transports": 10,
+    "collected_clip_windows": 20,
+    "qualified_scoped_decodes": 0,
+    "recorded_positive_checks": 25,
+    "refresh_terminal_offsets_seconds": [
+      300
+    ],
+    "seconds": 360,
+    "upstream_encoder_generations": 1,
+    "viewers": 10
+  },
+  "full_M9_accepted": false,
+  "idle_resource_recomputation": {
+    "census_growth": {
+      "file_descriptors": -203,
+      "processes": -2,
+      "socket_descriptors": -48,
+      "threads": -3
+    },
+    "passed": false,
+    "post_idle": {
+      "census_maxima": {
+        "file_descriptors": 119,
+        "processes": 11,
+        "socket_descriptors": 43,
+        "tcp_time_wait": 2,
+        "threads": 23
+      },
+      "complete_censuses": 11,
+      "working_memory_median_bytes": 327086080
+    },
+    "pre_idle": {
+      "census_maxima": {
+        "file_descriptors": 322,
+        "processes": 13,
+        "socket_descriptors": 91,
+        "tcp_time_wait": 80,
+        "threads": 26
+      },
+      "complete_censuses": 11,
+      "working_memory_median_bytes": 200331264
+    },
+    "working_memory_growth_bytes": 126754816,
+    "working_memory_growth_ceiling_bytes": 67108864
+  },
+  "independently_cleaned_roles": [
+    "baseline",
+    "candidate",
+    "data-init",
+    "origin",
+    "soak-relay"
+  ],
+  "literal_controller_exit": 1,
+  "literal_tracked_runner_exit": 1,
+  "memory_basis": "cgroup memory.current minus inactive_file, clamped at zero",
+  "other_idle_criteria_met": {
+    "file_descriptors": true,
+    "oom_events": true,
+    "processes": true,
+    "socket_descriptors": true,
+    "tcp_time_wait": true,
+    "threads": true
+  },
+  "physical_failure_preserved": true,
+  "prefix_qualified": false,
+  "process_heap_or_cache_cause_identified": false,
+  "reducer_source_sha256": {
+    "long_playback.py": "7ae3d76ca184e58bd0616aac828cca4f09727bf3dd064331d4167405d3d214b0",
+    "owned_resources.py": "89a9f5c6ff1019c8c8f72b73405cd22d2171a05efe22eaabf9d9dd566ee146e5",
+    "soak_plan.json": "975fbe39371dd78a4fea47e1d4102faacb689aa82efb8d642ca67666000de1c1",
+    "soak_resource_binding.py": "ad9302612cdd63a062ef74bcd8fe2575501e25ba1084a711d4280836baa9ce7c"
+  },
+  "remaining_owned_containers_networks_volumes": [
+    0,
+    0,
+    0
+  ],
+  "reported_failure_category": "ValueError",
+  "role_working_memory_medians": {
+    "baseline": {
+      "growth_bytes": 44716032,
+      "post_idle_bytes": 165355520,
+      "pre_idle_bytes": 120639488
+    },
+    "candidate": {
+      "growth_bytes": 77148160,
+      "post_idle_bytes": 87318528,
+      "pre_idle_bytes": 10170368
+    },
+    "origin": {
+      "growth_bytes": 2002944,
+      "post_idle_bytes": 61460480,
+      "pre_idle_bytes": 59457536
+    },
+    "relay": {
+      "growth_bytes": 2818048,
+      "post_idle_bytes": 12431360,
+      "pre_idle_bytes": 9613312
+    }
+  },
+  "scope": "d608 six-minute owned-soak prefix failure attribution"
+}
