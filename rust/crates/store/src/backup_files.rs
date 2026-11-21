@@ -39,6 +39,7 @@ enum JobAccess {
     None,
     Create,
     Restore,
+    CreateRestore,
     Complete,
 }
 
@@ -46,10 +47,16 @@ impl JobAccess {
     fn permits(self, kind: &str) -> bool {
         matches!(
             (self, kind),
-            (Self::Create | Self::Complete, "create")
-                | (Self::Create | Self::Restore | Self::Complete, "status")
-                | (Self::Restore | Self::Complete, "restore")
-                | (Self::Complete, "schedule-update")
+            (
+                Self::Create | Self::CreateRestore | Self::Complete,
+                "create"
+            ) | (
+                Self::Create | Self::Restore | Self::CreateRestore | Self::Complete,
+                "status"
+            ) | (
+                Self::Restore | Self::CreateRestore | Self::Complete,
+                "restore"
+            ) | (Self::Complete, "schedule-update")
         )
     }
 }
@@ -62,6 +69,7 @@ fn durable_job_routes_preserve_their_owner_capabilities() {
         (JobAccess::None, [false, false, false, false]),
         (JobAccess::Create, [true, true, false, false]),
         (JobAccess::Restore, [false, true, true, false]),
+        (JobAccess::CreateRestore, [true, true, true, false]),
         (JobAccess::Complete, [true, true, true, true]),
     ] {
         assert_eq!(routes.map(|route| scope.permits(route)), expected);
@@ -347,6 +355,14 @@ impl BackupFiles {
     pub fn with_restore_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
         self.jobs = Some(jobs);
         self.job_access = JobAccess::Restore;
+        self
+    }
+
+    /// Route create, restore and signed status through one worker. The
+    /// existing scheduler adapters retain both schedule update paths.
+    pub fn with_create_restore_jobs(mut self, jobs: Arc<dyn BackupJobApi>) -> Self {
+        self.jobs = Some(jobs);
+        self.job_access = JobAccess::CreateRestore;
         self
     }
 

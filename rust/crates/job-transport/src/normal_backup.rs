@@ -55,6 +55,7 @@ struct Inner {
     worker: Arc<Semaphore>,
     http: Arc<Semaphore>,
     closed: AtomicBool,
+    restore_claims_closed: AtomicBool,
     advanced: Arc<Notify>,
     uncertain: Mutex<Vec<Arc<dyn Send + Sync>>>,
     #[cfg(target_os = "linux")]
@@ -100,6 +101,7 @@ impl Application {
                 worker: Arc::new(Semaphore::new(1)),
                 http: Arc::new(Semaphore::new(4)),
                 closed: AtomicBool::new(false),
+                restore_claims_closed: AtomicBool::new(false),
                 advanced: Arc::new(Notify::new()),
                 uncertain: Mutex::new(Vec::with_capacity(1)),
                 #[cfg(target_os = "linux")]
@@ -176,6 +178,12 @@ impl Application {
     pub(super) fn close_http_admission(&self) {
         self.inner.http.close();
     }
+
+    pub(super) fn close_restore_claim_admission(&self) {
+        self.inner
+            .restore_claims_closed
+            .store(true, Ordering::Release);
+    }
     fn owner(
         &self,
         http: bool,
@@ -237,6 +245,10 @@ impl Application {
             let mut restore_scope=None;
             let mut restore_preflight_result=None;
             let is_restore=matches!(&candidate.message.kind,Kind::Restore(_));
+            let restore_claim_closed=||is_restore && inner.restore_claims_closed.load(Ordering::Acquire);
+            if restore_claim_closed() {
+                return Ok(Disposition::NotDue);
+            }
             let pre_revoked=if is_restore { inner.revoked.contains(&candidate.message.id.to_string()).map_err(|_|Disposition::Operational("backup revocation set unavailable".into()))? } else { false };
             if is_restore && !pre_revoked {
                 // This existing spawned worker owns admission through the
@@ -259,7 +271,7 @@ impl Application {
                     Err(_)=>{retain(&inner,owner.clone());return Err(Disposition::Operational("restore SQL admission unsettled".into()));}
                 }
             }
-            if inner.closed.load(Ordering::Acquire) {
+            if inner.closed.load(Ordering::Acquire) || restore_claim_closed() {
                 if let Some(scope)=restore_scope.take() {
                     inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore preclaim drain unsettled".into()))?;
                 }

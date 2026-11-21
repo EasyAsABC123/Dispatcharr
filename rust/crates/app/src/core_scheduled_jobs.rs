@@ -19,6 +19,31 @@ pub fn enabled() -> Result<bool, String> {
     }
 }
 
+pub fn restore_grace(core_enabled: bool, shutdown: Duration) -> Result<Option<Duration>, String> {
+    match env::var_os("RUST_CORE_BACKUP_RESTORE_OWNER") {
+        None => Ok(None),
+        Some(value) => restore_grace_for(&value, core_enabled, shutdown).map(Some),
+    }
+}
+
+fn restore_grace_for(
+    value: &OsStr,
+    core_enabled: bool,
+    shutdown: Duration,
+) -> Result<Duration, String> {
+    if value != OsStr::new("rust") || !core_enabled {
+        return Err(
+            "RUST_CORE_BACKUP_RESTORE_OWNER requires rust and the Core schedule owner".into(),
+        );
+    }
+    // Retain the existing restore and downstream drain bounds. Core must be
+    // able to settle even a restore stopped during its full SQL admission wait.
+    crate::manual_backup_config::restore_drain_grace(shutdown)
+        .ok()
+        .filter(|grace| *grace >= Duration::from_secs(30))
+        .ok_or_else(|| "Core backup restore requires RUST_SHUTDOWN_SECONDS of at least 46".into())
+}
+
 #[derive(Clone)]
 pub struct CoreScheduledJobs {
     worker: CoreScheduledWorker,
@@ -128,6 +153,15 @@ impl CoreScheduledJobs {
         self.worker.backup_create_api()
     }
 
+    pub fn bind_restore_plugins(
+        &self,
+        plugins: dispatcharr_store::PluginActions,
+    ) -> Result<(), String> {
+        self.worker
+            .bind_restore_plugins(plugins)
+            .map_err(|_| "Core backup restore plugin reconciliation binding failed".into())
+    }
+
     pub fn ready(&self) -> bool {
         self.scheduler.core_schedule_ready()
     }
@@ -155,7 +189,7 @@ impl CoreScheduledJobs {
 
     pub fn stop_admission(&self) {
         self.scheduler.stop_admission();
-        self.worker.stop_backup_api_admission();
+        self.worker.stop_backup_admission();
     }
 
     pub async fn shutdown(&self, grace: Duration) -> Result<(), String> {
@@ -176,4 +210,21 @@ impl CoreScheduledJobs {
         }
         Ok(())
     }
+}
+
+#[cfg(test)]
+#[test]
+fn core_restore_requires_its_owner_and_a_full_admission_budget() {
+    let rust = OsStr::new("rust");
+    assert!(restore_grace_for(rust, false, Duration::from_secs(136)).is_err());
+    assert!(restore_grace_for(OsStr::new("yes"), true, Duration::from_secs(136)).is_err());
+    assert!(restore_grace_for(rust, true, Duration::from_secs(45)).is_err());
+    assert_eq!(
+        restore_grace_for(rust, true, Duration::from_secs(46)),
+        Ok(Duration::from_secs(30))
+    );
+    assert_eq!(
+        restore_grace_for(rust, true, Duration::from_secs(240)),
+        Ok(Duration::from_secs(120))
+    );
 }

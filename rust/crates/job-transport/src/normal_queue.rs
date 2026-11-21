@@ -322,7 +322,15 @@ impl CoreScheduledWorker {
         self.backup.clone()
     }
 
-    pub fn stop_backup_api_admission(&self) {
+    pub fn bind_restore_plugins(
+        &self,
+        plugins: dispatcharr_store::PluginActions,
+    ) -> Result<(), super::normal_backup::Error> {
+        self.backup.bind_restore_plugins(plugins)
+    }
+
+    pub fn stop_backup_admission(&self) {
+        self.backup.close_restore_claim_admission();
         self.backup.close_http_admission();
     }
 

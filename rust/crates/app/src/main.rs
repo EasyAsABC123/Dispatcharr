@@ -280,6 +280,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     if selected_jobs_enabled && core_scheduled_jobs_enabled {
         return Err("Configure one application queue owner".into());
     }
+    let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
+    let core_restore_grace =
+        core_scheduled_jobs::restore_grace(core_scheduled_jobs_enabled, shutdown_timeout)?;
     // A Selected startup owns real SQL and Redis preparation before the HTTP
     // server exists. Register once before those operations, then await them
     // normally. Never use the signal to drop their in-progress futures.
@@ -1251,6 +1254,12 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         (None, None) => backup_files,
     };
     let backup_files = match &core_scheduled {
+        Some(owner) if core_restore_grace.is_some() => {
+            owner.bind_restore_plugins(plugin_actions.clone())?;
+            backup_files
+                .with_schedule_enable(Arc::new(owner.scheduler()))
+                .with_create_restore_jobs(owner.backup_create_api())
+        }
         Some(owner) => backup_files
             .with_schedule_enable(Arc::new(owner.scheduler()))
             .with_create_jobs(owner.backup_create_api()),
@@ -1417,7 +1426,6 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     }
     app = app.layer(axum::middleware::from_fn(response_headers::apply));
     eprintln!("Dispatcharr Rust port listening on {bind}; migration parity is incomplete");
-    let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
     let manual_restore_grace = manual_backup
         .as_ref()
         .filter(|owner| owner.is_restore_owner())
@@ -1463,6 +1471,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         core_settings,
         selected_jobs,
         core_scheduled,
+        core_restore_grace,
         core_compact: core_compact.clone(),
         core_repack: core_repack.clone(),
         ordinary_recording_playback: ordinary_recording_playback.clone(),
@@ -1708,6 +1717,7 @@ struct ShutdownServices {
     core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
     selected_jobs: Option<selected_jobs::SelectedJobs>,
     core_scheduled: Option<core_scheduled_jobs::CoreScheduledJobs>,
+    core_restore_grace: Option<Duration>,
     core_compact: Option<Arc<dispatcharr_job_transport::compact_coordination::CompactCoordinator>>,
     core_repack: Option<dispatcharr_store::xc_account_http::Repack>,
     ordinary_recording_playback: Option<dispatcharr_store::RecordingPlayback>,
@@ -1750,6 +1760,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         core_settings,
         selected_jobs,
         core_scheduled,
+        core_restore_grace,
         core_compact,
         core_repack,
         ordinary_recording_playback,
@@ -1788,7 +1799,17 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     }
     let core_scheduled_mode = core_scheduled.is_some();
     let core_scheduled_shutdown = match core_scheduled {
-        Some(ref owner) => owner.shutdown(Duration::from_secs(12)).await,
+        Some(ref owner) => {
+            let result = owner
+                .shutdown(core_restore_grace.unwrap_or(Duration::from_secs(12)))
+                .await;
+            if core_restore_grace.is_some() {
+                result?;
+                Ok(())
+            } else {
+                result
+            }
+        }
         None => Ok(()),
     };
     if selected_jobs.is_none() {
