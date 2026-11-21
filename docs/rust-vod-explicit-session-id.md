@@ -109,3 +109,31 @@ early-close cohorts still recorded Original 503 and Rust 200. This later
 condition-gated check establishes admission after retirement. Provider
 release timing, performance and full M4 remain open.
 [Redacted late-admission receipt](rust-vod-late-explicit-session-id.json)
+
+### Paired close and origin handler retirement
+
+Pinned Original and the exact Rust `21da6d0a7cbe` package repeated the
+ordinary close at 32 and 128 KiB/s. At each rate, two authenticated readers
+shared a VOD session and one read an unrelated session. All three received
+media with HTTP 200. Each backend made three origin requests. The unrelated
+reader remained active while the shared slot retired. All four playback
+guests exited 0, and each Compose scope verified four exact container
+generations retired with empty project inventories.
+
+| Observation after the last shared local close, in milliseconds | 32 KiB/s Original | 32 KiB/s Rust | 128 KiB/s Original | 128 KiB/s Rust |
+| --- | ---: | ---: | ---: | ---: |
+| Redis slot release sampling interval | 900.06–1,100.20 | 0.00–50.17 | 0.01–50.17 | 0.00–50.24 |
+| Original last shared iterator marker | 1,010.11 | — | 9.73 | — |
+| Original shared slot release marker | 1,010.81 | — | 10.48 | — |
+| Later shared origin handler retirement | 3,009.59 | 3,002.43 | 509.31 | 502.87 |
+
+The Redis bracket narrowed for Original at the faster origin rate. On both
+backends and at both rates the later origin handler remained active well
+past the first Redis sample that showed the free slot. A remote handler can
+observe a close on a subsequent write. The origin clock was checked against
+the guest clock at both observation points. The Original marker times
+measure Docker console ingest. These observations leave the exact local
+close mechanism and earlier replacement-admission difference open. This
+pair issued no replacement request and measured no performance outcome.
+
+[Redacted paired pacing receipt](rust-vod-21da-paced-close.json)

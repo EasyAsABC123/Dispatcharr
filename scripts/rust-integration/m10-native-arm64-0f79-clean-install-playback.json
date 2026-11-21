@@ -1,0 +1,132 @@
+{
+  "application_revision": "0f79dc28f8718a05a6b28dc554be958e3e295b47",
+  "browser_executed": false,
+  "exact_overlay_retry": {
+    "artifact_sha256": "6becacddfee5eee255db557ae588e3bc7d0c6c8ff7021a349fb97707e0b8df14",
+    "checks": [
+      "ordinary-topology-and-internal-network",
+      "clean-empty-database",
+      "initialization-off-exits-without-ddl",
+      "native-only-roles",
+      "initialized-original-schema",
+      "frontend-index-served",
+      "normal-first-admin-form-available",
+      "normal-first-admin-initialized",
+      "normal-login-created-admin",
+      "restart-preserves-schema-and-closes-setup",
+      "one-active-origin-two-authenticated-readers",
+      "both-readers-decoded-and-origin-retired"
+    ],
+    "components_exited_zero": 9,
+    "compose_exit": 0,
+    "controller_exit": 0,
+    "exact_cleanup": true,
+    "exact_nonroot_static_metadata_checks": 27,
+    "http_transport": "owned-rootful-internal-bridge",
+    "job": 136809763466,
+    "merged_file_count": 34618,
+    "owned_origin_counts": {
+      "retired": {
+        "active": 0,
+        "total": 1
+      },
+      "viewing": {
+        "active": 1,
+        "total": 1
+      }
+    },
+    "private_image_config": "sha256:3aa5394cc13f754adf659f705c1a5eab2898e4826fe29606b3e7df5dac37b9a5",
+    "private_image_smoke_receipt_sha256": "406f439af375f5e465be5382c595f3dbf9b38bec9195f44821a89404541344bf",
+    "published_host_port": false,
+    "revision": "359775f6c8f93fe9048ceca416fa35fc869ed69a",
+    "run": 44892036200,
+    "two_readers_decoded": [
+      {
+        "audio_video_decoded": true,
+        "packet_aligned_bytes": 197400
+      },
+      {
+        "audio_video_decoded": true,
+        "packet_aligned_bytes": 197400
+      }
+    ]
+  },
+  "performance_measured": false,
+  "prior_exact_hosted_attempts": [
+    {
+      "artifact_sha256": "5bf43e1c90e9600ec4a2adcf9c058a8b660897d0c729b88fedeb1c27bfb5731d",
+      "checkpoint": "initialize-on-port",
+      "checks": [
+        "ordinary-topology-and-internal-network",
+        "clean-empty-database",
+        "initialization-off-exits-without-ddl"
+      ],
+      "compose_checks": 3,
+      "compose_exit": 1,
+      "controller_exit": 1,
+      "exact_cleanup": true,
+      "exact_nonroot_static_metadata_checks": 0,
+      "job": 136791356563,
+      "revision": "16c37e52ffddbfa80d00e7b66554d4bf8bb0911a",
+      "run": 44886019085,
+      "startup_categories": [
+        "schema-created"
+      ],
+      "startup_state": "exited"
+    },
+    {
+      "artifact_sha256": "d7232f7ce4ddf343604dfd647221240937c928dd567e034b2759f64d7c557dec",
+      "checkpoint": "initialize-on-port",
+      "checks": [
+        "ordinary-topology-and-internal-network",
+        "clean-empty-database",
+        "initialization-off-exits-without-ddl"
+      ],
+      "compose_checks": 3,
+      "compose_exit": 1,
+      "controller_exit": 1,
+      "exact_cleanup": true,
+      "exact_nonroot_static_metadata_checks": 27,
+      "job": 136797517677,
+      "revision": "c2c25ac090994cc370edc2da4c844ab2050569b4",
+      "run": 44888035763,
+      "startup_categories": [
+        "main-listening",
+        "schema-created"
+      ],
+      "startup_state": "running"
+    },
+    {
+      "artifact_sha256": "477de7ca206adf9f740bf1c984d1742e7c01c1579e971f08e4da7a4a138741d7",
+      "checkpoint": "origin-start",
+      "checkpoint_diagnostic": "media-fixture-service-query-missing-overlay",
+      "checks": [
+        "ordinary-topology-and-internal-network",
+        "clean-empty-database",
+        "initialization-off-exits-without-ddl",
+        "native-only-roles",
+        "initialized-original-schema",
+        "frontend-index-served",
+        "normal-first-admin-form-available",
+        "normal-first-admin-initialized",
+        "normal-login-created-admin",
+        "restart-preserves-schema-and-closes-setup"
+      ],
+      "compose_checks": 10,
+      "compose_exit": 1,
+      "controller_exit": 1,
+      "exact_cleanup": true,
+      "exact_nonroot_static_metadata_checks": 27,
+      "job": 136804165914,
+      "revision": "370eda32aa65833f4d76a1f04b883a9bd2e9050f",
+      "run": 44890206380,
+      "startup_categories": [
+        "main-listening",
+        "schema-created"
+      ],
+      "startup_state": "running"
+    }
+  ],
+  "redistribution_qualified": false,
+  "scope": "private native ARM64 package ordinary Compose and MPEG-TS"
+}
