@@ -1,0 +1,149 @@
+{
+  "arm64_native_runtime_verified": false,
+  "arm64_package_built": false,
+  "authenticated_bookworm_fallbacks": {
+    "archive": {
+      "archive_keyring_sha256": "506b815cbb32d9b6066b4a2aa524071e071761e7e7f68c3ac74f3061ba852017",
+      "codename": "bookworm",
+      "packages_index": "main/binary-arm64/Packages.xz",
+      "packages_index_sha256": "2ddb1737692e8c45c53e8d57c0ce4cd21c78c5703b830c3226b1423566a06c00",
+      "release_date": "Sat, 11 Jul 2026 10:16:37 UTC",
+      "signed_inrelease_sha256": "77737fa4b34f2693e982cc9ee35736816c35a7778fc2d326cc1bbf5b301fe1aa"
+    },
+    "builder_inventory_verified": false,
+    "credits": "Original Dispatcharr, Debian, and dependency authors retain full credit.",
+    "docker_engine_calls": 0,
+    "fallback_package_candidates": {
+      "bison": {
+        "architecture": "arm64",
+        "bytes": 1152428,
+        "depends": "m4, libc6 (>= 2.34)",
+        "file": "pool/main/b/bison/bison_3.8.2+dfsg-1+b1_arm64.deb",
+        "sha256": "00301cacacd98f2bece7cfc1d2eaf133596bfba4c5fd89d6bf5f8c3d51d62755",
+        "version": "2:3.8.2+dfsg-1+b1"
+      },
+      "flex": {
+        "architecture": "arm64",
+        "bytes": 411032,
+        "depends": "libc6 (>= 2.34), m4",
+        "file": "pool/main/f/flex/flex_2.6.4-8.2_arm64.deb",
+        "sha256": "e457c7052b77de6526b417387d676b63e1b51d4be36be255cf868b2a3c8f23ed",
+        "version": "2.6.4-8.2"
+      },
+      "liblz4-1": {
+        "architecture": "arm64",
+        "bytes": 59808,
+        "depends": "libc6 (>= 2.17)",
+        "file": "pool/main/l/lz4/liblz4-1_1.9.4-1_arm64.deb",
+        "sha256": "f061216ce11aabba8f032dfd6c75c181e782fef7493033b9621a8c3b2953b87e",
+        "version": "1.9.4-1"
+      },
+      "liblz4-dev": {
+        "architecture": "arm64",
+        "bytes": 81948,
+        "depends": "liblz4-1 (= 1.9.4-1)",
+        "file": "pool/main/l/lz4/liblz4-dev_1.9.4-1_arm64.deb",
+        "sha256": "d1946be158d29cc044e4c03a222423cd94d1602fd631a00745f28b9472742f48",
+        "version": "1.9.4-1"
+      },
+      "m4": {
+        "architecture": "arm64",
+        "bytes": 276280,
+        "depends": "libc6 (>= 2.34)",
+        "file": "pool/main/m/m4/m4_1.4.19-3_arm64.deb",
+        "sha256": "54238d48d2b7b90c9146d156cfa0d80254c4892730c5b57fce8dee0747127228",
+        "version": "1.4.19-3"
+      }
+    },
+    "native_execution_verified": false,
+    "platform": "linux/arm64",
+    "redistribution_review_complete": false,
+    "release": "Debian Bookworm"
+  },
+  "checked_dockerfile_revisions": [
+    "f2db61e5072f86d4215c5d71d44e2a899257f64f",
+    "d608ff758c4a937961439f4389d01040f560122d"
+  ],
+  "comskip_corresponding_source_bound": false,
+  "credits": "The original Dispatcharr, Rust, Debian, Node.js, Comskip, and dependency authors retain full credit.",
+  "dockerfile_sha256": "c2bd7a459fe12b1ad757a844c71f8cb142cf52256ba2831423bef0b3d2980263",
+  "exact_rust_builder_dpkg_inventory": {
+    "actual_dpkg_status_sha256": "acfb964b425e54f8d8af33db68e5607934e30f0038c4e71b28a99bb14de4c4ae",
+    "authenticated_candidate_package_receipt_sha256": "d188e15711c55b0d16df776c4952f3e1374be7c4d6dd67fbc03419820e05f889",
+    "candidate_fallback_packages_selected_from_dpkg_status": [
+      "bison",
+      "flex",
+      "liblz4-dev"
+    ],
+    "config": "sha256:f6d52726c6c740d6ee8ea9ff348db1cb4bfbe325d1e86f3295388666500481ec",
+    "credits": "Original Dispatcharr, Debian, Rust, and dependency authors retain full credit.",
+    "docker_engine_calls": 0,
+    "inspected_layers_latest_first": [
+      {
+        "contains_dpkg_status": false,
+        "digest": "sha256:e96d5659cda5ca12e1ca72bd3843ffc2ab140ac830f0f6f7fdb7c234872be22b"
+      },
+      {
+        "contains_dpkg_status": true,
+        "digest": "sha256:6803b5e31b40492f4747e974e6e4ae692982b12beb2b87ed9d9ffbdaedefcfd4"
+      }
+    ],
+    "installed_prerequisites": {
+      "libc6": {
+        "architecture": "arm64",
+        "version": "2.36-9+deb12u13"
+      },
+      "liblz4-1": {
+        "architecture": "arm64",
+        "version": "1.9.4-1"
+      },
+      "libssl-dev": {
+        "architecture": "arm64",
+        "version": "3.0.17-1~deb12u3"
+      },
+      "libzstd-dev": {
+        "architecture": "arm64",
+        "version": "1.5.4+dfsg2-5"
+      },
+      "m4": {
+        "architecture": "arm64",
+        "version": "1.4.19-3"
+      },
+      "pkg-config": {
+        "architecture": "arm64",
+        "version": "1.8.1-1"
+      },
+      "pkgconf": {
+        "architecture": "arm64",
+        "version": "1.8.1-1"
+      }
+    },
+    "native_execution_verified": false,
+    "pinned_rust_builder_manifest": "sha256:4c632e493dfa97f0fe014c3910d1690c149bba85ed8678d47d3563ec6f258ead",
+    "platform": "linux/arm64"
+  },
+  "official_arm64_image_metadata": {
+    "debian": {
+      "compressed_layer_bytes": 28144358,
+      "image_config": "sha256:5b6c2c6cbc90b6085e3f9b3086110b1eccedb643374137bfdcd1d2f5c78f6cd1",
+      "image_manifest": "sha256:ec8534cda2cb30f29f44f23e135297af7a1496f2990fd8e4e84aa36b081a757a",
+      "index": "sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc",
+      "layers": 1
+    },
+    "node": {
+      "compressed_layer_bytes": 401025524,
+      "image_config": "sha256:087a47239071fc43868067cccb9d68f1a2b30aeb0042a4bc4b687481820e0516",
+      "image_manifest": "sha256:0bab91d6a954a4a75de4a887edfda7386ed8711aa8b1eb5fb309ee0f0a2c544f",
+      "index": "sha256:8fa96264f302f58bbb13aa7339c541547b56975766ce956c875da149452a3e40",
+      "layers": 8
+    },
+    "rust": {
+      "compressed_layer_bytes": 517422580,
+      "image_config": "sha256:f6d52726c6c740d6ee8ea9ff348db1cb4bfbe325d1e86f3295388666500481ec",
+      "image_manifest": "sha256:4c632e493dfa97f0fe014c3910d1690c149bba85ed8678d47d3563ec6f258ead",
+      "index": "sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f",
+      "layers": 5
+    }
+  },
+  "repository_distribution_review_complete": false
+}
