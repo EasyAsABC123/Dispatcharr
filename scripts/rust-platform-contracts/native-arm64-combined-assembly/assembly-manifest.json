@@ -1,0 +1,437 @@
+{
+  "application_input_count": 2020,
+  "application_input_scope": [
+    "ATTRIBUTION.md",
+    "LICENSE",
+    "frontend",
+    "rust/Cargo.toml",
+    "rust/Cargo.lock",
+    "rust/rust-toolchain.toml",
+    "rust/Dockerfile.app",
+    "rust/crates",
+    "rust/vendor",
+    "rust/runtime"
+  ],
+  "application_input_tree_sha256": "757a0c4c4072d830a50395101634d780c8d5d3de0d4286305f164c551934b6ba",
+  "application_revision": "fdede54c54ccb19300c01031537803a0b553f581",
+  "assembled_runtime_verified": false,
+  "components": {
+    "comskip": {
+      "allowed_files": [
+        "app/docker/comskip.ini",
+        "usr/local/bin/comskip"
+      ],
+      "allowed_prefixes": [
+        "opt/dispatcharr-comskip",
+        "usr/share/doc/dispatcharr-standalone-comskip"
+      ],
+      "export_paths": {
+        "/comskip-closure/": ""
+      },
+      "prior_evidence": [
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-integration/m10-native-arm64-comskip-collector.json",
+          "sha256": "7b9294f689bafe4ce4a0e4b37e1d105bbd25fa92582f24d47a8720fa8bcc3a7f"
+        },
+        {
+          "kind": "retained-artifact",
+          "path": "m10-3344bef3-arm64-comskip-debian-actions-1/qualified-publication-1/m10-native-arm64-comskip-debian.json",
+          "sha256": "13f45c1dba158f0e1506593df18be6bbb191266571460c88cf1d009dc58f76c8"
+        }
+      ],
+      "prior_standalone_terminal": "passed",
+      "recipe": {
+        "kind": "retained-artifact",
+        "path": "m10-3344bef3-arm64-comskip-debian-actions-1/SHA256SUMS",
+        "sha256": "6e77ec18e261564c73bbea35c62d7b14c400c0ddbae54910988ec674ccec387b"
+      },
+      "required_files": [
+        "app/docker/comskip.ini",
+        "usr/local/bin/comskip",
+        "opt/dispatcharr-comskip/bin/comskip",
+        "usr/share/doc/dispatcharr-standalone-comskip/unit-inputs.json"
+      ],
+      "requires_fresh_recipe_and_input_binding": true,
+      "same_job_stage": "collect"
+    },
+    "crypto": {
+      "allowed_files": [
+        "usr/local/bin/gpg",
+        "usr/share/doc/dispatcharr/crypto-runtime.json",
+        "usr/share/doc/dispatcharr/LICENSE",
+        "usr/share/doc/dispatcharr/ATTRIBUTION.md"
+      ],
+      "allowed_prefixes": [
+        "opt/dispatcharr-crypto",
+        "usr/share/doc/dispatcharr/crypto-copyright"
+      ],
+      "export_paths": {
+        "/media-runtime/": ""
+      },
+      "prior_evidence": [
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-integration/m10-native-arm64-gpg-debian.json",
+          "sha256": "6bca8da4f241ffe3bce9ecde25bb9c2db293a3d69f5c71c4e6cf4d7a96a65307"
+        }
+      ],
+      "prior_standalone_terminal": "passed",
+      "recipe": {
+        "kind": "retained-artifact",
+        "path": "m10-96e49a90-arm64-gpg-debian-actions-5/SHA256SUMS",
+        "sha256": "89b53b10dc402f4d662fcd640cff5dc5a5bfc644c6d06c15e3c9fb34e5ab308a"
+      },
+      "required_files": [
+        "usr/local/bin/gpg",
+        "usr/share/doc/dispatcharr/crypto-runtime.json"
+      ],
+      "requires_fresh_recipe_and_input_binding": true,
+      "same_job_stage": "donor"
+    },
+    "drf": {
+      "allowed_files": [
+        "usr/share/doc/dispatcharr/DRF-LICENSE.md",
+        "usr/share/doc/dispatcharr/drf-static-export.json",
+        "usr/share/doc/dispatcharr/drf-static-source-1.json"
+      ],
+      "allowed_prefixes": [
+        "opt/dispatcharr-frontend/static/rest_framework"
+      ],
+      "export_paths": {
+        "/media-runtime/opt/dispatcharr-frontend/static/rest_framework/": "opt/dispatcharr-frontend/static/rest_framework/",
+        "/media-runtime/usr/share/doc/dispatcharr/": "usr/share/doc/dispatcharr/"
+      },
+      "prior_evidence": [
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-integration/m10-native-arm64-drf-static.json",
+          "sha256": "134f3b2a7d5b9eee04a514867c3caf904f5bdc91a21a08d1c8ec6535a06905b3"
+        }
+      ],
+      "prior_standalone_terminal": "passed",
+      "recipe": {
+        "kind": "retained-artifact",
+        "path": "m10-dd9c2450-arm64-drf-static-actions-1/SHA256SUMS",
+        "sha256": "49c147362b8c16efd7c5522d8da9959b11f392247fc56779e5be5ab74ae98eea"
+      },
+      "required_files": [
+        "usr/share/doc/dispatcharr/drf-static-export.json"
+      ],
+      "requires_fresh_recipe_and_input_binding": true,
+      "same_job_stage": "exact-donor-readonly-collector"
+    },
+    "ffmpeg-vlc": {
+      "allowed_files": [
+        "usr/local/bin/ffmpeg",
+        "usr/local/bin/ffprobe",
+        "usr/local/bin/vlc",
+        "usr/local/bin/cvlc"
+      ],
+      "allowed_prefixes": [
+        "opt/dispatcharr-media",
+        "opt/dispatcharr-vlc",
+        "usr/share/doc/dispatcharr-standalone-media",
+        "usr/share/doc/dispatcharr-standalone-vlc"
+      ],
+      "export_paths": {
+        "/closure/": "",
+        "/vlc-closure/": ""
+      },
+      "prior_evidence": [
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-integration/m10-native-arm64-ffmpeg-debian-wrapper.json",
+          "sha256": "7bf19b3f4e61168971610aae7b9acd4a7f7b33344370451fdd9676898dc50551"
+        },
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-integration/m10-native-arm64-vlc-debian-wrapper.json",
+          "sha256": "b02cb876eb442602ad0cbb89ceddd47a3f039a0af08a02dd43c37cdc0ad27f04"
+        }
+      ],
+      "prior_standalone_terminal": "passed",
+      "recipe": {
+        "kind": "retained-artifact",
+        "path": "m10-native-arm64-vlc-debian-wrapper-2/SHA256SUMS",
+        "sha256": "50c6465844521e478c85e7b4c4f269e0472863bd4a9ca0ec1e5aa64977424148"
+      },
+      "required_files": [
+        "usr/local/bin/ffmpeg",
+        "usr/local/bin/ffprobe",
+        "usr/local/bin/vlc",
+        "usr/local/bin/cvlc"
+      ],
+      "requires_fresh_recipe_and_input_binding": true,
+      "same_job_stage": "collect"
+    },
+    "guarded-pg": {
+      "allowed_files": [],
+      "allowed_prefixes": [
+        "opt/dispatcharr-pg-guarded-restore",
+        "usr/share/doc/dispatcharr/pg-guarded-restore"
+      ],
+      "export_paths": {
+        "/taskless-out/opt/dispatcharr-pg-guarded-restore/": "opt/dispatcharr-pg-guarded-restore/",
+        "/taskless-out/usr/share/doc/dispatcharr/pg-guarded-restore/": "usr/share/doc/dispatcharr/pg-guarded-restore/"
+      },
+      "prior_evidence": [
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-integration/m10-native-arm64-guarded-helper.json",
+          "sha256": "6dce74031802b85dba4db2d7c24afb365cd2cb46de09b7338a826571a1e8dfe4"
+        },
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-integration/m10-native-arm64-rust-build.json",
+          "sha256": "22641f983da0006f471b1b7d0ec23831fa574524e455932c350fa811fdccd134"
+        }
+      ],
+      "prior_standalone_terminal": "passed",
+      "recipe": {
+        "kind": "retained-artifact",
+        "path": "m10-2581-arm64-helper-actions-2/SHA256SUMS",
+        "sha256": "29a39605e439c7a0bdb6c5dc235a0e9212f532fbddca21ca5532701848682ba0"
+      },
+      "required_files": [
+        "opt/dispatcharr-pg-guarded-restore/bin/dispatcharr-pg-guarded-restore",
+        "usr/share/doc/dispatcharr/pg-guarded-restore/provenance.json"
+      ],
+      "requires_fresh_recipe_and_input_binding": true,
+      "same_job_stage": "taskless-restore-helper"
+    },
+    "postgres": {
+      "allowed_files": [
+        "usr/local/bin/pg_dump",
+        "usr/local/bin/pg_restore",
+        "usr/local/bin/psql"
+      ],
+      "allowed_prefixes": [
+        "opt/dispatcharr-postgres",
+        "usr/share/doc/dispatcharr-standalone-postgres"
+      ],
+      "export_paths": {
+        "/closure/": ""
+      },
+      "prior_evidence": [
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-platform-contracts/m10-native-arm64-postgres-debian-wrappers.json",
+          "sha256": "088820146359266a45f54df6fbb39625beefd2f61f8941c0542fca206e53b75e"
+        },
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-platform-contracts/m10-native-arm64-postgres-client-roundtrip.json",
+          "sha256": "048f4d0de1698714f6476c14f1ec89621a9d77aead766ff93ef69f9f86278983"
+        }
+      ],
+      "prior_standalone_terminal": "passed",
+      "recipe": {
+        "kind": "retained-artifact",
+        "path": "m10-a7ccdd1f-arm64-postgres-debian-actions-2/SHA256SUMS",
+        "sha256": "723a8ea79b99b2d0471be25c84a128f01dfa43ad53b95fc37b76dd9e65550cd5"
+      },
+      "required_files": [
+        "usr/local/bin/pg_dump",
+        "usr/local/bin/pg_restore",
+        "usr/local/bin/psql"
+      ],
+      "requires_fresh_recipe_and_input_binding": true,
+      "same_job_stage": "collect"
+    },
+    "python": {
+      "allowed_files": [
+        "usr/local/bin/dispatcharr-python",
+        "usr/local/bin/dispatcharr-plugin-python",
+        "usr/local/bin/dispatcharr-regex-python",
+        "usr/share/doc/dispatcharr/LICENSE",
+        "usr/share/doc/dispatcharr/ATTRIBUTION.md"
+      ],
+      "allowed_prefixes": [
+        "opt/dispatcharr-python",
+        "usr/share/doc/dispatcharr/python-host",
+        "usr/share/doc/dispatcharr/regex-host"
+      ],
+      "export_paths": {
+        "/media-runtime/": ""
+      },
+      "prior_evidence": [
+        {
+          "kind": "retained-artifact",
+          "path": "m10-3344bef3-arm64-python-host-debian-actions-1/qualified-publication-1/m10-native-arm64-python-host-debian.json",
+          "sha256": "c60b625301abc9e7070eb5ca135e57dc5716ff6351e7fc111f62fc18bc9ae9c4"
+        },
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-integration/m10-native-arm64-python-host-inputs.json",
+          "sha256": "0a3474a4decbf1164501a5eb256227c2355d7e476a51658f7e4c089d02532328"
+        }
+      ],
+      "prior_standalone_terminal": "passed",
+      "recipe": {
+        "kind": "retained-artifact",
+        "path": "m10-3344bef3-arm64-python-host-debian-actions-1/SHA256SUMS",
+        "sha256": "16cb34c5b0e2dc9a1281db4d9167fe0f7436af3ef0d85cf7a31f55f7a05649d6"
+      },
+      "required_files": [
+        "opt/dispatcharr-python/bin/python3.13",
+        "usr/share/doc/dispatcharr/python-host/manifest.json",
+        "usr/share/doc/dispatcharr/regex-host/manifest.json",
+        "usr/local/bin/dispatcharr-plugin-python"
+      ],
+      "requires_fresh_recipe_and_input_binding": true,
+      "same_job_stage": "donor"
+    },
+    "react": {
+      "allowed_files": [],
+      "allowed_prefixes": [
+        "opt/dispatcharr-frontend"
+      ],
+      "export_paths": {
+        "/dispatcharr-frontend/dist/": "opt/dispatcharr-frontend/"
+      },
+      "prior_evidence": [
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-integration/m10-native-arm64-node-frontend.json",
+          "sha256": "7184e08d26ec87e55e5b0fd8e16401be6927241126de9353050fcf9e74a63a1a"
+        }
+      ],
+      "prior_standalone_terminal": "passed",
+      "recipe": {
+        "kind": "retained-artifact",
+        "path": "m10-dd9c2450-arm64-node-frontend-actions-2/SHA256SUMS",
+        "sha256": "24721a67f62cb9747a483c6c89b68d4a3aafc9ac46baa3e66742f39bf9d4b746"
+      },
+      "required_files": [
+        "opt/dispatcharr-frontend/index.html"
+      ],
+      "requires_fresh_recipe_and_input_binding": true,
+      "same_job_stage": "frontend"
+    },
+    "rust": {
+      "allowed_files": [
+        "usr/local/bin/dispatcharr-rs",
+        "usr/local/bin/dispatcharr-operator"
+      ],
+      "allowed_prefixes": [],
+      "export_paths": {
+        "/out/dispatcharr-operator": "usr/local/bin/dispatcharr-operator",
+        "/out/dispatcharr-rs": "usr/local/bin/dispatcharr-rs"
+      },
+      "prior_evidence": [
+        {
+          "commit": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6",
+          "kind": "verified-git",
+          "path": "scripts/rust-integration/m10-native-arm64-rust-build.json",
+          "sha256": "22641f983da0006f471b1b7d0ec23831fa574524e455932c350fa811fdccd134"
+        }
+      ],
+      "prior_standalone_terminal": "passed",
+      "recipe": {
+        "kind": "retained-artifact",
+        "path": "m10-a7ccdd1f-arm64-rust-build-actions-1/SHA256SUMS",
+        "sha256": "504b2851608c829ab68fc3500b79fa56cde1c8f1471db68c951496c942828ded"
+      },
+      "required_files": [
+        "usr/local/bin/dispatcharr-rs",
+        "usr/local/bin/dispatcharr-operator"
+      ],
+      "requires_fresh_recipe_and_input_binding": true,
+      "same_job_stage": "build"
+    }
+  },
+  "compose_role_config": {
+    "kind": "retained-artifact",
+    "path": "m10-arm64-compose-runtime-pins-1/compose.clean-install.arm64.yml",
+    "sha256": "c846945218a4955c19b5c825282f5246f3e6b9a1f78d2c556d008d94b1c9a67b"
+  },
+  "compose_role_pins": {
+    "kind": "retained-artifact",
+    "path": "m10-arm64-compose-runtime-pins-1/receipt.json",
+    "sha256": "ac18a2b82c773dea5d38ef540b135896e1672f6f160db8bd12260db47a5b30e2"
+  },
+  "credit": "Original Dispatcharr and upstream authors and contributors retain full credit.",
+  "credits": {
+    "usr/share/doc/dispatcharr/ATTRIBUTION.md": {
+      "sha256": "1202a089caf31b613a39ac819c8b362cd939cf828328a3880d1ffa16a45ffea7",
+      "source": "ATTRIBUTION.md"
+    },
+    "usr/share/doc/dispatcharr/Celery-LICENSE": {
+      "sha256": "c358cdf77f28bbab50d4a754e123118339c15230349e82bf66489cece3ac093a",
+      "source": "rust/crates/store/datasets/Celery-LICENSE"
+    },
+    "usr/share/doc/dispatcharr/Django-LICENSE": {
+      "sha256": "b846415d1b514e9c1dff14a22deb906d794bc546ca6129f950a18cd091e2a669",
+      "source": "rust/crates/output-http/data/Django-LICENSE"
+    },
+    "usr/share/doc/dispatcharr/Kombu-LICENSE": {
+      "sha256": "72216de09e6340d2c1aa67f833c3b6aeeee2e6922721366699811b632640fd3b",
+      "source": "rust/crates/store/datasets/Kombu-LICENSE"
+    },
+    "usr/share/doc/dispatcharr/LICENSE": {
+      "sha256": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+      "source": "LICENSE"
+    },
+    "usr/share/doc/dispatcharr/Python-COPYRIGHT": {
+      "sha256": "97209dcfd75e11c565495a9699c6978c7a5888d25ff4a5a5d73fcd737714372b",
+      "source": "rust/crates/store/third-party/PYTHON-COPYRIGHT"
+    },
+    "usr/share/doc/dispatcharr/Requests-LICENSE": {
+      "sha256": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+      "source": "rust/crates/store/third-party/REQUESTS-LICENSE"
+    },
+    "usr/share/doc/dispatcharr/libxml2-Copyright": {
+      "sha256": "5d4873884a890122a4b9b20ad56ac6f7da1d796a5bfcf04a427970ac96217626",
+      "source": "rust/crates/xmltv-parser/vendor/Copyright"
+    },
+    "usr/share/doc/dispatcharr/libxml2-NOTICES": {
+      "sha256": "f2f1d663264efe44163218972e7cfda80abf6fc2397421b130e84fcd84f493aa",
+      "source": "rust/crates/xmltv-parser/vendor/NOTICES"
+    },
+    "usr/share/doc/dispatcharr/sqlx-core/LICENSE-APACHE": {
+      "sha256": "9be39331309bc958aab10457c1a8459c038ae95662f26dfcf6c9088e2b3d653f",
+      "source": "rust/vendor/sqlx-core-0.8.6/LICENSE-APACHE"
+    },
+    "usr/share/doc/dispatcharr/sqlx-core/LICENSE-MIT": {
+      "sha256": "44b1600a26039a75b28e1ce154a5dd163b16549f50e34fa577d9efe9c1bae179",
+      "source": "rust/vendor/sqlx-core-0.8.6/LICENSE-MIT"
+    },
+    "usr/share/doc/dispatcharr/sqlx-postgres/LICENSE-APACHE": {
+      "sha256": "9be39331309bc958aab10457c1a8459c038ae95662f26dfcf6c9088e2b3d653f",
+      "source": "rust/vendor/sqlx-postgres-0.8.6/LICENSE-APACHE"
+    },
+    "usr/share/doc/dispatcharr/sqlx-postgres/LICENSE-MIT": {
+      "sha256": "44b1600a26039a75b28e1ce154a5dd163b16549f50e34fa577d9efe9c1bae179",
+      "source": "rust/vendor/sqlx-postgres-0.8.6/LICENSE-MIT"
+    }
+  },
+  "final_base": {
+    "config": "sha256:5b6c2c6cbc90b6085e3f9b3086110b1eccedb643374137bfdcd1d2f5c78f6cd1",
+    "diff_id": "sha256:c96c411090da09187c55ab267826b3903b542b5c03f1cafa912d60e060e7850c",
+    "manifest": "sha256:ec8534cda2cb30f29f44f23e135297af7a1496f2990fd8e4e84aa36b081a757a",
+    "repository": "docker.io/library/debian:bookworm-slim"
+  },
+  "platform": "linux/arm64",
+  "redistribution_qualified": false,
+  "required_runtime_checks": [
+    "owned compose clean install on exact local image",
+    "native Postgres and Redis role identity",
+    "normal browser and media startup on same image",
+    "guarded copied PostgreSQL restore",
+    "exact process and container retirement"
+  ],
+  "schema": 1,
+  "verified_docs_parent": "14948254883a48d6c2b628cbf9ab8b1857b8d6b6"
+}
