@@ -10,14 +10,13 @@ use crate::{
 use chrono::Utc;
 use serde_json::{json, Value};
 
-const INTERVAL_HOURS: i32 = 24;
-
 struct Input {
     name: String,
     url: String,
     username: Option<String>,
     password: Option<String>,
     active: bool,
+    interval_hours: i32,
 }
 
 fn unsupported() -> StoreError {
@@ -79,9 +78,13 @@ fn form(value: &Value) -> Result<Input, StoreError> {
         "custom_properties":{},"updated_at":null});
     let checked = validate(input, &defaults, "", false)?;
     let saved = checked.saved;
+    let interval_hours = saved["refresh_interval"]
+        .as_i64()
+        .and_then(|hours| i32::try_from(hours).ok())
+        .filter(|hours| *hours >= 0)
+        .ok_or_else(unsupported)?;
     if !checked.cron.is_empty()
         || !saved["file_path"].is_null()
-        || saved["refresh_interval"] != INTERVAL_HOURS
         || saved["priority"] != 0
         || saved["status"] != "idle"
         || !saved["last_message"].is_null()
@@ -95,6 +98,7 @@ fn form(value: &Value) -> Result<Input, StoreError> {
         username: username.as_str().map(str::to_owned),
         password: password.as_str().map(str::to_owned),
         active: saved["is_active"].as_bool().ok_or_else(unsupported)?,
+        interval_hours,
     })
 }
 
@@ -106,6 +110,7 @@ pub(crate) async fn create_xmltv(
 ) -> Result<Value, StoreError> {
     let input = form(value)?;
     let active = input.active;
+    let interval_hours = input.interval_hours;
     let result = async {
         let session = auth.borrow_task_sql_session(owner.clone()).await?;
         let created = async {
@@ -121,7 +126,7 @@ pub(crate) async fn create_xmltv(
                     "INSERT INTO epg_epgsource(name,source_type,url,username,password,is_active,file_path,extracted_file_path,refresh_interval,refresh_task_id,created_at,updated_at,status,last_message,custom_properties,priority)
                     VALUES($1,'xmltv',$2,$3,$4,$5,NULL,NULL,$6,NULL,$7,NULL,'idle',NULL,'{}'::jsonb,0) RETURNING id::bigint",
                 ).bind(input.name).bind(input.url).bind(input.username).bind(input.password)
-                    .bind(active).bind(INTERVAL_HOURS).bind(Utc::now())
+                    .bind(active).bind(interval_hours).bind(Utc::now())
                     .fetch_one(connection).await?;
                 Ok::<_, StoreError>(id)
             })).await??;
@@ -134,6 +139,7 @@ pub(crate) async fn create_xmltv(
 
         // The row was committed before post_save. The first receiver submits
         // the active root; only the next receiver writes and links the schedule.
+        // A zero interval disables recurrence but still runs this first import.
         // An unconfirmed root is never submitted again or hidden by rollback.
         if active {
             publisher.publish_initial(id, owner.clone()).await?;
@@ -141,7 +147,7 @@ pub(crate) async fn create_xmltv(
         let session = auth.borrow_task_sql_session(owner).await?;
         let scheduled = async {
             schedule_refresh(
-                &session, id, active, INTERVAL_HOURS, String::new(), "UTC".into()
+                &session, id, active, interval_hours, String::new(), "UTC".into()
             ).await?;
             // SerializerMethodField counts related rows at response time; the
             // newly published worker may already have discovered the guide.
@@ -175,9 +181,26 @@ mod tests {
         for active in [true, false] {
             let input = form(&stock(active)).unwrap();
             assert_eq!(input.active, active);
+            assert_eq!(input.interval_hours, 24);
             assert_eq!(input.url, "http://guide-host:8080/guide.xml");
             assert_eq!(input.username.as_deref(), Some(""));
             assert_eq!(input.password.as_deref(), Some(""));
+        }
+    }
+
+    #[test]
+    fn stock_remote_xmltv_custom_or_disabled_interval_is_preserved() {
+        for active in [true, false] {
+            for hours in [0, 6, 12] {
+                let mut request = stock(active);
+                request["refresh_interval"] = json!(hours);
+                let parsed = form(&request).unwrap();
+                assert_eq!(parsed.interval_hours, hours);
+                assert_eq!(parsed.active, active);
+            }
+            let mut request = stock(active);
+            request.as_object_mut().unwrap().remove("refresh_interval");
+            assert_eq!(form(&request).unwrap().interval_hours, 0);
         }
     }
 
@@ -190,6 +213,7 @@ mod tests {
             ("url", json!("http://guide-\thost/guide.xml")),
             ("file_path", json!("/data/guide.xml")),
             ("cron_expression", json!("0 1 * * *")),
+            ("refresh_interval", json!(-1)),
             ("password", json!("fixture-not-supported")),
             ("custom_properties", json!({"auto_apply_epg_logos": true})),
         ] {

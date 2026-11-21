@@ -524,6 +524,51 @@ async fn delete_files(paths: Vec<String>, owner: Owner) -> Result<(), StoreError
     .await
     .map_err(|_| unsupported())
 }
+
+async fn clear_channel_epg_relations(c: &mut PgConnection, source: i64) -> Result<(), StoreError> {
+    // Hold the referenced rows through deletion so concurrent PostgreSQL FK
+    // checks cannot introduce a channel link after the collector clears them.
+    sqlx::query("SELECT id FROM epg_epgdata WHERE epg_source_id=$1 ORDER BY id FOR UPDATE")
+        .bind(source)
+        .execute(&mut *c)
+        .await?;
+    for table in [
+        "dispatcharr_channels_channel",
+        "dispatcharr_channels_channeloverride",
+    ] {
+        let referenced: bool = sqlx::query_scalar(&format!(
+            "SELECT EXISTS(SELECT 1 FROM {table} WHERE epg_data_id IN \
+             (SELECT id FROM epg_epgdata WHERE epg_source_id=$1))"
+        ))
+        .bind(source)
+        .fetch_one(&mut *c)
+        .await?;
+        if !referenced {
+            continue;
+        }
+        let custom: bool = sqlx::query_scalar(
+            "SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal \
+             AND tgenabled<>'D' AND tgrelid=$1::text::regclass)",
+        )
+        .bind(table)
+        .fetch_one(&mut *c)
+        .await?;
+        if custom {
+            return Err(unsupported());
+        }
+        // Django's SET_NULL collector updates just the FK column, including
+        // override rows that would otherwise still refer to the removed guide.
+        sqlx::query(&format!(
+            "UPDATE {table} SET epg_data_id=NULL WHERE epg_data_id IN \
+             (SELECT id FROM epg_epgdata WHERE epg_source_id=$1)"
+        ))
+        .bind(source)
+        .execute(&mut *c)
+        .await?;
+    }
+    Ok(())
+}
+
 pub(crate) async fn delete(
     State(auth): State<AuthService>,
     Path(raw): Path<String>,
@@ -536,17 +581,15 @@ pub(crate) async fn delete(
     let session = auth.borrow_task_sql_session(owner.clone()).await?;
     let operation = tokio::spawn(async move {
         let outcome=session.run(move|c|Box::pin(async move{
-            let old:Option<Value>=sqlx::query_scalar("SELECT to_jsonb(e) FROM epg_epgsource e WHERE id=$1").bind(id).fetch_optional(&mut*c).await?;let old=old.ok_or_else(missing)?;
-            if !matches!(old["source_type"].as_str(),Some("xmltv"|"dummy")){return Err(unsupported());}
-            let mut paths=Vec::new();
-            for path in [old["file_path"].as_str(),old["extracted_file_path"].as_str()].into_iter().flatten().filter(|p|!p.is_empty()){if !paths.iter().any(|v|v==path){paths.push(path.to_owned());}}
-            if paths.iter().any(|p|!p.starts_with("/data/")||p.len()>1024){return Err(unsupported());}
-            no_custom_triggers(c).await?;
-            // Wider collectors need independent Source rows before activation.
-            let channels:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channel WHERE epg_data_id IN(SELECT id FROM epg_epgdata WHERE epg_source_id=$1) UNION ALL SELECT 1 FROM dispatcharr_channels_channeloverride WHERE epg_data_id IN(SELECT id FROM epg_epgdata WHERE epg_source_id=$1))").bind(id).fetch_one(&mut*c).await?;
-            if channels{return Err(unsupported());}
             let mut tx=c.begin().await?;
             let result=async{
+                let old:Option<Value>=sqlx::query_scalar("SELECT to_jsonb(e) FROM epg_epgsource e WHERE id=$1 FOR UPDATE").bind(id).fetch_optional(&mut*tx).await?;let old=old.ok_or_else(missing)?;
+                if !matches!(old["source_type"].as_str(),Some("xmltv"|"dummy")){return Err(unsupported());}
+                let mut paths=Vec::new();
+                for path in [old["file_path"].as_str(),old["extracted_file_path"].as_str()].into_iter().flatten().filter(|p|!p.is_empty()){if !paths.iter().any(|v|v==path){paths.push(path.to_owned());}}
+                if paths.iter().any(|p|!p.starts_with("/data/")||p.len()>1024){return Err(unsupported());}
+                no_custom_triggers(&mut tx).await?;
+                clear_channel_epg_relations(&mut tx, id).await?;
                 sqlx::query("DELETE FROM epg_programdata WHERE epg_id IN(SELECT id FROM epg_epgdata WHERE epg_source_id=$1)").bind(id).execute(&mut*tx).await?;
                 sqlx::query("DELETE FROM epg_epgsourceindex WHERE source_id=$1").bind(id).execute(&mut*tx).await?;
                 sqlx::query("DELETE FROM epg_sdprogrammd5 WHERE epg_source_id=$1").bind(id).execute(&mut*tx).await?;
