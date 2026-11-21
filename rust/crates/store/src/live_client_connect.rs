@@ -1,4 +1,4 @@
-//! Original Dispatcharr's ordinary live-client Connect webhook, using the shared Main writer.
+//! Original Dispatcharr's ordinary live-client audit and bounded Main Connect webhook.
 //! Original Dispatcharr, Django, and Requests authors retain application and algorithm credit.
 use crate::{
     epg_connect::{self, TemplateResult, Templates},
@@ -10,7 +10,6 @@ use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc, Mutex,
 };
-use tokio::sync::oneshot;
 use uuid::Uuid;
 
 type Owner = Arc<dyn Send + Sync>;
@@ -74,77 +73,91 @@ impl LiveClientConnect {
         self.used.load(Ordering::Acquire)
     }
 
+    async fn record_audit(
+        &self,
+        event: &LiveClientConnectEvent,
+        channel: Uuid,
+        details: &Value,
+    ) -> Result<(), StoreError> {
+        sqlx::query(
+            "INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details) \
+             VALUES($1,$2,$3,$4,$5)",
+        )
+        .bind(EVENT)
+        .bind(chrono::Utc::now())
+        .bind(channel)
+        .bind(&event.channel_name)
+        .bind(details)
+        .execute(self.auth.store.pool())
+        .await?;
+        Ok(())
+    }
+
     async fn deliver(
         &self,
         session: &TaskSqlSession,
         owner: Owner,
-        event: LiveClientConnectEvent,
-        audit_complete: &mut Option<oneshot::Sender<()>>,
+        channel: Uuid,
+        channel_name: String,
+        details: Value,
     ) -> Result<(), epg_connect::Error> {
-        let channel = Uuid::parse_str(&event.channel_id)
-            .map_err(|_| StoreError::Unsupported("Live Connect channel UUID"))?;
-        let details = event_details(&event);
-        let audit_details = details.clone();
-        let audit_name = event.channel_name.clone();
-        session
-            .run(move |connection| {
-                Box::pin(async move {
-                    sqlx::query(
-                        "INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details) \
-                         VALUES($1,$2,$3,$4,$5)",
-                    )
-                    .bind(EVENT)
-                    .bind(chrono::Utc::now())
-                    .bind(channel)
-                    .bind(audit_name)
-                    .bind(audit_details)
-                    .execute(connection)
-                    .await
-                    .map_err(StoreError::from)
-                })
-            })
-            .await??;
-        // Stock inserts its SystemEvent before streaming, then hands webhook
-        // delivery off to a separate greenlet. Only the audit precedes media.
-        if let Some(ready) = audit_complete.take() {
-            let _ = ready.send(());
-        }
         let payload = crate::recording_capture::enrichment::enrich(
             &self.auth,
             session,
             Some(channel),
-            Some(event.channel_name),
+            Some(channel_name),
             details,
             owner.clone(),
         )
         .await?;
-        let delivery = epg_connect::dispatch_live_client_connect(
-            payload,
-            session.clone(),
-            Arc::new(Plain),
-            owner,
-        )
-        .await;
-        let settings = session.system_settings(self.auth.clone()).await?;
+        epg_connect::dispatch_live_client_connect(payload, session.clone(), Arc::new(Plain), owner)
+            .await?;
+        Ok(())
+    }
+
+    async fn deliver_if_eligible(
+        &self,
+        owner: Owner,
+        channel: Uuid,
+        channel_name: String,
+        details: Value,
+    ) -> Result<(), epg_connect::Error> {
+        let eligible = sqlx::query_scalar::<_, bool>(ACTIVE_SCOPE)
+            .fetch_one(self.auth.store.pool())
+            .await
+            .map_err(StoreError::from)?;
+        if !eligible {
+            return Ok(());
+        }
+        let session = self.auth.borrow_task_sql_session(owner.clone()).await?;
+        let outcome = self
+            .deliver(&session, owner.clone(), channel, channel_name, details)
+            .await;
+        if session.close().await.is_err() {
+            // Retain the actual writer and worker if physical close is uncertain.
+            self.unsettled
+                .lock()
+                .unwrap_or_else(|error| error.into_inner())
+                .push(Unsettled {
+                    _session: session,
+                    _owner: owner,
+                });
+        }
+        outcome
+    }
+
+    async fn retain_audit_history(&self) -> Result<(), StoreError> {
+        let settings = self.auth.system_settings().await?;
         let maximum = crate::sd_guide::max_events(settings.get("max_system_events"));
         if maximum >= 0 {
-            session.run(move |connection| Box::pin(async move {
-                let cutoff: Option<i64> = sqlx::query_scalar(
-                    "SELECT id::bigint FROM core_systemevent ORDER BY timestamp DESC LIMIT 1 OFFSET $1",
-                )
-                .bind(maximum)
-                .fetch_optional(&mut *connection)
-                .await?;
-                if let Some(cutoff) = cutoff {
-                    sqlx::query("DELETE FROM core_systemevent WHERE id<$1")
-                        .bind(cutoff)
-                        .execute(connection)
-                        .await?;
-                }
-                Ok::<(), StoreError>(())
-            })).await??;
+            sqlx::query(
+                "DELETE FROM core_systemevent WHERE id < (SELECT id FROM core_systemevent \
+                 ORDER BY timestamp DESC LIMIT 1 OFFSET $1)",
+            )
+            .bind(maximum)
+            .execute(self.auth.store.pool())
+            .await?;
         }
-        delivery?;
         Ok(())
     }
 }
@@ -152,44 +165,33 @@ impl LiveClientConnect {
 impl LiveClientConnectObserver for LiveClientConnect {
     fn before_media(&self, event: LiveClientConnectEvent, owner: Owner) -> BoxFuture<'_, ()> {
         Box::pin(async move {
-            // Reuse saved integration/subscription enablement. The feature
-            // requires neither a new deployment flag nor a new SQL connection
-            // when no qualified recipient is configured.
-            let eligible = sqlx::query_scalar::<_, bool>(ACTIVE_SCOPE)
-                .fetch_one(self.auth.store.pool())
-                .await;
-            if !matches!(eligible, Ok(true)) {
-                return;
-            }
-            let Ok(session) = self.auth.borrow_task_sql_session(owner.clone()).await else {
+            let Ok(channel) = Uuid::parse_str(&event.channel_id) else {
                 return;
             };
             self.used.store(true, Ordering::Release);
+            let details = event_details(&event);
+            // Stock writes the SystemEvent after playback is ready and before
+            // useful media even if no delivery will be sent.
+            if self.record_audit(&event, channel, &details).await.is_err() {
+                tracing::warn!("Live client audit storage failed");
+                return;
+            }
+
+            // Recipient settings can change after startup. Read them in the
+            // detached worker, using an owned SQL writer only for delivery.
             let runtime = self.clone();
-            let (merged_audit, audit_wait) = oneshot::channel();
             tokio::spawn(async move {
-                let mut ready = Some(merged_audit);
                 let outcome = runtime
-                    .deliver(&session, owner.clone(), event, &mut ready)
+                    .deliver_if_eligible(owner.clone(), channel, event.channel_name, details)
                     .await;
-                drop(ready);
                 if outcome.is_err() {
-                    eprintln!("Live Connect delivery did not settle successfully");
+                    tracing::warn!("Live Connect delivery did not settle successfully");
                 }
-                if session.close().await.is_err() {
-                    // As for claimed recording hooks, uncertainty retains the
-                    // actual original writer and worker rather than certifying drain.
-                    runtime
-                        .unsettled
-                        .lock()
-                        .unwrap_or_else(|error| error.into_inner())
-                        .push(Unsettled {
-                            _session: session,
-                            _owner: owner,
-                        });
+                if runtime.retain_audit_history().await.is_err() {
+                    tracing::warn!("Live client audit retention failed");
                 }
+                drop(owner);
             });
-            let _ = audit_wait.await;
         })
     }
 }

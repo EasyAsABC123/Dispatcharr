@@ -2,7 +2,6 @@
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
 use crate::{
     admin_writes::{body_object, character},
-    channel_writes::mark_group,
     channels::{
         channel_options_headers, channel_options_indentation, float, options_json_response,
         serialize_options_json, timestamp, truthy,
@@ -18,8 +17,12 @@ use axum::{
     Json, Router,
 };
 use serde_json::{json, Map, Value};
-use sqlx::{postgres::PgRow, Postgres, Row, Transaction};
+use sqlx::{postgres::PgRow, Row};
 use std::{collections::HashMap, net::SocketAddr, sync::OnceLock};
+
+mod write;
+use self::write::GroupWrite;
+
 type Body = Result<Json<Value>, JsonRejection>;
 const COLLECTION_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
 const DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
@@ -334,21 +337,6 @@ fn name(body: Map<String, Value>, partial: bool) -> Result<Option<String>, Store
         )),
     }
 }
-async fn check_unique(
-    tx: &mut Transaction<'_, Postgres>,
-    name: &str,
-    except: Option<i64>,
-) -> Result<(), StoreError> {
-    let exists:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroup WHERE name=$1 AND ($2::bigint IS NULL OR id<>$2))").bind(name).bind(except).fetch_one(&mut **tx).await?;
-    if exists {
-        Err(unique())
-    } else {
-        Ok(())
-    }
-}
-async fn get_group(tx: &mut Transaction<'_, Postgres>, id: i64) -> Result<PgRow, StoreError> {
-    sqlx::query("SELECT g.name,EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id WHERE r.channel_group_id=g.id AND NOT a.locked) AS has_provider,EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id WHERE r.channel_group_id=g.id AND a.locked) AS is_custom FROM dispatcharr_channels_channelgroup g WHERE g.id=$1 FOR UPDATE OF g").bind(id).fetch_optional(&mut **tx).await?.ok_or_else(missing)
-}
 async fn create(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -357,16 +345,10 @@ async fn create(
 ) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers, true).await?;
     let name = name(body_object(body)?, false)?.expect("required name validated");
-    let mut tx = auth.store.pool().begin().await?;
-    check_unique(&mut tx, &name, None).await?;
-    let id: i64 = sqlx::query_scalar(
-        "INSERT INTO dispatcharr_channels_channelgroup(name) VALUES($1) RETURNING id",
-    )
-    .bind(name)
-    .fetch_one(&mut *tx)
-    .await
-    .map_err(write_error)?;
-    mark_group(&mut tx, &json!(id)).await?;
+    let mut tx = GroupWrite::begin(auth.store.pool()).await?;
+    tx.check_unique(&name, None).await?;
+    let id = tx.insert(name).await?;
+    tx.mark_custom(id).await?;
     tx.commit().await?;
     Ok((StatusCode::CREATED, Json(detail(&auth, &user, id).await?)).into_response())
 }
@@ -380,39 +362,28 @@ async fn update(
 ) -> Result<Json<Value>, StoreError> {
     let user = auth.account_user(peer, headers, true).await?;
     let id = id(raw)?;
-    let mut tx = auth.store.pool().begin().await?;
-    let old = get_group(&mut tx, id).await?;
-    let provider: bool = old.try_get("has_provider")?;
-    let custom: bool = old.try_get("is_custom")?;
+    let mut tx = GroupWrite::begin(auth.store.pool()).await?;
+    let old = tx.lock_group(id).await?;
+    let provider = old.has_provider()?;
+    let custom = old.is_custom()?;
     if provider && !custom {
         return Err(StoreError::InvalidInput(
             json!({"error":"Cannot edit group with M3U account associations"}),
         ));
     }
-    let name = name(body_object(body)?, partial)?.unwrap_or(old.try_get("name")?);
-    check_unique(&mut tx, &name, Some(id)).await?;
-    if provider && name != old.try_get::<String, _>("name")? {
-        let new: i64 = sqlx::query_scalar(
-            "INSERT INTO dispatcharr_channels_channelgroup(name) VALUES($1) RETURNING id",
-        )
-        .bind(name)
-        .fetch_one(&mut *tx)
-        .await
-        .map_err(write_error)?;
-        mark_group(&mut tx, &json!(new)).await?;
-        sqlx::query("UPDATE dispatcharr_channels_channel SET channel_group_id=$1 WHERE channel_group_id=$2 AND NOT auto_created").bind(new).bind(id).execute(&mut *tx).await?;
-        sqlx::query("DELETE FROM dispatcharr_channels_channelgroupm3uaccount r USING m3u_m3uaccount a WHERE r.m3u_account_id=a.id AND r.channel_group_id=$1 AND a.locked").bind(id).execute(&mut *tx).await?;
+    let name = name(body_object(body)?, partial)?.unwrap_or(old.name()?);
+    tx.check_unique(&name, Some(id)).await?;
+    if provider && name != old.name()? {
+        let new = tx.insert(name).await?;
+        tx.mark_custom(new).await?;
+        tx.move_manual_channels(id, new).await?;
+        tx.remove_custom_marker(id).await?;
         tx.commit().await?;
         let mut value = detail(&auth, &user, new).await?;
         value["demoted_group"] = detail(&auth, &user, id).await?;
         return Ok(Json(value));
     }
-    sqlx::query("UPDATE dispatcharr_channels_channelgroup SET name=$1 WHERE id=$2")
-        .bind(name)
-        .bind(id)
-        .execute(&mut *tx)
-        .await
-        .map_err(write_error)?;
+    tx.rename(id, name).await?;
     tx.commit().await?;
     Ok(Json(detail(&auth, &user, id).await?))
 }
@@ -435,13 +406,6 @@ async fn put_group(
 ) -> Result<Json<Value>, StoreError> {
     update(auth, raw, peer, headers, body, false).await
 }
-async fn has_channels(tx: &mut Transaction<'_, Postgres>, id: i64) -> Result<bool, StoreError> {
-    Ok(sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE COALESCE(o.channel_group_id,c.channel_group_id)=$1)").bind(id).fetch_one(&mut **tx).await?)
-}
-async fn remove(tx: &mut Transaction<'_, Postgres>, id: i64) -> Result<(), StoreError> {
-    for query in ["UPDATE dispatcharr_channels_channel SET channel_group_id=NULL WHERE channel_group_id=$1","UPDATE dispatcharr_channels_channeloverride SET channel_group_id=NULL WHERE channel_group_id=$1","UPDATE dispatcharr_channels_stream SET channel_group_id=NULL WHERE channel_group_id=$1","DELETE FROM dispatcharr_channels_channelgroupm3uaccount WHERE channel_group_id=$1","DELETE FROM dispatcharr_channels_channelgroup WHERE id=$1"]{sqlx::query(query).bind(id).execute(&mut **tx).await?;}
-    Ok(())
-}
 async fn delete(
     State(auth): State<AuthService>,
     Path(raw): Path<String>,
@@ -450,19 +414,19 @@ async fn delete(
 ) -> Result<StatusCode, StoreError> {
     auth.account_user(peer, headers, true).await?;
     let id = id(raw)?;
-    let mut tx = auth.store.pool().begin().await?;
-    let group = get_group(&mut tx, id).await?;
-    if has_channels(&mut tx, id).await? {
+    let mut tx = GroupWrite::begin(auth.store.pool()).await?;
+    let group = tx.lock_group(id).await?;
+    if tx.has_effective_channels(id).await? {
         return Err(StoreError::InvalidInput(
             json!({"error":"Cannot delete group with associated channels"}),
         ));
     }
-    if group.try_get::<bool, _>("has_provider")? {
+    if group.has_provider()? {
         return Err(StoreError::InvalidInput(
             json!({"error":"Cannot delete group with M3U account associations"}),
         ));
     }
-    remove(&mut tx, id).await?;
+    tx.remove(id).await?;
     tx.commit().await?;
     Ok(StatusCode::NO_CONTENT)
 }
@@ -474,9 +438,9 @@ async fn claim(
 ) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers, true).await?;
     let id = id(raw)?;
-    let mut tx = auth.store.pool().begin().await?;
-    get_group(&mut tx, id).await?;
-    mark_group(&mut tx, &json!(id)).await?;
+    let mut tx = GroupWrite::begin(auth.store.pool()).await?;
+    tx.lock_group(id).await?;
+    tx.mark_custom(id).await?;
     tx.commit().await?;
     let body = Json(detail(&auth, &user, id).await?);
     Ok(group_response(body, Some(CLAIM_ALLOW)))
@@ -489,14 +453,14 @@ async fn unclaim(
 ) -> Result<Json<Value>, StoreError> {
     let user = auth.account_user(peer, headers, true).await?;
     let id = id(raw)?;
-    let mut tx = auth.store.pool().begin().await?;
-    get_group(&mut tx, id).await?;
-    if has_channels(&mut tx, id).await? {
+    let mut tx = GroupWrite::begin(auth.store.pool()).await?;
+    tx.lock_group(id).await?;
+    if tx.has_effective_channels(id).await? {
         return Err(StoreError::InvalidInput(
             json!({"error":"Cannot unclaim group with associated channels"}),
         ));
     }
-    sqlx::query("DELETE FROM dispatcharr_channels_channelgroupm3uaccount r USING m3u_m3uaccount a WHERE r.m3u_account_id=a.id AND r.channel_group_id=$1 AND a.locked").bind(id).execute(&mut *tx).await?;
+    tx.remove_custom_marker(id).await?;
     tx.commit().await?;
     Ok(Json(detail(&auth, &user, id).await?))
 }
@@ -514,14 +478,8 @@ async fn cleanup(
         Value::Number(value) => value.to_string() == "1",
         _ => false,
     });
-    let mut tx = auth.store.pool().begin().await?;
-    let rows=sqlx::query("SELECT g.id,g.name FROM dispatcharr_channels_channelgroup g WHERE NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE COALESCE(o.channel_group_id,c.channel_group_id)=g.id) AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id WHERE r.channel_group_id=g.id AND NOT a.locked) AND ($1 OR NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id WHERE r.channel_group_id=g.id AND a.locked)) FOR UPDATE OF g").bind(include).fetch_all(&mut *tx).await?;
-    let mut names = Vec::new();
-    for row in rows {
-        let id: i64 = row.try_get("id")?;
-        names.push(row.try_get::<String, _>("name")?);
-        remove(&mut tx, id).await?;
-    }
+    let mut tx = GroupWrite::begin(auth.store.pool()).await?;
+    let names = tx.remove_unused(include).await?;
     tx.commit().await?;
     Ok(Json(
         json!({"message":format!("Successfully deleted {} unused channel groups",names.len()),"deleted_count":names.len(),"deleted_groups":names}),
