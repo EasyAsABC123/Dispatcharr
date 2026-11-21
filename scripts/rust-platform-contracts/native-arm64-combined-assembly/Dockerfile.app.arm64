@@ -1,0 +1,12 @@
+FROM docker.io/library/debian:bookworm-slim@sha256:ec8534cda2cb30f29f44f23e135297af7a1496f2990fd8e4e84aa36b081a757a
+LABEL org.opencontainers.image.title="Dispatcharr derivative Rust backend port" \
+      org.opencontainers.image.licenses="AGPL-3.0-only" \
+      org.opencontainers.image.description="Original Dispatcharr credit belongs to its original authors and contributors; see /usr/share/doc/dispatcharr/ATTRIBUTION.md. Migration parity is incomplete."
+COPY rootfs/ /
+RUN mkdir -p /app /data/logos && ln -s /data /app/media && chown 65532:65532 /data /data/logos
+WORKDIR /app
+USER 65532:65532
+RUN /opt/dispatcharr-pg-guarded-restore/bin/dispatcharr-pg-guarded-restore --version
+ENV RUST_BIND=0.0.0.0:9192 RUST_FRONTEND_DIR=/opt/dispatcharr-frontend
+EXPOSE 9192
+ENTRYPOINT ["/usr/local/bin/dispatcharr-rs"]
