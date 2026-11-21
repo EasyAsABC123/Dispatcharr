@@ -14,6 +14,8 @@ an executable crosswalk. Its `runtime_registration_verified` and
 
 ## Current implementation mapping
 
+The `fdede54c` static classifier maps 38 of the 47 pinned Original declarations, plus framework `celery.backend_cleanup`. It recognizes `core.tasks.beat_periodic_task` through the Scanner family and `apps.epg.tasks.refresh_all_epg_data` through the Refresh family. Each has earlier scoped Docker Compose evidence under the selected jobs and Beat configuration. Current default-worker acceptance remains open. [Compatibility Beat](rust-m6-c2a3-compat-beat.md) · [Aggregate XMLTV](rust-m6-d482-aggregate-xmltv.md)
+
 Candidate41 source `c0031d640d61cd21ff9b2a12fbc74cc0ab6aadf1` has moved beyond
 the historical selected14 proposal. The literal classifier in
 [milestone_dispatch.rs](../rust/crates/job-transport/src/milestone_dispatch.rs)
@@ -77,7 +79,8 @@ by Source and production execution evidence.
 | `process_groups` | Direct call in `apps/m3u/tasks.py:1971` | Map inline M3U group processing; do not require a separate worker solely because it has a decorator. |
 | `cleanup_orphaned_vod_content`, `process_movie_batch`, `process_series_batch`, `refresh_movie_advanced_data` | Direct calls in `apps/vod/tasks.py:164,287,342`, `apps/vod/api_views.py:229` and `apps/output/views.py:1704` | Preserve effects through actual import/metadata/output callers; queued registration is not proved necessary by these direct calls. |
 | `purge_recurring_rule`, `rebuild_recurring_rule` | Decorated wrappers in `apps/channels/tasks.py`; API/helper paths call the purge implementation directly | Map direct rule mutation/rebuild effects and inspect any persisted schedule producer; no natural queued wrapper producer identified here. |
-| `refresh_all_epg_data`, `batch_refresh_series_episodes`, `beat_periodic_task` | Definitions in `apps/epg/tasks.py:483`, `apps/vod/tasks.py:1846`, `core/tasks.py:56` | No natural queued producer identified here. Inspect persisted/user-created Beat rows and API/callback callers before classifying these as unused or requiring new consumers. |
+| `refresh_all_epg_data` and `beat_periodic_task` | Definitions in `apps/epg/tasks.py:483` and `core/tasks.py:56` | Exact task names resolve to Refresh and Scanner. Scoped Docker Compose checks exercised custom aggregate XMLTV scheduling and the compatibility Beat task on the historical images linked above. |
+| `batch_refresh_series_episodes` | Definition in `apps/vod/tasks.py:1846`, direct test calls, and the cleanup-name list in `dispatcharr/celery.py` | Inspect persisted Beat or integration registrations for an actual producer. Runtime proof for a queued invocation remains open. |
 
 Dynamic plugin registrations and framework tasks remain additional workflow
 contracts outside the 47-name inventory. Unsupported FIFO heads must remain

@@ -4,9 +4,9 @@ Original Dispatcharr/Celery/django-celery-beat and dependency authors retain all
 application, algorithm and protocol credit.
 
 [SelectedJobs](../rust/crates/app/src/selected_jobs.rs) assembles the
-selected Main worker graph. The Candidate41 mapping covered 36 of the 47
-static application declarations, plus framework backend cleanup and dynamic
-plugin registration. The
+selected Main worker graph. On `fdede54c`, the static classifier maps 38 of the 47
+pinned Original declarations, plus framework backend cleanup. Dynamic plugin
+registration uses the loaded callable. The
 [Source-task reconciliation](rust-source-task-coverage.md) separates those
 registrations from actual natural producers, executable evidence and remaining
 unmapped workflows.

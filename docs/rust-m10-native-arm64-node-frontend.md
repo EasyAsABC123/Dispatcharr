@@ -1,0 +1,7 @@
+# Native ARM64 React production build
+
+The hosted retry built the unchanged React source on the pinned native ARM64 Node 24.22.2 image. The checkout matched all 497 frontend, license, and attribution entries. The lock retained 443 registry package SHA-512 identities and the exact public webworkify-webpack Git commit. Dependency acquisition completed before the network-disabled Vite production build. [Hosted retry](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44876188401)
+
+The non-root guest checked 85 output files totaling 14,793,311 bytes, including 36 source maps. The generated index referenced its built JavaScript and stylesheet. The installed esbuild, Rollup, and SWC binaries were native AArch64 ELF files. The build, guest, and controller each exited 0, and the controller verified exact image and container retirement.
+
+The first build also exited 0, but non-root inspection stopped in its file-read helper. The original guest error number was unavailable. An exact archive extraction control reproduced the loss of world-read permission under the harness umask. The retry preserved archive modes and passed. This receipt covers production frontend artifacts. Browser behavior, integrated ARM64 packaging, and redistribution remain separate. The original Dispatcharr authors and upstream dependency authors retain full credit. [First attempt](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44875864206) · [Machine-readable evidence](../scripts/rust-integration/m10-native-arm64-node-frontend.json)
