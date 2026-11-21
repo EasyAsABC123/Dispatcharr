@@ -17,6 +17,19 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
+## Current qualification and remaining release work
+
+| Milestone | Latest scoped evidence and remaining work |
+| --- | --- |
+| M0 | The ordinary packaged Recording HLS comparison checks six authenticated playlist misses against Original. Broader declared method, role and browser coverage remains open. [Recording HLS wire](rust-m0-recording-hls-lookup-wire.md) |
+| M3 and M4 | Fragmented MP4 lease renewal served two viewers through one upstream after the renewal window. Catch-up media and recording flows still require broader paired lifecycle and resource coverage. [Fragmented MP4](rust-m3-f22f2260-fmp4-lease-renewal.md) · [Maintenance and catch-up](rust-5d9e558b-maintenance-workflow-parity.md) |
+| M5 | A populated inactive Xtream account deletion matches Original across linked VOD and retained shared rows. Active account, attributed rows and additional role combinations remain open. [Xtream deletion](rust-m5-de4cf8b0-xc-populated-delete.md) |
+| M6 | The opted-in shared Core scheduler passed ordinary backend cleanup, and account-expiration notices passed on their separate exact package. The default job graph, abrupt interruption and imports across the full operating set remain open. [Core scheduling](rust-m6-m8-d0a80aa5-shared-core-schedules.md) · [Account expiration](rust-m6-5d9e558b-account-expiration.md) |
+| M7 | Both backends interpreted a 91.5-minute dummy guide duration as 5,490 seconds in XMLTV, Guide Grid and Xtream. Full protocol, realtime and integration acceptance remains open. [Fractional guide durations](rust-m7-ab65a6d7-fractional-dummy-duration.md) |
+| M8 | Opted-in Core passed scheduled rotation and ordinary manual backup, signed task status and archive download. Broader restore, copied SQLite, plugins and default operational ownership remain open. [Scheduled backup](rust-m6-m8-d0a80aa5-shared-core-schedules.md) · [Manual backup](rust-m8-core-manual-backup.md) |
+| M9 | The latest executed formal matrix reports 26 of 127 required checks passed on `e740306c`. The selected release still needs its combined functional run, strict cold rollback and agreed whole-service performance measurement. [Exact formal results](rust-m9-e740306c-formal-matrix.md) |
+| M10 and M11 | Native ARM64 Compose results are bound to `e740306c`. Exact current platform execution, controlled rollout and a default-switch decision remain open. [Native ARM64](rust-m10-e740306c-native-arm64-cli-compose.md) |
+
 ## Acceptance evidence by package
 
 The `0f79dc28` application passed both required immediate forced XMLTV
