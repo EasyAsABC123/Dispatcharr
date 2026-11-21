@@ -1,0 +1,380 @@
+{
+  "artifact_id": 14693458514,
+  "candidate_branch_parent": "a7ccdd1f28a2af744a48c1958624535779e68a91",
+  "credit": "Original Dispatcharr, PostgreSQL, Ubuntu, Debian and dependency authors and contributors retain full credit.",
+  "distribution_qualified": false,
+  "donor_OCI": {
+    "OCI_diffid_SHA256": "6fb7a5b77449c48fdf92aeb9eb8ec812b1902af77a8a8d57b22da02e2f934b39",
+    "OCI_layers": 17,
+    "config": "sha256:aa357ada16661964a9af41fe289964ae8008460b60efcdbbad60c4383e7d3b43",
+    "descriptor_reported_by_engine": false,
+    "donor": "ghcr.io/dispatcharr/dispatcharr@sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "manifest": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "native_platform": "linux/arm64"
+  },
+  "exact_container_and_inventory_absence": true,
+  "full_arm64_application_verified": false,
+  "hosted_conclusion": "success",
+  "inventory": {
+    "binaries": {
+      "pg_dump": {
+        "owners": [
+          "postgresql-client-17"
+        ],
+        "sha256": "2de7b041c02e569e50489d8f00713c672425041b8487fb806b93b3c4bb1a6a30",
+        "version": "pg_dump (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg26.04+2)"
+      },
+      "pg_restore": {
+        "owners": [
+          "postgresql-client-17"
+        ],
+        "sha256": "3c37b792129a3cd6d5c840df5428cf7b5a9b5111a0c29332e4445366c0bb414d",
+        "version": "pg_restore (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg26.04+2)"
+      },
+      "psql": {
+        "owners": [
+          "postgresql-client-17"
+        ],
+        "sha256": "d46cbd00b059e4493efb675dd0e4290709bae601b5994dd48182e506eb4367de",
+        "version": "psql (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg26.04+2)"
+      }
+    },
+    "distribution_qualified": false,
+    "donor_config": "sha256:aa357ada16661964a9af41fe289964ae8008460b60efcdbbad60c4383e7d3b43",
+    "donor_manifest": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "elf_interpreter": "/lib/ld-linux-aarch64.so.1",
+    "libraries": {
+      "ld-linux-aarch64.so.1": {
+        "owners": [
+          "libc6:arm64"
+        ],
+        "sha256": "7cdd4ce693d93790bf088dca2e86857f758335b6010d913e086fa384e7704a46"
+      },
+      "libc.so.6": {
+        "owners": [
+          "libc6:arm64"
+        ],
+        "sha256": "7b17086ce95b15145e6c2c5f8146395f80e2df1af2636fbf78e90c546a70df06"
+      },
+      "libcom_err.so.2": {
+        "owners": [
+          "libcom-err2:arm64"
+        ],
+        "sha256": "05d6d407f8a71f29371c006f21d8424f2135d00455be0845d223db3dcdf39202"
+      },
+      "libcrypto.so.3": {
+        "owners": [
+          "libssl3t64:arm64"
+        ],
+        "sha256": "b8114f6efa2ad981f7b87c3e16c153e425790f1f10b997be2e743401ca7ff858"
+      },
+      "libgssapi_krb5.so.2": {
+        "owners": [
+          "libgssapi-krb5-2:arm64"
+        ],
+        "sha256": "ef08f4a67bd4044cc7c8d02f91d8221e3848a142d0d270747d14db208fe758c0"
+      },
+      "libk5crypto.so.3": {
+        "owners": [
+          "libk5crypto3:arm64"
+        ],
+        "sha256": "3c6c3eb48d97db8dabc5438ac86a8a847a9adcc0539cdd879233d3bcdac9c7eb"
+      },
+      "libkeyutils.so.1": {
+        "owners": [
+          "libkeyutils1:arm64"
+        ],
+        "sha256": "9ede9f58dcb113f62fbb2de9e57dd6681d18dc9ac58dad31844be30775329d29"
+      },
+      "libkrb5.so.3": {
+        "owners": [
+          "libkrb5-3:arm64"
+        ],
+        "sha256": "5d5ebfe349e082493d372bee4e2fee13a3cc71ba49d1900c94a79c215f20d3fc"
+      },
+      "libkrb5support.so.0": {
+        "owners": [
+          "libkrb5support0:arm64"
+        ],
+        "sha256": "39ed8d9d61575fdd2d3d5ce726f1c59cc412361c6dafc7b53a3abd4a6dc685f0"
+      },
+      "liblber.so.2": {
+        "owners": [
+          "libldap2:arm64"
+        ],
+        "sha256": "9e572a7d556fe1dba848628b85545b631531a876f3b8dae4adc88cb751ee667d"
+      },
+      "libldap.so.2": {
+        "owners": [
+          "libldap2:arm64"
+        ],
+        "sha256": "5a6c2f849b1991c8aa70fc4f09c5e3eec36168bc3fb0c992e5488f55ea837ef4"
+      },
+      "liblz4.so.1": {
+        "owners": [
+          "liblz4-1:arm64"
+        ],
+        "sha256": "51952a92f7e09b65a4dc35a3f5b12686287e7d49180fc8c67d4f702af4dee45d"
+      },
+      "libm.so.6": {
+        "owners": [
+          "libc6:arm64"
+        ],
+        "sha256": "ffeae799646fae7a8af80402a88f4bc84bfc110af834f5e756aae2fa0a1a9602"
+      },
+      "libnss_compat.so.2": {
+        "owners": [
+          "libc6:arm64"
+        ],
+        "sha256": "1899dafa40b23646eb3ba6f6759475341a3d1b650b13f5f8e537d19e25ed617b"
+      },
+      "libnss_dns.so.2": {
+        "owners": [
+          "libc6:arm64"
+        ],
+        "sha256": "68009c33f5caa6cda0027a07099c5538bd8a90ba0074b65ff55c9cf250cc8685"
+      },
+      "libnss_files.so.2": {
+        "owners": [
+          "libc6:arm64"
+        ],
+        "sha256": "ebe9edd922d8297d8726c58b955e2c85d91335060d5be7f206b50fda4305e751"
+      },
+      "libnss_hesiod.so.2": {
+        "owners": [
+          "libc6:arm64"
+        ],
+        "sha256": "b0682646579a5c798d0d286a263f943a739437edf1728bbf410d27e09438992e"
+      },
+      "libpq.so.5": {
+        "owners": [
+          "libpq5:arm64"
+        ],
+        "sha256": "e3478271c471eb64b2785a8875656d2145da3445294b6eef02717e9a75ef762f"
+      },
+      "libreadline.so.8": {
+        "owners": [
+          "libreadline8t64:arm64"
+        ],
+        "sha256": "039e695a2513438ff55950bf90000230232ea28fe12bc4d3004a807455f928a7"
+      },
+      "libresolv.so.2": {
+        "owners": [
+          "libc6:arm64"
+        ],
+        "sha256": "1431922c580f41dda4cecf29c6dbd97916d680d657b014fec34e26ce462aecfa"
+      },
+      "libsasl2.so.2": {
+        "owners": [
+          "libsasl2-2:arm64"
+        ],
+        "sha256": "ea1d224582c547d199da019cf0a4aed958bf196e25954eda384181de050f80c5"
+      },
+      "libssl.so.3": {
+        "owners": [
+          "libssl3t64:arm64"
+        ],
+        "sha256": "9adb8cc1686afb52893f82d8a2b4ea7784de1c3196ca7e814d67ff378647c583"
+      },
+      "libtinfo.so.6": {
+        "owners": [
+          "libtinfo6:arm64"
+        ],
+        "sha256": "5bb2b95c8ef8a6880de1caf392086098e96a09323cf5b1600c80f051605c5edd"
+      },
+      "libxxhash.so.0": {
+        "owners": [
+          "libxxhash0:arm64"
+        ],
+        "sha256": "05eeb75bba029f503b8462bd5a8fe621787a67013abcdf623a94a6dd8bb133ad"
+      },
+      "libz.so.1": {
+        "owners": [
+          "zlib1g:arm64"
+        ],
+        "sha256": "2d2437c87551b247720b69dd3d761227b4d6f7ee9a20a10ee75e6efc2808b79a"
+      },
+      "libzstd.so.1": {
+        "owners": [
+          "libzstd1:arm64"
+        ],
+        "sha256": "6b9bdeb9c94850c294b909226ab280247faa47e9ff4437f46688a5d328f0cf3b"
+      }
+    },
+    "native_platform": "linux/arm64",
+    "nss_names": [
+      "libnss_compat.so.2",
+      "libnss_dns.so.2",
+      "libnss_files.so.2",
+      "libnss_hesiod.so.2"
+    ],
+    "openssl_providers": {
+      "legacy.so": {
+        "owners": [
+          "openssl-provider-legacy"
+        ],
+        "sha256": "dd91d6711905766ef8eafab16a2aa22e6e8d0aa26db9e621e82ee9eba394e839"
+      }
+    },
+    "package_runtime_verified": false,
+    "packages": {
+      "libc6:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "c31d10900fdb95d1889005145a2205bb75e3bc018d3ec8265b81364901748e09",
+        "source_package": "glibc",
+        "source_version": "2.43-2ubuntu2.4",
+        "version": "2.43-2ubuntu2.4"
+      },
+      "libcom-err2:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "2041b5febdc110151ca3372d01b16b85dda1888e33f3f60fce0f59940eed7d19",
+        "source_package": "e2fsprogs",
+        "source_version": "1.47.2-3ubuntu4",
+        "version": "1.47.2-3ubuntu4"
+      },
+      "libgssapi-krb5-2:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "936728f4181718f42951b881c1e8f1386bf6b2723c4fbc533c374d6f42c71816",
+        "source_package": "krb5",
+        "source_version": "1.22.1-2ubuntu4.1",
+        "version": "1.22.1-2ubuntu4.1"
+      },
+      "libk5crypto3:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "936728f4181718f42951b881c1e8f1386bf6b2723c4fbc533c374d6f42c71816",
+        "source_package": "krb5",
+        "source_version": "1.22.1-2ubuntu4.1",
+        "version": "1.22.1-2ubuntu4.1"
+      },
+      "libkeyutils1:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "73f5682b0466f41cea2b9b7f1ff8a8052464f6c09fb29eeac4490512af09bd50",
+        "source_package": "keyutils",
+        "source_version": "1.6.3-6ubuntu3",
+        "version": "1.6.3-6ubuntu3"
+      },
+      "libkrb5-3:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "936728f4181718f42951b881c1e8f1386bf6b2723c4fbc533c374d6f42c71816",
+        "source_package": "krb5",
+        "source_version": "1.22.1-2ubuntu4.1",
+        "version": "1.22.1-2ubuntu4.1"
+      },
+      "libkrb5support0:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "936728f4181718f42951b881c1e8f1386bf6b2723c4fbc533c374d6f42c71816",
+        "source_package": "krb5",
+        "source_version": "1.22.1-2ubuntu4.1",
+        "version": "1.22.1-2ubuntu4.1"
+      },
+      "libldap2:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "2656a8ac4f2fda614be8fe6fd7f649665a6ca3abcf19f6ac125e2ff165b60939",
+        "source_package": "openldap",
+        "source_version": "2.6.10+dfsg-1ubuntu5",
+        "version": "2.6.10+dfsg-1ubuntu5"
+      },
+      "liblz4-1:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "8dce0cb8c5a4486e4aac00466e4dd4b0b5b28d70efe3b3256ea4594099a8509c",
+        "source_package": "lz4",
+        "source_version": "1.10.0-8",
+        "version": "1.10.0-8"
+      },
+      "libpq5:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "afcc052a946b4117667527211b4ca303f07044f5585222f4c8f577e0764b2123",
+        "source_package": "postgresql-18",
+        "source_version": "18.6-1.pgdg26.04+2",
+        "version": "18.6-1.pgdg26.04+2"
+      },
+      "libreadline8t64:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "00e252bd06d79a7b9bf235934aa1e2e475bd949e9cf179cd388608247d68fac7",
+        "source_package": "readline",
+        "source_version": "8.3-4",
+        "version": "8.3-4"
+      },
+      "libsasl2-2:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "ddb128a81d3a140ef5b3574ae000a1a50d0cb9a2ec59917121a155f91b670166",
+        "source_package": "cyrus-sasl2",
+        "source_version": "2.1.28+dfsg1-9ubuntu3",
+        "version": "2.1.28+dfsg1-9ubuntu3"
+      },
+      "libssl3t64:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "6a7da622fe0637a334d2a8fc470852d2ffb77d9a2b2f930f854e32a41ad6ef35",
+        "source_package": "openssl",
+        "source_version": "3.5.5-1ubuntu3.7",
+        "version": "3.5.5-1ubuntu3.7"
+      },
+      "libtinfo6:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "f838d6048fbc59356b7e56c207a7cb32dc6bf4adea95514a002596bde8f6e1e7",
+        "source_package": "ncurses",
+        "source_version": "6.6+20251231-1",
+        "version": "6.6+20251231-1"
+      },
+      "libxxhash0:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "81affefe3047c8a88a9e4c94c8c698f51a7e0787e75b58e901bf1f8fcd433f58",
+        "source_package": "xxhash",
+        "source_version": "0.8.3-2build1",
+        "version": "0.8.3-2build1"
+      },
+      "libzstd1:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "2efe51c80ddc473bc2c91faec49dae645bf7f5a04824528fec816320432da2ae",
+        "source_package": "libzstd",
+        "source_version": "1.5.7+dfsg-3",
+        "version": "1.5.7+dfsg-3"
+      },
+      "openssl-provider-legacy": {
+        "architecture": "arm64",
+        "copyright_sha256": "6a7da622fe0637a334d2a8fc470852d2ffb77d9a2b2f930f854e32a41ad6ef35",
+        "source_package": "openssl",
+        "source_version": "3.5.5-1ubuntu3.7",
+        "version": "3.5.5-1ubuntu3.7"
+      },
+      "postgresql-17": {
+        "architecture": "arm64",
+        "copyright_sha256": "afcc052a946b4117667527211b4ca303f07044f5585222f4c8f577e0764b2123",
+        "source_package": "postgresql-17",
+        "source_version": "17.11-1.pgdg26.04+2",
+        "version": "17.11-1.pgdg26.04+2"
+      },
+      "postgresql-client-17": {
+        "architecture": "arm64",
+        "copyright_sha256": "afcc052a946b4117667527211b4ca303f07044f5585222f4c8f577e0764b2123",
+        "source_package": "postgresql-17",
+        "source_version": "17.11-1.pgdg26.04+2",
+        "version": "17.11-1.pgdg26.04+2"
+      },
+      "zlib1g:arm64": {
+        "architecture": "arm64",
+        "copyright_sha256": "9e5b96d63773a5d177ba264254390f792be07e41748ebd94730981c6cac31cc6",
+        "source_package": "zlib",
+        "source_version": "1:1.3.dfsg+really1.3.1-1ubuntu3.2",
+        "version": "1:1.3.dfsg+really1.3.1-1ubuntu3.2"
+      }
+    },
+    "public_support_files": 475,
+    "public_support_owners": [
+      "postgresql-17",
+      "postgresql-client-17"
+    ],
+    "server_binary_present": true,
+    "triplet": "aarch64-linux-gnu",
+    "uid": 65532
+  },
+  "inventory_sha256": "d9b2b5118eb9183b8ff046b3cb931c92ba56e39cca233d0715fc25dd5ce8b300",
+  "job_id": 136744071592,
+  "literal_controller_exit": 0,
+  "literal_guest_exit": 0,
+  "native_wrapper_verified": false,
+  "run_id": 44870617035,
+  "text_artifact_sha256": "ac232576e6d7f3fe7d5b6782a7ba4164c69938ebfc65704434e3716f2162f6d6",
+  "validation_branch": "validation/m10-arm64-postgres-collector-a7ccdd1f-1",
+  "validation_commit": "6e82bab3a165e52d8b2131942c2aa413ad95880f"
+}

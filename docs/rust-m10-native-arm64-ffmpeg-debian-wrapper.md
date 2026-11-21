@@ -1,0 +1,9 @@
+# Standalone FFmpeg wrappers on native ARM64 Debian
+
+A native ARM64 build collected the exact Original FFmpeg and ffprobe binaries into the pinned Debian Bookworm-slim image. The non-root smoke verified all 112 copied file hashes, all 55 private libraries for each tool, and 51 installed dependency notices. The wrappers generated the exact previously observed 8.0196-second MPEG-TS fixture, and then probed and decoded both its audio and video without changing the input. Controller, build and wrapper statuses were zero. The exact temporary container and standalone image retired. [Successful hosted job](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44870394844/job/136743389173) · [Redacted receipt](../scripts/rust-integration/m10-native-arm64-ffmpeg-debian-wrapper.json) · [Native Original donor inputs](rust-m10-native-arm64-ffmpeg-collector-inputs.md)
+
+The first attempt's build and wrapper guest both exited 0 and retired, but its controller exited 1 when parsing the loader inventory. The retry normalized the explicit AArch64 interpreter alias while still requiring its target to resolve inside the private collected prefix. [Retained first attempt](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44870095932/job/136742456547)
+
+The two custom tools still have no installed package notices. The standalone test preserved their reported FFmpeg license and the installed dependency notices. The recorded anonymous GHCR request for the separate historical FFmpeg builder returned HTTP 401. Exact builder bytes, corresponding source, broader media profiles and full ARM64 application and distribution qualification remain open. Existing AMD64 collector and application Dockerfile bytes are unchanged. [Donor access record](rust-m10-native-arm64-comskip-donor-inventory.md)
+
+The original Dispatcharr authors, FFmpeg developers, Ubuntu and Debian contributors, and dependency authors retain full credit. [Attribution](../ATTRIBUTION.md)

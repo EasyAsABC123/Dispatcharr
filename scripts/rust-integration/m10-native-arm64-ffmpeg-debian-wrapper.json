@@ -1,0 +1,113 @@
+{
+  "Debian_OCI": {
+    "config": "sha256:5b6c2c6cbc90b6085e3f9b3086110b1eccedb643374137bfdcd1d2f5c78f6cd1",
+    "exact_debian_layers": 1,
+    "manifest": "sha256:ec8534cda2cb30f29f44f23e135297af7a1496f2990fd8e4e84aa36b081a757a",
+    "platform": "linux/arm64"
+  },
+  "cleanup": {
+    "exact_container_and_inventory_absence": true,
+    "exact_ephemeral_image_absence": true
+  },
+  "compiled_tool_corresponding_source_verified": false,
+  "credit": "Original Dispatcharr, FFmpeg, Ubuntu, Debian and dependency authors retain full credit.",
+  "distribution_qualified": false,
+  "full_ARM64_package_verified": false,
+  "github": {
+    "artifact_id": 14694056548,
+    "artifact_sha256": "dd30007205f2cf300b2e2750a3136e102378c19e63bf2601dc441bc6015b74cd",
+    "build_exit": 0,
+    "controller_exit": 0,
+    "job_id": 136743389173,
+    "native_wrapper_receipt_sha256": "160a24877f67ef649be4597b468bf7b838f2852ba31c4440afcaaf9b5aacc91f",
+    "parent": "132764102ccdc20a811460cde8e5abfd08d9a0a9",
+    "revision": "37cc85b7877a7c5783742f8ec1813ca4264a9d6c",
+    "run_id": 44870394844,
+    "wrapper_exit": 0
+  },
+  "original_OCI": {
+    "OCI_diffid_SHA256": "6fb7a5b77449c48fdf92aeb9eb8ec812b1902af77a8a8d57b22da02e2f934b39",
+    "OCI_layers": 17,
+    "config": "sha256:aa357ada16661964a9af41fe289964ae8008460b60efcdbbad60c4383e7d3b43",
+    "descriptor_reported_by_engine": false,
+    "donor": "ghcr.io/dispatcharr/dispatcharr@sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "manifest": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "native_platform": "linux/arm64"
+  },
+  "retained_first_failure": {
+    "branch": "validation/m10-arm64-ffmpeg-debian-13276410-1",
+    "build_exit": 0,
+    "conclusion": "failure",
+    "controller_exit": 1,
+    "evidence_assertion_line": 41,
+    "exact_cleanup": {
+      "exact_container_and_inventory_absence": true,
+      "exact_ephemeral_image_absence": true
+    },
+    "job_id": 136742456547,
+    "retained_artifact_files_sha256": {
+      "actual-exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "build-exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "cleanup.json": "f647c8a957620aa2ebd199c07b34e9943659fd85a89750bc01a15277ff24ca24",
+      "debian-identity.json": "53e85869bfdbaa286c663a84eb9a9fed18b19c82ee50cac70db8c4b690b58f0e",
+      "oci-identity.json": "3406e8e377c7f250f85c1c3df3494160777a0960cec3600aaf10db87f69b571e",
+      "terminal-phase": "1445c47ba4fbe78cf019a0fd7bfdf677983790bd132138d1a8bf1610f44c55ec",
+      "unit-image.json": "acb2170500feebf35bbd7c2ad342e32055eabc9f18e43649d2bbe63c441d183e",
+      "validation-commit": "faf2a80a5f72648363b57feed1a8c8d1ebab4026b7caafbf00f662d1a44bec0b",
+      "validation-parent": "e5d721c69929eec6b3f854858178821892ee01d2093ef829902ab5fa485ccbf2",
+      "wrapped-media.json": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "wrapper-exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "revision": "af4fa59be171621249fd744f712d9e0c0f288c13",
+    "run_id": 44870095932,
+    "terminal_phase": "wrapper-evidence",
+    "wrapped_media_qualification_receipt_present": false,
+    "wrapper_guest_exit": 0
+  },
+  "scope": "exact ARM64 Debian standalone FFmpeg and ffprobe wrapper smoke",
+  "separate_historical_FFmpeg_GHCR_access": {
+    "FFmpeg_attested_manifest": "sha256:6baed9ed3c8b828c9663abda7ff13f66c4a230ffbbb3f05e125df0c6eb7fa0d1",
+    "FFmpeg_config_bytes_retained": false,
+    "FFmpeg_manifest_bytes_retained": false,
+    "dispatcharr/dispatcharr": 200,
+    "dispatcharr/ffmpeg": 401,
+    "scope": "official public GHCR anonymous pull-token status control only"
+  },
+  "standalone_image": {
+    "collector_only_layers": 1,
+    "exact_debian_layers": 1,
+    "id": "sha256:e1f5b6fd60fb52cce9f25bcdc594ff7d46ecfdf3c7b8110bd9ac6f24d5cf909a",
+    "platform": "linux/arm64"
+  },
+  "wrapper": {
+    "collected_files": 112,
+    "credit": "Original Dispatcharr, FFmpeg, Ubuntu, Debian and dependency authors retain full credit.",
+    "distribution_qualified": false,
+    "exact_original_tool_bytes": true,
+    "generated_media": {
+      "codec_names": [
+        "mp2",
+        "mpeg2video"
+      ],
+      "duration_seconds": 8.0196,
+      "input_unchanged": true,
+      "sha256": "562fa93972763130c3079330b5e028a1e248ff98d59202129164d20a8c67d0b1",
+      "video_and_audio_decode_completed": true
+    },
+    "installed_package_notices_retained": 51,
+    "native_inventory_sha256": "95064285b5a2bac0b7f1ae235b845caccc6b6bf452c52fcb449511977b6b0d0a",
+    "nonroot_uid": 65532,
+    "private_library_counts": {
+      "ffmpeg": 55,
+      "ffprobe": 55
+    },
+    "reported_FFmpeg_license_retained": true,
+    "scope": "exact ARM64 Debian standalone FFmpeg and ffprobe wrapper smoke",
+    "tool_package_notice_gaps": [
+      "ffmpeg",
+      "ffprobe"
+    ],
+    "whole_ARM64_package_verified": false,
+    "wrapped_exit": 0
+  }
+}
