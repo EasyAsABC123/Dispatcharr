@@ -305,6 +305,9 @@ impl SelectedJobs {
         auth.bind_compact_coordinator(compact.clone())
             .map_err(|_| "Selected compact coordinator binding failed")?;
         let xc_http = dispatcharr_store::xc_account_http::Http::prepare(auth.clone(), xc_port);
+        xc_http
+            .bind_vod_settings(&auth)
+            .map_err(|_| "Selected XC VOD settings producer binding failed")?;
         let recording_playback = dispatcharr_store::RecordingPlayback::prepare(
             auth.clone(),
             dispatcharr_output_http::source_output_origin,

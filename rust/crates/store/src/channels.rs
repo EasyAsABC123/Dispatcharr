@@ -821,7 +821,10 @@ async fn retrieve(
     }
     Ok(response)
 }
-fn channel_options_indentation(uri: &Uri, headers: &HeaderMap) -> Result<usize, StoreError> {
+pub(crate) fn channel_options_indentation(
+    uri: &Uri,
+    headers: &HeaderMap,
+) -> Result<usize, StoreError> {
     let unsupported = || StoreError::Unsupported("Channel OPTIONS requires the ordinary JSON route");
     if !matches!(uri.query(), None | Some("format=json")) {
         return Err(unsupported());
@@ -877,19 +880,29 @@ fn channel_options_entity(scope: ChannelOptions, indentation: usize) -> Result<R
                         actions.insert("POST".into(), fields);
                     }
                 }
-                if indentation == 0 {
-                    return serde_json::to_vec(&metadata).ok().map(Bytes::from);
-                }
-                let formatter =
-                    serde_json::ser::PrettyFormatter::with_indent(&b"        "[..indentation]);
-                let mut output = Vec::new();
-                let mut serializer = serde_json::Serializer::with_formatter(&mut output, formatter);
-                serde::Serialize::serialize(&metadata, &mut serializer).ok()?;
-                Some(Bytes::from(output))
+                serialize_options_json(&metadata, indentation)
             })
             .clone()
             .ok_or(StoreError::UnhandledRestFault)?
     };
+    options_json_response(body)
+}
+
+pub(crate) fn serialize_options_json(
+    metadata: &Map<String, Value>,
+    indentation: usize,
+) -> Option<Bytes> {
+    if indentation == 0 {
+        return serde_json::to_vec(metadata).ok().map(Bytes::from);
+    }
+    let formatter = serde_json::ser::PrettyFormatter::with_indent(&b"        "[..indentation]);
+    let mut output = Vec::new();
+    let mut serializer = serde_json::Serializer::with_formatter(&mut output, formatter);
+    serde::Serialize::serialize(metadata, &mut serializer).ok()?;
+    Some(Bytes::from(output))
+}
+
+pub(crate) fn options_json_response(body: Bytes) -> Result<Response, StoreError> {
     let length = HeaderValue::from_str(&body.len().to_string())
         .map_err(|_| StoreError::UnhandledRestFault)?;
     Ok((
@@ -900,7 +913,7 @@ fn channel_options_entity(scope: ChannelOptions, indentation: usize) -> Result<R
         .into_response())
 }
 
-fn channel_options_headers(mut response: Response, allow: HeaderValue) -> Response {
+pub(crate) fn channel_options_headers(mut response: Response, allow: HeaderValue) -> Response {
     if response.status() != StatusCode::INTERNAL_SERVER_ERROR {
         response.headers_mut().insert(header::ALLOW, allow);
         // Main's normal CORS middleware adds the origin variation.

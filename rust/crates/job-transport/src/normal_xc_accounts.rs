@@ -188,6 +188,17 @@ impl dispatcharr_store::xc_account_http::Publisher for Prepared {
                     }
                     dispatcharr_store::vod_ingestion::AdmissionError::Operational(error) => error,
                 })?;
+            self.publish_vod_settings_root(account, owner).await?;
+            Ok(json!({"message":format!("VOD refresh initiated for account {name}")}))
+        })
+    }
+
+    fn publish_vod_settings_root(
+        &self,
+        account: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), StoreError>> {
+        Box::pin(async move {
             let identity = self.inner.identity.current()?;
             let raw = crate::vod_ingestion_protocol::encode(account, &identity)
                 .map_err(|_| StoreError::Unsupported("VOD root envelope unavailable"))?;
@@ -199,9 +210,7 @@ impl dispatcharr_store::xc_account_http::Publisher for Prepared {
                 return Err(StoreError::Unsupported("VOD producer draining"));
             }
             match self.inner.jobs.publish_vod(&raw, retained.clone()).await {
-                Ok(receipt) if receipt.task_id == message.id => {
-                    Ok(json!({"message":format!("VOD refresh initiated for account {name}")}))
-                }
+                Ok(receipt) if receipt.task_id == message.id => Ok(()),
                 other => {
                     if !matches!(other, Err(crate::transport::Error::Capacity)) {
                         self.inner

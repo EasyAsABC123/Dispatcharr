@@ -16,6 +16,9 @@ use axum::{
 use serde_json::{json, Map, Value};
 use sqlx::{Connection, PgConnection, Row};
 use std::{collections::HashSet, net::SocketAddr, sync::Arc};
+
+mod xc_vod_settings;
+
 type Body = Result<Json<Value>, JsonRejection>;
 type Owner = Arc<dyn Send + Sync>;
 fn unsupported() -> StoreError {
@@ -1191,6 +1194,15 @@ async fn change(
                 if old["locked"]==true{return Err(locked())}
                 (old,cron)
             }else{(defaults(),String::new())};
+            if let Some(account) = id {
+                if partial && xc_vod_settings::eligible(&input, &old, &old_cron) {
+                    let admitted = auth.admit_xc_vod_settings()?;
+                    let response = xc_vod_settings::apply_then_publish(
+                        &session, admitted, account, input, owner.clone(),
+                    ).await?;
+                    return Ok((account, None, (StatusCode::OK, response)));
+                }
+            }
             let mut validated=validate(input,&old,&old_cron,partial,id.is_none())?;
             let check=validated.saved.clone();let group_ids:Vec<i64>=validated.group_selection.iter().map(|(id,_)|*id).collect();
             session.run(move|c|Box::pin(async move{

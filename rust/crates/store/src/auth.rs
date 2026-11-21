@@ -73,6 +73,8 @@ pub struct TokenPair {
 pub struct AuthService {
     pub(crate) inline_xc_groups:
         Arc<std::sync::OnceLock<std::sync::Weak<dyn crate::xc_create_groups::InlineGroups>>>,
+    pub(crate) xc_vod_settings:
+        Arc<std::sync::OnceLock<std::sync::Weak<crate::xc_account_http::VodSettings>>>,
     pub(crate) compact_coordinator:
         Arc<std::sync::OnceLock<std::sync::Weak<dyn crate::compact_numbering::Coordinator>>>,
     pub(crate) store: Store,
@@ -106,6 +108,7 @@ impl AuthService {
     pub fn new(store: Store, config: AuthConfig) -> Self {
         Self {
             inline_xc_groups: Arc::new(std::sync::OnceLock::new()),
+            xc_vod_settings: Arc::new(std::sync::OnceLock::new()),
             store,
             native_log_liveness: None,
             config,

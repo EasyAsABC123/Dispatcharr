@@ -15,13 +15,22 @@ use sqlx::Row;
 use std::{
     net::SocketAddr,
     sync::{
-        atomic::{AtomicU8, Ordering},
+        atomic::{AtomicBool, AtomicU8, Ordering},
         Arc,
     },
     time::Duration,
 };
-use tokio::sync::Semaphore;
+use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 pub trait Publisher: Send + Sync {
+    /// Publishes the root after a settings edit has committed its owned SQL.
+    fn publish_vod_settings_root(
+        &self,
+        _account: i64,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), StoreError>> {
+        Box::pin(async { Err(StoreError::Unsupported("VOD settings producer unavailable")) })
+    }
+
     fn publish_vod(
         &self,
         _account: i64,
@@ -70,11 +79,70 @@ pub struct Http {
 struct Inner {
     publisher: Arc<dyn Publisher>,
     repack: Repack,
+    vod_settings: Arc<VodSettings>,
 }
 
 const REQUEST_SLOTS: u32 = 4;
 const CLOSED: u8 = 1;
 const REPACK_USED: u8 = 2;
+
+pub(crate) struct VodSettings {
+    publisher: Arc<dyn Publisher>,
+    closed: AtomicBool,
+    slots: Arc<Semaphore>,
+}
+
+pub(crate) struct AdmittedVodSettings {
+    publisher: Arc<dyn Publisher>,
+    slot: OwnedSemaphorePermit,
+}
+
+impl VodSettings {
+    fn new(publisher: Arc<dyn Publisher>) -> Self {
+        Self {
+            publisher,
+            closed: AtomicBool::new(false),
+            slots: Arc::new(Semaphore::new(REQUEST_SLOTS as usize)),
+        }
+    }
+
+    fn admit(&self) -> Result<AdmittedVodSettings, StoreError> {
+        let slot = self
+            .slots
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| unavailable())?;
+        if self.closed.load(Ordering::Acquire) {
+            return Err(unavailable());
+        }
+        Ok(AdmittedVodSettings {
+            publisher: self.publisher.clone(),
+            slot,
+        })
+    }
+}
+
+impl AuthService {
+    pub(crate) fn admit_xc_vod_settings(&self) -> Result<AdmittedVodSettings, StoreError> {
+        self.xc_vod_settings
+            .get()
+            .and_then(std::sync::Weak::upgrade)
+            .ok_or(StoreError::Unsupported("VOD settings producer unavailable"))?
+            .admit()
+    }
+}
+
+impl AdmittedVodSettings {
+    pub(crate) async fn publish(
+        self,
+        account: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<(), StoreError> {
+        self.publisher
+            .publish_vod_settings_root(account, Arc::new((owner, self.slot)))
+            .await
+    }
+}
 
 #[derive(Clone)]
 pub struct Repack {
@@ -90,10 +158,17 @@ impl Http {
     pub fn prepare(auth: AuthService, publisher: Arc<dyn Publisher>) -> Self {
         Self {
             inner: Arc::new(Inner {
+                vod_settings: Arc::new(VodSettings::new(publisher.clone())),
                 publisher,
                 repack: Repack::prepare(auth),
             }),
         }
+    }
+
+    pub fn bind_vod_settings(&self, auth: &AuthService) -> Result<(), StoreError> {
+        auth.xc_vod_settings
+            .set(Arc::downgrade(&self.inner.vod_settings))
+            .map_err(|_| StoreError::Unsupported("VOD settings producer already bound"))
     }
     pub fn router(self) -> Router {
         let repack = self.inner.repack.clone().router();
@@ -114,11 +189,27 @@ impl Http {
             .with_state(self)
     }
     pub fn close_admission(&self) {
+        self.inner
+            .vod_settings
+            .closed
+            .store(true, Ordering::Release);
         self.inner.repack.close_admission();
     }
 
     pub async fn shutdown(&self, duration: Duration) -> bool {
-        self.inner.repack.shutdown(duration).await
+        self.close_admission();
+        let (repack, vod_settings) = tokio::join!(
+            self.inner.repack.shutdown(duration),
+            tokio::time::timeout(
+                duration,
+                self.inner
+                    .vod_settings
+                    .slots
+                    .clone()
+                    .acquire_many_owned(REQUEST_SLOTS),
+            ),
+        );
+        repack && vod_settings.is_ok_and(|result| result.is_ok())
     }
 }
 
@@ -586,5 +677,44 @@ mod tests {
         assert!(!repack.was_used());
         drop(waiting_request);
         assert!(repack.shutdown(Duration::ZERO).await);
+    }
+
+    #[tokio::test]
+    async fn xc_vod_settings_owner_holds_admission_until_transport_settles() {
+        type PhysicalOwner = Arc<dyn Send + Sync>;
+        struct Capture(std::sync::Mutex<Option<PhysicalOwner>>);
+        impl Publisher for Capture {
+            fn publish_info(
+                &self,
+                _id: i64,
+                _owner: PhysicalOwner,
+            ) -> BoxFuture<'_, Result<(), StoreError>> {
+                Box::pin(async { panic!("settings publishes only VOD roots") })
+            }
+
+            fn publish_vod_settings_root(
+                &self,
+                id: i64,
+                owner: PhysicalOwner,
+            ) -> BoxFuture<'_, Result<(), StoreError>> {
+                Box::pin(async move {
+                    assert_eq!(id, 45);
+                    assert!(self.0.lock().unwrap().replace(owner).is_none());
+                    Ok(())
+                })
+            }
+        }
+        let auth = auth();
+        let publisher = Arc::new(Capture(std::sync::Mutex::new(None)));
+        let http = Http::prepare(auth.clone(), publisher.clone());
+        assert!(auth.admit_xc_vod_settings().is_err());
+        http.bind_vod_settings(&auth).unwrap();
+        let admitted = auth.admit_xc_vod_settings().unwrap();
+        http.close_admission();
+        assert!(auth.admit_xc_vod_settings().is_err());
+        admitted.publish(45, Arc::new(())).await.unwrap();
+        assert!(!http.shutdown(Duration::ZERO).await);
+        publisher.0.lock().unwrap().take().unwrap();
+        assert!(http.shutdown(Duration::ZERO).await);
     }
 }

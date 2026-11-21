@@ -3,23 +3,157 @@
 use crate::{
     admin_writes::{body_object, character},
     channel_writes::mark_group,
-    channels::{float, timestamp, truthy},
+    channels::{
+        channel_options_headers, channel_options_indentation, float, options_json_response,
+        serialize_options_json, timestamp, truthy,
+    },
     AuthService, StoreError, User,
 };
 use axum::{
-    extract::{rejection::JsonRejection, ConnectInfo, Path, State},
-    http::{header, HeaderMap, Method, StatusCode},
+    body::Bytes,
+    extract::{rejection::JsonRejection, ConnectInfo, OriginalUri, Path, State},
+    http::{header, HeaderMap, HeaderValue, Method, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::{get, post},
     Json, Router,
 };
 use serde_json::{json, Map, Value};
 use sqlx::{postgres::PgRow, Postgres, Row, Transaction};
-use std::{collections::HashMap, net::SocketAddr};
+use std::{collections::HashMap, net::SocketAddr, sync::OnceLock};
 type Body = Result<Json<Value>, JsonRejection>;
 const COLLECTION_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
 const DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
 const CLAIM_ALLOW: &str = "POST, OPTIONS";
+const GROUP_OPTIONS: &[u8; 1939] = include_bytes!("../datasets/source-channel-group-options.json");
+
+#[derive(Clone, Copy, Eq, PartialEq)]
+enum GroupOptions {
+    Collection,
+    ExistingDetail,
+    MissingDetail,
+    Claim,
+}
+
+impl GroupOptions {
+    fn allow(self) -> HeaderValue {
+        let allow = match self {
+            Self::Collection => COLLECTION_ALLOW,
+            Self::ExistingDetail | Self::MissingDetail => DETAIL_ALLOW,
+            Self::Claim => CLAIM_ALLOW,
+        };
+        HeaderValue::from_static(allow)
+    }
+
+    fn entity(self, indentation: usize) -> Result<Response, StoreError> {
+        static RENDERED: [[OnceLock<Option<Bytes>>; 9]; 4] =
+            [const { [const { OnceLock::new() }; 9] }; 4];
+        let body = if self == Self::Collection && indentation == 0 {
+            Bytes::from_static(GROUP_OPTIONS)
+        } else {
+            RENDERED[self as usize][indentation]
+                .get_or_init(|| {
+                    let mut metadata: Map<String, Value> =
+                        serde_json::from_slice(GROUP_OPTIONS).ok()?;
+                    match self {
+                        Self::Collection => {}
+                        Self::ExistingDetail | Self::MissingDetail => {
+                            *metadata.get_mut("name")? = "Channel Group Instance".into();
+                            if self == Self::MissingDetail {
+                                metadata.shift_remove("actions");
+                            } else {
+                                let actions = metadata.get_mut("actions")?.as_object_mut()?;
+                                let fields = actions.shift_remove("POST")?;
+                                actions.insert("PUT".into(), fields);
+                            }
+                        }
+                        Self::Claim => {
+                            *metadata.get_mut("name")? = "Claim custom".into();
+                            *metadata.get_mut("description")? =
+                                "Mark a group as custom so provider cleanup cannot remove it."
+                                    .into();
+                        }
+                    }
+                    serialize_options_json(&metadata, indentation)
+                })
+                .clone()
+                .ok_or(StoreError::UnhandledRestFault)?
+        };
+        options_json_response(body)
+    }
+}
+
+async fn group_options(
+    auth: AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    uri: Uri,
+    requested: GroupOptions,
+    detail_id: Option<String>,
+) -> Response {
+    let result = async {
+        auth.account_user(peer, headers.clone(), true).await?;
+        let indentation = channel_options_indentation(&uri, &headers)?;
+        let scope = match detail_id {
+            Some(raw) => {
+                let exists = sqlx::query_scalar::<_, bool>(
+                    "SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroup WHERE id = $1)",
+                )
+                .bind(id(raw)?)
+                .fetch_one(auth.store.pool())
+                .await?;
+                if exists {
+                    GroupOptions::ExistingDetail
+                } else {
+                    GroupOptions::MissingDetail
+                }
+            }
+            None => requested,
+        };
+        scope.entity(indentation)
+    }
+    .await;
+    channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        requested.allow(),
+    )
+}
+
+async fn collection_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    group_options(auth, peer, headers, uri, GroupOptions::Collection, None).await
+}
+
+async fn detail_options(
+    State(auth): State<AuthService>,
+    Path(raw): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    group_options(
+        auth,
+        peer,
+        headers,
+        uri,
+        GroupOptions::ExistingDetail,
+        Some(raw),
+    )
+    .await
+}
+
+async fn claim_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    // DRF's POST metadata does not look up the group or execute the action.
+    group_options(auth, peer, headers, uri, GroupOptions::Claim, None).await
+}
 
 fn group_response(body: Json<Value>, allow: Option<&'static str>) -> Response {
     match allow {
@@ -395,16 +529,23 @@ async fn cleanup(
 }
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
-        .route("/api/channels/groups/", get(list).post(create))
+        .route(
+            "/api/channels/groups/",
+            get(list).post(create).options(collection_options),
+        )
         .route("/api/channels/groups/cleanup/", post(cleanup))
         .route(
             "/api/channels/groups/{id}/",
             get(retrieve)
                 .patch(patch_group)
                 .put(put_group)
-                .delete(delete),
+                .delete(delete)
+                .options(detail_options),
         )
-        .route("/api/channels/groups/{id}/claim-custom/", post(claim))
+        .route(
+            "/api/channels/groups/{id}/claim-custom/",
+            post(claim).options(claim_options),
+        )
         .route("/api/channels/groups/{id}/unclaim-custom/", post(unclaim))
         .with_state(auth)
 }
@@ -413,6 +554,76 @@ pub(crate) fn router(auth: AuthService) -> Router {
 mod tests {
     use super::*;
     use axum::body::to_bytes;
+    use sha2::{Digest, Sha256};
+
+    #[tokio::test]
+    async fn group_options_matches_all_observed_stock_entities() {
+        for (scope, length, digest) in [
+            (
+                GroupOptions::Collection,
+                1939,
+                "e5fe36198f3be26ac6b71a637b494010aa9d70d17e8cd2b209e50b0cb31c1ed9",
+            ),
+            (
+                GroupOptions::ExistingDetail,
+                1942,
+                "9d8322d462656f2525af589399792adda5e2123eea2d656a14ca957d5eaa6978",
+            ),
+            (
+                GroupOptions::MissingDetail,
+                181,
+                "64d48b525c2b1ad9376cf09fcd39b8bdf663e5ff1bdf8ba5917e26826941e794",
+            ),
+            (
+                GroupOptions::Claim,
+                1993,
+                "35069a5e5a547591f2198efa6619b8d8dc7d464c1eaa52eebabffe5bdb491135",
+            ),
+        ] {
+            let response = channel_options_headers(scope.entity(0).unwrap(), scope.allow());
+            assert_eq!(response.status(), StatusCode::OK);
+            assert_eq!(response.headers()[header::ALLOW], scope.allow());
+            assert_eq!(response.headers()[header::VARY], "Accept");
+            assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+            assert_eq!(response.headers()[header::CONTENT_LENGTH], length.to_string());
+            let body = to_bytes(response.into_body(), length).await.unwrap();
+            assert_eq!(format!("{:x}", Sha256::digest(&body)), digest);
+        }
+    }
+
+    #[tokio::test]
+    async fn group_options_routes_require_the_existing_admin_authentication() {
+        use axum::{body::Body, http::Request};
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://unused:unused@localhost/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("test-group-options-signing-key".into()).unwrap(),
+        );
+        for (path, allow) in [
+            ("/api/channels/groups/", COLLECTION_ALLOW),
+            ("/api/channels/groups/1/", DETAIL_ALLOW),
+            ("/api/channels/groups/1/claim-custom/", CLAIM_ALLOW),
+        ] {
+            let request = Request::builder()
+                .method(Method::OPTIONS)
+                .uri(path)
+                .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                .body(Body::empty())
+                .unwrap();
+            let response = router(auth.clone()).oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+            assert_eq!(response.headers()[header::ALLOW], allow);
+            assert_eq!(response.headers()[header::VARY], "Accept");
+            assert_eq!(
+                response.headers()[header::WWW_AUTHENTICATE],
+                "Bearer realm=\"api\""
+            );
+        }
+    }
 
     #[tokio::test]
     async fn group_get_and_mutation_allow_preserve_json_and_head_handling() {
