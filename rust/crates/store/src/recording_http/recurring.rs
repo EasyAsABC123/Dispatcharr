@@ -7,7 +7,7 @@ use super::{
 use crate::{
     admin_writes::{body_object, boolean, character},
     channel_memberships::primary_key,
-    channels, AuthService, RecordingPlayback, StoreError, User,
+    channels, AuthService, RecordingPlayback, Store, StoreError, User,
 };
 use axum::{
     body::{to_bytes, Bytes},
@@ -21,6 +21,7 @@ use chrono::{
     Utc,
 };
 use chrono_tz::Tz;
+use dispatcharr_contracts::UpdateEventSink;
 use futures_util::TryStreamExt;
 use serde_json::{json, Map, Value};
 use sqlx::{postgres::PgRow, Connection, PgConnection, Postgres, QueryBuilder, Row};
@@ -580,7 +581,7 @@ async fn plan_on(
     rebuild_plan(rule, zone, &channel_name, Utc::now())
 }
 
-async fn purge(connection: &mut PgConnection, rule_id: i64) -> Result<bool, StoreError> {
+async fn purge_rows(connection: &mut PgConnection, rule_id: i64) -> Result<Vec<PgRow>, StoreError> {
     let rows = sqlx::query(
         "SELECT id::bigint AS id,CASE WHEN octet_length(task_id)<=1020 THEN task_id END AS task,
          task_id IS NULL OR octet_length(task_id)<=1020 AS bounded
@@ -597,7 +598,14 @@ async fn purge(connection: &mut PgConnection, rule_id: i64) -> Result<bool, Stor
             "Recurring rule future recording purge exceeds the row bound",
         ));
     }
-    for row in &rows {
+    Ok(rows)
+}
+
+async fn delete_purge_rows(
+    connection: &mut PgConnection,
+    rows: &[PgRow],
+) -> Result<(), StoreError> {
+    for row in rows {
         let id: i64 = row.try_get("id")?;
         let task: Option<String> = row.try_get("task")?;
         if !row.try_get::<bool, _>("bounded")? {
@@ -619,7 +627,96 @@ async fn purge(connection: &mut PgConnection, rule_id: i64) -> Result<bool, Stor
             }
         }
     }
+    Ok(())
+}
+
+async fn purge(connection: &mut PgConnection, rule_id: i64) -> Result<bool, StoreError> {
+    let rows = purge_rows(connection, rule_id).await?;
+    delete_purge_rows(connection, &rows).await?;
     Ok(!rows.is_empty())
+}
+
+async fn configured_purge_rows(
+    connection: &mut PgConnection,
+    rule_id: i64,
+) -> Result<Vec<PgRow>, StoreError> {
+    let rows = purge_rows(connection, rule_id).await?;
+    for row in &rows {
+        let id: i64 = row.try_get("id")?;
+        let task: Option<String> = row.try_get("task")?;
+        let expected = format!("dvr-recording-{id}");
+        if task.as_deref() != Some(expected.as_str()) {
+            return Err(StoreError::Unsupported(
+                "Configured recurring purge requires a scheduled recording task",
+            ));
+        }
+        // The qualified purge owns an undispatched DVR booking. Having a
+        // task name alone doesn't qualify an immediate or legacy revoke.
+        let booked: Option<i64> = sqlx::query_scalar(
+            "SELECT p.id::bigint FROM django_celery_beat_periodictask p
+             JOIN dispatcharr_channels_recording r ON r.id=$1
+             JOIN django_celery_beat_clockedschedule c ON c.id=p.clocked_id
+             WHERE p.name=$2 AND p.task='apps.channels.tasks.run_recording'
+               AND p.enabled AND p.one_off AND p.total_run_count=0
+               AND p.interval_id IS NULL AND p.crontab_id IS NULL AND p.solar_id IS NULL
+               AND c.clocked_time=r.start_time
+               AND r.custom_properties #>> '{status}' = 'scheduled'
+               AND NOT EXISTS (SELECT 1 FROM epg_epgsource WHERE refresh_task_id=p.id)
+               AND NOT EXISTS (SELECT 1 FROM m3u_m3uaccount WHERE refresh_task_id=p.id)
+             FOR UPDATE OF p, c",
+        )
+        .bind(id)
+        .bind(expected)
+        .fetch_optional(&mut *connection)
+        .await?;
+        if booked.is_none() {
+            return Err(StoreError::Unsupported(
+                "Configured recurring purge requires an owned clocked booking",
+            ));
+        }
+    }
+    Ok(rows)
+}
+
+pub async fn preflight_recurring_purge(store: &Store, rule_id: i64) -> Result<(), StoreError> {
+    let mut tx = store.pool().begin().await?;
+    let rows = configured_purge_rows(&mut tx, rule_id).await;
+    tx.rollback().await?;
+    rows.map(|_| ())
+}
+
+pub async fn execute_recurring_purge(
+    store: &Store,
+    auth: &AuthService,
+    events: Arc<dyn UpdateEventSink>,
+    rule_id: i64,
+    owner: Arc<dyn Send + Sync>,
+) -> Result<u64, StoreError> {
+    let _writer = auth.task_sql_writer()?;
+    let mut tx = store.pool().begin().await?;
+    let rows = match configured_purge_rows(&mut tx, rule_id).await {
+        Ok(rows) => rows,
+        Err(error) => {
+            tx.rollback().await?;
+            return Err(error);
+        }
+    };
+    if delete_purge_rows(&mut tx, &rows).await.is_err() {
+        // Django catches a settled failure of its atomic Collector and returns zero.
+        tx.rollback().await?;
+        return Ok(0);
+    }
+    tx.commit().await?;
+    let removed = rows.len() as u64;
+    if removed > 0 {
+        crate::core_task_offsets::retained_event(
+            events,
+            json!({"type":"update","data":{"success":true,"type":"recordings_refreshed"}}),
+            owner,
+        )
+        .await?;
+    }
+    Ok(removed)
 }
 
 fn input(body: &Bytes, media: &str) -> Result<Map<String, Value>, StoreError> {

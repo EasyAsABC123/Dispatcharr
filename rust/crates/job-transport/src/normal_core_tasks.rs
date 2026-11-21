@@ -8,7 +8,9 @@ use crate::{
 use base64::{engine::general_purpose::STANDARD, Engine};
 use dispatcharr_contracts::{BoxFuture, UpdateEventSink};
 use dispatcharr_store::{
-    core_task_rehash::Request, recording_http::RecordingJobs, AuthService, Store,
+    core_task_rehash::Request,
+    recording_http::{execute_recurring_purge, preflight_recurring_purge, RecordingJobs},
+    AuthService, Store,
 };
 use serde_json::{json, Value};
 use std::{
@@ -24,6 +26,16 @@ use uuid::Uuid;
 pub(crate) enum Kind {
     Rehash(Request),
     Offsets,
+    RecurringPurge(i64),
+}
+impl Kind {
+    fn family(&self) -> Family {
+        match self {
+            Self::Rehash(_) => Family::RehashStreams,
+            Self::Offsets => Family::RescheduleOffsets,
+            Self::RecurringPurge(_) => Family::RecurringPurge,
+        }
+    }
 }
 #[derive(Clone, Debug)]
 pub(crate) struct Message {
@@ -38,6 +50,35 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
     let kind = match frame["headers"]["task"].as_str() {
         Some("apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change") => {
             Kind::Offsets
+        }
+        Some("apps.channels.tasks.purge_recurring_rule") => {
+            let bytes = STANDARD
+                .decode(frame["body"].as_str().ok_or(())?)
+                .map_err(|_| ())?;
+            let body = crate::clocked_recording_envelope::json_value(&bytes).map_err(|_| ())?;
+            let args = body[0]
+                .as_array()
+                .filter(|args| args.len() == 1)
+                .ok_or(())?;
+            let rule = args[0].as_i64().filter(|id| *id > 0).ok_or(())?;
+            let scheduled_name = frame["headers"]["periodic_task_name"].as_str().ok_or(())?;
+            let expected_repr = format!("({rule},)");
+            let expected_list_repr = format!("[{rule}]");
+            if body
+                != json!([[rule], {}, {"callbacks":null,"errbacks":null,"chain":null,"chord":null}])
+                || scheduled_name.is_empty()
+                || !matches!(frame["headers"]["argsrepr"].as_str(), Some(repr) if repr == expected_repr || repr == expected_list_repr)
+            {
+                return Err(());
+            }
+            frame["body"] = json!(STANDARD.encode(
+                serde_json::to_vec(
+                    &json!([[],{},{ "callbacks":null,"errbacks":null,"chain":null,"chord":null }])
+                )
+                .map_err(|_| ())?
+            ));
+            frame["headers"]["argsrepr"] = json!("()");
+            Kind::RecurringPurge(rule)
         }
         Some("core.tasks.rehash_streams") => {
             let bytes = STANDARD
@@ -173,22 +214,20 @@ impl Prepared {
         })
     }
     pub fn entries(&self) -> Vec<(Family, Arc<dyn Handler>)> {
-        vec![
-            (
-                Family::RehashStreams,
-                Arc::new(Worker {
-                    inner: self.inner.clone(),
-                    rehash: true,
-                }),
-            ),
-            (
-                Family::RescheduleOffsets,
-                Arc::new(Worker {
-                    inner: self.inner.clone(),
-                    rehash: false,
-                }),
-            ),
+        [
+            Family::RehashStreams,
+            Family::RescheduleOffsets,
+            Family::RecurringPurge,
         ]
+        .into_iter()
+        .map(|family| {
+            let worker = Arc::new(Worker {
+                inner: self.inner.clone(),
+                family,
+            }) as Arc<dyn Handler>;
+            (family, worker)
+        })
+        .collect()
     }
 }
 struct WorkOwner {
@@ -198,7 +237,7 @@ struct WorkOwner {
 }
 struct Worker {
     inner: Arc<Inner>,
-    rehash: bool,
+    family: Family,
 }
 impl Worker {
     async fn run(&self, expected: Option<Arc<[u8]>>, caller: Arc<dyn Send + Sync>) -> Result<D, D> {
@@ -217,7 +256,7 @@ impl Worker {
             _inner: self.inner.clone(),
         });
         let inner = self.inner.clone();
-        let rehash = self.rehash;
+        let family = self.family;
         let join_owner: Arc<dyn Send + Sync> = owner.clone();
         let join_inner = inner.clone();
         let joined = tokio::spawn(async move {
@@ -232,13 +271,14 @@ impl Worker {
                 Err(crate::transport::Error::UnsupportedTask) => return Err(D::UnsupportedHead),
                 Err(e) => return Err(D::Operational(format!("Core peek {e:?}"))),
             };
-            if matches!(candidate.message.kind, Kind::Rehash(_)) != rehash {
+            if candidate.message.kind.family() != family {
                 return Err(D::UnsupportedHead);
             }
             match &candidate.message.kind {
                 Kind::Rehash(_) => {
                     dispatcharr_store::core_task_rehash::preflight(&inner.auth).await
                 }
+                Kind::RecurringPurge(rule) => preflight_recurring_purge(&inner.store, *rule).await,
                 Kind::Offsets => {
                     inner
                         .recordings
@@ -281,6 +321,18 @@ impl Worker {
                             )
                             .await
                             .map_err(|e| D::Operational(format!("Rehash effects {e:?}")))?,
+                            Vec::new(),
+                        ),
+                        Kind::RecurringPurge(rule) => (
+                            json!(execute_recurring_purge(
+                                &inner.store,
+                                &inner.auth,
+                                inner.events.clone(),
+                                *rule,
+                                owner.clone(),
+                            )
+                            .await
+                            .map_err(|error| D::Operational(format!("Recurring purge effects {error:?}")))?),
                             Vec::new(),
                         ),
                         Kind::Offsets => {
@@ -371,6 +423,47 @@ impl Lifecycle for Worker {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn configured_recurring_purge_requires_one_saved_numeric_operand_and_no_children() {
+        let id = Uuid::new_v4();
+        let raw = crate::protocol::encode(
+            &crate::protocol::Task::CreateBackup,
+            id,
+            Uuid::new_v4(),
+            Uuid::new_v4(),
+            "rust@recurring-purge-fixture",
+        )
+        .unwrap();
+        let mut frame: Value = serde_json::from_slice(&raw).unwrap();
+        frame["headers"]["task"] = json!("apps.channels.tasks.purge_recurring_rule");
+        frame["headers"]["argsrepr"] = json!("[27]");
+        crate::periodic_headers::put(&mut frame, "owned-recurring-purge").unwrap();
+        let mut body =
+            json!([[27], {}, {"callbacks":null,"errbacks":null,"chain":null,"chord":null}]);
+        frame["body"] = json!(STANDARD.encode(serde_json::to_vec(&body).unwrap()));
+        let parsed = parse(&serde_json::to_vec(&frame).unwrap()).unwrap();
+        assert_eq!(parsed.id, id);
+        assert!(matches!(parsed.kind, Kind::RecurringPurge(27)));
+        assert_eq!(
+            crate::milestone_dispatch::classify(&serde_json::to_vec(&frame).unwrap()),
+            Some(Family::RecurringPurge)
+        );
+
+        let mut unscheduled = frame.clone();
+        unscheduled["headers"]
+            .as_object_mut()
+            .unwrap()
+            .remove("periodic_task_name");
+        assert!(parse(&serde_json::to_vec(&unscheduled).unwrap()).is_err());
+        body[0][0] = json!("27");
+        frame["body"] = json!(STANDARD.encode(serde_json::to_vec(&body).unwrap()));
+        assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err());
+        body[0][0] = json!(27);
+        body[2]["callbacks"] = json!([]);
+        frame["body"] = json!(STANDARD.encode(serde_json::to_vec(&body).unwrap()));
+        assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err());
+    }
+
     #[test]
     fn actual_retained_core_producer_frames_parse_without_execution_or_other_family_authority() {
         let source: Value =

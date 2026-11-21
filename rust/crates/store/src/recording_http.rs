@@ -26,6 +26,7 @@ use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 
 pub(super) mod recurring;
+pub use recurring::{execute_recurring_purge, preflight_recurring_purge};
 pub type RecordingChannelId = Uuid;
 pub type RecordingTaskConnection = sqlx::PgConnection;
 const SLOTS: usize = 4;
