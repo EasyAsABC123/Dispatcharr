@@ -1,0 +1,102 @@
+{
+  "candidate": "5d9e558b70270e2dcc2b478d5ba96bca6a9abb8f",
+  "comparative_performance": false,
+  "credit": "Original Dispatcharr, Django, Celery and django-celery-beat authors retain full credit.",
+  "first_version200_attempt": {
+    "engine_calls": 0,
+    "output_setup_error_sha256": "b39720ed5364e6aca0c6f6ba8210805046e198bee82f0589b54537bebfaacc0c",
+    "prior_actual_exit": 1
+  },
+  "formal_row_promoted": false,
+  "frozen_review_sha256": "186f6925a2cf3dce42262aebd56368321f600f7637c0edda7e4a7acfa8a2b37b",
+  "image": "sha256:b1bce68f69628b653176add84d69e9fb5db322181811c7d7f9108983103f7089",
+  "literal_exit": 0,
+  "manifest_sha256": "70de2bcb2205bd4e0c181328b39c3bd1cf5e042f37a3afc4b1bed38af4512b8f",
+  "pairs": [
+    {
+      "cleanup": {
+        "exact_inventory_empty": true,
+        "normal_bootstrap_stop": true,
+        "owned_cids_absent": true,
+        "owned_host_generations_absent": true,
+        "passed": true
+      },
+      "complete": true,
+      "side": "original"
+    },
+    {
+      "cleanup": {
+        "exact_inventory_empty": true,
+        "normal_bootstrap_stop": true,
+        "owned_cids_absent": true,
+        "owned_host_generations_absent": true,
+        "passed": true
+      },
+      "complete": true,
+      "side": "native"
+    }
+  ],
+  "proof_sha256": "da6729d170fd0237b5fb7fa207b4ae5a3e32d22434a142b2fddc0dcfc7f10042",
+  "raw_receipt_sha256": "78b45bfed97b0037ac576443a4e20039ba85dae78047c121b72df77e4b8c10e1",
+  "rows": [
+    {
+      "actual_result": "SUCCESS/null",
+      "label": "no-update",
+      "one_saved_run": true,
+      "pinned_notice_result_matched": true,
+      "upstream_HTTP": 200
+    },
+    {
+      "actual_result": "SUCCESS/null",
+      "label": "update",
+      "one_saved_run": true,
+      "pinned_notice_result_matched": true,
+      "upstream_HTTP": 200
+    },
+    {
+      "actual_result": "SUCCESS/null",
+      "label": "repeat",
+      "one_saved_run": true,
+      "pinned_notice_result_matched": true,
+      "upstream_HTTP": 200
+    },
+    {
+      "actual_result": "SUCCESS/null",
+      "label": "malformed",
+      "one_saved_run": true,
+      "pinned_notice_result_matched": true,
+      "upstream_HTTP": 200
+    }
+  ],
+  "scope": "four ordinary scheduled Version HTTP 200 outcomes on exact Original and Native",
+  "scope_evidence": {
+    "native": {
+      "exact_cleanup": true,
+      "roles": 5,
+      "scope_state_sha256": "7551406156fbc31d752ec659a7892c267f8712c2029fd53bd3fd8de3a67a7774",
+      "startup_notice_isolation_sha256": "23ea8a7dc7ab514de89bce127141a6fb6e8990b5b652c635757d69ea620117ec",
+      "unrelated_native_startup_notice_count": 1
+    },
+    "original": {
+      "exact_cleanup": true,
+      "roles": 6,
+      "scope_state_sha256": "1598f926e2787752cfb784de7b3b92ebecb49fb6ad43be6e8afd141b49214b64",
+      "startup_notice_isolation_sha256": "702734bf955df78444faf7d98dd7f90e0861735410be287cfb06371bba54d78d",
+      "unrelated_native_startup_notice_count": 0
+    }
+  },
+  "second_version200_attempt": {
+    "both_exact_cleanups": true,
+    "native_failure_phase": "no-update",
+    "original_completed": true,
+    "prior_actual_exit": 1,
+    "raw_receipt_sha256": "b0814a66aecb4c6bc003f979fd81fbe8ac00ae8755573ac5d083bd348c27c0c8"
+  },
+  "source_cases_sha256": {
+    "malformed": "636e4b28cedba67daa986d578f404db4d6d3e20f8352924cabf508d8a907b456",
+    "no-update": "42a20db8148075985b9872589c74459be59a22d3e23e198aae9df6f6059a4bab",
+    "repeat": "302249f061f6e61901248395984a1b498c18b8d9870eaf9b98ff0d2aebece196",
+    "update": "1729aae6c641f3ba4e4a22e586d09e862b67607478356c9ecfce74f2a232c0bc"
+  },
+  "whole_M6": false
+}

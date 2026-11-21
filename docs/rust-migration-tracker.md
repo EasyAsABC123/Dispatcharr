@@ -38,6 +38,16 @@ one shared upstream across fMP4 lease renewal.
 [Scheduled version check](rust-m6-5d9e558b-version503.md) ·
 [fMP4 renewal](rust-m3-f22f2260-fmp4-lease-renewal.md)
 
+The `0b48cf4b` package matched both Schedules Direct Active transitions.
+It also passed five networkless Compose cases for the optional historical
+SQLite copy operator, retaining the input bytes and verifying 184 migration
+records and 62 application tables. The later `de4cf8b` package matched
+deletion of an inactive XC playlist with imported catalogue links. A separate
+`5d9e558b` run verified the retained Original queue handoff and restart after
+completion. [Schedules Direct and SQLite operator](rust-m5-m8-0b48cf4b-sd-sqlite-operator.md) ·
+[XC playlist deletion](rust-m5-de4cf8b0-xc-populated-delete.md) ·
+[Retained queue restart](rust-m6-5d9e558b-retained-queue-restart.md)
+
 The milestone rows below retain scoped historical evidence and the remaining
 acceptance requirements. [Milestone plan](rust-complete-parity-plan.md)
 
