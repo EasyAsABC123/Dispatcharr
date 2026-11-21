@@ -12,7 +12,7 @@ use axum::{
     extract::ConnectInfo,
     http::{HeaderMap, HeaderValue, Method, Uri},
     response::{IntoResponse, Response},
-    routing::any,
+    routing::{any, get},
     Router,
 };
 use serde_json::{json, Value};
@@ -125,7 +125,37 @@ impl VodReads {
         })
     }
     pub fn router(&self) -> Router {
-        router_with_gate(self.reader.clone(), self.auth.clone(), self.gate.clone())
+        let mut router =
+            router_with_gate(self.reader.clone(), self.auth.clone(), self.gate.clone());
+        for (path, detail) in [
+            ("/api/vod/vodlogos/", false),
+            ("/api/vod/vodlogos/{id}/", true),
+        ] {
+            let reads = self.clone();
+            router = router.route(
+                path,
+                get(
+                    move |ConnectInfo(peer): ConnectInfo<SocketAddr>,
+                          request: axum::extract::Request| {
+                        let reads = reads.clone();
+                        async move {
+                            respond_to(
+                                reads.reader,
+                                reads.auth,
+                                reads.gate,
+                                peer,
+                                ReadEndpoint::Logo,
+                                detail,
+                                request,
+                            )
+                            .await
+                        }
+                    },
+                )
+                .fallback(|| async { StoreError::NotFound }),
+            );
+        }
+        router
     }
     #[cfg(test)]
     pub(super) fn shared_gate(&self) -> HttpGate {
@@ -399,8 +429,39 @@ pub(super) async fn respond(
     detail: bool,
     request: axum::extract::Request,
 ) -> Response {
+    respond_to(
+        reader,
+        auth,
+        gate,
+        peer,
+        ReadEndpoint::Content(resource),
+        detail,
+        request,
+    )
+    .await
+}
+
+#[derive(Clone, Copy)]
+enum ReadEndpoint {
+    Content(Resource),
+    Logo,
+}
+
+async fn respond_to(
+    reader: SqlReads,
+    auth: crate::AuthService,
+    gate: HttpGate,
+    peer: SocketAddr,
+    endpoint: ReadEndpoint,
+    detail: bool,
+    request: axum::extract::Request,
+) -> Response {
     let (parts, body) = request.into_parts();
     drop(body);
+    let allow = match endpoint {
+        ReadEndpoint::Content(_) => "GET, HEAD, OPTIONS",
+        ReadEndpoint::Logo => "GET, HEAD",
+    };
     let input = parts
         .headers
         .iter()
@@ -439,7 +500,7 @@ pub(super) async fn respond(
             *response.status_mut() = axum::http::StatusCode::SERVICE_UNAVAILABLE;
             for (name, value) in [
                 ("content-type", "application/json"),
-                ("allow", "GET, HEAD, OPTIONS"),
+                ("allow", allow),
                 ("vary", "Accept, origin"),
             ] {
                 response
@@ -469,27 +530,38 @@ pub(super) async fn respond(
     // Use the shared trusted-proxy origin builder. Presented credentials and
     // client-address ACL processing remain in actual scoped AuthService.
     let origin = crate::logos::origin(&auth, peer.ip(), &parts.headers);
-    let input = ReadRequest {
-        peer,
-        headers: parts.headers,
-        resource,
-        detail: None,
-        query: Vec::new(),
-        origin,
-        path: parts.uri.path().into(),
+    let http = HttpRead {
+        method: parts.method,
+        uri: parts.uri,
+        raw_detail,
+        scope: Some(slot.clone()),
+        deadline,
     };
-    let result = reader
-        .dispatch(
-            input,
-            Some(HttpRead {
-                method: parts.method,
-                uri: parts.uri,
-                raw_detail,
-                scope: Some(slot.clone()),
-                deadline,
-            }),
-        )
-        .await;
+    let result = match endpoint {
+        ReadEndpoint::Content(resource) => {
+            let input = ReadRequest {
+                peer,
+                headers: parts.headers,
+                resource,
+                detail: None,
+                query: Vec::new(),
+                origin,
+                path: http.uri.path().into(),
+            };
+            reader.dispatch(input, Some(http)).await
+        }
+        ReadEndpoint::Logo => {
+            super::vod_api_logo_metadata::dispatch(
+                reader.shared_runtime(),
+                auth,
+                peer,
+                parts.headers,
+                http,
+                origin,
+            )
+            .await
+        }
+    };
     let mut response = match result {
         Ok(data) => {
             let length = data.len();
@@ -561,7 +633,7 @@ pub(super) async fn respond(
     };
     response
         .headers_mut()
-        .insert("allow", HeaderValue::from_static("GET, HEAD, OPTIONS"));
+        .insert("allow", HeaderValue::from_static(allow));
     response
         .headers_mut()
         .insert("vary", HeaderValue::from_static("Accept, origin"));

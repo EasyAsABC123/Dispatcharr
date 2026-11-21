@@ -6,7 +6,7 @@ use crate::{
 };
 use axum::{
     extract::{rejection::JsonRejection, ConnectInfo, Path, State},
-    http::{HeaderMap, StatusCode},
+    http::{HeaderMap, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::{get, post},
     Json, Router,
@@ -30,6 +30,61 @@ fn id(value: String) -> Result<i64, StoreError> {
 fn serialize(row: sqlx::postgres::PgRow) -> Result<Value, sqlx::Error> {
     Ok(
         json!({"id":row.try_get::<i64,_>("id")?,"name":row.try_get::<String,_>("name")?,"channels":row.try_get::<Value,_>("channels")?}),
+    )
+}
+
+fn detail_read_id(mut raw: String, path: &str) -> Result<(String, bool), StoreError> {
+    if let Some(id) = raw
+        .strip_suffix(".json")
+        .filter(|id| !id.is_empty() && !id.contains(['.', '/']))
+    {
+        raw.truncate(id.len());
+        return Ok((raw, true));
+    }
+    if path.ends_with('/') {
+        Ok((raw, false))
+    } else {
+        Err(StoreError::NotFound)
+    }
+}
+
+fn negotiate_read_json(uri: &Uri, headers: &HeaderMap, suffix: bool) -> Result<(), StoreError> {
+    // DRF's format suffix wins over the query parameter. Reuse the JSON
+    // renderer negotiation with that resolved format.
+    let explicit_json = suffix
+        || url::form_urlencoded::parse(uri.query().unwrap_or_default().as_bytes())
+            .filter(|(key, _)| key == "format")
+            .last()
+            .is_some_and(|(_, value)| value == "json");
+    if !explicit_json {
+        return Ok(());
+    }
+    let indented = headers
+        .get("accept")
+        .and_then(|accept| accept.to_str().ok())
+        .is_some_and(|accept| {
+            accept
+                .split(';')
+                .skip(1)
+                .filter_map(|parameter| parameter.split_once('='))
+                .any(|(name, _)| name.trim().eq_ignore_ascii_case("indent"))
+        });
+    if indented {
+        return Err(StoreError::Unsupported(
+            "Indented Channel Profile JSON is not implemented",
+        ));
+    }
+    crate::epg_program_http::json_negotiation(headers, &Uri::from_static("/?format=json")).map_err(
+        |error| {
+            if matches!(error, StoreError::Unsupported(_)) {
+                StoreError::StatusBody(
+                    406,
+                    json!({"detail":"Could not satisfy the request Accept header."}),
+                )
+            } else {
+                error
+            }
+        },
     )
 }
 pub(crate) async fn lookup(
@@ -121,7 +176,10 @@ async fn list(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
+    uri: Uri,
 ) -> Result<Json<Value>, StoreError> {
+    let suffix = uri.path().trim_end_matches('/').ends_with(".json");
+    negotiate_read_json(&uri, &headers, suffix)?;
     let user = auth.account_user(peer, headers, false).await?;
     if user.user_level < 1 {
         return Err(StoreError::PermissionDenied);
@@ -141,7 +199,10 @@ async fn retrieve(
     Path(raw): Path<String>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
+    uri: Uri,
 ) -> Result<Json<Value>, StoreError> {
+    let (raw, suffix) = detail_read_id(raw, uri.path())?;
+    negotiate_read_json(&uri, &headers, suffix)?;
     let user = auth.account_user(peer, headers, false).await?;
     if user.user_level < 1 {
         return Err(StoreError::PermissionDenied);
@@ -286,6 +347,10 @@ async fn duplicate(
     tx.commit().await?;
     Ok((StatusCode::CREATED, Json(value)).into_response())
 }
+async fn omitted_profile_read_method() -> StoreError {
+    StoreError::NotFound
+}
+
 pub(crate) fn router(auth: AuthService) -> Router {
     let memberships = crate::channel_memberships::router(auth.clone());
     Router::new()
@@ -294,7 +359,65 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/channels/profiles/{id}/",
             get(retrieve).patch(patch).put(put).delete(delete),
         )
+        .route(
+            "/api/channels/profiles.json",
+            get(list).fallback(omitted_profile_read_method),
+        )
+        .route(
+            "/api/channels/profiles.json/",
+            get(list).fallback(omitted_profile_read_method),
+        )
+        .route(
+            "/api/channels/profiles/{id}",
+            get(retrieve).fallback(omitted_profile_read_method),
+        )
         .route("/api/channels/profiles/{id}/duplicate/", post(duplicate))
         .with_state(auth)
         .merge(memberships)
+}
+
+#[cfg(test)]
+mod read_format_tests {
+    use super::*;
+    use axum::http::HeaderValue;
+
+    #[test]
+    fn detail_read_distinguishes_slash_and_both_json_suffix_paths() {
+        for (raw, path, suffix) in [
+            ("41", "/api/channels/profiles/41/", false),
+            ("41.json", "/api/channels/profiles/41.json", true),
+            ("41.json", "/api/channels/profiles/41.json/", true),
+        ] {
+            assert_eq!(
+                detail_read_id(raw.into(), path).unwrap(),
+                ("41".into(), suffix)
+            );
+        }
+        for raw in ["41", ".json", "4.1.json", "41.api"] {
+            assert!(matches!(
+                detail_read_id(raw.into(), &format!("/api/channels/profiles/{raw}")),
+                Err(StoreError::NotFound)
+            ));
+        }
+    }
+
+    #[test]
+    fn explicit_profile_json_reuses_renderer_and_suffix_precedence() {
+        let mut headers = HeaderMap::new();
+        headers.insert("accept", HeaderValue::from_static("application/json"));
+        for (path, suffix) in [
+            ("/api/channels/profiles/?format=json", false),
+            ("/api/channels/profiles.json?format=json", true),
+            ("/api/channels/profiles/41.json?format=api", true),
+        ] {
+            let uri: Uri = path.parse().unwrap();
+            assert!(negotiate_read_json(&uri, &headers, suffix).is_ok());
+        }
+        headers.insert("accept", HeaderValue::from_static("text/html"));
+        assert!(matches!(
+            negotiate_read_json(&Uri::from_static("/?format=json"), &headers, false),
+            Err(StoreError::StatusBody(406, _))
+        ));
+        assert!(negotiate_read_json(&Uri::from_static("/"), &headers, false).is_ok());
+    }
 }

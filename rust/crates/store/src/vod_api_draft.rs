@@ -28,6 +28,9 @@ mod vod_api_sql;
 #[path = "vod_api_http.rs"]
 mod vod_api_http;
 
+#[path = "vod_api_logo_metadata.rs"]
+mod vod_api_logo_metadata;
+
 pub use vod_api_http::VodReads;
 pub(crate) use vod_api_owned_read::ReadError;
 pub use vod_api_owned_read::ReadLimits as VodReadLimits;

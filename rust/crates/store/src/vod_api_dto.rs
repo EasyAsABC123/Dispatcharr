@@ -36,6 +36,10 @@ pub(crate) struct LogoRow {
     pub series_names: Vec<String>,
 }
 impl LogoRow {
+    pub(super) fn metadata(&self, context: &LogoContext<'_>) -> Value {
+        self.project(context, false)
+    }
+
     fn project(&self, context: &LogoContext<'_>, unified: bool) -> Value {
         let mut fields = Map::new();
         fields.insert("id".into(), self.id.into());
