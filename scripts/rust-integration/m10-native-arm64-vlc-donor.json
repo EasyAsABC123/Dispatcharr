@@ -1,0 +1,77 @@
+{
+  "candidate_packaging_qualified": false,
+  "controller_exit": 0,
+  "credit": "Original Dispatcharr, VideoLAN, Debian/Ubuntu and dependency authors and contributors retain full credit.",
+  "donor": {
+    "OCI_diffid_SHA256": "6fb7a5b77449c48fdf92aeb9eb8ec812b1902af77a8a8d57b22da02e2f934b39",
+    "OCI_layers": 17,
+    "config": "sha256:aa357ada16661964a9af41fe289964ae8008460b60efcdbbad60c4383e7d3b43",
+    "descriptor_reported_by_engine": false,
+    "donor": "ghcr.io/dispatcharr/dispatcharr@sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "manifest": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "native_platform": "linux/arm64"
+  },
+  "exact_container_and_inventory_absence": true,
+  "image_published": false,
+  "inventory": {
+    "dpkg_ownership_gaps": {
+      "/lib/ld-linux-aarch64.so.1": [
+        "diversion-from"
+      ]
+    },
+    "generated_plugin_caches": 1,
+    "license_inventory_complete": false,
+    "loader_elf_roots": 340,
+    "loader_inventory_complete": true,
+    "missing_notice_origins": [
+      "/lib/ld-linux-aarch64.so.1"
+    ],
+    "notice_records": 185,
+    "nss_companions": 4,
+    "plugin_elf_files": 339,
+    "public_vlc_data_files": 63,
+    "resolved_libraries": 201
+  },
+  "prior_attempts": [
+    {
+      "cause": "Underlying assertion unavailable in artifact",
+      "controller_exit": 1,
+      "exact_cleanup": true,
+      "phase": "probe-run",
+      "probe_exit": 1,
+      "run": 44870688001
+    },
+    {
+      "cause": "Requested-path dpkg-query prefix failed package owner validation",
+      "controller_exit": 1,
+      "exact_cleanup": true,
+      "phase": "probe-run",
+      "probe_exit": 1,
+      "run": 44871054421
+    },
+    {
+      "cause": "Validation branch guard mismatch",
+      "cleanup_field_literal": false,
+      "container_created": false,
+      "controller_exit": 1,
+      "phase": "host",
+      "run": 44871562974
+    }
+  ],
+  "probe_exit": 0,
+  "receiving_commit": "c2e99d498312d288f44ce71c517a8c4fb5eed7dc",
+  "scope": "native Original ARM64 VLC donor inventory",
+  "terminal_phase": "complete",
+  "validation_commit": "e149c131f516385fe2f7cf21034551891af3f2a8",
+  "validation_parent": "a7ccdd1f28a2af744a48c1958624535779e68a91",
+  "vlc_playback_executed": false,
+  "workflow": {
+    "artifact": 14693983080,
+    "artifact_zip_sha256": "9be432011507d4dde8e90134fdc8514092c476572f5cd2f4e596646b1442453b",
+    "branch": "validation/m10-arm64-vlc-donor-a7ccdd1f-4",
+    "inventory_sha256": "c574ebb762efdb282322922220f19ee69922beba64caddb7dbddaf8959ce773e",
+    "run": 44871964753,
+    "runner": "ubuntu-24.04-arm",
+    "url": "https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44871964753"
+  }
+}
