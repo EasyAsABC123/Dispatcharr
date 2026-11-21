@@ -4,7 +4,7 @@ use crate::{AuthService, Store, StoreError, User};
 use axum::{
     body::Bytes,
     extract::{ConnectInfo, OriginalUri, Path, Query, State},
-    http::{header, HeaderMap, HeaderValue, Method, Uri},
+    http::{header, HeaderMap, HeaderValue, Method, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::{get, post},
     Json, Router,
@@ -15,8 +15,12 @@ use sqlx::{Postgres, QueryBuilder, Row};
 use std::{
     collections::{HashMap, HashSet},
     net::SocketAddr,
+    sync::OnceLock,
 };
 use url::Url;
+const COLLECTION_ALLOW: HeaderValue = HeaderValue::from_static("GET, POST, HEAD, OPTIONS");
+const DETAIL_ALLOW: HeaderValue = HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS");
+const DETAIL_OPTIONS: &[u8; 5290] = include_bytes!("../datasets/source-channel-detail-options.json");
 const FIELDS: &[&str] = &[
     "id",
     "channel_number",
@@ -813,13 +817,144 @@ async fn retrieve(
     let body = read(auth, user, params, base_url(&headers, &uri)?, Some(id)).await?;
     let mut response = body.into_response();
     if method == Method::GET {
-        response.headers_mut().insert(
-            header::ALLOW,
-            HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
-        );
+        response.headers_mut().insert(header::ALLOW, DETAIL_ALLOW);
     }
     Ok(response)
 }
+fn channel_options_indentation(uri: &Uri, headers: &HeaderMap) -> Result<usize, StoreError> {
+    let unsupported = || StoreError::Unsupported("Channel OPTIONS requires the ordinary JSON route");
+    if !matches!(uri.query(), None | Some("format=json")) {
+        return Err(unsupported());
+    }
+    let mut accepts = headers.get_all(header::ACCEPT).iter();
+    let Some(accept) = accepts.next() else {
+        return Ok(0);
+    };
+    if accepts.next().is_some() {
+        return Err(unsupported());
+    }
+    let accept = accept.to_str().map_err(|_| unsupported())?;
+    if accept.eq_ignore_ascii_case("application/json") || accept == "*/*" {
+        return Ok(0);
+    }
+    let (media_type, parameter) = accept.split_once(';').ok_or_else(unsupported)?;
+    let (name, value) = parameter.trim().split_once('=').ok_or_else(unsupported)?;
+    if !media_type.trim().eq_ignore_ascii_case("application/json")
+        || !name.trim().eq_ignore_ascii_case("indent")
+        || value.contains(';')
+    {
+        return Err(unsupported());
+    }
+    Ok(value.trim().parse::<i32>().unwrap_or(0).clamp(0, 8) as usize)
+}
+
+#[derive(Clone, Copy, Eq, PartialEq)]
+enum ChannelOptions {
+    ExistingDetail,
+    MissingDetail,
+    Collection,
+}
+
+fn channel_options_entity(scope: ChannelOptions, indentation: usize) -> Result<Response, StoreError> {
+    static RENDERED: [[OnceLock<Option<Bytes>>; 9]; 3] =
+        [const { [const { OnceLock::new() }; 9] }; 3];
+    let body = if scope == ChannelOptions::ExistingDetail && indentation == 0 {
+        Bytes::from_static(DETAIL_OPTIONS)
+    } else {
+        // All three shapes share the pinned static serializer and its field order.
+        RENDERED[scope as usize][indentation]
+            .get_or_init(|| {
+                let mut metadata: Map<String, Value> = serde_json::from_slice(DETAIL_OPTIONS).ok()?;
+                match scope {
+                    ChannelOptions::ExistingDetail => {}
+                    ChannelOptions::MissingDetail => {
+                        metadata.shift_remove("actions");
+                    }
+                    ChannelOptions::Collection => {
+                        *metadata.get_mut("name")? = Value::String("Channel List".into());
+                        let actions = metadata.get_mut("actions")?.as_object_mut()?;
+                        let fields = actions.shift_remove("PUT")?;
+                        actions.insert("POST".into(), fields);
+                    }
+                }
+                if indentation == 0 {
+                    return serde_json::to_vec(&metadata).ok().map(Bytes::from);
+                }
+                let formatter =
+                    serde_json::ser::PrettyFormatter::with_indent(&b"        "[..indentation]);
+                let mut output = Vec::new();
+                let mut serializer = serde_json::Serializer::with_formatter(&mut output, formatter);
+                serde::Serialize::serialize(&metadata, &mut serializer).ok()?;
+                Some(Bytes::from(output))
+            })
+            .clone()
+            .ok_or(StoreError::UnhandledRestFault)?
+    };
+    let length = HeaderValue::from_str(&body.len().to_string())
+        .map_err(|_| StoreError::UnhandledRestFault)?;
+    Ok((
+        [(header::CONTENT_TYPE, HeaderValue::from_static("application/json")),
+         (header::CONTENT_LENGTH, length)],
+        body,
+    )
+        .into_response())
+}
+
+fn channel_options_headers(mut response: Response, allow: HeaderValue) -> Response {
+    if response.status() != StatusCode::INTERNAL_SERVER_ERROR {
+        response.headers_mut().insert(header::ALLOW, allow);
+        // Main's normal CORS middleware adds the origin variation.
+        response.headers_mut().insert(header::VARY, HeaderValue::from_static("Accept"));
+    }
+    response
+}
+
+async fn detail_options(
+    State(auth): State<AuthService>,
+    Path(raw): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    let result = async {
+        // DRF's metadata action falls through to the UI administrator gate.
+        auth.account_user(peer, headers.clone(), true).await?;
+        let indentation = channel_options_indentation(&uri, &headers)?;
+        let id: i64 = raw
+            .parse()
+            .map_err(|_| StoreError::StatusBody(404, json!({"detail":"Not found."})))?;
+        let exists = sqlx::query_scalar::<_, bool>(
+            "SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channel WHERE id = $1)",
+        )
+        .bind(id)
+        .fetch_one(auth.store.pool())
+        .await?;
+        let scope = if exists {
+            ChannelOptions::ExistingDetail
+        } else {
+            ChannelOptions::MissingDetail
+        };
+        channel_options_entity(scope, indentation)
+    }
+    .await;
+    channel_options_headers(result.unwrap_or_else(IntoResponse::into_response), DETAIL_ALLOW)
+}
+
+async fn collection_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    let result = async {
+        auth.account_user(peer, headers.clone(), true).await?;
+        let indentation = channel_options_indentation(&uri, &headers)?;
+        channel_options_entity(ChannelOptions::Collection, indentation)
+    }
+    .await;
+    channel_options_headers(result.unwrap_or_else(IntoResponse::into_response), COLLECTION_ALLOW)
+}
+
 // Unlike the management list, this action starts from Channel.objects.filter
 // and applies only the shared user ACL. List filtering, ordering and pagination
 // must not hide a requested channel or change the action's response shape.
@@ -956,14 +1091,17 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/channels/channels/",
-            get(list).post(crate::channel_writes::create),
+            get(list)
+                .post(crate::channel_writes::create)
+                .options(collection_options),
         )
         .route(
             "/api/channels/channels/{id}/",
             get(retrieve)
                 .patch(crate::channel_writes::patch)
                 .put(crate::channel_writes::put)
-                .delete(crate::channel_writes::delete),
+                .delete(crate::channel_writes::delete)
+                .options(detail_options),
         )
         .with_state(auth)
 }
@@ -1010,6 +1148,122 @@ impl Store {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn channel_detail_options_serves_the_exact_static_source_metadata() {
+        use axum::body::to_bytes;
+        use sha2::{Digest, Sha256};
+
+        let response = channel_options_headers(channel_options_entity(ChannelOptions::ExistingDetail, 0).unwrap(), DETAIL_ALLOW);
+        assert_eq!(response.status(), StatusCode::OK);
+        assert_eq!(response.headers()[header::ALLOW], DETAIL_ALLOW);
+        assert_eq!(response.headers()[header::VARY], "Accept");
+        assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+        assert_eq!(response.headers()[header::CONTENT_LENGTH], "5290");
+        let body = to_bytes(response.into_body(), DETAIL_OPTIONS.len()).await.unwrap();
+        assert_eq!(
+            format!("{:x}", Sha256::digest(&body)),
+            "3f87647156b6ae36e31e99d959c66a6b82a4c81036a165aae10b38a4a4180627"
+        );
+        let value: Value = serde_json::from_slice(&body).unwrap();
+        let put = value["actions"]["PUT"].as_object().unwrap();
+        assert_eq!(put.len(), 31);
+        assert_eq!(put["override"]["children"].as_object().unwrap().len(), 9);
+        assert_eq!(put["name"]["max_length"], 512);
+        assert_eq!(put["override"]["children"]["channel_number"]["min_value"], 0.0001);
+    }
+
+    #[tokio::test]
+    async fn channel_detail_options_matches_source_json_negotiation_and_absent_row() {
+        use axum::body::to_bytes;
+        use sha2::{Digest, Sha256};
+
+        for (uri, accept, exists, expected_length, expected_sha) in [
+            ("/api/channels/channels/1/?format=json", "application/json", true, 5290,
+             "3f87647156b6ae36e31e99d959c66a6b82a4c81036a165aae10b38a4a4180627"),
+            ("/api/channels/channels/1/", "application/json; indent=2", true, 8011,
+             "5fde952c1efaa96a09a82ae94b1278f43906c463b55d2f03bbece37e8abb471c"),
+            ("/api/channels/channels/2/", "application/json", false, 175,
+             "7dca1b678d265447c1abe5246397cf1aa77e0d7daca67b8d225ca76aed900a8b"),
+        ] {
+            let mut headers = HeaderMap::new();
+            headers.insert(header::ACCEPT, HeaderValue::from_static(accept));
+            let indentation = channel_options_indentation(&uri.parse().unwrap(), &headers).unwrap();
+            let scope = if exists { ChannelOptions::ExistingDetail } else { ChannelOptions::MissingDetail };
+            let response = channel_options_headers(channel_options_entity(scope, indentation).unwrap(), DETAIL_ALLOW);
+            assert_eq!(response.status(), StatusCode::OK);
+            assert_eq!(response.headers()[header::ALLOW], DETAIL_ALLOW);
+            assert_eq!(response.headers()[header::VARY], "Accept");
+            assert_eq!(response.headers()[header::CONTENT_LENGTH], expected_length.to_string());
+            let body = to_bytes(response.into_body(), expected_length).await.unwrap();
+            assert_eq!(body.len(), expected_length);
+            assert_eq!(format!("{:x}", Sha256::digest(&body)), expected_sha);
+            let metadata: Value = serde_json::from_slice(&body).unwrap();
+            assert_eq!(metadata.get("actions").is_some(), exists);
+        }
+    }
+
+    #[tokio::test]
+    async fn channel_collection_options_matches_source_post_metadata() {
+        use axum::body::to_bytes;
+        use sha2::{Digest, Sha256};
+
+        for (uri, accept, length, digest) in [
+            ("/api/channels/channels/", "application/json", 5287,
+             "6a71b76fdbf2bae83d42f87c272e070845335d28e6da3719dfff03a38ed9d217"),
+            ("/api/channels/channels/?format=json", "application/json", 5287,
+             "6a71b76fdbf2bae83d42f87c272e070845335d28e6da3719dfff03a38ed9d217"),
+            ("/api/channels/channels/", "application/json; indent=2", 8008,
+             "be64590f42d8ea8776b3c1725e1e46c5a341c2592e85374c4b4d354c2760410c"),
+        ] {
+            let mut headers = HeaderMap::new();
+            headers.insert(header::ACCEPT, HeaderValue::from_static(accept));
+            let indentation = channel_options_indentation(&uri.parse().unwrap(), &headers).unwrap();
+            let response = channel_options_headers(
+                channel_options_entity(ChannelOptions::Collection, indentation).unwrap(),
+                COLLECTION_ALLOW,
+            );
+            assert_eq!(response.status(), StatusCode::OK);
+            assert_eq!(response.headers()[header::ALLOW], COLLECTION_ALLOW);
+            assert_eq!(response.headers()[header::VARY], "Accept");
+            assert_eq!(response.headers()[header::CONTENT_LENGTH], length.to_string());
+            let body = to_bytes(response.into_body(), length).await.unwrap();
+            assert_eq!(format!("{:x}", Sha256::digest(&body)), digest);
+            let metadata: Value = serde_json::from_slice(&body).unwrap();
+            assert_eq!(metadata["name"], "Channel List");
+            assert_eq!(metadata["actions"]["POST"].as_object().unwrap().len(), 31);
+        }
+    }
+
+    #[tokio::test]
+    async fn channel_options_keeps_the_existing_bearer_gate() {
+        use axum::{body::Body, http::Request};
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://unused:unused@localhost/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            Store::from_pool(pool),
+            crate::AuthConfig::new("test-signing-secret-only".into()).unwrap(),
+        );
+        for (path, allow) in [
+            ("/api/channels/channels/1/", DETAIL_ALLOW),
+            ("/api/channels/channels/", COLLECTION_ALLOW),
+        ] {
+            let request = Request::builder()
+                .method(Method::OPTIONS)
+                .uri(path)
+                .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                .body(Body::empty())
+                .unwrap();
+            let response = router(auth.clone()).oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+            assert_eq!(response.headers()[header::ALLOW], allow);
+            assert_eq!(response.headers()[header::VARY], "Accept");
+            assert_eq!(response.headers()[header::WWW_AUTHENTICATE], "Bearer realm=\"api\"");
+        }
+    }
 
     #[test]
     fn channel_range_accepts_source_finite_float_spellings() {
