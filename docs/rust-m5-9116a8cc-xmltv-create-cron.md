@@ -1,0 +1,15 @@
+# XMLTV source creation with Cron on 9116a8cc
+
+The unchanged React Standard EPG form sends a cron expression with a zero refresh interval when the user selects Cron. On the exact packaged Rust revision `9116a8cc` and pinned Original, a fresh active and inactive source both returned HTTP 201. Detail reads both returned HTTP 200 and the same cron, zero interval, and `Allow: GET, PUT, PATCH, DELETE, HEAD, OPTIONS`. Each committed source linked the five cron fields in the effective system timezone with no interval. The active task was enabled and the inactive task was disabled. [Exact paired receipt](../scripts/rust-integration/m5-9116a8cc-xmltv-create-cron.json)
+
+Both fixture arms also ran the 24-hour interval regression on the same exact backend images used for Cron. The Native fixture used Selected jobs and Beat. In both workflows, the active creation started exactly one real initial refresh and its two successful descendants, with one fetch from the owned XMLTV origin. The inactive source stayed idle without an initial publication. The owned processes and projects retired after both arms. These results cover creation and initial refresh. [Exact paired receipt](../scripts/rust-integration/m5-9116a8cc-xmltv-create-cron.json)
+
+The first paired candidate returned HTTP 200 and the expected persisted values, but both Native detail responses omitted the Original `Allow` header. The first run exited 1 with exact cleanup in both arms. The successor adds that header to successful detail GET and reruns both workflows.
+
+The combined Compose controller exited 0 with both backends and cleanup verified. Its first evidence wrapper exited 1 because it compared an archive hash with the per-file hash map. The corrected independent reducer verified the same retained run, including all 1,211 Original file hashes. The foreground workspace retry also passed after the first launcher inherited an ignored SIGINT.
+
+In the same paired campaign, the ordinary nine-field React edit changed only the URL of an active XMLTV feed on the same origin. The PATCH and subsequent GET returned HTTP 200 and the same Allow header. The two cached guide channel rows and their index, the linked enabled Cron task and the other source were preserved. No additional refresh publication or origin fetch appeared in the observed edit window.
+
+Rust now passes the validated cron to the existing scheduler and returns it in the immediate response. It reuses the same effective timezone lookup as the update path and preserves the initial publication before the recurring task is linked. The independent Stock-only Cron witness preceded that candidate test. The older 24-hour stock receipt established the fixture lineage. The fresh pair exercised both workflows.
+
+The exact packaged application archive includes 497 unchanged React, license and attribution inputs. Formatting, strict Clippy and 1,520 enabled workspace tests passed in the exact archived host workspace. Scheduled due-time behavior, broader M5 parity and comparative performance remain open. The original Dispatcharr authors and dependency contributors retain full credit. [Original attribution](../ATTRIBUTION.md)
