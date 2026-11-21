@@ -129,38 +129,49 @@ impl crate::AuthService {
             )?;
             return Ok(false);
         };
-        match check(cache, &ip.to_string(), scope, record).await? {
-            Decision::Allowed { crossed } => Ok(crossed),
-            Decision::Limited { wait } => {
-                let retry_after = wait.map(|wait| {
-                    if proxy {
-                        wait.floor().max(1.0) as u64
-                    } else {
-                        wait.ceil().max(0.0) as u64
-                    }
-                });
-                let prefix = match scope {
-                    Scope::Login if proxy => "Too many login attempts. Try again later.",
-                    Scope::Login => "Request was throttled.",
-                    Scope::ApiKey => "Too many API key attempts. Try again later.",
-                };
-                let detail = if proxy {
-                    prefix.to_owned()
-                } else if let Some(wait) = wait {
-                    let seconds = wait.ceil().max(0.0) as u64;
-                    format!(
-                        "{prefix} Expected available in {seconds} {}.",
-                        if seconds == 1 { "second" } else { "seconds" }
-                    )
+        cached_auth_budget(Some(cache), ip, scope, record, proxy).await
+    }
+}
+
+pub(crate) async fn cached_auth_budget(
+    cache: Option<&NotificationCache>,
+    ip: dispatcharr_contracts::SourceIpAddr,
+    scope: Scope,
+    record: bool,
+    proxy: bool,
+) -> Result<bool, StoreError> {
+    let cache = cache.ok_or_else(failed)?;
+    match check(cache, &ip.to_string(), scope, record).await? {
+        Decision::Allowed { crossed } => Ok(crossed),
+        Decision::Limited { wait } => {
+            let retry_after = wait.map(|wait| {
+                if proxy {
+                    wait.floor().max(1.0) as u64
                 } else {
-                    prefix.to_owned()
-                };
-                Err(StoreError::Throttled {
-                    body: json!({"detail":detail}),
-                    retry_after,
-                    wait,
-                })
-            }
+                    wait.ceil().max(0.0) as u64
+                }
+            });
+            let prefix = match scope {
+                Scope::Login if proxy => "Too many login attempts. Try again later.",
+                Scope::Login => "Request was throttled.",
+                Scope::ApiKey => "Too many API key attempts. Try again later.",
+            };
+            let detail = if proxy {
+                prefix.to_owned()
+            } else if let Some(wait) = wait {
+                let seconds = wait.ceil().max(0.0) as u64;
+                format!(
+                    "{prefix} Expected available in {seconds} {}.",
+                    if seconds == 1 { "second" } else { "seconds" }
+                )
+            } else {
+                prefix.to_owned()
+            };
+            Err(StoreError::Throttled {
+                body: json!({"detail":detail}),
+                retry_after,
+                wait,
+            })
         }
     }
 }

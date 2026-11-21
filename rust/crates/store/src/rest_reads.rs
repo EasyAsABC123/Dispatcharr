@@ -431,17 +431,25 @@ impl RetainedRestReads {
             }
             None => self.network_group().await?,
         };
-        if !crate::xc_auth::system_allowed(&policy, "UI", ip)
-            .map_err(crate::auth_network::ui_permission_error)?
-        {
-            return Ok(false);
-        }
-        subject.map_or(Ok(true), |subject| {
-            crate::xc_auth::user_allowed(subject.user(), "UI", ip)
-                .map_err(crate::auth_network::ui_permission_error)
-        })
+        ui_policy_allows(&policy, ip, subject.map(RetainedRestSubject::user))
     }
 }
+fn ui_policy_allows(policy: &Value, ip: IpAddr, user: Option<&User>) -> Result<bool, StoreError> {
+    if !crate::xc_auth::system_allowed(policy, "UI", ip)
+        .map_err(crate::auth_network::ui_permission_error)?
+    {
+        return Ok(false);
+    }
+    user.map_or(Ok(true), |user| {
+        crate::xc_auth::user_allowed(user, "UI", ip)
+            .map_err(crate::auth_network::ui_permission_error)
+    })
+}
+
+#[cfg(feature = "sqlite-identity")]
+#[path = "sqlite_rest_reads.rs"]
+pub mod sqlite;
+
 #[cfg(test)]
 #[path = "rest_reads_tests.rs"]
 mod tests;

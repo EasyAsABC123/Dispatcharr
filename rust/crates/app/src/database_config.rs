@@ -1,6 +1,20 @@
 //! Original Dispatcharr authors retain application/configuration credit.
 use std::path::Path;
 
+#[derive(Debug, PartialEq, Eq)]
+pub(crate) enum DatastoreSelection {
+    Postgres,
+    Sqlite(&'static Path),
+}
+
+pub(crate) fn selection(read: impl Fn(&str) -> Option<String>) -> DatastoreSelection {
+    if read("DB_ENGINE").as_deref() == Some("sqlite") {
+        DatastoreSelection::Sqlite(Path::new("/data/dispatcharr.db"))
+    } else {
+        DatastoreSelection::Postgres
+    }
+}
+
 pub fn url() -> Result<String, String> {
     from_environment(
         |name| std::env::var(name).ok(),
@@ -14,7 +28,7 @@ fn from_environment(
 ) -> Result<String, String> {
     // Source selects SQLite before PostgreSQL. Never silently connect to a
     // different store while the required SQLite backend is still unfinished.
-    if read("DB_ENGINE").as_deref() == Some("sqlite") {
+    if selection(&read) != DatastoreSelection::Postgres {
         return Err("SQLite backend is not yet implemented in this incomplete Rust port".into());
     }
     // Preserve this existing Rust-only explicit URL override.
@@ -198,6 +212,67 @@ mod tests {
         )
         .unwrap_err();
         assert!(error.starts_with("SQLite backend is not yet implemented"));
+    }
+
+    #[test]
+    fn database_selection_matches_source_before_reading_any_postgres_setting() {
+        let selected = selection(|name| {
+            assert_eq!(name, "DB_ENGINE");
+            Some("sqlite".into())
+        });
+        assert_eq!(
+            selected,
+            DatastoreSelection::Sqlite(Path::new("/data/dispatcharr.db"))
+        );
+        for value in [None, Some(""), Some("postgres"), Some("SQLite")] {
+            assert_eq!(
+                selection(|name| {
+                    assert_eq!(name, "DB_ENGINE");
+                    value.map(str::to_owned)
+                }),
+                DatastoreSelection::Postgres
+            );
+        }
+    }
+
+    #[cfg(feature = "sqlite-runtime-readiness")]
+    #[tokio::test]
+    #[ignore = "requires owned SQLite readiness files"]
+    async fn selected_sqlite_opens_the_current_owned_store_without_postgres_fallback() {
+        use dispatcharr_store::sqlite_identity::SqliteIdentity;
+
+        let selected = selection(|name| {
+            assert_eq!(name, "DB_ENGINE");
+            Some("sqlite".into())
+        });
+        let DatastoreSelection::Sqlite(configured_path) = selected else {
+            panic!("the exact Source engine must select SQLite");
+        };
+        assert_eq!(configured_path, Path::new("/data/dispatcharr.db"));
+        // Map the selected deployment path to a detached copy without touching /data.
+        let fixtures =
+            Path::new(&std::env::var_os("DISPATCHARR_SQLITE_READY_COPIES").unwrap()).to_path_buf();
+        let owned = fixtures.join("current.db");
+        let repo = SqliteIdentity::open_current_login_groups(&owned)
+            .await
+            .unwrap();
+        let name = std::env::var("DISPATCHARR_SQLITE_READY_ADMIN").unwrap();
+        let user = repo.user_by_username(&name).await.unwrap().unwrap();
+        assert_eq!(user.user_level, 10);
+        repo.close().await;
+        for refused in [
+            "historical.db",
+            "partial.db",
+            "same-count-wrong-history.db",
+            "does-not-exist.db",
+        ] {
+            assert!(
+                SqliteIdentity::open_current_login_groups(&fixtures.join(refused))
+                    .await
+                    .is_err()
+            );
+        }
+        assert!(!fixtures.join("does-not-exist.db").exists());
     }
     #[test]
     fn postgres_defaults_and_existing_explicit_url_are_preserved() {

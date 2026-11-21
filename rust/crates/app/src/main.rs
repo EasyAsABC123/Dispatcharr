@@ -20,6 +20,8 @@ mod recording_http_bridge;
 mod redis_config;
 mod response_headers;
 mod selected_jobs;
+#[cfg(feature = "sqlite-copied-data-runtime")]
+mod sqlite_copied_runtime;
 mod static_assets;
 mod statistics;
 mod vod_react_fallback;
@@ -2105,6 +2107,13 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
 
 #[tokio::main]
 async fn serve(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    if std::env::args_os()
+        .skip(1)
+        .eq([std::ffi::OsString::from("--sqlite-copied-data-runtime")])
+    {
+        return sqlite_copied_runtime::run().await;
+    }
     plugin_gpg_trace::install_from_environment()?;
     run(logs).await
 }

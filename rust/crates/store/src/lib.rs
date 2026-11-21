@@ -12,6 +12,8 @@ pub use plugin_repositories::{
     PluginRefreshAdmission, PluginRepositories, PluginRepositoryRefresh,
 };
 mod rest_reads;
+#[cfg(feature = "sqlite-identity")]
+pub use rest_reads::sqlite::RetainedSqliteRestReads;
 pub use rest_reads::{RestReadLimits, RetainedRestReads, RetainedRestSubject};
 mod auth_throttle;
 mod cache_codec;
@@ -25,6 +27,8 @@ mod connect_reads;
 mod core_reads;
 mod core_stream_writes;
 mod output_profile_writes;
+#[cfg(feature = "sqlite-identity")]
+pub mod sqlite_identity;
 pub use output_profile_writes::OutputProfileWrites;
 mod core_utilities;
 mod display_timezone;
@@ -630,6 +634,9 @@ pub mod vod_ingestion;
 
 pub mod comskip_http;
 pub mod comskip_task;
+
+#[cfg(feature = "sqlite-copied-data-runtime")]
+pub use auth::CopiedSqliteRuntime;
 
 #[cfg(feature = "sqlite-historical-upgrade")]
 mod sqlite_accounts_upgrade;

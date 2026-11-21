@@ -21,6 +21,11 @@ use sqlx::{postgres::PgRow, Row};
 use std::{collections::HashMap, net::SocketAddr, sync::OnceLock};
 
 mod write;
+
+#[cfg(feature = "sqlite-identity")]
+#[path = "sqlite_channel_groups.rs"]
+pub(crate) mod sqlite;
+
 use self::write::GroupWrite;
 
 type Body = Result<Json<Value>, JsonRejection>;
@@ -212,6 +217,10 @@ async fn rows(auth: &AuthService, user: &User, id: Option<i64>) -> Result<Vec<Pg
 }
 fn provider(row: &PgRow) -> Result<Value, StoreError> {
     let raw: Value = row.try_get("raw")?;
+    Ok(provider_json(&raw, row.try_get("stream_count")?))
+}
+
+fn provider_json(raw: &Value, stream_count: i64) -> Value {
     let mut value = Map::new();
     // The source read-only m3u_accounts.id path is absent on this through
     // model. DRF omits it; do not invent an account-ID key.
@@ -241,16 +250,33 @@ fn provider(row: &PgRow) -> Result<Value, StoreError> {
             item,
         );
     }
-    value.insert(
-        "stream_count".into(),
-        json!(row.try_get::<i64, _>("stream_count")?),
-    );
-    Ok(Value::Object(value))
+    value.insert("stream_count".into(), json!(stream_count));
+    Value::Object(value)
 }
+
 fn group(row: PgRow, count: i64, accounts: Vec<Value>) -> Result<Value, StoreError> {
-    Ok(
-        json!({"id":row.try_get::<i64,_>("id")?,"name":row.try_get::<String,_>("name")?,"channel_count":count,"is_custom":row.try_get::<bool,_>("is_custom")?,"m3u_account_count":accounts.len(),"m3u_accounts":accounts}),
-    )
+    Ok(group_json(
+        row.try_get("id")?,
+        row.try_get("name")?,
+        count,
+        row.try_get("is_custom")?,
+        accounts,
+    ))
+}
+
+fn group_json(id: i64, name: String, count: i64, is_custom: bool, accounts: Vec<Value>) -> Value {
+    json!({"id":id,"name":name,"channel_count":count,"is_custom":is_custom,"m3u_account_count":accounts.len(),"m3u_accounts":accounts})
+}
+
+pub(crate) fn collection_response(values: Vec<Value>, method: Method) -> Response {
+    get_response(Json(Value::Array(values)), method, COLLECTION_ALLOW)
+}
+
+pub(crate) fn collection_permission(user: &User) -> Result<(), StoreError> {
+    if user.user_level < 1 {
+        return Err(StoreError::PermissionDenied);
+    }
+    Ok(())
 }
 async fn serialize(auth: &AuthService, row: PgRow) -> Result<Value, StoreError> {
     let id: i64 = row.try_get("id")?;
@@ -277,12 +303,10 @@ async fn list(
     headers: HeaderMap,
 ) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers, false).await?;
-    if user.user_level < 1 {
-        return Err(StoreError::PermissionDenied);
-    }
+    collection_permission(&user)?;
     let groups = rows(&auth, &user, None).await?;
     if groups.is_empty() {
-        return Ok(get_response(Json(json!([])), method, COLLECTION_ALLOW));
+        return Ok(collection_response(Vec::new(), method));
     }
     let ids = groups
         .iter()
@@ -308,11 +332,7 @@ async fn list(
             relations.remove(&id).unwrap_or_default(),
         )?);
     }
-    Ok(get_response(
-        Json(Value::Array(values)),
-        method,
-        COLLECTION_ALLOW,
-    ))
+    Ok(collection_response(values, method))
 }
 async fn retrieve(
     State(auth): State<AuthService>,

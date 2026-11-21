@@ -284,38 +284,16 @@ impl AuthService {
     /// Same peer trust used by forwarded client-IP resolution. Export origin
     /// builders must check this socket peer before using forwarded headers.
     pub fn is_trusted_proxy(&self, peer: IpAddr) -> bool {
-        cidrs_allow(
-            self.config.trusted_proxies.as_deref().unwrap_or(
-                "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1/128,fc00::/7,fe80::/10",
-            ),
-            dispatcharr_contracts::SourceIpAddr::from(peer).address(),
-        )
+        is_trusted_proxy(&self.config, peer)
     }
+
     pub fn source_client_ip(
         &self,
         request: &PlaybackRequest,
     ) -> dispatcharr_contracts::SourceIpAddr {
-        let peer = dispatcharr_contracts::SourceIpAddr::from(request.peer_ip);
-        if !self.is_trusted_proxy(peer.address()) {
-            return peer;
-        }
-        if let Some(ip) = request
-            .header("x-real-ip")
-            .and_then(|value| value.parse::<dispatcharr_contracts::SourceIpAddr>().ok())
-        {
-            return ip;
-        }
-        if let Some(forwarded) = request.header("x-forwarded-for") {
-            for value in forwarded.split(',').rev() {
-                if let Ok(ip) = value.parse::<dispatcharr_contracts::SourceIpAddr>() {
-                    if !self.is_trusted_proxy(ip.address()) {
-                        return ip;
-                    }
-                }
-            }
-        }
-        peer
+        source_client_ip_for_config(&self.config, request)
     }
+
     pub fn client_ip(&self, request: &PlaybackRequest) -> IpAddr {
         self.source_client_ip(request).address()
     }
@@ -365,85 +343,11 @@ impl AuthService {
     }
 
     pub fn decode_token(&self, token: &str, kind: &str) -> Result<Claims, StoreError> {
-        let mut validation = Validation::new(Algorithm::HS256);
-        validation.leeway = 0;
-        validation.validate_nbf = true;
-        let raw = decode::<Value>(
-            token,
-            &DecodingKey::from_secret(self.config.signing_key.as_bytes()),
-            &validation,
-        )
-        .map_err(|error| {
-            token_error(
-                kind,
-                if matches!(
-                    error.kind(),
-                    jsonwebtoken::errors::ErrorKind::ExpiredSignature
-                ) {
-                    "Token is expired"
-                } else {
-                    "Token is invalid"
-                },
-            )
-        })?
-        .claims;
-        if raw.get("jti").is_none() {
-            return Err(token_error(kind, "Token has no id"));
-        }
-        if raw.get("token_type").is_none() {
-            return Err(token_error(kind, "Token has no type"));
-        }
-        if raw.get("token_type").and_then(Value::as_str) != Some(kind) {
-            return Err(token_error(kind, "Token has wrong type"));
-        }
-        let claims: Claims =
-            serde_json::from_value(raw).map_err(|_| token_error(kind, "Token is invalid"))?;
-        let now = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map_err(|_| StoreError::Unauthorized("Token is invalid or expired"))?
-            .as_secs();
-        // PyJWT used by SimpleJWT rejects exp == now and future issued-at.
-        if claims.exp <= now || claims.iat > now {
-            return Err(token_error(
-                kind,
-                if claims.exp <= now {
-                    "Token is expired"
-                } else {
-                    "Token is invalid"
-                },
-            ));
-        }
-        if claims.id().is_none() {
-            return Err(StoreError::AuthenticationBody(
-                json!({"detail":"Token contained no recognizable user identification","code":"token_not_valid"}),
-            ));
-        }
-        Ok(claims)
+        decode_token_for_config(&self.config, token, kind)
     }
 
     pub(crate) fn mint(&self, id: Value, kind: &str) -> Result<String, StoreError> {
-        let now = SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map_err(|_| StoreError::Unsupported("clock before epoch"))?
-            .as_secs();
-        let lifetime = if kind == "refresh" {
-            self.config.refresh_lifetime
-        } else {
-            self.config.access_lifetime
-        };
-        let claims = Claims {
-            token_type: kind.to_string(),
-            exp: now + lifetime.as_secs(),
-            iat: now,
-            jti: uuid::Uuid::new_v4().simple().to_string(),
-            user_id: id,
-        };
-        encode(
-            &Header::new(Algorithm::HS256),
-            &claims,
-            &EncodingKey::from_secret(self.config.signing_key.as_bytes()),
-        )
-        .map_err(|_| StoreError::Unsupported("token signing failed"))
+        mint_token(&self.config, id, kind)
     }
 
     pub async fn authenticate(
@@ -469,23 +373,11 @@ impl AuthService {
             .unwrap_or("")
             .split_whitespace()
             .collect();
-        if auth.first().is_some_and(|scheme| *scheme == "Bearer") {
-            if auth.len() != 2 {
-                return Err(StoreError::AuthenticationBody(json!({
-                    "detail":"Authorization header must contain two space-delimited values",
-                    "code":"bad_authorization_header"
-                })));
-            }
-            let claims = self.decode_token(auth[1], "access")?;
-            return match self.rest_read_user_id(claims.id().unwrap(), limits).await? {
-                Some(user) if user.user.is_active => Ok(Some(user)),
-                Some(_) => Err(StoreError::AuthenticationBody(
-                    json!({"detail":"User is inactive","code":"user_inactive"}),
-                )),
-                None => Err(StoreError::AuthenticationBody(
-                    json!({"detail":"User not found","code":"user_not_found"}),
-                )),
-            };
+        if let Some(claims) = bearer_claims(&self.config, &auth)? {
+            return active_bearer_subject(
+                self.rest_read_user_id(claims.id().unwrap(), limits).await?,
+            )
+            .map(Some);
         }
         let key = request
             .header("x-api-key")
@@ -575,138 +467,20 @@ impl AuthService {
             .await;
             return Err(StoreError::Forbidden);
         }
-        if !body.is_object() {
-            // Original custom token view calls request.data.get before DRF
-            // serializer validation and therefore crashes for non-mappings.
-            return Err(StoreError::StatusBody(
-                500,
-                json!({"detail":"Invalid login payload."}),
-            ));
-        }
-        let mut errors = serde_json::Map::new();
-        let mut values = serde_json::Map::new();
-        for name in ["username", "password"] {
-            match body.get(name) {
-                None => {
-                    errors.insert(name.to_string(), json!(["This field is required."]));
-                }
-                Some(value) => match crate::admin_writes::character(name, value, None, false) {
-                    Ok(value) => {
-                        values.insert(name.into(), Value::String(value));
-                    }
-                    Err(StoreError::InvalidInput(value)) => {
-                        if let Some(value) = value.get(name) {
-                            errors.insert(name.into(), value.clone());
-                        }
-                    }
-                    Err(error) => return Err(error),
-                },
-            }
-        }
-        if !errors.is_empty() {
-            let body_error = Value::Object(errors);
-            let reason = format!(
-                "Authentication error: {}",
-                crate::auth_events::validation_exception(&body_error)
-                    .chars()
-                    .take(100)
-                    .collect::<String>()
-            );
-            self.auth_event(
+        login_after_admission(
+            &PostgresLogin {
+                auth: self,
                 request,
-                "login_failed",
-                crate::auth_events::audit_username(&body),
-                Some(&reason),
-            )
-            .await;
-            return Err(StoreError::InvalidInput(body_error));
-        }
-        let username = values["username"].as_str().unwrap();
-        let password = values["password"].as_str().unwrap().to_owned();
-        let user = self.store.user_by_username(username).await?;
-        let encoded = user
-            .as_ref()
-            .map(|user| user.password.clone())
-            .unwrap_or_else(|| {
-                "pbkdf2_sha256$1200000$missing$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
-                    .to_owned()
-            });
-        let worker = self
-            .password_workers
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| StoreError::RateLimited(1))?;
-        let previous_hash = encoded.clone();
-        let (matched, upgraded_hash) = tokio::task::spawn_blocking(move || {
-            let _worker = worker;
-            crate::passwords::verify_and_upgrade(&password, &encoded)
-        })
+            },
+            &self.password_workers,
+            &self.config,
+            body,
+        )
         .await
-        .map_err(|_| StoreError::Unsupported("password verification worker failed"))?;
-        if let (Some(user), Some(upgraded_hash)) = (user.as_ref(), upgraded_hash) {
-            // Avoid overwriting a password changed concurrently after lookup.
-            // No other user fields or timestamps are changed by Django's setter.
-            sqlx::query("UPDATE accounts_user SET password=$1 WHERE id=$2 AND password=$3")
-                .bind(upgraded_hash)
-                .bind(user.id)
-                .bind(previous_hash)
-                .execute(self.store.pool())
-                .await?;
-        }
-        let Some(user) = user.filter(|user| user.is_active && matched) else {
-            self.auth_event(
-                request,
-                "login_failed",
-                crate::auth_events::audit_username(&body),
-                Some("Authentication error: No active account found with the given credentials"),
-            )
-            .await;
-            return Err(StoreError::Unauthorized(
-                "No active account found with the given credentials",
-            ));
-        };
-        // The original custom view looks up the untrimmed request username
-        // after authentication. Padded names may authenticate successfully
-        // without updating last_login; do not silently change that behavior.
-        if crate::channels::truthy(body.get("username")) {
-            let raw = &body["username"];
-            let logged_username = if let Some(value) = raw.as_str() {
-                value.to_owned()
-            } else {
-                crate::admin_writes::character("username", raw, None, false)?
-            };
-            let saved = sqlx::query("UPDATE accounts_user SET last_login=NOW() WHERE username=$1")
-                .bind(logged_username)
-                .execute(self.store.pool())
-                .await?;
-            if saved.rows_affected() > 0 {
-                self.auth_event(request, "login_success", body["username"].clone(), None)
-                    .await;
-            }
-        }
-        Ok(TokenPair {
-            access: self.mint(json!(user.id.to_string()), "access")?,
-            refresh: self.mint(json!(user.id.to_string()), "refresh")?,
-        })
     }
 
     pub(crate) async fn hash_password(&self, password: String) -> Result<String, StoreError> {
-        let worker = self
-            .password_workers
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| StoreError::RateLimited(1))?;
-        tokio::task::spawn_blocking(move || {
-            let _worker = worker;
-            crate::passwords::encode_password(&password)
-        })
-        .await
-        .map_err(|_| StoreError::Unsupported("password verification worker failed"))?
-        .ok_or_else(|| {
-            StoreError::InvalidInput(
-                json!({"password":["Password exceeds implementation size limit."]}),
-            )
-        })
+        hash_for_workers(&self.password_workers, password).await
     }
 
     pub async fn refresh(
@@ -736,15 +510,373 @@ impl AuthService {
     }
 
     async fn refresh_after_network(&self, token: &str) -> Result<Value, StoreError> {
-        let claims = self.decode_token(token, "refresh")?;
-        let user = self
-            .store
-            .user_by_id(claims.id().unwrap())
-            .await?
-            .filter(|user| user.is_active)
-            .ok_or(StoreError::AuthenticationBody(json!({"detail":"No active account found for the given token.","code":"no_active_account"})))?;
-        Ok(json!({"access": self.mint(json!(user.id.to_string()), "access")?}))
+        refresh_for_config(&self.config, token, |id| self.store.user_by_id(id)).await
     }
+}
+
+async fn refresh_for_config<F>(
+    config: &AuthConfig,
+    token: &str,
+    lookup: impl FnOnce(i64) -> F,
+) -> Result<Value, StoreError>
+where
+    F: std::future::Future<Output = Result<Option<User>, StoreError>>,
+{
+    let claims = decode_token_for_config(config, token, "refresh")?;
+    let user = lookup(claims.id().unwrap())
+        .await?
+        .filter(|user| user.is_active)
+        .ok_or(StoreError::AuthenticationBody(json!({
+            "detail": "No active account found for the given token.",
+            "code": "no_active_account"
+        })))?;
+    Ok(json!({"access": mint_token(config, json!(user.id.to_string()), "access")?}))
+}
+
+async fn hash_for_workers(
+    workers: &Arc<tokio::sync::Semaphore>,
+    password: String,
+) -> Result<String, StoreError> {
+    let worker = workers
+        .clone()
+        .try_acquire_owned()
+        .map_err(|_| StoreError::RateLimited(1))?;
+    tokio::task::spawn_blocking(move || {
+        let _worker = worker;
+        crate::passwords::encode_password(&password)
+    })
+    .await
+    .map_err(|_| StoreError::Unsupported("password verification worker failed"))?
+    .ok_or_else(|| {
+        StoreError::InvalidInput(
+            json!({"password":["Password exceeds implementation size limit."]}),
+        )
+    })
+}
+
+fn is_trusted_proxy(config: &AuthConfig, peer: IpAddr) -> bool {
+    cidrs_allow(
+        config.trusted_proxies.as_deref().unwrap_or(
+            "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,::1/128,fc00::/7,fe80::/10",
+        ),
+        dispatcharr_contracts::SourceIpAddr::from(peer).address(),
+    )
+}
+
+pub(crate) fn source_client_ip_for_config(
+    config: &AuthConfig,
+    request: &PlaybackRequest,
+) -> dispatcharr_contracts::SourceIpAddr {
+    let peer = dispatcharr_contracts::SourceIpAddr::from(request.peer_ip);
+    if !is_trusted_proxy(config, peer.address()) {
+        return peer;
+    }
+    if let Some(ip) = request
+        .header("x-real-ip")
+        .and_then(|value| value.parse::<dispatcharr_contracts::SourceIpAddr>().ok())
+    {
+        return ip;
+    }
+    if let Some(forwarded) = request.header("x-forwarded-for") {
+        for value in forwarded.split(',').rev() {
+            if let Ok(ip) = value.parse::<dispatcharr_contracts::SourceIpAddr>() {
+                if !is_trusted_proxy(config, ip.address()) {
+                    return ip;
+                }
+            }
+        }
+    }
+    peer
+}
+
+pub(crate) fn bearer_claims(
+    config: &AuthConfig,
+    authorization: &[&str],
+) -> Result<Option<Claims>, StoreError> {
+    if authorization.first() != Some(&"Bearer") {
+        return Ok(None);
+    }
+    if authorization.len() != 2 {
+        return Err(StoreError::AuthenticationBody(json!({
+            "detail":"Authorization header must contain two space-delimited values",
+            "code":"bad_authorization_header"
+        })));
+    }
+    decode_token_for_config(config, authorization[1], "access").map(Some)
+}
+
+pub(crate) fn active_bearer_subject(
+    subject: Option<crate::rest_reads::ReadSubject>,
+) -> Result<crate::rest_reads::ReadSubject, StoreError> {
+    match subject {
+        Some(user) if user.user.is_active => Ok(user),
+        Some(_) => Err(StoreError::AuthenticationBody(
+            json!({"detail":"User is inactive","code":"user_inactive"}),
+        )),
+        None => Err(StoreError::AuthenticationBody(
+            json!({"detail":"User not found","code":"user_not_found"}),
+        )),
+    }
+}
+
+fn decode_token_for_config(
+    config: &AuthConfig,
+    token: &str,
+    kind: &str,
+) -> Result<Claims, StoreError> {
+    let mut validation = Validation::new(Algorithm::HS256);
+    validation.leeway = 0;
+    validation.validate_nbf = true;
+    let raw = decode::<Value>(
+        token,
+        &DecodingKey::from_secret(config.signing_key.as_bytes()),
+        &validation,
+    )
+    .map_err(|error| {
+        token_error(
+            kind,
+            if matches!(
+                error.kind(),
+                jsonwebtoken::errors::ErrorKind::ExpiredSignature
+            ) {
+                "Token is expired"
+            } else {
+                "Token is invalid"
+            },
+        )
+    })?
+    .claims;
+    if raw.get("jti").is_none() {
+        return Err(token_error(kind, "Token has no id"));
+    }
+    if raw.get("token_type").is_none() {
+        return Err(token_error(kind, "Token has no type"));
+    }
+    if raw.get("token_type").and_then(Value::as_str) != Some(kind) {
+        return Err(token_error(kind, "Token has wrong type"));
+    }
+    let claims: Claims =
+        serde_json::from_value(raw).map_err(|_| token_error(kind, "Token is invalid"))?;
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|_| StoreError::Unauthorized("Token is invalid or expired"))?
+        .as_secs();
+    // PyJWT used by SimpleJWT rejects exp == now and future issued-at.
+    if claims.exp <= now || claims.iat > now {
+        return Err(token_error(
+            kind,
+            if claims.exp <= now {
+                "Token is expired"
+            } else {
+                "Token is invalid"
+            },
+        ));
+    }
+    if claims.id().is_none() {
+        return Err(StoreError::AuthenticationBody(
+            json!({"detail":"Token contained no recognizable user identification","code":"token_not_valid"}),
+        ));
+    }
+    Ok(claims)
+}
+
+pub(crate) fn mint_token(config: &AuthConfig, id: Value, kind: &str) -> Result<String, StoreError> {
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_err(|_| StoreError::Unsupported("clock before epoch"))?
+        .as_secs();
+    let lifetime = if kind == "refresh" {
+        config.refresh_lifetime
+    } else {
+        config.access_lifetime
+    };
+    let claims = Claims {
+        token_type: kind.to_string(),
+        exp: now + lifetime.as_secs(),
+        iat: now,
+        jti: uuid::Uuid::new_v4().simple().to_string(),
+        user_id: id,
+    };
+    encode(
+        &Header::new(Algorithm::HS256),
+        &claims,
+        &EncodingKey::from_secret(config.signing_key.as_bytes()),
+    )
+    .map_err(|_| StoreError::Unsupported("token signing failed"))
+}
+
+/// Persistence effects required after the existing throttle and network policy.
+trait LoginEffects: Sync {
+    fn user_by_name(
+        &self,
+        username: &str,
+    ) -> impl std::future::Future<Output = Result<Option<User>, StoreError>> + Send;
+    fn compare_and_save_hash(
+        &self,
+        user: &User,
+        replacement: &str,
+    ) -> impl std::future::Future<Output = Result<(), StoreError>> + Send;
+    fn failure_audit(
+        &self,
+        user: Value,
+        reason: &str,
+    ) -> impl std::future::Future<Output = ()> + Send;
+    fn successful_login(
+        &self,
+        raw_username: &str,
+        audit_user: Value,
+    ) -> impl std::future::Future<Output = Result<(), StoreError>> + Send;
+}
+
+struct PostgresLogin<'a> {
+    auth: &'a AuthService,
+    request: &'a PlaybackRequest,
+}
+
+impl LoginEffects for PostgresLogin<'_> {
+    async fn user_by_name(&self, username: &str) -> Result<Option<User>, StoreError> {
+        self.auth.store.user_by_username(username).await
+    }
+
+    async fn compare_and_save_hash(
+        &self,
+        user: &User,
+        replacement: &str,
+    ) -> Result<(), StoreError> {
+        sqlx::query("UPDATE accounts_user SET password=$1 WHERE id=$2 AND password=$3")
+            .bind(replacement)
+            .bind(user.id)
+            .bind(&user.password)
+            .execute(self.auth.store.pool())
+            .await?;
+        Ok(())
+    }
+
+    async fn failure_audit(&self, user: Value, reason: &str) {
+        self.auth
+            .auth_event(self.request, "login_failed", user, Some(reason))
+            .await;
+    }
+
+    async fn successful_login(
+        &self,
+        raw_username: &str,
+        audit_user: Value,
+    ) -> Result<(), StoreError> {
+        let saved = sqlx::query("UPDATE accounts_user SET last_login=NOW() WHERE username=$1")
+            .bind(raw_username)
+            .execute(self.auth.store.pool())
+            .await?;
+        if saved.rows_affected() > 0 {
+            self.auth
+                .auth_event(self.request, "login_success", audit_user, None)
+                .await;
+        }
+        Ok(())
+    }
+}
+
+async fn login_after_admission(
+    effects: &impl LoginEffects,
+    workers: &Arc<tokio::sync::Semaphore>,
+    config: &AuthConfig,
+    body: Value,
+) -> Result<TokenPair, StoreError> {
+    if !body.is_object() {
+        // Original custom token view calls request.data.get before DRF
+        // serializer validation and therefore crashes for non-mappings.
+        return Err(StoreError::StatusBody(
+            500,
+            json!({"detail":"Invalid login payload."}),
+        ));
+    }
+    let mut errors = serde_json::Map::new();
+    let mut values = serde_json::Map::new();
+    for name in ["username", "password"] {
+        match body.get(name) {
+            None => {
+                errors.insert(name.to_string(), json!(["This field is required."]));
+            }
+            Some(value) => match crate::admin_writes::character(name, value, None, false) {
+                Ok(value) => {
+                    values.insert(name.into(), Value::String(value));
+                }
+                Err(StoreError::InvalidInput(value)) => {
+                    if let Some(value) = value.get(name) {
+                        errors.insert(name.into(), value.clone());
+                    }
+                }
+                Err(error) => return Err(error),
+            },
+        }
+    }
+    if !errors.is_empty() {
+        let body_error = Value::Object(errors);
+        let reason = format!(
+            "Authentication error: {}",
+            crate::auth_events::validation_exception(&body_error)
+                .chars()
+                .take(100)
+                .collect::<String>()
+        );
+        effects
+            .failure_audit(crate::auth_events::audit_username(&body), &reason)
+            .await;
+        return Err(StoreError::InvalidInput(body_error));
+    }
+    let username = values["username"].as_str().unwrap();
+    let password = values["password"].as_str().unwrap().to_owned();
+    let user = effects.user_by_name(username).await?;
+    let encoded = user
+        .as_ref()
+        .map(|user| user.password.clone())
+        .unwrap_or_else(|| {
+            "pbkdf2_sha256$1200000$missing$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=".to_owned()
+        });
+    let worker = workers
+        .clone()
+        .try_acquire_owned()
+        .map_err(|_| StoreError::RateLimited(1))?;
+    let (matched, upgraded_hash) = tokio::task::spawn_blocking(move || {
+        let _worker = worker;
+        crate::passwords::verify_and_upgrade(&password, &encoded)
+    })
+    .await
+    .map_err(|_| StoreError::Unsupported("password verification worker failed"))?;
+    if let (Some(user), Some(upgraded_hash)) = (user.as_ref(), upgraded_hash) {
+        // Avoid overwriting a password changed concurrently after lookup.
+        // No other user fields or timestamps are changed by Django's setter.
+        effects.compare_and_save_hash(user, &upgraded_hash).await?;
+    }
+    let Some(user) = user.filter(|user| user.is_active && matched) else {
+        effects
+            .failure_audit(
+                crate::auth_events::audit_username(&body),
+                "Authentication error: No active account found with the given credentials",
+            )
+            .await;
+        return Err(StoreError::Unauthorized(
+            "No active account found with the given credentials",
+        ));
+    };
+    // The original custom view looks up the untrimmed request username
+    // after authentication. Padded names may authenticate successfully
+    // without updating last_login; do not silently change that behavior.
+    if crate::channels::truthy(body.get("username")) {
+        let raw = &body["username"];
+        let logged_username = if let Some(value) = raw.as_str() {
+            value.to_owned()
+        } else {
+            crate::admin_writes::character("username", raw, None, false)?
+        };
+        effects
+            .successful_login(&logged_username, raw.clone())
+            .await?;
+    }
+    Ok(TokenPair {
+        access: mint_token(config, json!(user.id.to_string()), "access")?,
+        refresh: mint_token(config, json!(user.id.to_string()), "refresh")?,
+    })
 }
 
 pub(crate) fn request(peer: SocketAddr, headers: HeaderMap) -> PlaybackRequest {
@@ -785,21 +917,26 @@ fn direct_token_login_response(result: Result<TokenPair, StoreError>) -> Respons
     }
 }
 
+fn direct_token_json(
+    body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
+) -> Result<Value, (StatusCode, Json<Value>)> {
+    body.map(|Json(body)| body).map_err(|_| {
+        (
+            StatusCode::BAD_REQUEST,
+            Json(json!({"detail":"JSON parse error"})),
+        )
+    })
+}
+
 async fn login(
     State(service): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
 ) -> Response {
-    let body = match body {
-        Ok(Json(body)) => body,
-        Err(_) => {
-            return (
-                StatusCode::BAD_REQUEST,
-                Json(json!({"detail":"JSON parse error"})),
-            )
-                .into_response()
-        }
+    let body = match direct_token_json(body) {
+        Ok(body) => body,
+        Err(response) => return response.into_response(),
     };
     direct_token_login_response(service.login(&request(peer, headers), body).await)
 }
@@ -818,38 +955,31 @@ async fn login_alias(
     login(State(service), ConnectInfo(peer), headers, body).await
 }
 
-async fn refresh(
-    State(service): State<AuthService>,
-    ConnectInfo(peer): ConnectInfo<SocketAddr>,
-    headers: HeaderMap,
-    body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
-) -> Response {
-    let request = request(peer, headers);
+type TokenJson = Result<Json<Value>, axum::extract::rejection::JsonRejection>;
+
+fn refresh_token_json(body: TokenJson) -> Result<String, StoreError> {
+    let body = direct_token_json(body)
+        .map_err(|(status, Json(body))| StoreError::StatusBody(status.as_u16(), body))?;
+    if !body.is_object() {
+        return Err(StoreError::InvalidInput(json!({
+            "non_field_errors": [format!("Invalid data. Expected a dictionary, but got {}.",
+                crate::channel_memberships::datatype(&body))]
+        })));
+    }
+    let Some(value) = body.get("refresh") else {
+        return Err(StoreError::InvalidInput(
+            json!({"refresh":["This field is required."]}),
+        ));
+    };
+    crate::admin_writes::character("refresh", value, None, false)
+}
+
+async fn refresh(service: &AuthService, request: PlaybackRequest, body: TokenJson) -> Response {
     // The source checks UI policy before accessing/parsing request.data.
     if let Err(error) = service.refresh_network(&request).await {
         return error.into_response();
     }
-    let body = match body {
-        Ok(Json(body)) => body,
-        Err(_) => {
-            return (
-                StatusCode::BAD_REQUEST,
-                Json(json!({"detail":"JSON parse error"})),
-            )
-                .into_response()
-        }
-    };
-    if !body.is_object() {
-        return StoreError::InvalidInput(json!({"non_field_errors":[format!("Invalid data. Expected a dictionary, but got {}.",crate::channel_memberships::datatype(&body))]})).into_response();
-    }
-    let Some(value) = body.get("refresh") else {
-        return (
-            StatusCode::BAD_REQUEST,
-            Json(json!({"refresh":["This field is required."]})),
-        )
-            .into_response();
-    };
-    let token = match crate::admin_writes::character("refresh", value, None, false) {
+    let token = match refresh_token_json(body) {
         Ok(token) => token,
         Err(error) => return error.into_response(),
     };
@@ -1272,3 +1402,9 @@ mod source_rendered_error_tests {
         }
     }
 }
+
+#[cfg(feature = "sqlite-copied-data-runtime")]
+#[path = "sqlite_runtime.rs"]
+pub(crate) mod sqlite_runtime;
+#[cfg(feature = "sqlite-copied-data-runtime")]
+pub use sqlite_runtime::CopiedSqliteRuntime;

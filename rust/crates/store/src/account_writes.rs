@@ -161,7 +161,7 @@ pub(crate) fn validate_custom(value: &Value) -> Result<Map<String, Value>, Store
     Ok(values.clone())
 }
 
-fn owner_patch(body: Value) -> Result<Map<String, Value>, StoreError> {
+pub(crate) fn owner_patch(body: Value) -> Result<Map<String, Value>, StoreError> {
     let mut fields = body.as_object().cloned().ok_or_else(|| {
         StoreError::InvalidInput(
             json!({"non_field_errors":["Invalid data. Expected a dictionary, but got list."]}),
@@ -248,6 +248,25 @@ pub(crate) fn merged_properties(existing: Option<Value>, patch: Option<&Value>) 
     Some(Value::Object(properties))
 }
 
+pub(crate) fn nonobject_profile_patch() -> Response {
+    (
+        StatusCode::INTERNAL_SERVER_ERROR,
+        [("content-type", "text/html; charset=utf-8")],
+        r#"
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Server Error (500)</title>
+</head>
+<body>
+  <h1>Server Error (500)</h1><p></p>
+</body>
+</html>
+"#,
+    )
+        .into_response()
+}
+
 pub(crate) async fn patch_me(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -261,22 +280,7 @@ pub(crate) async fn patch_me(
     // the captured default Django HTML500 for authenticated nonobject bodies;
     // permissions still run first and no model mutation is attempted.
     if !body.is_object() {
-        return Ok((
-            StatusCode::INTERNAL_SERVER_ERROR,
-            [("content-type", "text/html; charset=utf-8")],
-            r#"
-<!doctype html>
-<html lang="en">
-<head>
-  <title>Server Error (500)</title>
-</head>
-<body>
-  <h1>Server Error (500)</h1><p></p>
-</body>
-</html>
-"#,
-        )
-            .into_response());
+        return Ok(nonobject_profile_patch());
     }
     let fields = owner_patch(body)?;
     let password = if let Some(value) = fields.get("password") {

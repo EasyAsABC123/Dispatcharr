@@ -5,6 +5,8 @@ use sha1::Sha1;
 use sha2::Sha256;
 use subtle::ConstantTimeEq;
 
+pub(crate) const MAX_CREDENTIAL_BYTES: usize = 4096;
+
 const PREFERRED_ITERATIONS: u32 = 1_200_000;
 
 /// Django's default PBKDF2 policy counts salt characters, not UTF-8 bytes.
@@ -22,7 +24,7 @@ pub(crate) fn needs_upgrade(encoded: &str) -> bool {
 /// Run only in the bounded password-worker pool. As in Django's ModelBackend,
 /// a matching legacy hash is upgraded even when the account is inactive.
 pub(crate) fn verify_and_upgrade(password: &str, encoded: &str) -> (bool, Option<String>) {
-    if password.len() > 4096 || encoded.len() > 4096 {
+    if password.len() > MAX_CREDENTIAL_BYTES || encoded.len() > MAX_CREDENTIAL_BYTES {
         return (false, None);
     }
     let matched = verify_password(password, encoded);
@@ -54,7 +56,7 @@ pub(crate) fn verify_and_upgrade(password: &str, encoded: &str) -> (bool, Option
 }
 
 pub(crate) fn encode_password(password: &str) -> Option<String> {
-    if password.len() > 4096 {
+    if password.len() > MAX_CREDENTIAL_BYTES {
         return None;
     }
     let salt: String = rand::rngs::OsRng
@@ -78,7 +80,7 @@ pub(crate) fn encode_password(password: &str) -> Option<String> {
 /// Verify existing Django default and legacy PBKDF2 hashes without plaintext storage.
 /// Unsupported/unusable hashes fail closed; they are never treated as passwords.
 pub fn verify_password(password: &str, encoded: &str) -> bool {
-    if password.len() > 4096 || encoded.len() > 4096 {
+    if password.len() > MAX_CREDENTIAL_BYTES || encoded.len() > MAX_CREDENTIAL_BYTES {
         return false;
     }
     if encoded.starts_with("scrypt$") {

@@ -13,6 +13,19 @@ pub(crate) struct LockoutNotice {
 }
 pub(crate) const LOGIN_NOTICE:LockoutNotice=LockoutNotice{key:"login-rate-limit",cooldown:"login_rate_limit_notice_cooldown",title:"Login rate limit triggered",message:"One or more clients were temporarily locked out after too many login attempts (JWT, reverse-proxy headers, or Django admin). Check System Events on the Stats page for IP addresses and details."};
 pub(crate) const API_NOTICE:LockoutNotice=LockoutNotice{key:"api-key-auth-lockout",cooldown:"api_key_auth_lockout_notice_cooldown",title:"API key authentication rate limit triggered",message:"One or more clients were temporarily locked out after too many failed API key attempts. Check System Events on the Stats page for IP addresses and details."};
+pub(crate) fn audit_event_details(
+    user: Value,
+    client_ip: &str,
+    user_agent: &str,
+    reason: Option<&str>,
+) -> Value {
+    let mut details = json!({"user":user,"client_ip":client_ip,"user_agent":user_agent});
+    if let Some(reason) = reason {
+        details["reason"] = json!(reason)
+    }
+    details
+}
+
 impl AuthService {
     pub(crate) async fn auth_event(
         &self,
@@ -21,10 +34,12 @@ impl AuthService {
         user: Value,
         reason: Option<&str>,
     ) {
-        let mut details = json!({"user":user,"client_ip":self.client_ip_text(request),"user_agent":request.header("user-agent").unwrap_or("unknown")});
-        if let Some(reason) = reason {
-            details["reason"] = json!(reason)
-        }
+        let details = audit_event_details(
+            user,
+            &self.client_ip_text(request),
+            request.header("user-agent").unwrap_or("unknown"),
+            reason,
+        );
         if sqlx::query("INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details) VALUES($1,now(),NULL,NULL,$2)").bind(event_type).bind(details).execute(self.store.pool()).await.is_err(){tracing::warn!("Authentication audit storage failed");return}
         // Connect/plugin dispatch remains an independently tracked M8 bridge.
         let setting = self.system_settings().await.unwrap_or(Value::Null);

@@ -106,7 +106,7 @@ impl AuthService {
 
 pub(crate) const SERIALIZED_USER: &str = "SELECT u.id::bigint AS id,u.username,u.api_key,u.email,u.user_level,COALESCE(u.custom_properties,'null'::jsonb) AS custom_properties,COALESCE(u.avatar_config,'null'::jsonb) AS avatar_config,u.stream_limit,u.is_staff,u.is_superuser,u.last_login,u.date_joined,u.first_name,u.last_name,COALESCE((SELECT jsonb_agg(p.channelprofile_id ORDER BY p.id) FROM accounts_user_channel_profiles p WHERE p.user_id=u.id),'[]'::jsonb) AS channel_profiles FROM accounts_user u";
 
-fn datetime(value: Option<DateTime<Utc>>) -> Value {
+pub(crate) fn datetime(value: Option<DateTime<Utc>>) -> Value {
     value.map_or(Value::Null, |value| {
         Value::String(value.to_rfc3339_opts(
             if value.timestamp_subsec_micros() == 0 {

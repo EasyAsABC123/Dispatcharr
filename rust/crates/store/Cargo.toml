@@ -5,6 +5,8 @@ edition.workspace = true
 license.workspace = true
 
 [features]
+sqlite-copied-data-runtime = ["sqlite-identity"]
+sqlite-identity = ["sqlx/sqlite"]
 sqlite-historical-upgrade = ["sqlx/sqlite"]
 
 [dependencies]

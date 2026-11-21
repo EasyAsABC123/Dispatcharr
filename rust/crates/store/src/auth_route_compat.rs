@@ -38,66 +38,79 @@ fn finalized(mut response: Response) -> Response {
     }
     response
 }
-async fn dispatch(
-    service: AuthService,
-    peer: SocketAddr,
-    mut request: Request,
-    route: Route,
-) -> Response {
-    let method = request.method().clone();
-    if method != Method::POST {
-        // AuthViewSet authenticates even for unsupported verbs/metadata, but
-        // its logout permission applies to that action, not anonymous OPTIONS.
-        if !matches!(route, Route::Refresh) {
-            if let Err(error) = service
-                .authenticate(&super::request(peer, request.headers().clone()))
-                .await
-            {
-                return finalized(error.into_response());
-            }
-        }
-        return finalized(if method == Method::OPTIONS {
-            Json(metadata(route)).into_response()
-        } else {
-            (
-                StatusCode::METHOD_NOT_ALLOWED,
-                Json(json!({"detail":format!("Method \"{}\" not allowed.",method)})),
-            )
-                .into_response()
-        });
+fn unavailable_method(route: Route, method: &Method) -> Response {
+    if *method == Method::OPTIONS {
+        return Json(metadata(route)).into_response();
     }
-    if matches!(route, Route::Logout) {
-        return finalized(cookie_logout(service, peer, request.headers().clone()).await);
-    }
-    // DRF's empty request.data is {}, including a POST with no Content-Type.
-    // Nonempty JSON continues through the existing exact parser/error path.
+    (
+        StatusCode::METHOD_NOT_ALLOWED,
+        Json(json!({"detail":format!("Method \"{}\" not allowed.",method)})),
+    )
+        .into_response()
+}
+
+async fn auth_json(request: Request) -> Result<(HeaderMap, TokenJson), Response> {
+    // DRF treats an empty body as an empty form, even without Content-Type.
     let (mut parts, body) = request.into_parts();
-    let bytes = match to_bytes(body, 65536).await {
-        Ok(bytes) => bytes,
-        Err(_) => {
-            return finalized(
-                StoreError::Unsupported("Authentication request capacity unavailable")
-                    .into_response(),
-            )
-        }
-    };
-    if bytes.is_empty() {
+    let bytes = to_bytes(body, 65536).await.map_err(|_| {
+        StoreError::Unsupported("Authentication request capacity unavailable").into_response()
+    })?;
+    let request = if bytes.is_empty() {
         parts.headers.insert(
             header::CONTENT_TYPE,
             HeaderValue::from_static("application/json"),
         );
         parts.headers.remove(header::CONTENT_LENGTH);
-        request = Request::from_parts(parts, Body::from("{}"));
+        Request::from_parts(parts, Body::from("{}"))
     } else {
-        request = Request::from_parts(parts, Body::from(bytes));
-    }
+        Request::from_parts(parts, Body::from(bytes))
+    };
     let headers = request.headers().clone();
-    let body = Json::<Value>::from_request(request, &service).await;
-    finalized(match route {
-        Route::Login => super::login_alias(State(service), ConnectInfo(peer), headers, body).await,
-        Route::Refresh => super::refresh(State(service), ConnectInfo(peer), headers, body).await,
-        Route::Logout => unreachable!(),
-    })
+    Ok((headers, Json::<Value>::from_request(request, &()).await))
+}
+
+async fn dispatch(
+    service: AuthService,
+    peer: SocketAddr,
+    request: Request,
+    route: Route,
+) -> Response {
+    if request.method() != Method::POST {
+        // AuthViewSet authenticates even for unsupported verbs and metadata.
+        if let Err(error) = service
+            .authenticate(&super::request(peer, request.headers().clone()))
+            .await
+        {
+            return finalized(error.into_response());
+        }
+        return finalized(unavailable_method(route, request.method()));
+    }
+    if matches!(route, Route::Logout) {
+        return finalized(cookie_logout(service, peer, request.headers().clone()).await);
+    }
+    let (headers, body) = match auth_json(request).await {
+        Ok(parsed) => parsed,
+        Err(response) => return finalized(response),
+    };
+    finalized(super::login_alias(State(service), ConnectInfo(peer), headers, body).await)
+}
+
+pub(super) async fn dispatch_refresh<F>(
+    peer: SocketAddr,
+    request: Request,
+    handler: impl FnOnce(PlaybackRequest, TokenJson) -> F,
+) -> Response
+where
+    F: std::future::Future<Output = Response>,
+{
+    if request.method() != Method::POST {
+        return finalized(unavailable_method(Route::Refresh, request.method()));
+    }
+    let (headers, body) = match auth_json(request).await {
+        Ok(parsed) => parsed,
+        Err(response) => return finalized(response),
+    };
+    finalized(handler(super::request(peer, headers), body).await)
 }
 fn session_cookie(headers: &HeaderMap) -> Result<Option<String>, StoreError> {
     let mut found = None;
@@ -178,5 +191,8 @@ pub(super) async fn refresh(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Response {
-    dispatch(service, peer, request, Route::Refresh).await
+    dispatch_refresh(peer, request, |incoming, body| {
+        super::refresh(&service, incoming, body)
+    })
+    .await
 }

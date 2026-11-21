@@ -79,6 +79,27 @@ RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/
       *) echo 'DISPATCHARR_BUILD_SQLITE_OPERATOR must be 0 or 1' >&2 && exit 1 ;; \
     esac
 
+# Optional copied-data runtime for the private integration package.
+ARG DISPATCHARR_BUILD_COPIED_SQLITE_RUNTIME=0
+RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked \
+    --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked \
+    case "$DISPATCHARR_BUILD_COPIED_SQLITE_RUNTIME" in \
+      0) ;; \
+      1) find rust/crates rust/vendor -type f -exec touch {} + && \
+         touch rust/Cargo.toml rust/Cargo.lock rust/rust-toolchain.toml rust/runtime/drf-static-source-1.json && \
+         DISPATCHARR_PACKAGED_TASKLESS_HELPER_SHA256="$(cat /tmp/taskless-helper.digest)" \
+         cargo build --manifest-path rust/Cargo.toml --locked --release --jobs 2 -p dispatcharr-rs \
+           --bin dispatcharr-rs --features sqlite-copied-data-runtime && \
+         cp "$CARGO_TARGET_DIR/release/dispatcharr-rs" /out/dispatcharr-rs && \
+         mkdir -p /out/sqlite-operator-notices && \
+         set -- /usr/local/cargo/registry/src/*/sqlx-sqlite-0.8.6 && [ "$#" -eq 1 ] && \
+         cp "$1/LICENSE-APACHE" /out/sqlite-operator-notices/sqlx-sqlite-LICENSE-APACHE && \
+         cp "$1/LICENSE-MIT" /out/sqlite-operator-notices/sqlx-sqlite-LICENSE-MIT && \
+         set -- /usr/local/cargo/registry/src/*/libsqlite3-sys-0.30.1 && [ "$#" -eq 1 ] && \
+         cp "$1/LICENSE" /out/sqlite-operator-notices/libsqlite3-sys-LICENSE ;; \
+      *) echo 'DISPATCHARR_BUILD_COPIED_SQLITE_RUNTIME must be 0 or 1' >&2 && exit 1 ;; \
+    esac
+
 FROM build AS xmltv-parser-tests
 RUN --mount=type=cache,id=dispatcharr-release-1.90.0-bookworm-amd64,target=/tmp/dispatcharr-target,sharing=locked \
     --mount=type=cache,id=dispatcharr-registry-1.90.0-bookworm-amd64,target=/usr/local/cargo/registry,sharing=locked \

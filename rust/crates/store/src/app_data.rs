@@ -40,16 +40,16 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .with_state(auth)
 }
-fn app_error(status: u16, detail: &str, code: &str) -> StoreError {
+pub(crate) fn app_error(status: u16, detail: &str, code: &str) -> StoreError {
     StoreError::StatusBody(status, json!({"detail":detail,"code":code}))
 }
-fn user_missing() -> StoreError {
+pub(crate) fn user_missing() -> StoreError {
     app_error(404, "User not found.", "user_not_found")
 }
-fn limits() -> Value {
+pub(crate) fn limits() -> Value {
     json!({"max_value_bytes":MAX_VALUE,"max_total_bytes":MAX_TOTAL,"max_apps":MAX_APPS,"max_depth":MAX_DEPTH,"key_min_length":8,"key_max_length":64})
 }
-fn validate_key(key: &str) -> Result<(), StoreError> {
+pub(crate) fn validate_key(key: &str) -> Result<(), StoreError> {
     let bytes = key.as_bytes();
     if !(8..=64).contains(&bytes.len())
         || !bytes[0].is_ascii_alphanumeric()
@@ -61,7 +61,7 @@ fn validate_key(key: &str) -> Result<(), StoreError> {
     }
     Ok(())
 }
-fn content_length(headers: &HeaderMap) -> Result<Option<usize>, StoreError> {
+pub(crate) fn content_length(headers: &HeaderMap) -> Result<Option<usize>, StoreError> {
     let Some(value) = headers.get("content-length") else {
         return Ok(None);
     };
@@ -236,17 +236,10 @@ async fn clear(auth: &AuthService, id: i64) -> Result<StatusCode, StoreError> {
     Ok(StatusCode::NO_CONTENT)
 }
 
-async fn write_request(
-    auth: &AuthService,
-    actor: &User,
-    id: Option<i64>,
-    key: &str,
+pub(crate) async fn payload(
     request: Request,
-) -> Result<Json<Value>, StoreError> {
-    // Source checks body length before target lookup but after authentication.
-    let length = content_length(request.headers())?;
-    let id = target(auth, actor, id).await?;
-    validate_key(key)?;
+    length: Option<usize>,
+) -> Result<(Value, usize), StoreError> {
     let mut value = if length.unwrap_or(0) == 0 {
         json!({})
     } else {
@@ -289,6 +282,45 @@ async fn write_request(
         })?
     };
     let size = validate_value(&mut value)?;
+    Ok((value, size))
+}
+
+pub(crate) fn verify_quota(
+    new_key: bool,
+    count: i64,
+    total: i64,
+    existing: i64,
+    size: i64,
+) -> Result<(), StoreError> {
+    if new_key && count >= MAX_APPS {
+        return Err(app_error(
+            409,
+            &format!("User already has the maximum of {MAX_APPS} apps stored"),
+            "max_apps",
+        ));
+    }
+    if total - existing + size > MAX_TOTAL {
+        return Err(app_error(
+            413,
+            &format!("App data would exceed maximum total size of {MAX_TOTAL} bytes"),
+            "total_too_large",
+        ));
+    }
+    Ok(())
+}
+
+async fn write_request(
+    auth: &AuthService,
+    actor: &User,
+    id: Option<i64>,
+    key: &str,
+    request: Request,
+) -> Result<Json<Value>, StoreError> {
+    // Source checks body length before target lookup but after authentication.
+    let length = content_length(request.headers())?;
+    let id = target(auth, actor, id).await?;
+    validate_key(key)?;
+    let (value, size) = payload(request, length).await?;
     let mut transaction = auth.store.pool().begin().await?;
     let exists: Option<i64> =
         sqlx::query_scalar("SELECT id::bigint FROM accounts_user WHERE id=$1 FOR NO KEY UPDATE")
@@ -317,20 +349,7 @@ async fn write_request(
     } else {
         0
     };
-    if current.is_none() && count >= MAX_APPS {
-        return Err(app_error(
-            409,
-            &format!("User already has the maximum of {MAX_APPS} apps stored"),
-            "max_apps",
-        ));
-    }
-    if total - existing + size as i64 > MAX_TOTAL {
-        return Err(app_error(
-            413,
-            &format!("App data would exceed maximum total size of {MAX_TOTAL} bytes"),
-            "total_too_large",
-        ));
-    }
+    verify_quota(current.is_none(), count, total, existing, size as i64)?;
     sqlx::query("INSERT INTO accounts_userappdata(user_id,key,value,byte_size,updated_at) VALUES($1,$2,$3,$4,NOW()) ON CONFLICT(user_id,key) DO UPDATE SET value=EXCLUDED.value,byte_size=EXCLUDED.byte_size,updated_at=EXCLUDED.updated_at")
         .bind(id).bind(key).bind(&value).bind(size as i32).execute(&mut *transaction).await?;
     transaction.commit().await?;
