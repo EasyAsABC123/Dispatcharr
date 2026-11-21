@@ -1,0 +1,138 @@
+{
+  "actual_receipt_sha256": "80300f37693f338fb2b1f315e5ed9729e45712823ff14a388e0bf9e63e6ab738",
+  "applicable_existing_enabled_boot_windows": {
+    "native_initial": {
+      "both_task_clocks_and_beat_marker_advanced_inside_boot": true,
+      "enabled_rows": [
+        "backup-scheduled-task",
+        "plugin-repo-refresh-task"
+      ],
+      "other_scoped_scheduler_state_unchanged": true,
+      "preserved_task_and_schedule_ids": true,
+      "read_only_exact_sequence_state": {
+        "cron": {
+          "is_called": true,
+          "last_value": 1,
+          "qualified": "public.django_celery_beat_crontabschedule_id_seq"
+        },
+        "interval": {
+          "is_called": true,
+          "last_value": 2,
+          "qualified": "public.django_celery_beat_intervalschedule_id_seq"
+        },
+        "periodic_task": {
+          "is_called": true,
+          "last_value": 3,
+          "qualified": "public.django_celery_beat_periodictask_id_seq"
+        },
+        "settings": {
+          "is_called": true,
+          "last_value": 18,
+          "qualified": "public.core_coresettings_id_seq"
+        }
+      },
+      "sequence_identity_and_state_unchanged": true,
+      "workers_or_beat_started": false
+    },
+    "native_restart": {
+      "both_task_clocks_and_beat_marker_advanced_inside_boot": true,
+      "enabled_rows": [
+        "backup-scheduled-task",
+        "plugin-repo-refresh-task"
+      ],
+      "other_scoped_scheduler_state_unchanged": true,
+      "preserved_task_and_schedule_ids": true,
+      "read_only_exact_sequence_state": {
+        "cron": {
+          "is_called": true,
+          "last_value": 1,
+          "qualified": "public.django_celery_beat_crontabschedule_id_seq"
+        },
+        "interval": {
+          "is_called": true,
+          "last_value": 2,
+          "qualified": "public.django_celery_beat_intervalschedule_id_seq"
+        },
+        "periodic_task": {
+          "is_called": true,
+          "last_value": 3,
+          "qualified": "public.django_celery_beat_periodictask_id_seq"
+        },
+        "settings": {
+          "is_called": true,
+          "last_value": 18,
+          "qualified": "public.core_coresettings_id_seq"
+        }
+      },
+      "sequence_identity_and_state_unchanged": true,
+      "workers_or_beat_started": false
+    },
+    "original": {
+      "both_task_clocks_and_beat_marker_advanced_inside_boot": true,
+      "enabled_rows": [
+        "backup-scheduled-task",
+        "plugin-repo-refresh-task"
+      ],
+      "other_scoped_scheduler_state_unchanged": true,
+      "preserved_task_and_schedule_ids": true,
+      "read_only_exact_sequence_state": {
+        "cron": {
+          "is_called": true,
+          "last_value": 1,
+          "qualified": "public.django_celery_beat_crontabschedule_id_seq"
+        },
+        "interval": {
+          "is_called": true,
+          "last_value": 2,
+          "qualified": "public.django_celery_beat_intervalschedule_id_seq"
+        },
+        "periodic_task": {
+          "is_called": true,
+          "last_value": 3,
+          "qualified": "public.django_celery_beat_periodictask_id_seq"
+        },
+        "settings": {
+          "is_called": true,
+          "last_value": 18,
+          "qualified": "public.core_coresettings_id_seq"
+        }
+      },
+      "sequence_identity_and_state_unchanged": true,
+      "workers_or_beat_started": false
+    }
+  },
+  "candidate_image_id": "sha256:a5a40e8251192dee41a1d3f830ee07b220e67cc45aa46b26362448da76ac56df",
+  "candidate_revision": "2025258fba9aa301a4a87b4ea12391087b5c55a7",
+  "credit": "The original Dispatcharr authors and contributors retain full credit.",
+  "fixture_sha256": "57b21e7bf704b9c7618696ce095755f70b1619e29613d2ae8da988204a060e96",
+  "full_milestone_accepted": false,
+  "group_allow_companion_map_sha256": "7f24a9d7e409a04f6de5667ac1d456533879bee1b868448d9be5536862ec7962",
+  "independent_original_proof_sha256": "a1db54cc500d0d9667b4887e1f8e8314e5bf105288697e666093e2607ac7c732",
+  "independent_original_receipt_sha256": "07bf1f96a31b0a429c2fb82c70b2bdab4e1f29e82b154cfb6e4c2a0963033b9e",
+  "joint_source_map_sha256": "a463eae86c3adb6bd6ad473d5c814ac1d9fa1c723dca83d3f222556790fde1a6",
+  "literal_exit": 0,
+  "manifest_sha256": "65aec07ebd68b03ee77f68d18fe89f50eb2f710a3e8a581e14bc858c6d541d74",
+  "ordinary_Native_stop_exits": [
+    0,
+    0
+  ],
+  "owned_cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "performance_measured": false,
+  "review_sha256": "abe209465cfeb5815fb01f78fef81ed861606a7e793c20e14b0033cbea4d49cf",
+  "schedule_sequences_map_sha256": "71f6a9ea349011981065bbd1bbb3903516c9dc1696d6e95ce21e463c1dc3cd50",
+  "scope": "paired normal stock and Native startup preserves four existing schedule sequences",
+  "separate_copied_rollback_strict_exit": 1
+}
