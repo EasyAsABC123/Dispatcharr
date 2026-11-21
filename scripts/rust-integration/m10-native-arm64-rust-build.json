@@ -1,0 +1,64 @@
+{
+  "binary_or_image_published": false,
+  "build_context": {
+    "architecture_cache_patch_sha256": "54e839c022c3e4cec5c40fcde25d978e832d12c89cc577a847eb6c94aff3f767",
+    "offline_dockerfile_sha256": "a526093d34c268538275593b8c52656f0a754287ac1357836826c34ae14c5c60",
+    "registry_config_sha256": "e6afff43d14272c592d2355050dc09f41c0e7c6e188a0eb8f6ec045eec20f945",
+    "target": "build"
+  },
+  "builder_image_id": "sha256:04c222150b2b62dfdfdd53570319327452158d2aa37062b74c14b4dc6c6b90ef",
+  "cargo": "cargo 1.90.0 (840b83a10 2025-07-30)",
+  "cargo_admission": {
+    "cargo_lock_sha256": "9bc9661784b91bca0a88fbd9c3313168dfbb4e0b5c0e7115c34d198bc461225c",
+    "locked_archive_inventory_sha256": "8b18507ccba905fbcfbd09cc943bc41fd28bda7940fa6df37afa0c23b1690fd8",
+    "registry_archives": 328,
+    "vendored_source_files": 15050
+  },
+  "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+  "elf": "ELF64 little endian AArch64 /lib/ld-linux-aarch64.so.1",
+  "embedded_guarded_helper_sha256": "6770b7458d051f69f5e1060d24b37dea6660113d42f1e84d0898481b280ad632",
+  "executable_sha256": {
+    "dispatcharr-operator": "d0851f07b3262094f245e974543fba4defbb7cf5fa17588a72f99f4a82341a7a",
+    "dispatcharr-rs": "3b7c2e375c4e1b2565e4fb980c70420b0437f6e9041b4359431c0202f0bc5efe"
+  },
+  "first_ref_publication_wrapper_exit": 2,
+  "full_ARM64_runtime_package_verified": false,
+  "github": {
+    "artifact_id": 14694542115,
+    "artifact_sha256": "e6d21e727bdcf39a918456ed4509c30620094d52f9455bd335e6ca8d3da0f9ce",
+    "job": 136747131219,
+    "ref": "validation/m10-arm64-rust-build-a7ccdd1f-1",
+    "revision": "f4001b8a2b654816a43ea94922bb55f27bc4cd0b",
+    "run": 44871602843
+  },
+  "helper_inputs": {
+    "exact_dockerfile_stage_sha256": "0ddb3eed245f8fed244352e82c308515db71ed6ab9cb5cd36fd23666ff515131",
+    "reviewed_input_sha256": "bad17d8da2f40cf11b2cbf5d307c4f7eb417b93f742edb5f20dab1a157104571",
+    "signed_archive_packages": 3,
+    "source_base": "2581d75bc4c0ed7f522b08288f335a6db58d141a",
+    "stage": "taskless-restore-helper"
+  },
+  "operator_help_sha256": "dbde241bbef84e0df18c41ddbd297b1b601920e50bdd3617d1b6b95f49540595",
+  "original_authors_retain_credit": true,
+  "rust_image": {
+    "arm64_manifest": "rust:1.90.0-bookworm@sha256:4c632e493dfa97f0fe014c3910d1690c149bba85ed8678d47d3563ec6f258ead",
+    "config": "sha256:f6d52726c6c740d6ee8ea9ff348db1cb4bfbe325d1e86f3295388666500481ec",
+    "index": "rust:1.90.0-bookworm@sha256:3914072ca0c3b8aad871db9169a651ccfce30cf58303e5d6f2db16d1d8a7e58f",
+    "rootfs_diff_id_sequence_sha256": "472b7a79d00e1038155e085f49b84167bde1d632468cba7edd0c8026d5742534"
+  },
+  "scope": "native ARM64 Dockerfile build target and read-only executable inspection",
+  "source": {
+    "application_base": "fdede54c54ccb19300c01031537803a0b553f581",
+    "cargo_lock_sha256": "9bc9661784b91bca0a88fbd9c3313168dfbb4e0b5c0e7115c34d198bc461225c",
+    "original_authors_retain_credit": true,
+    "parent": "a7ccdd1f28a2af744a48c1958624535779e68a91",
+    "scoped_git_entries": 1469,
+    "scoped_git_tree_sha256": "92e7acf444f207ca1f9083fa5ae3be5056e58802f1ed5afe576d2c5fc59101fd",
+    "validation_revision": "f4001b8a2b654816a43ea94922bb55f27bc4cd0b"
+  },
+  "terminal": {
+    "controller_exit": 0,
+    "last_phase": "qualified",
+    "owned_containers_tag_and_workspace_retired": true
+  }
+}
