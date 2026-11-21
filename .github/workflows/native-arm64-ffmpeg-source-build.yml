@@ -1,0 +1,42 @@
+name: Native ARM64 FFmpeg source qualification
+"on":
+  push:
+    branches: [validation/m10-arm64-ffmpeg-source-build-380551dc-1]
+    paths:
+      - .github/workflows/native-arm64-ffmpeg-source-build.yml
+      - scripts/rust-platform-contracts/native-arm64-ffmpeg-source-build/**
+permissions:
+  contents: read
+concurrency:
+  group: native-arm64-ffmpeg-source-build-380551dc
+  cancel-in-progress: false
+jobs:
+  ffmpeg:
+    if: github.repository == 'EasyAsABC123/Dispatcharr' && github.ref == 'refs/heads/validation/m10-arm64-ffmpeg-source-build-380551dc-1' && !github.event.deleted
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 2
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/native-arm64-ffmpeg-source-build.yml
+            /scripts/rust-platform-contracts/native-arm64-ffmpeg-source-build/
+      - name: Build and qualify only the private native image
+        shell: bash
+        run: |
+          set -euo pipefail
+          export DOCKER_BUILDKIT=1
+          tool="$PWD/scripts/rust-platform-contracts/native-arm64-ffmpeg-source-build"
+          python3 -B "$tool/run.py" --evidence "$RUNNER_TEMP/native-ffmpeg-source-evidence"
+      - name: Retain text-only build and guest evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: native-arm64-ffmpeg-source-evidence
+          path: ${{ runner.temp }}/native-ffmpeg-source-evidence/
+          if-no-files-found: error
+          retention-days: 14
