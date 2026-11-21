@@ -19,8 +19,10 @@ use std::{
 };
 use url::Url;
 const COLLECTION_ALLOW: HeaderValue = HeaderValue::from_static("GET, POST, HEAD, OPTIONS");
-const DETAIL_ALLOW: HeaderValue = HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS");
-const DETAIL_OPTIONS: &[u8; 5290] = include_bytes!("../datasets/source-channel-detail-options.json");
+const DETAIL_ALLOW: HeaderValue =
+    HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS");
+const DETAIL_OPTIONS: &[u8; 5290] =
+    include_bytes!("../datasets/source-channel-detail-options.json");
 const FIELDS: &[&str] = &[
     "id",
     "channel_number",
@@ -846,7 +848,8 @@ pub(crate) fn channel_options_indentation(
     uri: &Uri,
     headers: &HeaderMap,
 ) -> Result<usize, StoreError> {
-    let unsupported = || StoreError::Unsupported("Channel OPTIONS requires the ordinary JSON route");
+    let unsupported =
+        || StoreError::Unsupported("Channel OPTIONS requires the ordinary JSON route");
     if !matches!(uri.query(), None | Some("format=json")) {
         return Err(unsupported());
     }
@@ -879,7 +882,10 @@ enum ChannelOptions {
     Collection,
 }
 
-fn channel_options_entity(scope: ChannelOptions, indentation: usize) -> Result<Response, StoreError> {
+fn channel_options_entity(
+    scope: ChannelOptions,
+    indentation: usize,
+) -> Result<Response, StoreError> {
     static RENDERED: [[OnceLock<Option<Bytes>>; 9]; 3] =
         [const { [const { OnceLock::new() }; 9] }; 3];
     let body = if scope == ChannelOptions::ExistingDetail && indentation == 0 {
@@ -888,7 +894,8 @@ fn channel_options_entity(scope: ChannelOptions, indentation: usize) -> Result<R
         // All three shapes share the pinned static serializer and its field order.
         RENDERED[scope as usize][indentation]
             .get_or_init(|| {
-                let mut metadata: Map<String, Value> = serde_json::from_slice(DETAIL_OPTIONS).ok()?;
+                let mut metadata: Map<String, Value> =
+                    serde_json::from_slice(DETAIL_OPTIONS).ok()?;
                 match scope {
                     ChannelOptions::ExistingDetail => {}
                     ChannelOptions::MissingDetail => {
@@ -927,8 +934,13 @@ pub(crate) fn options_json_response(body: Bytes) -> Result<Response, StoreError>
     let length = HeaderValue::from_str(&body.len().to_string())
         .map_err(|_| StoreError::UnhandledRestFault)?;
     Ok((
-        [(header::CONTENT_TYPE, HeaderValue::from_static("application/json")),
-         (header::CONTENT_LENGTH, length)],
+        [
+            (
+                header::CONTENT_TYPE,
+                HeaderValue::from_static("application/json"),
+            ),
+            (header::CONTENT_LENGTH, length),
+        ],
         body,
     )
         .into_response())
@@ -938,7 +950,9 @@ pub(crate) fn channel_options_headers(mut response: Response, allow: HeaderValue
     if response.status() != StatusCode::INTERNAL_SERVER_ERROR {
         response.headers_mut().insert(header::ALLOW, allow);
         // Main's normal CORS middleware adds the origin variation.
-        response.headers_mut().insert(header::VARY, HeaderValue::from_static("Accept"));
+        response
+            .headers_mut()
+            .insert(header::VARY, HeaderValue::from_static("Accept"));
     }
     response
 }
@@ -971,7 +985,10 @@ async fn detail_options(
         channel_options_entity(scope, indentation)
     }
     .await;
-    channel_options_headers(result.unwrap_or_else(IntoResponse::into_response), DETAIL_ALLOW)
+    channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        DETAIL_ALLOW,
+    )
 }
 
 async fn collection_options(
@@ -986,7 +1003,10 @@ async fn collection_options(
         channel_options_entity(ChannelOptions::Collection, indentation)
     }
     .await;
-    channel_options_headers(result.unwrap_or_else(IntoResponse::into_response), COLLECTION_ALLOW)
+    channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        COLLECTION_ALLOW,
+    )
 }
 
 // Unlike the management list, this action starts from Channel.objects.filter
@@ -1186,7 +1206,11 @@ mod tests {
     #[test]
     fn channel_json_uses_the_stock_serializer_order_for_normal_rows() {
         let stock: Value = serde_json::from_slice(DETAIL_OPTIONS).unwrap();
-        let stock_fields: Vec<_> = stock["actions"]["PUT"].as_object().unwrap().keys().collect();
+        let stock_fields: Vec<_> = stock["actions"]["PUT"]
+            .as_object()
+            .unwrap()
+            .keys()
+            .collect();
         let base = Url::parse("http://localhost:9192").unwrap();
         let manual = serialize_channel(
             &json!({"id": 60, "name": "Owned manual", "channel_number": 214,
@@ -1208,9 +1232,11 @@ mod tests {
 
         let raw = json!({"id": 61, "name": "Owned managed", "channel_number": 215,
                          "channel_group_id": 11, "auto_created": true, "auto_created_by_id": 5});
-        let streams = [json!({"raw": {"id": 41, "name": "Owned stream", "m3u_account_id": 5,
+        let streams = [
+            json!({"raw": {"id": 41, "name": "Owned stream", "m3u_account_id": 5,
                                       "url": "http://origin/stream.ts"},
-                              "account_name": "Owned provider"})];
+                              "account_name": "Owned provider"}),
+        ];
         let managed = serialize_channel(
             &raw,
             Some(json!({"channel_number": 19.5, "is_radio": false})),
@@ -1223,8 +1249,11 @@ mod tests {
         assert_eq!(managed["streams"], json!([41]));
         assert_eq!(managed["auto_created_by"], json!(5));
         assert_eq!(managed["auto_created_by_name"], json!("Owned provider"));
-        assert_eq!(managed["source_stream"], json!({"id": 41, "name": "Owned stream",
-            "account_id": 5, "account_name": "Owned provider"}));
+        assert_eq!(
+            managed["source_stream"],
+            json!({"id": 41, "name": "Owned stream",
+            "account_id": 5, "account_name": "Owned provider"})
+        );
         assert_eq!(managed["channel_number"], json!(215.0));
         assert_eq!(managed["effective_channel_number"], json!(19.5));
         assert_eq!(managed["effective_channel_group_id"], json!(11));
@@ -1246,13 +1275,18 @@ mod tests {
         use axum::body::to_bytes;
         use sha2::{Digest, Sha256};
 
-        let response = channel_options_headers(channel_options_entity(ChannelOptions::ExistingDetail, 0).unwrap(), DETAIL_ALLOW);
+        let response = channel_options_headers(
+            channel_options_entity(ChannelOptions::ExistingDetail, 0).unwrap(),
+            DETAIL_ALLOW,
+        );
         assert_eq!(response.status(), StatusCode::OK);
         assert_eq!(response.headers()[header::ALLOW], DETAIL_ALLOW);
         assert_eq!(response.headers()[header::VARY], "Accept");
         assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
         assert_eq!(response.headers()[header::CONTENT_LENGTH], "5290");
-        let body = to_bytes(response.into_body(), DETAIL_OPTIONS.len()).await.unwrap();
+        let body = to_bytes(response.into_body(), DETAIL_OPTIONS.len())
+            .await
+            .unwrap();
         assert_eq!(
             format!("{:x}", Sha256::digest(&body)),
             "3f87647156b6ae36e31e99d959c66a6b82a4c81036a165aae10b38a4a4180627"
@@ -1262,7 +1296,10 @@ mod tests {
         assert_eq!(put.len(), 31);
         assert_eq!(put["override"]["children"].as_object().unwrap().len(), 9);
         assert_eq!(put["name"]["max_length"], 512);
-        assert_eq!(put["override"]["children"]["channel_number"]["min_value"], 0.0001);
+        assert_eq!(
+            put["override"]["children"]["channel_number"]["min_value"],
+            0.0001
+        );
     }
 
     #[tokio::test]
@@ -1271,23 +1308,50 @@ mod tests {
         use sha2::{Digest, Sha256};
 
         for (uri, accept, exists, expected_length, expected_sha) in [
-            ("/api/channels/channels/1/?format=json", "application/json", true, 5290,
-             "3f87647156b6ae36e31e99d959c66a6b82a4c81036a165aae10b38a4a4180627"),
-            ("/api/channels/channels/1/", "application/json; indent=2", true, 8011,
-             "5fde952c1efaa96a09a82ae94b1278f43906c463b55d2f03bbece37e8abb471c"),
-            ("/api/channels/channels/2/", "application/json", false, 175,
-             "7dca1b678d265447c1abe5246397cf1aa77e0d7daca67b8d225ca76aed900a8b"),
+            (
+                "/api/channels/channels/1/?format=json",
+                "application/json",
+                true,
+                5290,
+                "3f87647156b6ae36e31e99d959c66a6b82a4c81036a165aae10b38a4a4180627",
+            ),
+            (
+                "/api/channels/channels/1/",
+                "application/json; indent=2",
+                true,
+                8011,
+                "5fde952c1efaa96a09a82ae94b1278f43906c463b55d2f03bbece37e8abb471c",
+            ),
+            (
+                "/api/channels/channels/2/",
+                "application/json",
+                false,
+                175,
+                "7dca1b678d265447c1abe5246397cf1aa77e0d7daca67b8d225ca76aed900a8b",
+            ),
         ] {
             let mut headers = HeaderMap::new();
             headers.insert(header::ACCEPT, HeaderValue::from_static(accept));
             let indentation = channel_options_indentation(&uri.parse().unwrap(), &headers).unwrap();
-            let scope = if exists { ChannelOptions::ExistingDetail } else { ChannelOptions::MissingDetail };
-            let response = channel_options_headers(channel_options_entity(scope, indentation).unwrap(), DETAIL_ALLOW);
+            let scope = if exists {
+                ChannelOptions::ExistingDetail
+            } else {
+                ChannelOptions::MissingDetail
+            };
+            let response = channel_options_headers(
+                channel_options_entity(scope, indentation).unwrap(),
+                DETAIL_ALLOW,
+            );
             assert_eq!(response.status(), StatusCode::OK);
             assert_eq!(response.headers()[header::ALLOW], DETAIL_ALLOW);
             assert_eq!(response.headers()[header::VARY], "Accept");
-            assert_eq!(response.headers()[header::CONTENT_LENGTH], expected_length.to_string());
-            let body = to_bytes(response.into_body(), expected_length).await.unwrap();
+            assert_eq!(
+                response.headers()[header::CONTENT_LENGTH],
+                expected_length.to_string()
+            );
+            let body = to_bytes(response.into_body(), expected_length)
+                .await
+                .unwrap();
             assert_eq!(body.len(), expected_length);
             assert_eq!(format!("{:x}", Sha256::digest(&body)), expected_sha);
             let metadata: Value = serde_json::from_slice(&body).unwrap();
@@ -1301,12 +1365,24 @@ mod tests {
         use sha2::{Digest, Sha256};
 
         for (uri, accept, length, digest) in [
-            ("/api/channels/channels/", "application/json", 5287,
-             "6a71b76fdbf2bae83d42f87c272e070845335d28e6da3719dfff03a38ed9d217"),
-            ("/api/channels/channels/?format=json", "application/json", 5287,
-             "6a71b76fdbf2bae83d42f87c272e070845335d28e6da3719dfff03a38ed9d217"),
-            ("/api/channels/channels/", "application/json; indent=2", 8008,
-             "be64590f42d8ea8776b3c1725e1e46c5a341c2592e85374c4b4d354c2760410c"),
+            (
+                "/api/channels/channels/",
+                "application/json",
+                5287,
+                "6a71b76fdbf2bae83d42f87c272e070845335d28e6da3719dfff03a38ed9d217",
+            ),
+            (
+                "/api/channels/channels/?format=json",
+                "application/json",
+                5287,
+                "6a71b76fdbf2bae83d42f87c272e070845335d28e6da3719dfff03a38ed9d217",
+            ),
+            (
+                "/api/channels/channels/",
+                "application/json; indent=2",
+                8008,
+                "be64590f42d8ea8776b3c1725e1e46c5a341c2592e85374c4b4d354c2760410c",
+            ),
         ] {
             let mut headers = HeaderMap::new();
             headers.insert(header::ACCEPT, HeaderValue::from_static(accept));
@@ -1318,7 +1394,10 @@ mod tests {
             assert_eq!(response.status(), StatusCode::OK);
             assert_eq!(response.headers()[header::ALLOW], COLLECTION_ALLOW);
             assert_eq!(response.headers()[header::VARY], "Accept");
-            assert_eq!(response.headers()[header::CONTENT_LENGTH], length.to_string());
+            assert_eq!(
+                response.headers()[header::CONTENT_LENGTH],
+                length.to_string()
+            );
             let body = to_bytes(response.into_body(), length).await.unwrap();
             assert_eq!(format!("{:x}", Sha256::digest(&body)), digest);
             let metadata: Value = serde_json::from_slice(&body).unwrap();
@@ -1353,7 +1432,10 @@ mod tests {
             assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
             assert_eq!(response.headers()[header::ALLOW], allow);
             assert_eq!(response.headers()[header::VARY], "Accept");
-            assert_eq!(response.headers()[header::WWW_AUTHENTICATE], "Bearer realm=\"api\"");
+            assert_eq!(
+                response.headers()[header::WWW_AUTHENTICATE],
+                "Bearer realm=\"api\""
+            );
         }
     }
 

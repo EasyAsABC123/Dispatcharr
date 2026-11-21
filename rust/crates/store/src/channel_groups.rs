@@ -585,7 +585,10 @@ mod tests {
             assert_eq!(response.headers()[header::ALLOW], scope.allow());
             assert_eq!(response.headers()[header::VARY], "Accept");
             assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
-            assert_eq!(response.headers()[header::CONTENT_LENGTH], length.to_string());
+            assert_eq!(
+                response.headers()[header::CONTENT_LENGTH],
+                length.to_string()
+            );
             let body = to_bytes(response.into_body(), length).await.unwrap();
             assert_eq!(format!("{:x}", Sha256::digest(&body)), digest);
         }

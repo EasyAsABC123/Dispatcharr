@@ -141,16 +141,27 @@ impl RefreshSeriesChild {
         backend: &[u8],
         child: &crate::series_protocol::SeriesMessage,
     ) -> Option<Self> {
-        if refresh.force
-            || refresh.call.list_args
-            || refresh.call.args != vec![json!(refresh.source_id)]
-            || refresh.call.kwargs != json!({"force":false}).as_object()?.clone()
-        {
+        if refresh.force {
             return None;
         }
-        // Validation-only clone changes exactly the already-checked redundant
-        // false argument. Never rewrites retained FIFO/CAS/publication bytes.
+        Self::from_completed_live_refresh_api(refresh, backend, child)
+    }
+
+    /// The live handoff already retains the original executed parent and its
+    /// published child. Accept either explicit HTTP force value with the same
+    /// successful result and child lineage checks.
+    pub(crate) fn from_completed_live_refresh_api(
+        refresh: &crate::refresh_protocol::RefreshMessage,
+        backend: &[u8],
+        child: &crate::series_protocol::SeriesMessage,
+    ) -> Option<Self> {
+        if !refresh.has_explicit_api_arguments() {
+            return None;
+        }
+        // Normalize the validated argument for the shared lineage checks.
+        // The retained parent and published queue bytes stay exactly as sent.
         let mut validation = refresh.clone();
+        validation.force = false;
         validation.call = crate::refresh_protocol::RefreshCall::initial(refresh.source_id);
         Self::from_completed_refresh(&validation, backend, child)
     }
@@ -728,6 +739,18 @@ mod api_producer_tests {
             RefreshSeriesChild::from_completed_refresh_api(&parent, &backend, &child).is_some()
         );
     }
+    #[test]
+    fn live_immediate_api_force_uses_the_same_completed_parent_and_child_lineage() {
+        let (mut force, backend, child) = source_composition();
+        force.force = true;
+        force.call.kwargs.insert("force".into(), json!(true));
+        assert!(
+            RefreshSeriesChild::from_completed_live_refresh_api(&force, &backend, &child)
+                .and_then(|capability| capability.admit(&child))
+                .is_some()
+        );
+    }
+
     #[test]
     fn api_scope_rejects_missing_force_true_and_list_producer() {
         let (parent, backend, child) = source_composition();

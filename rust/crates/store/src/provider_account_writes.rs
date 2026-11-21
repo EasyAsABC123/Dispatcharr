@@ -733,7 +733,11 @@ impl TargetLock {
         Ok(())
     }
 }
-async fn update_default_capacity(c: &mut PgConnection, account: i64, max: i32) -> Result<(), StoreError> {
+async fn update_default_capacity(
+    c: &mut PgConnection,
+    account: i64,
+    max: i32,
+) -> Result<(), StoreError> {
     sqlx::query(
         "UPDATE m3u_m3uaccountprofile SET max_streams=$2 WHERE m3u_account_id=$1 AND is_default AND max_streams<>$2",
     )
@@ -946,7 +950,9 @@ fn existing_queue_free_interval_account(old: &Value, previous_cron: &str) -> boo
     let eligible_activity = old["is_active"] == false
         || (old["is_active"] == true
             && old["status"] == "idle"
-            && old["refresh_interval"].as_i64().is_some_and(|hours| hours > 0));
+            && old["refresh_interval"]
+                .as_i64()
+                .is_some_and(|hours| hours > 0));
     eligible_activity
         && old["locked"] == false
         && old["refresh_task_id"].as_i64().is_some_and(|id| id > 0)
@@ -969,7 +975,9 @@ fn eligible_queue_free_edit(edit: QueueFreeProviderEdit, old: &Value, previous_c
             QueueFreeProviderEdit::Activate => {
                 old["is_active"] == false
                     && old["status"] == "disabled"
-                    && old["refresh_interval"].as_i64().is_some_and(|hours| hours > 0)
+                    && old["refresh_interval"]
+                        .as_i64()
+                        .is_some_and(|hours| hours > 0)
             }
             QueueFreeProviderEdit::Deactivate | QueueFreeProviderEdit::ChangeInterval(_) => {
                 old["is_active"] == true
@@ -1037,7 +1045,10 @@ async fn edit_without_broker(
         .as_i64()
         .and_then(|value| i32::try_from(value).ok())
         .ok_or_else(unsupported)?;
-    let account_type = old["account_type"].as_str().ok_or_else(unsupported)?.to_owned();
+    let account_type = old["account_type"]
+        .as_str()
+        .ok_or_else(unsupported)?
+        .to_owned();
     session
         .run(move |c| {
             Box::pin(async move {
@@ -1590,7 +1601,10 @@ mod tests {
         old["refresh_interval"] = json!(4);
         old["custom_properties"] = json!({"hash_key":"name,url","owned_fixture_marker":"preserve"});
         let input = Map::from_iter([("name".into(), json!("Owned renamed standard provider"))]);
-        assert_eq!(queue_free_provider_edit(&input), Some(QueueFreeProviderEdit::Rename));
+        assert_eq!(
+            queue_free_provider_edit(&input),
+            Some(QueueFreeProviderEdit::Rename)
+        );
         for active in [false, true] {
             old["is_active"] = json!(active);
             assert!(existing_std_interval_account(&old, ""));
@@ -1601,7 +1615,10 @@ mod tests {
             assert!(!validated.hash_changed && validated.expiration.is_none());
             assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
         }
-        let extra = Map::from_iter([("name".into(), json!("Owned name")), ("hash_key".into(), json!("name"))]);
+        let extra = Map::from_iter([
+            ("name".into(), json!("Owned name")),
+            ("hash_key".into(), json!("name")),
+        ]);
         assert_eq!(queue_free_provider_edit(&extra), None);
         assert!(!existing_std_interval_account(&old, "0 7 * * *"));
         old["refresh_interval"] = json!(0);
@@ -1689,9 +1706,13 @@ mod tests {
             queue_free_provider_edit(&Map::from_iter([("is_active".into(), json!(false))])),
             Some(QueueFreeProviderEdit::Deactivate)
         );
-        assert_eq!(queue_free_provider_edit(&Map::from_iter([
-            ("is_active".into(), json!(true)), ("name".into(), json!("Owned name"))
-        ])), None);
+        assert_eq!(
+            queue_free_provider_edit(&Map::from_iter([
+                ("is_active".into(), json!(true)),
+                ("name".into(), json!("Owned name"))
+            ])),
+            None
+        );
     }
 
     #[test]
@@ -1738,8 +1759,16 @@ mod tests {
         assert_eq!(validated.saved, expected);
         assert!(!validated.hash_changed && validated.expiration.is_none());
         assert!(validated.cron.is_empty() && validated.group_selection.is_empty());
-        assert!(!eligible_queue_free_edit(QueueFreeProviderEdit::Rename, &old, ""));
-        assert!(!eligible_queue_free_edit(QueueFreeProviderEdit::Activate, &old, ""));
+        assert!(!eligible_queue_free_edit(
+            QueueFreeProviderEdit::Rename,
+            &old,
+            ""
+        ));
+        assert!(!eligible_queue_free_edit(
+            QueueFreeProviderEdit::Activate,
+            &old,
+            ""
+        ));
         assert!(!eligible_queue_free_edit(edit, &old, "0 7 * * *"));
         for (name, value) in [
             ("locked", json!(true)),

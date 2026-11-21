@@ -64,7 +64,9 @@ async fn setup(connection: &mut PgConnection) -> Result<(), Error> {
     .fetch_one(&mut *connection)
     .await?;
     if !released {
-        return Err(Error::Configuration("plugin repository schedule lock was not retained"));
+        return Err(Error::Configuration(
+            "plugin repository schedule lock was not retained",
+        ));
     }
     observed
 }

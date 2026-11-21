@@ -358,7 +358,13 @@ async fn refresh_handle(
     // Redis acknowledgement, keeping the same Auth4 writer session throughout.
     let result = tokio::spawn(async move {
         let owner = Arc::new((slot, api.inner.clone()));
-        let auth = api.inner.repack.inner.auth.clone().with_retained_scope(owner.clone());
+        let auth = api
+            .inner
+            .repack
+            .inner
+            .auth
+            .clone()
+            .with_retained_scope(owner.clone());
         let user = auth.account_user(peer, headers, false).await?;
         let required = if matches!(method, Method::GET | Method::HEAD) {
             1
@@ -421,7 +427,13 @@ async fn vod_handle(
     // Redis acknowledgement, keeping the same Auth4 writer session throughout.
     let result = tokio::spawn(async move {
         let owner = Arc::new((slot, api.inner.clone()));
-        let auth = api.inner.repack.inner.auth.clone().with_retained_scope(owner.clone());
+        let auth = api
+            .inner
+            .repack
+            .inner
+            .auth
+            .clone()
+            .with_retained_scope(owner.clone());
         let user = auth.account_user(peer, headers, false).await?;
         let required = if matches!(method, Method::GET | Method::HEAD) {
             1
@@ -480,7 +492,13 @@ async fn refresh_all_handle(
     // Redis acknowledgement, keeping the same Auth4 writer session throughout.
     let result = tokio::spawn(async move {
         let owner = Arc::new((slot, api.inner.clone()));
-        let auth = api.inner.repack.inner.auth.clone().with_retained_scope(owner.clone());
+        let auth = api
+            .inner
+            .repack
+            .inner
+            .auth
+            .clone()
+            .with_retained_scope(owner.clone());
         let user = auth.account_user(peer, headers, false).await?;
         let required = if matches!(method, Method::GET | Method::HEAD) {
             1

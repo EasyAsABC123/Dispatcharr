@@ -705,33 +705,36 @@ pub(super) async fn execute(
         Some((_, row)) => raw_text(row.get("public_key"))?,
         None => text(fields.get("public_key"))?,
     };
-    let (data, verification) = match fetch_verified(&url, Some(&verification_key), TransportUse::Request).await {
-        Ok(value) => value,
-        Err(error) => {
-            if let Some(id) = created {
-                sqlx::query("DELETE FROM plugins_pluginrepo WHERE id=$1")
-                    .bind(id)
-                    .execute(&mut *connection)
-                    .await?;
+    let (data, verification) =
+        match fetch_verified(&url, Some(&verification_key), TransportUse::Request).await {
+            Ok(value) => value,
+            Err(error) => {
+                if let Some(id) = created {
+                    sqlx::query("DELETE FROM plugins_pluginrepo WHERE id=$1")
+                        .bind(id)
+                        .execute(&mut *connection)
+                        .await?;
+                }
+                if let Failure::Unqualified(message) = error {
+                    return Err(unqualified(message));
+                }
+                if matches!(action, Action::Preview) {
+                    return Ok(
+                        Json(json!({"valid":false,"errors":[friendly(&error)]})).into_response()
+                    );
+                }
+                let status = if created.is_some() {
+                    StatusCode::BAD_REQUEST
+                } else {
+                    StatusCode::BAD_GATEWAY
+                };
+                return Ok((
+                    status,
+                    Json(json!({"error":"Failed to fetch manifest. Check the URL and try again."})),
+                )
+                    .into_response());
             }
-            if let Failure::Unqualified(message) = error {
-                return Err(unqualified(message));
-            }
-            if matches!(action, Action::Preview) {
-                return Ok(Json(json!({"valid":false,"errors":[friendly(&error)]})).into_response());
-            }
-            let status = if created.is_some() {
-                StatusCode::BAD_REQUEST
-            } else {
-                StatusCode::BAD_GATEWAY
-            };
-            return Ok((
-                status,
-                Json(json!({"error":"Failed to fetch manifest. Check the URL and try again."})),
-            )
-                .into_response());
-        }
-    };
+        };
     if matches!(action, Action::Preview) {
         let name = text(inner(&data).get("registry_name"))?;
         let registry = text(inner(&data).get("registry_url"))?;
@@ -1058,7 +1061,8 @@ async fn refresh_enabled_sql(mut connection: RefreshSql<'_>) -> Result<Value, St
         } else {
             Some(repo.key.as_str())
         };
-        let (data, verified) = match fetch_verified(&repo.url, key, TransportUse::RefreshTask).await {
+        let (data, verified) = match fetch_verified(&repo.url, key, TransportUse::RefreshTask).await
+        {
             Ok(value) => value,
             Err(error) => {
                 let status = settled_fetch_status(error)?;

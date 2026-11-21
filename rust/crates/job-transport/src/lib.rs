@@ -280,9 +280,9 @@ pub mod normal_core_tasks;
 pub mod normal_beat;
 
 pub mod normal_backup;
-pub mod normal_backup_taskless;
 mod normal_backup_archive;
 mod normal_backup_protocol;
+pub mod normal_backup_taskless;
 
 mod normal_backup_schedule;
 pub use normal_backup_schedule::{initialize_operator_backup_schedule, BackupScheduleDisable};
@@ -290,9 +290,9 @@ pub mod normal_channel_tasks;
 
 pub mod core_settings_broker;
 
+pub mod compact_coordination;
 pub mod normal_plugin_repos;
 pub mod normal_xc_accounts;
-pub mod compact_coordination;
 
 mod xc_profile_notifications;
 

@@ -1,7 +1,7 @@
 //! Same-process handoff from actual Refresh execution to configured Series.
 //! Original Dispatcharr authors retain all algorithm and protocol credit.
-//! Captured initial model/repeat/API-false parents only; restart reconstruction
-//! and deferred/forced parent chains remain unsupported, with their FIFO intact.
+//! Captured initial model/repeat and immediate API parents only. Restart
+//! reconstruction and deferred parent chains remain unsupported.
 use crate::{
     recording_artwork::RefreshSeriesChild,
     refresh_protocol::{RefreshCall, RefreshMessage},
@@ -26,6 +26,26 @@ struct Entry {
     children: Mutex<BTreeSet<Uuid>>,
     _permit: OwnedSemaphorePermit,
 }
+impl Entry {
+    fn owns_child(&self, message: &SeriesMessage) -> Result<bool, TransportError> {
+        let children = self.children.lock().map_err(|_| TransportError::Protocol)?;
+        Ok(children.contains(&message.task_id))
+    }
+
+    fn completed_child(&self, raw: &[u8], message: &SeriesMessage) -> Option<RefreshSeriesChild> {
+        match &self.parent {
+            Parent::Individual(refresh) => {
+                RefreshSeriesChild::from_completed_refresh(refresh, raw, message).or_else(|| {
+                    RefreshSeriesChild::from_completed_live_refresh_api(refresh, raw, message)
+                })
+            }
+            Parent::Aggregate(root) => {
+                RefreshSeriesChild::from_completed_aggregate(*root, raw, message)
+            }
+        }
+    }
+}
+
 struct Inner {
     entries: Mutex<BTreeMap<Uuid, Arc<Entry>>>,
     slots: Arc<Semaphore>,
@@ -69,38 +89,28 @@ impl Handoff {
         let Some(entry) = entry else {
             return Ok(None);
         };
-        if !entry
-            .children
-            .lock()
-            .map_err(|_| TransportError::Protocol)?
-            .contains(&message.task_id)
-        {
+        if !entry.owns_child(message)? {
             return Ok(None);
         }
         // Queue publication precedes parent SUCCESS. Absence is an ordinary
         // wait, never permission to synthesize completion or remove this head.
-        let child = match &entry.parent {
+        let raw = match &entry.parent {
             Parent::Individual(refresh) => {
-                let Some(raw) = self.inner.jobs.read_refresh_lineage(refresh, owner).await? else {
-                    return Ok(None);
-                };
-                RefreshSeriesChild::from_completed_refresh(refresh, &raw, message).or_else(|| {
-                    RefreshSeriesChild::from_completed_refresh_api(refresh, &raw, message)
-                })
+                self.inner.jobs.read_refresh_lineage(refresh, owner).await?
             }
             Parent::Aggregate(root) => {
-                let Some(raw) = self
-                    .inner
+                self.inner
                     .jobs
                     .read_aggregate_refresh_lineage(*root, owner)
                     .await?
-                else {
-                    return Ok(None);
-                };
-                RefreshSeriesChild::from_completed_aggregate(*root, &raw, message)
             }
-        }
-        .ok_or(TransportError::Protocol)?;
+        };
+        let Some(raw) = raw else {
+            return Ok(None);
+        };
+        let child = entry
+            .completed_child(&raw, message)
+            .ok_or(TransportError::Protocol)?;
         Ok(Some(CompletedParent {
             entry,
             root: parent,
@@ -181,23 +191,14 @@ fn supported(parent: &RefreshMessage) -> bool {
         || parent.root != parent.task_id
         || parent.retry != 0
         || parent.eta.is_some()
-        || parent.force
     {
         return false;
     }
     let mut model = RefreshCall::initial(parent.source_id);
     model.list_args = parent.call.list_args;
-    if parent.call == model {
-        return true;
-    }
-    !parent.call.list_args
-        && parent.call.args == model.args
-        && parent.call.kwargs
-            == serde_json::json!({"force":false})
-                .as_object()
-                .unwrap()
-                .clone()
+    (!parent.force && parent.call == model) || parent.has_explicit_api_arguments()
 }
+
 pub(crate) struct Executor {
     pub(crate) inner: Arc<dyn RefreshExecutor>,
     pub(crate) handoff: Handoff,
@@ -251,5 +252,84 @@ impl RefreshExecutor for Executor {
                 .retain(root, Parent::Aggregate(root), &completed.series, permit)?;
             Ok(completed)
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn immediate_api_force_is_a_live_parent() {
+        let id = Uuid::new_v4();
+        for force in [false, true] {
+            let mut call = RefreshCall::initial(1);
+            call.kwargs
+                .insert("force".into(), serde_json::Value::Bool(force));
+            let parent = RefreshMessage {
+                task_id: id,
+                source_id: 1,
+                force,
+                retry: 0,
+                root: id,
+                parent: None,
+                eta: None,
+                call,
+            };
+            assert!(supported(&parent));
+            assert!(!supported(&RefreshMessage {
+                force: !force,
+                ..parent
+            }));
+        }
+    }
+
+    #[test]
+    fn forced_refresh_live_entry_completes_its_published_series_child() {
+        let root = Uuid::new_v4();
+        let child = Uuid::new_v4();
+        let index = Uuid::new_v4();
+        let mut call = RefreshCall::initial(1);
+        call.kwargs
+            .insert("force".into(), serde_json::Value::Bool(true));
+        let parent = RefreshMessage {
+            task_id: root,
+            source_id: 1,
+            force: true,
+            retry: 0,
+            root,
+            parent: None,
+            eta: None,
+            call,
+        };
+        assert!(supported(&parent));
+        let slots = Arc::new(Semaphore::new(1));
+        let entry = Entry {
+            parent: Parent::Individual(Box::new(parent)),
+            children: Mutex::new(BTreeSet::from([child])),
+            _permit: slots.clone().try_acquire_owned().unwrap(),
+        };
+        assert_eq!(slots.available_permits(), 0);
+        let message = SeriesMessage {
+            task_id: child,
+            root,
+            parent: Some(root),
+        };
+        assert!(entry.owns_child(&message).unwrap());
+        let terminal = serde_json::json!({
+            "status": "SUCCESS",
+            "result": null,
+            "traceback": null,
+            "children": [[[index, null], null], [[child, null], null]],
+            "date_done": "2026-11-21T08:06:00+00:00",
+            "task_id": root
+        });
+        let raw = serde_json::to_vec(&terminal).unwrap();
+        assert!(entry
+            .completed_child(&raw, &message)
+            .and_then(|completed| completed.admit(&message))
+            .is_some());
+        drop(entry);
+        assert_eq!(slots.available_permits(), 1);
     }
 }

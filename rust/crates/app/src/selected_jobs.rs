@@ -301,7 +301,9 @@ impl SelectedJobs {
         )
         .map_err(|_| "Selected XC account task configuration unsupported")?;
         let xc_port = Arc::new(xc.clone());
-        let compact = Arc::new(jobs::compact_coordination::CompactCoordinator::shared(locks.clone()));
+        let compact = Arc::new(jobs::compact_coordination::CompactCoordinator::shared(
+            locks.clone(),
+        ));
         auth.bind_compact_coordinator(compact.clone())
             .map_err(|_| "Selected compact coordinator binding failed")?;
         let xc_http = dispatcharr_store::xc_account_http::Http::prepare(auth.clone(), xc_port);

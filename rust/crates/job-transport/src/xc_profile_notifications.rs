@@ -335,7 +335,12 @@ impl ProfileSaveSignal for Callback {
             }
             let keys = ids
                 .into_iter()
-                .flat_map(|id| [format!("xc-exp-warning-{id}"), format!("xc-exp-expired-{id}")])
+                .flat_map(|id| {
+                    [
+                        format!("xc-exp-warning-{id}"),
+                        format!("xc-exp-expired-{id}"),
+                    ]
+                })
                 .collect();
             shared::collect_deactivation_in_transaction(c, keys)
                 .await
@@ -449,18 +454,27 @@ mod retained_signal_event_tests {
         let callback = Callback::new(sink.clone());
         let keys = vec!["xc-exp-warning-7".into(), "xc-exp-expired-9".into()];
         assert_eq!(
-            callback.dispatch_account_dismissals(keys, Arc::new(())).await.unwrap(),
+            callback
+                .dispatch_account_dismissals(keys, Arc::new(()))
+                .await
+                .unwrap(),
             SignalOutcome::Applied
         );
         assert_eq!(
             *sink.0.lock().unwrap(),
             vec![
-                ("updates".into(), json!({"type":"update","data":{
-                    "type":"notification_dismissed","notification_key":"xc-exp-warning-7"
-                }})),
-                ("updates".into(), json!({"type":"update","data":{
-                    "type":"notification_dismissed","notification_key":"xc-exp-expired-9"
-                }})),
+                (
+                    "updates".into(),
+                    json!({"type":"update","data":{
+                        "type":"notification_dismissed","notification_key":"xc-exp-warning-7"
+                    }})
+                ),
+                (
+                    "updates".into(),
+                    json!({"type":"update","data":{
+                        "type":"notification_dismissed","notification_key":"xc-exp-expired-9"
+                    }})
+                ),
             ]
         );
     }

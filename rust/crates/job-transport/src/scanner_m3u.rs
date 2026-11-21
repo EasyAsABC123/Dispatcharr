@@ -504,12 +504,9 @@ impl Service {
         self.prepare_with_authority(id, kind, caller, false).await
     }
 
-    pub(crate) async fn prepare_periodic(
-        &self,
-        id: i64,
-        caller: Owner,
-    ) -> Result<Prepared, Error> {
-        self.prepare_with_authority(id, Kind::Single, caller, true).await
+    pub(crate) async fn prepare_periodic(&self, id: i64, caller: Owner) -> Result<Prepared, Error> {
+        self.prepare_with_authority(id, Kind::Single, caller, true)
+            .await
     }
 
     async fn prepare_with_authority(
@@ -653,9 +650,8 @@ impl Service {
         let Some((args, kwargs, headers)) = found else {
             return Err(Error::Unsupported);
         };
-        let eq_json = |raw: &str, expected| {
-            serde_json::from_str::<Value>(raw).ok() == Some(expected)
-        };
+        let eq_json =
+            |raw: &str, expected| serde_json::from_str::<Value>(raw).ok() == Some(expected);
         if !eq_json(&args, json!([]))
             || !eq_json(&kwargs, json!({"account_id": id}))
             || !eq_json(&headers, json!({}))

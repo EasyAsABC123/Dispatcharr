@@ -88,7 +88,9 @@ fn encode(value: &impl Serialize) -> Result<(&'static str, Vec<u8>), StoreError>
 fn django_json(value: &impl Serialize) -> Result<Vec<u8>, StoreError> {
     let mut bytes = Vec::new();
     value
-        .serialize(&mut serde_json::Serializer::with_formatter(&mut bytes, DjangoJson))
+        .serialize(&mut serde_json::Serializer::with_formatter(
+            &mut bytes, DjangoJson,
+        ))
         .map_err(|_| unavailable())?;
     Ok(bytes)
 }
@@ -98,14 +100,22 @@ fn django_json(value: &impl Serialize) -> Result<Vec<u8>, StoreError> {
 struct DjangoJson;
 
 impl Formatter for DjangoJson {
-    fn begin_array_value<W: Write + ?Sized>(&mut self, writer: &mut W, first: bool) -> io::Result<()> {
+    fn begin_array_value<W: Write + ?Sized>(
+        &mut self,
+        writer: &mut W,
+        first: bool,
+    ) -> io::Result<()> {
         if !first {
             writer.write_all(b", ")?;
         }
         Ok(())
     }
 
-    fn begin_object_key<W: Write + ?Sized>(&mut self, writer: &mut W, first: bool) -> io::Result<()> {
+    fn begin_object_key<W: Write + ?Sized>(
+        &mut self,
+        writer: &mut W,
+        first: bool,
+    ) -> io::Result<()> {
         self.begin_array_value(writer, first)
     }
 

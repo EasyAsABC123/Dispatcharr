@@ -1057,9 +1057,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     // explicitly unsupported transports and signatures.
     let plugin_repositories =
         dispatcharr_store::PluginRepositories::new(auth.clone()).with_unsigned_manifest_fetches();
-    let plugin_schedule = Arc::new(
-        dispatcharr_job_transport::normal_beat::PluginRepositoryScheduleAdapter,
-    );
+    let plugin_schedule =
+        Arc::new(dispatcharr_job_transport::normal_beat::PluginRepositoryScheduleAdapter);
     let plugin_actions = dispatcharr_store::PluginActions::prepare(
         auth.clone(),
         std::env::var_os("DISPATCHARR_PLUGINS_DIR")
@@ -1073,7 +1072,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     if !selected_jobs_enabled
         && !std::env::var("DISPATCHARR_SKIP_PLUGIN_AUTODISCOVERY")
             .ok()
-            .is_some_and(|value| matches!(value.to_ascii_lowercase().as_str(), "1" | "true" | "yes"))
+            .is_some_and(|value| {
+                matches!(value.to_ascii_lowercase().as_str(), "1" | "true" | "yes")
+            })
         && plugin_schedule.initialize_core(&auth).await.is_err()
     {
         eprintln!("Could not set up plugin repository refresh schedule");
@@ -1093,9 +1094,11 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let core_compact = if selected_jobs_enabled {
         None
     } else if let Some(cache) = cache_url.as_ref() {
-        let owner = Arc::new(dispatcharr_job_transport::compact_coordination::CompactCoordinator::lazy(
-            cache.clone(),
-        ));
+        let owner = Arc::new(
+            dispatcharr_job_transport::compact_coordination::CompactCoordinator::lazy(
+                cache.clone(),
+            ),
+        );
         auth.bind_compact_coordinator(owner.clone())
             .map_err(|_| "Core compact coordinator binding failed")?;
         Some(owner)

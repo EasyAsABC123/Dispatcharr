@@ -30,6 +30,16 @@ pub struct RefreshMessage {
     pub eta: Option<DateTime<Utc>>,
     pub call: RefreshCall,
 }
+impl RefreshMessage {
+    /// Exact immediate import API arguments, after protocol parsing has
+    /// established the actual published message fields.
+    pub(crate) fn has_explicit_api_arguments(&self) -> bool {
+        !self.call.list_args
+            && self.call.args.as_slice() == [json!(self.source_id)]
+            && self.call.kwargs.len() == 1
+            && self.call.kwargs.get("force").and_then(Value::as_bool) == Some(self.force)
+    }
+}
 impl RefreshCall {
     pub fn initial(source_id: i64) -> Self {
         Self {
