@@ -1853,3 +1853,10 @@ Main generations. The same-image AIO check retained the default login redirect.
 The [pinned Comskip candidate](rust-m10-native-arm64-comskip-candidate.md)
 completed a native ARM64 generated-media smoke test at its verified source
 revision. Full ARM64 packaging remains open.
+
+The [fdede ordinary exports](rust-m7-fdede54c-ordinary-exports.md) matched
+15 M3U requests per backend and the UTC custom guide through XMLTV,
+programme Grid, and Xtream short EPG. The
+[fdede same-session VOD pair](rust-m4-fdede54c-vod-same-client-reconnect.md)
+verified two complete A/V reads, provider-slot release, and natural metadata
+retirement. Both scopes verified exact Compose cleanup.
