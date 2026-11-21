@@ -1,0 +1,7 @@
+# Standalone Debian ARM64 regex bridge
+
+The hosted retry relocated the exact Original ARM64 CPython 3.13.18 interpreter and regex 2026.9.29 extension into the pinned Debian Bookworm ARM64 base. The non-root, read-only guest verified 657 retained files and 21 notice files. It used a private AArch64 loader for all 5 interpreter and 3 regex linked paths. The isolated Python module origins remained within the copied prefix. Packaging reported version 26.3, and CPython reported Unicode 15.1.0. [Hosted retry](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44874814116)
+
+The regular dependency bridge matched named groups for an owned string fixture, returned the expected packaging version order, and shut down cleanly. Build, guest, bridge child, and controller each exited 0. The first assembly also built successfully. Its controller exited 1 before starting the probe because Docker omitted the optional empty `Tmpfs` field from its inspection response. Both attempts verified image and container retirement. [First attempt](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44874481338)
+
+The scope covers the dependency-only regex bridge in standalone Debian. Django, Torch, GPG, full plugin hosting, integrated ARM64 Compose, and distribution qualification remain separate. Original Dispatcharr and upstream authors retain full credit. [Machine-readable evidence](../scripts/rust-integration/m10-native-arm64-regex-debian.json)
