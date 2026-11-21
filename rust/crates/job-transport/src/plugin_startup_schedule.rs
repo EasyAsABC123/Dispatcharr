@@ -107,7 +107,39 @@ async fn synchronize_rows(connection: &mut PgConnection) -> Result<(), Error> {
                 .await?;
         }
         Plan::Interval { enabled, .. } => {
-            sqlx::query("INSERT INTO django_celery_beat_periodictask(name,task,interval_id,crontab_id,args,kwargs,headers,enabled,total_run_count,date_changed,description,one_off) VALUES($1,'apps.plugins.tasks.refresh_plugin_repos',$2,NULL,'[]','{}','{}',$3,0,$4,'',false) ON CONFLICT(name) DO UPDATE SET task=EXCLUDED.task,interval_id=EXCLUDED.interval_id,crontab_id=NULL,enabled=EXCLUDED.enabled,kwargs='{}',last_run_at=CASE WHEN EXCLUDED.enabled THEN django_celery_beat_periodictask.last_run_at ELSE NULL END,date_changed=EXCLUDED.date_changed").bind(NAME).bind(new_interval).bind(enabled).bind(Utc::now()).execute(&mut *tx).await?;
+            // Django updates an existing named row without evaluating its
+            // INSERT-only sequence default. Keep the conflict fallback for
+            // a creator outside the native advisory lock.
+            let now = Utc::now();
+            let updated = sqlx::query(concat!(
+                "UPDATE django_celery_beat_periodictask SET task='apps.plugins.tasks.refresh_plugin_repos',",
+                "interval_id=$2,crontab_id=NULL,enabled=$3,kwargs='{}',",
+                "last_run_at=CASE WHEN $3 THEN last_run_at ELSE NULL END,date_changed=$4 ",
+                "WHERE name=$1"
+            ))
+            .bind(NAME)
+            .bind(new_interval)
+            .bind(enabled)
+            .bind(now)
+            .execute(&mut *tx)
+            .await?;
+            if updated.rows_affected() == 0 {
+                sqlx::query(concat!(
+                    "INSERT INTO django_celery_beat_periodictask ",
+                    "(name,task,interval_id,crontab_id,args,kwargs,headers,enabled,total_run_count,date_changed,description,one_off) ",
+                    "VALUES($1,'apps.plugins.tasks.refresh_plugin_repos',$2,NULL,'[]','{}','{}',$3,0,$4,'',false) ",
+                    "ON CONFLICT(name) DO UPDATE SET task=EXCLUDED.task,interval_id=EXCLUDED.interval_id,",
+                    "crontab_id=NULL,enabled=EXCLUDED.enabled,kwargs='{}',",
+                    "last_run_at=CASE WHEN EXCLUDED.enabled THEN django_celery_beat_periodictask.last_run_at ELSE NULL END,",
+                    "date_changed=EXCLUDED.date_changed"
+                ))
+                .bind(NAME)
+                .bind(new_interval)
+                .bind(enabled)
+                .bind(now)
+                .execute(&mut *tx)
+                .await?;
+            }
         }
     }
     sqlx::query("INSERT INTO django_celery_beat_periodictasks(ident,last_update) VALUES(1,$1) ON CONFLICT(ident) DO UPDATE SET last_update=EXCLUDED.last_update").bind(Utc::now()).execute(&mut *tx).await?;

@@ -260,7 +260,34 @@ impl Schedule {
                let found:Option<i64>=sqlx::query_scalar("SELECT id::bigint FROM django_celery_beat_crontabschedule WHERE minute=$1 AND hour=$2 AND day_of_month=$3 AND month_of_year=$4 AND day_of_week=$5 AND timezone=$6 ORDER BY id LIMIT 1").bind(parts[0]).bind(parts[1]).bind(parts[2]).bind(parts[3]).bind(parts[4]).bind(canonical).fetch_optional(&mut *tx).await?;
                let cron=match found{Some(id)=>id,None=>sqlx::query_scalar("INSERT INTO django_celery_beat_crontabschedule(minute,hour,day_of_month,month_of_year,day_of_week,timezone) VALUES($1,$2,$3,$4,$5,$6) RETURNING id::bigint").bind(parts[0]).bind(parts[1]).bind(parts[2]).bind(parts[3]).bind(parts[4]).bind(canonical).fetch_one(&mut *tx).await?};
                let kwargs=retention_kwargs(&config["retention_count"])?;
-               sqlx::query("INSERT INTO django_celery_beat_periodictask(name,task,crontab_id,args,kwargs,headers,enabled,total_run_count,date_changed,description,one_off) VALUES('backup-scheduled-task','apps.backups.tasks.scheduled_backup_task',$1,'[]',$2,'{}',true,0,$3,'',false) ON CONFLICT(name) DO UPDATE SET task=EXCLUDED.task,crontab_id=EXCLUDED.crontab_id,interval_id=NULL,kwargs=EXCLUDED.kwargs,enabled=true,date_changed=EXCLUDED.date_changed").bind(cron).bind(kwargs).bind(chrono::Utc::now()).execute(&mut *tx).await?;
+               let now = chrono::Utc::now();
+               if let Some((id, _, _)) = old {
+                  // The existing row is locked above. Updating by ID preserves
+                  // Django's sequence state when only the schedule is saved.
+                  sqlx::query(concat!(
+                      "UPDATE django_celery_beat_periodictask SET task='apps.backups.tasks.scheduled_backup_task',",
+                      "crontab_id=$2,interval_id=NULL,kwargs=$3,enabled=true,date_changed=$4 WHERE id=$1"
+                  ))
+                  .bind(id)
+                  .bind(cron)
+                  .bind(kwargs)
+                  .bind(now)
+                  .execute(&mut *tx)
+                  .await?;
+               } else {
+                  sqlx::query(concat!(
+                      "INSERT INTO django_celery_beat_periodictask ",
+                      "(name,task,crontab_id,args,kwargs,headers,enabled,total_run_count,date_changed,description,one_off) ",
+                      "VALUES('backup-scheduled-task','apps.backups.tasks.scheduled_backup_task',$1,'[]',$2,'{}',true,0,$3,'',false) ",
+                      "ON CONFLICT(name) DO UPDATE SET task=EXCLUDED.task,crontab_id=EXCLUDED.crontab_id,",
+                      "interval_id=NULL,kwargs=EXCLUDED.kwargs,enabled=true,date_changed=EXCLUDED.date_changed"
+                  ))
+                  .bind(cron)
+                  .bind(kwargs)
+                  .bind(now)
+                  .execute(&mut *tx)
+                  .await?;
+               }
             }
             if let Some((_,interval,cron))=old{
                if let Some(id)=interval{sqlx::query("DELETE FROM django_celery_beat_intervalschedule s WHERE id=$1 AND NOT EXISTS(SELECT 1 FROM django_celery_beat_periodictask p WHERE p.interval_id=s.id)").bind(id).execute(&mut *tx).await?;}

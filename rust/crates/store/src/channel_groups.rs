@@ -8,7 +8,7 @@ use crate::{
 };
 use axum::{
     extract::{rejection::JsonRejection, ConnectInfo, Path, State},
-    http::{HeaderMap, StatusCode},
+    http::{header, HeaderMap, Method, StatusCode},
     response::{IntoResponse, Response},
     routing::{get, post},
     Json, Router,
@@ -17,6 +17,21 @@ use serde_json::{json, Map, Value};
 use sqlx::{postgres::PgRow, Postgres, Row, Transaction};
 use std::{collections::HashMap, net::SocketAddr};
 type Body = Result<Json<Value>, JsonRejection>;
+const COLLECTION_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
+const DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
+const CLAIM_ALLOW: &str = "POST, OPTIONS";
+
+fn group_response(body: Json<Value>, allow: Option<&'static str>) -> Response {
+    match allow {
+        Some(allow) => ([(header::ALLOW, allow)], body).into_response(),
+        None => body.into_response(),
+    }
+}
+
+fn get_response(body: Json<Value>, method: Method, allow: &'static str) -> Response {
+    // Axum also dispatches HEAD through these GET handlers.
+    group_response(body, (method == Method::GET).then_some(allow))
+}
 const ADMIN:&str="SELECT g.id::bigint AS id,g.name,EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id WHERE r.channel_group_id=g.id AND a.locked) AS is_custom,count(DISTINCT rel.id) FILTER(WHERE NOT a.locked) AS provider_count FROM dispatcharr_channels_channelgroup g LEFT JOIN dispatcharr_channels_channelgroupm3uaccount rel ON rel.channel_group_id=g.id LEFT JOIN m3u_m3uaccount a ON a.id=rel.m3u_account_id WHERE ($1::bigint IS NULL OR g.id=$1) GROUP BY g.id";
 const MEMBER:&str="SELECT g.id::bigint AS id,g.name,EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount r JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id WHERE r.channel_group_id=g.id AND a.locked) AS is_custom FROM dispatcharr_channels_channelgroup g WHERE ($1::bigint IS NULL OR g.id=$1) AND EXISTS(SELECT 1 FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE COALESCE(o.channel_group_id,c.channel_group_id)=g.id AND c.user_level<=$2 AND (NOT $3 OR NOT c.is_adult))";
 fn missing() -> StoreError {
@@ -121,15 +136,16 @@ async fn detail(auth: &AuthService, user: &User, id: i64) -> Result<Value, Store
 async fn list(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    method: Method,
     headers: HeaderMap,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers, false).await?;
     if user.user_level < 1 {
         return Err(StoreError::PermissionDenied);
     }
     let groups = rows(&auth, &user, None).await?;
     if groups.is_empty() {
-        return Ok(Json(json!([])));
+        return Ok(get_response(Json(json!([])), method, COLLECTION_ALLOW));
     }
     let ids = groups
         .iter()
@@ -155,19 +171,25 @@ async fn list(
             relations.remove(&id).unwrap_or_default(),
         )?);
     }
-    Ok(Json(Value::Array(values)))
+    Ok(get_response(
+        Json(Value::Array(values)),
+        method,
+        COLLECTION_ALLOW,
+    ))
 }
 async fn retrieve(
     State(auth): State<AuthService>,
     Path(raw): Path<String>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    method: Method,
     headers: HeaderMap,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers, false).await?;
     if user.user_level < 1 {
         return Err(StoreError::PermissionDenied);
     }
-    Ok(Json(detail(&auth, &user, id(raw)?).await?))
+    let body = Json(detail(&auth, &user, id(raw)?).await?);
+    Ok(get_response(body, method, DETAIL_ALLOW))
 }
 fn name(body: Map<String, Value>, partial: bool) -> Result<Option<String>, StoreError> {
     match body.get("name") {
@@ -266,8 +288,9 @@ async fn patch_group(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     body: Body,
-) -> Result<Json<Value>, StoreError> {
-    update(auth, raw, peer, headers, body, true).await
+) -> Result<Response, StoreError> {
+    let body = update(auth, raw, peer, headers, body, true).await?;
+    Ok(group_response(body, Some(DETAIL_ALLOW)))
 }
 async fn put_group(
     State(auth): State<AuthService>,
@@ -314,14 +337,15 @@ async fn claim(
     Path(raw): Path<String>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<Response, StoreError> {
     let user = auth.account_user(peer, headers, true).await?;
     let id = id(raw)?;
     let mut tx = auth.store.pool().begin().await?;
     get_group(&mut tx, id).await?;
     mark_group(&mut tx, &json!(id)).await?;
     tx.commit().await?;
-    Ok(Json(detail(&auth, &user, id).await?))
+    let body = Json(detail(&auth, &user, id).await?);
+    Ok(group_response(body, Some(CLAIM_ALLOW)))
 }
 async fn unclaim(
     State(auth): State<AuthService>,
@@ -383,4 +407,45 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route("/api/channels/groups/{id}/claim-custom/", post(claim))
         .route("/api/channels/groups/{id}/unclaim-custom/", post(unclaim))
         .with_state(auth)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::body::to_bytes;
+
+    #[tokio::test]
+    async fn group_get_and_mutation_allow_preserve_json_and_head_handling() {
+        let body = Json(json!({"id": 9}));
+        for (response, expected) in [
+            (
+                get_response(body.clone(), Method::GET, COLLECTION_ALLOW),
+                Some(COLLECTION_ALLOW),
+            ),
+            (
+                get_response(body.clone(), Method::GET, DETAIL_ALLOW),
+                Some(DETAIL_ALLOW),
+            ),
+            (get_response(body.clone(), Method::HEAD, DETAIL_ALLOW), None),
+            (
+                group_response(body.clone(), Some(DETAIL_ALLOW)),
+                Some(DETAIL_ALLOW),
+            ),
+            (group_response(body, Some(CLAIM_ALLOW)), Some(CLAIM_ALLOW)),
+        ] {
+            assert_eq!(response.status(), StatusCode::OK);
+            assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+            assert_eq!(
+                response
+                    .headers()
+                    .get(header::ALLOW)
+                    .map(|value| value.to_str().unwrap()),
+                expected
+            );
+            assert_eq!(
+                to_bytes(response.into_body(), 32).await.unwrap().as_ref(),
+                br#"{"id":9}"#
+            );
+        }
+    }
 }
