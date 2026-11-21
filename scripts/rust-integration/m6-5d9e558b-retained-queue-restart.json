@@ -1,0 +1,121 @@
+{
+  "corrected_independent_proof_sha256": "e15ad7e820c9fb3e39c3f5e938f3c35bd675cf4569455d1b5b80689f9cbf4f4c",
+  "native": {
+    "Native_only_pending_restart_measured": false,
+    "Source": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "actual_physical_exit": 0,
+    "candidate": "5d9e558b70270e2dcc2b478d5ba96bca6a9abb8f",
+    "cleanup_sha256": "8ba01740d5f2df0873ef5dde76798ec46a85aa5eee9b9832f80d68879361522f",
+    "comparative_performance": false,
+    "credit": "Original Dispatcharr, Django, Celery and django-celery-beat authors retain credit.",
+    "exact_cleanup": true,
+    "fresh_Native_exit_sha256": [
+      "1b920cb08762a62b79cc9cac0c25f18350a0ee13d220ab1815d30923ef2684f3",
+      "1b920cb08762a62b79cc9cac0c25f18350a0ee13d220ab1815d30923ef2684f3"
+    ],
+    "image": "sha256:b1bce68f69628b653176add84d69e9fb5db322181811c7d7f9108983103f7089",
+    "manifest_sha256": "70de2bcb2205bd4e0c181328b39c3bd1cf5e042f37a3afc4b1bed38af4512b8f",
+    "observed": {
+      "actual_queue": "celery",
+      "body_sha256": "91d3e63d5afc7aeef65871495a65a4a3226f7bde1a67ef03c283af7ed4902bc8",
+      "final_default_DVR_and_unacked_queues_empty": true,
+      "native_consumed_same_task_with_SUCCESS_and_null": true,
+      "native_restart_republished_already_completed_task": false,
+      "observed_native_startup_roots": [
+        [
+          "apps.plugins.tasks.refresh_plugin_repos"
+        ],
+        [
+          "apps.plugins.tasks.refresh_plugin_repos"
+        ]
+      ],
+      "original_Beat_published_exactly_one_pending_root": true,
+      "pending_queue_message_sha256": "d77769dbb802d72efaa0a4ad9a0a42e227d25e182d62967fe5529641d4060a5c",
+      "retained_result_sha256_unchanged_after_completed_task_restart": "faead53c2b1a9078dcd84ad6de50fc7da24aad63b2a0405516375576c61b3b0e",
+      "same_SQL_row_single_tick_and_unchanged_other_rows": true,
+      "same_copied_SQL_and_Redis_generations": {
+        "owned_Redis_server_generation_sha256": "7dcd3ea04e300aedd5747ddfd56aac88fdb441cf8bcdb0f8394354e579de2cc6",
+        "owned_database_generation_sha256": "b3477943b744b69aede38cb7241580ea15b52197b9761eb1ff88c6f0edc4359d"
+      },
+      "same_pending_raw_bytes_and_ID_until_Native_admission": true,
+      "two_distinct_native_generations": [
+        {
+          "actual_exit": 0,
+          "generation_sha256": "6a180beefac9a36c92b0c1b880913e97d11e7f852c22430870f7798eb34b9ed2"
+        },
+        {
+          "actual_exit": 0,
+          "generation_sha256": "4951529550c2c3215d9760092cfe9c704abfa67ef496d73fb9ebaf179d7d8a46"
+        }
+      ],
+      "wire_journal_sha256": [
+        "af7024b575e8640df4a867a1d513fcd758422937790492895fe9ea3f1f3fb05f",
+        "6fba2d6361e04a9a1e66c65d11ad57e61e8815511ea677c583e53d236d8d0902"
+      ]
+    },
+    "original_only_restart_proof_sha256": "e4fadef6511c90bce5bca1ea03dcd58b66a62746519a5b2e7d42f807e1a003ce",
+    "original_ordinary_role_retirements": {
+      "beat": [
+        "afb448145ab9ecfaf2d653cca37c80e7a6e3c34af0b98dcc596e091724fe5eeb",
+        "edc8aef3435ee7dbb9578094347f4a6f21fd01bfaad119bfc3027dd37109075c"
+      ],
+      "celery": [
+        "99a3f2199377e11d3b331567bb2265a7aaa259f487273a1f2ae9a2b7f10390d4"
+      ],
+      "web": [
+        "7c8240ab86e834607623f0fbb5958a5d93eca4244fa2ef95e1d620da3487f070"
+      ]
+    },
+    "physical_replayed_by_this_reducer": false,
+    "previous_aggregate_wrapper_exit": 1,
+    "previous_reducer_exit": 1,
+    "previous_reducer_failure_sha256": "5ee2870e5df593f28632ae93e47364bc66dbcad465ecb26299f22df8ebbbb774",
+    "replacement_saved_schedule_observation_sha256": "8b7c3afdde8d6959d51592dcac99c75139a0ffb1042b5260970144038a59cbe5",
+    "review_sha256": "186f6925a2cf3dce42262aebd56368321f600f7637c0edda7e4a7acfa8a2b37b",
+    "whole_M6": false
+  },
+  "original": {
+    "Native_measured": false,
+    "Source_archive": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "Source_controller_exit": 0,
+    "Source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "credit": "Original Dispatcharr, Django, Celery and django-celery-beat authors retain full credit.",
+    "distinct_normal_role_retirement": {
+      "beat": [
+        "4d272e9acfe098f1cddfbca33599efcfb2b4196e8365dc3c98423ec50af05199",
+        "f4d0ec22962df21446839aecb72898bc3810e41f44f08f4f594f17c7cae72afc"
+      ],
+      "celery": [
+        "054c23b5ad4bc759e3a810b3bd9bbc09e9f1a66e39ac0255d9885c6a1d8a4787",
+        "bfaa59005fb83760e4193aea40947641d968eef0669733ed93d01e1edbf45ec6"
+      ]
+    },
+    "exact_cleanup": true,
+    "lane_sha256": "daa459f296008fb77c45331b6fcb79e7f30ae708fbfe5dac84ab7d31fb12d8a4",
+    "previous_actual_controller_exit": 1,
+    "previous_exact_owned_cleanup": true,
+    "previous_missing_tick_log_marker": true,
+    "replacement_saved_schedule_observation_sha256": "c91526f744ea7175de46b6b67c25cdbfd754798fe10f0fd3ef6432d56193d73f",
+    "scope": {
+      "actual_queue": "celery",
+      "actual_root_publications": 1,
+      "new_beat_and_worker_generations": true,
+      "no_terminal_result_before_worker_restart": true,
+      "one_durable_tick_and_other_rows_unchanged": true,
+      "replacement_beat_loaded_saved_schedule": true,
+      "restart_startup_roots": [],
+      "retained_queue_head_sha256": "6934a100fa7f64036df8d2fb0ec73b7b820992c63af86ea9f5a280b68797d291",
+      "same_pending_bytes_before_after_beat_stop_and_restart": true,
+      "same_task_identity_after_worker_restart": true,
+      "terminal_default_and_dvr_queues_empty": true,
+      "terminal_result": null,
+      "terminal_status": "SUCCESS",
+      "wire_journal_sha256": "c2080b5a1e449847db031526d3130711d00bb020b73c1f52c6c2869d76fba39c"
+    },
+    "second_actual_controller_exit": 1,
+    "second_exact_owned_cleanup": true,
+    "second_fixture_buffer_hidden_live_beat_stderr": true,
+    "whole_formal_M6_restart_row_passed": false
+  },
+  "original_proof_sha256": "e4fadef6511c90bce5bca1ea03dcd58b66a62746519a5b2e7d42f807e1a003ce"
+}
