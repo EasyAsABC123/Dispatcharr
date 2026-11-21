@@ -1,0 +1,56 @@
+{
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "acceptance_owner_proof_sha256": "3b54faa11cf856b29a61df92c90a6b19f04d13d38dfa9adc5d3a931f1f8c4c75",
+  "actual_phase_exit": 0,
+  "arm_decoders": [
+    {
+      "backend": "Original",
+      "first_tune_decoders": 2,
+      "opposite_worker_retune_decoders": 2
+    },
+    {
+      "backend": "Rust",
+      "first_tune_decoders": 2,
+      "opposite_worker_retune_decoders": 2
+    }
+  ],
+  "candidate_image": "sha256:0e8e603ae0de52f5eca2347021c8c5f8a86c5775c3e73304c56f746552be2620",
+  "candidate_manifest_sha256": "b9bd8feb7583982f6449414ca2040e892d15b46542a27db6624843b759b33b4e",
+  "candidate_revision": "e9d143b8f803053e876ca435332d26d0fa15e2d6",
+  "capture_sha256": "97921362314e4718a4260b2cb8f7fea182ddcf017ca9c1971b316765188cc109",
+  "checks_passed_per_arm": [
+    "one-origin-and-provider",
+    "packet-sync",
+    "actual-decoder",
+    "first-stop-redis-marker-and-clients-retired",
+    "fresh-ownership-on-opposite-replica",
+    "retune-one-fresh-upstream-and-slot",
+    "fresh-owner-survives-local-viewer-close",
+    "final-redis-and-origin-cleanup",
+    "retune-wire",
+    "retune-actual-decoder"
+  ],
+  "cleanup_sha256": "367d4ed77345a0ff08a278349c7cc43a2c6b9a94a231662e6e928cab67e0e4ea",
+  "credit": "Original Dispatcharr and framework authors retain full credit.",
+  "decoder_paths_qualified": 8,
+  "formal_lifecycle_node_passed": false,
+  "full_M2_accepted": false,
+  "literal_owner_exits": {
+    "physical": 0,
+    "preflight": 0,
+    "proof": 0,
+    "wrapper": 0
+  },
+  "owned_compose_inventory_counts": {
+    "containers": 0,
+    "networks": 0,
+    "volumes": 0
+  },
+  "owned_exact_cleanup": true,
+  "owned_generations_absent": 5,
+  "performance_verified": false,
+  "physical_receipt_sha256": "2f8af08c74c3f4304954383955edc8bc48440de0493a15b726fab4adf6191be0",
+  "prior_status_transferred": false,
+  "scope": "cross-worker global stop then same-channel retune on the opposite worker"
+}

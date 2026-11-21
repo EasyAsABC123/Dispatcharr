@@ -1,0 +1,324 @@
+{
+  "Native_interruption": {
+    "after_accept_before_sync": {
+      "Native": {
+        "accepted_after_restart": 1,
+        "accepted_before_restart": 1,
+        "archive_sha256": "f1f2f2be818d81ccf3477ff150fef74f586ba3e1d19d674c36594e6f5a2f0965",
+        "boundary": "after-accept-before-sync",
+        "bounded_restart_observation_seconds": 25,
+        "durable_count_after_fresh_stop": 1,
+        "exact_SIGKILL_exit": 137,
+        "final_disable_200": true,
+        "observed_open_SQL_reservation": true,
+        "owned_redis_journal_sha256": "8e220c512b23eac3d0c02be59bdc69906167de320398897b3fe580f442b1b795",
+        "stable_local_backend": true,
+        "successful_results": 2,
+        "unchanged_durable_count_at_placement": true,
+        "unrelated_SQL_unchanged": true
+      },
+      "Original_proof_sha256": "c1a3398a292b837efa083754fdc3119b5d62150693976956a3bd96741b40c96e",
+      "candidate": "a8ea333d922f9834afc561493fc6b104f5e2b5d3",
+      "confirmed_scoped_source_effects": [
+        "boundary",
+        "accepted_before_restart",
+        "accepted_after_restart",
+        "successful_results",
+        "durable_count_after_fresh_stop",
+        "unchanged_durable_count_at_placement",
+        "unrelated_SQL_unchanged",
+        "final_disable_200",
+        "bounded_restart_observation_seconds"
+      ],
+      "earlier_239ba8_failed_receipt_sha256": "100b09fddb121383bfce0dda95c0c1bcab9576031c1e9ee4fdc9591225d9c6a2",
+      "exact_cleanup": true,
+      "full_M8": false,
+      "image": "sha256:80a3acb342c8d0d15508efd1e71eb08bb3c0432e6f5a715d72bfb5b9e22cd0a2",
+      "manifest_sha256": "d6e23cb2dc4fa6235b500c350273fd352d96559fdc2c944dda379cddbe0438d9",
+      "performance": false,
+      "restored_schedule_clock": {
+        "after_ready_saved_count": 1,
+        "after_window_saved_count": 1,
+        "clock_linked_to_independent_replay": true,
+        "exact_clean_retirement": true,
+        "literal_physical_status": 0,
+        "observed_window_seconds": 25,
+        "pre_restart_same_committed_clock": true,
+        "private_clock_evidence_sha256": [
+          "9be34d01304555712441d998423910053e33fc3d6c0287837e89ed9f084f1575",
+          "3bcf63022fc1f3b4baca1b5097c4c148b33d66735ada74edabdfb8ee5d8b41ea",
+          "3bcf63022fc1f3b4baca1b5097c4c148b33d66735ada74edabdfb8ee5d8b41ea",
+          "6f7cb957a11ef1a0c4703c18ebd326b136298d6d053d5438e2990cbb22e3d5e2",
+          "7aa1cbba39abc23f321d75e8be0c5523adc445d50e677f2589536897aea0db87"
+        ],
+        "restart_clock_advanced_past_due_without_tick": false,
+        "same_date_changed_after_window": false,
+        "same_date_changed_at_ready": false,
+        "scope": "after-accept-before-sync",
+        "visible_placement_count": 0
+      }
+    },
+    "before_publish": {
+      "Native": {
+        "accepted_after_restart": 1,
+        "accepted_before_restart": 0,
+        "archive_sha256": "0f59706c74ff5567fc57cbe3bd604efbaf34d2007dc2b98b93926af8bfd40d41",
+        "boundary": "before-publish",
+        "bounded_restart_observation_seconds": 25,
+        "durable_count_after_fresh_stop": 1,
+        "exact_SIGKILL_exit": 137,
+        "final_disable_200": true,
+        "observed_open_SQL_reservation": true,
+        "owned_redis_journal_sha256": "cd4ce9af678fa1493745650e2ae59dbccf29ae81496ef2f9fbef7fabe4650dc2",
+        "stable_local_backend": true,
+        "successful_results": 1,
+        "unchanged_durable_count_at_placement": true,
+        "unrelated_SQL_unchanged": true
+      },
+      "Original_proof_sha256": "c1a3398a292b837efa083754fdc3119b5d62150693976956a3bd96741b40c96e",
+      "candidate": "a8ea333d922f9834afc561493fc6b104f5e2b5d3",
+      "confirmed_scoped_source_effects": [
+        "boundary",
+        "accepted_before_restart",
+        "accepted_after_restart",
+        "successful_results",
+        "durable_count_after_fresh_stop",
+        "unchanged_durable_count_at_placement",
+        "unrelated_SQL_unchanged",
+        "final_disable_200",
+        "bounded_restart_observation_seconds"
+      ],
+      "earlier_239ba8_failed_receipt_sha256": "97e64925a590f39609cb794369bccee314e431d04d95fb6d02c5b348ae21ca22",
+      "exact_cleanup": true,
+      "full_M8": false,
+      "image": "sha256:80a3acb342c8d0d15508efd1e71eb08bb3c0432e6f5a715d72bfb5b9e22cd0a2",
+      "manifest_sha256": "d6e23cb2dc4fa6235b500c350273fd352d96559fdc2c944dda379cddbe0438d9",
+      "performance": false,
+      "restored_schedule_clock": {
+        "after_ready_saved_count": 1,
+        "after_window_saved_count": 1,
+        "clock_linked_to_independent_replay": true,
+        "exact_clean_retirement": true,
+        "literal_physical_status": 0,
+        "observed_window_seconds": 25,
+        "pre_restart_same_committed_clock": true,
+        "private_clock_evidence_sha256": [
+          "7a4c7796298d9a78d0bce9d6460226daaabc60385c88b2054def8a13ec4a9b78",
+          "c2d7956a7bf67e9fd215f681f159acf2e21a474fc6f80eff3f04711e853cb569",
+          "c2d7956a7bf67e9fd215f681f159acf2e21a474fc6f80eff3f04711e853cb569",
+          "f8a2278a6adebfa9cfe77fae86ce71f5e4518f8c2c36f1539ad20c0213050079",
+          "472cc1c74f4999f76abd1ddc1e345569fd42e0595edb6f04585751771dcee6c7"
+        ],
+        "restart_clock_advanced_past_due_without_tick": false,
+        "same_date_changed_after_window": false,
+        "same_date_changed_at_ready": false,
+        "scope": "before-publish",
+        "visible_placement_count": 0
+      }
+    }
+  },
+  "candidate": "a8ea333d922f9834afc561493fc6b104f5e2b5d3",
+  "comparative_performance": false,
+  "daily": {
+    "account_expiration": {
+      "actual_controller_exit": 0,
+      "candidate": "a8ea333d922f9834afc561493fc6b104f5e2b5d3",
+      "comparative_performance": false,
+      "credit": "Original Dispatcharr, Django, Celery and django-celery-beat authors.",
+      "formal_row_promoted": false,
+      "manifest_sha256": "d6e23cb2dc4fa6235b500c350273fd352d96559fdc2c944dda379cddbe0438d9",
+      "native_shared_Core_scheduler_and_receiver": true,
+      "paired_Core_startup_and_post_task_readiness": {
+        "no_separate_worker_or_beat": true,
+        "readiness_sha256": "f12c5e30b1172261ea8a8a64e6e1733e937aacf1d57d478b7f3f834e3c4512c2",
+        "revision": "a8ea333d922f9834afc561493fc6b104f5e2b5d3",
+        "single_scheduled_expiration": true,
+        "startup_sha256": "df0c7ce2355094e9439994402e2d9a17cdabbf606d39b85cb8580161aa8c47f5"
+      },
+      "review_sha256": "3432ccbf24fe5e7e11b77bd1f03f69d7756743886159f6659c05a6721d15137e",
+      "scope": {
+        "active_profile_sql_effects": [
+          "warning updated in place",
+          "expired value created"
+        ],
+        "deleted_and_dismissed_notifications": 2,
+        "full_M6": false,
+        "inactive_account_filtered": true,
+        "normal_queue_drained": true,
+        "notice_update_events": 2,
+        "performance_verified": false,
+        "profile_and_unrelated_notice_rows_unchanged": true,
+        "root_task": "apps.m3u.tasks.check_account_expirations",
+        "stock_daily_task_runs": 1,
+        "success_result": null
+      },
+      "scoped_fresh_actual": {
+        "Native": {
+          "actual_lane_exit": 0,
+          "actual_witnesses": {
+            "actual_Channels_receiver_sha256": "96d0540fa30c20cae7ed0c5acc53f1d3c61eb517598a9cfacacb57003418b7af",
+            "actual_result_sha256": "fa4477293eb76ad553fd3fbed1a635200575a0e8d3960bf9daa2757da84d856b",
+            "seed_and_both_SQL_snapshots_sha256": [
+              "7cbba53f8753893c38353e196c490964754a3413bf72a5d1eab5861f45355ec8",
+              "918ad9266488e996b645e1c1dcc6b2d29e625d4e5b414b7853dd5ba997295f28",
+              "4519ed2bed188d593754cca1fe385a8ffa95a056f53a2aaf7c9bb6b7b89c730c"
+            ],
+            "wire_and_terminal_barrier_sha256": [
+              "6b37d4c5242e5a018193c55edcbc636956c6c39825c68469632624270569a9d8",
+              "c4f169f77a5520adf9873aef410b206bb31eee60d3c7854013f121f8b00c0dee"
+            ]
+          },
+          "execution_sha256": "e187bbb2f3e29063ff0d7c5c08723e656af5b587773b093bca896123172c3ea2",
+          "lane_sha256": "9edec6ef004264e49d3cd65b2bf8e832f4a126192039dad3e0998fc6282c765d",
+          "owned_retirement_count": 3,
+          "retirement_sha256": "db235aa415ab87d5882e449ef5fe20d5c60c8a614a9d164e251db30ce153ed4a",
+          "terminal_sha256": "1b920cb08762a62b79cc9cac0c25f18350a0ee13d220ab1815d30923ef2684f3"
+        },
+        "Original": {
+          "actual_lane_exit": 0,
+          "actual_witnesses": {
+            "actual_Channels_receiver_sha256": "673d1f7a0909c9b5bb9e7c7d3a4fcdd1080b48947e0324cbc11a33eca3476036",
+            "actual_result_sha256": "a4003f3d4741a2898dcc86030c5263f200a49f02e67cf08b05b90a47a648c700",
+            "seed_and_both_SQL_snapshots_sha256": [
+              "2681775ce875f36416ca0aab06a09b35f9ace16f9689bb8aad8f50ab311b795d",
+              "a76402d5d8a970bf808bc365168516dc9a43b72baad527f664b7c2e404beee19",
+              "c700e41fc9ecef1840de343f3adc5e328102e10774f59590542034898a190d73"
+            ],
+            "wire_and_terminal_barrier_sha256": [
+              "861615f735b13f839628f14d14c4fc6dc21fdb306274bda9bf0dab6848759357",
+              "414ec337b5ce3bd46956c180371630ec67da8b3012ec3a9cb3dea96526ec4cc4"
+            ]
+          },
+          "execution_sha256": "4399ff349e7ff5f189a6fbccd48b08ad76ea0c3128002956085341c6d798d95d",
+          "lane_sha256": "3bc021317793ff99feb42d451a2faee130a2eb919b3881f2f22d3df9acd301b1",
+          "owned_retirement_count": 2,
+          "retirement_sha256": "a78427961a257ec442877717940fe4c15742394f1003edf9c847ad3f2559e1cf",
+          "terminal_sha256": "7911191d92cdc83c478985d65aa72e68331e9a83ffeea4562f536721b92af685"
+        }
+      },
+      "scoped_historical_authority": "9e5965af337e6b27688b2e0adc0f5995501845bfe9244ac0f5c9b0d22e079962",
+      "whole_M6_or_default_graph": false
+    },
+    "version": {
+      "candidate": "a8ea333d922f9834afc561493fc6b104f5e2b5d3",
+      "comparative_performance": false,
+      "credit": "Original Dispatcharr, Django, Celery and django-celery-beat authors retain full credit.",
+      "first_version200_attempt": {
+        "engine_calls": 0,
+        "output_setup_error_sha256": "b39720ed5364e6aca0c6f6ba8210805046e198bee82f0589b54537bebfaacc0c",
+        "prior_actual_exit": 1
+      },
+      "formal_row_promoted": false,
+      "frozen_review_sha256": "3432ccbf24fe5e7e11b77bd1f03f69d7756743886159f6659c05a6721d15137e",
+      "image": "sha256:80a3acb342c8d0d15508efd1e71eb08bb3c0432e6f5a715d72bfb5b9e22cd0a2",
+      "literal_exit": 0,
+      "manifest_sha256": "d6e23cb2dc4fa6235b500c350273fd352d96559fdc2c944dda379cddbe0438d9",
+      "pairs": [
+        {
+          "cleanup": {
+            "exact_inventory_empty": true,
+            "normal_bootstrap_stop": true,
+            "owned_cids_absent": true,
+            "owned_host_generations_absent": true,
+            "passed": true
+          },
+          "complete": true,
+          "side": "original"
+        },
+        {
+          "cleanup": {
+            "exact_inventory_empty": true,
+            "normal_bootstrap_stop": true,
+            "owned_cids_absent": true,
+            "owned_host_generations_absent": true,
+            "passed": true
+          },
+          "complete": true,
+          "side": "native"
+        }
+      ],
+      "raw_receipt_sha256": "f937964a40bd1b006bfd98afb34aa354a89b439e3c556ce50e5d3d07e17e6da8",
+      "rows": [
+        {
+          "actual_result": "SUCCESS/null",
+          "label": "no-update",
+          "one_saved_run": true,
+          "pinned_notice_result_matched": true,
+          "upstream_HTTP": 200
+        },
+        {
+          "actual_result": "SUCCESS/null",
+          "label": "update",
+          "one_saved_run": true,
+          "pinned_notice_result_matched": true,
+          "upstream_HTTP": 200
+        },
+        {
+          "actual_result": "SUCCESS/null",
+          "label": "repeat",
+          "one_saved_run": true,
+          "pinned_notice_result_matched": true,
+          "upstream_HTTP": 200
+        },
+        {
+          "actual_result": "SUCCESS/null",
+          "label": "malformed",
+          "one_saved_run": true,
+          "pinned_notice_result_matched": true,
+          "upstream_HTTP": 200
+        }
+      ],
+      "scope": "four ordinary scheduled Version HTTP 200 outcomes on exact Original and shared Core Native",
+      "scope_evidence": {
+        "native": {
+          "exact_cleanup": true,
+          "roles": 5,
+          "scope_state_sha256": "7551406156fbc31d752ec659a7892c267f8712c2029fd53bd3fd8de3a67a7774",
+          "shared_Core_readiness_sha256": "90f2d10d67f4b5d05d8fd92b0ced0870d06d77ae2a8df5ab5b605d4cbc1caddc",
+          "shared_Core_receiver_and_scheduler": true,
+          "standalone_startup_version_publisher_enabled": false,
+          "startup_notice_isolation_sha256": "23ea8a7dc7ab514de89bce127141a6fb6e8990b5b652c635757d69ea620117ec",
+          "unrelated_native_startup_notice_count": 1
+        },
+        "original": {
+          "exact_cleanup": true,
+          "roles": 6,
+          "scope_state_sha256": "1598f926e2787752cfb784de7b3b92ebecb49fb6ad43be6e8afd141b49214b64",
+          "startup_notice_isolation_sha256": "702734bf955df78444faf7d98dd7f90e0861735410be287cfb06371bba54d78d",
+          "unrelated_native_startup_notice_count": 0
+        }
+      },
+      "second_version200_attempt": {
+        "both_exact_cleanups": true,
+        "native_failure_phase": "no-update",
+        "original_completed": true,
+        "prior_actual_exit": 1,
+        "raw_receipt_sha256": "b0814a66aecb4c6bc003f979fd81fbe8ac00ae8755573ac5d083bd348c27c0c8"
+      },
+      "source_cases_sha256": {
+        "malformed": "636e4b28cedba67daa986d578f404db4d6d3e20f8352924cabf508d8a907b456",
+        "no-update": "42a20db8148075985b9872589c74459be59a22d3e23e198aae9df6f6059a4bab",
+        "repeat": "302249f061f6e61901248395984a1b498c18b8d9870eaf9b98ff0d2aebece196",
+        "update": "1729aae6c641f3ba4e4a22e586d09e862b67607478356c9ecfce74f2a232c0bc"
+      },
+      "whole_M6": false
+    }
+  },
+  "formal_promotion": false,
+  "host_workspace": {
+    "failed": 0,
+    "ignored": 814,
+    "passed": 1553,
+    "targets": 193
+  },
+  "image": "sha256:80a3acb342c8d0d15508efd1e71eb08bb3c0432e6f5a715d72bfb5b9e22cd0a2",
+  "manifest_sha256": "d6e23cb2dc4fa6235b500c350273fd352d96559fdc2c944dda379cddbe0438d9",
+  "ordinary_package_source_inputs": 2142,
+  "proof_sha256": {
+    "after_accept": "517ec9c9fe350125e314713a7356c91587b47828ce4cdaeebe4b2e1f2fa4e9f1",
+    "before_publish": "98f5d5b1da4af4c3cb2e40b0128cd23cb8a043e6359420507f2f07da63d83683",
+    "expiry": "3f85fb45a17f4041d1ff88b456e1552c1aa9fc69f0311208fa530819b284890f",
+    "version": "138c3cd5d3c8ba92ef53665cef9924ef045c7cca492f8d653c7adf1f632832d3"
+  },
+  "protected_inputs": 497
+}

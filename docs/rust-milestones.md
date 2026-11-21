@@ -9,6 +9,23 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [shared Core scheduler](rust-m6-m8-shared-daily-jobs-and-backup-replay.md)
+passed fresh paired account-expiration and Version checks. Its two scheduled
+backup interruption tests matched the Original outcomes across Redis and
+PostgreSQL, with one durable tick in each case. Default worker coverage and
+full restore acceptance remain open.
+
+The [live MPEG-TS stop and retune check](rust-m2-e9d143b8-contained-stop-retune.md)
+verified authenticated cross-worker stop, opposite-worker retune, and useful
+audio and video. Concurrent viewers reused one upstream and one provider slot
+per backend in the scoped comparison.
+
+The [native ARM64 Docker Desktop package](rust-m10-e9d143b8-native-arm64-docker-desktop.md)
+started locally with PostgreSQL, Redis and unchanged React. The same image
+passed first-admin setup, sign-in and protected group listing. The earlier
+[d0a80aa5 startup](rust-m10-d0a80aa5-native-arm64-docker-desktop.md) and
+[first-run auth](rust-m10-d0a80aa5-native-arm64-first-run-auth.md) retain their
+own package evidence. Controlled rollout awaits complete M9 evidence.
 
 The [81ce Guide renderer package](rust-m7-browsable-guide-original.md#packaged-rust-successful-list-get)
 matched the successful HTML list and its cookie behavior, passed all 37
@@ -1016,7 +1033,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (Auto Sync regex preview and Connect workflows verified in scoped Compose runs) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (trusted selected actions, managed logs and scoped operator checks passed. Default plugin attachment and wider restore and admin coverage remain open.) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
 | M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (copied PostgreSQL rollback passed with four matched Original restart timestamp updates; strict fingerprint and final suite open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
-| M10 | Controlled rollout | M9 | Proposed ([ARM64 donor identity verified offline](rust-m10-amd64-pg-vlc-portability.md#arm64-donor-provenance), native package checks pending) | Scoped rollout plan, monitoring and rollback on the selected release image |
+| M10 | Controlled rollout | M9 | Proposed ([native ARM64 package, startup, React and first-run auth verified](rust-m10-e9d143b8-native-arm64-docker-desktop.md) on e9d143b8) | Scoped rollout plan, monitoring and rollback on the selected release image |
 | M11 | Default switch and operator handoff | M10 | Proposed | Released image and configuration, upgrade evidence, attribution and monitored fallback |
 
 The historical selected functional application checkpoint is [image57](rust-image57-validation.md), immutable `d77f25fa94ee128c79ade9176d8eb4a9d23bf498`:839 Rust inputs,495 unchanged React inputs and original credits. All28 package groups and three scoped Main gates pass. Its [portable checkpoint](../scripts/rust-integration/image57-checkpoint/README.md) passes Root's57 controls,487 exact private projections and app/support/SDK reconstruction. The additional26 Main catalogue responses qualify separately while their original controller exit1 remains literal; its failed backend observer is not relabeled by the separate successful stop-observer run. Full M0–M9 acceptance and default worker activation remain open.
