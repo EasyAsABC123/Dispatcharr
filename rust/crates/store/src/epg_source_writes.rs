@@ -7,7 +7,8 @@ use crate::{
 };
 use axum::{
     extract::{rejection::JsonRejection, ConnectInfo, Path, State},
-    http::{HeaderMap, StatusCode},
+    http::{header::ALLOW, HeaderMap, HeaderValue, StatusCode},
+    response::{IntoResponse, Response},
     Json,
 };
 use serde_json::{json, Map, Value};
@@ -76,6 +77,7 @@ fn truth(value: &Value) -> bool {
 struct Validated {
     saved: Value,
     cron: String,
+    url_changed: bool,
 }
 fn validate(
     mut input: Map<String, Value>,
@@ -148,9 +150,10 @@ fn validate(
             "username" | "password" => nullable_character(name, value, Some(255)),
             "file_path" => nullable_character(name, value, Some(1024)),
             "last_message" => nullable_character(name, value, None),
-            // URL validator/source-type changes need separate Source branches;
-            // unchanged URL is admitted, never silently cleared or normalized.
             "url" if value == &old["url"] => Ok(value.clone()),
+            "url" if partial && old["source_type"] == "xmltv" && old["is_active"] == true => {
+                xmltv_create::remote_url(value).map(Value::String)
+            }
             "url" => Err(unsupported()),
             "updated_at" => parse_datetime(name, value, true).map(|v| json!(v)),
             _ => Ok(value.clone()),
@@ -195,7 +198,29 @@ fn validate(
             "disabled"
         });
     }
-    Ok(Validated { saved, cron })
+    let url_changed = old["url"] != saved["url"];
+    if url_changed {
+        let previous = xmltv_create::remote_url(&old["url"])?;
+        let next = saved["url"].as_str().ok_or_else(unsupported)?;
+        let previous = url::Url::parse(&previous).map_err(|_| unsupported())?;
+        let next = url::Url::parse(next).map_err(|_| unsupported())?;
+        // The ordinary URL-only edit retains the selected origin, the saved
+        // source values and the existing recurrence.
+        let mut unchanged = saved.clone();
+        unchanged["url"] = old["url"].clone();
+        if previous.origin() != next.origin()
+            || unchanged != *old
+            || cron != linked_cron
+            || old["refresh_task_id"].as_i64().is_none()
+        {
+            return Err(unsupported());
+        }
+    }
+    Ok(Validated {
+        saved,
+        cron,
+        url_changed,
+    })
 }
 async fn no_custom_triggers(c: &mut PgConnection) -> Result<(), StoreError> {
     let custom:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled<>'D' AND tgrelid IN('epg_epgsource'::regclass,'epg_epgdata'::regclass,'epg_programdata'::regclass,'epg_epgsourceindex'::regclass,'epg_sdprogrammd5'::regclass,'epg_sdschedulemd5'::regclass,'django_celery_beat_periodictask'::regclass,'django_celery_beat_intervalschedule'::regclass,'django_celery_beat_crontabschedule'::regclass,'django_celery_beat_periodictasks'::regclass))").fetch_one(c).await?;
@@ -227,6 +252,54 @@ async fn project(
     }
     Ok(Json(value))
 }
+async fn schedule_timezone(
+    session: &TaskSqlSession,
+    auth: AuthService,
+    cron: &str,
+) -> Result<String, StoreError> {
+    if cron.trim().is_empty() {
+        return Ok("UTC".into());
+    }
+    let settings = session.system_settings(auth).await?;
+    match &settings["time_zone"] {
+        Value::Null => Ok("UTC".into()),
+        Value::String(value) if value.is_empty() => Ok("UTC".into()),
+        Value::String(value) if value.len() <= 255 => Ok(value.clone()),
+        _ => Err(unsupported()),
+    }
+}
+
+async fn schedule_refresh_on_connection(
+    connection: &mut PgConnection,
+    id: i64,
+    active: bool,
+    interval: i32,
+    cron: &str,
+    zone: &str,
+) -> Result<(), StoreError> {
+    let name = format!("epg_source-refresh-{id}");
+    let kwargs = format!("{{\"source_id\": {id}}}");
+    let periodic = crate::provider_schedule::upsert(
+        connection,
+        crate::provider_schedule::Spec {
+            name: &name,
+            task: "apps.epg.tasks.refresh_epg_data",
+            kwargs: &kwargs,
+            interval_hours: interval,
+            cron,
+            active,
+            timezone: zone,
+        },
+    )
+    .await?;
+    let periodic = i32::try_from(periodic).map_err(|_| unsupported())?;
+    sqlx::query("UPDATE epg_epgsource SET refresh_task_id=$2 WHERE id=$1 AND refresh_task_id IS DISTINCT FROM $2")
+        .bind(id)
+        .bind(periodic)
+        .execute(connection)
+        .await?;
+    Ok(())
+}
 async fn schedule_refresh(
     session: &TaskSqlSession,
     id: i64,
@@ -235,30 +308,62 @@ async fn schedule_refresh(
     cron: String,
     zone: String,
 ) -> Result<(), StoreError> {
-    let name = format!("epg_source-refresh-{id}");
-    let kwargs = format!("{{\"source_id\": {id}}}");
-    let periodic = session
-        .run(move |c| {
+    session
+        .run(move |connection| {
             Box::pin(async move {
-                crate::provider_schedule::upsert(
-                    c,
-                    crate::provider_schedule::Spec {
-                        name: &name,
-                        task: "apps.epg.tasks.refresh_epg_data",
-                        kwargs: &kwargs,
-                        interval_hours: interval,
-                        cron: &cron,
-                        active,
-                        timezone: &zone,
-                    },
-                )
-                .await
+                schedule_refresh_on_connection(connection, id, active, interval, &cron, &zone).await
             })
         })
-        .await??;
-    let periodic = i32::try_from(periodic).map_err(|_| unsupported())?;
-    session.run(move|c|Box::pin(async move{sqlx::query("UPDATE epg_epgsource SET refresh_task_id=$2 WHERE id=$1 AND refresh_task_id IS DISTINCT FROM $2").bind(id).bind(periodic).execute(c).await.map(|_|())})).await??;
-    Ok(())
+        .await?
+}
+
+async fn update_remote_url(
+    session: &TaskSqlSession,
+    id: i64,
+    old: Value,
+    new_url: String,
+    interval: i32,
+    cron: String,
+    zone: String,
+) -> Result<(), StoreError> {
+    session
+        .run(move |connection| {
+            Box::pin(async move {
+                let mut transaction = connection.begin().await?;
+                no_custom_triggers(&mut transaction).await?;
+                // Compare the locked current row with the validated snapshot.
+                // A concurrent editor or refresher can keep its newer state.
+                let row: Option<Value> = sqlx::query_scalar(
+                    "SELECT to_jsonb(e) FROM epg_epgsource e WHERE id=$1 FOR UPDATE",
+                )
+                .bind(id)
+                .fetch_optional(&mut *transaction)
+                .await?;
+                if row.ok_or_else(missing)? != old {
+                    return Err(unsupported());
+                }
+                let task = old["refresh_task_id"].as_i64().ok_or_else(unsupported)?;
+                let current: Option<String> = sqlx::query_scalar(
+                    "SELECT COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week),'') FROM django_celery_beat_periodictask p LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=p.crontab_id WHERE p.id=$1 AND p.name=$2 AND p.task='apps.epg.tasks.refresh_epg_data' FOR UPDATE OF p",
+                )
+                .bind(task)
+                .bind(format!("epg_source-refresh-{id}"))
+                .fetch_optional(&mut *transaction)
+                .await?;
+                if current.as_deref() != Some(cron.as_str()) {
+                    return Err(unsupported());
+                }
+                sqlx::query("UPDATE epg_epgsource SET url=$2 WHERE id=$1")
+                    .bind(id)
+                    .bind(new_url)
+                    .execute(&mut *transaction)
+                    .await?;
+                schedule_refresh_on_connection(&mut transaction, id, true, interval, &cron, &zone).await?;
+                transaction.commit().await?;
+                Ok(())
+            })
+        })
+        .await?
 }
 
 async fn dummy_signal(
@@ -433,6 +538,9 @@ pub(super) async fn create_dummy(
         error => error,
     })
 }
+const DETAIL_ALLOW: HeaderValue =
+    HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS");
+
 async fn change(
     auth: AuthService,
     peer: SocketAddr,
@@ -440,7 +548,7 @@ async fn change(
     raw: String,
     body: Body,
     partial: bool,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<(Json<Value>, bool), StoreError> {
     auth.account_user(peer, headers, true).await?;
     let id = key(raw)?;
     let owner: Owner = Arc::new(auth.clone());
@@ -451,13 +559,16 @@ async fn change(
                 sqlx::query("SELECT to_jsonb(e) AS raw,COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,ct.month_of_year,ct.day_of_week),'') AS cron FROM epg_epgsource e LEFT JOIN django_celery_beat_periodictask p ON p.id=e.refresh_task_id LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=p.crontab_id WHERE e.id=$1").bind(id).fetch_optional(c).await
             })).await??.ok_or_else(missing)?;
             let old:Value=row.try_get("raw")?;let old_cron:String=row.try_get("cron")?;
-            let validated=validate(body_object(body)?,&old,&old_cron,partial)?;let saved=validated.saved;let cron=validated.cron;
+            let Validated {saved,cron,url_changed}=validate(body_object(body)?,&old,&old_cron,partial)?;
             let dummy=saved["source_type"]=="dummy";
             if dummy && (!old["refresh_task_id"].is_null() || auth.event_sink.is_none() || !captured_dummy_name_domain(&saved)){return Err(unsupported());}
-            let zone=if !dummy && !cron.trim().is_empty(){
-                let settings=session.system_settings(auth.clone()).await?;
-                match &settings["time_zone"] {Value::Null=>"UTC".into(),Value::String(v)if v.is_empty()=>"UTC".into(),Value::String(v)if v.len()<=255=>v.clone(),_=>return Err(unsupported())}
-            }else{"UTC".into()};
+            let zone=if dummy {"UTC".into()}else{schedule_timezone(&session,auth.clone(),&cron).await?};
+            if url_changed {
+                let url = saved["url"].as_str().ok_or_else(unsupported)?.to_owned();
+                let interval = saved["refresh_interval"].as_i64().and_then(|value| i32::try_from(value).ok()).ok_or_else(unsupported)?;
+                update_remote_url(&session,id,old,url,interval,cron.clone(),zone).await?;
+                return Ok((project(&session,id,Some(cron)).await?,true));
+            }
             let saved_name=saved["name"].as_str().ok_or_else(unsupported)?.to_owned();
             let updated=saved.get("updated_at").cloned().unwrap_or(Value::Null);let updated=parse_datetime("updated_at",&updated,true)?;
             let new_name=saved_name.clone();let new_value=saved.clone();
@@ -475,7 +586,7 @@ async fn change(
                 let active=saved["is_active"].as_bool().ok_or_else(unsupported)?;
                 schedule_refresh(&session,id,active,interval,cron.clone(),zone).await?;
             }
-            project(&session,id,Some(cron)).await
+            Ok((project(&session,id,Some(cron)).await?,false))
         }.await;
         let close = session.close().await;
         let value = outcome?;
@@ -493,7 +604,9 @@ pub(crate) async fn put(
     headers: HeaderMap,
     body: Body,
 ) -> Result<Json<Value>, StoreError> {
-    change(auth, peer, headers, id, body, false).await
+    change(auth, peer, headers, id, body, false)
+        .await
+        .map(|(reply, _)| reply)
 }
 pub(crate) async fn patch(
     State(auth): State<AuthService>,
@@ -501,8 +614,13 @@ pub(crate) async fn patch(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     body: Body,
-) -> Result<Json<Value>, StoreError> {
-    change(auth, peer, headers, id, body, true).await
+) -> Result<Response, StoreError> {
+    let (body, url_changed) = change(auth, peer, headers, id, body, true).await?;
+    let mut response = body.into_response();
+    if url_changed {
+        response.headers_mut().insert(ALLOW, DETAIL_ALLOW);
+    }
+    Ok(response)
 }
 
 async fn delete_files(paths: Vec<String>, owner: Owner) -> Result<(), StoreError> {
@@ -633,6 +751,44 @@ mod tests {
         assert_eq!(v.saved["last_message"], Value::Null);
         assert_eq!(v.saved["is_active"], false);
     }
+    #[test]
+    fn active_xmltv_url_patch_preserves_the_row_and_schedule() {
+        let mut old = old();
+        old["source_type"] = json!("xmltv");
+        old["url"] = json!("https://guide.example.invalid/prior.xml");
+        old["username"] = json!("");
+        old["password"] = json!("");
+        old["is_active"] = json!(true);
+        old["status"] = json!("success");
+        old["file_path"] = json!("/data/cached_epg/owned-prior.xml");
+        old["refresh_task_id"] = json!(14);
+        let cron = "17 4 29 2 *";
+        let request = json!({
+            "name":"Old","source_type":"xmltv","url":"https://guide.example.invalid/replacement.xml",
+            "username":"","password":"","is_active":true,"refresh_interval":0,
+            "cron_expression":cron,"priority":0
+        });
+        let input = request.as_object().unwrap();
+        let updated = validate(input.clone(), &old, cron, true).unwrap();
+        assert!(updated.url_changed);
+        assert_eq!(updated.cron, cron);
+        let mut expected = old.clone();
+        expected["url"] = request["url"].clone();
+        assert_eq!(updated.saved, expected);
+
+        assert!(validate(input.clone(), &old, cron, false).is_err());
+        for (key, value) in [
+            ("url", json!("https://another.example.invalid/guide.xml")),
+            ("name", json!("Renamed")),
+            ("is_active", json!(false)),
+            ("cron_expression", json!("18 4 29 2 *")),
+        ] {
+            let mut extra = input.clone();
+            extra.insert(key.into(), value);
+            assert!(validate(extra, &old, cron, true).is_err(), "{key}");
+        }
+    }
+
     #[test]
     fn patch_preserves_cron_but_full_put_uses_serializer_default() {
         let mut old = old();

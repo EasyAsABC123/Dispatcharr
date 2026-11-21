@@ -1,7 +1,7 @@
 //! Stock bounded remote XMLTV form and its pinned Source post-save ordering.
 use super::{
-    character, field, no_custom_triggers, nullable_character, project, schedule_refresh, validate,
-    AuthService, Owner, StoreError,
+    character, field, no_custom_triggers, nullable_character, project, schedule_refresh,
+    schedule_timezone, validate, AuthService, Owner, StoreError,
 };
 use crate::{
     provider_account_writes::ordinary_provider_http_url, sd_source_http::InitialXmltvRefresh,
@@ -17,20 +17,15 @@ struct Input {
     password: Option<String>,
     active: bool,
     interval_hours: i32,
+    cron: String,
 }
 
 fn unsupported() -> StoreError {
     StoreError::Unsupported("This remote XMLTV creation variant has not been migrated")
 }
 
-fn form(value: &Value) -> Result<Input, StoreError> {
-    let mut input = value.as_object().ok_or_else(unsupported)?.clone();
-    let url = character(
-        "url",
-        input.get("url").ok_or_else(unsupported)?,
-        Some(1000),
-        false,
-    )?;
+pub(super) fn remote_url(value: &Value) -> Result<String, StoreError> {
+    let url = character("url", value, Some(1000), false)?;
     // Preserve the actual Source text. This guarded subset cannot silently
     // accept a different scheme, credentials, fragments or parser rewriting.
     if !url.is_ascii()
@@ -43,6 +38,12 @@ fn form(value: &Value) -> Result<Input, StoreError> {
     {
         return Err(unsupported());
     }
+    Ok(url)
+}
+
+fn form(value: &Value) -> Result<Input, StoreError> {
+    let mut input = value.as_object().ok_or_else(unsupported)?.clone();
+    let url = remote_url(input.get("url").ok_or_else(unsupported)?)?;
     input.insert("url".into(), json!(&url));
 
     let username = input
@@ -83,8 +84,7 @@ fn form(value: &Value) -> Result<Input, StoreError> {
         .and_then(|hours| i32::try_from(hours).ok())
         .filter(|hours| *hours >= 0)
         .ok_or_else(unsupported)?;
-    if !checked.cron.is_empty()
-        || !saved["file_path"].is_null()
+    if !saved["file_path"].is_null()
         || saved["priority"] != 0
         || saved["status"] != "idle"
         || !saved["last_message"].is_null()
@@ -99,6 +99,7 @@ fn form(value: &Value) -> Result<Input, StoreError> {
         password: password.as_str().map(str::to_owned),
         active: saved["is_active"].as_bool().ok_or_else(unsupported)?,
         interval_hours,
+        cron: checked.cron,
     })
 }
 
@@ -111,6 +112,7 @@ pub(crate) async fn create_xmltv(
     let input = form(value)?;
     let active = input.active;
     let interval_hours = input.interval_hours;
+    let cron = input.cron;
     let result = async {
         let session = auth.borrow_task_sql_session(owner.clone()).await?;
         let created = async {
@@ -132,23 +134,23 @@ pub(crate) async fn create_xmltv(
             })).await??;
             // Source serializes the created object, even when the newly
             // published worker updates status before the response is sent.
-            let reply = project(&session, id, Some(String::new())).await?.0;
+            let reply = project(&session, id, Some(cron.clone())).await?.0;
             Ok::<_, StoreError>((id, reply))
         }.await;
         let (id, mut reply) = close_result(&session, created).await?;
 
         // The row was committed before post_save. The first receiver submits
         // the active root; only the next receiver writes and links the schedule.
-        // A zero interval disables recurrence but still runs this first import.
+        // A cron or positive interval controls recurrence. An active source
+        // always gets the first import.
         // An unconfirmed root is never submitted again or hidden by rollback.
         if active {
             publisher.publish_initial(id, owner.clone()).await?;
         }
         let session = auth.borrow_task_sql_session(owner).await?;
         let scheduled = async {
-            schedule_refresh(
-                &session, id, active, interval_hours, String::new(), "UTC".into()
-            ).await?;
+            let zone = schedule_timezone(&session, auth.clone(), &cron).await?;
+            schedule_refresh(&session, id, active, interval_hours, cron, zone).await?;
             // SerializerMethodField counts related rows at response time; the
             // newly published worker may already have discovered the guide.
             let count: i64 = session.run(move |connection| Box::pin(async move {
@@ -205,6 +207,19 @@ mod tests {
     }
 
     #[test]
+    fn stock_remote_xmltv_cron_is_retained_with_zero_interval() {
+        for active in [true, false] {
+            let mut request = stock(active);
+            request["refresh_interval"] = json!(0);
+            request["cron_expression"] = json!("17 4 29 2 *");
+            let parsed = form(&request).unwrap();
+            assert_eq!(parsed.interval_hours, 0);
+            assert_eq!(parsed.cron, "17 4 29 2 *");
+            assert_eq!(parsed.active, active);
+        }
+    }
+
+    #[test]
     fn broader_remote_source_variants_remain_gated() {
         for (key, value) in [
             ("url", json!("ftp://guide-host/guide.xml")),
@@ -212,7 +227,7 @@ mod tests {
             ("url", json!("http://guide-host/guide.xml#fragment")),
             ("url", json!("http://guide-\thost/guide.xml")),
             ("file_path", json!("/data/guide.xml")),
-            ("cron_expression", json!("0 1 * * *")),
+            ("cron_expression", json!("0 1 * *")),
             ("refresh_interval", json!(-1)),
             ("password", json!("fixture-not-supported")),
             ("custom_properties", json!({"auto_apply_epg_logos": true})),

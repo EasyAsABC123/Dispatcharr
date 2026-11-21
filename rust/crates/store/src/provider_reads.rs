@@ -6,7 +6,7 @@ use crate::{
 };
 use axum::{
     extract::{ConnectInfo, Path, State},
-    http::HeaderMap,
+    http::{header::ALLOW, HeaderMap, HeaderValue, Method},
     routing::get,
     Json, Router,
 };
@@ -405,7 +405,25 @@ macro_rules! endpoints {
 }
 endpoints!(accounts, account_detail, Accounts);
 endpoints!(server_groups, server_group, ServerGroups);
-endpoints!(epg_sources, epg_source, EpgSources);
+endpoints!(epg_sources, epg_source_detail, EpgSources);
+
+async fn epg_source(
+    auth: State<AuthService>,
+    id: Path<String>,
+    peer: ConnectInfo<SocketAddr>,
+    method: Method,
+    headers: HeaderMap,
+) -> Result<(HeaderMap, Json<Value>), StoreError> {
+    let body = epg_source_detail(auth, id, peer, headers).await?;
+    let mut response = HeaderMap::new();
+    if method == Method::GET {
+        response.insert(
+            ALLOW,
+            HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
+        );
+    }
+    Ok((response, body))
+}
 endpoints!(epg_data, epg_entry, EpgData);
 struct ProviderJsonFormatter;
 impl serde_json::ser::Formatter for ProviderJsonFormatter {
