@@ -416,6 +416,24 @@ pub(crate) fn expiration(value: &Value) -> Option<DateTime<Utc>> {
                 .and_hms_opt(0, 0, 0)
                 .map(|v| v.and_utc())
         })
+        .or_else(|| {
+            // Python fromisoformat also accepts a minute without seconds.
+            // Admit that shape through the existing Source ISO parser.
+            let suffix = s.get(16..)?;
+            let bytes = s.as_bytes();
+            if bytes[4] != b'-'
+                || bytes[7] != b'-'
+                || !matches!(bytes[10], b'T' | b' ')
+                || bytes[13] != b':'
+                || !matches!(suffix.as_bytes().first(), None | Some(b'Z' | b'+' | b'-'))
+            {
+                return None;
+            }
+            let parsed = crate::epg_grid_iso::datetime(s)?;
+            DateTime::from_timestamp_micros(
+                parsed.local.and_utc().timestamp_micros() - parsed.offset_micros,
+            )
+        })
         .filter(|v| (1..=9999).contains(&v.year()))
 }
 
@@ -582,6 +600,31 @@ mod source_controls {
             1,
         )
         .is_err());
+    }
+    #[test]
+    fn expiration_accepts_source_minute_precision_without_replacing_invalid_dates() {
+        // Pinned Original M3UAccountProfile._parse_exp_date and Django UTC.
+        let vectors = [
+            ("2031-06-02T16:25+05:30", Some(1938164100)),
+            ("2031-06-02T16:25-03:30", Some(1938196500)),
+            ("2031-06-02 16:25+0530", Some(1938164100)),
+            ("2031-06-02T16:25+05", Some(1938165900)),
+            ("2031-06-02T16:25Z", Some(1938183900)),
+            ("2031-06-02 16:25", Some(1938183900)),
+            ("2031-06-02T16:25", Some(1938183900)),
+            ("2031-02-29T16:25Z", None),
+            ("2031-06-02T25:25Z", None),
+            ("2031-06-02T16:61+00:00", None),
+            ("2031-06-02T16:25+24:00", None),
+            ("2031-06-02T16:25invalid", None),
+        ];
+        for (value, expected) in vectors {
+            assert_eq!(
+                expiration(&json!(value)).map(|date| date.timestamp()),
+                expected,
+                "{value}"
+            );
+        }
     }
     #[test]
     fn provider_auth_zero_expired_is_still_source_success_when_user_info_is_truthy() {

@@ -49,6 +49,41 @@ fn detail_read_id(mut raw: String, path: &str) -> Result<(String, bool), StoreEr
     }
 }
 
+fn explicit_json_indent(accept: &str) -> Option<usize> {
+    let mut selected = None::<(u8, Option<&str>)>;
+    for range in accept.split(',') {
+        let (media, parameters) = range.split_once(';').unwrap_or((range, ""));
+        let media = media.trim();
+        let rank = match media {
+            "*/*" => 0,
+            media if media.eq_ignore_ascii_case("application/*") => 1,
+            media if media.eq_ignore_ascii_case("application/json") => 2,
+            _ => continue,
+        };
+        let mut has_non_quality_parameter = false;
+        let mut indent = None;
+        for (name, value) in parameters
+            .split(';')
+            .filter_map(|part| part.split_once('='))
+        {
+            let name = name.trim();
+            has_non_quality_parameter |= !name.eq_ignore_ascii_case("q");
+            if name.eq_ignore_ascii_case("indent") {
+                indent = Some(value);
+            }
+        }
+        // Source ranks wildcard type, wildcard subtype, exact and
+        // parameterized exact ranges. Compact JSON is a selected result.
+        let rank = rank + u8::from(rank == 2 && has_non_quality_parameter);
+        if selected.is_none_or(|(previous, _)| rank > previous) {
+            selected = Some((rank, indent));
+        }
+    }
+    selected
+        .and_then(|(_, indent)| indent)
+        .and_then(crate::vod_api_draft::json_indent_value)
+}
+
 fn negotiate_read_json(
     uri: &Uri,
     headers: &HeaderMap,
@@ -61,6 +96,9 @@ fn negotiate_read_json(
             .filter(|(key, _)| key == "format")
             .last()
             .is_some_and(|(_, value)| value == "json");
+    let accept = headers
+        .get(header::ACCEPT)
+        .and_then(|accept| accept.to_str().ok());
     if explicit_json {
         crate::epg_program_http::json_negotiation(headers, &Uri::from_static("/?format=json"))
             .map_err(|error| {
@@ -73,19 +111,17 @@ fn negotiate_read_json(
                     error
                 }
             })?;
+        return Ok(accept.and_then(explicit_json_indent));
     }
-    let indent = headers
-        .get(header::ACCEPT)
-        .and_then(|accept| accept.to_str().ok())
-        .and_then(|accept| {
-            accept.split(',').find_map(|range| {
-                let (media, _) = range.split_once(';')?;
-                if !media.trim().eq_ignore_ascii_case("application/json") {
-                    return None;
-                }
-                crate::vod_api_draft::json_indent_for_range(range)
-            })
-        });
+    let indent = accept.and_then(|accept| {
+        accept.split(',').find_map(|range| {
+            let (media, _) = range.split_once(';')?;
+            if !media.trim().eq_ignore_ascii_case("application/json") {
+                return None;
+            }
+            crate::vod_api_draft::json_indent_for_range(range)
+        })
+    });
     Ok(indent)
 }
 
@@ -441,6 +477,25 @@ mod read_format_tests {
             Err(StoreError::StatusBody(406, _))
         ));
         assert!(negotiate_read_json(&Uri::from_static("/"), &headers, false).is_ok());
+    }
+
+    #[test]
+    fn explicit_profile_json_selects_source_media_precedence_and_compact() {
+        let uri = Uri::from_static("/api/channels/profiles.json");
+        let cases = [
+            ("application/*; indent=2", Some(2)),
+            ("*/*; indent=3", Some(3)),
+            ("application/json, application/*; indent=2", None),
+            ("application/json; indent = 2", Some(2)),
+            ("application/json; indent=0", None),
+            ("application/json; indent=-1", None),
+            ("text/html, application/json; indent=4", Some(4)),
+        ];
+        let mut headers = HeaderMap::new();
+        for (accept, expected) in cases {
+            headers.insert(header::ACCEPT, HeaderValue::from_static(accept));
+            assert_eq!(negotiate_read_json(&uri, &headers, true).unwrap(), expected);
+        }
     }
 
     #[tokio::test]

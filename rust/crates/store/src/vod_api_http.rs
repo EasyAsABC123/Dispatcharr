@@ -303,17 +303,20 @@ pub(crate) fn json_indent_for_range(raw: &str) -> Option<usize> {
     for part in raw.split(';').skip(1) {
         let (key, value) = part.trim().split_once('=')?;
         if key.eq_ignore_ascii_case("indent") {
-            let number =
-                dispatcharr_ingest_core::source_integer_literal(value.trim().trim_matches('"'))?;
-            let selected = number
-                .parse::<i64>()
-                .map(|n| n.clamp(0, 8) as usize)
-                .unwrap_or(if number.starts_with('-') { 0 } else { 8 });
-            return (selected != 0).then_some(selected);
+            return json_indent_value(value);
         }
     }
     None
 }
+pub(crate) fn json_indent_value(value: &str) -> Option<usize> {
+    let number = dispatcharr_ingest_core::source_integer_literal(value.trim().trim_matches('"'))?;
+    let selected = number
+        .parse::<i64>()
+        .map(|n| n.clamp(0, 8) as usize)
+        .unwrap_or(if number.starts_with('-') { 0 } else { 8 });
+    (selected != 0).then_some(selected)
+}
+
 pub(crate) fn pretty_document(
     input: &[u8],
     indent: usize,
