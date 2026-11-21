@@ -1,0 +1,127 @@
+{
+  "actual_exit": 0,
+  "approved_review_sha256": "2d71512bcb0fc02f1894f44eb19e6d92a2ccee05e5bd8d01582a01c7db3e7eaf",
+  "both_POST_Allow_headers_match_each_backend": true,
+  "candidate_image_id": "sha256:7356d07995d1613c30b91f87535c302ff445f8c8c961b2234744ebdd44a9d98e",
+  "candidate_revision": "f2db61e5072f86d4215c5d71d44e2a899257f64f",
+  "checked_terminal_sha256": "9f3b67749375143fef6a622e3787c8b1f502bce9e38de562e1391896cb8a6b0a",
+  "credits": "All application and behavior credit belongs to the original Dispatcharr authors and contributors.",
+  "full_M0_accepted": false,
+  "full_M5_or_M7_accepted": false,
+  "generated_guide_output_exercised": false,
+  "literal_POST_Allow": {
+    "native": [
+      "POST, OPTIONS",
+      "POST, OPTIONS"
+    ],
+    "original": [
+      "POST, OPTIONS",
+      "POST, OPTIONS"
+    ]
+  },
+  "manifest_sha256": "2c650caa355601ad6129823e7ffa1955a8a276ca36cccd78076d84994b82f189",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owned_cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "paired_effects": {
+    "cases": [
+      {
+        "action": "assign-local-dummy",
+        "after_SQL_sha256": "aacefbda4c3bf18932a4779d2ecca0f0bdec63a98a79b1933b1bd79ee823799e",
+        "before_SQL_sha256": "ec10f86d1c030879977ebddc2f4aa49175ac5417e930ff655cc410acf35a0a40",
+        "ordered_details": [
+          {
+            "both_raw_and_effective": "assign-local-dummy",
+            "detail": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "kind": "managed",
+            "media_and_overlay_preserved": true
+          },
+          {
+            "both_raw_and_effective": "assign-local-dummy",
+            "detail": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "kind": "manual",
+            "media_and_overlay_preserved": true
+          }
+        ],
+        "post": {
+          "allow": "POST, OPTIONS",
+          "mime": "application/json",
+          "status": 200
+        },
+        "typed": {
+          "channels_updated": 2,
+          "programs_refreshed": 0,
+          "success": true
+        }
+      },
+      {
+        "action": "clear-explicit-null",
+        "after_SQL_sha256": "ec10f86d1c030879977ebddc2f4aa49175ac5417e930ff655cc410acf35a0a40",
+        "before_SQL_sha256": "aacefbda4c3bf18932a4779d2ecca0f0bdec63a98a79b1933b1bd79ee823799e",
+        "ordered_details": [
+          {
+            "both_raw_and_effective": "clear-explicit-null",
+            "detail": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "kind": "managed",
+            "media_and_overlay_preserved": true
+          },
+          {
+            "both_raw_and_effective": "clear-explicit-null",
+            "detail": {
+              "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+              "mime": "application/json",
+              "status": 200
+            },
+            "kind": "manual",
+            "media_and_overlay_preserved": true
+          }
+        ],
+        "post": {
+          "allow": "POST, OPTIONS",
+          "mime": "application/json",
+          "status": 200
+        },
+        "typed": {
+          "channels_updated": 2,
+          "programs_refreshed": 0,
+          "success": true
+        }
+      }
+    ],
+    "no_cache_generation_or_queue_depth_change": true,
+    "no_remote_or_imported_guide": true,
+    "raw_body_or_credentials_retained": false,
+    "same_unchanged_fixture_after_clear": true
+  },
+  "paired_freeze_sha256": "b8160a61ab03baff76178ba880e65a8e16dd80e758f4cfdc7883827fdd69ad44",
+  "paired_receipt_sha256": "14734048f7f6b9558ff57c73fb41a68eb191687b55d70cb895683c4dd925f545",
+  "performance_verified": false,
+  "previous_Physical_missing_POST_Allow_receipt_sha256": "96c9213b7733dcf0434db7f7b622984489eb24abad0fffcdc98890cd3cc60432",
+  "previous_Physical_missing_POST_Allow_verified": true,
+  "previous_app_revision": "a33cf4cc8af0a7753592fc7cca643a73d758c037",
+  "scope": "normal React Batch Set EPG dummy assignment and explicit null clear"
+}
