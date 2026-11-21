@@ -17,6 +17,32 @@ fixtures, and expose unimplemented cells as blockers. Narrow tests diagnose
 failures; they are no longer the unit of delivery. The rows below remain a
 capability inventory and historical component checkpoint.
 
+## Current acceptance on fdede54c
+
+The current packaged application is `fdede54c`. The paired Store, VOD, and
+export workflows below completed on its exact image. The React asset and
+attribution inputs were checked during packaging. The earlier `2581d75b`
+required-node receipts remain tied to that package.
+
+| Milestone | Verified scope and remaining acceptance |
+| --- | --- |
+| M0 | The stock resolver selected the explicit route in 12 ordinary recording cases. Complete executable role and method coverage remains open. [Recording route evidence](rust-m0-recording-hls-router-reachability.md) |
+| M1 | The shared stream and retained-history owners have executable scopes. The latest Main repeat and ordinary slow-reader capacity observation remain open. |
+| M2 | The current short and six-minute runs served ten simultaneous viewers through one upstream. The current 100-viewer functional repeat and matched resource comparison remain open. [Earlier 100-viewer measurements](rust-m2-100-viewer-measured.md) |
+| M3 | Shared HLS and fMP4 evidence remains bound to the prior package. The current shared-format checks and broader profile acceptance remain open. |
+| M4 | Two complete A/V reads and natural retirement passed on the same VOD session. Timeshift and the wider lifecycle acceptance remain open. [Current VOD evidence](rust-m4-fdede54c-vod-same-client-reconnect.md) |
+| M5 | Group Manager OPTIONS and ordinary Channel response order have paired evidence. Wider account, settings, and route coverage remains open. [Current Channel evidence](rust-m5-fdede54c-channel-json-order.md) |
+| M6 | Default Main XC deactivation matched the schedule and notification effects with zero admissions. The complete default worker and scheduler graph remains open. [Current deactivation evidence](rust-m6-fdede54c-xc-deactivation.md) |
+| M7 | Current M3U, XMLTV, programme Grid, and Xtream exports passed. Full protocol, realtime, and integration acceptance remains open. [Current export evidence](rust-m7-fdede54c-ordinary-exports.md) |
+| M8 | Private Main preserved the saved value and signed session across restart. Wider admin capabilities, plugin behavior, and operational acceptance remain open. [Private admin evidence](rust-m8-2581-private-admin-settings-restart.md) |
+| M9 | The current short and prefix stages passed. The current two-hour result, required matrix, strict cold rollback, and final matched-work performance comparison remain open. [Current soak admission](rust-m9-fdede54c-canonical-soak-short-prefix.md) |
+| M10 | The native ARM64 PostgreSQL helper, standalone pinned Comskip smoke, and donor library inventory passed. Full ARM64 package and controlled rollout remain open. [Native donor inventory](rust-m10-native-arm64-comskip-donor-inventory.md) |
+| M11 | The default switch and operator handoff depend on release acceptance and a rollout decision. |
+
+The original Dispatcharr authors and dependency contributors retain full credit.
+
+## Historical checkpoints
+
 Current implementation and executable coverage are reconciled in the
 [worker graph](rust-default-worker-graph.md) and
 [47-declaration producer review](rust-source-task-coverage.md). Candidate38
