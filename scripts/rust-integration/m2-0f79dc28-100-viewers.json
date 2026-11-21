@@ -1,0 +1,44 @@
+{
+  "additional_required_workflows_qualified": 0,
+  "arms": [
+    {
+      "backend": "source",
+      "maximum_simultaneous_upstreams": 1,
+      "minimum_video_frames": 72,
+      "new_upstream_connections_per_arm": 1,
+      "upstream_active_after_retirement": 0,
+      "viewers": 100,
+      "viewing_window_seconds": 5,
+      "warmup_seconds": 5
+    },
+    {
+      "backend": "candidate",
+      "maximum_simultaneous_upstreams": 1,
+      "minimum_video_frames": 124,
+      "new_upstream_connections_per_arm": 1,
+      "upstream_active_after_retirement": 0,
+      "viewers": 100,
+      "viewing_window_seconds": 5,
+      "warmup_seconds": 5
+    }
+  ],
+  "candidate_revision": "0f79dc28f8718a05a6b28dc554be958e3e295b47",
+  "controller_phase_exits": {
+    "execution": 0,
+    "preflight": 0,
+    "verification": 0
+  },
+  "credits": "The original Dispatcharr authors and contributors retain full application and protocol credit.",
+  "exact_retired_roles": 5,
+  "formal_m2_accepted": false,
+  "fresh_concurrent_authenticated_readers_per_backend": 100,
+  "image_id": "sha256:85921973356eb8608b68988911485030e323c1ca851e7ca06d83ea6ef2b31024",
+  "literal_controller_exit": 0,
+  "manifest_sha256": "e4907ce1821201b0d299878df0c5c5a715e461ce00c510c0def4a422a19dcbc8",
+  "one_origin_during_overlap": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false,
+  "positive_media_progress_and_A_V_decode_per_backend": 100,
+  "raw_receipt_sha256": "6230cdcbd295c134837dcc434c30a6f3e1711009f7a525fd3f1e5be63116b330",
+  "teardown_project_empty": true
+}
