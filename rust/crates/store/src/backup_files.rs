@@ -1,6 +1,6 @@
 //! Job-free original backup HTTP/filesystem contracts. Original authors retain AGPL credit.
 //! Optional explicit shared create/status/current-schema restore adapter. No worker starts here.
-use crate::{AuthService, StoreError};
+use crate::{channels::channel_options_headers, AuthService, StoreError};
 use axum::{
     body::{Body, Bytes},
     extract::{ConnectInfo, FromRequest, Multipart, Request, State},
@@ -492,7 +492,7 @@ impl BackupFiles {
             _ => return Ok(reply(404, "Not found.")),
         };
         if request.method() == Method::OPTIONS {
-            return Ok(self.options(kind));
+            return Ok(backup_options(kind, &allowed));
         }
         if request.method() != allowed {
             let mut response = reply(405, format!("Method \"{}\" not allowed.", request.method()));
@@ -737,10 +737,6 @@ impl BackupFiles {
         }
         Ok(response)
     }
-    fn options(&self, kind: &str) -> Response {
-        let(name,description)=match kind{"list"=>("List Backups","List all available backup files."),"download"=>("Download Backup","Download a backup file.\n\nRequires either:\n- Valid admin authentication, OR\n- Valid download_token query parameter"),_=>return reply(501,"Backup metadata contract is not migrated")};
-        Json(json!({"name":name,"description":description,"renders":["application/json","text/html"],"parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]})).into_response()
-    }
     async fn schedule(&self) -> Result<Response, StoreError> {
         let raw: Option<Option<Value>> =
             sqlx::query_scalar("SELECT value FROM core_coresettings WHERE key='backup_settings'")
@@ -971,6 +967,46 @@ impl BackupFiles {
         })
     }
 }
+fn backup_options(kind: &str, method: &Method) -> Response {
+    let (name, description) = match kind {
+        "list" => ("List Backups", "List all available backup files."),
+        "download" => ("Download Backup", "Download a backup file.\n\nRequires either:\n- Valid admin authentication, OR\n- Valid download_token query parameter"),
+        "create" => ("Create Backup", "Create a new backup (async via Celery)."),
+        "upload" => ("Upload Backup", "Upload a backup file for restoration."),
+        "schedule" => ("Get Schedule", "Get backup schedule settings."),
+        "schedule-update" => ("Update Schedule", "Update backup schedule settings."),
+        "status" => ("Backup Status", "Check the status of a backup/restore task.\n\nRequires either:\n- Valid admin authentication, OR\n- Valid task_token query parameter"),
+        "download-token" => ("Get Download Token", "Get a signed token for downloading a backup file."),
+        "delete" => ("Delete Backup", "Delete a backup file."),
+        "restore" => ("Restore Backup", "Restore from a backup file (async via Celery). WARNING: This will flush the database!"),
+        _ => return reply(404, "Not found."),
+    };
+    let allow = match *method {
+        Method::GET => "OPTIONS, GET",
+        Method::POST => "OPTIONS, POST",
+        Method::PUT => "OPTIONS, PUT",
+        Method::DELETE => "OPTIONS, DELETE",
+        _ => return reply(404, "Not found."),
+    };
+    let parsers: &[&str] = if kind == "upload" {
+        &["multipart/form-data", "application/x-www-form-urlencoded"]
+    } else {
+        &[
+            "application/json",
+            "application/x-www-form-urlencoded",
+            "multipart/form-data",
+        ]
+    };
+    let response = Json(json!({
+        "name": name,
+        "description": description,
+        "renders": ["application/json", "text/html"],
+        "parses": parsers,
+    }))
+    .into_response();
+    channel_options_headers(response, HeaderValue::from_static(allow))
+}
+
 async fn handle(
     State(state): State<BackupFiles>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,

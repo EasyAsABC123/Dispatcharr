@@ -517,3 +517,41 @@ fn filename_decoding_keeps_query_delimiters_literal_and_decodes_once() {
     assert_eq!(decode_filename("amp%26plus%2B%3D.zip"), "amp&plus+=.zip");
     assert_eq!(decode_filename("literal%2526.zip"), "literal%26.zip");
 }
+
+#[tokio::test]
+async fn backup_options_advertises_the_route_method_and_parser_classes() {
+    for (kind, method, allow) in [
+        ("list", Method::GET, "OPTIONS, GET"),
+        ("create", Method::POST, "OPTIONS, POST"),
+        ("upload", Method::POST, "OPTIONS, POST"),
+        ("schedule", Method::GET, "OPTIONS, GET"),
+        ("schedule-update", Method::PUT, "OPTIONS, PUT"),
+        ("status", Method::GET, "OPTIONS, GET"),
+        ("download-token", Method::GET, "OPTIONS, GET"),
+        ("download", Method::GET, "OPTIONS, GET"),
+        ("delete", Method::DELETE, "OPTIONS, DELETE"),
+        ("restore", Method::POST, "OPTIONS, POST"),
+    ] {
+        let response = backup_options(kind, &method);
+        assert_eq!(response.status(), StatusCode::OK, "{kind}");
+        assert_eq!(response.headers()["allow"], allow, "{kind}");
+        assert_eq!(response.headers()["vary"], "Accept", "{kind}");
+        let body = axum::body::to_bytes(response.into_body(), 8192)
+            .await
+            .unwrap();
+        let body: Value = serde_json::from_slice(&body).unwrap();
+        assert_eq!(body["renders"], json!(["application/json", "text/html"]));
+        assert_eq!(
+            body["parses"],
+            if kind == "upload" {
+                json!(["multipart/form-data", "application/x-www-form-urlencoded"])
+            } else {
+                json!([
+                    "application/json",
+                    "application/x-www-form-urlencoded",
+                    "multipart/form-data"
+                ])
+            }
+        );
+    }
+}
