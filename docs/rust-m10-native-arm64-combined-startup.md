@@ -1,0 +1,7 @@
+# Private ARM64 image assembly and Compose startup on d426
+
+Two hosted native ARM64 attempts assembled all nine scoped components and reached the same-job Compose stage. Both verified the isolated topology, a fresh empty PostgreSQL database, and the expected exit with initialization disabled. Their Compose and overall controllers exited 1 and both exact cleanup checks passed. [First hosted attempt](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44881460987/job/136777460796) · [Digest-bound receipts](../scripts/rust-integration/m10-native-arm64-d426-compose-startup.json)
+
+The second attempt retained the private 34,618-file image assembly receipt and an actual zero exit from the same image's non-root wrapper smoke. It kept the original database, cache, and initialization roles and replaced only the intentional initialization-off candidate. The enabled Main process reported schema creation, exited 1 without an OOM indication, and failed the checkpoint for obtaining the HTTP endpoint. The retained startup categories did not identify the reason for the exit. [Instrumented hosted retry](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44883627069/job/136784079885)
+
+The Compose campaign still needs a ready Main, first-admin login and restart, two live stream readers, and one shared upstream with both media decodes. Neither attempt qualifies full ARM64 application packaging, performance, or distribution. Full credit belongs to the original Dispatcharr authors and dependency contributors. [Original attribution](../ATTRIBUTION.md)

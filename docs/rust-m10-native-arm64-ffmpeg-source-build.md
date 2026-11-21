@@ -1,0 +1,7 @@
+# Native ARM64 FFmpeg source rebuild
+
+The exact public Dispatcharr FFmpeg source recipe built successfully on native ARM64 using the verified historical Ubuntu base, nine upstream source archives, and all 312 binaries in the signed APT lock. The job built with network access disabled after staging the verified inputs. The container and private images retired. The build, guest, and controller all exited 0. The workflow uploaded only text evidence. [Native ARM64 hosted job](https://github.com/EasyAsABC123/Dispatcharr/actions/runs/44885655023/job/136790248212) · [Signed APT closure](rust-m10-arm64-ffmpeg-apt-closure.md) · [Digest-bound receipt](../scripts/rust-integration/m10-native-arm64-ffmpeg-source-build.json)
+
+The non-root guest verified both AArch64 executables, the exact configure line, 25 runtime package versions, 55 shared-library SONAMEs per executable, and 62 Original notice and configuration hashes. The rebuilt tools generated an MPEG-TS with software H.264 and stripped FDK AAC, probed its streams, and decoded both tracks. Both executable SHA-256 values differ from Original. This qualifies the source-built tools for the measured software-media scope and leaves hardware acceleration, application Compose integration, and distribution qualification open. [Original binary and source provenance](rust-m10-native-arm64-ffmpeg-source-notices.md)
+
+Full credit belongs to the original Dispatcharr authors, FFmpeg developers, Canonical and Ubuntu contributors, and all dependency authors. [Original attribution](../ATTRIBUTION.md)
