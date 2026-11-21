@@ -24,9 +24,14 @@ export workflows below completed on its exact image. The React asset and
 attribution inputs were checked during packaging. The earlier `2581d75b`
 required-node receipts remain tied to that package.
 
+The newer application `814b9403` passed the default Main Standard provider
+cadence edit and four ordinary Core backup schedule boots. The 14 required
+Compose passes below apply to `fdede54c`. The broader matrix for the new
+package requires fresh evidence. [Rust cadence](rust-m6-ordinary-active-std-cadence.md) · [Core backup startup](rust-m8-814b9403-core-backup-startup.md)
+
 | Milestone | Verified scope and remaining acceptance |
 | --- | --- |
-| M0 | The stock resolver selected the explicit route in 12 ordinary recording cases. Complete executable role and method coverage remains open. [Recording route evidence](rust-m0-recording-hls-router-reachability.md) |
+| M0 | Stock selected the explicit route in 12 ordinary recording cases. Original and Rust matched four canonical Standard and Admin Channel Profile reads. Stock verified 16 JSON-format reads. Native suffixes and complete executable role and method coverage remain open. [Recording routes](rust-m0-recording-hls-router-reachability.md) · [Channel Profile reads](rust-m0-fdede54c-channel-profile-reads.md) |
 | M1 | Shared-stream disconnect and operator stop, bounded history reads, and the paced-reader observation passed on the current image. Broader lifecycle and buffer acceptance remain open. [Current M1 functional evidence](rust-m1-fdede54c-ordinary-shared-retention.md) |
 | M2 | At 100 simultaneous authenticated viewers per backend, both decoded A/V and held one active upstream connection. Matched resource comparison remains open. [Current 100-viewer run](rust-m2-fdede54c-functional100.md) · [Earlier performance measurements](rust-m2-100-viewer-measured.md) |
 | M3 | The current package served two concurrent viewers with one upstream in each HLS and fragmented MP4 run. Both decoded A/V. Broader profile acceptance remains open. [HLS](rust-m3-fdede54c-ordinary-hls.md) · [Fragmented MP4](rust-m3-fdede54c-ordinary-fmp4.md) |
@@ -36,7 +41,7 @@ required-node receipts remain tied to that package.
 | M7 | Current M3U, XMLTV, programme Grid and Xtream exports passed, along with ordinary playback through an HDHomeRun advertised URL. Full protocol, realtime and integration acceptance remain open. [Exports](rust-m7-fdede54c-ordinary-exports.md) · [HDHomeRun](rust-m7-fdede54c-ordinary-hdhr-playback.md) |
 | M8 | Private Main preserved the saved value and signed session across restart. The stock and Rust AIO observations share the login redirect destination and differ in Location header spelling. Wider admin, plugin and operational acceptance remain open. [Private admin](rust-m8-2581-private-admin-settings-restart.md) · [AIO login](rust-m8-stock-aio-admin-login.md) |
 | M9 | The `fdede54c` two-hour soak, 14 of 127 required Compose checks and copied-data warm fallback passed. The complete required matrix, strict cold rollback and matched-work performance comparison remain open. [Two-hour soak](rust-m9-fdede54c-canonical-soak-full.md) · [Required Compose tally](rust-m9-fdede54c-ordinary-browser-pair.md) · [Warm fallback](rust-m9-fdede54c-warm-copied-rollback.md) |
-| M10 | Native ARM64 Rust, unchanged React packaging, standalone media, PostgreSQL tooling, the Debian regex bridge, GPG parser and exact DRF static export passed scoped checks. Full ARM64 packaging and controlled rollout remain open. [Rust](rust-m10-native-arm64-rust-build.md) · [React](rust-m10-native-arm64-node-frontend.md) · [GPG](rust-m10-native-arm64-gpg-debian.md) · [DRF static](rust-m10-native-arm64-drf-static.md) |
+| M10 | Native ARM64 Rust, unchanged React packaging, standalone media, PostgreSQL tooling, the GPG parser, the Debian Python dependency host and exact DRF static export passed scoped checks. Integrated package, plugin execution and controlled rollout remain open. [Rust](rust-m10-native-arm64-rust-build.md) · [React](rust-m10-native-arm64-node-frontend.md) · [Python host](rust-m10-native-arm64-python-host-debian.md) |
 | M11 | The default switch and operator handoff depend on release acceptance and a rollout decision. |
 
 The original Dispatcharr authors and dependency contributors retain full credit.

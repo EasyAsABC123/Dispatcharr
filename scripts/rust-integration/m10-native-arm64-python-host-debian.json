@@ -1,0 +1,104 @@
+{
+  "Debian_OCI": {
+    "config": "sha256:5b6c2c6cbc90b6085e3f9b3086110b1eccedb643374137bfdcd1d2f5c78f6cd1",
+    "exact_debian_layers": 1,
+    "manifest": "sha256:ec8534cda2cb30f29f44f23e135297af7a1496f2990fd8e4e84aa36b081a757a",
+    "platform": "linux/arm64"
+  },
+  "Original_OCI": {
+    "OCI_diffid_SHA256": "6fb7a5b77449c48fdf92aeb9eb8ec812b1902af77a8a8d57b22da02e2f934b39",
+    "OCI_layers": 17,
+    "config": "sha256:aa357ada16661964a9af41fe289964ae8008460b60efcdbbad60c4383e7d3b43",
+    "descriptor_reported_by_engine": false,
+    "donor": "ghcr.io/dispatcharr/dispatcharr@sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "manifest": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "native_platform": "linux/arm64"
+  },
+  "bound_native_inputs": {
+    "artifact_sha256": "71bc4c8e06d905df51604c6465c86ac5902e2b34d8a8b1f397b08ebc4946930f",
+    "projection_sha256": "2a5d706d14670b636f227266b879ecede31ec361b57a44252d2432fe17f95b4a",
+    "run": 44876783005,
+    "shim": {
+      "ELF64_AArch64": true,
+      "byte_match_with_AMD64": false,
+      "bytes": 688016,
+      "exact_AMD64_exclusion_sha256": "d99a3f78fb4b253b21efbd6818337a5ef1cac47768e54369f44d4c19b102fbf4",
+      "isolated_ARM64_exclusion_candidate": true,
+      "path": "torch/bin/test_shim",
+      "sha256": "7a6ed5a36b82b29aa78469736dca7b9ba36f8534bf40c7c30291d4c5339f86ba",
+      "upstream_test_config_sha256": "93f9c5744fac67300f51336118bccb06705a9a818ba00f887988e8566a1234d5",
+      "version": "2.14.1+cpu",
+      "wheel_record_member": true,
+      "wheel_record_sha256_matches": true,
+      "wheel_record_size_present": true
+    }
+  },
+  "build_exit": 0,
+  "cleanup": {
+    "exact_container_and_inventory_absence": true,
+    "exact_ephemeral_image_absence": true
+  },
+  "collector_source_tree_sha256": "23a134211e2f0a91b7b9b9f68498a86734071f72b2efe56da37d9e4e627fd184",
+  "controller_exit": 0,
+  "github": {
+    "artifact_id": 14696771273,
+    "artifact_sha256": "49ebc157d3d53e680d3670d02a96121a6529d31128e43850112e3e1fe4d4de44",
+    "job": 136764589258,
+    "parent": "3344bef38b82f92dee2db3cc6f87a366d41a788b",
+    "revision": "7584e9e22f28cf3eade396f627859f1bc80d5af3",
+    "run": 44877259680,
+    "runtime_receipt_sha256": "0c1df4a24c9495fe22d5f14ae14c262ef92c66137d9273a5d14fab1dc4e4a20f"
+  },
+  "guest_exit": 0,
+  "original_authors_retain_credit": true,
+  "private_ARM64_exclusion": {
+    "AMD64_manifest_preimage_sha256": "78a7b60825611013c42932f481a145da87a3acb3d47ebf811c8cb453265ced03",
+    "ARM64_exclusion_manifest_sha256": "7786d9d4d8129973bfeb83a68bd737857b7a2389ac77312c0e5f0f059cf188ad",
+    "changed_fields": [
+      "bytes",
+      "sha256"
+    ],
+    "scope": "private ARM64 validation context only"
+  },
+  "runtime": {
+    "dependency_module_origins": {
+      "celery": "lib/python3.13/dist-packages/celery/__init__.py",
+      "channels": "lib/python3.13/dist-packages/channels/__init__.py",
+      "channels_redis": "lib/python3.13/dist-packages/channels_redis/__init__.py",
+      "django": "lib/python3.13/dist-packages/django/__init__.py",
+      "django_redis": "lib/python3.13/dist-packages/django_redis/__init__.py",
+      "kombu": "lib/python3.13/dist-packages/kombu/__init__.py",
+      "psycopg": "lib/python3.13/dist-packages/psycopg/__init__.py",
+      "redis": "lib/python3.13/dist-packages/redis/__init__.py",
+      "regex": "lib/python3.13/dist-packages/regex/__init__.py",
+      "rest_framework": "lib/python3.13/dist-packages/rest_framework/__init__.py"
+    },
+    "distribution_count": 127,
+    "distribution_qualified": false,
+    "manifest_sha256": "b66c28e48a968b8b694b3bc40c15f3db3ad3c9a05cdbc8c4f73c9665972f65a8",
+    "native_loader_sha256": "7cdd4ce693d93790bf088dca2e86857f758335b6010d913e086fa384e7704a46",
+    "platform": "linux/arm64",
+    "plugin_started": false,
+    "python": "3.13.18",
+    "retained_elf_count": 423,
+    "retained_file_count": 32359,
+    "retained_torch_library_sha256": {
+      "libc10.so": "a6b9e6a5a070196e975d6d71bfb0459b7a86b85fd78a9d54e2b884e9d7a990b1",
+      "libtorch.so": "3e8a0379fe130c8f011a24d3f90e8a1bf893bd57c449fe902c4d7756dc6c73c6",
+      "libtorch_cpu.so": "2befcd2b97a282fb2f2cc0ce069f9943dd12c67cf88ab41c17824966f750e14d"
+    },
+    "scope": "standalone relocated ARM64 Python plugin dependency-host package",
+    "source_application_started": false,
+    "torch_imported": false,
+    "torch_notice_count": 90,
+    "torch_shim_excluded": true,
+    "uid": 65532
+  },
+  "scope": "standalone relocated ARM64 Python plugin dependency-host package",
+  "unit_image": {
+    "collector_only_layers": 1,
+    "exact_debian_layers": 1,
+    "id": "sha256:249d27784713da941a445cf65939e0bab0d480f5c1be48b7f1ef224e126a7a23",
+    "platform": "linux/arm64"
+  }
+}
