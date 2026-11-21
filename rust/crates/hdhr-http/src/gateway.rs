@@ -263,36 +263,19 @@ impl HdhrGateway {
         let method = request.method().clone();
         let headers = request.headers();
         let endpoint = endpoint(request.uri().path())?;
-        // DRF content negotiation precedes permission checks and GET handlers.
-        if identity
-            .parameter("format")
-            .is_some_and(|value| !value.is_empty() && value != "json")
-        {
-            return Ok(error(StatusCode::NOT_FOUND, "Not found."));
-        }
-        let django_response = matches!(method, Method::GET | Method::HEAD)
-            && matches!(
-                &endpoint,
-                Endpoint::Discover { .. }
-                    | Endpoint::Lineup { .. }
-                    | Endpoint::Status
-                    | Endpoint::Xml
-            );
-        if headers
-            .get("accept")
-            .and_then(|v| v.to_str().ok())
-            .is_some_and(|value| {
-                !value.split(',').any(|part| {
-                    let value = part.split(';').next().unwrap_or("").trim();
-                    matches!(value, "application/json" | "*/*" | "application/*")
-                        || (django_response && matches!(value, "text/html" | "text/*"))
-                })
-            })
-        {
-            return Ok(error(
-                StatusCode::NOT_ACCEPTABLE,
-                "Could not satisfy the request Accept header.",
-            ));
+        if let Some(status) = negotiation_status(
+            &method,
+            request.uri().path(),
+            &endpoint,
+            identity.parameter("format"),
+            headers.get("accept").and_then(|value| value.to_str().ok()),
+        ) {
+            let detail = if status == StatusCode::NOT_FOUND {
+                "Not found."
+            } else {
+                "Could not satisfy the request Accept header."
+            };
+            return Ok(error(status, detail));
         }
         let origin = origin(&self.inner.auth, &identity, headers);
         if let Endpoint::Devices { lookup } = endpoint {
@@ -375,6 +358,47 @@ impl HdhrGateway {
         Ok(response)
     }
 }
+// The four public Django GET handlers return their own JSON/XML entity after
+// DRF selects a renderer. The format alias selects the browsable renderer;
+// it does not change those concrete HttpResponse bodies or network checks.
+fn negotiation_status(
+    method: &Method,
+    path: &str,
+    endpoint: &Endpoint,
+    format: Option<&str>,
+    accept: Option<&str>,
+) -> Option<StatusCode> {
+    let browser_format = format == Some("api")
+        && method == Method::GET
+        && matches!(
+            path,
+            "/hdhr/discover.json"
+                | "/hdhr/lineup.json"
+                | "/hdhr/lineup_status.json"
+                | "/hdhr/device.xml"
+        );
+    if !browser_format && format.is_some_and(|value| !value.is_empty() && value != "json") {
+        return Some(StatusCode::NOT_FOUND);
+    }
+    let django_response = matches!(*method, Method::GET | Method::HEAD)
+        && matches!(
+            endpoint,
+            Endpoint::Discover { .. } | Endpoint::Lineup { .. } | Endpoint::Status | Endpoint::Xml
+        );
+    let rejected = accept.is_some_and(|value| {
+        !value.split(',').any(|part| {
+            let value = part.split(';').next().unwrap_or("").trim();
+            if browser_format {
+                matches!(value, "text/html" | "text/*" | "*/*")
+            } else {
+                matches!(value, "application/json" | "*/*" | "application/*")
+                    || (django_response && matches!(value, "text/html" | "text/*"))
+            }
+        })
+    });
+    rejected.then_some(StatusCode::NOT_ACCEPTABLE)
+}
+
 async fn redirect() -> Response {
     let mut result = StatusCode::MOVED_PERMANENTLY.into_response();
     result
@@ -559,6 +583,62 @@ fn origin(auth: &AuthService, identity: &PlaybackRequest, _headers: &HeaderMap) 
 mod tests {
     use super::*;
     use http_body_util::BodyExt;
+
+    #[test]
+    fn browser_format_keeps_the_public_django_response() {
+        let browser = Some("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        for path in [
+            "/hdhr/discover.json",
+            "/hdhr/lineup.json",
+            "/hdhr/lineup_status.json",
+            "/hdhr/device.xml",
+        ] {
+            let route = endpoint(path).unwrap();
+            for format in [None, Some("api")] {
+                assert_eq!(
+                    negotiation_status(&Method::GET, path, &route, format, browser),
+                    None
+                );
+            }
+            assert_eq!(
+                negotiation_status(
+                    &Method::GET,
+                    path,
+                    &route,
+                    Some("api"),
+                    Some("application/json")
+                ),
+                Some(StatusCode::NOT_ACCEPTABLE)
+            );
+            assert_eq!(
+                negotiation_status(
+                    &Method::GET,
+                    path,
+                    &route,
+                    Some("json"),
+                    Some("application/json")
+                ),
+                None
+            );
+        }
+    }
+
+    #[test]
+    fn browser_format_preserves_other_route_and_method_admission() {
+        for (method, path) in [
+            (Method::GET, "/api/hdhr/devices/"),
+            (Method::GET, "/api/hdhr/discover.json"),
+            (Method::GET, "/hdhr/House/lineup.json"),
+            (Method::HEAD, "/hdhr/device.xml"),
+            (Method::OPTIONS, "/hdhr/lineup_status.json"),
+        ] {
+            let route = endpoint(path).unwrap();
+            assert_eq!(
+                negotiation_status(&method, path, &route, Some("api"), Some("text/html")),
+                Some(StatusCode::NOT_FOUND)
+            );
+        }
+    }
 
     #[test]
     fn hdhr_channel_profile_path_keeps_literal_query_delimiters() {
