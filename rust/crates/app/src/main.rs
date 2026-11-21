@@ -1239,7 +1239,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         (None, None) => backup_files,
     };
     let backup_files = match &core_scheduled {
-        Some(owner) => backup_files.with_schedule_enable(Arc::new(owner.scheduler())),
+        Some(owner) => backup_files
+            .with_schedule_enable(Arc::new(owner.scheduler()))
+            .with_create_jobs(owner.backup_create_api()),
         None => backup_files,
     };
     let backup_files = match &manual_backup {

@@ -111,6 +111,10 @@ impl CoreScheduledJobs {
         self.scheduler.clone()
     }
 
+    pub fn backup_create_api(&self) -> Arc<dyn dispatcharr_store::BackupJobApi> {
+        self.worker.backup_create_api()
+    }
+
     pub fn ready(&self) -> bool {
         self.scheduler.core_schedule_ready()
     }
@@ -138,6 +142,7 @@ impl CoreScheduledJobs {
 
     pub fn stop_admission(&self) {
         self.scheduler.stop_admission();
+        self.worker.stop_backup_api_admission();
     }
 
     pub async fn shutdown(&self, grace: Duration) -> Result<(), String> {

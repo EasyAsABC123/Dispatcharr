@@ -188,7 +188,11 @@ impl Prepared {
         Self::with_required(
             head,
             entries,
-            &[Family::BackupScheduled, Family::BackendCleanup],
+            &[
+                Family::BackupCreate,
+                Family::BackupScheduled,
+                Family::BackendCleanup,
+            ],
         )
     }
 

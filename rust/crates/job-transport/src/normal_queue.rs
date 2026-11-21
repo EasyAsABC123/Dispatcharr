@@ -232,7 +232,7 @@ pub struct Application {
     lifetime: Arc<Lifetime>,
 }
 
-/// Shared Core Celery receiver for the prepared periodic families.
+/// Shared Core Celery receiver for backup requests and prepared periodic families.
 #[derive(Clone)]
 pub struct CoreScheduledWorker {
     lane: Arc<Lane>,
@@ -260,6 +260,7 @@ impl CoreScheduledWorker {
         let actual: Arc<dyn Handler> = backup.clone();
         let mut families = BTreeMap::new();
         for (family, inner) in [
+            (Family::BackupCreate, actual.clone()),
             (Family::BackupScheduled, actual),
             (Family::BackendCleanup, cleanup),
         ] {
@@ -298,6 +299,14 @@ impl CoreScheduledWorker {
 
     pub(crate) fn jobs(&self) -> crate::transport::Jobs {
         self.backup.scheduled_jobs()
+    }
+
+    pub fn backup_create_api(&self) -> Arc<dyn dispatcharr_store::BackupJobApi> {
+        self.backup.clone()
+    }
+
+    pub fn stop_backup_api_admission(&self) {
+        self.backup.close_http_admission();
     }
 
     pub(crate) fn ready(&self) -> bool {

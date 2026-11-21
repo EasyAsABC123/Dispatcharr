@@ -285,7 +285,9 @@ async fn execute(
         .strip_prefix("/api/channels/recordings/")
         .ok_or(StoreError::NotFound)?;
     let (id, action) = tail.split_once('/').ok_or(StoreError::NotFound)?;
-    let id_number = id.parse::<i64>().map_err(|_| StoreError::NotFound)?;
+    let Ok(id_number) = id.parse::<i64>() else {
+        return Ok(recording_lookup_miss(id, action, head));
+    };
     let mut query=QueryBuilder::<Postgres>::new("SELECT CASE WHEN octet_length(COALESCE(r.custom_properties,'{}'::jsonb)::text)<=65536 THEN COALESCE(r.custom_properties,'{}'::jsonb) ELSE NULL END AS properties FROM dispatcharr_channels_recording r JOIN dispatcharr_channels_channel c ON c.id=r.channel_id WHERE r.id=");
     query.push_bind(id_number);
     channels::scope(&mut query, user);
@@ -301,7 +303,7 @@ async fn execute(
         {
             return Err(StoreError::Forbidden);
         }
-        return Err(StoreError::NotFound);
+        return Ok(recording_lookup_miss(id, action, head));
     };
     let properties: Option<Value> = row.try_get("properties")?;
     let properties = properties.ok_or_else(capacity)?;
@@ -342,6 +344,45 @@ async fn execute(
         Err(StoreError::NotFound)
     }
 }
+fn recording_lookup_miss(id: &str, action: &str, head: bool) -> Response {
+    let mut response = StoreError::NotFound.into_response();
+    if head || !matches!(action, "hls/index.m3u8" | "hls/index.m3u8/") {
+        return response;
+    }
+    // The stock plain DRF route passes an alphabetic recording key into the
+    // numeric lookup on this playlist shape. Reuse its existing generic wire
+    // fault after the same access checks without attempting that lookup.
+    if action.ends_with('/')
+        && id.as_bytes().first().is_some_and(u8::is_ascii_alphabetic)
+        && id.as_bytes().last().is_some_and(u8::is_ascii_alphabetic)
+        && id
+            .bytes()
+            .all(|byte| byte.is_ascii_alphabetic() || byte == b'-')
+    {
+        return StoreError::UnhandledRestFault.into_response();
+    }
+    // These spellings only affect the observed not-found response headers.
+    // The parsed recording key for actual data lookup is unchanged.
+    if let Ok(spelling) = percent_decode(id) {
+        let digits = spelling.strip_prefix(['+', '-']).unwrap_or(&spelling);
+        if !digits.is_empty()
+            && digits
+                .chars()
+                .all(|value| value.is_ascii_digit() || ('٠'..='٩').contains(&value))
+        {
+            response.headers_mut().insert(
+                axum::http::header::ALLOW,
+                axum::http::HeaderValue::from_static("GET, HEAD, OPTIONS"),
+            );
+            response.headers_mut().insert(
+                axum::http::header::VARY,
+                axum::http::HeaderValue::from_static("Accept"),
+            );
+        }
+    }
+    response
+}
+
 fn percent_decode(raw: &str) -> Result<String, StoreError> {
     // form_urlencoded uses '+' as space; protect literal path plus signs.
     let encoded = format!("v={}", raw.replace('+', "%2B").replace('&', "%26"));
@@ -354,6 +395,42 @@ fn percent_decode(raw: &str) -> Result<String, StoreError> {
 #[cfg(test)]
 mod writer_admission_tests {
     use super::*;
+
+    #[test]
+    fn source_playlist_lookup_miss_keeps_scoped_wire_and_excludes_other_requests() {
+        use axum::http::{header, StatusCode};
+        for (id, action) in [
+            ("42631", "hls/index.m3u8"),
+            ("042631", "hls/index.m3u8/"),
+            ("%2B42631", "hls/index.m3u8/"),
+            ("-42631", "hls/index.m3u8/"),
+            ("%D9%A4%D9%A2%D9%A6%D9%A3%D9%A1", "hls/index.m3u8/"),
+        ] {
+            let response = recording_lookup_miss(id, action, false);
+            assert_eq!(response.status(), StatusCode::NOT_FOUND);
+            assert_eq!(response.headers()[header::ALLOW], "GET, HEAD, OPTIONS");
+            assert_eq!(response.headers()[header::VARY], "Accept");
+            assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+        }
+        let error = recording_lookup_miss("owned-missing", "hls/index.m3u8/", false);
+        assert_eq!(error.status(), StatusCode::INTERNAL_SERVER_ERROR);
+        assert_eq!(error.headers()[header::CONTENT_LENGTH], "145");
+        assert_eq!(error.headers()[header::VARY], "origin");
+        assert!(!error.headers().contains_key(header::ALLOW));
+        for (id, action, head) in [
+            ("", "hls/index.m3u8/", false),
+            ("+-123", "hls/index.m3u8/", false),
+            ("owned-missing", "hls/index.m3u8", false),
+            ("owned-missing", "hls/index.m3u8/", true),
+            ("owned-missing", "file/", false),
+            ("42631", "hls/seg_00001.ts", false),
+        ] {
+            let response = recording_lookup_miss(id, action, head);
+            assert_eq!(response.status(), StatusCode::NOT_FOUND);
+            assert!(!response.headers().contains_key(header::ALLOW));
+            assert!(!response.headers().contains_key(header::VARY));
+        }
+    }
 
     #[tokio::test]
     async fn ten_viewers_wait_in_order_without_increasing_four_writer_limit() {

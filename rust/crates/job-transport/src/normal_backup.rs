@@ -159,6 +159,10 @@ impl Application {
     pub fn close_admission(&self) {
         self.inner.closed.store(true, Ordering::Release);
         self.inner.worker.close();
+        self.close_http_admission();
+    }
+
+    pub(super) fn close_http_admission(&self) {
         self.inner.http.close();
     }
     fn owner(
