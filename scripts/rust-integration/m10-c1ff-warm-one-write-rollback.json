@@ -1,0 +1,70 @@
+{
+  "actual_outer_exit": 0,
+  "actual_physical_exit": 0,
+  "actual_preflight_exit": 0,
+  "actual_strict_reducer_exit": 0,
+  "build_manifest_sha256": "430eaabe4f2c0c32d33e3525bc64e1932e63d36d7f9768cc47d01f7b29b90ab8",
+  "candidate": "c1ff40056abc819d477ffa8eb82a45b1ebba38d8",
+  "formal_m9_nodes_claimed": 0,
+  "full_M9_gate_open": true,
+  "git_application_inputs": 2038,
+  "image_config": "sha256:aedf38806ead181b5d6ef021ac181d41006ba38c5e7dfa3c1cf7d0db7b287872",
+  "local_fixture_recovery_ms": 7691,
+  "native_clean_exit": 0,
+  "one_write_reconciliation": {
+    "changed_fields": [
+      "name",
+      "updated_at"
+    ],
+    "changed_table": "dispatcharr_channels_channel",
+    "old_native_writer_retired_before_reconcile": true,
+    "one_fallback_patch_acknowledged": true,
+    "retained_native_write_reconciled": true,
+    "same_original_process_generations": true,
+    "same_signed_session_read": true,
+    "unrelated_rows_and_schema_equal": true,
+    "updated_rows": 1
+  },
+  "performance_measured": false,
+  "phases": [
+    "restore-before-web",
+    "start-original-once",
+    "verify-original-and-warm-baseline",
+    "start-rust-copy",
+    "switch-to-rust-and-edit-copy",
+    "stop-rust-before-switch-back",
+    "switch-to-warm-original",
+    "verify-original-authentication-and-media",
+    "reconcile-acknowledged-native-write-on-original",
+    "relay-stopped-before-compose-cleanup",
+    "verify-owned-project-retirement"
+  ],
+  "prior_cold_result_transferred": false,
+  "prior_cold_strict_exit": 1,
+  "prior_workload_authority": "d426d322b27a197aaaaa057ef73dfb53c516c452",
+  "production_rollout_or_default_switch_executed": false,
+  "protected_react_and_credit_inputs": 497,
+  "raw_receipt_sha256": "ae752b20a6d6f8b452ad628a255357312a4574f2d22b859907bdea62afa74509",
+  "receiving_publication": "27edb1f64adb182edd21fd2cdce18415d105aa99",
+  "reduced_receipt_sha256": "a907c18f39fa0cba9f75d41b60802c412679b6cbd536b52acd835b134f7e1768",
+  "retired_owned_roles": {
+    "donor": {
+      "cleanup_receipt_sha256": "c688b9cfb52819ba7f1c29389c47237c115ee040b6312bdf8e7a4163c4a3939f",
+      "owned_container_count": 2
+    },
+    "original_control": {
+      "cleanup_receipt_sha256": "c688b9cfb52819ba7f1c29389c47237c115ee040b6312bdf8e7a4163c4a3939f",
+      "owned_container_count": 2
+    },
+    "warm_trial": {
+      "cleanup_receipt_sha256": "923981bc7b9176780db476e539953a03f47a960522bda4002dad8f226de116f6",
+      "owned_container_count": 5
+    }
+  },
+  "stable_front_door_route_order": [
+    "Original",
+    "Native",
+    "Original"
+  ],
+  "warm_original_full_observations_equal_before_replay": 4
+}
