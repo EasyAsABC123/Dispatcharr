@@ -1,0 +1,76 @@
+{
+  "candidate": {
+    "build_manifest_sha256": "7fcd40658044f41592da4befbcfc9d03ec4a2945e09919f735db96b02782b11e",
+    "git": "1423e79b6090af2ba47a7516ff4b29f39e9222fa",
+    "image_id": "sha256:4cd12e5ff12aad6750d092d96ad14b725d59872f8157f603a3c2755e541a792a",
+    "source_map_sha256": "0d0231cadf972a4e88621be7fba182c0c1e074535700d601737380e469465ab1"
+  },
+  "credits": "The original Dispatcharr and dependency contributors retain full credit.",
+  "exact_retirement": {
+    "donor": {
+      "cleanup_receipt_sha256": "c688b9cfb52819ba7f1c29389c47237c115ee040b6312bdf8e7a4163c4a3939f",
+      "owned_container_count": 2,
+      "owned_generation_count": 2
+    },
+    "original_control": {
+      "cleanup_receipt_sha256": "c688b9cfb52819ba7f1c29389c47237c115ee040b6312bdf8e7a4163c4a3939f",
+      "owned_container_count": 2,
+      "owned_generation_count": 2
+    },
+    "warm_trial": {
+      "cleanup_receipt_sha256": "923981bc7b9176780db476e539953a03f47a960522bda4002dad8f226de116f6",
+      "owned_container_count": 5,
+      "owned_generation_count": 3
+    }
+  },
+  "formal_M9_nodes_claimed": 0,
+  "front_door_order": [
+    "Original",
+    "Native",
+    "Original"
+  ],
+  "local_fixture_recovery_ms": 7882,
+  "one_write_reconciliation": {
+    "changed_fields": [
+      "name",
+      "updated_at"
+    ],
+    "changed_table": "dispatcharr_channels_channel",
+    "old_native_writer_retired_before_reconcile": true,
+    "one_fallback_patch_acknowledged": true,
+    "retained_native_write_reconciled": true,
+    "same_original_process_generations": true,
+    "same_signed_session_read": true,
+    "unrelated_rows_and_schema_equal": true,
+    "updated_rows": 1
+  },
+  "performance_measured": false,
+  "phases": [
+    "restore-before-web",
+    "start-original-once",
+    "verify-original-and-warm-baseline",
+    "start-rust-copy",
+    "switch-to-rust-and-edit-copy",
+    "stop-rust-before-switch-back",
+    "switch-to-warm-original",
+    "verify-original-authentication-and-media",
+    "reconcile-acknowledged-native-write-on-original",
+    "relay-stopped-before-compose-cleanup",
+    "verify-owned-project-retirement"
+  ],
+  "prior_cold_strict_actual_exit": 1,
+  "production_rollout_or_default_switch": false,
+  "raw_receipt_sha256": "a7dae33735a9657fd9bb0df0bfe1a9f350aeab272e2b6e1541e85aaab33606c8",
+  "real_literal_exits": {
+    "campaign": 0,
+    "ordinary_rust_stop": 0,
+    "physical": 0,
+    "preflight": 0,
+    "proof": 0
+  },
+  "receiving_publication": "8d4c1444a1ad90702dee7dd09f3b685a217d68d3",
+  "reduced_receipt_sha256": "da0015787edb6c0263986fb0817675473f5d610d5317aa24ec3e538825913016",
+  "source_archive_sha256": "49db40d19329f6216443278671ef3305ac0b97b795fdc728eb5f9fe5a7a9b699",
+  "source_tree_sha256": "eb11a6f298c5e76fc59306a2a853c52973f571846ae6e43698dd0420d8d844b2",
+  "warm_Original_observations_equal_before_replay": 4
+}

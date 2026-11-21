@@ -1,0 +1,9 @@
+# 25 required workflows on 1423e79b
+
+The exact packaged Rust image for `1423e79b6090af2ba47a7516ff4b29f39e9222fa` passed 25 fresh required workflows across the 20-workflow base and its independently executed package groups. The unchanged coordinator roster has 127 rows. One retained Original capture supplies a dependency, and 101 rows remain blocked. The receipt lists every required disposition for this image. [Formal matrix receipt](../scripts/rust-integration/m9-1423e79b-formal-matrix.json)
+
+The first campaign recorded 22 canonical passes. Category Browser passed its live HTTP and React assertions, and the cleanup callback observed empty Compose inventories, the asset donor's absence, and all four browser groups retired. The callback omitted the coordinator's required cleanup field, so its formal phases stayed at workflow exit 0, cleanup exit 0 and evaluator exit 1. The archived quarantine and exact first records remain available. An independent review confirmed the live behavior and cleanup while preserving that formal failure.
+
+The fresh corrected Category Browser run then passed all three formal phases. Fresh Channel Logos and User Agent owners also passed all three phases on the same package. Together the three fresh passes bring the canonical count to 25. Category Browser captured 664 Original responses and compared 393 ordinary HTTP and 163 category HTTP responses within their defined subsets. Real movie and series browser selections matched, and the exact browser groups, asset donor and owned Compose resources retired.
+
+The separate warm copied-PostgreSQL rehearsal used this image and adds no formal workflow pass. The complete M9 matrix, strict cold-rollback equality and comparative performance remain open. Full credit belongs to the original Dispatcharr authors and dependency contributors. [Warm rollback rehearsal](rust-m10-1423e79b-warm-one-write-rollback.md) · [Original attribution](../ATTRIBUTION.md)
