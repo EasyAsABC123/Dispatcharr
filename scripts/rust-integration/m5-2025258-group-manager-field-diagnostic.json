@@ -1,0 +1,218 @@
+{
+  "actual_receipt_sha256": "ee254f0c165d55cf15b5a222d797513b13fe26afe4a5daa3a976a6b50d5a3b2f",
+  "approved_review_sha256": "abe209465cfeb5815fb01f78fef81ed861606a7e793c20e14b0033cbea4d49cf",
+  "candidate_image": "sha256:a5a40e8251192dee41a1d3f830ee07b220e67cc45aa46b26362448da76ac56df",
+  "candidate_revision": "2025258fba9aa301a4a87b4ea12391087b5c55a7",
+  "cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "credit": "The original Dispatcharr authors and contributors retain full credit.",
+  "diagnostic": {
+    "fresh_body_digest_mismatches": [
+      3,
+      5,
+      6,
+      7,
+      8
+    ],
+    "measurements": [
+      {
+        "body_digest_equal": true,
+        "encoding_only_or_unresolved": false,
+        "position": 1,
+        "redacted_differences": {
+          "allocated_identity": [],
+          "array_order": [],
+          "number_representation": [],
+          "object_order": [],
+          "presence": [],
+          "type": [],
+          "value": []
+        },
+        "request": "initial-provider-group",
+        "transient_value_hashes_retained": false,
+        "typed_values_equal_after_reference_normalization": true
+      },
+      {
+        "body_digest_equal": true,
+        "encoding_only_or_unresolved": false,
+        "position": 2,
+        "redacted_differences": {
+          "allocated_identity": [],
+          "array_order": [],
+          "number_representation": [],
+          "object_order": [],
+          "presence": [],
+          "type": [],
+          "value": []
+        },
+        "request": "claim",
+        "transient_value_hashes_retained": false,
+        "typed_values_equal_after_reference_normalization": true
+      },
+      {
+        "body_digest_equal": false,
+        "encoding_only_or_unresolved": false,
+        "position": 3,
+        "redacted_differences": {
+          "allocated_identity": [
+            {
+              "fixture_role": "allocated_renamed_group",
+              "path": "/id"
+            }
+          ],
+          "array_order": [],
+          "number_representation": [],
+          "object_order": [],
+          "presence": [],
+          "type": [],
+          "value": []
+        },
+        "request": "rename",
+        "transient_value_hashes_retained": false,
+        "typed_values_equal_after_reference_normalization": true
+      },
+      {
+        "body_digest_equal": true,
+        "encoding_only_or_unresolved": false,
+        "position": 4,
+        "redacted_differences": {
+          "allocated_identity": [],
+          "array_order": [],
+          "number_representation": [],
+          "object_order": [],
+          "presence": [],
+          "type": [],
+          "value": []
+        },
+        "request": "demoted-group-refetch",
+        "transient_value_hashes_retained": false,
+        "typed_values_equal_after_reference_normalization": true
+      },
+      {
+        "body_digest_equal": false,
+        "encoding_only_or_unresolved": false,
+        "position": 5,
+        "redacted_differences": {
+          "allocated_identity": [
+            {
+              "fixture_role": "allocated_renamed_group",
+              "path": "/id"
+            }
+          ],
+          "array_order": [],
+          "number_representation": [],
+          "object_order": [],
+          "presence": [],
+          "type": [],
+          "value": []
+        },
+        "request": "renamed-group-refetch",
+        "transient_value_hashes_retained": false,
+        "typed_values_equal_after_reference_normalization": true
+      },
+      {
+        "body_digest_equal": false,
+        "encoding_only_or_unresolved": false,
+        "position": 6,
+        "redacted_differences": {
+          "allocated_identity": [
+            {
+              "fixture_role": "allocated_renamed_group",
+              "path": "/channel_group_id"
+            },
+            {
+              "fixture_role": "allocated_renamed_group",
+              "path": "/effective_channel_group_id"
+            }
+          ],
+          "array_order": [],
+          "number_representation": [],
+          "object_order": [
+            {
+              "path": "/"
+            }
+          ],
+          "presence": [],
+          "type": [],
+          "value": []
+        },
+        "request": "manual-channel-refetch",
+        "transient_value_hashes_retained": false,
+        "typed_values_equal_after_reference_normalization": true
+      },
+      {
+        "body_digest_equal": false,
+        "encoding_only_or_unresolved": false,
+        "position": 7,
+        "redacted_differences": {
+          "allocated_identity": [],
+          "array_order": [],
+          "number_representation": [],
+          "object_order": [
+            {
+              "path": "/"
+            }
+          ],
+          "presence": [],
+          "type": [],
+          "value": []
+        },
+        "request": "managed-channel-refetch",
+        "transient_value_hashes_retained": false,
+        "typed_values_equal_after_reference_normalization": true
+      },
+      {
+        "body_digest_equal": false,
+        "encoding_only_or_unresolved": false,
+        "position": 8,
+        "redacted_differences": {
+          "allocated_identity": [
+            {
+              "fixture_role": "allocated_renamed_group",
+              "path": "/1/id"
+            }
+          ],
+          "array_order": [],
+          "number_representation": [],
+          "object_order": [],
+          "presence": [],
+          "type": [],
+          "value": []
+        },
+        "request": "group-collection",
+        "transient_value_hashes_retained": false,
+        "typed_values_equal_after_reference_normalization": true
+      }
+    ],
+    "prior_recorded_positions_reproduced": true,
+    "prior_same_image_body_digest_mismatches": [
+      3,
+      5,
+      6,
+      7,
+      8
+    ],
+    "raw_bodies_credentials_or_transient_hmac_material_retained": false
+  },
+  "fixture_sha256": "bff827f97750e7e1b0856068830b3d5237f8ab4d660750c25236c2aaf95c33ff",
+  "fresh_scoped_typed_SQL_and_business_parity": true,
+  "full_milestone_accepted": false,
+  "literal_Allow_matches": 8,
+  "literal_exit": 0,
+  "manifest_sha256": "65aec07ebd68b03ee77f68d18fe89f50eb2f710a3e8a581e14bc858c6d541d74",
+  "performance_measured": false,
+  "prior_same_image_receipt_sha256": "11e41f4930de4a699cedc5c579fe67691c70c1356f4ad5352ae43be847bcae24",
+  "scope": "same-package redacted Group Manager JSON field and order diagnostic"
+}
