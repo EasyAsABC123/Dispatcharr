@@ -1,0 +1,43 @@
+name: Native ARM64 Comskip donor-linked compiler input inventory
+
+"on":
+  push:
+    branches: [validation/m10-arm64-comskip-toolchain-418fcabd-1]
+    paths:
+      - '.github/workflows/native-arm64-comskip-toolchain.yml'
+      - 'scripts/rust-platform-contracts/native-arm64-comskip-toolchain/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m10-arm64-comskip-toolchain-418fcabd
+  cancel-in-progress: false
+
+jobs:
+  toolchain:
+    if: github.repository == 'EasyAsABC123/Dispatcharr' && github.ref == 'refs/heads/validation/m10-arm64-comskip-toolchain-418fcabd-1' && !github.event.deleted
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 25
+    steps:
+      - name: Check out exact validation source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+          fetch-depth: 2
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/native-arm64-comskip-toolchain.yml
+            /scripts/rust-platform-contracts/native-arm64-comskip-toolchain/
+      - name: Resolve signed compiler inputs against the immutable ARM64 donor
+        shell: bash
+        run: bash scripts/rust-platform-contracts/native-arm64-comskip-toolchain/qualify.sh
+      - name: Retain text-only evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: native-arm64-comskip-toolchain-evidence
+          path: ${{ runner.temp }}/native-arm64-comskip-toolchain-evidence/
+          if-no-files-found: error
+          retention-days: 14
