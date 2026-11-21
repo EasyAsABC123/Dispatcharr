@@ -1,0 +1,468 @@
+{
+  "actual_fresh_pair_literal_exit": 0,
+  "admitted_original_allow_permutations": {
+    "create": [
+      "OPTIONS, POST",
+      "POST, OPTIONS"
+    ],
+    "delete": [
+      "OPTIONS, DELETE",
+      "DELETE, OPTIONS"
+    ],
+    "download": [
+      "OPTIONS, GET",
+      "GET, OPTIONS"
+    ],
+    "download-token": [
+      "OPTIONS, GET",
+      "GET, OPTIONS"
+    ],
+    "list": [
+      "OPTIONS, GET",
+      "GET, OPTIONS"
+    ],
+    "restore": [
+      "OPTIONS, POST",
+      "POST, OPTIONS"
+    ],
+    "schedule": [
+      "OPTIONS, GET",
+      "GET, OPTIONS"
+    ],
+    "schedule-update": [
+      "OPTIONS, PUT",
+      "PUT, OPTIONS"
+    ],
+    "status": [
+      "OPTIONS, GET",
+      "GET, OPTIONS"
+    ],
+    "upload": [
+      "OPTIONS, POST",
+      "POST, OPTIONS"
+    ]
+  },
+  "application_revision": "58bcb6771f1019480c15f00b4df7bb960e4aaca0",
+  "backup_jobs_exercised": false,
+  "candidate": {
+    "image_id": "sha256:cc448b89d8a748b88fb5d72c3d7de4565b0e3e6577168cefefdc2b665ba5dbd7",
+    "manifest_sha256": "01a058a34c10b4933bf923f5271ab8233e4577b14271d6ac43a4955c1d3a2558",
+    "postimage_sha256": {
+      "rust/crates/store/src/backup_files.rs": "3d8ba063f19b016f857b41d6aaa717515b31b0d5c4a342a0818d76a2bda1b136",
+      "rust/crates/store/src/backup_files_tests.rs": "1683334cf2183c32963a959854f6bdd287599edd0c90182a5e1f8a13b61926a3"
+    },
+    "revision": "58bcb6771f1019480c15f00b4df7bb960e4aaca0"
+  },
+  "exact_owned_cleanup": true,
+  "frozen_review_sha256": "87957c7b20efd9639c672d17471fb15eeba1482f32418eaa1ff45e21c69275c2",
+  "host_workspace": {
+    "application_inputs_verified": 2038,
+    "failed": 0,
+    "host_controller_sha256": "c7157fa04890c67db170ff846893167deed343291e086570ebc521303a691ae7",
+    "ignored": 814,
+    "passed": 1523,
+    "test_groups": 193,
+    "timeshift_support_input_sha256": "8de35e29739283f7098db98b775e3b90260d9478a190bc3315e7ceb3ac178a32",
+    "tool_version": "rustc 1.90.0 (1159e78c4 2025-09-14)",
+    "tools_format_clippy_workspace_tests_literal_exit": 0,
+    "workspace_test_log_sha256": "f040c5e0c09d6382bb244e898003e4a500c0dfe33b80634fc9f755ae4478895a"
+  },
+  "literal_allow_orders": {
+    "initial_original": {
+      "create": "OPTIONS, POST",
+      "delete": "OPTIONS, DELETE",
+      "download": "OPTIONS, GET",
+      "download-token": "OPTIONS, GET",
+      "list": "OPTIONS, GET",
+      "restore": "OPTIONS, POST",
+      "schedule": "OPTIONS, GET",
+      "schedule-update": "OPTIONS, PUT",
+      "status": "OPTIONS, GET",
+      "upload": "OPTIONS, POST"
+    },
+    "prior_fresh_original_1": {
+      "create": "OPTIONS, POST",
+      "delete": "OPTIONS, DELETE",
+      "download": "GET, OPTIONS",
+      "download-token": "GET, OPTIONS",
+      "list": "GET, OPTIONS",
+      "restore": "OPTIONS, POST",
+      "schedule": "GET, OPTIONS",
+      "schedule-update": "OPTIONS, PUT",
+      "status": "GET, OPTIONS",
+      "upload": "OPTIONS, POST"
+    },
+    "prior_fresh_original_2": {
+      "create": "POST, OPTIONS",
+      "delete": "OPTIONS, DELETE",
+      "download": "GET, OPTIONS",
+      "download-token": "GET, OPTIONS",
+      "list": "GET, OPTIONS",
+      "restore": "POST, OPTIONS",
+      "schedule": "GET, OPTIONS",
+      "schedule-update": "OPTIONS, PUT",
+      "status": "GET, OPTIONS",
+      "upload": "POST, OPTIONS"
+    },
+    "retry_native": {
+      "create": "OPTIONS, POST",
+      "delete": "OPTIONS, DELETE",
+      "download": "OPTIONS, GET",
+      "download-token": "OPTIONS, GET",
+      "list": "OPTIONS, GET",
+      "restore": "OPTIONS, POST",
+      "schedule": "OPTIONS, GET",
+      "schedule-update": "OPTIONS, PUT",
+      "status": "OPTIONS, GET",
+      "upload": "OPTIONS, POST"
+    },
+    "retry_original": {
+      "create": "OPTIONS, POST",
+      "delete": "DELETE, OPTIONS",
+      "download": "GET, OPTIONS",
+      "download-token": "GET, OPTIONS",
+      "list": "GET, OPTIONS",
+      "restore": "OPTIONS, POST",
+      "schedule": "GET, OPTIONS",
+      "schedule-update": "OPTIONS, PUT",
+      "status": "GET, OPTIONS",
+      "upload": "OPTIONS, POST"
+    }
+  },
+  "matched_metadata": {
+    "create": {
+      "allow": "OPTIONS, POST",
+      "body": {
+        "description": "Create a new backup (async via Celery).",
+        "name": "Create Backup",
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "content_type": "application/json",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "delete": {
+      "allow": "OPTIONS, DELETE",
+      "body": {
+        "description": "Delete a backup file.",
+        "name": "Delete Backup",
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "content_type": "application/json",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "download": {
+      "allow": "OPTIONS, GET",
+      "body": {
+        "description": "Download a backup file.\n\nRequires either:\n- Valid admin authentication, OR\n- Valid download_token query parameter",
+        "name": "Download Backup",
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "content_type": "application/json",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "download-token": {
+      "allow": "OPTIONS, GET",
+      "body": {
+        "description": "Get a signed token for downloading a backup file.",
+        "name": "Get Download Token",
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "content_type": "application/json",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "list": {
+      "allow": "OPTIONS, GET",
+      "body": {
+        "description": "List all available backup files.",
+        "name": "List Backups",
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "content_type": "application/json",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "restore": {
+      "allow": "OPTIONS, POST",
+      "body": {
+        "description": "Restore from a backup file (async via Celery). WARNING: This will flush the database!",
+        "name": "Restore Backup",
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "content_type": "application/json",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "schedule": {
+      "allow": "OPTIONS, GET",
+      "body": {
+        "description": "Get backup schedule settings.",
+        "name": "Get Schedule",
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "content_type": "application/json",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "schedule-update": {
+      "allow": "OPTIONS, PUT",
+      "body": {
+        "description": "Update backup schedule settings.",
+        "name": "Update Schedule",
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "content_type": "application/json",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "status": {
+      "allow": "OPTIONS, GET",
+      "body": {
+        "description": "Check the status of a backup/restore task.\n\nRequires either:\n- Valid admin authentication, OR\n- Valid task_token query parameter",
+        "name": "Backup Status",
+        "parses": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "content_type": "application/json",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "upload": {
+      "allow": "OPTIONS, POST",
+      "body": {
+        "description": "Upload a backup file for restoration.",
+        "name": "Upload Backup",
+        "parses": [
+          "multipart/form-data",
+          "application/x-www-form-urlencoded"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "content_type": "application/json",
+      "status": 200,
+      "vary": "Accept, origin"
+    }
+  },
+  "observed_per_route_allow_orders": {
+    "create": [
+      "OPTIONS, POST",
+      "POST, OPTIONS"
+    ],
+    "delete": [
+      "DELETE, OPTIONS",
+      "OPTIONS, DELETE"
+    ],
+    "download": [
+      "GET, OPTIONS",
+      "OPTIONS, GET"
+    ],
+    "download-token": [
+      "GET, OPTIONS",
+      "OPTIONS, GET"
+    ],
+    "list": [
+      "GET, OPTIONS",
+      "OPTIONS, GET"
+    ],
+    "restore": [
+      "OPTIONS, POST",
+      "POST, OPTIONS"
+    ],
+    "schedule": [
+      "GET, OPTIONS",
+      "OPTIONS, GET"
+    ],
+    "schedule-update": [
+      "OPTIONS, PUT"
+    ],
+    "status": [
+      "GET, OPTIONS",
+      "OPTIONS, GET"
+    ],
+    "upload": [
+      "OPTIONS, POST",
+      "POST, OPTIONS"
+    ]
+  },
+  "original_dispatcharr_authors_retain_full_credit": true,
+  "performance_measured": false,
+  "prior_conflicting_original_pairs": {
+    "both_prior_conflicts": [
+      {
+        "prior_native_launched": false,
+        "prior_original_exact_cleanup": true,
+        "prior_physical_exit": 1,
+        "prior_raw_receipt_sha256": "5ca7f556fb93b9cd593cc3413543dd598deae2ff5f016e2de6ec5c30b017f3c8"
+      },
+      {
+        "prior_native_launched": false,
+        "prior_original_exact_cleanup": true,
+        "prior_physical_exit": 1,
+        "prior_raw_receipt_sha256": "0e654866aee15d7f4810d64b3e48e72feb2a2c385df5deedb2c867db8b8a1b48"
+      }
+    ],
+    "pinned_method_contract": {
+      "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "drf_version": "3.18.3",
+      "framework_metadata_sha256": "eea8d072c4cfc18a35d3ee57a5c5530c82d9310bf2962b64b08f0e69b9a5cda6",
+      "framework_sha256": {
+        "django/views/generic/base.py": "e90c49034c40718f68d60f80acabf8d5485b7ca590709a3cec9214faed72007a",
+        "rest_framework/decorators.py": "9d70f042044020a67f2d4147bc296fed706bb74e1578186ec98c378fb782e29b",
+        "rest_framework/views.py": "07d663e11faac813dd0965c337ade1cf3d6596314a37a57a21dd8e30fa56b8be"
+      },
+      "module_sha256": {
+        "apps/backups/api_urls.py": "6723bb65ae87e747fdd81ca7154bd8b2e4dd5124d7b070e56519113c7f7b4c0b",
+        "apps/backups/api_views.py": "92dced3d20743862066dfeccb1728ca4f1fd508aecb7489686dd03c66939972a"
+      }
+    },
+    "through_two_conflicts_observed_orders": {
+      "create": [
+        "OPTIONS, POST",
+        "POST, OPTIONS"
+      ],
+      "delete": [
+        "OPTIONS, DELETE"
+      ],
+      "download": [
+        "GET, OPTIONS",
+        "OPTIONS, GET"
+      ],
+      "download-token": [
+        "GET, OPTIONS",
+        "OPTIONS, GET"
+      ],
+      "list": [
+        "GET, OPTIONS",
+        "OPTIONS, GET"
+      ],
+      "restore": [
+        "OPTIONS, POST",
+        "POST, OPTIONS"
+      ],
+      "schedule": [
+        "GET, OPTIONS",
+        "OPTIONS, GET"
+      ],
+      "schedule-update": [
+        "OPTIONS, PUT"
+      ],
+      "status": [
+        "GET, OPTIONS",
+        "OPTIONS, GET"
+      ],
+      "upload": [
+        "OPTIONS, POST",
+        "POST, OPTIONS"
+      ]
+    }
+  },
+  "prior_drafts": {
+    "affected_routes": 10,
+    "corrected_source_gate_exit": 0,
+    "corrected_source_gate_sha256": "25c0b2697bc719c87b2584fa9519a0d31cfda8d369d1acd20d71e490206bc84c",
+    "difference_field": "Allow",
+    "failed_gate_stderr_sha256": "feba4f70fa162a69876abe8a3125629430c88c777cf54605d09e728045597315",
+    "initial_draft_gate_exit": 1,
+    "prior_unreleased_drafts": [
+      {
+        "draft": "m8-c70f791d-backup-options-port-1",
+        "packaged_runtime_exercised": false,
+        "patch_sha256": "70e5bb6a6cc9c6a9ff2a76356720c300a2b4a058ddb71c341f1f3a5344c50df0",
+        "scoped_host_exit": 0
+      },
+      {
+        "draft": "m8-c70f791d-backup-options-port-2",
+        "packaged_runtime_exercised": false,
+        "patch_sha256": "c070957bd3fcc03d9ca28dc88a6bb8352932f521676428a9e52a39cbb7fa0651",
+        "scoped_host_exit": 0
+      }
+    ]
+  },
+  "protected_react_and_credit_inputs": 497,
+  "receiving_parent": "8d4c1444a1ad90702dee7dd09f3b685a217d68d3",
+  "retry_pair_raw_receipt_sha256": "ce75efee5098c377daa10ec76c80df617b29e2c33681af37113910047d988d9f",
+  "retry_reducer_sha256": "ccd137559737066776329cf46bbede3a29a6e5c13e3f1509bed5a58ae046b1e2",
+  "source_authority": {
+    "first_draft_diff_field": "allow",
+    "first_draft_gate_literal_exit": 1,
+    "source_proof_sha256": "da7bccecd444fed7fadc19290d852d4b8f59c0fe844012f524dd061fafb137d1",
+    "source_receipt_sha256": "03cf9569d69b2ab52395a115a1cc2dfcdaf7ed5c7e712e3c23112ebbfecde0de"
+  }
+}
