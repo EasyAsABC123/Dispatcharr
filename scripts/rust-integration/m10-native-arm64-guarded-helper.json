@@ -1,0 +1,70 @@
+{
+  "confirmed_published_migration_sha": "af729638e5e9f0c00473062a70254b8772ae00f3",
+  "first_native_run": {
+    "conclusion": "failure",
+    "corrected_command_locally_checked_with_three_exact_signed_packages": true,
+    "id": 44859249836,
+    "job_id": 136708570164,
+    "log_sha256": "ba88487e3f1e076a9d00805ea257d450f35b8456b6ff8dac6eb241b7ea720c87",
+    "reason": "The dpkg-deb archive metadata command used the invalid short format flag.",
+    "validation_sha": "b668694fa2ec06284ab886d9627f686c69cfc38b"
+  },
+  "known_ref": "validation/m10-arm64-helper-2581d75b-2",
+  "native_ARM64_helper_qualified": {
+    "GitHub_commit": "ce6e32bcd8e20a1b323477ee866aa3e2188be17d",
+    "GitHub_run": 44859493788,
+    "GitHub_run_attempt": 1,
+    "GitHub_runner_architecture": "ARM64",
+    "OCI_builder_image": "sha256:f6d52726c6c740d6ee8ea9ff348db1cb4bfbe325d1e86f3295388666500481ec",
+    "OCI_builder_manifest": "sha256:4c632e493dfa97f0fe014c3910d1690c149bba85ed8678d47d3563ec6f258ead",
+    "actual_runtime": {
+      "ELF_machine": "AArch64",
+      "actual_private_libraries": 6,
+      "actual_system_dependencies": 3,
+      "container_arch": "aarch64",
+      "debian_and_postgresql_notices_verified": 5,
+      "empty_LD_LIBRARY_PATH": true,
+      "exact_loader_closure_verified": true,
+      "gid": 65532,
+      "helper_sha256": "6770b7458d051f69f5e1060d24b37dea6660113d42f1e84d0898481b280ad632",
+      "helper_version": "pg_restore (PostgreSQL) 17.11",
+      "image_debian_architecture": "arm64",
+      "interpreter": "/lib/ld-linux-aarch64.so.1",
+      "transitive_private_RPATH": "/opt/dispatcharr-pg-guarded-restore/lib",
+      "uid": 65532
+    },
+    "application_image_published": false,
+    "container_runtime_exit": 0,
+    "credit": "Original Dispatcharr, PostgreSQL, Rust, and Debian contributors retain full credit.",
+    "exact_container_retired": true,
+    "full_ARM_distribution_accepted": false,
+    "locally_built_image": "sha256:1219318498995c500859c3c548d953854dfa51fd8cdb57fb3e07c837f9dce748",
+    "network_none_read_only_runtime": true,
+    "runner_uname_machine": "aarch64",
+    "scope": "native ARM64 guarded PostgreSQL helper only",
+    "staged_context": {
+      "exact_dockerfile_stage_sha256": "0ddb3eed245f8fed244352e82c308515db71ed6ab9cb5cd36fd23666ff515131",
+      "reviewed_input_sha256": "bad17d8da2f40cf11b2cbf5d307c4f7eb417b93f742edb5f20dab1a157104571",
+      "signed_archive_packages": 3,
+      "source_base": "2581d75bc4c0ed7f522b08288f335a6db58d141a",
+      "stage": "taskless-restore-helper"
+    }
+  },
+  "public_parent": "aad849f80100069518bd62d771bf6aafab02e611",
+  "remote_validation_sha": "ce6e32bcd8e20a1b323477ee866aa3e2188be17d",
+  "validation_files": [
+    ".github/workflows/native-arm64-guarded-helper.yml",
+    "scripts/rust-platform-contracts/guarded-arm64-helper/helper-text.patch",
+    "scripts/rust-platform-contracts/guarded-arm64-helper/inputs.json",
+    "scripts/rust-platform-contracts/guarded-arm64-helper/prepare.py",
+    "scripts/rust-platform-contracts/guarded-arm64-helper/qualify.sh",
+    "scripts/rust-platform-contracts/guarded-arm64-helper/verify_runtime.py"
+  ],
+  "validation_sha": "ce6e32bcd8e20a1b323477ee866aa3e2188be17d",
+  "workflow_execution": {
+    "attempt": 1,
+    "job_id": 136709338463,
+    "log_sha256": "5ffce796d16c830edaca1f4932a30d1e6ef786f9fafa322e8238c04093ef7d05",
+    "run_id": 44859493788
+  }
+}

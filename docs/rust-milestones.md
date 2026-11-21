@@ -1831,3 +1831,8 @@ request, including the schedule change, preserved VOD links, and no new jobs.
 The [stock admin restart](rust-m8-original-admin-settings-restart.md)
 retained the saved value and the same signed administrator session across an
 owned web-generation restart. Both Rust runtime comparisons are pending.
+
+The [native ARM64 guarded restore helper](rust-m10-native-arm64-guarded-helper.md)
+built on the pinned Linux ARM64 runner and passed the same-image non-root
+runtime, loader closure, notices, and exact container retirement checks.
+Full ARM64 application and copied-data release checks remain open.
