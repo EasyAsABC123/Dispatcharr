@@ -1404,6 +1404,130 @@ async fn shared_live_observer_owner_retires_once_and_holds_engine_drain() {
     assert!(engine.shutdown_wait(Duration::from_millis(100)).await);
 }
 
+fn supported_input_url(candidate: &PlaybackCandidate) -> bool {
+    // Source promotes RTSP/RTP/UDP to a configured input process.
+    reqwest::Url::parse(&candidate.url).is_ok_and(|url| {
+        matches!(url.scheme(), "http" | "https")
+            || (candidate.input_command.is_some()
+                && matches!(url.scheme(), "rtsp" | "rtp" | "udp")
+                && url.host_str().is_some_and(|host| !host.is_empty()))
+    })
+}
+
+fn same_live_reservation(current: &PlaybackCandidate, next: &PlaybackCandidate) -> bool {
+    current.input_command.is_none()
+        && next.input_command.is_none()
+        && current.stream_id != next.stream_id
+        && current.url != next.url
+        && current.provider_max_streams > 0
+        && current.provider_max_streams == next.provider_max_streams
+        && current.provider_profile_id.is_some()
+        && current.provider_profile_id == next.provider_profile_id
+        && current
+            .credential_pool
+            .as_ref()
+            .map(|pool| (&pool.counter_key, pool.max_streams))
+            == next
+                .credential_pool
+                .as_ref()
+                .map(|pool| (&pool.counter_key, pool.max_streams))
+        && supported_input_url(next)
+}
+
+#[cfg(test)]
+mod retained_source_tests {
+    use super::*;
+    use dispatcharr_contracts::PlaybackCredentialPool;
+
+    fn candidate(id: i64) -> PlaybackCandidate {
+        PlaybackCandidate {
+            input_command: None,
+            stream_id: id,
+            provider_profile_id: Some(3),
+            provider_max_streams: 1,
+            credential_pool: Some(PlaybackCredentialPool {
+                counter_key: "server_group_connections:7:owned".to_owned(),
+                max_streams: 1,
+            }),
+            url: format!("http://owned-origin/{id}.ts"),
+            user_agent: String::new(),
+            headers: Vec::new(),
+            metadata: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn only_distinct_raw_inputs_with_equal_finite_reservation_identity_reuse_capacity() {
+        let initial = candidate(11);
+        let alternate = candidate(12);
+        assert!(same_live_reservation(&initial, &alternate));
+        let duplicate_url = PlaybackCandidate {
+            url: initial.url.clone(),
+            ..candidate(13)
+        };
+        let pool = [initial.clone(), duplicate_url, alternate.clone()];
+        let mut retry = crate::retry::RetryState::new();
+        retry.new_source(0);
+        let next = retry.next_candidate(&pool, Some(&initial.url)).unwrap();
+        assert_eq!(next, 2);
+        assert!(same_live_reservation(&initial, &pool[next]));
+        assert_eq!(retry.next_candidate(&pool, Some(&initial.url)), Some(next));
+        for different in [
+            PlaybackCandidate {
+                stream_id: initial.stream_id,
+                ..alternate.clone()
+            },
+            PlaybackCandidate {
+                url: initial.url.clone(),
+                ..alternate.clone()
+            },
+            PlaybackCandidate {
+                url: "rtsp://owned-origin/fallback".to_owned(),
+                ..alternate.clone()
+            },
+            PlaybackCandidate {
+                provider_profile_id: None,
+                ..alternate.clone()
+            },
+            PlaybackCandidate {
+                provider_profile_id: Some(4),
+                ..alternate.clone()
+            },
+            PlaybackCandidate {
+                provider_max_streams: 0,
+                ..alternate.clone()
+            },
+            PlaybackCandidate {
+                provider_max_streams: 2,
+                ..alternate.clone()
+            },
+            PlaybackCandidate {
+                credential_pool: None,
+                ..alternate.clone()
+            },
+            PlaybackCandidate {
+                credential_pool: Some(PlaybackCredentialPool {
+                    counter_key: "server_group_connections:7:different".to_owned(),
+                    max_streams: 1,
+                }),
+                ..alternate.clone()
+            },
+            PlaybackCandidate {
+                credential_pool: Some(PlaybackCredentialPool {
+                    counter_key: "server_group_connections:7:owned".to_owned(),
+                    max_streams: 2,
+                }),
+                ..alternate
+            },
+        ] {
+            assert!(
+                !same_live_reservation(&initial, &different),
+                "{different:?}"
+            );
+        }
+    }
+}
+
 async fn run_upstream(
     weak: Weak<Inner>,
     key: String,
@@ -1609,6 +1733,7 @@ async fn run_upstream(
         0
     };
     let mut attempts = 0u64;
+    let mut retained_source_slot = false;
     let mut last_candidate = None;
     let mut input = InputAccumulator::new(inner.config.chunk_bytes);
     let mut last_error = PlaybackError::new(502, "Upstream did not provide stream data");
@@ -1623,21 +1748,15 @@ async fn run_upstream(
         retry.new_source(current);
         let candidate = &candidates[current];
         session.connecting.store(true, Ordering::Relaxed);
-        // Source promotes RTSP/RTP/UDP to a configured input process. Those
-        // transports never enter the raw HTTP requester; validation here must
-        // not reject a real process-backed candidate before its slot/admission.
-        let valid_url = reqwest::Url::parse(&candidate.url).is_ok_and(|url| {
-            matches!(url.scheme(), "http" | "https")
-                || (candidate.input_command.is_some()
-                    && matches!(url.scheme(), "rtsp" | "rtp" | "udp")
-                    && url.host_str().is_some_and(|host| !host.is_empty()))
-        });
-        let reservation = if !valid_url {
+        let keep_source_slot = std::mem::take(&mut retained_source_slot);
+        let source_borrowed = initial_assignment.is_some();
+        let bytes_at_admission = session.received_bytes.load(Ordering::Relaxed);
+        let reservation = if !supported_input_url(candidate) {
             Err(PlaybackError::new(
                 502,
                 "Invalid or unsupported upstream URL",
             ))
-        } else if std::mem::take(&mut preview_borrowed) {
+        } else if keep_source_slot || std::mem::take(&mut preview_borrowed) {
             Ok(())
         } else if let Some(assignment) = initial_assignment.take() {
             match lease.as_ref().ok_or_else(||PlaybackError::new(503,"Raw assignment owner unavailable")) {
@@ -1737,7 +1856,16 @@ async fn run_upstream(
                                 break 'session;
                             }
                         };
-                        let published = if let Some(clients) = inner.clients.as_ref() {
+                        let published = if keep_source_slot {
+                            lease
+                                .switch_active_source_with_reservation(
+                                    candidate.stream_id,
+                                    candidate
+                                        .provider_profile_id
+                                        .expect("retained provider profile"),
+                                )
+                                .await
+                        } else if let Some(clients) = inner.clients.as_ref() {
                             lease
                                 .publish_source_assignment_with_metadata(
                                     assignment,
@@ -1819,8 +1947,18 @@ async fn run_upstream(
                 let final_initializing_source = session.native_initializing.load(Ordering::Acquire)
                     && matches!(*session.startup.borrow(), Startup::Pending)
                     && (0..candidates.len()).all(|index| retry.tried.contains(&index));
+                retained_source_slot = inner.config.source_initialization
+                    && !source_borrowed
+                    && preview_assignment.is_none()
+                    && lease.is_some()
+                    && session.source_slot_published.load(Ordering::Acquire)
+                    && matches!(*session.startup.borrow(), Startup::Ready)
+                    && session.received_bytes.load(Ordering::Relaxed) > bytes_at_admission
+                    && retry
+                        .next_candidate(&candidates, Some(&candidate.url))
+                        .is_some_and(|next| same_live_reservation(candidate, &candidates[next]));
                 if let Some(lease) = &lease {
-                    if !final_initializing_source {
+                    if !final_initializing_source && !retained_source_slot {
                         if let Err(error) = lease.release_provider().await {
                             last_error = coordination_error(error);
                             break 'session;

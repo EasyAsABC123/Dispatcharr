@@ -71,6 +71,30 @@ impl Lease {
         }
         self.publish_assignment(assignment, Some(ttl)).await
     }
+    /// Change the active input without rewriting the initial Source alias or
+    /// moving capacity. The same local live owner still holds that reservation.
+    pub async fn switch_active_source_with_reservation(
+        &self,
+        stream: i64,
+        profile: i64,
+    ) -> Result<(), Error> {
+        if stream <= 0 || profile <= 0 || self.inner.release_started.load(Ordering::Acquire) {
+            return Err(Error::InvalidRequest);
+        }
+        match lease_mutation_observed(
+            &self.inner,
+            LeaseMutation::SwitchActiveSource { stream, profile },
+            true,
+        )
+        .await?
+        {
+            1 => Ok(()),
+            _ => {
+                self.inner.lost.send_replace(true);
+                Err(Error::Lost)
+            }
+        }
+    }
     async fn publish_assignment(
         &self,
         assignment: LiveChannelAssignment,

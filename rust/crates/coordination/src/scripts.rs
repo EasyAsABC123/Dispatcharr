@@ -210,6 +210,34 @@ redis.call('HSET',KEYS[2],'alias_channel',KEYS[4],'alias_stream',KEYS[5],
 return 1
 "#;
 
+/// Preserve the already-owned alias and capacity for a same-profile switch.
+pub const SWITCH_ACTIVE_SOURCE: &str = r#"
+local owner,ledger=KEYS[1],KEYS[2]
+local token,stream,pid=ARGV[1],ARGV[2],ARGV[3]
+if redis.call('GET',owner)~=token or redis.call('HGET',ledger,'token')~=token then return 0 end
+if redis.call('HGET',ledger,'reserved')~='1' or redis.call('HGET',ledger,'source_slot_shared')~='1'
+    or redis.call('HGET',ledger,'source_borrowed')=='1'
+    or redis.call('HGET',ledger,'profile')~='profile_connections:'..pid then return 0 end
+local metadata=redis.call('HGET',ledger,'source_metadata')
+if not metadata or metadata~=string.gsub(owner,':owner$',':metadata')
+    or redis.call('HGET',metadata,'owner')~=token or redis.call('HGET',metadata,'rust_token')~=token
+    or redis.call('HGET',metadata,'m3u_profile')~=pid then return 0 end
+local state=redis.call('HGET',metadata,'state')
+if state~='active' and state~='buffering' and state~='waiting_for_clients' then return 0 end
+local channel_alias,stream_alias=unpack(redis.call('HMGET',ledger,'alias_channel','alias_stream'))
+local channel_receipt,stream_receipt=unpack(redis.call('HMGET',ledger,'alias_channel_receipt','alias_stream_receipt'))
+local alias_sid,alias_pid=unpack(redis.call('HMGET',ledger,'alias_sid','alias_pid'))
+if not channel_alias or not stream_alias or not channel_receipt or not stream_receipt
+    or redis.call('GET',channel_alias)~=alias_sid or redis.call('GET',stream_alias)~=pid or alias_pid~=pid
+    or redis.call('HGET',channel_receipt,'token')~=token or redis.call('HGET',stream_receipt,'token')~=token
+    or redis.call('HGET',channel_receipt,'scope')~='live' or redis.call('HGET',stream_receipt,'scope')~='live'
+    or redis.call('HGET',channel_receipt,'ledger')~=ledger or redis.call('HGET',stream_receipt,'ledger')~=ledger
+    or redis.call('HGET',channel_receipt,'stream')~=alias_sid or redis.call('HGET',channel_receipt,'profile')~=pid then return 0 end
+if counter_value('profile_connections:'..pid)<1 then return 0 end
+redis.call('HSET',metadata,'stream_id',stream)
+return 1
+"#;
+
 /// Adopt the real public allocation without incrementing profile/credential
 /// counters. A sealed observation is rechecked under this actual raw owner.
 pub const ADOPT_SOURCE_ASSIGNMENT: &str = r#"

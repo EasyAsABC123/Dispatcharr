@@ -112,6 +112,7 @@ struct Inner {
     clear_provider: Script,
     reserve_provider: Script,
     source_assignment: Script,
+    switch_active_source: Script,
     adopt_source_assignment: Script,
     preview_assignment: Script,
 }
@@ -278,6 +279,11 @@ impl Coordinator {
                 "{}{}",
                 scripts::REAP,
                 scripts::SOURCE_ASSIGNMENT
+            )),
+            switch_active_source: Script::new(&format!(
+                "{}{}",
+                scripts::REAP,
+                scripts::SWITCH_ACTIVE_SOURCE
             )),
             adopt_source_assignment: Script::new(&format!(
                 "{}{}",
@@ -691,6 +697,10 @@ enum LeaseMutation {
         assignment: LiveChannelAssignment,
         metadata_ttl: Option<Duration>,
     },
+    SwitchActiveSource {
+        stream: i64,
+        profile: i64,
+    },
     AdoptSourceAssignment {
         assignment: LiveChannelAssignment,
         profile: i64,
@@ -724,6 +734,7 @@ async fn lease_mutation_observed(
             LeaseMutation::ClearProvider => &inner.clear_provider,
             LeaseMutation::ReserveProvider(_) => &inner.reserve_provider,
             LeaseMutation::SourceAssignment { .. } => &inner.source_assignment,
+            LeaseMutation::SwitchActiveSource { .. } => &inner.switch_active_source,
             LeaseMutation::AdoptSourceAssignment { .. } => &inner.adopt_source_assignment,
         };
         let mut invocation = script.prepare_invoke();
@@ -793,6 +804,9 @@ async fn lease_mutation_observed(
                 profile,
             } => {
                 invocation.arg(assignment.stream).arg(profile);
+            }
+            LeaseMutation::SwitchActiveSource { stream, profile } => {
+                invocation.arg(stream).arg(profile);
             }
             LeaseMutation::Release | LeaseMutation::ClearProvider => {}
         }
