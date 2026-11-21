@@ -1,0 +1,204 @@
+{
+  "candidate": "3843b61af0ad8493a9004316836a18c65e7001a2",
+  "full_M8_accepted": false,
+  "package": {
+    "application_inputs": 2142,
+    "archive_sha256": "c0c85781437b269ca236fe58424764d05dfcc5bf4b2861f443249d84edfc22f3",
+    "engine_calls": 0,
+    "image": "sha256:4ff78894cd99f7c8083c97960562d217c4a754c4b3712aa679e0e6119a8e6e22",
+    "manifest_sha256": "340305af2df23ff4c3d10566719a00f825771f2997d7284839266f8cc94656da",
+    "parent": "8c57f3efefe674c59b77dbb6cb11e6c97cc4ff4d",
+    "product_paths": 5,
+    "protected_inputs": 497,
+    "revision": "3843b61af0ad8493a9004316836a18c65e7001a2"
+  },
+  "performance_verified": false,
+  "proof_sha256": {
+    "claimed": "859ac0821dd90af743700c561f3fb1fbc9a8f6f8c477e5ff7cfcafb4e60e2be9",
+    "queued": "aa6cb4965be8bf4a361c83e8ad3c76c4b4c8f6348418f8ba4e822f453eb842e6",
+    "roundtrip": "8720ad126dab6beae29b95f9a10a4dec61a1462e77058d1d78804c970da89eca"
+  },
+  "roundtrip": {
+    "Native": {
+      "actual_worker_results": [
+        "SUCCESS",
+        "SUCCESS",
+        "SUCCESS"
+      ],
+      "archive": {
+        "bytes": 39353,
+        "database_type": "postgresql",
+        "format_version": 2,
+        "members": [
+          "database.dump",
+          "metadata.json"
+        ],
+        "sha256": "78315db7d61c5436bfe1591f1c212a3a1199a16f86148650eefcbdb40cd3b9e1"
+      },
+      "compose_generations_retired": 4,
+      "create": 202,
+      "distinct_native_tasks": 3,
+      "download": 200,
+      "exact_scoped_SQL_restored_in_both_directions": true,
+      "fresh_admin_login_and_settings_channel_readback_after_both": true,
+      "normal_exit": 0,
+      "owned_inventory_empty": true,
+      "proof_sha256": "59380f40f71fca9b152e05ef5b5c5ae5e28f221e22d0b512d03bb86843ad5451",
+      "restore_statuses": [
+        202,
+        202
+      ],
+      "restored_archive_order": [
+        "Original-created",
+        "Native-created"
+      ],
+      "same_Main_and_PostgreSQL_generations": true,
+      "separate_control_database_marker_unchanged": true,
+      "signed_status": 200,
+      "upload": 201
+    },
+    "Original": {
+      "actual_worker": "SUCCESS",
+      "archive": {
+        "bytes": 39374,
+        "database_type": "postgresql",
+        "format_version": 2,
+        "members": [
+          "database.dump",
+          "metadata.json"
+        ],
+        "sha256": "fb519d1eed0d876c1509ad4eebb2d9c989a3fada0516ae27563253a4d5902849"
+      },
+      "compose_generations_retired": 2,
+      "create": 202,
+      "download": 200,
+      "normal_exit": 0,
+      "owned_inventory_empty": true,
+      "proof_sha256": "ca936963e02f5c36b9379e83557fc3498f337bcf0dd39aa9716d5d306c170281",
+      "scoped_SQL_unchanged": true,
+      "separate_control_database_marker_unchanged": true,
+      "signed_status": 200
+    },
+    "build_manifest_sha256": "340305af2df23ff4c3d10566719a00f825771f2997d7284839266f8cc94656da",
+    "candidate": "3843b61af0ad8493a9004316836a18c65e7001a2",
+    "candidate_image": "sha256:4ff78894cd99f7c8083c97960562d217c4a754c4b3712aa679e0e6119a8e6e22",
+    "compose_stop_grace_seconds": 150,
+    "controller_sha256": "f22c1e88abe95dbe6a6cd1d845560688439f40eeeaa3620f2d656919aa542cd5",
+    "credit": "Original Dispatcharr, Django, Celery and PostgreSQL contributors.",
+    "full_M8_accepted": false,
+    "full_default_graph_verified": false,
+    "independent_core_role_census": [
+      "baseline",
+      "candidate",
+      "data-init",
+      "origin"
+    ],
+    "opt_in_Core_create_restore_and_status": true,
+    "performance_verified": false,
+    "physical_exit": 0,
+    "scheduled_jobs_or_enabled_plugins_verified": false,
+    "scope": "Ordinary database-only PostgreSQL archive round trip on a disposable opt-in Core Main",
+    "sealed_runner_sha256": "02da7678b33859dd905b6a9c622cd700eecf0e0dbc6318588d3fe8a782a71570",
+    "source": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "shutdown": {
+    "claimed": {
+      "Original": {
+        "archive": {
+          "bytes": 39394,
+          "database_type": "postgresql",
+          "format_version": 2,
+          "members": [
+            "database.dump",
+            "metadata.json"
+          ],
+          "sha256": "84ae24781f8725c0db071a6af34aff5bae14543754d4fc21b1e031a788a7fdd0"
+        },
+        "create_status": 202,
+        "download_status": 200,
+        "exact_owned_compose_generations_retired": 2,
+        "normal_process_exit": 0,
+        "observer_skipped_Django_startup": true,
+        "owned_compose_inventory_empty": true,
+        "phase_receipt_sha256": "d7aa802225ba80cc2fdf5d7c3d5caabab91325bb2fbabb92364d16ca8a3d8150",
+        "seeded_admin_login_status": 200,
+        "signed_status": 200,
+        "snapshot_observations": 1,
+        "source_SQL_and_separate_control_unchanged": true,
+        "worker_result": "SUCCESS"
+      },
+      "candidate": "3843b61af0ad8493a9004316836a18c65e7001a2",
+      "candidate_image": "sha256:4ff78894cd99f7c8083c97960562d217c4a754c4b3712aa679e0e6119a8e6e22",
+      "controller_sha256": "3efbe3dd62ba9fcb03e9cd004f022a76d11d2d9f3b7b4912e384fdec91f437d6",
+      "credit": "Original Dispatcharr, Django, Redis, PostgreSQL and Celery contributors retain full credit.",
+      "effects": {
+        "independent_control_unchanged": true,
+        "remaining_broker_tasks": 0,
+        "restore_SQL_matches_Original": true,
+        "same_pg_restore_survived_SIGTERM": true,
+        "signed_restore_HTTP": 202,
+        "worker": "SUCCESS"
+      },
+      "exact_cleanup": true,
+      "full_M8": false,
+      "historical_active_976f_sha256": "4c9c03b683a6577623cf8067b55166ad5b923bea4cc5317a0702185201b9e510",
+      "manifest_sha256": "340305af2df23ff4c3d10566719a00f825771f2997d7284839266f8cc94656da",
+      "native_receipt_sha256": "0121d5971d9981a0e5336a97d83d33540e9ed3e1c8f6ae0b75f5642e58d7f040",
+      "normal_Main_exit": 0,
+      "performance": false,
+      "scope": "claimed"
+    },
+    "queued": {
+      "Original": {
+        "archive": {
+          "bytes": 39426,
+          "database_type": "postgresql",
+          "format_version": 2,
+          "members": [
+            "database.dump",
+            "metadata.json"
+          ],
+          "sha256": "6cea0aa4e7bcb10ae9c8a663d1460921eccf678d6c9a95fe85d32059aaf84c23"
+        },
+        "create_status": 202,
+        "download_status": 200,
+        "exact_owned_compose_generations_retired": 2,
+        "normal_process_exit": 0,
+        "observer_skipped_Django_startup": true,
+        "owned_compose_inventory_empty": true,
+        "phase_receipt_sha256": "46ce2542d9baeb10af20fe0a2ac9e0c56b89e40273e3c746b81efb5a7dc6710d",
+        "seeded_admin_login_status": 200,
+        "signed_status": 200,
+        "snapshot_observations": 1,
+        "source_SQL_and_separate_control_unchanged": true,
+        "worker_result": "SUCCESS"
+      },
+      "candidate": "3843b61af0ad8493a9004316836a18c65e7001a2",
+      "candidate_image": "sha256:4ff78894cd99f7c8083c97960562d217c4a754c4b3712aa679e0e6119a8e6e22",
+      "controller_sha256": "9e67f5e5e2f78ec79c7745d3fde7b73b29029f86fd6a011586da2cb58e5cc3ab",
+      "credit": "Original Dispatcharr, Django, Redis, PostgreSQL and Celery contributors retain full credit.",
+      "effects": {
+        "create_worker": "SUCCESS",
+        "queued_restore_has_no_terminal_result": true,
+        "remaining_broker_tasks": 1,
+        "same_create_survived_SIGTERM": true,
+        "signed_restore_HTTP": 202,
+        "unchanged_target_SQL_and_control": true
+      },
+      "exact_cleanup": true,
+      "full_M8": false,
+      "historical_active_976f_sha256": "4c9c03b683a6577623cf8067b55166ad5b923bea4cc5317a0702185201b9e510",
+      "manifest_sha256": "340305af2df23ff4c3d10566719a00f825771f2997d7284839266f8cc94656da",
+      "native_receipt_sha256": "f9f1994e90a890a19f7b31f49a6c480fd5d43230ea3ec3beb80268793e353cbf",
+      "normal_Main_exit": 0,
+      "performance": false,
+      "scope": "queued"
+    }
+  },
+  "workspace": {
+    "failed": 0,
+    "fixture_ignored": 814,
+    "passed": 1554,
+    "targets": 193
+  }
+}
