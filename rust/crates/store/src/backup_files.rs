@@ -31,6 +31,7 @@ pub struct BackupFiles {
     jobs: Option<Arc<dyn BackupJobApi>>,
     job_access: JobAccess,
     schedule_disable: Option<Arc<dyn BackupScheduleDisableApi>>,
+    schedule_enable: Option<Arc<dyn BackupScheduleEnableApi>>,
     nginx_accel: bool,
 }
 #[derive(Clone, Copy)]
@@ -107,6 +108,14 @@ pub trait BackupScheduleDisableApi: Send + Sync {
         auth: &'a AuthService,
         caller: Arc<dyn Send + Sync>,
     ) -> dispatcharr_contracts::BoxFuture<'a, Result<Value, StoreError>>;
+}
+/// Ordinary enable requires the scheduled publisher and consumer.
+pub trait BackupScheduleEnableApi: Send + Sync {
+    fn enable(
+        &self,
+        data: Value,
+        caller: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<Value, StoreError>>;
 }
 type Lease = Arc<OwnedSemaphorePermit>;
 fn reply(status: u16, detail: impl Into<String>) -> Response {
@@ -312,6 +321,7 @@ impl BackupFiles {
             jobs: None,
             job_access: JobAccess::None,
             schedule_disable: None,
+            schedule_enable: None,
             nginx_accel: false,
         })
     }
@@ -347,6 +357,10 @@ impl BackupFiles {
     /// Attach schedule-only behavior through the existing request executor.
     pub fn with_schedule_disable(mut self, adapter: Arc<dyn BackupScheduleDisableApi>) -> Self {
         self.schedule_disable = Some(adapter);
+        self
+    }
+    pub fn with_schedule_enable(mut self, adapter: Arc<dyn BackupScheduleEnableApi>) -> Self {
+        self.schedule_enable = Some(adapter);
         self
     }
     pub fn router(self) -> Router {
@@ -554,12 +568,18 @@ impl BackupFiles {
         }
         if kind == "schedule-update" {
             let jobs = self.jobs_for(kind);
-            if jobs.is_none() && self.schedule_disable.is_none() {
+            if jobs.is_none() && self.schedule_disable.is_none() && self.schedule_enable.is_none() {
                 return Ok(reply(501, "Backup schedule consumer is not prepared"));
             }
             let value = schedule_update_body(request).await?;
             let updated = if let Some(jobs) = jobs {
                 jobs.update_schedule(value, lease.clone()).await?
+            } else if let Some(adapter) = self
+                .schedule_enable
+                .as_ref()
+                .filter(|_| value.get("enabled").and_then(Value::as_bool) == Some(true))
+            {
+                adapter.enable(value, lease.clone()).await?
             } else if let Some(adapter) = &self.schedule_disable {
                 adapter.disable(value, &self.auth, lease.clone()).await?
             } else {

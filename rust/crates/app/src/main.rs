@@ -5,6 +5,7 @@ mod combined_statistics;
 mod combined_statistics_html;
 mod combined_statistics_wire;
 mod control;
+mod core_scheduled_jobs;
 mod database_config;
 mod drf_api_roots;
 mod m3u_refresh_all_config;
@@ -90,6 +91,7 @@ struct HealthState {
     stream_files: AuthService,
     store: Store,
     selected: Option<selected_jobs::SelectedJobs>,
+    core_scheduled: Option<core_scheduled_jobs::CoreScheduledJobs>,
     refresh_tvg: Option<dispatcharr_job_transport::tvg_programme_application::Application>,
 }
 async fn health(State(state): State<HealthState>) -> (StatusCode, Json<serde_json::Value>) {
@@ -114,6 +116,22 @@ async fn health(State(state): State<HealthState>) -> (StatusCode, Json<serde_jso
                     Json(
                         serde_json::json!({"status":if ready{"ready"}else{"selected_workers_not_ready"},"backend":"rust","parity_complete":false,"selected_workers":details}),
                     ),
+                );
+            }
+            if let Some(owner) = state.core_scheduled {
+                let ready = owner.ready();
+                return (
+                    if ready {
+                        StatusCode::OK
+                    } else {
+                        StatusCode::SERVICE_UNAVAILABLE
+                    },
+                    Json(serde_json::json!({
+                        "status": if ready {"ready"} else {"core_schedule_not_ready"},
+                        "backend": "rust",
+                        "parity_complete": false,
+                        "core_scheduled_jobs": {"ready": ready},
+                    })),
                 );
             }
             if let Some(tvg) = state.refresh_tvg {
@@ -239,10 +257,14 @@ async fn combined_stats_legacy_alias(request: axum::extract::Request) -> Respons
 async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let admin_location = admin_ingress::configured_location()?;
     let selected_jobs_enabled = selected_jobs::enabled()?;
+    let core_scheduled_jobs_enabled = core_scheduled_jobs::enabled()?;
+    if selected_jobs_enabled && core_scheduled_jobs_enabled {
+        return Err("Configure one application queue owner".into());
+    }
     // A Selected startup owns real SQL and Redis preparation before the HTTP
     // server exists. Register once before those operations, then await them
     // normally. Never use the signal to drop their in-progress futures.
-    let mut selected_stop = if selected_jobs_enabled {
+    let mut selected_stop = if selected_jobs_enabled || core_scheduled_jobs_enabled {
         Some(LatchedShutdown::register()?)
     } else {
         None
@@ -861,7 +883,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         selected_jobs_enabled
             || refresh_enabled
             || version_tasks_enabled
-            || original_m3u_refresh_all.is_some(),
+            || original_m3u_refresh_all.is_some()
+            || core_scheduled_jobs_enabled,
         store.clone(),
         auth.clone(),
         cache_url.as_deref(),
@@ -1094,7 +1117,26 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     {
         eprintln!("Could not set up plugin repository refresh schedule");
     }
-    if let Some(cache) = cache_url.as_ref().filter(|_| !selected_jobs_enabled) {
+    let core_scheduled = if core_scheduled_jobs_enabled {
+        Some(
+            core_scheduled_jobs::CoreScheduledJobs::prepare(
+                store.clone(),
+                auth.clone(),
+                cache_url.as_deref(),
+                selected_jobs_enabled
+                    || refresh_enabled
+                    || version_tasks_enabled
+                    || original_m3u_refresh_all.is_some(),
+            )
+            .await?,
+        )
+    } else {
+        None
+    };
+    if let Some(cache) = cache_url
+        .as_ref()
+        .filter(|_| !selected_jobs_enabled && !core_scheduled_jobs_enabled)
+    {
         if dispatcharr_job_transport::initialize_operator_backup_schedule(
             store.clone(),
             cache.clone(),
@@ -1196,6 +1238,10 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         )),
         (None, None) => backup_files,
     };
+    let backup_files = match &core_scheduled {
+        Some(owner) => backup_files.with_schedule_enable(Arc::new(owner.scheduler())),
+        None => backup_files,
+    };
     let backup_files = match &manual_backup {
         Some(owner) if owner.is_restore_owner() => {
             owner
@@ -1218,6 +1264,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             stream_files: auth.clone(),
             store,
             selected: selected_jobs.clone(),
+            core_scheduled: core_scheduled.clone(),
             refresh_tvg: epg_tvg.clone().filter(|_| !selected_jobs_enabled),
         })
         .merge(auth_routes)
@@ -1389,6 +1436,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         if let Some(owner) = &manual_backup {
             owner.start().map_err(|_| "Manual backup intake failed")?;
         }
+        if let Some(owner) = &core_scheduled {
+            owner.start().await?;
+        }
     }
     let manual_backup_enabled = manual_backup.is_some();
     let (shutdown_started, mut shutdown_notice) = tokio::sync::oneshot::channel();
@@ -1398,6 +1448,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         plugin_actions,
         core_settings,
         selected_jobs,
+        core_scheduled,
         core_compact: core_compact.clone(),
         core_repack: core_repack.clone(),
         ordinary_recording_playback: ordinary_recording_playback.clone(),
@@ -1465,6 +1516,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         "Original M3U publisher"
     } else if manual_backup_enabled {
         "Manual backup worker"
+    } else if core_scheduled_jobs_enabled {
+        "Core scheduled jobs"
     } else {
         "Selected"
     };
@@ -1472,6 +1525,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         refresh_enabled
             || original_m3u_refresh_all.is_some()
             || manual_backup_enabled
+            || core_scheduled_jobs_enabled
             || core_compact.as_ref().is_some_and(|owner| owner.was_used())
             || core_repack
                 .as_ref()
@@ -1538,6 +1592,9 @@ fn stop_service_admission(services: &ShutdownServices) {
     }
     if let Some(owner) = &services.core_compact {
         owner.close_admission();
+    }
+    if let Some(owner) = &services.core_scheduled {
+        owner.stop_admission();
     }
     if let Some(owner) = &services.manual_backup {
         owner.stop_admission();
@@ -1636,6 +1693,7 @@ struct ShutdownServices {
     plugin_actions: dispatcharr_store::PluginActions,
     core_settings: Option<dispatcharr_store::CoreSettingsWrites>,
     selected_jobs: Option<selected_jobs::SelectedJobs>,
+    core_scheduled: Option<core_scheduled_jobs::CoreScheduledJobs>,
     core_compact: Option<Arc<dispatcharr_job_transport::compact_coordination::CompactCoordinator>>,
     core_repack: Option<dispatcharr_store::xc_account_http::Repack>,
     ordinary_recording_playback: Option<dispatcharr_store::RecordingPlayback>,
@@ -1677,6 +1735,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         plugin_actions,
         core_settings,
         selected_jobs,
+        core_scheduled,
         core_compact,
         core_repack,
         ordinary_recording_playback,
@@ -1713,6 +1772,11 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     if let Some(owner) = &manual_backup {
         owner.stop_admission();
     }
+    let core_scheduled_mode = core_scheduled.is_some();
+    let core_scheduled_shutdown = match core_scheduled {
+        Some(ref owner) => owner.shutdown(Duration::from_secs(12)).await,
+        None => Ok(()),
+    };
     if selected_jobs.is_none() {
         if let Some(tvg) = &epg_tvg {
             tvg.stop_channel_publications();
@@ -2004,7 +2068,10 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     if !live && live_client_connect.was_used() {
         return Err("Live Connect drain incomplete".into());
     }
-    if (selected_mode || manual_restore_grace.is_some()) && (incomplete || !statistics_drained) {
+    core_scheduled_shutdown?;
+    if (selected_mode || manual_restore_grace.is_some() || core_scheduled_mode)
+        && (incomplete || !statistics_drained)
+    {
         return Err(
             "Service drain incomplete; process termination may close outstanding resources".into(),
         );

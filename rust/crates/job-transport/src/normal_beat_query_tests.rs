@@ -8,6 +8,8 @@ async fn query(c: &mut PgConnection, now: DateTime<Utc>) -> Vec<sqlx::postgres::
         .bind(&f.numeric_hours)
         .bind(f.zones)
         .bind(f.offsets)
+        .bind(Option::<String>::None)
+        .bind(Option::<String>::None)
         .fetch_all(c)
         .await
         .unwrap()

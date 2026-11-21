@@ -85,6 +85,79 @@ struct Inner {
     cache: Mutex<Cache>,
     lifecycle: Lifecycle,
     maximum_sleep: Duration,
+    scope: ScheduleScope,
+    backup_worker: Option<crate::normal_queue::CoreScheduledWorker>,
+}
+const BACKUP_PERIODIC_NAME: &str = "backup-scheduled-task";
+const BACKUP_PERIODIC_TASK: &str = "apps.backups.tasks.scheduled_backup_task";
+const CLEANUP_PERIODIC_TASK: &str = "celery.backend_cleanup";
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum ScheduleScope {
+    All,
+    Backup,
+    Cleanup,
+}
+impl ScheduleScope {
+    fn row_identity(self) -> (Option<&'static str>, Option<&'static str>) {
+        match self {
+            Self::All => (None, None),
+            Self::Backup => (Some(BACKUP_PERIODIC_NAME), Some(BACKUP_PERIODIC_TASK)),
+            Self::Cleanup => (Some(CLEANUP_PERIODIC_TASK), Some(CLEANUP_PERIODIC_TASK)),
+        }
+    }
+    fn admits(self, entry: &Entry) -> bool {
+        if self == Self::All {
+            return true;
+        }
+        if self == Self::Cleanup {
+            return entry.name == CLEANUP_PERIODIC_TASK
+                && entry.task == CLEANUP_PERIODIC_TASK
+                && entry.interval.is_none()
+                && entry.crontab.is_some()
+                && !entry.one_off
+                && entry.start_time.is_none()
+                && entry.expires.is_none()
+                && entry.expire_seconds == Some(43_200)
+                && entry.queue.is_none()
+                && entry.exchange.is_none()
+                && entry.routing_key.is_none()
+                && entry.priority.is_none()
+                && entry
+                    .headers
+                    .as_object()
+                    .is_some_and(|value| value.is_empty())
+                && entry
+                    .kwargs
+                    .as_object()
+                    .is_some_and(|value| value.is_empty())
+                && entry.args.as_array().is_some_and(|value| value.is_empty());
+        }
+        entry.name == BACKUP_PERIODIC_NAME
+            && entry.task == BACKUP_PERIODIC_TASK
+            && entry.interval.is_none()
+            && entry.crontab.is_some()
+            && !entry.one_off
+            && entry.start_time.is_none()
+            && entry.expires.is_none()
+            && entry.expire_seconds.is_none()
+            && entry.queue.is_none()
+            && entry.exchange.is_none()
+            && entry.routing_key.is_none()
+            && entry.priority.is_none()
+            && entry
+                .headers
+                .as_object()
+                .is_some_and(|header| header.is_empty())
+            && entry.args.as_array().is_some_and(|args| args.is_empty())
+            && entry.kwargs.as_object().is_some_and(|kwargs| {
+                kwargs.len() == 1
+                    && kwargs
+                        .get("retention_count")
+                        .and_then(Value::as_i64)
+                        .is_some_and(|count| count >= 0)
+            })
+    }
 }
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum Admission {
@@ -177,6 +250,28 @@ impl Scheduler {
         identity: ProducerIdentitySource,
         maximum_sleep: Duration,
     ) -> Result<Self, Error> {
+        Self::prepare_scoped(pool, jobs, identity, maximum_sleep, None)
+    }
+
+    /// Route a backup-only periodic owner through the same model/reload and
+    /// confirmed broker publisher. Callers must replace their Beat loop, and
+    /// own the matching normal backup queue adapter before starting this one.
+    pub fn prepare_core_schedules(
+        pool: PgPool,
+        identity: ProducerIdentitySource,
+        maximum_sleep: Duration,
+        worker: crate::normal_queue::CoreScheduledWorker,
+    ) -> Result<Self, Error> {
+        Self::prepare_scoped(pool, worker.jobs(), identity, maximum_sleep, Some(worker))
+    }
+
+    fn prepare_scoped(
+        pool: PgPool,
+        jobs: Jobs,
+        identity: ProducerIdentitySource,
+        maximum_sleep: Duration,
+        backup_worker: Option<crate::normal_queue::CoreScheduledWorker>,
+    ) -> Result<Self, Error> {
         if !jobs.allows_defaults()
             || maximum_sleep.is_zero()
             || maximum_sleep > Duration::from_secs(5)
@@ -191,6 +286,12 @@ impl Scheduler {
                 cache: Mutex::new(Cache::default()),
                 lifecycle: Lifecycle::new(),
                 maximum_sleep,
+                scope: if backup_worker.is_some() {
+                    ScheduleScope::Cleanup
+                } else {
+                    ScheduleScope::All
+                },
+                backup_worker,
             }),
         })
     }
@@ -208,7 +309,21 @@ impl Scheduler {
         tokio::spawn(async move {
             let _owner = owner;
             let mut connection = inner.pool.acquire().await?.detach();
-            let observed = install_defaults(&mut connection).await;
+            let observed = if inner.scope == ScheduleScope::Cleanup {
+                install_default(
+                    &mut connection,
+                    CLEANUP_PERIODIC_TASK,
+                    CLEANUP_PERIODIC_TASK,
+                    None,
+                )
+                .await
+                .map(|()| Setup {
+                    installed: vec![CLEANUP_PERIODIC_TASK.into()],
+                    failed: Vec::new(),
+                })
+            } else {
+                install_defaults(&mut connection).await
+            };
             settle(connection, observed).await
         })
         .await
@@ -221,6 +336,16 @@ impl Scheduler {
         self.inner.lifecycle.status.borrow().clone()
     }
     pub fn start(&self, caller: Arc<dyn Send + Sync>) -> Result<(), Error> {
+        if self
+            .inner
+            .backup_worker
+            .as_ref()
+            .is_some_and(|worker| !worker.ready())
+        {
+            return Err(Error::Configuration(
+                "backup schedule consumer is unavailable",
+            ));
+        }
         self.inner.lifecycle.start()?;
         let this = self.clone();
         let mut stop = self.inner.lifecycle.stop.subscribe();
@@ -252,6 +377,17 @@ impl Scheduler {
     }
     pub async fn tick_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Tick, Error> {
         let slot = self.inner.lifecycle.reserve(Operation::Tick)?;
+        if self
+            .inner
+            .backup_worker
+            .as_ref()
+            .is_some_and(|worker| !worker.ready())
+        {
+            return Ok(Tick {
+                delay_seconds: self.inner.maximum_sleep.as_secs_f64(),
+                ..Tick::default()
+            });
+        }
         let owner = Arc::new(Owner {
             _caller: caller,
             _slot: slot,
@@ -262,12 +398,39 @@ impl Scheduler {
         // owned through all statements, broker reply, Ready and physical close.
         tokio::spawn(async move {
             let mut connection = inner.pool.acquire().await?.detach();
-            let observed = tick(&inner, &mut connection, owner.clone()).await;
+            let observed = async {
+                if inner.scope == ScheduleScope::Cleanup
+                    && crate::normal_backup_schedule::try_lock_due_occurrence(&mut connection)
+                        .await?
+                {
+                    let backup = tick_backup(&inner, &mut connection, owner.clone()).await?;
+                    if backup.synchronized != 0 {
+                        return Ok(backup);
+                    }
+                    if !crate::normal_backup_schedule::release_due_occurrence(&mut connection)
+                        .await?
+                    {
+                        return Err(Error::Configuration("backup schedule lock settlement"));
+                    }
+                }
+                tick(&inner, &mut connection, owner).await
+            }
+            .await;
             settle(connection, observed).await
         })
         .await
         .map_err(|_| Error::Supervisor)?
     }
+    pub fn core_schedule_ready(&self) -> bool {
+        !*self.inner.lifecycle.stop.borrow()
+            && matches!(self.status(), Status::Observed(_))
+            && self
+                .inner
+                .backup_worker
+                .as_ref()
+                .is_some_and(|worker| worker.ready())
+    }
+
     pub fn stop_admission(&self) {
         self.inner.lifecycle.close();
     }
@@ -307,6 +470,26 @@ impl Scheduler {
             .map_err(|_| Error::Supervisor)?
     }
 }
+
+impl dispatcharr_store::BackupScheduleEnableApi for Scheduler {
+    fn enable(
+        &self,
+        data: Value,
+        caller: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<Value, dispatcharr_store::StoreError>> {
+        Box::pin(async move {
+            let ready = self.core_schedule_ready()
+                && data.get("enabled").and_then(Value::as_bool) == Some(true);
+            let Some(worker) = self.inner.backup_worker.as_ref().filter(|_| ready) else {
+                return Err(dispatcharr_store::StoreError::StatusBody(
+                    501,
+                    json!({"detail":"Backup schedule consumer is not prepared"}),
+                ));
+            };
+            worker.enable_schedule(data, caller).await
+        })
+    }
+}
 async fn settle<T>(mut connection: PgConnection, observed: Result<T, Error>) -> Result<T, Error> {
     let ready = connection.ping().await.err().map(Box::new);
     let close = connection.close().await.err().map(Box::new);
@@ -318,6 +501,93 @@ async fn settle<T>(mut connection: PgConnection, observed: Result<T, Error>) -> 
         });
     }
     observed
+}
+
+fn due_matches_config(entry: &Entry, expression: &str, retention: i64) -> bool {
+    let Some((minute, hour, weekday, day, month, _)) = &entry.crontab else {
+        return false;
+    };
+    let current = [minute, hour, day, month, weekday];
+    let expected: Vec<_> = expression.split_whitespace().map(cron_names).collect();
+    current.len() == expected.len()
+        && current
+            .into_iter()
+            .zip(expected)
+            .all(|(live, wanted)| live == &wanted)
+        && entry.kwargs["retention_count"].as_i64() == Some(retention)
+}
+
+async fn tick_backup(
+    inner: &Inner,
+    connection: &mut PgConnection,
+    owner: Arc<Owner>,
+) -> Result<Tick, Error> {
+    let mut result = Tick {
+        delay_seconds: 5.0,
+        ..Tick::default()
+    };
+    // The detached session keeps its lock through the SQL reservation and
+    // the real Redis result. The outer tick settles the same connection.
+    let now = Utc::now();
+    let (mut entries, invalid) = load(connection, now, ScheduleScope::Backup).await?;
+    result.reloaded = true;
+    result.invalid_rows = invalid;
+    let Some(candidate) = entries.remove(BACKUP_PERIODIC_NAME) else {
+        return Ok(result);
+    };
+    let due = decision(&candidate, now)?;
+    if !due.due || due.persistence != PersistenceEffect::Unchanged {
+        return Ok(result);
+    }
+    let Some((expression, retention)) =
+        crate::normal_backup_schedule::live_due_configuration(connection)
+            .await
+            .map_err(|_| Error::Configuration("live backup schedule settings"))?
+    else {
+        return Ok(result);
+    };
+    let entry = candidate.entry;
+    if !due_matches_config(&entry, &expression, retention)
+        || !inner
+            .backup_worker
+            .as_ref()
+            .is_some_and(|worker| worker.ready())
+    {
+        return Ok(result);
+    }
+    let count = entry
+        .total_run_count
+        .checked_add(1)
+        .ok_or(Error::Capacity)?;
+    let reserved = sqlx::query(concat!(
+        "UPDATE django_celery_beat_periodictask ",
+        "SET last_run_at=$1,total_run_count=$2,date_changed=$1 ",
+        "WHERE enabled AND id=$3 AND name=$4 AND task=$5 AND total_run_count=$6"
+    ))
+    .bind(now)
+    .bind(count)
+    .bind(entry.id)
+    .bind(BACKUP_PERIODIC_NAME)
+    .bind(BACKUP_PERIODIC_TASK)
+    .bind(entry.total_run_count)
+    .execute(&mut *connection)
+    .await?;
+    if reserved.rows_affected() != 1 {
+        return Ok(result);
+    }
+    result.synchronized = 1;
+    let published = match prepare_publication(&entry, Uuid::new_v4(), &inner.identity) {
+        Ok(publication) => inner.jobs.publish_normal_beat(&publication, owner).await,
+        Err(_) => Err(transport::Error::Protocol),
+    };
+    match published {
+        Ok(publication) => result.published = Some(publication.task_id),
+        Err(error @ transport::Error::AmbiguousPublication(_)) => {
+            return Err(Error::Transport(error))
+        }
+        Err(error) => result.publication_error = Some(error),
+    }
+    Ok(result)
 }
 fn adjusted(delay: f64) -> f64 {
     if delay > 0.0 {
@@ -451,7 +721,7 @@ async fn tick(
         let (saved, missing) = sync(connection, &mut cache).await?;
         result.synchronized += saved;
         result.missing += missing;
-        let (entries, invalid) = load(connection, now).await?;
+        let (entries, invalid) = load(connection, now, inner.scope).await?;
         cache.entries = entries;
         cache.loaded = true;
         cache.last_full = Some(std::time::Instant::now());
@@ -578,6 +848,8 @@ candidates AS MATERIALIZED (
  LEFT JOIN django_celery_beat_crontabschedule cr ON cr.id=p.crontab_id
  LEFT JOIN zone_offsets z ON z.zone_name=cr.timezone
  WHERE p.enabled
+   AND ($6::text IS NULL OR (p.name=$6 AND p.task=$7::text
+        AND p.interval_id IS NULL AND p.solar_id IS NULL AND p.clocked_id IS NULL AND p.crontab_id IS NOT NULL))
    AND (p.clocked_id IS NULL OR cl.clocked_time IS NULL OR cl.clocked_time <= $1::timestamptz)
    AND (p.crontab_id IS NULL OR cr.id IS NULL OR NOT (cr.hour=ANY($3::text[])) OR z.hour_offset IS NULL
         OR CASE WHEN cr.hour=ANY($3::text[]) THEN (cr.hour::integer+z.hour_offset+24)%24 END=ANY($2::integer[]))
@@ -635,17 +907,21 @@ impl QueryFilters {
 async fn load(
     connection: &mut PgConnection,
     now: DateTime<Utc>,
+    scope: ScheduleScope,
 ) -> Result<(BTreeMap<String, Cached>, usize), Error> {
     // Source enabled_models_qs excludes far-future clocked and simple numeric
     // calendar hours BEFORE model loading. Apply those exact profile predicates
     // before LIMIT/serialization budget, not after an unrelated enabled-row cap.
     let filters = QueryFilters::new(now)?;
+    let (name, task) = scope.row_identity();
     let rows = sqlx::query(LOAD_QUERY)
         .bind(filters.cutoff)
         .bind(&filters.hours)
         .bind(&filters.numeric_hours)
         .bind(filters.zones)
         .bind(filters.offsets)
+        .bind(name)
+        .bind(task)
         .fetch_all(&mut *connection)
         .await?;
     let budget = rows.first().ok_or(Error::Capacity)?;
@@ -727,6 +1003,9 @@ async fn load(
         let kwargs = serde_json::from_str::<Value>(if kwargs.is_empty() { "{}" } else { &kwargs });
         let mut enabled = true;
         if args.is_err() || kwargs.is_err() {
+            if scope != ScheduleScope::All {
+                return Err(Error::Configuration("stored Core periodic arguments"));
+            }
             sqlx::query("UPDATE django_celery_beat_periodictask SET enabled=false,last_run_at=NULL,date_changed=$2 WHERE id=$1").bind(id).bind(now).execute(&mut *connection).await?;
             enabled = false;
         }
@@ -779,6 +1058,9 @@ async fn load(
                 )
             }),
         };
+        if !scope.admits(&model) {
+            return Err(Error::Configuration("stored backup schedule admission"));
+        }
         if model.crontab.is_some()
             && (!(1970..=2037).contains(&model.last_run_at.year())
                 || !(1970..=2037).contains(&now.year()))
@@ -1146,6 +1428,67 @@ mod tests {
             interval: Some((5, "seconds".into())),
             crontab: None,
         }
+    }
+    #[test]
+    fn backup_scheduler_selects_only_the_owned_standard_periodic_model() {
+        let mut entry = model(BACKUP_PERIODIC_TASK);
+        entry.name = BACKUP_PERIODIC_NAME.into();
+        entry.interval = None;
+        entry.crontab = Some((
+            "10".into(),
+            "14".into(),
+            "2".into(),
+            "*".into(),
+            "*".into(),
+            "UTC".into(),
+        ));
+        entry.kwargs = json!({"retention_count": 3});
+        assert_eq!(
+            ScheduleScope::Backup.row_identity(),
+            (Some(BACKUP_PERIODIC_NAME), Some(BACKUP_PERIODIC_TASK))
+        );
+        assert_eq!(ScheduleScope::All.row_identity(), (None, None));
+        assert!(ScheduleScope::Backup.admits(&entry));
+        assert!(due_matches_config(&entry, "10 14 * * 2", 3));
+        assert!(!due_matches_config(&entry, "11 14 * * 2", 3));
+        assert!(!due_matches_config(&entry, "10 14 * * 2", 2));
+        assert!(!due_matches_config(&entry, "10 14 * *", 3));
+        let mut other = entry.clone();
+        other.name = "other-periodic-backup".into();
+        assert!(!ScheduleScope::Backup.admits(&other));
+        assert!(ScheduleScope::All.admits(&other));
+        other = entry.clone();
+        other.task = "apps.backups.tasks.create_backup_task".into();
+        assert!(!ScheduleScope::Backup.admits(&other));
+        other = entry.clone();
+        other.queue = Some("custom".into());
+        assert!(!ScheduleScope::Backup.admits(&other));
+        other = entry;
+        other.kwargs = json!({"retention_count": -1});
+        assert!(!ScheduleScope::Backup.admits(&other));
+    }
+    #[test]
+    fn core_cleanup_scope_keeps_the_ordinary_same_named_backend_task() {
+        let mut entry = model(CLEANUP_PERIODIC_TASK);
+        entry.name = CLEANUP_PERIODIC_TASK.into();
+        entry.interval = None;
+        entry.crontab = Some((
+            "0".into(),
+            "4".into(),
+            "*".into(),
+            "*".into(),
+            "*".into(),
+            "UTC".into(),
+        ));
+        entry.expire_seconds = Some(43_200);
+        assert_eq!(
+            ScheduleScope::Cleanup.row_identity(),
+            (Some(CLEANUP_PERIODIC_TASK), Some(CLEANUP_PERIODIC_TASK))
+        );
+        assert!(ScheduleScope::Cleanup.admits(&entry));
+        assert!(!ScheduleScope::Backup.admits(&entry));
+        entry.name = BACKUP_PERIODIC_NAME.into();
+        assert!(!ScheduleScope::Cleanup.admits(&entry));
     }
     #[test]
     fn cached_backup_timezone_change_reaches_the_next_honolulu_cron_boundary() {

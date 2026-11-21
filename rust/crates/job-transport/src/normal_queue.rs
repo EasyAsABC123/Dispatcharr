@@ -231,6 +231,199 @@ pub struct Application {
     inner: Arc<Inner>,
     lifetime: Arc<Lifetime>,
 }
+
+/// Shared Core Celery receiver for the prepared periodic families.
+#[derive(Clone)]
+pub struct CoreScheduledWorker {
+    lane: Arc<Lane>,
+    head: Arc<NormalHead>,
+    families: Arc<BTreeMap<Family, FamilyAdapter>>,
+    backup: Arc<crate::normal_backup::Application>,
+    lifecycle: Arc<Mutex<(bool, bool)>>,
+    stop: Arc<Lifetime>,
+    poll: Duration,
+}
+impl CoreScheduledWorker {
+    pub fn prepare(
+        backup: Arc<crate::normal_backup::Application>,
+        store: &dispatcharr_store::Store,
+        poll: Duration,
+    ) -> Result<Self, Error> {
+        let jobs = backup.scheduled_jobs();
+        if !jobs.allows_defaults()
+            || !(Duration::from_millis(25)..=Duration::from_secs(5)).contains(&poll)
+        {
+            return Err(Error::Configuration);
+        }
+        let cleanup = crate::normal_default_families::prepare_cleanup(jobs.clone(), store)
+            .map_err(|_| Error::Configuration)?;
+        let actual: Arc<dyn Handler> = backup.clone();
+        let mut families = BTreeMap::new();
+        for (family, inner) in [
+            (Family::BackupScheduled, actual),
+            (Family::BackendCleanup, cleanup),
+        ] {
+            let maximum = inner.maximum_concurrency();
+            validate_family_admission(family, maximum, inner.supports_selected_head())?;
+            families.insert(
+                family,
+                FamilyAdapter(Arc::new(OwnedFamily {
+                    inner,
+                    slot: Arc::new(Semaphore::new(maximum)),
+                    closed: AtomicBool::new(false),
+                })),
+            );
+        }
+        let head = Arc::new(NormalHead::core_scheduled(jobs));
+        let handlers = families
+            .iter()
+            .map(|(family, adapter)| (*family, Arc::new(adapter.clone()) as Arc<dyn Handler>))
+            .collect();
+        let prepared =
+            Prepared::core_scheduled(head.clone(), handlers).map_err(|_| Error::Configuration)?;
+        Ok(Self {
+            lane: Arc::new(Lane {
+                prepared,
+                state: watch::channel(State::Prepared).0,
+                done: watch::channel(true).0,
+            }),
+            head,
+            families: Arc::new(families),
+            backup,
+            lifecycle: Arc::new(Mutex::new((false, false))),
+            stop: Arc::new(Lifetime(watch::channel(false).0)),
+            poll,
+        })
+    }
+
+    pub(crate) fn jobs(&self) -> crate::transport::Jobs {
+        self.backup.scheduled_jobs()
+    }
+
+    pub(crate) fn ready(&self) -> bool {
+        self.lane.state.borrow().ready() && !*self.stop.0.borrow()
+    }
+
+    pub(super) fn enable_schedule(
+        &self,
+        data: serde_json::Value,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<serde_json::Value, dispatcharr_store::StoreError>> {
+        dispatcharr_store::BackupJobApi::update_schedule(self.backup.as_ref(), data, owner)
+    }
+
+    pub fn start(&self, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
+        let mut lifecycle = self.lifecycle.lock().map_err(|_| Error::Poisoned)?;
+        if lifecycle.0 || lifecycle.1 {
+            return Err(Error::Closed);
+        }
+        lifecycle.0 = true;
+        self.lane.state.send_replace(State::Starting);
+        self.lane.done.send_replace(false);
+        tokio::spawn(celery_lane(
+            self.lane.clone(),
+            self.head.clone(),
+            self.families.as_ref().clone(),
+            owner,
+            self.stop.0.subscribe(),
+            self.poll,
+        ));
+        Ok(())
+    }
+
+    pub async fn await_ready(&self, budget: Duration) -> Result<(), Error> {
+        let mut state = self.lane.state.subscribe();
+        tokio::time::timeout(budget, async {
+            loop {
+                let observed = state.borrow_and_update().clone();
+                if observed.ready() && !*self.stop.0.borrow() {
+                    return Ok(());
+                }
+                if matches!(observed, State::Fault(_) | State::Stopped) || *self.stop.0.borrow() {
+                    return Err(Error::Closed);
+                }
+                state.changed().await.map_err(|_| Error::Closed)?;
+            }
+        })
+        .await
+        .map_err(|_| Error::Transport)?
+    }
+
+    /// Stop API/scheduler intake and await scheduler publications before
+    /// calling this method. It then settles queue callbacks and shared ports.
+    pub async fn shutdown(&self, budget: Duration) -> Result<(), Error> {
+        let deadline = tokio::time::Instant::now() + budget;
+        self.retire_callbacks(deadline).await?;
+        self.head
+            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+            .await
+            .map_err(|_| Error::Transport)?;
+        self.retired_callback_status()
+    }
+
+    /// Retire worker callbacks while an independently unsettled publisher
+    /// retains the shared transport.
+    pub async fn drain(&self, budget: Duration) -> Result<(), Error> {
+        self.retire_callbacks(tokio::time::Instant::now() + budget)
+            .await?;
+        self.retired_callback_status()
+    }
+
+    async fn retire_callbacks(&self, deadline: tokio::time::Instant) -> Result<(), Error> {
+        if let Ok(mut lifecycle) = self.lifecycle.lock() {
+            lifecycle.1 = true;
+        }
+        self.stop.0.send_replace(true);
+        for handler in self.families.values() {
+            handler.stop_admission();
+        }
+        let mut done = self.lane.done.subscribe();
+        tokio::time::timeout_at(deadline, async {
+            while !*done.borrow_and_update() {
+                done.changed().await.map_err(|_| Error::Closed)?;
+            }
+            Ok(())
+        })
+        .await
+        .map_err(|_| Error::DrainTimeout)??;
+        let mut held = Vec::with_capacity(self.families.len());
+        for handler in self.families.values() {
+            handler.0.closed.store(true, Ordering::Release);
+            let slot = tokio::time::timeout_at(
+                deadline,
+                handler
+                    .0
+                    .slot
+                    .clone()
+                    .acquire_many_owned(handler.maximum_concurrency() as u32),
+            )
+            .await
+            .map_err(|_| Error::DrainTimeout)?
+            .map_err(|_| Error::Closed)?;
+            held.push(slot);
+        }
+        let mut clean = true;
+        for handler in self.families.values() {
+            clean &= handler
+                .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
+                .await
+                .is_ok();
+        }
+        if !clean {
+            return Err(Error::DrainTimeout);
+        }
+        drop(held);
+        Ok(())
+    }
+
+    fn retired_callback_status(&self) -> Result<(), Error> {
+        if matches!(&*self.lane.state.borrow(), State::Fault(_)) {
+            return Err(Error::Transport);
+        }
+        Ok(())
+    }
+}
+
 /// Read-only witness for the observed taskless restore periodic domain.
 #[derive(Clone)]
 pub struct TasklessBuiltins {

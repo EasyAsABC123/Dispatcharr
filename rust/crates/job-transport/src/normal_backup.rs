@@ -65,6 +65,10 @@ pub struct Application {
     inner: Arc<Inner>,
 }
 impl Application {
+    pub(crate) fn scheduled_jobs(&self) -> Jobs {
+        self.inner.jobs.clone()
+    }
+
     #[allow(clippy::too_many_arguments)]
     pub fn prepare(
         jobs: Jobs,

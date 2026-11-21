@@ -10,6 +10,14 @@ pub(crate) struct NormalHead {
     peek: Arc<redis::Script>,
 }
 impl NormalHead {
+    pub(crate) fn core_scheduled(jobs: Jobs) -> Self {
+        Self {
+            jobs,
+            queue: Queue::Celery,
+            peek: Arc::new(redis::Script::new(PEEK_CREATE)),
+        }
+    }
+
     pub(crate) async fn connect(broker: &str, backend: &str, queue: Queue) -> Result<Self, Error> {
         Ok(Self {
             jobs: Jobs::connect_series(broker, backend, Config::default()).await?,

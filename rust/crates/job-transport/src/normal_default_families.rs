@@ -89,6 +89,16 @@ impl PreparedDefaults {
         ]
     }
 }
+/// Prepare the retained cleanup handler for a registry that owns the Jobs port.
+/// Stopping the handler drains its own task admission. The registry drains
+/// the shared transport after all handlers and the scheduler have stopped.
+pub fn prepare_cleanup(jobs: Jobs, store: &Store) -> Result<Arc<dyn Handler>, Error> {
+    let domains = Arc::new(KnownDomains::new(store.pool().clone()));
+    let worker = DefaultWorker::new_normal_family(jobs, domains, Kind::RedisBackendCleanup)
+        .map_err(|_| Error::Configuration)?;
+    Ok(Arc::new(NormalWorker::Default(worker)))
+}
+
 pub async fn prepare_defaults(
     store: Store,
     events: Arc<dyn UpdateEventSink>,
@@ -104,12 +114,7 @@ pub async fn prepare_defaults(
     let cleanup_jobs = Jobs::connect_defaults(broker, backend, Config::default())
         .await
         .map_err(|_| Error::Transport)?;
-    let cleanup = DefaultWorker::new_normal_family(
-        cleanup_jobs.clone(),
-        domains.clone(),
-        Kind::RedisBackendCleanup,
-    )
-    .map_err(|_| Error::Configuration)?;
+    let cleanup = prepare_cleanup(cleanup_jobs.clone(), &store)?;
     let account_jobs = Jobs::connect_defaults(broker, backend, Config::default())
         .await
         .map_err(|_| Error::Transport)?;
@@ -147,13 +152,12 @@ pub async fn prepare_defaults(
         publisher,
         completions,
     });
-    let cleanup_stop = cleanup.clone();
     let account_stop = accounts.clone();
     Ok(PreparedDefaults {
         cleanup: Arc::new(FamilyBundle {
-            worker: Arc::new(NormalWorker::Default(cleanup)),
+            worker: cleanup,
             ports: Ports::Default(cleanup_jobs),
-            stop: Some(Arc::new(move || cleanup_stop.request_stop())),
+            stop: None,
         }),
         accounts: Arc::new(FamilyBundle {
             worker: Arc::new(NormalWorker::Default(accounts)),

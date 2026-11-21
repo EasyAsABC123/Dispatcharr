@@ -178,13 +178,32 @@ impl Prepared {
         head: Arc<dyn Head>,
         entries: Vec<(Family, Arc<dyn Handler>)>,
     ) -> Result<Self, PrepareError> {
+        Self::with_required(head, entries, &REQUIRED)
+    }
+
+    pub(crate) fn core_scheduled(
+        head: Arc<dyn Head>,
+        entries: Vec<(Family, Arc<dyn Handler>)>,
+    ) -> Result<Self, PrepareError> {
+        Self::with_required(
+            head,
+            entries,
+            &[Family::BackupScheduled, Family::BackendCleanup],
+        )
+    }
+
+    fn with_required(
+        head: Arc<dyn Head>,
+        entries: Vec<(Family, Arc<dyn Handler>)>,
+        required: &[Family],
+    ) -> Result<Self, PrepareError> {
         let mut handlers = BTreeMap::new();
         for (family, handler) in entries {
             if handlers.insert(family, handler).is_some() {
                 return Err(PrepareError::DuplicateFamily(family));
             }
         }
-        for family in REQUIRED {
+        for &family in required {
             if !handlers.contains_key(&family) {
                 return Err(PrepareError::MissingFamily(family));
             }

@@ -76,6 +76,28 @@ async fn lock_schedule(connection: &mut PgConnection) -> Result<(), StoreError> 
     Ok(())
 }
 
+/// The scoped scheduler owns this physical connection through the Redis reply.
+/// A durable reservation commits before publication, with this lock still held.
+pub(super) async fn try_lock_due_occurrence(
+    connection: &mut PgConnection,
+) -> Result<bool, sqlx::Error> {
+    sqlx::query_scalar(
+        "SELECT pg_try_advisory_lock(hashtext('dispatcharr:backup-scheduled-task'), 0)",
+    )
+    .fetch_one(connection)
+    .await
+}
+
+pub(super) async fn release_due_occurrence(
+    connection: &mut PgConnection,
+) -> Result<bool, sqlx::Error> {
+    sqlx::query_scalar(
+        "SELECT pg_advisory_unlock(hashtext('dispatcharr:backup-scheduled-task'), 0)",
+    )
+    .fetch_one(connection)
+    .await
+}
+
 async fn locked_settings(connection: &mut PgConnection) -> Result<Option<Value>, StoreError> {
     let row = sqlx::query(concat!(
         "SELECT CASE WHEN value IS NULL OR octet_length(value::text)<=65536 THEN value END AS value,",
@@ -97,6 +119,40 @@ async fn locked_settings(connection: &mut PgConnection) -> Result<Option<Value>,
 fn settings_value(row: Option<Value>, updating: bool) -> Value {
     row.filter(Value::is_object)
         .unwrap_or_else(|| if updating { json!({}) } else { defaults() })
+}
+
+fn calendar_expression(config: &Value) -> Result<String, StoreError> {
+    let advanced = config["cron_expression"].as_str().unwrap_or("");
+    if !advanced.is_empty() {
+        return Ok(advanced.to_owned());
+    }
+    let (hour, minute) = config["time"]
+        .as_str()
+        .and_then(|time| time.split_once(':'))
+        .filter(|(_, minute)| !minute.contains(':'))
+        .ok_or_else(|| failed("Invalid stored backup schedule time"))?;
+    let weekday = if config["frequency"] == json!("daily") {
+        "*".to_owned()
+    } else {
+        config["day_of_week"].to_string()
+    };
+    Ok(format!("{minute} {hour} * * {weekday}"))
+}
+
+pub(super) async fn live_due_configuration(
+    connection: &mut PgConnection,
+) -> Result<Option<(String, i64)>, StoreError> {
+    let Some(row) = locked_settings(connection).await? else {
+        return Ok(None);
+    };
+    let config = normalized(&settings_value(Some(row), false))?;
+    if config["enabled"] == json!(false) {
+        return Ok(None);
+    }
+    let retention = config["retention_count"]
+        .as_i64()
+        .ok_or_else(|| failed("Backup schedule retention unavailable"))?;
+    Ok(Some((calendar_expression(&config)?, retention)))
 }
 
 #[derive(Clone)]
@@ -255,7 +311,7 @@ impl Schedule {
             if !enabled {sqlx::query("DELETE FROM django_celery_beat_periodictask WHERE name='backup-scheduled-task'").execute(&mut *tx).await?;}
             else{
                let canonical = timezone.ok_or_else(|| failed("Backup schedule timezone unavailable"))?;
-               let advanced=config["cron_expression"].as_str().unwrap_or("");let expression=if !advanced.is_empty(){advanced.to_string()}else{let time=config["time"].as_str().unwrap_or("");let parts=time.split(':').collect::<Vec<_>>();if parts.len()!=2{return Err(failed("Invalid stored backup schedule time"))}format!("{} {} * * {}",parts[1],parts[0],if config["frequency"]==json!("daily"){ "*".to_string()}else{config["day_of_week"].to_string()})};
+               let expression=calendar_expression(&config)?;
                let parts=expression.split_whitespace().collect::<Vec<_>>();if parts.len()!=5{return Err(invalid("Cron expression must have 5 parts: minute hour day month weekday"))}
                let found:Option<i64>=sqlx::query_scalar("SELECT id::bigint FROM django_celery_beat_crontabschedule WHERE minute=$1 AND hour=$2 AND day_of_month=$3 AND month_of_year=$4 AND day_of_week=$5 AND timezone=$6 ORDER BY id LIMIT 1").bind(parts[0]).bind(parts[1]).bind(parts[2]).bind(parts[3]).bind(parts[4]).bind(canonical).fetch_optional(&mut *tx).await?;
                let cron=match found{Some(id)=>id,None=>sqlx::query_scalar("INSERT INTO django_celery_beat_crontabschedule(minute,hour,day_of_month,month_of_year,day_of_week,timezone) VALUES($1,$2,$3,$4,$5,$6) RETURNING id::bigint").bind(parts[0]).bind(parts[1]).bind(parts[2]).bind(parts[3]).bind(parts[4]).bind(canonical).fetch_one(&mut *tx).await?};
