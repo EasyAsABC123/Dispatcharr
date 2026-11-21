@@ -1,7 +1,7 @@
 use crate::{AuthService, Store, StoreError, User};
 use dispatcharr_contracts::{
-    BoxFuture, OutputFormat, PlaybackCandidate, PlaybackError, PlaybackRequest, PlaybackResolver,
-    PlaybackSource, PlaybackViewer, UserLimitPolicy,
+    BoxFuture, OutputFormat, PlaybackCandidate, PlaybackError, PlaybackRequest, PlaybackResolution,
+    PlaybackResolver, PlaybackSource, PlaybackViewer, UserLimitPolicy,
 };
 use sqlx::Row;
 use std::time::Duration;
@@ -621,7 +621,7 @@ impl AuthService {
         user: User,
         channel_id: &str,
         forced: Option<OutputFormat>,
-    ) -> Result<PlaybackSource, PlaybackError> {
+    ) -> Result<PlaybackResolution, PlaybackError> {
         let invalid = || PlaybackError {
             status: 404,
             body: serde_json::json!({"error":"Not found"}),
@@ -647,8 +647,27 @@ impl AuthService {
             }
         })?;
         request.channel_id = channel.uuid.to_string();
-        self.build_playback_source(request, Some(user), forced)
+        let channel = self
+            .store
+            .resolve_channel_mode_cached(
+                &request.channel_id,
+                true,
+                Some(&user),
+                self.notification_cache.as_ref(),
+            )
             .await
+            .map_err(playback_error)?
+            .ok_or_else(|| PlaybackError::new(404, "Not found"))?;
+        // Original handles a saved Redirect before any XC extension can select
+        // an output format. XC does not enter the direct preview route.
+        if channel.redirect {
+            return self
+                .playback_redirect_plan(request, Some(user), channel)
+                .await;
+        }
+        self.playback_source_with_channel(request, Some(user), forced, channel)
+            .await
+            .map(|source| PlaybackResolution::Stream(Box::new(source)))
     }
 
     pub(crate) async fn build_playback_source(

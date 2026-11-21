@@ -1,6 +1,6 @@
 //! Source direct Redirect-mode response selection, before live-worker reuse.
 //! Original Dispatcharr authors retain algorithm/application credit.
-use crate::playback::playback_error;
+use crate::playback::{playback_error, ResolvedChannel};
 use crate::{AuthService, User};
 use dispatcharr_contracts::{
     PlaybackCandidate, PlaybackError, PlaybackRedirectPlan, PlaybackRequest, PlaybackResolution,
@@ -155,7 +155,6 @@ impl AuthService {
                 .await
                 .map(|v| PlaybackResolution::Stream(Box::new(v)));
         }
-        let capacity_only = allowed(user.as_ref())?.is_some();
         if skip {
             if let Some(proxy) = self.locked_proxy_profile().await? {
                 let candidates = self
@@ -195,6 +194,18 @@ impl AuthService {
             // Source Channel Redirect falls back to ordinary handoff when the
             // locked Proxy template does not exist. Stream preview differs.
         }
+        self.playback_redirect_plan(request, user, channel).await
+    }
+
+    // Shared by direct playback and XC after their own authentication and
+    // channel authorization. Only the direct route resolves preview overrides.
+    pub(crate) async fn playback_redirect_plan(
+        &self,
+        request: PlaybackRequest,
+        user: Option<User>,
+        channel: ResolvedChannel,
+    ) -> Result<PlaybackResolution, PlaybackError> {
+        let capacity_only = allowed(user.as_ref())?.is_some();
         let proxy = self
             .store
             .setting("proxy_settings")

@@ -13,7 +13,7 @@ pub mod timeshift;
 pub mod vod;
 pub use hls::HlsSessionInfo;
 
-use dispatcharr_contracts::PlaybackViewer;
+use dispatcharr_contracts::{BoxFuture, PlaybackViewer};
 use redis::{
     aio::{ConnectionManager, ConnectionManagerConfig},
     Script,
@@ -25,7 +25,7 @@ use std::{
         atomic::{AtomicBool, AtomicU64, Ordering},
         Arc, Mutex, Weak,
     },
-    time::{Duration, SystemTime, UNIX_EPOCH},
+    time::{Duration, Instant, SystemTime, UNIX_EPOCH},
 };
 use tokio::{
     sync::{watch, OwnedSemaphorePermit, Semaphore},
@@ -91,6 +91,24 @@ pub struct ClientStore {
     inner: Arc<Inner>,
 }
 
+type NotifyRetirement =
+    Box<dyn FnOnce(Duration, u64, Arc<dyn Send + Sync>) -> Option<BoxFuture<'static, ()>> + Send>;
+
+struct Retirement {
+    started: Instant,
+    notify: NotifyRetirement,
+}
+
+impl Retirement {
+    fn observe(
+        self,
+        bytes_sent: u64,
+        admission: Arc<dyn Send + Sync>,
+    ) -> Option<BoxFuture<'static, ()>> {
+        (self.notify)(self.started.elapsed(), bytes_sent, admission)
+    }
+}
+
 struct ClientInner {
     runtime: tokio::runtime::Handle,
     store: Weak<Inner>,
@@ -112,6 +130,7 @@ struct ClientInner {
     stats_announced: AtomicBool,
     cleanup_done: watch::Sender<bool>,
     cleanup_error: Arc<AtomicBool>,
+    natural_retirement: Mutex<Option<Retirement>>,
     _permit: Arc<OwnedSemaphorePermit>,
 }
 
@@ -546,6 +565,7 @@ return 1
             stats_announced: AtomicBool::new(false),
             cleanup_done,
             cleanup_error: Arc::new(AtomicBool::new(false)),
+            natural_retirement: Mutex::new(None),
             _permit: Arc::new(permit),
         });
         {
@@ -741,6 +761,28 @@ impl ClientLease {
     }
     pub fn stopped(&self) -> watch::Receiver<bool> {
         self.inner.stop.subscribe()
+    }
+    /// One callback for an ordinary raw TS lease. It cannot retain or release
+    /// the actual ClientLease and never runs in frame accounting.
+    pub fn observe_natural_retirement(
+        &self,
+        started: Instant,
+        notify: impl FnOnce(Duration, u64, Arc<dyn Send + Sync>) -> Option<BoxFuture<'static, ()>>
+            + Send
+            + 'static,
+    ) {
+        let mut retirement = self.inner.natural_retirement.lock().unwrap();
+        if retirement.is_none()
+            && self.inner.output_format == "mpegts"
+            && self.inner.registered.load(Ordering::Acquire)
+            && !self.inner.released.load(Ordering::Acquire)
+            && !*self.inner.stop.borrow()
+        {
+            *retirement = Some(Retirement {
+                started,
+                notify: Box::new(notify),
+            });
+        }
     }
     pub fn record_bytes(&self, bytes: usize) {
         self.inner.bytes.fetch_add(bytes as u64, Ordering::Relaxed);

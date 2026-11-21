@@ -171,11 +171,18 @@ pub struct PlaybackViewer {
 }
 
 /// An authenticated raw TS viewer whose body has reached useful media.
+#[derive(Clone)]
 pub struct LiveClientConnectEvent {
     pub channel_id: String,
     pub channel_name: String,
     pub client_id: String,
     pub viewer: PlaybackViewer,
+}
+
+pub struct LiveClientDisconnectEvent {
+    pub connected: LiveClientConnectEvent,
+    pub elapsed: Duration,
+    pub bytes_sent: u64,
 }
 
 pub trait LiveClientConnectObserver: Send + Sync {
@@ -184,6 +191,17 @@ pub trait LiveClientConnectObserver: Send + Sync {
         event: LiveClientConnectEvent,
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, ()>;
+
+    /// The registered raw TS viewer retired through its ordinary owner.
+    /// Admission spans the audit stage and is independent of media frames.
+    fn after_natural_retirement(
+        &self,
+        _event: LiveClientDisconnectEvent,
+        _owner: Arc<dyn Send + Sync>,
+        _admission: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, ()> {
+        Box::pin(async {})
+    }
 }
 
 /// An actual active pre-delivery OutputProfile resolved under the existing

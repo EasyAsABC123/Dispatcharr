@@ -7,7 +7,7 @@ use axum::{
     Extension, Json, Router,
 };
 use dispatcharr_contracts::{
-    OutputFormat, PlaybackError, PlaybackRequest, PlaybackResolver, PlaybackSource,
+    OutputFormat, PlaybackError, PlaybackRequest, PlaybackResolution, PlaybackResolver,
 };
 use dispatcharr_fmp4_http::Fmp4Gateway;
 use dispatcharr_hls_http::HlsGateway;
@@ -93,17 +93,11 @@ async fn stream(
             .insert("allow", "GET, OPTIONS".parse().unwrap());
         return response;
     }
-    let source = match app.resolver.resolve_response(request).await {
-        Ok(dispatcharr_contracts::PlaybackResolution::Stream(source)) => *source,
-        Ok(dispatcharr_contracts::PlaybackResolution::Redirect(plan)) => {
-            return match app.engine.redirect(*plan).await {
-                Ok(response) => response,
-                Err(reason) => error(reason),
-            }
-        }
+    let resolution = match app.resolver.resolve_response(request).await {
+        Ok(resolution) => resolution,
         Err(reason) => return error(reason),
     };
-    let response = dispatch_source(app.engine, app.hls, app.fmp4, source).await;
+    let response = dispatch_resolution(app.engine, app.hls, app.fmp4, resolution).await;
     match response {
         Ok(response) => response,
         Err(reason) => error(reason),
@@ -114,19 +108,23 @@ pub fn dispatcher(
     hls: Option<HlsGateway>,
     fmp4: Option<Fmp4Gateway>,
 ) -> dispatcharr_xc_http::LiveDispatcher {
-    Arc::new(move |source| {
+    Arc::new(move |resolution| {
         let engine = engine.clone();
         let hls = hls.clone();
         let fmp4 = fmp4.clone();
-        Box::pin(async move { dispatch_source(engine, hls, fmp4, source).await })
+        Box::pin(async move { dispatch_resolution(engine, hls, fmp4, resolution).await })
     })
 }
-async fn dispatch_source(
+async fn dispatch_resolution(
     engine: StreamEngine,
     hls: Option<HlsGateway>,
     fmp4: Option<Fmp4Gateway>,
-    source: PlaybackSource,
+    resolution: PlaybackResolution,
 ) -> Result<Response, PlaybackError> {
+    let source = match resolution {
+        PlaybackResolution::Stream(source) => *source,
+        PlaybackResolution::Redirect(plan) => return engine.redirect(*plan).await,
+    };
     match source.output_format {
         OutputFormat::MpegTs => engine.play(source).await,
         OutputFormat::Hls => match hls {
@@ -137,5 +135,39 @@ async fn dispatch_source(
             Some(gateway) => gateway.play(source).await,
             None => Err(PlaybackError::new(503, "Redis fMP4 output unavailable")),
         },
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use dispatcharr_contracts::{PlaybackRedirectPlan, PlaybackViewer, UserLimitPolicy};
+
+    #[tokio::test]
+    async fn xc_dispatcher_uses_shared_redirect_engine() {
+        let engine = StreamEngine::new(dispatcharr_stream_http::EngineConfig::default()).unwrap();
+        let dispatch = dispatcher(engine, None, None);
+        let resolution = PlaybackResolution::Redirect(Box::new(PlaybackRedirectPlan {
+            channel_id: "owned-test".to_owned(),
+            candidates: Vec::new(),
+            viewer: PlaybackViewer {
+                user_id: Some(7),
+                username: Some("owned-test".to_owned()),
+                ip_address: "127.0.0.1".parse().unwrap(),
+                user_agent: String::new(),
+                stream_limit: 0,
+                limit_policy: UserLimitPolicy::default(),
+            },
+            capacity_only: true,
+            assignment: None,
+            validate_urls: false,
+            selection_error: None,
+        }));
+        let result = dispatch(resolution).await.unwrap_err();
+        assert_eq!(result.status, 501);
+        assert_eq!(
+            result.body["error"],
+            "Redirect client-policy transport unavailable"
+        );
     }
 }

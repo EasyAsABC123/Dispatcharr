@@ -1,10 +1,12 @@
 //! Original Dispatcharr's ordinary live-client audit and bounded Main Connect webhook.
 //! Original Dispatcharr, Django, and Requests authors retain application and algorithm credit.
 use crate::{
-    epg_connect::{self, TemplateResult, Templates},
+    epg_connect::{self, LiveClientEvent, TemplateResult, Templates},
     AuthService, StoreError, TaskSqlSession,
 };
-use dispatcharr_contracts::{BoxFuture, LiveClientConnectEvent, LiveClientConnectObserver};
+use dispatcharr_contracts::{
+    BoxFuture, LiveClientConnectEvent, LiveClientConnectObserver, LiveClientDisconnectEvent,
+};
 use serde_json::{json, Value};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -13,13 +15,12 @@ use std::sync::{
 use uuid::Uuid;
 
 type Owner = Arc<dyn Send + Sync>;
-const EVENT: &str = "client_connect";
 const ACTIVE_SCOPE: &str = "SELECT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s \
     JOIN dispatcharr_connect_integration i ON i.id=s.integration_id \
-    WHERE s.event='client_connect' AND s.enabled AND i.enabled) \
+    WHERE s.event=$1 AND s.enabled AND i.enabled) \
     AND NOT EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s \
     JOIN dispatcharr_connect_integration i ON i.id=s.integration_id \
-    WHERE s.event='client_connect' AND s.enabled AND i.enabled \
+    WHERE s.event=$1 AND s.enabled AND i.enabled \
     AND (i.type<>'webhook' OR coalesce(s.payload_template,'')<>'')) \
     AND NOT EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled)";
 
@@ -50,14 +51,19 @@ impl Templates for Plain {
     }
 }
 
-fn event_details(event: &LiveClientConnectEvent) -> Value {
+fn event_details(event: &LiveClientConnectEvent, end: Option<&LiveClientDisconnectEvent>) -> Value {
     let user_agent: String = event.viewer.user_agent.chars().take(100).collect();
-    json!({
+    let mut details = json!({
         "client_ip":event.viewer.ip_address.to_string(),
         "client_id":event.client_id,
         "user_agent":(!user_agent.is_empty()).then_some(user_agent),
         "username":event.viewer.username,
-    })
+    });
+    if let Some(end) = end {
+        details["duration"] = json!((end.elapsed.as_secs_f64() * 100.0).round_ties_even() / 100.0);
+        details["bytes_sent"] = json!(end.bytes_sent);
+    }
+    details
 }
 
 impl LiveClientConnect {
@@ -75,6 +81,7 @@ impl LiveClientConnect {
 
     async fn record_audit(
         &self,
+        kind: LiveClientEvent,
         event: &LiveClientConnectEvent,
         channel: Uuid,
         details: &Value,
@@ -83,7 +90,7 @@ impl LiveClientConnect {
             "INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details) \
              VALUES($1,$2,$3,$4,$5)",
         )
-        .bind(EVENT)
+        .bind(kind.name())
         .bind(chrono::Utc::now())
         .bind(channel)
         .bind(&event.channel_name)
@@ -95,6 +102,7 @@ impl LiveClientConnect {
 
     async fn deliver(
         &self,
+        kind: LiveClientEvent,
         session: &TaskSqlSession,
         owner: Owner,
         channel: Uuid,
@@ -110,19 +118,22 @@ impl LiveClientConnect {
             owner.clone(),
         )
         .await?;
-        epg_connect::dispatch_live_client_connect(payload, session.clone(), Arc::new(Plain), owner)
+        epg_connect::dispatch_live_client(kind, payload, session.clone(), Arc::new(Plain), owner)
             .await?;
         Ok(())
     }
 
     async fn deliver_if_eligible(
         &self,
+        kind: LiveClientEvent,
         owner: Owner,
         channel: Uuid,
         channel_name: String,
         details: Value,
+        admission: Option<Owner>,
     ) -> Result<(), epg_connect::Error> {
         let eligible = sqlx::query_scalar::<_, bool>(ACTIVE_SCOPE)
+            .bind(kind.name())
             .fetch_one(self.auth.store.pool())
             .await
             .map_err(StoreError::from)?;
@@ -130,8 +141,16 @@ impl LiveClientConnect {
             return Ok(());
         }
         let session = self.auth.borrow_task_sql_session(owner.clone()).await?;
+        drop(admission);
         let outcome = self
-            .deliver(&session, owner.clone(), channel, channel_name, details)
+            .deliver(
+                kind,
+                &session,
+                owner.clone(),
+                channel,
+                channel_name,
+                details,
+            )
             .await;
         if session.close().await.is_err() {
             // Retain the actual writer and worker if physical close is uncertain.
@@ -169,10 +188,14 @@ impl LiveClientConnectObserver for LiveClientConnect {
                 return;
             };
             self.used.store(true, Ordering::Release);
-            let details = event_details(&event);
+            let details = event_details(&event, None);
             // Stock writes the SystemEvent after playback is ready and before
             // useful media even if no delivery will be sent.
-            if self.record_audit(&event, channel, &details).await.is_err() {
+            if self
+                .record_audit(LiveClientEvent::Connect, &event, channel, &details)
+                .await
+                .is_err()
+            {
                 tracing::warn!("Live client audit storage failed");
                 return;
             }
@@ -182,7 +205,14 @@ impl LiveClientConnectObserver for LiveClientConnect {
             let runtime = self.clone();
             tokio::spawn(async move {
                 let outcome = runtime
-                    .deliver_if_eligible(owner.clone(), channel, event.channel_name, details)
+                    .deliver_if_eligible(
+                        LiveClientEvent::Connect,
+                        owner.clone(),
+                        channel,
+                        event.channel_name,
+                        details,
+                        None,
+                    )
                     .await;
                 if outcome.is_err() {
                     tracing::warn!("Live Connect delivery did not settle successfully");
@@ -194,6 +224,54 @@ impl LiveClientConnectObserver for LiveClientConnect {
             });
         })
     }
+
+    fn after_natural_retirement(
+        &self,
+        event: LiveClientDisconnectEvent,
+        owner: Owner,
+        admission: Owner,
+    ) -> BoxFuture<'_, ()> {
+        Box::pin(async move {
+            let Ok(channel) = Uuid::parse_str(&event.connected.channel_id) else {
+                return;
+            };
+            self.used.store(true, Ordering::Release);
+            let details = event_details(&event.connected, Some(&event));
+            if self
+                .record_audit(
+                    LiveClientEvent::Disconnect,
+                    &event.connected,
+                    channel,
+                    &details,
+                )
+                .await
+                .is_err()
+            {
+                tracing::warn!("Live client disconnect audit storage failed");
+                return;
+            }
+            if self.retain_audit_history().await.is_err() {
+                tracing::warn!("Live client audit retention failed");
+            }
+            // Retain the existing bounded client slot through the audit and
+            // recipient lookup. Webhook I/O owns only the existing SQL writer.
+            let channel_name = event.connected.channel_name;
+            if self
+                .deliver_if_eligible(
+                    LiveClientEvent::Disconnect,
+                    owner,
+                    channel,
+                    channel_name,
+                    details,
+                    Some(admission),
+                )
+                .await
+                .is_err()
+            {
+                tracing::warn!("Live Connect disconnect delivery did not settle successfully");
+            }
+        })
+    }
 }
 
 #[cfg(test)]
@@ -201,7 +279,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn viewer_audit_uses_source_field_order_and_character_bound() {
+    fn viewer_connect_and_disconnect_retain_same_identity_and_typed_counters() {
         let event = LiveClientConnectEvent {
             channel_id: "11ca0bac-7532-414a-9d5b-9790cb6784a1".into(),
             channel_name: "Owned".into(),
@@ -215,7 +293,7 @@ mod tests {
                 limit_policy: Default::default(),
             },
         };
-        let fields = event_details(&event);
+        let fields = event_details(&event, None);
         assert_eq!(
             fields
                 .as_object()
@@ -227,5 +305,21 @@ mod tests {
         );
         assert_eq!(fields["user_agent"], "ř".repeat(100));
         assert_eq!(fields["client_id"], "owned-connection");
+        let end = LiveClientDisconnectEvent {
+            connected: event.clone(),
+            elapsed: std::time::Duration::from_millis(1249),
+            bytes_sent: 75_200,
+        };
+        let mut disconnected = event_details(&event, Some(&end));
+        assert_eq!(
+            disconnected.as_object_mut().unwrap().remove("duration"),
+            Some(json!(1.25))
+        );
+        assert_eq!(
+            disconnected.as_object_mut().unwrap().remove("bytes_sent"),
+            Some(json!(75200))
+        );
+        assert_eq!(disconnected, fields);
+        assert_eq!(LiveClientEvent::Disconnect.name(), "client_disconnect");
     }
 }

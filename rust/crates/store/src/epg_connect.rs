@@ -120,13 +120,28 @@ pub async fn dispatch(
     dispatch_observed(event, payload, session, templates, owner).await
 }
 
-pub(crate) async fn dispatch_live_client_connect(
+#[derive(Clone, Copy)]
+pub(crate) enum LiveClientEvent {
+    Connect,
+    Disconnect,
+}
+impl LiveClientEvent {
+    pub(crate) fn name(self) -> &'static str {
+        match self {
+            Self::Connect => "client_connect",
+            Self::Disconnect => "client_disconnect",
+        }
+    }
+}
+
+pub(crate) async fn dispatch_live_client(
+    event: LiveClientEvent,
     payload: Value,
     session: TaskSqlSession,
     templates: Arc<dyn Templates>,
     owner: Owner,
 ) -> Result<Report, Error> {
-    dispatch_observed("client_connect".into(), payload, session, templates, owner).await
+    dispatch_observed(event.name().into(), payload, session, templates, owner).await
 }
 
 async fn dispatch_observed(

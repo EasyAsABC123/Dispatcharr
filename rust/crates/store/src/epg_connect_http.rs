@@ -28,6 +28,11 @@ fn scalar(value: &Value) -> Result<String, Error> {
         Value::String(v) => Ok(v.clone()),
         Value::Bool(v) => Ok(if *v { "True" } else { "False" }.into()),
         Value::Number(v) if v.is_i64() || v.is_u64() => Ok(v.to_string()),
+        Value::Number(v) if v.is_f64() => v
+            .as_f64()
+            .filter(|value| value.is_finite())
+            .map(crate::json_compat::float_string)
+            .ok_or_else(|| unsupported("Connect form non-finite number unsupported")),
         _ => Err(unsupported(
             "Connect form scalar/iteration semantics unsupported",
         )),
@@ -349,6 +354,30 @@ mod actual_requests_peer {
             json!({"status_code":503,"body":"owned server rejection","success":false})
         );
     }
+    #[tokio::test]
+    async fn sends_typed_disconnect_duration_as_python_form_text() {
+        let (url, peer) = peer(200, "text/plain; charset=utf-8", b"accepted".to_vec());
+        let event = json!({"client_id": "owned viewer", "duration": 1.25, "bytes_sent": 75_200});
+        let result = send(&json!({"url": url}), &Payload::Original(event.clone()))
+            .await
+            .unwrap();
+        let request = String::from_utf8(peer.join().unwrap()).unwrap();
+        let (header, body) = request.split_once("\r\n\r\n").unwrap();
+        assert!(header.lines().any(
+            |line| line.eq_ignore_ascii_case("content-type: application/x-www-form-urlencoded")
+        ));
+        assert_eq!(
+            body,
+            "client_id=owned+viewer&duration=1.25&bytes_sent=75200"
+        );
+        assert_eq!(
+            result,
+            json!({"status_code": 200, "body": "accepted", "success": true})
+        );
+        assert!(event["duration"].is_f64());
+        assert_eq!(form(&json!({"duration": 1.0})).unwrap(), "duration=1.0");
+    }
+
     #[tokio::test]
     async fn rendered_source_json_flag_changes_header_without_reserializing_body_and_latin1_is_not_windows1252(
     ) {

@@ -1,13 +1,13 @@
 //! XC live entry port from original apps/proxy/live_proxy/views.py stream_xc.
 //! Original Dispatcharr authors retain credit. Component/media gates pending.
 use super::*;
-use dispatcharr_contracts::{BoxFuture, OutputFormat, PlaybackError, PlaybackSource};
+use dispatcharr_contracts::{BoxFuture, OutputFormat, PlaybackError, PlaybackResolution};
 pub type LiveDispatcher = Arc<
-    dyn Fn(PlaybackSource) -> BoxFuture<'static, Result<Response, PlaybackError>> + Send + Sync,
+    dyn Fn(PlaybackResolution) -> BoxFuture<'static, Result<Response, PlaybackError>> + Send + Sync,
 >;
 enum Authorized {
     Response(Response),
-    Source(Box<PlaybackSource>),
+    Playback(PlaybackResolution),
 }
 impl XcGateway {
     pub fn with_live(self, dispatcher: LiveDispatcher) -> Result<Self, StoreError> {
@@ -147,7 +147,7 @@ impl XcGateway {
             .resolve_xc_authorized(identity, user, channel, forced)
             .await
         {
-            Ok(source) => Ok(Authorized::Source(Box::new(source))),
+            Ok(resolution) => Ok(Authorized::Playback(resolution)),
             Err(error) => {
                 if error.status == 404
                     && error.body.get("error").and_then(serde_json::Value::as_str)
@@ -185,8 +185,8 @@ async fn live_dispatch(State(gateway): State<XcGateway>, request: Request<Body>)
     let head = request.method() == Method::HEAD;
     let mut response = match gateway.authorize_live(request).await {
         Ok(Authorized::Response(response)) => response,
-        Ok(Authorized::Source(source)) => match gateway.inner.live.get() {
-            Some(dispatcher) => match dispatcher(*source).await {
+        Ok(Authorized::Playback(resolution)) => match gateway.inner.live.get() {
+            Some(dispatcher) => match dispatcher(resolution).await {
                 Ok(response) => response,
                 Err(error) => drf(error.status, error.body, false),
             },

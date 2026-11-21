@@ -692,6 +692,7 @@ impl StreamEngine {
         let stream = async_stream::stream! {
             let mut state = state;
             let mut connect = connect;
+            let stream_started = std::time::Instant::now();
             let mut stopped=state.client.as_ref().map(ClientLease::stopped);
             let mut last_media=Instant::now();
             let mut source_keepalive=source_keepalive::SourceKeepalive::new();
@@ -747,7 +748,12 @@ impl StreamEngine {
                 match next {
                     Ok(Some(chunk)) => {
                         if let Some(event) = connect.take() {
-                            observe_client_connect(&state._guard, event).await;
+                            observe_client_connect(
+                                &state._guard,
+                                state.client.as_ref(),
+                                event,
+                                stream_started,
+                            ).await;
                         }
                         last_media=Instant::now();
                         source_keepalive.received();
@@ -1323,7 +1329,9 @@ async fn run_follower(
 
 async fn observe_client_connect(
     guard: &ViewerGuard,
+    client: Option<&ClientLease>,
     event: dispatcharr_contracts::LiveClientConnectEvent,
+    stream_started: std::time::Instant,
 ) {
     let Some(inner) = guard.inner.upgrade() else {
         return;
@@ -1348,7 +1356,28 @@ async fn observe_client_connect(
     };
     // The event owns only the worker count and immutable viewer fields. A
     // webhook cannot keep a disconnected viewer or a provider slot alive.
-    observer.before_media(event, owner).await;
+    observer.before_media(event.clone(), owner.clone()).await;
+    if let Some(client) = client {
+        let loss = Arc::downgrade(&inner);
+        client.observe_natural_retirement(stream_started, move |elapsed, bytes_sent, admission| {
+            if loss.upgrade().is_none_or(|engine| engine.slots.is_closed()) {
+                return None;
+            }
+            Some(Box::pin(async move {
+                observer
+                    .after_natural_retirement(
+                        dispatcharr_contracts::LiveClientDisconnectEvent {
+                            connected: event,
+                            elapsed,
+                            bytes_sent,
+                        },
+                        owner,
+                        admission,
+                    )
+                    .await;
+            }))
+        });
+    }
 }
 
 struct WorkerCount(Arc<Inner>);
@@ -1357,6 +1386,22 @@ impl Drop for WorkerCount {
         self.0.workers.fetch_sub(1, Ordering::AcqRel);
         self.0.workers_done.notify_waiters();
     }
+}
+
+#[cfg(test)]
+#[tokio::test]
+async fn shared_live_observer_owner_retires_once_and_holds_engine_drain() {
+    let engine = StreamEngine::new(EngineConfig::default()).unwrap();
+    engine.inner.workers.fetch_add(1, Ordering::AcqRel);
+    let connect = Arc::new(WorkerCount(engine.inner.clone()));
+    let disconnect = connect.clone();
+
+    drop(connect);
+    assert_eq!(engine.inner.workers.load(Ordering::Acquire), 1);
+    assert!(!engine.shutdown_wait(Duration::ZERO).await);
+    drop(disconnect);
+    assert_eq!(engine.inner.workers.load(Ordering::Acquire), 0);
+    assert!(engine.shutdown_wait(Duration::from_millis(100)).await);
 }
 
 async fn run_upstream(

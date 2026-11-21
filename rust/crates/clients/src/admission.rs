@@ -20,7 +20,7 @@ pub(super) async fn register_job(
     if result.is_err() && !client.released.swap(true, Ordering::AcqRel) {
         // A channel-stop supervisor may also retain this pending client; do
         // not rely on final Arc Drop to clean a rejected/failed registration.
-        let _ = release_job(&client).await;
+        let _ = release_job(&client, None).await;
     }
     result
 }
@@ -81,11 +81,19 @@ async fn register_actual(
     Ok(ClientLease { inner: client })
 }
 
-fn release_job(client: &ClientInner) -> tokio::task::JoinHandle<Result<(), Error>> {
+fn release_job(
+    client: &ClientInner,
+    retirement: Option<Retirement>,
+) -> tokio::task::JoinHandle<Result<(), Error>> {
     let (metadata, set, stop) = keys(&client.channel, &client.id);
     let token = client.token.clone();
     let id = client.id.clone();
     let admission = client._permit.clone();
+    // Capture at the release boundary. Construct this future synchronously
+    // so a later shutdown cannot discard an already accepted retirement.
+    let observation = retirement.and_then(|retirement| {
+        retirement.observe(client.bytes.load(Ordering::Relaxed), admission.clone())
+    });
     let done = client.cleanup_done.clone();
     let failed = client.cleanup_error.clone();
     let mut connection = client.connection.clone();
@@ -94,7 +102,6 @@ fn release_job(client: &ClientInner) -> tokio::task::JoinHandle<Result<(), Error
     let stats_id = client.id.clone();
     let stats_announced = client.stats_announced.swap(false, Ordering::AcqRel);
     client.runtime.spawn(async move {
-        let _admission = admission;
         let result: Result<i64, redis::RedisError> = Script::new(scripts::RELEASE)
             .key(metadata)
             .key(set)
@@ -105,12 +112,20 @@ fn release_job(client: &ClientInner) -> tokio::task::JoinHandle<Result<(), Error
             .await;
         failed.store(result.is_err(), Ordering::Release);
         done.send_replace(true);
-        result.map_err(|_| Error::RedisUnavailable)?;
+        let released = result.map_err(|_| Error::RedisUnavailable)?;
         if let Some(store) = stats_store.upgrade() {
             statistics::released(&store, &stats_channel, &stats_id, stats_announced);
         }
+        drop(admission);
+        notify_released(released, observation).await;
         Ok(())
     })
+}
+
+async fn notify_released(released: i64, observation: Option<BoxFuture<'static, ()>>) {
+    if let (1, Some(observation)) = (released, observation) {
+        observation.await;
+    }
 }
 
 pub(super) async fn release(client: &ClientInner) -> Result<(), Error> {
@@ -122,7 +137,7 @@ pub(super) async fn release(client: &ClientInner) -> Result<(), Error> {
         return Ok(());
     }
     // Timeout limits the caller, not the supervised Redis command lifetime.
-    time::timeout(client.config.command_timeout, release_job(client))
+    time::timeout(client.config.command_timeout, release_job(client, None))
         .await
         .map_err(|_| Error::RedisUnavailable)?
         .map_err(|_| Error::RedisUnavailable)?
@@ -137,7 +152,12 @@ pub(super) fn drop_client(client: &mut ClientInner) {
     }
     // Use the creation runtime even if the final lease is dropped on a plain
     // thread. Dropping the JoinHandle detaches the bounded supervised task.
-    std::mem::drop(release_job(client));
+    let retirement = if *client.stop.borrow() {
+        None
+    } else {
+        client.natural_retirement.get_mut().unwrap().take()
+    };
+    std::mem::drop(release_job(client, retirement));
 }
 
 /// Keep strong references to the bounded registry snapshot, then signal outside
@@ -173,7 +193,7 @@ pub(super) async fn stop_local_channel(store: Arc<Inner>, channel: &str) -> Resu
                 if client.registered.load(Ordering::Acquire)
                     && !client.released.swap(true, Ordering::AcqRel)
                 {
-                    jobs.push((client.clone(), release_job(client)));
+                    jobs.push((client.clone(), release_job(client, None)));
                 }
             }
             for (client, job) in jobs {
@@ -207,4 +227,36 @@ pub(super) async fn stop_local_channel(store: Arc<Inner>, channel: &str) -> Resu
         .await
         .map_err(|_| Error::RedisUnavailable)?
         .map_err(|_| Error::RedisUnavailable)?
+}
+
+#[cfg(test)]
+mod retirement_tests {
+    use super::*;
+    use std::sync::atomic::AtomicUsize;
+
+    #[tokio::test]
+    async fn exact_client_retirement_captures_once_and_polls_only_after_cleanup() {
+        for (redis_release, expected_calls) in [(1, 1), (0, 0)] {
+            let calls = Arc::new(AtomicUsize::new(0));
+            let calls_in_delivery = calls.clone();
+            let admission = Arc::new(());
+            let weak = Arc::downgrade(&admission);
+            let retirement = Retirement {
+                started: Instant::now(),
+                notify: Box::new(move |_elapsed, bytes, admission| {
+                    assert_eq!(bytes, 75_200);
+                    Some(Box::pin(async move {
+                        let _admission = admission;
+                        calls_in_delivery.fetch_add(1, Ordering::Relaxed);
+                    }))
+                }),
+            };
+            let observation = retirement.observe(75_200, admission);
+            assert!(weak.upgrade().is_some());
+            assert_eq!(calls.load(Ordering::Relaxed), 0);
+            notify_released(redis_release, observation).await;
+            assert_eq!(calls.load(Ordering::Relaxed), expected_calls);
+            assert!(weak.upgrade().is_none());
+        }
+    }
 }
