@@ -705,3 +705,15 @@ other typed row retain their prior values. The attachment qualifies scoped
 Original task behavior. Native parity, full task input coverage, performance
 and formal M0 acceptance remain open. Original Dispatcharr, Celery, Django
 and PostgreSQL authors and contributors retain full credit.
+
+## Retained Channel Profile and Group Manager cases
+
+The Original receipts attach four canonical Channel Profile JSON GET cases
+on Admin and assigned Standard actors and 28 GET cases on the two separate
+JSON-suffix routes. The suffix cases retain the declared media ranges,
+selected renderer and typed visibility. Five Admin Group Manager OPTIONS
+observations attach to the existing collection, detail and claim-custom
+routes. They retain the tested metadata and leave the discovery method
+declarations unchanged. These partial assignments reuse qualified receipts
+and require no additional HTTP run. The register adds no operation IDs or
+fully verified rows.

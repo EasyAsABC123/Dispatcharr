@@ -1,0 +1,226 @@
+{
+  "credit": "Original Dispatcharr and dependency authors and contributors retain full credit.",
+  "formal_nodes_transferred": 0,
+  "performance_verified": false,
+  "publication": {
+    "first_group_run": {
+      "cleanup_verified": true,
+      "native_business_requests_admitted": false,
+      "physical_exit": 1,
+      "receipt_sha256": "f672cc1f92ba42d6958d15a796c1cfc0acb0d3bfe0c334269a0261ff68fdbe71"
+    },
+    "host_log_sha256": "9f4d7ea2fe517a210d8b31b498c970ced7a97fb3e58324d7a2a3c46a99125068",
+    "host_workspace": {
+      "failed": 0,
+      "ignored": 814,
+      "passed": 1497
+    },
+    "image_id": "sha256:228d6a4c196c663a00d21bb5870b592f52da79fea13ed282e2d8b21acdcc4119",
+    "manifest_sha256": "59008317701682f1b66c99f5dab1b984d2bb8fa04c36ba4ab4e489f0bf006467",
+    "parent": "5b1827c5fecd581de9bdbee006b0778104e89b5e",
+    "postimage_sha256": {
+      "rust/crates/store/src/channel_groups.rs": "524b967f51bccc58749c78f3dac237f673fad81073e025f5b2dcf6d954a3b428",
+      "rust/crates/store/src/channel_groups/write.rs": "d6125c4216ea00f82196542e621c688e33c54b41a6731ef006330c7e72e34fe5",
+      "rust/crates/store/src/live_client_connect.rs": "c8f2d0d54d4521ae71dd8683ba44346856f6401e192a1bc00034ee4abe1a9343"
+    },
+    "protected_inputs": 497,
+    "restricted_host_run": {
+      "cargo_exit": 101,
+      "log_sha256": "e63045e375a9cfbc8af49921df5e72f16801bea8b5ba34aa4546d18fc96555a3",
+      "loopback_socket_denied": true
+    },
+    "review_sha256": "209afaf59a31d49ecc92788a5c1e8185a4ddb29d4ffe0b9d3aaf340005776a6b",
+    "revision": "6dbd079641c967f7532213ba16d0855d4603e4da",
+    "scoped_receipts_sha256": {
+      "enabled-webhook": "83e584c1dd815b6e6c3680ccb51e1ed98459e6498553b4431780f211093dbcaf",
+      "group": "6626f6ef99d622d233b4a1b7eaf57d24fc6bc92d26a49daabe2fcecc2dd46391",
+      "no-recipient": "c8a8ad528da6b4d6424d39f59fed85d4e0d24172d033409fcb5422a4f953a97c"
+    }
+  },
+  "scopes": {
+    "enabled-webhook": {
+      "candidate": {
+        "image_id": "sha256:228d6a4c196c663a00d21bb5870b592f52da79fea13ed282e2d8b21acdcc4119",
+        "manifest_sha256": "59008317701682f1b66c99f5dab1b984d2bb8fa04c36ba4ab4e489f0bf006467",
+        "revision": "6dbd079641c967f7532213ba16d0855d4603e4da",
+        "source_archive_sha256": "3964a5e11a6b257c90887eec54c9aa0df2eb3dbe0cd3221252a03a01edfce6b7",
+        "source_tree_sha256": "1885ff98065be8f2dc7821a6603684ff244b6b13fb93804adb8329c011524879",
+        "tag": "dispatcharr-rust-candidate:live-audit-group-write-6dbd079641c9"
+      },
+      "credit": "Original Dispatcharr and dependency authors and contributors retain full credit.",
+      "exact_cleanup": {
+        "Native": {
+          "cleanup_sha256": "6cb07a1fe7d69ecfb76380d9ee8c0bc8814decf5b202220a048443d8fd1cdf3f",
+          "exact_retired_roles": 4,
+          "probe_stdout_sha256": "b180a59c921a6976ff0182ef77890eafb1d3bf69821a1b68cda17f73b1df2296",
+          "receipt_sha256": "cd269690f0780e2a422fd5a3b87a01f66cdb01b7ad61414716da34e0031e02d1"
+        },
+        "Original": {
+          "cleanup_sha256": "5e20b2a1d68aece12876baea5b02bb34d6fb20df2cd8e711449234f2fb2bb3e0",
+          "exact_retired_roles": 2,
+          "probe_stdout_sha256": "6fe29675e9d0553f4196c1186fa61996280013f364882e2ba79f9a1260609610",
+          "receipt_sha256": "5327a4b3ebb241f8d4be6a5108369e5bb75fec841722a3a6c5a064a5a24a281b"
+        }
+      },
+      "formal_nodes_claimed": 0,
+      "fresh_normal_ts_client_connect": {
+        "HTTP_status": 200,
+        "audit_fields": [
+          "client_id",
+          "client_ip",
+          "user_agent",
+          "username"
+        ],
+        "audit_precedes_delivery": true,
+        "audit_visible_at_first_bounded_media_read": true,
+        "enriched_fields": [
+          "channel_id",
+          "channel_name",
+          "channel_url",
+          "client_id",
+          "client_ip",
+          "profile_used",
+          "provider_name",
+          "stream_id",
+          "stream_name",
+          "stream_url",
+          "user_agent",
+          "username"
+        ],
+        "linked_client_and_shared_payload": true,
+        "media_bytes": 75200,
+        "natural_origin_retirement": true,
+        "one_SystemEvent": true,
+        "one_successful_DeliveryLog": true,
+        "one_webhook": true,
+        "receiver_body_sha256": "a6f8481f8dcd4c53e788c2a827fee39830618b3083aa11a49b2ee68893ed432a",
+        "stock_provider_requests": 1,
+        "useful_packets_at_least": 40
+      },
+      "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "paired_controller_exit": 0,
+      "performance_measured": false,
+      "pinned_stock_proof_sha256": "cb2c2978ca51679a24744e5c981b3fedfc66e779491e17d9d343b82fcef08328"
+    },
+    "group": {
+      "Native_SQLite_parity_verified": false,
+      "Original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "actual_exit": 0,
+      "both_backend_SQL_boundaries_verified": true,
+      "both_backend_typed_group_shapes_match": true,
+      "build_manifest_sha256": "59008317701682f1b66c99f5dab1b984d2bb8fa04c36ba4ab4e489f0bf006467",
+      "candidate_image_id": "sha256:228d6a4c196c663a00d21bb5870b592f52da79fea13ed282e2d8b21acdcc4119",
+      "candidate_revision": "6dbd079641c967f7532213ba16d0855d4603e4da",
+      "cases": {
+        "claim": 200,
+        "create": 201,
+        "delete": 204,
+        "deleted_read": 404,
+        "detail": 200,
+        "fresh_login": 200,
+        "list": 200,
+        "login": 200,
+        "patch": 200,
+        "put": 200,
+        "restart_read": 200,
+        "unclaim": 200
+      },
+      "credit": "Original Dispatcharr, Django, PostgreSQL and dependency contributors.",
+      "exact_owned_container_generations_retired": 5,
+      "fixture_receipt_sha256": "04621c51743046582cc0a9d5d52ff69ab92c5780d544cb166a25c083419f21ea",
+      "graceful_native_main_generations": 2,
+      "graceful_stock_web_generations": 2,
+      "performance_verified": false,
+      "persisted_readback_after_each_restart": true,
+      "provider_demotion_or_bulk_cleanup_exercised": false,
+      "review_sha256": "209afaf59a31d49ecc92788a5c1e8185a4ddb29d4ffe0b9d3aaf340005776a6b",
+      "unchanged_PG_process_generation_and_independent_groups": true,
+      "wire_Allow_differences": {
+        "create": {
+          "Native": null,
+          "Original": "GET, POST, HEAD, OPTIONS"
+        },
+        "delete": {
+          "Native": null,
+          "Original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "deleted_read": {
+          "Native": null,
+          "Original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "fresh_login": {
+          "Native": null,
+          "Original": "POST, OPTIONS"
+        },
+        "login": {
+          "Native": null,
+          "Original": "POST, OPTIONS"
+        },
+        "put": {
+          "Native": null,
+          "Original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "unclaim": {
+          "Native": null,
+          "Original": "POST, OPTIONS"
+        }
+      },
+      "workload_seal_sha256": "afea2316e38181e89155ac63e006100ac9947c44bb5e163acde95972bab39e3b"
+    },
+    "no-recipient": {
+      "candidate": {
+        "image_id": "sha256:228d6a4c196c663a00d21bb5870b592f52da79fea13ed282e2d8b21acdcc4119",
+        "manifest_sha256": "59008317701682f1b66c99f5dab1b984d2bb8fa04c36ba4ab4e489f0bf006467",
+        "revision": "6dbd079641c967f7532213ba16d0855d4603e4da",
+        "source_archive_sha256": "3964a5e11a6b257c90887eec54c9aa0df2eb3dbe0cd3221252a03a01edfce6b7",
+        "source_tree_sha256": "1885ff98065be8f2dc7821a6603684ff244b6b13fb93804adb8329c011524879",
+        "tag": "dispatcharr-rust-candidate:live-audit-group-write-6dbd079641c9"
+      },
+      "credit": "Original Dispatcharr and dependency authors and contributors retain full credit.",
+      "exact_cleanup": {
+        "Native": {
+          "cleanup_sha256": "3c9fd4f93286cc246a17ccd1016af9e1cf94d2dea3d33033d3945f51bf13125a",
+          "exact_retired_roles": 4,
+          "probe_stdout_sha256": "176756534701689d45b136ce6abe325a245623adb53df709ecff87bb2fadfc86",
+          "receipt_sha256": "b31c2d6422c644626d515ed782cc52e50eb9dc6a85d2dfa311f66deb659cbe94"
+        },
+        "Original": {
+          "cleanup_sha256": "4dce99f8aee9c8f74a8ce0e1af0e5d18c863d7235a658bb62fd320091a2c9c94",
+          "exact_retired_roles": 2,
+          "probe_stdout_sha256": "9a2963811c495a4eba79125a95c27160b2b5e01acfe709d7ddac3bb5b2b49d57",
+          "receipt_sha256": "32a4a595b1e0974df4af28d5301322e3be0685b6056e1f69c0f9c83276b4e91d"
+        }
+      },
+      "formal_nodes_claimed": 0,
+      "fresh_normal_ts_no_recipient": {
+        "DeliveryLog_rows": 0,
+        "HTTP_status": 200,
+        "SystemEvent_rows": 1,
+        "audit_fields": [
+          "client_id",
+          "client_ip",
+          "user_agent",
+          "username"
+        ],
+        "audit_retained_through_close": true,
+        "audit_visible_after_useful_media": true,
+        "disabled_settings_profiles": [
+          "integration",
+          "subscription"
+        ],
+        "enabled_recipients": 0,
+        "media_bytes": 75200,
+        "natural_origin_retirement": true,
+        "stock_provider_requests": 1,
+        "useful_packets_at_least": 40,
+        "webhook_POSTs": 0
+      },
+      "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "paired_controller_exit": 0,
+      "performance_measured": false,
+      "pinned_stock_proof_sha256": "2bbe79788f1b25e039a76f90b2e8a6f0b1da47be0261d69b419a11b1bc737583"
+    }
+  }
+}

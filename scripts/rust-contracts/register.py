@@ -274,6 +274,8 @@ def build(bindings_path=None,deep_evidence=False):
         assert seen_cases=={(key,index)for key,dataset in datasets.items()for index in range(dataset['case_count'])}
     import source_contracts
     executable_Source_mapping=source_contracts.apply(ROOT,rows,case_bindings or {})
+    import retained_react_profile_group_contracts
+    retained_react_profile_group_contracts.apply(ROOT,rows,executable_Source_mapping)
     attestations=sorted({item['attestation']['path']:item['attestation']for item in(case_bindings or{}).get('evidence_datasets',[])}.values(),key=lambda item:item['path'])
     attestation_paths=[ROOT/item['path']for item in attestations]
     operations=[]
@@ -299,7 +301,7 @@ def build(bindings_path=None,deep_evidence=False):
     retained_channel_task_effects.apply(ROOT,non_http)
     return {'format_version':1,'scope':'Contract work register linking runtime discovery and explicit mapping gaps; not executable parity acceptance',
         'credit':'All application/algorithm credit belongs to original Dispatcharr authors and contributors; AGPL retained.',
-        'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path,*([methods_path]if dispatch is not None else[]),*([bindings_path]if case_bindings is not None else[]),*attestation_paths,ROOT/RECORDING_HLS_RESOLVER['path'],*(ROOT/path for path in retained_channel_task_effects.INPUT_SHA256),*([ROOT/'scripts/rust-contracts/executable-source-inputs.json', *[ROOT/item['path'] for item in executable_Source_mapping.get('inputs',[])]] if (ROOT/'scripts/rust-contracts/executable-source-inputs.json').exists() else [])]},
+        'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path,*([methods_path]if dispatch is not None else[]),*([bindings_path]if case_bindings is not None else[]),*attestation_paths,ROOT/RECORDING_HLS_RESOLVER['path'],*(ROOT/path for path in retained_channel_task_effects.INPUT_SHA256),*(ROOT/path for path in retained_react_profile_group_contracts.INPUT_SHA256),*([ROOT/'scripts/rust-contracts/executable-source-inputs.json', *[ROOT/item['path'] for item in executable_Source_mapping.get('inputs',[])]] if (ROOT/'scripts/rust-contracts/executable-source-inputs.json').exists() else [])]},
         'Source_resolver_dispositions': recording_hls_resolver_dispositions(rows),
         'executable_Source_mapping':executable_Source_mapping,'executable_Source_non_HTTP_mapping':executable_Source_non_HTTP_mapping,'runtime_discovery_metadata':runtime['metadata'],'case_attestation_bindings':attestations,'case_binding_validation':{'mode':'deep_private_raw_revalidation'if deep_evidence else'committed_sanitized_attestation','is_new_HTTP_replay':False},'limits':['Method/action is unresolved where original runtime discovery returned null; no GET/POST guesses.',
             'Schema authentication is not a role/permission proof; every role matrix still requires case mapping.',

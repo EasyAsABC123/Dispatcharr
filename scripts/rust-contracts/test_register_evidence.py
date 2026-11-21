@@ -192,6 +192,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update(retained_task_registry_contracts.dependencies())
         import retained_management_registration_contracts
         refs.update(retained_management_registration_contracts.dependencies())
+        import retained_react_profile_group_contracts
+        refs.update(retained_react_profile_group_contracts.INPUT_SHA256)
         for relative in refs:
             target = self.root / relative
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -245,6 +247,23 @@ class CapturedEvidenceRegister(unittest.TestCase):
         self.assertFalse(disposition[key]['wider_identifier_grammar_qualified'])
         self.assertNotIn('executable_Source_contract', operations[key])
         self.assertEqual(actual['runtime_routes'], self.baseline['runtime_routes'])
+        scoped = {
+            op['contract_id']: len(op['scoped_Original_role_method_observations'])
+            for op in operations.values() if 'scoped_Original_role_method_observations' in op
+        }
+        self.assertEqual(scoped, {
+            'route-f140a95f4ea400cc74f0:GET': 2, 'route-bc28dbffca264c415359:GET': 2,
+            'route-46bf8895f1099c41714b:GET': 14, 'route-4b846379969a5288d58b:GET': 14,
+        })
+        from retained_react_profile_group_contracts import GROUP
+        group_cases = [
+            row for row in actual['executable_Source_mapping']['unmapped_method_Source_observations']
+            if row.get('evidence', {}).get('path') == GROUP
+        ]
+        self.assertEqual([row['observation']['case'] for row in group_cases],
+                         ['collection', 'detail', 'claim-custom', 'unallocated-detail', 'unallocated-claim-custom'])
+        self.assertTrue(all(row['observed_method'] == 'OPTIONS' and row['contract_id'] is None
+                            and row['fully_verified'] is False for row in group_cases))
         self.assertIsNone(operations[key]['result'])
         self.assertFalse(operations[key]['fully_verified'])
         self.assertEqual(actual['openapi_operations'], self.baseline['openapi_operations'])

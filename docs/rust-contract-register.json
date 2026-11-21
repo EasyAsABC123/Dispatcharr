@@ -15,6 +15,9 @@
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/independent-cleanup.json": "91cf44aa94c63b31ba154a78aa9bc6ca59a2768ce463b180344a50eb3d263bd2",
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/driver3/tools/guest.py": "3415cfe7880be835e3975c9665b72c72877120bbebbf6b3c80fb6dc7f60a9685",
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/driver3/input-sha256.json": "df225d03bce1b985252c88db55102eccf80b8bf04134c8aca4d17ab5a0fa4fd8",
+    "scripts/rust-integration/m0-channel-profile-json-aliases-paired.json": "e79c1402cab049c41fe34966c21658fd933cea6ad99cc77f09c59a4c0553e820",
+    "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+    "scripts/rust-integration/m5-2025258-group-manager-stock-options.json": "b85e9f079bcfa739e72e6769305691770381c1eabeb968b029b0a80b3f782c32",
     "scripts/rust-contracts/executable-source-inputs.json": "fa245defee78d70956a0a7bf8828a182b973103a4eac74dca770defe44e24f47",
     "scripts/rust-contracts/executable-source-bindings.json": "4a991c946c268634141537ad9b647991344ddf2b83a3e3dfdc5a4ebc2800a604",
     "scripts/rust-contracts/framework-auth/bindings.json": "2ddf05153de748eabcd6e3581e27ba307fd87f09f98988cffc1444da67f51324",
@@ -1065,6 +1068,174 @@
         "fixture_id": "retained-Original-stored-EPG-reads-104",
         "rendered_representation_bytes": 1382,
         "Source_TCP_verified": false
+      },
+      {
+        "route_id": "route-db3a78dbace6356b715c",
+        "contract_id": null,
+        "pattern_exact": "api/channels/^groups/$",
+        "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+        "observed_method": "OPTIONS",
+        "declared_method_set_expanded": false,
+        "fully_verified": false,
+        "scope": "canonical Group Manager JSON metadata with authenticated admin",
+        "observation": {
+          "case": "collection",
+          "role": "admin",
+          "wire": {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 1939,
+            "body_sha256": "e5fe36198f3be26ac6b71a637b494010aa9d70d17e8cd2b209e50b0cb31c1ed9",
+            "content_length": 1939,
+            "mime": "application/json",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          "ordered_action_schema_sha256": {
+            "POST": "b2d64797edbf5ca397dd432aa80ff6148b6c5e2212a536ad6b6441270d1dc946"
+          },
+          "owned_SQL_unchanged": true
+        },
+        "evidence": {
+          "path": "scripts/rust-integration/m5-2025258-group-manager-stock-options.json",
+          "sha256": "b85e9f079bcfa739e72e6769305691770381c1eabeb968b029b0a80b3f782c32",
+          "pointer": "/observed/0",
+          "backend": "Original",
+          "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+        }
+      },
+      {
+        "route_id": "route-bcad6fcc7a44673cca5c",
+        "contract_id": null,
+        "pattern_exact": "api/channels/^groups/(?P<pk>[^/.]+)/$",
+        "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+        "observed_method": "OPTIONS",
+        "declared_method_set_expanded": false,
+        "fully_verified": false,
+        "scope": "canonical Group Manager JSON metadata with authenticated admin",
+        "observation": {
+          "case": "detail",
+          "role": "admin",
+          "wire": {
+            "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "body_bytes": 1942,
+            "body_sha256": "9d8322d462656f2525af589399792adda5e2123eea2d656a14ca957d5eaa6978",
+            "content_length": 1942,
+            "mime": "application/json",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          "ordered_action_schema_sha256": {
+            "PUT": "b2d64797edbf5ca397dd432aa80ff6148b6c5e2212a536ad6b6441270d1dc946"
+          },
+          "owned_SQL_unchanged": true
+        },
+        "evidence": {
+          "path": "scripts/rust-integration/m5-2025258-group-manager-stock-options.json",
+          "sha256": "b85e9f079bcfa739e72e6769305691770381c1eabeb968b029b0a80b3f782c32",
+          "pointer": "/observed/1",
+          "backend": "Original",
+          "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+        }
+      },
+      {
+        "route_id": "route-e0adb9f74703029f9925",
+        "contract_id": null,
+        "pattern_exact": "api/channels/^groups/(?P<pk>[^/.]+)/claim-custom/$",
+        "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+        "observed_method": "OPTIONS",
+        "declared_method_set_expanded": false,
+        "fully_verified": false,
+        "scope": "canonical Group Manager JSON metadata with authenticated admin",
+        "observation": {
+          "case": "claim-custom",
+          "role": "admin",
+          "wire": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 1993,
+            "body_sha256": "35069a5e5a547591f2198efa6619b8d8dc7d464c1eaa52eebabffe5bdb491135",
+            "content_length": 1993,
+            "mime": "application/json",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          "ordered_action_schema_sha256": {
+            "POST": "b2d64797edbf5ca397dd432aa80ff6148b6c5e2212a536ad6b6441270d1dc946"
+          },
+          "owned_SQL_unchanged": true
+        },
+        "evidence": {
+          "path": "scripts/rust-integration/m5-2025258-group-manager-stock-options.json",
+          "sha256": "b85e9f079bcfa739e72e6769305691770381c1eabeb968b029b0a80b3f782c32",
+          "pointer": "/observed/2",
+          "backend": "Original",
+          "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+        }
+      },
+      {
+        "route_id": "route-bcad6fcc7a44673cca5c",
+        "contract_id": null,
+        "pattern_exact": "api/channels/^groups/(?P<pk>[^/.]+)/$",
+        "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+        "observed_method": "OPTIONS",
+        "declared_method_set_expanded": false,
+        "fully_verified": false,
+        "scope": "canonical Group Manager JSON metadata with authenticated admin",
+        "observation": {
+          "case": "unallocated-detail",
+          "role": "admin",
+          "wire": {
+            "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            "body_bytes": 181,
+            "body_sha256": "64d48b525c2b1ad9376cf09fcd39b8bdf663e5ff1bdf8ba5917e26826941e794",
+            "content_length": 181,
+            "mime": "application/json",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          "ordered_action_schema_sha256": {},
+          "owned_SQL_unchanged": true
+        },
+        "evidence": {
+          "path": "scripts/rust-integration/m5-2025258-group-manager-stock-options.json",
+          "sha256": "b85e9f079bcfa739e72e6769305691770381c1eabeb968b029b0a80b3f782c32",
+          "pointer": "/observed/3",
+          "backend": "Original",
+          "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+        }
+      },
+      {
+        "route_id": "route-e0adb9f74703029f9925",
+        "contract_id": null,
+        "pattern_exact": "api/channels/^groups/(?P<pk>[^/.]+)/claim-custom/$",
+        "source_handler": "apps.channels.api_views.ChannelGroupViewSet",
+        "observed_method": "OPTIONS",
+        "declared_method_set_expanded": false,
+        "fully_verified": false,
+        "scope": "canonical Group Manager JSON metadata with authenticated admin",
+        "observation": {
+          "case": "unallocated-claim-custom",
+          "role": "admin",
+          "wire": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 1993,
+            "body_sha256": "35069a5e5a547591f2198efa6619b8d8dc7d464c1eaa52eebabffe5bdb491135",
+            "content_length": 1993,
+            "mime": "application/json",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          "ordered_action_schema_sha256": {
+            "POST": "b2d64797edbf5ca397dd432aa80ff6148b6c5e2212a536ad6b6441270d1dc946"
+          },
+          "owned_SQL_unchanged": true
+        },
+        "evidence": {
+          "path": "scripts/rust-integration/m5-2025258-group-manager-stock-options.json",
+          "sha256": "b85e9f079bcfa739e72e6769305691770381c1eabeb968b029b0a80b3f782c32",
+          "pointer": "/observed/4",
+          "backend": "Original",
+          "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+        }
       }
     ]
   },
@@ -67521,7 +67692,49 @@
                 "actual_body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796"
               }
             ]
-          }
+          },
+          "scoped_Original_role_method_observations": [
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/?format=json",
+              "role": "admin",
+              "case": "admin-list-query",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 2,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "body_bytes": 129,
+              "body_sha256": "b0697cdb8c1774ca9486a8cce00162b30abfa1f17491e881c17920aa4a327f34",
+              "evidence": {
+                "path": "scripts/rust-integration/m0-channel-profile-json-aliases-paired.json",
+                "sha256": "e79c1402cab049c41fe34966c21658fd933cea6ad99cc77f09c59a4c0553e820",
+                "pointer": "/observations/admin-list-query",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/?format=json",
+              "role": "assigned_standard",
+              "case": "standard-list-query",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "body_bytes": 67,
+              "body_sha256": "486ef8b94623e818eb03a602b4d162f39d138eb68e92176d722cda9485b4f8f4",
+              "evidence": {
+                "path": "scripts/rust-integration/m0-channel-profile-json-aliases-paired.json",
+                "sha256": "e79c1402cab049c41fe34966c21658fd933cea6ad99cc77f09c59a4c0553e820",
+                "pointer": "/observations/standard-list-query",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            }
+          ]
         },
         {
           "contract_id": "route-f140a95f4ea400cc74f0:POST",
@@ -68061,7 +68274,303 @@
               "complete_raw_proof_sha256": "8dfdf24ce2f597f9f9427343a1fd75238527596d08e2f739e2f200f0653d03fc"
             },
             "literal_path_template": "/api/channels/profiles.json"
-          }
+          },
+          "scoped_Original_role_method_observations": [
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "admin",
+              "case": "admin-list-wildcard-subtype",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 2,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 2,
+              "accept": "application/*; indent=2",
+              "body_bytes": 202,
+              "body_sha256": "46df5ed5d2f60dffc0533bb13374d770cc711bdab8d87df6c8c6f53d3d8c6cc1",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-list-wildcard-subtype",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "admin",
+              "case": "admin-list-wildcard-all",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 2,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 3,
+              "accept": "*/*; indent=3",
+              "body_bytes": 228,
+              "body_sha256": "ddfd0eb11866184624cd878ef9a039b050c8b8c7bd505ad13e5c8d1904a463c4",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-list-wildcard-all",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "admin",
+              "case": "admin-list-specific-range-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 2,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json, application/*; indent=2",
+              "body_bytes": 129,
+              "body_sha256": "b0697cdb8c1774ca9486a8cce00162b30abfa1f17491e881c17920aa4a327f34",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-list-specific-range-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "admin",
+              "case": "admin-list-media-parameter-space",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 2,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 2,
+              "accept": "application/json; indent = 2",
+              "body_bytes": 202,
+              "body_sha256": "46df5ed5d2f60dffc0533bb13374d770cc711bdab8d87df6c8c6f53d3d8c6cc1",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-list-media-parameter-space",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "admin",
+              "case": "admin-list-zero-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 2,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json; indent=0",
+              "body_bytes": 129,
+              "body_sha256": "b0697cdb8c1774ca9486a8cce00162b30abfa1f17491e881c17920aa4a327f34",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-list-zero-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "admin",
+              "case": "admin-list-negative-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 2,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json; indent=-1",
+              "body_bytes": 129,
+              "body_sha256": "b0697cdb8c1774ca9486a8cce00162b30abfa1f17491e881c17920aa4a327f34",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-list-negative-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "admin",
+              "case": "admin-list-mixed-ranges-select-specific",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 2,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 4,
+              "accept": "text/html, application/json; indent=4",
+              "body_bytes": 254,
+              "body_sha256": "b8dfd8cd0f691d1568e773f7eca9521a15b47b88c900e90463388132d08c98b5",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-list-mixed-ranges-select-specific",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "assigned_standard",
+              "case": "standard-list-wildcard-subtype",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 2,
+              "accept": "application/*; indent=2",
+              "body_bytes": 104,
+              "body_sha256": "fb1b2838595934101f6332da38c35152e86cdc0d0afa14a99e35e2a5e4bd744c",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-list-wildcard-subtype",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "assigned_standard",
+              "case": "standard-list-wildcard-all",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 3,
+              "accept": "*/*; indent=3",
+              "body_bytes": 117,
+              "body_sha256": "ef47608a0c0dd74092ecef7ba4cd90ccbffb981d437033c8b7438ff190770be3",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-list-wildcard-all",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "assigned_standard",
+              "case": "standard-list-specific-range-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json, application/*; indent=2",
+              "body_bytes": 67,
+              "body_sha256": "486ef8b94623e818eb03a602b4d162f39d138eb68e92176d722cda9485b4f8f4",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-list-specific-range-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "assigned_standard",
+              "case": "standard-list-media-parameter-space",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 2,
+              "accept": "application/json; indent = 2",
+              "body_bytes": 104,
+              "body_sha256": "fb1b2838595934101f6332da38c35152e86cdc0d0afa14a99e35e2a5e4bd744c",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-list-media-parameter-space",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "assigned_standard",
+              "case": "standard-list-zero-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json; indent=0",
+              "body_bytes": 67,
+              "body_sha256": "486ef8b94623e818eb03a602b4d162f39d138eb68e92176d722cda9485b4f8f4",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-list-zero-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "assigned_standard",
+              "case": "standard-list-negative-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json; indent=-1",
+              "body_bytes": 67,
+              "body_sha256": "486ef8b94623e818eb03a602b4d162f39d138eb68e92176d722cda9485b4f8f4",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-list-negative-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles.json",
+              "role": "assigned_standard",
+              "case": "standard-list-mixed-ranges-select-specific",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 4,
+              "accept": "text/html, application/json; indent=4",
+              "body_bytes": 130,
+              "body_sha256": "38ad391e2abda60681410c6d9afaeee3c76057411c14ab5c0989028470081ac6",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-list-mixed-ranges-select-specific",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            }
+          ]
         },
         {
           "contract_id": "route-46bf8895f1099c41714b:POST",
@@ -68696,7 +69205,49 @@
                 "actual_body_sha256": "95582532af7a8a3e24be1393bdfe8e90a5512f084b75193c07f5e62627369b0d"
               }
             ]
-          }
+          },
+          "scoped_Original_role_method_observations": [
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}/?format=json",
+              "role": "admin",
+              "case": "admin-detail-query",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "body_bytes": 61,
+              "body_sha256": "24bc7ac7005b26ed6757847adc66c83359d91198ada211b7601ce2a5935b3842",
+              "evidence": {
+                "path": "scripts/rust-integration/m0-channel-profile-json-aliases-paired.json",
+                "sha256": "e79c1402cab049c41fe34966c21658fd933cea6ad99cc77f09c59a4c0553e820",
+                "pointer": "/observations/admin-detail-query",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}/?format=json",
+              "role": "assigned_standard",
+              "case": "standard-detail-query",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "body_bytes": 65,
+              "body_sha256": "895f7a642a3a30b472bfe33cbf8a608eec9694fde5d37990b6ccfd5a08465223",
+              "evidence": {
+                "path": "scripts/rust-integration/m0-channel-profile-json-aliases-paired.json",
+                "sha256": "e79c1402cab049c41fe34966c21658fd933cea6ad99cc77f09c59a4c0553e820",
+                "pointer": "/observations/standard-detail-query",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            }
+          ]
         },
         {
           "contract_id": "route-bc28dbffca264c415359:PATCH",
@@ -69504,7 +70055,303 @@
               "complete_raw_proof_sha256": "4e1718f10b3c3b9746754bfc4b2517e71ee1320aff499b579c26f229f5878f32"
             },
             "literal_path_template": "/api/channels/profiles/{profile}.json"
-          }
+          },
+          "scoped_Original_role_method_observations": [
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "admin",
+              "case": "admin-detail-wildcard-subtype",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 2,
+              "accept": "application/*; indent=2",
+              "body_bytes": 82,
+              "body_sha256": "dac70947b8d66037dc569529898c66c52d9486a2091d5e82c8981f9e71543a1e",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-detail-wildcard-subtype",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "admin",
+              "case": "admin-detail-wildcard-all",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 3,
+              "accept": "*/*; indent=3",
+              "body_bytes": 88,
+              "body_sha256": "84288d085975658aec6f4692f92f3226499356e6729c3d455895d33ec038167e",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-detail-wildcard-all",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "admin",
+              "case": "admin-detail-specific-range-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json, application/*; indent=2",
+              "body_bytes": 61,
+              "body_sha256": "24bc7ac7005b26ed6757847adc66c83359d91198ada211b7601ce2a5935b3842",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-detail-specific-range-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "admin",
+              "case": "admin-detail-media-parameter-space",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 2,
+              "accept": "application/json; indent = 2",
+              "body_bytes": 82,
+              "body_sha256": "dac70947b8d66037dc569529898c66c52d9486a2091d5e82c8981f9e71543a1e",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-detail-media-parameter-space",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "admin",
+              "case": "admin-detail-zero-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json; indent=0",
+              "body_bytes": 61,
+              "body_sha256": "24bc7ac7005b26ed6757847adc66c83359d91198ada211b7601ce2a5935b3842",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-detail-zero-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "admin",
+              "case": "admin-detail-negative-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json; indent=-1",
+              "body_bytes": 61,
+              "body_sha256": "24bc7ac7005b26ed6757847adc66c83359d91198ada211b7601ce2a5935b3842",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-detail-negative-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "admin",
+              "case": "admin-detail-mixed-ranges-select-specific",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 4,
+              "accept": "text/html, application/json; indent=4",
+              "body_bytes": 94,
+              "body_sha256": "8f8fe970a0cbbb363104969a653b73400a27c3630a91847f0bb75c71c3cdf84b",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/admin-detail-mixed-ranges-select-specific",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "assigned_standard",
+              "case": "standard-detail-wildcard-subtype",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 2,
+              "accept": "application/*; indent=2",
+              "body_bytes": 86,
+              "body_sha256": "1ff0455063c2ec55c4d668b0512ec94f9defce20eba129da9788d895db07de4d",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-detail-wildcard-subtype",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "assigned_standard",
+              "case": "standard-detail-wildcard-all",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 3,
+              "accept": "*/*; indent=3",
+              "body_bytes": 92,
+              "body_sha256": "50c5411138bd49336940707d9d3d18e2bc9a6877b54bf902f7ca3c7a43c0e0ea",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-detail-wildcard-all",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "assigned_standard",
+              "case": "standard-detail-specific-range-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json, application/*; indent=2",
+              "body_bytes": 65,
+              "body_sha256": "895f7a642a3a30b472bfe33cbf8a608eec9694fde5d37990b6ccfd5a08465223",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-detail-specific-range-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "assigned_standard",
+              "case": "standard-detail-media-parameter-space",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 2,
+              "accept": "application/json; indent = 2",
+              "body_bytes": 86,
+              "body_sha256": "1ff0455063c2ec55c4d668b0512ec94f9defce20eba129da9788d895db07de4d",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-detail-media-parameter-space",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "assigned_standard",
+              "case": "standard-detail-zero-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json; indent=0",
+              "body_bytes": 65,
+              "body_sha256": "895f7a642a3a30b472bfe33cbf8a608eec9694fde5d37990b6ccfd5a08465223",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-detail-zero-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "assigned_standard",
+              "case": "standard-detail-negative-selects-compact",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": null,
+              "accept": "application/json; indent=-1",
+              "body_bytes": 65,
+              "body_sha256": "895f7a642a3a30b472bfe33cbf8a608eec9694fde5d37990b6ccfd5a08465223",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-detail-negative-selects-compact",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            },
+            {
+              "request_method": "GET",
+              "fixture_path_template": "/api/channels/profiles/{assigned_or_peer_id}.json",
+              "role": "assigned_standard",
+              "case": "standard-detail-mixed-ranges-select-specific",
+              "status": 200,
+              "mime": "application/json",
+              "visible_profile_count": 1,
+              "owned_SQL_unchanged": true,
+              "effective_indent": 4,
+              "accept": "text/html, application/json; indent=4",
+              "body_bytes": 98,
+              "body_sha256": "6b96b8c4b50ad627842b08c7ac5a4c43c565eee1c6bb81253d876e5e9308f402",
+              "evidence": {
+                "path": "scripts/rust-integration/m5-m6-cf64fbfe-profile-and-xc-expiration.json",
+                "sha256": "3cb62a48a98d83e9bb8a5212ced14ee6fd3e8b59dd6bc29d28dfae70397d7088",
+                "pointer": "/profile_media/observations/standard-detail-mixed-ranges-select-specific",
+                "backend": "Original",
+                "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+              }
+            }
+          ]
         },
         {
           "contract_id": "route-4b846379969a5288d58b:PATCH",
