@@ -19,6 +19,12 @@ capability inventory and historical component checkpoint.
 
 ## Acceptance evidence by package
 
+The `0f79dc28` application passed both required immediate forced XMLTV
+workflows with six successful task results per backend. Its exact host
+workspace passed formatting, strict Clippy and 1,491 tests.
+[Forced XMLTV](rust-m6-0f79dc28-forced-xmltv-series.md) ·
+[Host workspace](rust-m0-0f79dc28-workspace-host.md)
+
 The `d426d322` application passed Channel Profile JSON aliases and ordinary
 VOD logo metadata, media and category reads. Packaging verified the React
 and attribution inputs. Sixteen of its 127 required Compose checks passed.
@@ -38,17 +44,17 @@ a two-hour playback soak, and warm copied-data fallback.
 
 | Milestone | Verified scope and remaining acceptance |
 | --- | --- |
-| M0 | Portable Original baseline reductions passed, including the bounded Source2 metrics attachment. Both backends matched Channel Profile JSON reads. Current workspace verification and wider executable role and method evidence remain open. [Baseline review](rust-m0-baseline-progress.md) · [Channel Profile JSON aliases](rust-m0-channel-profile-json-aliases-paired.md) |
+| M0 | Portable Original baseline reductions passed, including the bounded Source2 metrics attachment. Exact `0f79dc28` host formatting, strict Clippy and 1,491 Cargo tests passed. Compose workspace verification and broader executable role and method evidence remain open. [Baseline review](rust-m0-baseline-progress.md) · [Host workspace](rust-m0-0f79dc28-workspace-host.md) |
 | M1 | On `d426d322`, two-worker sharing, disconnect and ordinary stop, retained history across ten channels and paced readers passed. The bounded history test served 100 late reads. Broader lifecycle and buffer acceptance remain open. [Current viewing evidence](rust-m1-m3-d426d322-ordinary-viewing.md) |
 | M2 | On `d426d322`, each backend served 100 simultaneous authenticated viewers with A/V decode and one active upstream connection during overlap. Current matched resource comparison remains open. [Current functional playback](rust-m1-m3-d426d322-ordinary-viewing.md) · [Earlier performance measurements](rust-m2-100-viewer-measured.md) |
 | M3 | On `d426d322`, both backends served two concurrent viewers through one upstream per HLS and fragmented MP4 run. Both decoded A/V and the remaining fMP4 viewer progressed after the first disconnected. Broader profile acceptance remains open. [Current viewing evidence](rust-m1-m3-d426d322-ordinary-viewing.md) |
 | M4 | On `d426d322`, ordinary seeks, calendar ranges, same-client reconnect and default timeshift archive playback passed. The formal VOD and timeshift workflow also passed. Wider recording and on-demand lifecycle acceptance remain open. [Current media group](rust-m4-d426d322-ordinary-media-group.md) · [Formal M4](rust-m9-d426d322-m4-functional.md) |
 | M5 | Group Manager OPTIONS, ordinary Channel response order and seven ordinary asset and category reads have paired evidence. Wider account, settings and route coverage remains open. [Channel evidence](rust-m5-fdede54c-channel-json-order.md) · [Asset and category reads](rust-m5-m4-d426d322-owned-assets.md) |
-| M6 | The Standard provider cadence edit passed on `814b9403`. On `d426d322`, local gzip Refresh All passed with the Original Celery consumer, and scheduled backend cleanup passed with Rust Selected Jobs and Beat. The complete default worker and scheduler graph remains open. [Cadence](rust-m6-ordinary-active-std-cadence.md) · [Current jobs](rust-m6-d426d322-ordinary-jobs.md) |
+| M6 | On `0f79dc28`, two forced XMLTV imports completed Refresh, Index and Series in each backend. Prior package evidence covers the provider cadence edit, gzip Refresh All with Original Celery and scheduled cleanup with Rust Selected Jobs and Beat. The complete default worker and scheduler graph remains open. [Forced XMLTV](rust-m6-0f79dc28-forced-xmltv-series.md) · [Current jobs](rust-m6-d426d322-ordinary-jobs.md) |
 | M7 | M3U, XMLTV, programme Grid and Xtream exports passed on `fdede54c` alongside HDHomeRun. On `d426d322`, 12 ordinary Connect reads and the paired authenticated WebSocket hello, IP snapshot and Stats update passed. Broader protocol and realtime acceptance remain open. [Connect](rust-m7-d426d322-connect-positive.md) · [WebSocket](rust-m7-d426d322-websocket-positive.md) |
 | M8 | Default backup inventory and download matched on `d426d322`. Private Main preserved the saved value and signed session across restart on its earlier package. Wider admin, plugin and operational acceptance remain open. [Backup inventory and download](rust-m8-d426-postgresql-backup-inventory.md) · [Private admin](rust-m8-2581-private-admin-settings-restart.md) · [AIO login](rust-m8-stock-aio-admin-login.md) |
-| M9 | On `d426d322`, 16 of 127 required checks and warm copied-data fallback passed. The Native complete XMLTV node remains open after a missing Series result. Strict cold remains open because Original startup updates four timestamps included in exact equality. The complete matrix and matched-work performance remain open. [First fourteen](rust-m9-d426d322-required-fourteen.md) · [Formal M4](rust-m9-d426d322-m4-functional.md) · [XMLTV](rust-m9-d426d322-complete-refresh-source.md) · [Cold rollback](rust-m9-strict-cold-startup-operands.md) |
-| M10 | The `d426d322` release executables compiled natively on ARM64. Scoped runtime checks cover React, media, Comskip, PostgreSQL, GPG, Python and DRF assets. Exact publicly verified FFmpeg sources and signed direct Ubuntu package inputs are recorded. Integrated Compose, recursive FFmpeg rebuild provenance, plugin execution and controlled rollout remain open. [Current Rust build](rust-m10-native-arm64-rust-build-d426.md) · [FFmpeg source inputs](rust-m10-arm64-ffmpeg-source-inputs.md) |
+| M9 | The `0f79dc28` package passed its two fresh required XMLTV checks. The `d426d322` package passed 16 required checks and warm copied-data fallback. Strict cold remains open because Original startup updates four timestamps included in exact equality. The complete 127-node matrix and matched-work performance remain open. [Current XMLTV](rust-m6-0f79dc28-forced-xmltv-series.md) · [Earlier Compose tally](rust-m9-d426d322-required-fourteen.md) · [Cold rollback](rust-m9-strict-cold-startup-operands.md) |
+| M10 | The `d426d322` release executables compiled natively on ARM64. Signed FFmpeg inputs cover all 312 packages in the prepared build and runtime APT closure. Integrated Compose, native source rebuild, plugin execution and controlled rollout remain open. [Native build](rust-m10-native-arm64-rust-build-d426.md) · [FFmpeg APT closure](rust-m10-arm64-ffmpeg-apt-closure.md) |
 | M11 | The default switch and operator handoff depend on release acceptance and a rollout decision. |
 
 The original Dispatcharr authors and dependency contributors retain full credit.
