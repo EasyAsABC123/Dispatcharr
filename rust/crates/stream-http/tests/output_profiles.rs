@@ -213,6 +213,22 @@ async fn raw_owner_serves_two_replica_profile_viewers_with_one_process_one_provi
             .count(),
         1
     );
+    assert!(
+        time::timeout(Duration::from_millis(200), remote.frame())
+            .await
+            .is_err(),
+        "a slow profile reader cannot queue another response frame"
+    );
+    drop(held_local);
+    let held_local = time::timeout(Duration::from_secs(3), local.frame())
+        .await
+        .expect("a separate profile reader still makes progress")
+        .unwrap()
+        .unwrap()
+        .into_data()
+        .unwrap();
+    assert!(!held_local.is_empty());
+
     // Cancelling the remote body with its actual frame still held must retain
     // both actual metadata and internal follower demand until that frame drops.
     drop(remote);
@@ -247,10 +263,11 @@ async fn raw_owner_serves_two_replica_profile_viewers_with_one_process_one_provi
     })
     .await
     .unwrap();
+    drop(held_local);
     assert!(
-        !local
-            .frame()
+        !time::timeout(Duration::from_secs(3), local.frame())
             .await
+            .unwrap()
             .unwrap()
             .unwrap()
             .into_data()
@@ -258,7 +275,6 @@ async fn raw_owner_serves_two_replica_profile_viewers_with_one_process_one_provi
             .is_empty(),
         "other replica profile viewer survives remote follower retirement"
     );
-    drop(held_local);
     let profile = outputs.profile(7).unwrap();
     assert_eq!(
         profile.state(&channel).await.unwrap().as_deref(),

@@ -6,12 +6,13 @@ use crate::{
 };
 use axum::{
     extract::{rejection::JsonRejection, ConnectInfo, Path, State},
-    http::{HeaderMap, StatusCode, Uri},
+    http::{header, HeaderMap, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::{get, post},
     Json, Router,
 };
-use serde_json::{json, Map, Value};
+use serde::Serialize;
+use serde_json::{json, ser::PrettyFormatter, Map, Value};
 use sqlx::{Postgres, Row, Transaction};
 use std::net::SocketAddr;
 type Body = Result<Json<Value>, JsonRejection>;
@@ -48,7 +49,11 @@ fn detail_read_id(mut raw: String, path: &str) -> Result<(String, bool), StoreEr
     }
 }
 
-fn negotiate_read_json(uri: &Uri, headers: &HeaderMap, suffix: bool) -> Result<(), StoreError> {
+fn negotiate_read_json(
+    uri: &Uri,
+    headers: &HeaderMap,
+    suffix: bool,
+) -> Result<Option<usize>, StoreError> {
     // DRF's format suffix wins over the query parameter. Reuse the JSON
     // renderer negotiation with that resolved format.
     let explicit_json = suffix
@@ -56,37 +61,55 @@ fn negotiate_read_json(uri: &Uri, headers: &HeaderMap, suffix: bool) -> Result<(
             .filter(|(key, _)| key == "format")
             .last()
             .is_some_and(|(_, value)| value == "json");
-    if !explicit_json {
-        return Ok(());
+    if explicit_json {
+        crate::epg_program_http::json_negotiation(headers, &Uri::from_static("/?format=json"))
+            .map_err(|error| {
+                if matches!(error, StoreError::Unsupported(_)) {
+                    StoreError::StatusBody(
+                        406,
+                        json!({"detail":"Could not satisfy the request Accept header."}),
+                    )
+                } else {
+                    error
+                }
+            })?;
     }
-    let indented = headers
-        .get("accept")
+    let indent = headers
+        .get(header::ACCEPT)
         .and_then(|accept| accept.to_str().ok())
-        .is_some_and(|accept| {
-            accept
-                .split(';')
-                .skip(1)
-                .filter_map(|parameter| parameter.split_once('='))
-                .any(|(name, _)| name.trim().eq_ignore_ascii_case("indent"))
+        .and_then(|accept| {
+            accept.split(',').find_map(|range| {
+                let (media, _) = range.split_once(';')?;
+                if !media.trim().eq_ignore_ascii_case("application/json") {
+                    return None;
+                }
+                crate::vod_api_draft::json_indent_for_range(range)
+            })
         });
-    if indented {
-        return Err(StoreError::Unsupported(
-            "Indented Channel Profile JSON is not implemented",
-        ));
-    }
-    crate::epg_program_http::json_negotiation(headers, &Uri::from_static("/?format=json")).map_err(
-        |error| {
-            if matches!(error, StoreError::Unsupported(_)) {
-                StoreError::StatusBody(
-                    406,
-                    json!({"detail":"Could not satisfy the request Accept header."}),
-                )
-            } else {
-                error
-            }
-        },
-    )
+    Ok(indent)
 }
+
+fn json_response(value: Value, indent: Option<usize>) -> Result<Response, StoreError> {
+    let Some(indent) = indent else {
+        return Ok(Json(value).into_response());
+    };
+    let mut bytes = Vec::new();
+    let spaces = [b' '; 8];
+    let formatter = PrettyFormatter::with_indent(&spaces[..indent]);
+    value
+        .serialize(&mut serde_json::Serializer::with_formatter(
+            &mut bytes, formatter,
+        ))
+        .map_err(|_| StoreError::UnhandledRestFault)?;
+    let mut body = String::from_utf8(bytes).map_err(|_| StoreError::UnhandledRestFault)?;
+    if body.contains(['\u{2028}', '\u{2029}']) {
+        body = body
+            .replace('\u{2028}', "\\u2028")
+            .replace('\u{2029}', "\\u2029");
+    }
+    Ok(([(header::CONTENT_TYPE, "application/json")], body).into_response())
+}
+
 pub(crate) async fn lookup(
     tx: &mut Transaction<'_, Postgres>,
     user: &User,
@@ -177,9 +200,9 @@ async fn list(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     uri: Uri,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<Response, StoreError> {
     let suffix = uri.path().trim_end_matches('/').ends_with(".json");
-    negotiate_read_json(&uri, &headers, suffix)?;
+    let indent = negotiate_read_json(&uri, &headers, suffix)?;
     let user = auth.account_user(peer, headers, false).await?;
     if user.user_level < 1 {
         return Err(StoreError::PermissionDenied);
@@ -190,9 +213,8 @@ async fn list(
         .bind(user.id)
         .fetch_all(auth.store.pool())
         .await?;
-    Ok(Json(Value::Array(
-        rows.into_iter().map(serialize).collect::<Result<_, _>>()?,
-    )))
+    let values = rows.into_iter().map(serialize).collect::<Result<_, _>>()?;
+    json_response(Value::Array(values), indent)
 }
 async fn retrieve(
     State(auth): State<AuthService>,
@@ -200,15 +222,15 @@ async fn retrieve(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     uri: Uri,
-) -> Result<Json<Value>, StoreError> {
+) -> Result<Response, StoreError> {
     let (raw, suffix) = detail_read_id(raw, uri.path())?;
-    negotiate_read_json(&uri, &headers, suffix)?;
+    let indent = negotiate_read_json(&uri, &headers, suffix)?;
     let user = auth.account_user(peer, headers, false).await?;
     if user.user_level < 1 {
         return Err(StoreError::PermissionDenied);
     }
     let mut tx = auth.store.pool().begin().await?;
-    Ok(Json(lookup(&mut tx, &user, id(raw)?).await?))
+    json_response(lookup(&mut tx, &user, id(raw)?).await?, indent)
 }
 async fn create(
     State(auth): State<AuthService>,
@@ -419,5 +441,36 @@ mod read_format_tests {
             Err(StoreError::StatusBody(406, _))
         ));
         assert!(negotiate_read_json(&Uri::from_static("/"), &headers, false).is_ok());
+    }
+
+    #[tokio::test]
+    async fn profile_indent_matches_json_renderer_bound_and_separator_escaping() {
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            header::ACCEPT,
+            HeaderValue::from_static("application/json; indent=99"),
+        );
+        let uri = Uri::from_static("/api/channels/profiles/41.json?format=api");
+        assert_eq!(negotiate_read_json(&uri, &headers, true).unwrap(), Some(8));
+        headers.insert(
+            header::ACCEPT,
+            HeaderValue::from_static("application/json; indent=\"2\""),
+        );
+        let uri = Uri::from_static("/api/channels/profiles/41/");
+        let indent = negotiate_read_json(&uri, &headers, false).unwrap();
+        assert_eq!(indent, Some(2));
+        let response = json_response(
+            json!({"id":41,"name":"Č\u{2028}sample\u{2029}","channels":[5]}),
+            indent,
+        )
+        .unwrap();
+        assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+        let body = axum::body::to_bytes(response.into_body(), 4096)
+            .await
+            .unwrap();
+        assert_eq!(
+            body.as_ref(),
+            "{\n  \"id\": 41,\n  \"name\": \"Č\\u2028sample\\u2029\",\n  \"channels\": [\n    5\n  ]\n}".as_bytes()
+        );
     }
 }

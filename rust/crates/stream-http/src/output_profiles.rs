@@ -449,23 +449,29 @@ impl StreamEngine {
             let demand=demand;
             let client=client;
             let mut stopped=client.as_ref().map(ClientLease::stopped);
+            let mut source_stopped=demand.session.stop.subscribe();
+            let delivery=Arc::new(Semaphore::new(1));
             let mut keepalive=source_keepalive::SourceKeepalive::new();
             let mut remote=history::RemoteHealth::default();
             loop{
-                if self_stopped(&stopped){break;}
+                if *source_stopped.borrow() || stopped.as_ref().is_some_and(|stop| *stop.borrow()) {break;}
                 let snapshot=match store.snapshot(&channel).await{Ok(v)=>v,Err(_)=>{yield Err(io::Error::other("Profile history unavailable"));break;}};
                 if snapshot.owner.as_deref()!=Some(expected.as_str()){break;}
                 if let Some((oldest,_))=snapshot.segments.first(){sequence=sequence.max(*oldest);}
                 if sequence<=snapshot.index{
-                    match store.get_owned_retained(&channel,&expected,sequence,(client.clone(),reader.clone(),demand.clone(),_profiles.clone())).await{
-                        Ok((Some(data),_retained))=>{
+                    // A held response cannot reserve another Redis payload.
+                    // Snapshot above still observes an already retired owner.
+                    let Some(permit)=next_profile_delivery(&delivery,&mut stopped,&mut source_stopped).await else {break;};
+                    match store.get_owned_retained(&channel,&expected,sequence,(permit,client.clone(),reader.clone(),demand.clone(),_profiles.clone())).await{
+                        Ok((Some(data),(permit,client_owner,reader_owner,demand_owner,profile_owner)))=>{
                             sequence=sequence.saturating_add(1);
                             keepalive.received();
                             if let Some(client)=client.as_ref(){client.record_bytes(data.as_ref().len());}
                             // Actual media-frame ownership retains the profile
                             // client beyond stream cancellation/backpressure.
-                            let frame=HeldFrame{data,_client:client.clone(),_profiles:_profiles.clone(),_reader:reader.clone(),_demand:demand.clone()};
-                            yield Ok(MediaFrame{data:Bytes::from_owner(frame),discontinuity:false});
+                            let frame=HeldFrame{data,_client:client_owner,_profiles:profile_owner,_reader:reader_owner,_demand:demand_owner};
+                            let delivered=ProfileDelivery{frame,_permit:permit};
+                            yield Ok(MediaFrame{data:Bytes::from_owner(delivered),discontinuity:false});
                         },
                         Ok((None,_retained))=>sequence=sequence.saturating_add(1),
                         Err(StoreError::LostOwnership)=>break,
@@ -483,13 +489,19 @@ impl StreamEngine {
                             source_keepalive::Decision::Stop=>break,
                             source_keepalive::Decision::Wait=>{},
                             source_keepalive::Decision::Send=>{
+                                let Some(permit)=next_profile_delivery(&delivery,&mut stopped,&mut source_stopped).await else {break;};
                                 if let Some(client)=client.as_ref(){client.record_keepalive(188);}
-                                yield Ok(MediaFrame{data:Bytes::from_owner(ProfileKeepalive{_client:client.clone(),_reader:reader.clone(),_profiles:_profiles.clone(),_demand:demand.clone()}),discontinuity:false});
+                                let frame=ProfileKeepalive{_client:client.clone(),_reader:reader.clone(),_profiles:_profiles.clone(),_demand:demand.clone()};
+                                let delivered=ProfileDelivery{frame,_permit:permit};
+                                yield Ok(MediaFrame{data:Bytes::from_owner(delivered),discontinuity:false});
                             },
                         }
                     }
-                    let stop=async{match stopped.as_mut(){Some(stop)=>{let _=stop.changed().await;},None=>std::future::pending::<()>().await}};
-                    tokio::select!{_=stop=>break,_=time::sleep(if source_controls {keepalive.delay()}else{Duration::from_millis(50)})=>{}}
+                    tokio::select!{
+                        _=wait_profile_client_stop(&mut stopped)=>break,
+                        _=source_stopped.changed()=>break,
+                        _=time::sleep(if source_controls {keepalive.delay()}else{Duration::from_millis(50)})=>{},
+                    }
                 }
             }
         };
@@ -517,8 +529,43 @@ impl Drop for ProfileDemand {
         });
     }
 }
-fn self_stopped(stopped: &Option<watch::Receiver<bool>>) -> bool {
-    stopped.as_ref().is_some_and(|s| *s.borrow())
+async fn wait_profile_client_stop(stopped: &mut Option<watch::Receiver<bool>>) {
+    match stopped {
+        Some(stop) => {
+            if !*stop.borrow() {
+                let _ = stop.changed().await;
+            }
+        }
+        None => std::future::pending::<()>().await,
+    }
+}
+
+async fn next_profile_delivery(
+    delivery: &Arc<Semaphore>,
+    client_stopped: &mut Option<watch::Receiver<bool>>,
+    source_stopped: &mut watch::Receiver<bool>,
+) -> Option<OwnedSemaphorePermit> {
+    if *source_stopped.borrow() {
+        return None;
+    }
+    tokio::select! {
+        biased;
+        _ = wait_profile_client_stop(client_stopped) => None,
+        _ = source_stopped.changed() => None,
+        permit = delivery.clone().acquire_owned() => permit.ok(),
+    }
+}
+
+/// The lease stays attached to the last Bytes owner, including cloned/sliced
+/// transport buffers. The shared store's byte reservation is held by the frame.
+struct ProfileDelivery<T> {
+    frame: T,
+    _permit: OwnedSemaphorePermit,
+}
+impl<T: AsRef<[u8]>> AsRef<[u8]> for ProfileDelivery<T> {
+    fn as_ref(&self) -> &[u8] {
+        self.frame.as_ref()
+    }
 }
 struct HeldFrame {
     data: dispatcharr_output_store::SegmentBytes,
@@ -802,6 +849,69 @@ fn finish(profiles: &Profiles, key: &Key, running: &Arc<Profile>) {
         sessions.remove(key);
     }
     running.done.send_replace(true);
+}
+
+#[cfg(test)]
+mod profile_delivery_tests {
+    use super::*;
+    use std::task::Poll;
+
+    #[tokio::test]
+    async fn slow_profile_body_retains_one_delivery_without_blocking_peer() {
+        let slow = Arc::new(Semaphore::new(1));
+        let fast = Arc::new(Semaphore::new(1));
+        let (_source_stop, source_stopped) = watch::channel(false);
+        let mut slow_source = source_stopped.clone();
+        let mut fast_source = source_stopped.clone();
+        let mut slow_client = None;
+        let mut fast_client = None;
+        let first = next_profile_delivery(&slow, &mut slow_client, &mut slow_source)
+            .await
+            .unwrap();
+        let delivered = Bytes::from_owner(ProfileDelivery {
+            frame: &b"packet"[..],
+            _permit: first,
+        });
+        let transport = delivered.slice(1..);
+        drop(delivered);
+
+        let waiting = next_profile_delivery(&slow, &mut slow_client, &mut slow_source);
+        tokio::pin!(waiting);
+        assert!(matches!(futures_util::poll!(&mut waiting), Poll::Pending));
+        assert!(
+            next_profile_delivery(&fast, &mut fast_client, &mut fast_source)
+                .await
+                .is_some()
+        );
+        assert_eq!(transport.as_ref(), b"acket");
+        drop(transport);
+        assert!(waiting.await.is_some());
+    }
+
+    #[tokio::test]
+    async fn stopping_viewer_or_source_does_not_wait_for_held_profile_delivery() {
+        for stop_source in [false, true] {
+            let delivery = Arc::new(Semaphore::new(1));
+            let held = delivery.clone().try_acquire_owned().unwrap();
+            let (source_stop, mut source_stopped) = watch::channel(false);
+            let (client_stop, client_stopped) = watch::channel(false);
+            let mut client_stopped = Some(client_stopped);
+            let waiting =
+                next_profile_delivery(&delivery, &mut client_stopped, &mut source_stopped);
+            tokio::pin!(waiting);
+            assert!(matches!(futures_util::poll!(&mut waiting), Poll::Pending));
+
+            if stop_source {
+                source_stop.send_replace(true);
+            } else {
+                client_stop.send_replace(true);
+            }
+            assert!(waiting.await.is_none());
+            assert_eq!(delivery.available_permits(), 0);
+            drop(held);
+            assert_eq!(delivery.available_permits(), 1);
+        }
+    }
 }
 
 #[cfg(test)]

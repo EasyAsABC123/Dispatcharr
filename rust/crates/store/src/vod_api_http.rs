@@ -296,6 +296,10 @@ pub(crate) fn negotiate(headers: &HeaderMap, uri: &Uri) -> Result<(), StoreError
 pub(crate) fn json_indent(headers: &HeaderMap) -> Option<usize> {
     let accept = headers.get("accept")?;
     let raw = dispatcharr_contracts::source_header_value(accept.as_bytes());
+    json_indent_for_range(&raw)
+}
+
+pub(crate) fn json_indent_for_range(raw: &str) -> Option<usize> {
     for part in raw.split(';').skip(1) {
         let (key, value) = part.trim().split_once('=')?;
         if key.eq_ignore_ascii_case("indent") {

@@ -27,6 +27,7 @@ mod vod_api_sql;
 
 #[path = "vod_api_http.rs"]
 mod vod_api_http;
+pub(crate) use vod_api_http::json_indent_for_range;
 
 #[path = "vod_api_logo_metadata.rs"]
 mod vod_api_logo_metadata;
