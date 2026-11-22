@@ -58,6 +58,9 @@ across two generations. Broader browser workflows and comparative playback
 performance remain open.
 The [55c895bf cached Xtream info](rust-m7-55c895-cached-xc-info.md) also matched
 eight paired requests, with unchanged SQL and zero provider calls.
+The [Original stale and missing metadata cohort](rust-m7-original-xc-inline-info-refresh.md)
+recorded all four responses and eight provider requests without queue changes.
+Native inline refresh qualification remains open.
 
 The [55c895bf archive cohort](rust-m4-55c895bf-archive-interop.md) matched a
 same-session programme hop and a transformed XC archive range with useful

@@ -1,0 +1,145 @@
+{
+  "actual_exit": 0,
+  "actual_original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "cases": [
+    {
+      "body_bytes": 659,
+      "body_sha256": "5c1d706307ac62589c4721dc962b84fa0f3bba244aab7ab6298dff6dd8caca12",
+      "case": "movie_stale",
+      "changed_sequences": [],
+      "changed_tables": [
+        "vod_m3umovierelation",
+        "vod_movie"
+      ],
+      "clock_advanced": true,
+      "content_type": "application/json",
+      "episode_count": [
+        0,
+        0
+      ],
+      "outside_scope_SQL_exact": true,
+      "provider_events": [
+        "authenticate",
+        "movie_stale"
+      ],
+      "queue_and_task_results_unchanged": true,
+      "response_causal_fields_verified": true,
+      "selected_relation_unchanged": true,
+      "sequence_count": 59,
+      "status": 200,
+      "table_count": 62
+    },
+    {
+      "body_bytes": 714,
+      "body_sha256": "2a3e32c4a3199bba30e302075268205b41fcc02f703c70690d2b08b14a517438",
+      "case": "movie_missing_metadata",
+      "changed_sequences": [],
+      "changed_tables": [
+        "vod_m3umovierelation",
+        "vod_movie"
+      ],
+      "clock_advanced": true,
+      "content_type": "application/json",
+      "episode_count": [
+        0,
+        0
+      ],
+      "outside_scope_SQL_exact": true,
+      "provider_events": [
+        "authenticate",
+        "movie_missing_metadata"
+      ],
+      "queue_and_task_results_unchanged": true,
+      "response_causal_fields_verified": true,
+      "selected_relation_unchanged": true,
+      "sequence_count": 59,
+      "status": 200,
+      "table_count": 62
+    },
+    {
+      "body_bytes": 945,
+      "body_sha256": "f68b244384a2a7836d5137d4700ec2faf3ab0dc5b7904b0c30a8e1e7f475c7b5",
+      "case": "series_stale_stored_episodes",
+      "changed_sequences": [],
+      "changed_tables": [
+        "vod_m3useriesrelation",
+        "vod_series"
+      ],
+      "clock_advanced": true,
+      "content_type": "application/json",
+      "episode_count": [
+        1,
+        1
+      ],
+      "outside_scope_SQL_exact": true,
+      "provider_events": [
+        "authenticate",
+        "series_stale_stored_episodes"
+      ],
+      "queue_and_task_results_unchanged": true,
+      "response_causal_fields_verified": true,
+      "selected_relation_unchanged": true,
+      "sequence_count": 59,
+      "status": 200,
+      "table_count": 62
+    },
+    {
+      "body_bytes": 988,
+      "body_sha256": "d1ac73e174f0f610e20a02280603f98c2a3a0dda122850716b165c64b18ef1f0",
+      "case": "series_missing_metadata_and_episodes",
+      "changed_sequences": [
+        "vod_episode_id_seq",
+        "vod_m3uepisoderelation_id_seq"
+      ],
+      "changed_tables": [
+        "vod_episode",
+        "vod_m3uepisoderelation",
+        "vod_m3useriesrelation",
+        "vod_series"
+      ],
+      "clock_advanced": true,
+      "content_type": "application/json",
+      "episode_count": [
+        0,
+        1
+      ],
+      "outside_scope_SQL_exact": true,
+      "provider_events": [
+        "authenticate",
+        "series_missing_metadata_and_episodes"
+      ],
+      "queue_and_task_results_unchanged": true,
+      "response_causal_fields_verified": true,
+      "selected_relation_unchanged": true,
+      "sequence_count": 59,
+      "status": 200,
+      "table_count": 62
+    }
+  ],
+  "earlier_attempts": [
+    {
+      "actual_exit": 1,
+      "cause_in_runner": "The readiness header allowlist rejected the inherited User-Agent.",
+      "exact_cleanup": true,
+      "receipt_sha256": "f5c985c99bf1de7a5ac7c7c7f53521ce71529fd4ad15e40aa8dcafc6b6fc8047",
+      "stage": "source-http-readiness"
+    },
+    {
+      "actual_exit": 1,
+      "cause_in_runner": "The seed imported a result ORM model absent from pinned Original.",
+      "exact_cleanup": true,
+      "receipt_sha256": "73ac88fa45ad16f0ec09056a49131d68f9b7369348c717219e86064a0a44e8cb",
+      "stage": "disposable-vod-and-role-seed"
+    }
+  ],
+  "exact_cleanup": true,
+  "native_executed": false,
+  "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false,
+  "provider_GETs_total": 8,
+  "receipt_sha256": "cb4a084cdf7885b1bafbd57a1b3d026b1dc7f00d7dbe789a10c6026ea762a118",
+  "runtime_case_count": 4,
+  "source_only": true,
+  "strict_proof_sha256": "ac5646f501bed4a39ddb45081f01333b67aeae2df7f8c2cecb6d4c590cb1885d"
+}
