@@ -9,6 +9,10 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [9cf6407 ordinary checkpoint](rust-m0-m6-9cf6407-compose.md) verified the two fixed
+HDHomeRun browser OPTIONS cases and an opt-in Selected/Core warm handoff. The same peer
+took over the scheduler and ran the second naturally due cleanup after the leader retired.
+
 The [ad6babd ordinary checkpoint](rust-m0-m6-ad6babd-compose.md) verified
 saved XC live refresh and automatic VOD ingestion, a linked UTC XMLTV cron,
 six deterministic HDHomeRun HEAD and JSON OPTIONS cases, and the post-commit
