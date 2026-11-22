@@ -1,0 +1,71 @@
+{
+  "actual_exit": 0,
+  "candidate": {
+    "expected": "successor",
+    "image_id": "sha256:abcbbe219c822e8320d77810f4305831d832a0be0f0c72600af809c90fb4535d",
+    "manifest_sha256": "a07614a0d6b42efa27f3ee229fc61d28e331cbd81d51c829d6a26655ea0743cf",
+    "revision": "e7dda7fec25918644a29de56454bad7f9a63fd83",
+    "source_tree_sha256": "3738fcd39f5e9cf0cce5608ad2d5b73370c745f6fdf2bb4248b60c21f2030852",
+    "tag": "dispatcharr-rust-candidate:88b-connect-log-json-ordinary-e7dda7fec259"
+  },
+  "contract_id": "route-d52d5a62d4e324405b85:GET",
+  "credit": "Original Dispatcharr, Django, Django REST Framework, and dependency authors retain full credit.",
+  "exact_cleanups": {
+    "Native": {
+      "exact_retired_roles": 4,
+      "receipt_sha256": "942cce13a8b52caa7d5de277b727d19d3fcf0613199538843703af13574a98b5"
+    },
+    "Original": {
+      "exact_retired_roles": 2,
+      "receipt_sha256": "c51244bfc2045c77c03b8f2156013620091c34829758bf4394cc4e496aac3d29"
+    }
+  },
+  "expected_representation_gap_observed": true,
+  "formal_nodes_promoted": 0,
+  "observations": {
+    "Native": {
+      "browsable_suffix": {
+        "body_bytes": 23,
+        "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+        "branch": "api_detail_not_found",
+        "challenge": false,
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 404
+      },
+      "json_html_accept": {
+        "body_bytes": 380,
+        "body_sha256": "64ef81ad0bea8d436655de8ace7b14b788eaa5f5936df64bb3ea29764a1b2e46",
+        "branch": "owned_log_in_json",
+        "challenge": false,
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      }
+    },
+    "Original": {
+      "browsable_suffix": {
+        "body_bytes": 11233,
+        "body_sha256": "aade946eaa753bc94cf46a303827dc9a253a96fd3cbea55824ae76b5208591d2",
+        "branch": "owned_log_in_drf_html",
+        "challenge": false,
+        "mime": "text/html",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "json_html_accept": {
+        "body_bytes": 57,
+        "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+        "branch": "negotiation_not_acceptable",
+        "challenge": false,
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 406
+      }
+    }
+  },
+  "original_resolver_ordinal": 347,
+  "parity_verified": false,
+  "published_register_commit": "f999ef08161270a295c2ef770f926e6c23b222de",
+  "scope": "Connect delivery-log two GETs with ordinary HTML Accept"
+}
