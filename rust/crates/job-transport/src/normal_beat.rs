@@ -128,6 +128,8 @@ const EXPIRATION_PERIODIC_NAME: &str = "check-account-expirations";
 const EXPIRATION_PERIODIC_TASK: &str = "apps.m3u.tasks.check_account_expirations";
 const VERSION_PERIODIC_NAME: &str = "check-version-updates";
 const DAILY_SECONDS: i32 = 86_400;
+const DISABLED_STATS_DEFAULT: &str = "fetch-channel-statuses";
+const STATS_TASK: &str = "apps.proxy.tasks.fetch_channel_stats";
 const SCAN_FILES: (&str, &str, i32) = ("scan-files", "core.tasks.scan_and_process_files", 20);
 const MAINTAIN_RECURRING: (&str, &str, i32) = (
     "maintain-recurring-recordings",
@@ -141,16 +143,26 @@ enum ScheduleScope {
     Backup,
     Core,
     CoreWithPluginRefresh,
-    CoreWithXmltv { plugin_refresh: bool },
+    CoreWithXmltv {
+        plugin_refresh: bool,
+        saved_stats: bool,
+    },
 }
 impl ScheduleScope {
-    fn core_with_xmltv(plugin_refresh: bool, xmltv_worker_available: bool) -> Result<Self, Error> {
+    fn core_with_xmltv(
+        plugin_refresh: bool,
+        xmltv_worker_available: bool,
+        saved_stats: bool,
+    ) -> Result<Self, Error> {
         if !xmltv_worker_available {
             return Err(Error::Configuration(
                 "Core linked XMLTV receiver unavailable",
             ));
         }
-        Ok(Self::CoreWithXmltv { plugin_refresh })
+        Ok(Self::CoreWithXmltv {
+            plugin_refresh,
+            saved_stats,
+        })
     }
 
     fn loads_linked_xmltv(self) -> bool {
@@ -202,6 +214,62 @@ impl ScheduleScope {
         )
     }
 
+    fn includes_saved_stats(self) -> bool {
+        matches!(
+            self,
+            Self::CoreWithXmltv {
+                saved_stats: true,
+                ..
+            }
+        )
+    }
+
+    fn admits_saved_stats(self, entry: &Entry) -> bool {
+        if !self.includes_saved_stats()
+            || entry.task != STATS_TASK
+            || entry.name == DISABLED_STATS_DEFAULT
+            || !entry.enabled
+            || entry.expires.is_some()
+            || entry.expire_seconds.is_some()
+            || entry.queue.is_some()
+            || entry.exchange.is_some()
+            || entry.routing_key.is_some()
+            || entry.priority.is_some()
+            || !entry.args.as_array().is_some_and(Vec::is_empty)
+            || !entry
+                .kwargs
+                .as_object()
+                .is_some_and(serde_json::Map::is_empty)
+            || !entry
+                .headers
+                .as_object()
+                .is_some_and(serde_json::Map::is_empty)
+        {
+            return false;
+        }
+
+        fn clock_value(value: &str, upper_bound: u8) -> bool {
+            value.len() <= 2
+                && value.bytes().all(|digit| digit.is_ascii_digit())
+                && value.parse::<u8>().is_ok_and(|value| value < upper_bound)
+        }
+
+        match (&entry.interval, &entry.crontab) {
+            (Some((every, period)), None) => *every > 0 && period == "seconds" && entry.one_off,
+            (None, Some((minute, hour, weekday, day, month, zone))) => {
+                zone == "UTC"
+                    && !entry.one_off
+                    && entry.start_time.is_none()
+                    && clock_value(minute, 60)
+                    && clock_value(hour, 24)
+                    && weekday == "*"
+                    && day == "*"
+                    && month == "*"
+            }
+            _ => false,
+        }
+    }
+
     fn row_identity(self) -> (Option<&'static str>, Option<&'static str>) {
         match self {
             Self::All => (None, None),
@@ -216,6 +284,9 @@ impl ScheduleScope {
             return true;
         }
         if self.is_core() {
+            if self.admits_saved_stats(entry) {
+                return true;
+            }
             let cleanup = entry.name == CLEANUP_PERIODIC_TASK
                 && entry.task == CLEANUP_PERIODIC_TASK
                 && entry.interval.is_none()
@@ -425,6 +496,7 @@ impl Scheduler {
         let scope = ScheduleScope::core_with_xmltv(
             worker.owns_plugin_refresh(),
             worker.owns_xmltv_refresh(),
+            worker.owns_saved_stats(),
         )?;
         Self::prepare_scoped(
             worker.pool(),
@@ -1184,6 +1256,17 @@ const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
                        WHERE i.id=p.interval_id AND i.period='seconds'
                          AND ((p.name=$16::text AND p.task=$17::text AND i.every=$18::integer)
                            OR (p.name=$19::text AND p.task=$20::text AND i.every=$21::integer))))
+        OR (p.task=$22::text AND p.name<>$23::text
+            AND p.expires IS NULL AND p.expire_seconds IS NULL
+            AND p.queue IS NULL AND p.exchange IS NULL AND p.routing_key IS NULL AND p.priority IS NULL
+            AND p.args IN ('','[]') AND p.kwargs IN ('','{}') AND p.headers IN ('','{}')
+            AND ((p.one_off AND p.crontab_id IS NULL
+                  AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
+                              WHERE i.id=p.interval_id AND i.period='seconds' AND i.every>0))
+                 OR (NOT p.one_off AND p.start_time IS NULL AND p.interval_id IS NULL
+                     AND cr.timezone='UTC' AND cr.minute ~ '^[0-5]?[0-9]$'
+                     AND cr.hour ~ '^(0?[0-9]|1[0-9]|2[0-3])$'
+                     AND cr.day_of_week='*' AND cr.day_of_month='*' AND cr.month_of_year='*')))
 "#
 );
 struct ZoneHours {
@@ -1275,6 +1358,8 @@ async fn load(
             .bind(MAINTAIN_RECURRING.0)
             .bind(MAINTAIN_RECURRING.1)
             .bind(MAINTAIN_RECURRING.2)
+            .bind(scope.includes_saved_stats().then_some(STATS_TASK))
+            .bind(DISABLED_STATS_DEFAULT)
     } else {
         query
     };
@@ -1598,11 +1683,7 @@ fn prepare_publication(
 async fn install_defaults(connection: &mut PgConnection) -> Result<Setup, Error> {
     let specifications = [
         ("celery.backend_cleanup", "celery.backend_cleanup", None),
-        (
-            "fetch-channel-statuses",
-            "apps.proxy.tasks.fetch_channel_stats",
-            Some(2),
-        ),
+        (DISABLED_STATS_DEFAULT, STATS_TASK, Some(2)),
         (SCAN_FILES.0, SCAN_FILES.1, Some(SCAN_FILES.2)),
         (
             MAINTAIN_RECURRING.0,
@@ -1667,7 +1748,7 @@ async fn install_default(
             )
         };
     }
-    let enabled = name != "fetch-channel-statuses";
+    let enabled = name != DISABLED_STATS_DEFAULT;
     let changed = Utc::now();
     let expiry = every.is_none().then_some(43_200i32);
     let write = |statement: &'static str| {
@@ -1783,10 +1864,10 @@ mod tests {
         entry.interval = Some((1, "hours".into()));
         entry.crontab = None;
         entry.kwargs = json!({"source_id":17});
-        let scope = ScheduleScope::core_with_xmltv(true, true).unwrap();
+        let scope = ScheduleScope::core_with_xmltv(true, true, false).unwrap();
         assert!(scope.admits(&entry));
         assert!(!ScheduleScope::CoreWithPluginRefresh.admits(&entry));
-        assert!(ScheduleScope::core_with_xmltv(false, false).is_err());
+        assert!(ScheduleScope::core_with_xmltv(false, false, false).is_err());
         assert_eq!(scope.xmltv_source_id(&entry), Some(17));
         let mut second = entry.clone();
         second.name = "epg_source-refresh-29".into();
@@ -2021,7 +2102,7 @@ mod tests {
     async fn selected_core_defaults_publish_to_registered_receiver_families() {
         use crate::default_protocol::Kind;
         use crate::milestone_dispatch::{builtin_family, Family, REQUIRED};
-        let scope = ScheduleScope::core_with_xmltv(false, true).unwrap();
+        let scope = ScheduleScope::core_with_xmltv(false, true, false).unwrap();
         let pool = sqlx::postgres::PgPoolOptions::new()
             .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
             .unwrap();
@@ -2118,6 +2199,90 @@ mod tests {
         stats.name = "fetch-channel-statuses".into();
         stats.interval = Some((2, "seconds".into()));
         assert!(!scope.admits(&stats));
+    }
+
+    #[tokio::test]
+    async fn selected_core_saved_stats_uses_the_existing_guards_and_receiver_frame() {
+        use crate::milestone_dispatch::{builtin_family, Family};
+
+        let scope = ScheduleScope::core_with_xmltv(false, true, true).unwrap();
+        let no_stats = ScheduleScope::core_with_xmltv(false, true, false).unwrap();
+        let mut entry = model(STATS_TASK);
+        let now = entry.last_run_at;
+        entry.name = "operator-saved-stats".into();
+        entry.start_time = Some(now);
+        entry.last_run_at = now - chrono::Duration::seconds(30);
+        entry.one_off = true;
+        assert!(scope.admits(&entry));
+        assert!(!no_stats.admits(&entry) && !ScheduleScope::Core.admits(&entry));
+        for invalid in [
+            Entry {
+                name: DISABLED_STATS_DEFAULT.into(),
+                ..entry.clone()
+            },
+            Entry {
+                enabled: false,
+                ..entry.clone()
+            },
+            Entry {
+                kwargs: json!({"other": true}),
+                ..entry.clone()
+            },
+            Entry {
+                queue: Some("other".into()),
+                ..entry.clone()
+            },
+        ] {
+            assert!(!scope.admits(&invalid));
+        }
+        let mut cached = Cached {
+            entry: entry.clone(),
+            clocked: None,
+            when: 0.0,
+            identity: Arc::new(()),
+        };
+        let before = decision(&cached, now - chrono::Duration::milliseconds(100)).unwrap();
+        assert!(!before.due && before.next_seconds == 1.0);
+        assert!(decision(&cached, now).unwrap().due);
+        cached.entry.total_run_count = 1;
+        assert_eq!(
+            decision(&cached, now).unwrap().persistence,
+            PersistenceEffect::DisableCompletedOneOff
+        );
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
+            .unwrap();
+        let auth = dispatcharr_store::AuthService::new(
+            dispatcharr_store::Store::from_pool(pool),
+            dispatcharr_store::AuthConfig::new("unused-metadata-only".into()).unwrap(),
+        );
+        let id = Uuid::new_v4();
+        let frame = prepare_publication(&entry, id, &auth.producer_identity_source()).unwrap();
+        assert_eq!(builtin_family(&entry.task), Some(Family::ProxyStats));
+        assert_eq!(frame.redis_queue(), "celery");
+        assert_eq!(
+            crate::stats_protocol::parse(frame.bytes()).unwrap().task_id,
+            id
+        );
+        let frame: Value = serde_json::from_slice(frame.bytes()).unwrap();
+        assert_eq!(frame["headers"]["periodic_task_name"], entry.name);
+        assert!(frame["headers"]["eta"].is_null() && frame["headers"]["expires"].is_null());
+
+        entry.one_off = false;
+        entry.start_time = None;
+        entry.interval = None;
+        entry.crontab = Some((
+            "0".into(),
+            "12".into(),
+            "*".into(),
+            "*".into(),
+            "*".into(),
+            "UTC".into(),
+        ));
+        assert!(scope.admits(&entry));
+        entry.crontab.as_mut().unwrap().5 = "America/St_Johns".into();
+        assert!(!scope.admits(&entry));
     }
 
     #[tokio::test]

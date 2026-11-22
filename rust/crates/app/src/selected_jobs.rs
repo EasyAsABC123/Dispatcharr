@@ -602,7 +602,7 @@ impl SelectedJobs {
             ),
             (Family::BackupCreate, backup_handler.clone()),
             (Family::BackupScheduled, backup_handler.clone()),
-            (Family::ProxyStats, stats),
+            (Family::ProxyStats, stats.clone()),
             (Family::Recording, dvr.clone()),
             (Family::StartupRecovery, Arc::new(recovery.clone())),
         ];
@@ -681,7 +681,7 @@ impl SelectedJobs {
         let scheduler = match beat {
             Beat::Core => jobs::normal_beat::Scheduler::prepare_core_schedules_for_selected(
                 queue
-                    .core_schedule_receiver(&backup_handler)
+                    .core_schedule_receiver(&backup_handler, &stats)
                     .map_err(|_| "Selected Core Beat receiver configuration failed")?,
                 Duration::from_secs(5),
             ),

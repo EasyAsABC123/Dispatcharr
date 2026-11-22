@@ -1,14 +1,14 @@
 use axum::{
     body::Body,
     extract::{ConnectInfo, State},
-    http::{HeaderMap, Method, Request, StatusCode},
+    http::{header, HeaderMap, HeaderValue, Method, Request, StatusCode},
     response::{IntoResponse, Response},
     routing::any,
     Json, Router,
 };
 use bytes::Bytes;
 use dispatcharr_contracts::PlaybackRequest;
-use dispatcharr_store::{AuthService, Store, StoreError};
+use dispatcharr_store::{source_browsable_csrf, AuthService, Store, StoreError};
 use serde_json::json;
 use std::{
     net::{IpAddr, Ipv4Addr, SocketAddr},
@@ -311,7 +311,23 @@ impl HdhrGateway {
                 method == Method::HEAD,
             );
         }
-        self.inner.auth.authenticate(&identity).await?;
+        if let Err(error) = self.inner.auth.authenticate(&identity).await {
+            let path = request.uri().path();
+            if path != "/hdhr/lineup_status.json"
+                || !forced_browser_format(&method, path, identity.parameter("format"))
+            {
+                return Err(error);
+            }
+            let Some(content) = lineup_status_auth_content(&error) else {
+                return Err(error);
+            };
+            let (body, set_cookie) =
+                lineup_status_auth_html(content, headers, self.inner.config.max_response_bytes)?;
+            let mut response =
+                self.retained(StatusCode::UNAUTHORIZED, Some(body), memory, false)?;
+            set_lineup_status_auth_headers(response.headers_mut(), set_cookie);
+            return Ok(response);
+        }
         let mut response = if method == Method::OPTIONS {
             Json(json!({"name":match endpoint{Endpoint::Discover{..}=>"Discover Api",Endpoint::Lineup{..}=>"Lineup Api",Endpoint::Status=>"Lineup Status Api",Endpoint::Xml=>"Hdhr Device Xml Api",_=>unreachable!()},"description":match endpoint{Endpoint::Discover{..}=>"Returns device discovery information",Endpoint::Lineup{..}=>"Returns available channel lineup",Endpoint::Status=>"Returns the current status of the HDHR lineup",Endpoint::Xml=>"Returns HDHomeRun device configuration in XML",_=>unreachable!()},"renders":["application/json","text/html"],"parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]})).into_response()
         } else if method != Method::GET && method != Method::HEAD {
@@ -358,6 +374,106 @@ impl HdhrGateway {
         Ok(response)
     }
 }
+fn forced_browser_format(method: &Method, path: &str, format: Option<&str>) -> bool {
+    format == Some("api")
+        && method == Method::GET
+        && matches!(
+            path,
+            "/hdhr/discover.json"
+                | "/hdhr/lineup.json"
+                | "/hdhr/lineup_status.json"
+                | "/hdhr/device.xml"
+        )
+}
+
+const BROWSABLE_AUTH_VARY: HeaderValue = HeaderValue::from_static("Accept, origin, Cookie");
+const LINEUP_STATUS_AUTH_SHELL: &str = include!("../datasets/lineup-status-auth.rs");
+
+fn set_lineup_status_auth_headers(headers: &mut HeaderMap, set_cookie: HeaderValue) {
+    for (name, value) in [
+        (
+            header::CONTENT_TYPE,
+            HeaderValue::from_static("text/html; charset=utf-8"),
+        ),
+        (header::VARY, BROWSABLE_AUTH_VARY),
+        (
+            header::WWW_AUTHENTICATE,
+            HeaderValue::from_static("Bearer realm=\"api\""),
+        ),
+        (header::SET_COOKIE, set_cookie),
+    ] {
+        headers.insert(name, value);
+    }
+}
+
+fn lineup_status_auth_content(error: &StoreError) -> Option<&'static str> {
+    let value = match error {
+        StoreError::Unauthorized("User inactive") => return Some(INACTIVE_API_KEY_HTML),
+        StoreError::AuthenticationBody(value) => value,
+        _ => return None,
+    };
+    if value == &json!({"detail":"User is inactive","code":"user_inactive"}) {
+        return Some(INACTIVE_BEARER_HTML);
+    }
+    (value == &json!({
+        "detail":"Given token not valid for any token type",
+        "code":"token_not_valid",
+        "messages":[{"token_class":"AccessToken","token_type":"access","message":"Token is expired"}]
+    }))
+        .then_some(EXPIRED_BEARER_HTML)
+}
+
+// Keep the Source document order and escaping for these observed error shapes.
+const INACTIVE_API_KEY_HTML: &str = r#"{
+    &quot;detail&quot;: &quot;User inactive&quot;
+}"#;
+const INACTIVE_BEARER_HTML: &str = r#"{
+    &quot;detail&quot;: &quot;User is inactive&quot;,
+    &quot;code&quot;: &quot;user_inactive&quot;
+}"#;
+const EXPIRED_BEARER_HTML: &str = r#"{
+    &quot;detail&quot;: &quot;Given token not valid for any token type&quot;,
+    &quot;code&quot;: &quot;token_not_valid&quot;,
+    &quot;messages&quot;: [
+        {
+            &quot;token_class&quot;: &quot;AccessToken&quot;,
+            &quot;token_type&quot;: &quot;access&quot;,
+            &quot;message&quot;: &quot;Token is expired&quot;
+        }
+    ]
+}"#;
+
+fn lineup_status_auth_html(
+    content: &str,
+    headers: &HeaderMap,
+    maximum: usize,
+) -> Result<(Vec<u8>, HeaderValue), StoreError> {
+    let (before, after) = LINEUP_STATUS_AUTH_SHELL
+        .split_once("@@HDHR_ERROR_CONTENT@@")
+        .expect("captured HDHR error slot");
+    let (middle, end) = after
+        .split_once("@@HDHR_CSRF_SCRIPT@@")
+        .expect("captured HDHR CSRF slot");
+    let cookie = headers.get_all(header::COOKIE).iter().find_map(|raw| {
+        raw.to_str().ok()?.split(';').find_map(|part| {
+            let (name, value) = part.trim().split_once('=')?;
+            (name == "csrftoken").then_some(value)
+        })
+    });
+    let (_, masked, set_cookie) = source_browsable_csrf(cookie);
+    let pieces = [before, content, middle, &masked, end];
+    let length = pieces.iter().map(|piece| piece.len()).sum();
+    if length > maximum {
+        return Err(unavailable());
+    }
+    let mut body = Vec::with_capacity(length);
+    for piece in pieces {
+        body.extend_from_slice(piece.as_bytes());
+    }
+    let cookie = HeaderValue::from_str(&set_cookie).map_err(|_| unavailable())?;
+    Ok((body, cookie))
+}
+
 // The four public Django GET handlers return their own JSON/XML entity after
 // DRF selects a renderer. The format alias selects the browsable renderer;
 // it does not change those concrete HttpResponse bodies or network checks.
@@ -368,15 +484,7 @@ fn negotiation_status(
     format: Option<&str>,
     accept: Option<&str>,
 ) -> Option<StatusCode> {
-    let browser_format = format == Some("api")
-        && method == Method::GET
-        && matches!(
-            path,
-            "/hdhr/discover.json"
-                | "/hdhr/lineup.json"
-                | "/hdhr/lineup_status.json"
-                | "/hdhr/device.xml"
-        );
+    let browser_format = forced_browser_format(method, path, format);
     if !browser_format && format.is_some_and(|value| !value.is_empty() && value != "json") {
         return Some(StatusCode::NOT_FOUND);
     }
@@ -423,14 +531,17 @@ async fn dispatch(State(gateway): State<HdhrGateway>, request: Request<Body>) ->
         .handle(request)
         .await
         .unwrap_or_else(IntoResponse::into_response);
-    response
-        .headers_mut()
-        .insert("allow", allow.parse().unwrap());
-    response
-        .headers_mut()
-        .insert("vary", "Accept, origin".parse().unwrap());
+    set_dispatch_headers(response.headers_mut(), allow);
     response
 }
+
+fn set_dispatch_headers(headers: &mut HeaderMap, allow: &'static str) {
+    headers.insert(header::ALLOW, HeaderValue::from_static(allow));
+    if headers.get(header::VARY) != Some(&BROWSABLE_AUTH_VARY) {
+        headers.insert(header::VARY, HeaderValue::from_static("Accept, origin"));
+    }
+}
+
 pub(crate) fn unavailable() -> StoreError {
     StoreError::StatusBody(
         503,
@@ -596,6 +707,96 @@ fn origin(auth: &AuthService, identity: &PlaybackRequest, _headers: &HeaderMap) 
 mod tests {
     use super::*;
     use http_body_util::BodyExt;
+
+    #[test]
+    fn fixed_status_browsable_auth_preserves_captured_shapes_and_response_limit() {
+        let inactive_bearer = StoreError::AuthenticationBody(
+            json!({"detail":"User is inactive","code":"user_inactive"}),
+        );
+        let expired = StoreError::AuthenticationBody(json!({
+            "detail":"Given token not valid for any token type",
+            "code":"token_not_valid",
+            "messages":[{"token_class":"AccessToken","token_type":"access","message":"Token is expired"}]
+        }));
+        let mut headers = HeaderMap::new();
+        let secret = "a".repeat(32);
+        headers.insert(
+            header::COOKIE,
+            format!("unrelated=ordinary; csrftoken={secret}")
+                .parse()
+                .unwrap(),
+        );
+        for (error, length) in [
+            (StoreError::Unauthorized("User inactive"), 10317),
+            (inactive_bearer, 10369),
+            (expired, 10630),
+        ] {
+            let content = lineup_status_auth_content(&error).unwrap();
+            let (body, cookie) = lineup_status_auth_html(content, &headers, length).unwrap();
+            assert_eq!(body.len(), length);
+            let body = std::str::from_utf8(&body).unwrap();
+            assert!(body.contains(content));
+            let (_, script) = body.split_once("\"csrfToken\": \"").unwrap();
+            let (masked, _) = script.split_once('"').unwrap();
+            assert_eq!(masked.len(), 64);
+            assert!(masked.bytes().all(|byte| byte.is_ascii_alphanumeric()));
+            assert!(cookie
+                .to_str()
+                .unwrap()
+                .starts_with(&format!("csrftoken={secret};")));
+            assert!(lineup_status_auth_html(content, &headers, length - 1).is_err());
+        }
+        assert!(lineup_status_auth_content(&StoreError::Unauthorized("Invalid API key")).is_none());
+        assert!(lineup_status_auth_content(&StoreError::RateLimited(1)).is_none());
+    }
+
+    #[test]
+    fn browsable_auth_replaces_retained_json_type_without_duplicate_headers() {
+        let mut response = StoreError::Unauthorized("User inactive").into_response();
+        let headers = response.headers_mut();
+        // The body-retention helper initializes Content-Type and Content-Length.
+        headers.insert(header::CONTENT_LENGTH, HeaderValue::from_static("10317"));
+        let (_, _, cookie) = source_browsable_csrf(None);
+        let cookie = cookie.parse::<HeaderValue>().unwrap();
+        set_lineup_status_auth_headers(headers, cookie.clone());
+        set_dispatch_headers(headers, "GET, HEAD, OPTIONS");
+
+        for (name, expected) in [
+            (
+                header::CONTENT_TYPE,
+                HeaderValue::from_static("text/html; charset=utf-8"),
+            ),
+            (header::CONTENT_LENGTH, HeaderValue::from_static("10317")),
+            (header::VARY, BROWSABLE_AUTH_VARY),
+            (
+                header::WWW_AUTHENTICATE,
+                HeaderValue::from_static("Bearer realm=\"api\""),
+            ),
+            (
+                header::ALLOW,
+                HeaderValue::from_static("GET, HEAD, OPTIONS"),
+            ),
+            (header::SET_COOKIE, cookie),
+        ] {
+            assert_eq!(
+                headers.get_all(name).iter().collect::<Vec<_>>(),
+                [&expected]
+            );
+        }
+
+        let mut json = StoreError::Unauthorized("Invalid API key").into_response();
+        set_dispatch_headers(json.headers_mut(), "GET, HEAD, OPTIONS");
+        assert_eq!(json.headers()[header::CONTENT_TYPE], "application/json");
+        assert_eq!(json.headers()[header::VARY], "Accept, origin");
+        assert!(json.headers().get(header::SET_COOKIE).is_none());
+
+        let mut success = Json(json!({"ScanInProgress": 0})).into_response();
+        set_dispatch_headers(success.headers_mut(), "GET, HEAD, OPTIONS");
+        assert_eq!(success.status(), StatusCode::OK);
+        assert_eq!(success.headers()[header::CONTENT_TYPE], "application/json");
+        assert_eq!(success.headers()[header::VARY], "Accept, origin");
+        assert!(success.headers().get(header::WWW_AUTHENTICATE).is_none());
+    }
 
     #[tokio::test]
     async fn network_denial_uses_the_exact_django_json_bytes() {

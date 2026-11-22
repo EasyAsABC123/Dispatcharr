@@ -256,6 +256,7 @@ pub struct SelectedCoreSchedules {
     stop: Weak<Lifetime>,
     backup: Arc<crate::normal_backup::Application>,
     plugin_refresh: bool,
+    saved_stats: bool,
 }
 
 impl SelectedCoreSchedules {
@@ -288,6 +289,10 @@ impl SelectedCoreSchedules {
 
     pub(super) fn owns_plugin_refresh(&self) -> bool {
         self.plugin_refresh
+    }
+
+    pub(super) fn owns_saved_stats(&self) -> bool {
+        self.saved_stats
     }
 
     pub(super) fn owns_xmltv_refresh(&self) -> bool {
@@ -726,12 +731,15 @@ impl Application {
     pub fn core_schedule_receiver(
         &self,
         backup: &Arc<crate::normal_backup::Application>,
+        stats: &Arc<dyn Handler>,
     ) -> Result<SelectedCoreSchedules, Error> {
         let handler: Arc<dyn Handler> = backup.clone();
         let jobs = backup.scheduled_jobs();
         if !jobs.allows_defaults()
             || !backup.scheduled_admission_open()
             || !selected_schedules_match(&self.inner.families, &handler)
+            || !self.contains_actual_handler(Family::ProxyStats, stats)
+            || !stats.supports_selected_head()
             || self
                 .inner
                 .heads
@@ -754,6 +762,7 @@ impl Application {
             stop: Arc::downgrade(&self.lifetime),
             backup: backup.clone(),
             plugin_refresh: self.inner.families.contains_key(&Family::PluginRefresh),
+            saved_stats: true,
         })
     }
 
