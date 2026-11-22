@@ -1,0 +1,85 @@
+{
+  "build": {
+    "both_dynamic_closures_verified": true,
+    "copied_sqlite": false,
+    "exact_temporary_container_absence": true,
+    "guest_uid": 65532,
+    "historical_operator_feature": false,
+    "image": "sha256:33e0a8257cd1a733a6fba007259a55f0dbeadac906e99552808ce6a70f2a221a",
+    "image_identity": {
+      "arm_manifest": "sha256:51b17beee5fbd42b92f7f45d0cf8e40693f8fbcb6dcda3a24e04e3a3ceb6e3dc",
+      "entrypoint": [
+        "/usr/local/bin/dispatcharr-rs"
+      ],
+      "exact_file_copy_layers": [
+        "sha256:379b5c0dc782d8a2c05d7dbf3258487812056a8615037928ac192456ac31f805",
+        "sha256:fffcbe880918878a340d44f5be59de83a2a3806fe7f641f3c8aa93db8fd26f88"
+      ],
+      "image": "sha256:33e0a8257cd1a733a6fba007259a55f0dbeadac906e99552808ce6a70f2a221a",
+      "inherited_base_layers": [
+        "sha256:c96c411090da09187c55ab267826b3903b542b5c03f1cafa912d60e060e7850c",
+        "sha256:7f856aa1cd067ecab082ff78086ce478a7ebd7b98d2fc2e641721f6445f04479",
+        "sha256:ebe45b161b711a9064f2a890525f760d79a55ff38a2f2c146beb5214b0226612",
+        "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+        "sha256:f880ee075530623c7da2fc784c392106dfd34f54272f376d4f1b4096fdd9119c"
+      ],
+      "platform": "linux/arm64",
+      "source_tree_label": "3d2ebe97807d848e67228b2939ec42bac6d0828e42f6e81e73a6413d4ffe8023",
+      "user": "65532:65532"
+    },
+    "platform": "linux/arm64",
+    "revision": "88b9f45f880d8e5147c862f223efa92284697fa2",
+    "source_tree": "3d2ebe97807d848e67228b2939ec42bac6d0828e42f6e81e73a6413d4ffe8023"
+  },
+  "credit": "Original Dispatcharr and dependency authors retain full application credit.",
+  "package": {
+    "actual_exit": 0,
+    "auth_smoke": {
+      "accounts_after": 1,
+      "accounts_before": 0,
+      "active_admin_login_rows": 1,
+      "actual_exit": 0,
+      "application_revision": "88b9f45f880d8e5147c862f223efa92284697fa2",
+      "candidate_engine_exit": 0,
+      "django_migrations": 184,
+      "exact_cleanup": true,
+      "exact_container_ids_retired": 5,
+      "exact_network_and_volume_absence": true,
+      "full_compose_qualification": false,
+      "guest_architecture": "aarch64",
+      "guest_uid": 65532,
+      "public_tables": 62,
+      "react_html": 200,
+      "ready": 200
+    },
+    "build_sha256": "ef86884eb0e21ca0318213b8ef4c27afa62fecb1a16e04f142739b787c5fa69f",
+    "file_copy_history": [
+      "COPY --chmod=0755 dispatcharr-operator /usr/local/bin/dispatcharr-operator # buildkit",
+      "COPY --chmod=0755 dispatcharr-rs /usr/local/bin/dispatcharr-rs # buildkit"
+    ],
+    "file_copy_layer_suffix": [
+      "sha256:379b5c0dc782d8a2c05d7dbf3258487812056a8615037928ac192456ac31f805",
+      "sha256:fffcbe880918878a340d44f5be59de83a2a3806fe7f641f3c8aa93db8fd26f88"
+    ],
+    "image": "sha256:33e0a8257cd1a733a6fba007259a55f0dbeadac906e99552808ce6a70f2a221a",
+    "source": {
+      "application_inputs": 2159,
+      "application_revision": "88b9f45f880d8e5147c862f223efa92284697fa2",
+      "application_source_tree_sha256": "3d2ebe97807d848e67228b2939ec42bac6d0828e42f6e81e73a6413d4ffe8023",
+      "changed_paths": {
+        "rust/crates/store/src/channel_writes/edit_bulk.rs": {
+          "88b9_sha256": "d077608acf71577501e9330e44f3336dcffe5d13ab72bd1a95347d8348cb22bf",
+          "e68_sha256": "72dda36231b3ea622e599af591bd82863531a4fa4035a3f1c36621f1b90fde4d"
+        }
+      },
+      "protected_inputs": 497,
+      "protected_tree_sha256": "1a74175c6e698b04b2d2bc0d44b92210893113161a959e319fe919c6faedf716",
+      "published_docs_descendant": "bf09b3e7eef1e3da927a9710796b80530e992bdb",
+      "published_merge": "09d287d0caf5f5d863e8d93690aa330baf069523",
+      "raw_archive_sha256": "f3963a38b02c7fff9d408b20ca40cf03daaadf3b9d9e4199b8ef85e80486b85e"
+    }
+  },
+  "performance_measured": false,
+  "raw_ARM64_receipt_sha256": "3ceaef208fc7eee225b35e27c4c3fbbb6c9b119535d659bf77dad38b1fe2810a"
+}
