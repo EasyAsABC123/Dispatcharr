@@ -54,6 +54,12 @@ Broader browser workflows and comparative playback performance remain open.
 The [55c895bf cached Xtream info](rust-m7-55c895-cached-xc-info.md) also matched
 eight paired requests, with unchanged SQL and zero provider calls.
 
+The [55c895bf archive cohort](rust-m4-55c895bf-archive-interop.md) matched a
+same-session programme hop and a transformed XC archive range with useful
+audio and video. Both paired runs verified upstream and provider-slot
+accounting and exact teardown. Broader M4 fault and resource checks remain
+open.
+
 The [2c939204 ordinary playback batch](rust-m3-2c939204-ordinary-output-cohort.md)
 passed shared HLS, shared profiled fMP4, live fMP4 lease renewal and natural
 raw MPEG-TS failover. Each pair verified teardown. Broader output-process
