@@ -9,6 +9,12 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [e65b4318 Compose checkpoint](rust-m6-m8-e65b4318-compose-checkpoint.md)
+matched Original's definite broker refusal and copied SQLite startup reads.
+The copied Standard Chromium flow completed real sign-in, rendered its owned
+channel, loaded Logos, and verified WebSocket delivery and shutdown.
+The administrator HEAD and OPTIONS pairs for both HDHomeRun roots also matched.
+
 The [4558a85b grouped Compose checkpoint](rust-m9-4558a85b-formal-compose.md)
 recorded 26 fresh passing workflows across 127 required rows.
 The matrix retains each other disposition and the Original reference separately.
