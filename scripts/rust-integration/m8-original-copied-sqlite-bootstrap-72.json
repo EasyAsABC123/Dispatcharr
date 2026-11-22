@@ -1,0 +1,777 @@
+{
+  "Original_admin_users_cases": 8,
+  "Original_channel_profiles_cases": 7,
+  "Original_core_catalog_cases": 24,
+  "Original_epg_collection_cases": 16,
+  "Original_m3u_account_cases": 8,
+  "Original_public_configured_setup_get": true,
+  "Original_server_group_cases": 8,
+  "admin_users_account_and_profile_rows_unchanged": true,
+  "admin_users_census": {
+    "by_user_level": {
+      "0": 1,
+      "1": 2,
+      "10": 2
+    },
+    "census_matches_independent_SQL": true,
+    "profile_links": 1,
+    "serializer_fields": [
+      "id",
+      "username",
+      "api_key",
+      "email",
+      "user_level",
+      "channel_profiles",
+      "custom_properties",
+      "avatar_config",
+      "stream_limit",
+      "is_staff",
+      "is_superuser",
+      "last_login",
+      "date_joined",
+      "first_name",
+      "last_name"
+    ],
+    "user_rows": 5
+  },
+  "after_reopen_repeats": 72,
+  "bearer_reused_after_reopen": true,
+  "credit": "Original Dispatcharr and dependency authors retain full credit.",
+  "exact_cleanup": true,
+  "initial_observations": 72,
+  "legacy_master_unchanged": true,
+  "literal_physical_exit": 0,
+  "literal_proof_exit": 0,
+  "m3u_account_typed_roles_nested_sql_verified": true,
+  "native_outcome": "pending",
+  "performance_measured": false,
+  "receipt_sha256": "9071923bf2041cfa652ce471bcc658b30fede715a3594bc6688f75d75bd0e02d",
+  "repeated_read_login_effects_unchanged": true,
+  "schema_migrations": 184,
+  "scope": "Original-only on a disposable historical SQLite copy with the two pinned dialect adaptations",
+  "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_proof_sha256": "6dbeee9a7890f2e4bec6541a8c0947b7fd212c741c4d493504db779614b0738a",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "wire": {
+    "admin-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 223,
+      "content_type": "application/json",
+      "declared_length": "223",
+      "method": "GET",
+      "sha256": "ad3a480bb005efa3d234c5cb343433021b0b60db361079a5a1f99891d0875c97",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "admin-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "223",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "anonymous-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 58,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "GET",
+      "sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "epg-data-admin-get": {
+      "allow": "GET, HEAD, OPTIONS",
+      "body_bytes": 254,
+      "content_type": "application/json",
+      "declared_length": "254",
+      "method": "GET",
+      "sha256": "9e807a499b852126fcf189e584425ea8ab1781128a2a1dfd3599a6ebb1f515d8",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "epg-data-admin-head": {
+      "allow": "GET, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "254",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "epg-data-anonymous-get": {
+      "allow": "GET, HEAD, OPTIONS",
+      "body_bytes": 58,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "GET",
+      "sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "epg-data-anonymous-head": {
+      "allow": "GET, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "epg-data-standard-get": {
+      "allow": "GET, HEAD, OPTIONS",
+      "body_bytes": 254,
+      "content_type": "application/json",
+      "declared_length": "254",
+      "method": "GET",
+      "sha256": "9e807a499b852126fcf189e584425ea8ab1781128a2a1dfd3599a6ebb1f515d8",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "epg-data-standard-head": {
+      "allow": "GET, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "254",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "epg-data-streamer-get": {
+      "allow": "GET, HEAD, OPTIONS",
+      "body_bytes": 63,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "GET",
+      "sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "epg-data-streamer-head": {
+      "allow": "GET, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "epg-sources-admin-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 774,
+      "content_type": "application/json",
+      "declared_length": "774",
+      "method": "GET",
+      "sha256": "f790578fc8a595dbbefa8f2caa7b4e3938308a3248d68658c1f6d78b31b03790",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "epg-sources-admin-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "774",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "epg-sources-anonymous-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 58,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "GET",
+      "sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "epg-sources-anonymous-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "epg-sources-standard-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 774,
+      "content_type": "application/json",
+      "declared_length": "774",
+      "method": "GET",
+      "sha256": "f790578fc8a595dbbefa8f2caa7b4e3938308a3248d68658c1f6d78b31b03790",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "epg-sources-standard-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "774",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "epg-sources-streamer-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 63,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "GET",
+      "sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "epg-sources-streamer-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "hide_adult-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 2,
+      "content_type": "application/json",
+      "declared_length": "2",
+      "method": "GET",
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "hide_adult-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "2",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "m3u-accounts-admin-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 5911,
+      "content_type": "application/json",
+      "declared_length": "5911",
+      "method": "GET",
+      "sha256": "c809e541420cd34924b5009de42e3a144cf2afd16c513cb37acf3b9dfe51b479",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "m3u-accounts-admin-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "5911",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "m3u-accounts-anonymous-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 58,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "GET",
+      "sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "m3u-accounts-anonymous-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "m3u-accounts-standard-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 5834,
+      "content_type": "application/json",
+      "declared_length": "5834",
+      "method": "GET",
+      "sha256": "c04d4760aa85ff4dbf8f7c2f35d0a20be3d87ffa9028068379cb67fe6c23a7ee",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "m3u-accounts-standard-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "5834",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "m3u-accounts-streamer-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 63,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "GET",
+      "sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "m3u-accounts-streamer-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "outputprofiles-admin-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 960,
+      "content_type": "application/json",
+      "declared_length": "960",
+      "method": "GET",
+      "sha256": "44fde7b423cd5060bec89a212375aef3651f60b804a59cd34ff23f4a2e590d77",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "outputprofiles-admin-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "960",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "outputprofiles-anonymous-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 58,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "GET",
+      "sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "outputprofiles-anonymous-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "outputprofiles-standard-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 960,
+      "content_type": "application/json",
+      "declared_length": "960",
+      "method": "GET",
+      "sha256": "44fde7b423cd5060bec89a212375aef3651f60b804a59cd34ff23f4a2e590d77",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "outputprofiles-standard-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "960",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "outputprofiles-streamer-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 63,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "GET",
+      "sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "outputprofiles-streamer-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "public-configured-setup-get": {
+      "allow": null,
+      "body_bytes": 26,
+      "content_type": "application/json",
+      "declared_length": "26",
+      "method": "GET",
+      "sha256": "061a71658524cbcef06f508fdf69643d4596afbc42dbed4eadffcbbba68d99ca",
+      "status": 200,
+      "vary": "origin"
+    },
+    "server-groups-admin-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 56,
+      "content_type": "application/json",
+      "declared_length": "56",
+      "method": "GET",
+      "sha256": "946f8ed23d4baeeda4b798bc07a57939a135d4cdf77f5136d3f2ac9dd755e485",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "server-groups-admin-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "56",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "server-groups-anonymous-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 58,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "GET",
+      "sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "server-groups-anonymous-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "server-groups-standard-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 56,
+      "content_type": "application/json",
+      "declared_length": "56",
+      "method": "GET",
+      "sha256": "946f8ed23d4baeeda4b798bc07a57939a135d4cdf77f5136d3f2ac9dd755e485",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "server-groups-standard-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "56",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "server-groups-streamer-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 63,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "GET",
+      "sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "server-groups-streamer-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "show_adult-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 77,
+      "content_type": "application/json",
+      "declared_length": "77",
+      "method": "GET",
+      "sha256": "e07e683a9f8f0f406c3f445d8360d78bfe9a72ae6404a74dd12b69206719bbd8",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "show_adult-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "77",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "streamprofiles-admin-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 1242,
+      "content_type": "application/json",
+      "declared_length": "1242",
+      "method": "GET",
+      "sha256": "fbf3247f230b18714917bae246794cdf99794b16a00a033efd9cedfc0168884a",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "streamprofiles-admin-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "1242",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "streamprofiles-anonymous-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 58,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "GET",
+      "sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "streamprofiles-anonymous-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "streamprofiles-standard-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 1242,
+      "content_type": "application/json",
+      "declared_length": "1242",
+      "method": "GET",
+      "sha256": "fbf3247f230b18714917bae246794cdf99794b16a00a033efd9cedfc0168884a",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "streamprofiles-standard-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "1242",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "streamprofiles-streamer-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 63,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "GET",
+      "sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "streamprofiles-streamer-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "useragents-admin-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 877,
+      "content_type": "application/json",
+      "declared_length": "877",
+      "method": "GET",
+      "sha256": "285ea201dbd2642bc507f5c4cd070b4ba545dcf5df128d20b128fd8febeba43b",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "useragents-admin-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "877",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "useragents-anonymous-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 58,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "GET",
+      "sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "useragents-anonymous-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "useragents-standard-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 877,
+      "content_type": "application/json",
+      "declared_length": "877",
+      "method": "GET",
+      "sha256": "285ea201dbd2642bc507f5c4cd070b4ba545dcf5df128d20b128fd8febeba43b",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "useragents-standard-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "877",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "useragents-streamer-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 63,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "GET",
+      "sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "useragents-streamer-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "users-admin-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 1725,
+      "content_type": "application/json",
+      "declared_length": "1725",
+      "method": "GET",
+      "sha256": "4ae83474216556a38ce9815d0d281a9910af7f59ca4d943569ff29f3d8978ec2",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "users-admin-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "1725",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    "users-anonymous-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 58,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "GET",
+      "sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "users-anonymous-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "58",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 401,
+      "vary": "Accept, origin"
+    },
+    "users-standard-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 63,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "GET",
+      "sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "users-standard-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "users-streamer-get": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 63,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "GET",
+      "sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "status": 403,
+      "vary": "Accept, origin"
+    },
+    "users-streamer-head": {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 0,
+      "content_type": "application/json",
+      "declared_length": "63",
+      "method": "HEAD",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 403,
+      "vary": "Accept, origin"
+    }
+  }
+}

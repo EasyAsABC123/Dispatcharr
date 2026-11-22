@@ -9,13 +9,15 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The latest formal clean-install report records one passing node and 126
-blocked nodes on the `34860b9a` package. The latest broader executed wave,
-`e740306c`, recorded 26 passed, 100 blocked and one retained Original result
-across the same 127 required nodes. Every milestone still has open acceptance
-work. The next comparative resource measurement follows functional
-acceptance. [Current scoped results](rust-m1-m4-m6-m9-34860-ordinary-post-feature.md) ·
-[Broader recorded matrix](../scripts/rust-integration/m9-e740306c-formal-matrix.json)
+The [f75cac4e formal wave](rust-m9-f75cac4e-formal-and-auth-hash.md) recorded
+four passes, one Auth Hash callback failure, 121 blocked nodes and one retained
+Original result across 127 required nodes. The Auth Hash workload and later
+independent cleanup and semantic reduction succeeded. The original exit 2 and
+failed row remain recorded. A fresh 15-cell same-image retry passed preflight.
+The earlier `e740306c` wave recorded 26 passes on its own package. Every
+milestone still has open acceptance work. The next comparative resource
+measurement follows functional acceptance.
+[Earlier recorded matrix](../scripts/rust-integration/m9-e740306c-formal-matrix.json)
 
 The [live provider retry](rust-m2-provider-capacity-retry.md) matched the
 ordinary full-slot HTTP 503 response. Both backends delivered media after a
@@ -54,8 +56,10 @@ three HEAD lengths matched Original, and 20 admin reads repeated after restart.
 The build reused the ordinary Cargo layer from the same verified archive.
 The [f75cac4e copied SQLite bootstrap cohort](rust-m8-f75cac4e-copied-sqlite-bootstrap-groups.md)
 matched 19 Core reads and exercised eight scoped Channel Group operations
-across two generations. Broader browser workflows and comparative playback
-performance remain open.
+across two generations. The [Original copied SQLite bootstrap reference](rust-m8-original-copied-sqlite-bootstrap-72.md)
+recorded 72 initial requests and 72 repeated requests after reopening the
+adapted historical copy. Its matching Native replay and broader browser
+workflows remain pending. Comparative playback performance remains open.
 The [55c895bf cached Xtream info](rust-m7-55c895-cached-xc-info.md) also matched
 eight paired requests, with unchanged SQL and zero provider calls.
 The [Original stale and missing metadata cohort](rust-m7-original-xc-inline-info-refresh.md)

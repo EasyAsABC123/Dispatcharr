@@ -1,0 +1,51 @@
+{
+  "business": {
+    "acl_restored": true,
+    "backend": "Original",
+    "checkpoints": {
+      "refusal-retry": {
+        "body_bytes": 999,
+        "body_sha256": "358ce55408c39853808e3451518b0a577cc85b45f47ee7ce0c90bf6168e7e626",
+        "exact_held_roles": true,
+        "mime": "application/json",
+        "ready_or_reserved": 0,
+        "same_observer": true,
+        "status": 200
+      },
+      "refusal-wire": {
+        "body_bytes": 145,
+        "body_sha256": "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        "mime": "text/html",
+        "redis_lpush_denials": 2,
+        "status": 500
+      }
+    },
+    "eventual_verified_merge": false,
+    "http_status": 500,
+    "no_publications": true,
+    "override_visible_before_worker": true,
+    "ready_or_reserved_at_finish": 0,
+    "redacted_publication_journal_sha256": "3b07943635d5e2cceeed0a8e2b148dc2b0bd7d74b7e0f1e0991b9cef6275a6cc",
+    "same_value_retry_enqueued": false,
+    "same_value_retry_status": 200,
+    "scoped_publications_before_worker": 0,
+    "token_after_http": "absent",
+    "window": "definite-no-enqueue"
+  },
+  "cleanup_sha256": "e2fb3f8ec55e65aaa9f9708b9117128b4d9f1eedda9d5b660672c910bfaf26f8",
+  "comparative_performance_measured": false,
+  "independent_proof_sha256": "09535b65f12784abe7f9020532ed1ad04c83f7eb254813d0c0ba2de0f3323027",
+  "literal_actual_exit": 0,
+  "native_measured": false,
+  "original": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "retired": 2,
+  "retired_previous_attempt": {
+    "first_acl_denials": 2,
+    "first_exact_cleanup": true,
+    "first_http_status": 500,
+    "first_lane_sha256": "addc73e4bac8e3c3ae23856921df4a6cd996e68ef232bdf5ba5915101c6589eb",
+    "first_literal1": true,
+    "first_recorded_acl_restore_commands": "+@all +lpush"
+  },
+  "rust_wire_measured": false
+}
