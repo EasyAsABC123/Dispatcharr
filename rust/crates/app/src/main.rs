@@ -1379,36 +1379,11 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             .route(&format!("/{prefix}/{{*path}}"), any(api_not_found));
     }
     if let Ok(path) = env::var("RUST_FRONTEND_DIR") {
-        let index = std::path::Path::new(&path).join("index.html");
-        if !index.is_file() {
-            return Err("RUST_FRONTEND_DIR must contain index.html".into());
-        }
+        let root = std::path::Path::new(&path);
+        let index = static_assets::index(root)?;
         // Actual static directories take precedence over the original short
         // three-component XC credential alias, including nested font assets.
-        for prefix in ["assets", "static"] {
-            let directory = std::path::Path::new(&path).join(prefix);
-            if directory.is_dir() {
-                if prefix == "static" {
-                    if let Some(assets) = static_assets::load(&directory)
-                        .await
-                        .map_err(|error| format!("Pinned static assets: {error}"))?
-                    {
-                        let files = Router::new()
-                            .fallback_service(tower_http::services::ServeDir::new(directory))
-                            .layer(axum::middleware::from_fn_with_state(
-                                assets,
-                                static_assets::apply,
-                            ));
-                        app = app.nest_service("/static", files.into_service());
-                        continue;
-                    }
-                }
-                app = app.nest_service(
-                    &format!("/{prefix}"),
-                    tower_http::services::ServeDir::new(directory),
-                );
-            }
-        }
+        app = static_assets::with_directories(app, root).await?;
         app = app.fallback_service(
             tower_http::services::ServeDir::new(path)
                 .fallback(tower_http::services::ServeFile::new(index.clone())),

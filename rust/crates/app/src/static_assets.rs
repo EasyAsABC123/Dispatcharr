@@ -4,11 +4,49 @@ use axum::{
     body::Body,
     extract::{Request, State},
     http::{header, HeaderValue, Method, StatusCode},
-    middleware::Next,
+    middleware::{self, Next},
     response::Response,
+    Router,
 };
 use serde_json::Value;
-use std::{collections::BTreeMap, path::Path, sync::Arc};
+use std::{
+    collections::BTreeMap,
+    path::{Path, PathBuf},
+    sync::Arc,
+};
+use tower_http::services::ServeDir;
+
+pub(super) fn index(root: &Path) -> Result<PathBuf, &'static str> {
+    let index = root.join("index.html");
+    if !index.is_file() {
+        return Err("RUST_FRONTEND_DIR must contain index.html");
+    }
+    Ok(index)
+}
+
+pub(super) async fn with_directories(mut app: Router, root: &Path) -> Result<Router, String> {
+    for prefix in ["assets", "static"] {
+        let directory = root.join(prefix);
+        if !directory.is_dir() {
+            continue;
+        }
+        let files = ServeDir::new(&directory);
+        if prefix == "static" {
+            if let Some(assets) = load(&directory)
+                .await
+                .map_err(|error| format!("Pinned static assets: {error}"))?
+            {
+                let files = Router::new()
+                    .fallback_service(files)
+                    .layer(middleware::from_fn_with_state(assets, apply));
+                app = app.nest_service("/static", files.into_service());
+                continue;
+            }
+        }
+        app = app.nest_service(&format!("/{prefix}"), files);
+    }
+    Ok(app)
+}
 
 #[derive(Clone)]
 struct Asset {
