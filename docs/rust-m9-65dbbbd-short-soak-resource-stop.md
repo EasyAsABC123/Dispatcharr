@@ -19,3 +19,9 @@ The infrastructure group accounts for the process increase. The recorded census 
 The repeat completed all 26 workload checks and exact Compose cleanup, and failed the same idle resource gate. Seven new PostgreSQL process generations in the shared infrastructure appeared after the final playback sample and remained in all 11 idle samples. One initial process was absent, for a net increase of six. The Native, origin, and relay roles gained no persistent process generation in that interval. Across the owned roles, open file descriptors rose by 171, threads by five, and socket descriptors by 14.
 
 The process names identify PostgreSQL as the location of the growth. The evidence leaves connection state, socket peers, and the reason for persistence unresolved. The prefix and two-hour gates remain open. [Machine-readable attribution](../scripts/rust-integration/m9-65dbbbd-short-soak-process-attribution.json)
+
+## PostgreSQL socket counterparts
+
+A further repeat paired all seven persistent PostgreSQL generations with the same Native Main process in all 11 idle samples. The observer matched both ends of each owned established TCP socket and opened zero database sessions. The result identifies which process retains the sockets. It leaves PostgreSQL session activity and the cause of retention unresolved.
+
+The observer kept the same 120-second workload, sample schedule, and limits. The run completed all 26 workload checks and exact cleanup. The idle resource gate again exited 1, with six additional processes, 167 open file descriptors, five threads, and 14 socket descriptors. [Machine-readable counterpart evidence](../scripts/rust-integration/m9-65dbbbd-postgres-counterpart.json)

@@ -1,0 +1,60 @@
+{
+  "attribution": {
+    "baseline": {
+      "earlier_new_persistent_processes": 0,
+      "initial_processes_absent_from_all_post_idle_samples": 1,
+      "new_after_final_active_sample_persistent_processes": 7,
+      "new_persistent_process_classes": {
+        "postgres": 7
+      },
+      "new_persistent_processes_without_stable_known_class": 0
+    },
+    "candidate": {
+      "earlier_new_persistent_processes": 0,
+      "initial_processes_absent_from_all_post_idle_samples": 0,
+      "new_after_final_active_sample_persistent_processes": 0,
+      "new_persistent_process_classes": {},
+      "new_persistent_processes_without_stable_known_class": 0
+    },
+    "origin": {
+      "earlier_new_persistent_processes": 0,
+      "initial_processes_absent_from_all_post_idle_samples": 0,
+      "new_after_final_active_sample_persistent_processes": 0,
+      "new_persistent_process_classes": {},
+      "new_persistent_processes_without_stable_known_class": 0
+    },
+    "relay": {
+      "earlier_new_persistent_processes": 0,
+      "initial_processes_absent_from_all_post_idle_samples": 0,
+      "new_after_final_active_sample_persistent_processes": 0,
+      "new_persistent_process_classes": {},
+      "new_persistent_processes_without_stable_known_class": 0
+    }
+  },
+  "candidate": "65dbbbd267ad319a791e3558df9228362cd73c38",
+  "counterparts": {
+    "counterpart_covered_idle_samples": 11,
+    "eligible_idle_samples": 11,
+    "new_persistent_postgres": 7,
+    "new_persistent_postgres_unclassified": 0,
+    "postgres_paired_to_same_native_generation": 7,
+    "sql_session_state_observed": false
+  },
+  "formal_M9_promoted": false,
+  "independent_cleanup_passed": true,
+  "new_database_sessions_from_observer": 0,
+  "physical_short_controller_exit": 1,
+  "postgres_connection_state_observed": false,
+  "proof_sha256": "1411b69af8d238fb01f0952da470920652d8f949358d966fd21080c309d45545",
+  "raw_census_sha256": "c9db4f36ab5fa315b6d91d55cdfb7b074011daa328657f51bc4ec6ecdaeba401",
+  "resource_budgets_passed": false,
+  "resource_growth": {
+    "file_descriptors": 167,
+    "processes": 6,
+    "socket_descriptors": 14,
+    "threads": 5
+  },
+  "scope": "passive_database_counterpart_only",
+  "unchanged_workload_and_budget": true,
+  "validated_business_check_count": 26
+}
