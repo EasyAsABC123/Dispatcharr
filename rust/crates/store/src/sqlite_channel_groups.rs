@@ -37,7 +37,7 @@ const PROVIDERS: &str = r"
     FROM dispatcharr_channels_channelgroupm3uaccount r
     JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id
     LEFT JOIN counts s ON s.channel_group_id=r.channel_group_id AND s.m3u_account_id=r.m3u_account_id
-    WHERE NOT a.locked
+    WHERE NOT a.locked AND (?1 IS NULL OR r.channel_group_id=?1)
     ORDER BY r.id";
 
 pub(crate) const COLLECTION_SCHEMA_QUERIES: [&str; 2] = [COLLECT, PROVIDERS];
@@ -56,7 +56,11 @@ pub(crate) async fn collection(
         .await?;
     let mut providers: HashMap<i64, Vec<Value>> = HashMap::new();
     if admin && !groups.is_empty() {
-        for row in sqlx::query(PROVIDERS).fetch_all(&mut *snapshot).await? {
+        for row in sqlx::query(PROVIDERS)
+            .bind(None::<i64>)
+            .fetch_all(&mut *snapshot)
+            .await?
+        {
             providers
                 .entry(row.try_get("channel_group_id")?)
                 .or_default()
@@ -93,3 +97,7 @@ fn provider(row: SqliteRow) -> Result<Value, StoreError> {
     });
     Ok(provider_json(&json_row, row.try_get("stream_count")?))
 }
+
+#[cfg(feature = "sqlite-copied-data-runtime")]
+#[path = "sqlite_channel_group_writes.rs"]
+pub(crate) mod writes;

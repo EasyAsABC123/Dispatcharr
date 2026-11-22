@@ -87,7 +87,7 @@ impl Resource {
     }
 }
 
-fn settings_value(id: i64, key: String, name: String, value: Value) -> Value {
+pub(crate) fn settings_value(id: i64, key: String, name: String, value: Value) -> Value {
     // Actual Source51 case16 ModelSerializer order, not map alphabetization.
     json!({"id":id,"key":key,"name":name,"value":value})
 }

@@ -7,12 +7,15 @@ use crate::{
 };
 use axum::{
     extract::{OriginalUri, Path as RoutePath, Query},
+    http::Method,
     Extension,
 };
 use chrono::Utc;
 
 #[path = "sqlite_app_data.rs"]
 pub(crate) mod application_data;
+#[path = "sqlite_environment.rs"]
+mod environment;
 #[path = "sqlite_profile.rs"]
 pub(crate) mod profile;
 use std::{collections::HashMap, path::Path};
@@ -22,6 +25,8 @@ use tokio::sync::Semaphore;
 pub struct CopiedSqliteRuntime {
     identity: Arc<SqliteIdentity>,
     cache: NotificationCache,
+    ip_lookup: crate::ip_lookup::IpLookup,
+    ip_event_sink: Option<Arc<dyn dispatcharr_contracts::UpdateEventSink>>,
     config: AuthConfig,
     password_workers: Arc<Semaphore>,
     requests: Arc<Semaphore>,
@@ -42,10 +47,20 @@ impl CopiedSqliteRuntime {
         Ok(Self {
             identity: Arc::new(identity),
             cache,
+            ip_lookup: crate::ip_lookup::IpLookup::new(crate::IpLookupConfig::default()),
+            ip_event_sink: None,
             config,
             password_workers: Arc::new(Semaphore::new(4)),
             requests: Arc::new(Semaphore::new(4)),
         })
+    }
+
+    pub fn with_ip_event_sink(
+        mut self,
+        sink: Arc<dyn dispatcharr_contracts::UpdateEventSink>,
+    ) -> Self {
+        self.ip_event_sink = Some(sink);
+        self
     }
 
     pub fn router(&self) -> Router {
@@ -57,7 +72,17 @@ impl CopiedSqliteRuntime {
             )
             .route("/api/accounts/token/refresh/", axum::routing::any(refresh))
             .route("/api/accounts/users/me/", axum::routing::any(profile::me))
-            .route("/api/channels/groups/", axum::routing::get(groups))
+            .route(
+                "/api/channels/groups/",
+                axum::routing::get(groups).post(group_create),
+            )
+            .route(
+                "/api/channels/groups/{id}/",
+                axum::routing::get(group_detail)
+                    .put(group_put)
+                    .patch(group_patch)
+                    .delete(group_delete),
+            )
             .route("/api/channels/channels/", axum::routing::get(channels))
             .route(
                 "/api/channels/channels/ids/",
@@ -70,6 +95,16 @@ impl CopiedSqliteRuntime {
             .route(
                 "/api/channels/channels/{id}/",
                 axum::routing::get(channel_detail),
+            )
+            .route("/api/core/version/", axum::routing::any(version))
+            .route("/api/core/settings/", axum::routing::get(settings))
+            .route(
+                "/api/core/settings/{id}/",
+                axum::routing::get(settings_detail),
+            )
+            .route(
+                "/api/core/settings/env/",
+                axum::routing::get(environment::get),
             )
             .route("/healthz", axum::routing::get(readiness))
             .with_state(self.clone())
@@ -252,6 +287,71 @@ async fn groups(
         .await
 }
 
+use crate::channel_groups::sqlite::writes::Action as GroupAction;
+
+async fn group_detail(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    RoutePath(id): RoutePath<String>,
+    method: Method,
+    headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    runtime
+        .allocate()?
+        .channel_group_action(peer, headers, GroupAction::Detail(id, method))
+        .await
+}
+
+async fn group_create(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
+) -> Result<Response, StoreError> {
+    runtime
+        .allocate()?
+        .channel_group_action(peer, headers, GroupAction::Create(body))
+        .await
+}
+
+async fn group_put(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    RoutePath(id): RoutePath<String>,
+    headers: HeaderMap,
+    body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
+) -> Result<Response, StoreError> {
+    runtime
+        .allocate()?
+        .channel_group_action(peer, headers, GroupAction::Update(id, false, body))
+        .await
+}
+
+async fn group_patch(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    RoutePath(id): RoutePath<String>,
+    headers: HeaderMap,
+    body: Result<Json<Value>, axum::extract::rejection::JsonRejection>,
+) -> Result<Response, StoreError> {
+    runtime
+        .allocate()?
+        .channel_group_action(peer, headers, GroupAction::Update(id, true, body))
+        .await
+}
+
+async fn group_delete(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    RoutePath(id): RoutePath<String>,
+    headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    runtime
+        .allocate()?
+        .channel_group_action(peer, headers, GroupAction::Delete(id))
+        .await
+}
+
 async fn channels(
     State(runtime): State<CopiedSqliteRuntime>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -320,7 +420,7 @@ async fn channel_projection(
             .into_response(),
         Err(error) => error.into_response(),
     };
-    channel_response_headers(
+    copied_read_headers(
         response,
         axum::http::HeaderValue::from_static("GET, HEAD, OPTIONS"),
     )
@@ -348,10 +448,10 @@ fn channel_read_response(
         Ok(value) => Json(value).into_response(),
         Err(error) => error.into_response(),
     };
-    channel_response_headers(response, allow)
+    copied_read_headers(response, allow)
 }
 
-fn channel_response_headers(mut response: Response, allow: axum::http::HeaderValue) -> Response {
+fn copied_read_headers(mut response: Response, allow: axum::http::HeaderValue) -> Response {
     response
         .headers_mut()
         .insert(axum::http::header::ALLOW, allow);
@@ -360,6 +460,112 @@ fn channel_response_headers(mut response: Response, allow: axum::http::HeaderVal
         axum::http::HeaderValue::from_static("Accept, origin"),
     );
     response
+}
+
+async fn version(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    method: axum::http::Method,
+    headers: HeaderMap,
+) -> Response {
+    let reply = async {
+        if headers.contains_key(axum::http::header::AUTHORIZATION)
+            || headers.contains_key("x-api-key")
+        {
+            runtime
+                .allocate()?
+                .authenticate_optional_bearer(peer, headers)
+                .await?;
+        }
+        version_document_for_method(method).map(Json)
+    }
+    .await;
+    copied_read_headers(
+        reply.into_response(),
+        axum::http::HeaderValue::from_static("GET, OPTIONS"),
+    )
+}
+
+fn version_document_for_method(method: axum::http::Method) -> Result<Value, StoreError> {
+    match method {
+        axum::http::Method::GET => Ok(crate::startup::version_document()),
+        axum::http::Method::OPTIONS => Ok(json!({
+            "name": "Version",
+            "description": "",
+            "renders": ["application/json", "text/html"],
+            "parses": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"]
+        })),
+        _ => Err(StoreError::StatusBody(
+            405,
+            json!({
+                "detail": format!("Method \"{method}\" not allowed.")
+            }),
+        )),
+    }
+}
+
+#[cfg(test)]
+#[test]
+fn copied_version_preserves_source_head_refusal_and_options_shape() {
+    let method = axum::http::Method::HEAD;
+    let Err(StoreError::StatusBody(405, head)) = version_document_for_method(method) else {
+        panic!("copied Version HEAD must return the Source method refusal");
+    };
+    assert_eq!(head, json!({"detail": "Method \"HEAD\" not allowed."}));
+    assert_eq!(serde_json::to_vec(&head).unwrap().len(), 41);
+    let options = version_document_for_method(axum::http::Method::OPTIONS).unwrap();
+    assert_eq!(
+        serde_json::to_vec(&options).unwrap(),
+        br#"{"name":"Version","description":"","renders":["application/json","text/html"],"parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]}"#,
+    );
+}
+
+async fn settings(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Response {
+    settings_reply(
+        runtime,
+        peer,
+        headers,
+        None,
+        crate::channels::COLLECTION_ALLOW,
+    )
+    .await
+}
+
+async fn settings_detail(
+    State(runtime): State<CopiedSqliteRuntime>,
+    RoutePath(id): RoutePath<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Response {
+    settings_reply(
+        runtime,
+        peer,
+        headers,
+        Some(id),
+        crate::channels::DETAIL_ALLOW,
+    )
+    .await
+}
+
+async fn settings_reply(
+    runtime: CopiedSqliteRuntime,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    id: Option<String>,
+    allow: axum::http::HeaderValue,
+) -> Response {
+    let reply = async {
+        runtime
+            .allocate()?
+            .core_settings_read(peer, headers, id)
+            .await
+    }
+    .await;
+    copied_read_headers(reply.map(Json).into_response(), allow)
 }
 
 async fn readiness(State(runtime): State<CopiedSqliteRuntime>) -> (StatusCode, Json<Value>) {

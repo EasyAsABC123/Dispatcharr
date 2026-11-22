@@ -31,6 +31,40 @@ pub struct RetainedSqliteRestReads {
     limits: RestReadLimits,
 }
 
+#[cfg(feature = "sqlite-copied-data-runtime")]
+async fn core_settings_rows(
+    connection: &mut sqlx::SqliteConnection,
+    id: Option<i64>,
+) -> Result<Value, StoreError> {
+    let rows =
+        sqlx::query("SELECT id,key,name,value FROM core_coresettings WHERE (?1 IS NULL OR id=?1)")
+            .bind(id)
+            .fetch_all(connection)
+            .await?;
+    let mut settings = rows
+        .into_iter()
+        .map(|row| {
+            let value = row.try_get::<Option<sqlx::types::Json<Value>>, _>("value")?;
+            Ok(crate::core_reads::settings_value(
+                row.try_get("id")?,
+                row.try_get("key")?,
+                row.try_get("name")?,
+                value.map_or(Value::Null, |value| value.0),
+            ))
+        })
+        .collect::<Result<Vec<_>, sqlx::Error>>()?;
+    if id.is_some() {
+        settings.pop().ok_or_else(|| {
+            StoreError::StatusBody(
+                404,
+                json!({"detail": "No CoreSettings matches the given query."}),
+            )
+        })
+    } else {
+        Ok(Value::Array(settings))
+    }
+}
+
 impl RetainedSqliteRestReads {
     pub fn from_owned_request(
         identity: &crate::sqlite_identity::SqliteIdentity,
@@ -70,12 +104,10 @@ impl RetainedSqliteRestReads {
         .await
     }
 
-    pub async fn bearer_account_user(
-        &self,
+    fn checked_bearer_request(
         peer: SocketAddr,
         headers: HeaderMap,
-        admin: bool,
-    ) -> Result<RetainedRestSubject, StoreError> {
+    ) -> Result<PlaybackRequest, StoreError> {
         if ["authorization", "x-api-key"].iter().any(|name| {
             headers
                 .get(*name)
@@ -83,7 +115,27 @@ impl RetainedSqliteRestReads {
         }) {
             return Err(StoreError::Unauthorized("Invalid authentication header"));
         }
-        let request = auth::request(peer, headers);
+        Ok(auth::request(peer, headers))
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn authenticate_optional_bearer(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+    ) -> Result<(), StoreError> {
+        self.authenticate_bearer(&Self::checked_bearer_request(peer, headers)?)
+            .await?;
+        Ok(())
+    }
+
+    pub async fn bearer_account_user(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        admin: bool,
+    ) -> Result<RetainedRestSubject, StoreError> {
+        let request = Self::checked_bearer_request(peer, headers)?;
         let ip = auth::source_client_ip_for_config(&self.config, &request).address();
         authorize_ordered(
             self.authenticate_bearer(&request),
@@ -115,6 +167,53 @@ impl RetainedSqliteRestReads {
                 result?,
                 axum::http::Method::GET,
             ))
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn core_settings_read(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        detail: Option<String>,
+    ) -> Result<Value, StoreError> {
+        let subject = self.bearer_account_user(peer, headers, false).await?;
+        if subject.user().user_level < 1 {
+            return Err(StoreError::PermissionDenied);
+        }
+        let id: Option<i64> = detail
+            .as_deref()
+            .map(str::parse)
+            .transpose()
+            .map_err(|_| StoreError::StatusBody(404, json!({"detail": "Not found."})))?;
+        let pool = self.pool.clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let results = core_settings_rows(&mut connection, id).await;
+            settle(connection).await?;
+            results
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn channel_group_action(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        action: crate::channel_groups::sqlite::writes::Action,
+    ) -> Result<axum::response::Response, StoreError> {
+        use crate::channel_groups::sqlite::writes::{run, Action};
+        let admin = !matches!(&action, Action::Detail(..));
+        let subject = self.bearer_account_user(peer, headers, admin).await?;
+        crate::channel_groups::collection_permission(subject.user())?;
+        let pool = self.pool.clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = run(&mut connection, subject.user(), action).await;
+            settle(connection).await?;
+            result
         })
         .await
     }
@@ -226,12 +325,16 @@ impl RetainedSqliteRestReads {
     }
 
     async fn network_group(&self) -> Result<Value, StoreError> {
+        self.group_value("network_access").await
+    }
+
+    async fn group_value(&self, group: &'static str) -> Result<Value, StoreError> {
         let pool = self.pool.clone();
         let limits = self.limits;
         supervised_sql_read(self.permit.clone(), async move {
             let mut connection = pool.acquire().await?;
             let result = sqlx::query(SQLITE_GROUP_SQL)
-                .bind("network_access")
+                .bind(group)
                 .bind(limits.max_raw_bytes as i32)
                 .fetch_optional(&mut *connection)
                 .await;
@@ -246,6 +349,27 @@ impl RetainedSqliteRestReads {
             }
         })
         .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn environment_system_settings(&self) -> Result<Value, StoreError> {
+        let load = || async {
+            let value = self.group_value("system_settings").await?;
+            if value.as_object().is_some_and(|map| !map.is_empty()) {
+                Ok(value)
+            } else {
+                Ok(crate::source_system_settings_defaults())
+            }
+        };
+        match &self.cache {
+            Some(cache) => cache.settings_group_bounded("system_settings", load).await,
+            None => load().await,
+        }
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) fn environment_request_cache(&self) -> Option<&NotificationCache> {
+        self.cache.as_ref()
     }
 
     #[cfg(feature = "sqlite-copied-data-runtime")]

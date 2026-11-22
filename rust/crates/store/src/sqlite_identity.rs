@@ -188,6 +188,7 @@ impl SqliteIdentity {
             for statement in profile::STATEMENTS
                 .into_iter()
                 .chain(application_data::STATEMENTS)
+                .chain(crate::channel_groups::sqlite::writes::STATEMENTS)
             {
                 snapshot.prepare(statement).await?;
             }

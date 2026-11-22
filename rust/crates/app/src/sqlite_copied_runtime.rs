@@ -8,6 +8,7 @@ use dispatcharr_store::{AuthConfig, CopiedSqliteRuntime};
 use std::{
     net::SocketAddr,
     path::{Path, PathBuf},
+    sync::Arc,
 };
 use tower_http::services::ServeFile;
 
@@ -77,7 +78,12 @@ pub(super) async fn run() -> Result<(), String> {
         Ok(path) => frontend(Path::new(&path)).await?,
         Err(_) => Router::new(),
     };
+    let ip_bus = super::realtime::bus(Some(&redis)).await?;
     let runtime = CopiedSqliteRuntime::open(&copy, auth, &redis).await?;
+    let runtime = match ip_bus {
+        Some(bus) => runtime.with_ip_event_sink(Arc::new(bus)),
+        None => runtime,
+    };
     let result = async {
         let listener = tokio::net::TcpListener::bind(bind)
             .await
