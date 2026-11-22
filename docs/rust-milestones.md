@@ -9,6 +9,10 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [9cf6407 HTTP attachment packets](../scripts/rust-contracts/observed-http-9cf6407/README.md)
+record 16 Channels and M3U directory requests and 16 Programme Guide requests. Portable
+offline verification covers the tested route identities, response projections and physical cleanup.
+
 Four [required M9 Compose rows](rust-m9-9cf6407-four-required-compose.md) passed fresh on
 9cf6407, including Complete Refresh with its immediately preceding Original reference. The
 same image passed a [local warm rollback](rust-m10-m11-9cf6407-local-rollback.md) with one
