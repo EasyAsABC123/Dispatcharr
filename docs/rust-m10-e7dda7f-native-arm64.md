@@ -5,3 +5,7 @@ Lappy compiled and verified the ordinary ARM64 package for `e7dda7f` using the p
 A fresh Compose project booted the package as UID 65532 on ARM64. React served the application shell. Initial setup, first-admin creation, JWT login, and a protected channel-group read passed. PostgreSQL contained the expected 184 migration records. The app exited normally, and the observer verified exact retirement of five containers and absence of the owned networks and volumes.
 
 The [machine-readable record](../scripts/rust-integration/m10-e7dda7f-native-arm64.json) binds the exact application, image, and receipt hashes. This verifies native packaging and startup. Controlled rollout and release-wide verification remain open. Original authors retain full credit. [Upstream attribution](../ATTRIBUTION.md)
+
+## M7 output checks
+
+A second isolated Compose project on the same ARM64 package passed four output checks. Authenticated M3U and XMLTV returned 200. Each returned the expected 401 body without credentials. The fixture checked profile exclusions, guide and live link ownership, XML escaping, selected headers, and unchanged SQL. The app and its owned resources retired exactly. [Machine-readable output evidence](../scripts/rust-integration/m7-e7dda7f-arm64-outputs.json)
