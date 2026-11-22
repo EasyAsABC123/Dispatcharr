@@ -18,6 +18,10 @@ Guide cases to the two declared list and detail GET rows as partial evidence.
 The [9cf6407 profiled HLS pair](rust-m3-9cf6407-profiled-hls-performance.md) matched
 30 complete segments with 32.4% lower CPU and 47.4% lower peak working memory.
 
+The [scoped Compose wave](rust-m5-m7-m8-scoped-compose.md) verified the manual
+channel edit on `5d9568f`, and realtime and ordinary plugin settings on `1124391`.
+Each workflow passed its owned cleanup checks.
+
 The [08d3b455 grouped STD pool pair](rust-m2-08d3b455-std-sample-pool.md)
 matched four Original and Rust calls, including shared-capacity refusal, a distinct
 pool and shared admission after release. Both arms verified media and teardown.
