@@ -46,8 +46,17 @@ API commit and then released the pending programme job. It matched the
 retained post-commit Native result, including two cache invalidations,
 programme replacement, the exact stream order and selected profile,
 and the next XMLTV response. The Original replay and reducer exited 0
-with exact cleanup. The Native pre-commit path has separate coverage
-remaining.
+with exact cleanup.
+
+The controlled Native pre-commit replay held an owned stream row until the
+actual programme job reached `SUCCESS` while the new channel-to-guide
+mapping was still invisible. After the hold released, the create returned
+201 with two ordered streams, one selected profile, and the expected next
+XMLTV response. It matched the natural Original pre-commit result with one
+cache invalidation and the existing programme rows intact. The replay,
+reducer, and independent cleanup passed. An earlier attempt stopped before
+sending the create because the harness could not format its SQL probe.
+That attempt also passed cleanup.
 
 Default scheduler activation, further provider shapes, wider HDHomeRun
 methods and release acceptance remain open.

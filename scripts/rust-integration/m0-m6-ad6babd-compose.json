@@ -72,6 +72,44 @@
     "stage": "m5-ad6-manual-channel-create-post-commit-1",
     "stage_seal_sha256": "29464126c13bcea7938bdd227f75a6c3a7f7d8e2aa5e6b93ed016a994f83850d"
   },
+  "guide_create_pre_commit": {
+    "earlier_fixture_run": {
+      "HTTP_create_sent": false,
+      "exact_cleanup": true,
+      "failure": "Host formatting of initial SQL probe",
+      "literal_exit": 1
+    },
+    "proof_sha256": "8f45a678b441db55db7b105bcdc409866ecd790d9746a03f6a610e0bed4daf60",
+    "result": {
+      "Native_pre_commit": {
+        "cache_generation_delta": 1,
+        "programme_replaced": false,
+        "raw_monitor_sha256": "e5769b99129b4a2aa1c9b72de93bcda810c0e9a903a83a39f482fa64220dc137",
+        "root_id": "142bd035-afcb-4ee5-a154-c36f818bb097"
+      },
+      "Original_natural_pre_commit": {
+        "cache_generation_delta": 1,
+        "programme_replaced": false,
+        "raw_monitor_sha256": "e875d0832970133e1104afbf54184a6f2c656b516740bed58cfbfa6c301e2b7d",
+        "root_id": "99d011c5-951d-4e17-9694-44669275b634"
+      },
+      "SQL_fence_proof_sha256": "8d09eaa5787ca64e7b4ec606bb5e45ab0fe181fc5c795f9ca8edb166733c419a",
+      "compared_effects": {
+        "HTTP_status": 201,
+        "cache_generation_delta": 1,
+        "matching_programme_roots": 1,
+        "next_XMLTV_readback": true,
+        "ordered_streams": 2,
+        "programme_rows_changed": false,
+        "selected_profiles": 1
+      },
+      "exact_Native_cleanup": true,
+      "image": "sha256:31446db001c8e381406ad2370f71a8858afbd6358885ea61616d20ee0a3e5e26",
+      "revision": "ad6babd7641067a49ba33f749b8aa39cba1cbb79",
+      "same_branch_matched": true,
+      "scope": "One composed XMLTV channel create, matching pre-commit programme mapping branch"
+    }
+  },
   "milestones_closed": [],
   "package": {
     "compiler_step_seconds": 344.0,

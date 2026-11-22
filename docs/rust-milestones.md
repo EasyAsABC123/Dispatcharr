@@ -15,6 +15,11 @@ six deterministic HDHomeRun HEAD and JSON OPTIONS cases, and the post-commit
 branch of manual channel creation with a real XMLTV guide. Its scheduler
 checks used explicit Selected/Core ownership.
 
+The [ad6babd guide-create timing replay](rust-m0-m6-ad6babd-compose.md#guide-channel-creation)
+matched the Original in both measured transaction orders. The pre-commit
+programme job kept existing programme rows and invalidated the cache once.
+The post-commit job replaced programme rows and invalidated it twice.
+
 The [ad6babd shared-viewing comparison](rust-m2-ad6babd-viewing100.md)
 measured three fresh 100-viewer pairs with one upstream connection and
 one provider slot per backend. The six phases passed useful audio and video,
