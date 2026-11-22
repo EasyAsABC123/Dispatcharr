@@ -133,6 +133,12 @@ confirmed Original administrator HTML 200 for two stock list and history
 registrations. The same Native paths returned its 404/301 ingress outcomes.
 Dedicated admin parity remains open.
 
+The [stock listener comparison](rust-m0-stock-aio-modeladmin-boundary.md)
+confirmed that both anonymous list paths reach Django through nginx, while
+public login and history use the nginx redirect. The [owned trusted plugin
+actions](rust-m8-f960875-aio-trusted-plugin-actions.md) passed on ordinary
+f960875 Native AIO against retained Original responses.
+
 The [f960875 abrupt Native fMP4 observation](rust-m3-f960875-native-abrupt-fmp4.md)
 decoded both retained viewer prefixes and recorded the attached follower's EOF.
 Both backends passed the [six-default cold and warm scheduler rehearsal](rust-m6-f960875-cold-warm-scheduler-install.md)
