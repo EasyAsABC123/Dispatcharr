@@ -110,6 +110,7 @@ pub(crate) async fn prepare<N: FnMut() -> i64>(
         ctx.user,
         ctx.family,
         id,
+        None,
         ctx.limits,
         ctx.available_work_bytes,
     )
@@ -132,6 +133,55 @@ pub(crate) async fn prepare<N: FnMut() -> i64>(
     }
     Ok(prepared)
 }
+/// Refresh the exact selected relation and render the committed reread.
+pub(crate) async fn refresh_and_write(
+    ctx: &Context<'_>,
+    initial: InfoRow,
+    refresher: &dispatcharr_store::XcVodRefresh,
+    request_owner: std::sync::Arc<tokio::sync::OwnedSemaphorePermit>,
+    out: &mut JsonBytes,
+) -> Result<(), Error> {
+    use dispatcharr_store::XcVodRefreshTarget;
+    let content = initial.object.content_id;
+    let relation = initial.relation_id;
+    let account = initial.account_id;
+    if content <= 0 || relation <= 0 || account <= 0 {
+        return Err(Error::UnsupportedIdRange);
+    }
+    let (target, movie_before) = match ctx.family {
+        Family::Movie => (XcVodRefreshTarget::Movie, Some(initial)),
+        Family::Series => (XcVodRefreshTarget::Series, None),
+    };
+    refresher
+        .run(target, content, relation, account, request_owner)
+        .await?;
+    let remaining = ctx
+        .available_work_bytes
+        .checked_sub(movie_before.as_ref().map_or(0, |row| row.retained_bytes))
+        .ok_or_else(reader::capacity)?;
+    let row = vod_info_row::read(
+        ctx.store,
+        ctx.user,
+        ctx.family,
+        content,
+        Some((relation, account)),
+        ctx.limits,
+        remaining,
+    )
+    .await?
+    .ok_or(Error::UnsupportedContext)?;
+
+    if let Some(before) = movie_before.as_ref() {
+        vod_movie_info::write_after_refresh(before, &row, ctx.origin, remaining, out)?;
+        return Ok(());
+    }
+    let refreshed = FreshInfo {
+        row,
+        family: ctx.family,
+    };
+    write_cached(ctx, &refreshed, out).await
+}
+
 pub(crate) async fn write_cached(
     ctx: &Context<'_>,
     fresh: &FreshInfo,

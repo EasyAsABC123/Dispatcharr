@@ -230,12 +230,22 @@ async fn movie_steps(
     relation_id: i64,
     force: bool,
     clock: Clock,
+    selected: Option<(i64, i64)>,
 ) -> Result<MovieResult, Step> {
     let mut connection = work.connection(auth.store.pool()).await?;
     let prepared = async {
         let snapshot = sql::movie_task(work, &mut connection, relation_id)
             .await?
             .ok_or(Step::Source)?;
+        if let Some((content, account)) = selected {
+            if snapshot["movie"]["id"].as_i64() != Some(content)
+                || snapshot["account"]["id"].as_i64() != Some(account)
+                || snapshot["account"]["account_type"].as_str() != Some("XC")
+                || snapshot["account"]["is_active"].as_bool() != Some(true)
+            {
+                return Err(Step::Unsupported("XC Movie relation changed"));
+            }
+        }
         let attempt = clock.now();
         if recent(&snapshot["relation"], force, attempt)? {
             return Ok(None);
@@ -334,8 +344,32 @@ pub(super) async fn movie_result(
     force: bool,
     clock: Clock,
 ) -> Result<Option<MovieResult>, ReadError> {
+    movie_result_for(work, auth, relation_id, force, clock, None).await
+}
+
+pub(super) async fn selected_movie(
+    work: &ReadWork,
+    auth: &crate::AuthService,
+    relation: i64,
+    content: i64,
+    account: i64,
+    clock: Clock,
+) -> Result<(), ReadError> {
+    movie_result_for(work, auth, relation, false, clock, Some((content, account)))
+        .await
+        .map(|_| ())
+}
+
+async fn movie_result_for(
+    work: &ReadWork,
+    auth: &crate::AuthService,
+    relation_id: i64,
+    force: bool,
+    clock: Clock,
+    selected: Option<(i64, i64)>,
+) -> Result<Option<MovieResult>, ReadError> {
     work.check()?;
-    match movie_steps(work, auth, relation_id, force, clock).await {
+    match movie_steps(work, auth, relation_id, force, clock, selected).await {
         Ok(result) => Ok(Some(result)),
         Err(Step::Source) => Ok(None),
         Err(Step::Capacity) => Err(ReadError::Capacity),

@@ -65,6 +65,7 @@ struct Inner {
     epg_enabled: AtomicBool,
     vod_lists_enabled: AtomicBool,
     cached_vod_info_enabled: AtomicBool,
+    vod_refresh: std::sync::OnceLock<dispatcharr_store::XcVodRefresh>,
     #[cfg(test)]
     vod_info_clock: std::sync::OnceLock<i64>,
     workers: AtomicUsize,
@@ -177,6 +178,7 @@ impl XcGateway {
                 epg_enabled: AtomicBool::new(false),
                 vod_lists_enabled: AtomicBool::new(false),
                 cached_vod_info_enabled: AtomicBool::new(false),
+                vod_refresh: std::sync::OnceLock::new(),
                 #[cfg(test)]
                 vod_info_clock: std::sync::OnceLock::new(),
                 workers: AtomicUsize::new(0),
@@ -217,6 +219,18 @@ impl XcGateway {
             .store(true, Ordering::Release);
         self
     }
+    /// Attach synchronous refresh to the same opt-in XC info routes.
+    pub fn with_vod_refresh(
+        self,
+        refresh: dispatcharr_store::XcVodRefresh,
+    ) -> Result<Self, StoreError> {
+        self.inner
+            .vod_refresh
+            .set(refresh)
+            .map_err(|_| StoreError::Unsupported("XC metadata refresh was already attached"))?;
+        Ok(self)
+    }
+
     /// Fixture-only eligibility clock, never an environment-controlled Main capability.
     #[cfg(test)]
     fn with_vod_info_for_test(self, eligibility_micros: i64) -> Self {
@@ -508,9 +522,22 @@ impl XcGateway {
                     Prepared::Fresh(fresh) => {
                         crate::vod_info_stage::write_cached(&ctx, &fresh, &mut out).await
                     }
-                    Prepared::RefreshRequired(_) | Prepared::PropertyCheckFailed(_) => {
-                        Err(Error::UnsupportedContext)
+                    Prepared::RefreshRequired(initial) => {
+                        let refresher = self
+                            .inner
+                            .vod_refresh
+                            .get()
+                            .ok_or(Error::UnsupportedContext)?;
+                        crate::vod_info_stage::refresh_and_write(
+                            &ctx,
+                            initial,
+                            refresher,
+                            permit.clone(),
+                            &mut out,
+                        )
+                        .await
                     }
+                    Prepared::PropertyCheckFailed(_) => Err(Error::UnsupportedContext),
                 }
             }
             .await;

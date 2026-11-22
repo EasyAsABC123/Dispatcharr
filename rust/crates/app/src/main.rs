@@ -1091,11 +1091,13 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     .map_err(|_| "Invalid EPG grid read configuration")?;
     let xc = xc
         .map(|gateway| {
-            gateway.with_live(playback::dispatcher(
-                engine.clone(),
-                hls.clone(),
-                fmp4.clone(),
-            ))
+            gateway
+                .with_vod_refresh(vod_reads.xc_vod_refresh())?
+                .with_live(playback::dispatcher(
+                    engine.clone(),
+                    hls.clone(),
+                    fmp4.clone(),
+                ))
         })
         .transpose()
         .map_err(|_| "XC live dispatcher initialization failed")?;

@@ -4,6 +4,8 @@
 use super::*;
 use crate::{auth, auth_throttle, AuthConfig, NotificationCache};
 
+#[cfg(feature = "sqlite-copied-data-runtime")]
+use futures_util::TryStreamExt;
 use sqlx::{sqlite::SqliteRow, SqlitePool};
 #[cfg(feature = "sqlite-copied-data-runtime")]
 use std::collections::HashMap;
@@ -18,6 +20,18 @@ pub(crate) enum ChannelRead {
 
 const SUBJECT_SQL: &str = "SELECT id,is_active,user_level,stream_limit,CASE WHEN length(CAST(username AS BLOB))+length(CAST(password AS BLOB))<=2048 THEN username END AS username,CASE WHEN length(CAST(username AS BLOB))+length(CAST(password AS BLOB))<=2048 THEN password END AS password,length(CAST(COALESCE(custom_properties,'{}') AS BLOB)) AS properties_bytes,CASE WHEN length(CAST(COALESCE(custom_properties,'{}') AS BLOB))<=?2 THEN COALESCE(custom_properties,'{}') END AS properties_text FROM accounts_user WHERE id=?1 LIMIT 2";
 const SQLITE_GROUP_SQL: &str = "SELECT value IS NULL AS sql_null,length(CAST(value AS BLOB)) AS bytes,CASE WHEN length(CAST(value AS BLOB))<=?2 THEN value END AS raw FROM core_coresettings WHERE key=?1";
+
+#[cfg(feature = "sqlite-copied-data-runtime")]
+pub(crate) const CHANNEL_PROFILE_COLLECTION_SQL: &str = "
+    SELECT p.id, p.name, m.channel_id
+    FROM dispatcharr_channels_channelprofile p
+    LEFT JOIN dispatcharr_channels_channelprofilemembership m
+        ON m.channel_profile_id=p.id AND m.enabled
+    WHERE ?1 OR EXISTS(
+        SELECT 1 FROM accounts_user_channel_profiles up
+        WHERE up.channelprofile_id=p.id AND up.user_id=?2
+    )
+    ORDER BY p.id,m.id";
 
 pub(crate) const READ_SCHEMA_QUERIES: [&str; 2] = [SUBJECT_SQL, SQLITE_GROUP_SQL];
 
@@ -66,6 +80,22 @@ async fn core_settings_rows(
 }
 
 impl RetainedSqliteRestReads {
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn bootstrap_admin_exists(&self) -> Result<bool, StoreError> {
+        let pool = self.pool.clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = sqlx::query_scalar::<_, bool>(
+                "SELECT EXISTS(SELECT 1 FROM accounts_user WHERE user_level >= 10)",
+            )
+            .fetch_one(&mut *connection)
+            .await;
+            settle(connection).await?;
+            Ok(result?)
+        })
+        .await
+    }
+
     pub fn from_owned_request(
         identity: &crate::sqlite_identity::SqliteIdentity,
         config: AuthConfig,
@@ -198,6 +228,27 @@ impl RetainedSqliteRestReads {
     }
 
     #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn core_catalog_read(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        catalog: crate::auth::sqlite_runtime::core_catalog::Catalog,
+    ) -> Result<Value, StoreError> {
+        let subject = self.bearer_account_user(peer, headers, false).await?;
+        if subject.user().user_level < 1 {
+            return Err(StoreError::PermissionDenied);
+        }
+        let pool = self.pool.clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let results = catalog.read(&mut connection).await;
+            settle(connection).await?;
+            results
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
     pub(crate) async fn channel_group_action(
         &self,
         peer: SocketAddr,
@@ -212,6 +263,26 @@ impl RetainedSqliteRestReads {
         supervised_sql_read(self.permit.clone(), async move {
             let mut connection = pool.acquire().await?;
             let result = run(&mut connection, subject.user(), action).await;
+            settle(connection).await?;
+            result
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn channel_profile_collection(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+    ) -> Result<Value, StoreError> {
+        let subject = self.bearer_account_user(peer, headers, false).await?;
+        crate::channel_groups::collection_permission(subject.user())?;
+        let pool = self.pool.clone();
+        let work_bytes = self.limits.work_bytes;
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result =
+                collect_channel_profiles(&mut connection, subject.user(), work_bytes).await;
             settle(connection).await?;
             result
         })
@@ -273,6 +344,48 @@ impl RetainedSqliteRestReads {
                 read
             }
             .await;
+            settle(connection).await?;
+            result
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn epg_collection(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        collection: crate::auth::sqlite_runtime::epg_collections::Collection,
+    ) -> Result<Vec<u8>, StoreError> {
+        let subject = self.bearer_account_user(peer, headers, false).await?;
+        crate::channel_groups::collection_permission(subject.user())?;
+        let pool = self.pool.clone();
+        let work_bytes = self.limits.work_bytes;
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = collection.read(&mut connection, work_bytes).await;
+            settle(connection).await?;
+            result
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn provider_accounts(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+    ) -> Result<Vec<u8>, StoreError> {
+        let subject = self.bearer_account_user(peer, headers, false).await?;
+        crate::channel_groups::collection_permission(subject.user())?;
+        let admin = subject.user().user_level >= 10;
+        let pool = self.pool.clone();
+        let work_bytes = self.limits.work_bytes;
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result =
+                crate::auth::sqlite_runtime::m3u_accounts::read(&mut connection, admin, work_bytes)
+                    .await;
             settle(connection).await?;
             result
         })
@@ -405,6 +518,46 @@ impl RetainedSqliteRestReads {
     }
 }
 
+#[cfg(feature = "sqlite-copied-data-runtime")]
+async fn collect_channel_profiles(
+    connection: &mut sqlx::SqliteConnection,
+    user: &User,
+    mut remaining: usize,
+) -> Result<Value, StoreError> {
+    let mut rows = sqlx::query_as::<_, (i64, String, Option<i64>)>(CHANNEL_PROFILE_COLLECTION_SQL)
+        .bind(user.user_level == 10)
+        .bind(user.id)
+        .fetch(connection);
+    let mut profiles = Vec::new();
+    let mut current: Option<(i64, String, Vec<i64>)> = None;
+    while let Some((id, name, channel)) = rows.try_next().await? {
+        if current
+            .as_ref()
+            .is_none_or(|(previous, ..)| *previous != id)
+        {
+            remaining = remaining
+                .checked_sub(2 * name.len() + 3 * std::mem::size_of::<Value>())
+                .ok_or_else(capacity)?;
+            if let Some((id, name, channels)) = current.take() {
+                profiles.push(json!({"id":id,"name":name,"channels":channels}));
+            }
+            current = Some((id, name, Vec::new()));
+        }
+        if let Some(channel) = channel {
+            remaining = remaining
+                .checked_sub(std::mem::size_of::<Value>())
+                .ok_or_else(capacity)?;
+            if let Some((_, _, channels)) = current.as_mut() {
+                channels.push(channel);
+            }
+        }
+    }
+    if let Some((id, name, channels)) = current {
+        profiles.push(json!({"id":id,"name":name,"channels":channels}));
+    }
+    Ok(Value::Array(profiles))
+}
+
 async fn settle(
     mut connection: sqlx::pool::PoolConnection<sqlx::Sqlite>,
 ) -> Result<(), StoreError> {
@@ -438,4 +591,64 @@ fn decode_sqlite_user(row: SqliteRow, limits: RestReadLimits) -> Result<ReadSubj
         raw.as_deref(),
         limits,
     )
+}
+
+#[cfg(all(test, feature = "sqlite-copied-data-runtime"))]
+mod channel_profile_collection_tests {
+    use super::*;
+    use sqlx::SqliteConnection;
+
+    fn user(id: i64, user_level: i32) -> crate::User {
+        crate::User {
+            id,
+            username: String::new(),
+            password: String::new(),
+            is_active: true,
+            user_level,
+            stream_limit: 0,
+            custom_properties: json!({}),
+        }
+    }
+
+    #[tokio::test]
+    async fn copied_channel_profiles_filter_assignments_and_preserve_enabled_membership_order() {
+        let mut connection = SqliteConnection::connect("sqlite::memory:").await.unwrap();
+        sqlx::raw_sql(
+            "CREATE TABLE dispatcharr_channels_channelprofile (id INTEGER PRIMARY KEY,name TEXT);
+            CREATE TABLE dispatcharr_channels_channelprofilemembership
+                (id INTEGER PRIMARY KEY,channel_profile_id INTEGER,channel_id INTEGER,enabled INTEGER);
+            CREATE TABLE accounts_user_channel_profiles (user_id INTEGER,channelprofile_id INTEGER);
+            INSERT INTO dispatcharr_channels_channelprofile VALUES (7,'Assigned'),(12,'Other'),(20,'Empty');
+            INSERT INTO dispatcharr_channels_channelprofilemembership VALUES
+                (1,7,42,1),(2,7,11,0),(3,7,18,1),(4,12,99,1);
+            INSERT INTO accounts_user_channel_profiles VALUES (1,20),(1,7);",
+        )
+        .execute(&mut connection)
+        .await
+        .unwrap();
+        let assigned = json!({"id":7,"name":"Assigned","channels":[42,18]});
+        let empty = json!({"id":20,"name":"Empty","channels":[]});
+        assert_eq!(
+            collect_channel_profiles(&mut connection, &user(1, 1), 4096)
+                .await
+                .unwrap(),
+            json!([assigned, empty])
+        );
+        assert_eq!(
+            collect_channel_profiles(&mut connection, &user(2, 10), 4096)
+                .await
+                .unwrap(),
+            json!([assigned, {"id":12,"name":"Other","channels":[99]}, empty])
+        );
+        assert_eq!(
+            collect_channel_profiles(&mut connection, &user(2, 1), 4096)
+                .await
+                .unwrap(),
+            json!([])
+        );
+        assert!(matches!(
+            collect_channel_profiles(&mut connection, &user(1, 1), 1).await,
+            Err(StoreError::StatusBody(503, _))
+        ));
+    }
 }

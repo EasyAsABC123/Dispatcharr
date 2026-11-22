@@ -185,8 +185,30 @@ fn group(raw: &Value) -> Value {
 }
 fn account(row: &PgRow, admin: bool) -> Result<Value, StoreError> {
     let raw: Value = row.try_get("raw")?;
-    let mut value = fields(
+    let profiles: Value = row.try_get("profiles")?;
+    let filters: Vec<Value> =
+        serde_json::from_value(row.try_get("filters")?).expect("SQL aggregate array");
+    let groups: Value = row.try_get("groups")?;
+    Ok(account_value(
         &raw,
+        profiles.as_array().expect("SQL aggregate array"),
+        filters,
+        groups.as_array().expect("SQL aggregate array"),
+        row.try_get("cron")?,
+        admin,
+    ))
+}
+
+pub(crate) fn account_value(
+    raw: &Value,
+    profiles: &[Value],
+    mut filters: Vec<Value>,
+    groups: &[Value],
+    cron: String,
+    admin: bool,
+) -> Value {
+    let mut value = fields(
+        raw,
         &[
             "id",
             "name",
@@ -230,10 +252,8 @@ fn account(row: &PgRow, admin: bool) -> Result<Value, StoreError> {
         .get("hash_key")
         .cloned()
         .unwrap_or(Value::Null);
-    value["cron_expression"] = row.try_get::<String, _>("cron")?.into();
-    let profiles: Value = row.try_get("profiles")?;
-    let profiles = profiles.as_array().expect("SQL aggregate array");
-    value["profiles"] = Value::Array(profiles.iter().map(|p| profile(p, &raw)).collect());
+    value["cron_expression"] = cron.into();
+    value["profiles"] = Value::Array(profiles.iter().map(|p| profile(p, raw)).collect());
     value["exp_date"] = profiles
         .iter()
         .find(|p| p["is_default"] == true)
@@ -250,20 +270,10 @@ fn account(row: &PgRow, admin: bool) -> Result<Value, StoreError> {
         .map(|(_, p)| seconds(&p["exp_date"]))
         .unwrap_or(Value::Null);
     value["all_expirations"]=Value::Array(expiring.iter().map(|(_,p)|json!({"profile_id":p["id"],"profile_name":p["name"],"exp_date":seconds(&p["exp_date"]),"is_active":p["is_active"]})).collect());
-    let mut filters: Vec<Value> =
-        serde_json::from_value(row.try_get("filters")?).expect("SQL aggregate array");
     filters.sort_by_key(|value| value["order"].as_u64().unwrap_or(0));
     value["filters"] = Value::Array(filters.iter().map(filter).collect());
-    let groups: Value = row.try_get("groups")?;
-    value["channel_groups"] = Value::Array(
-        groups
-            .as_array()
-            .expect("SQL aggregate array")
-            .iter()
-            .map(group)
-            .collect(),
-    );
-    Ok(value)
+    value["channel_groups"] = Value::Array(groups.iter().map(group).collect());
+    value
 }
 fn serialize(resource: Resource, row: PgRow, admin: bool) -> Result<Value, StoreError> {
     if matches!(resource, Resource::Accounts) {

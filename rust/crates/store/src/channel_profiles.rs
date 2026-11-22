@@ -16,7 +16,7 @@ use serde_json::{json, ser::PrettyFormatter, Map, Value};
 use sqlx::{Postgres, Row, Transaction};
 use std::net::SocketAddr;
 type Body = Result<Json<Value>, JsonRejection>;
-const SELECT:&str="SELECT p.id::bigint AS id,p.name,COALESCE((SELECT jsonb_agg(m.channel_id ORDER BY m.id) FROM dispatcharr_channels_channelprofilemembership m WHERE m.channel_profile_id=p.id AND m.enabled),'[]'::jsonb) AS channels FROM dispatcharr_channels_channelprofile p WHERE ($1::bigint IS NULL OR p.id=$1) AND ($2 OR EXISTS(SELECT 1 FROM accounts_user_channel_profiles up WHERE up.channelprofile_id=p.id AND up.user_id=$3)) ORDER BY p.id";
+const SELECT: &str = "SELECT p.id::bigint AS id,p.name,COALESCE((SELECT jsonb_agg(m.channel_id ORDER BY m.id) FROM dispatcharr_channels_channelprofilemembership m WHERE m.channel_profile_id=p.id AND m.enabled),'[]'::jsonb) AS channels FROM dispatcharr_channels_channelprofile p WHERE ($1::bigint IS NULL OR p.id=$1) AND ($2 OR EXISTS(SELECT 1 FROM accounts_user_channel_profiles up WHERE up.channelprofile_id=p.id AND up.user_id=$3)) ORDER BY p.id";
 fn missing() -> StoreError {
     StoreError::StatusBody(
         404,
@@ -144,6 +144,15 @@ fn json_response(value: Value, indent: Option<usize>) -> Result<Response, StoreE
             .replace('\u{2029}', "\\u2029");
     }
     Ok(([(header::CONTENT_TYPE, "application/json")], body).into_response())
+}
+
+#[cfg(feature = "sqlite-copied-data-runtime")]
+pub(crate) fn canonical_json_response(
+    value: Value,
+    uri: &Uri,
+    headers: &HeaderMap,
+) -> Result<Response, StoreError> {
+    json_response(value, negotiate_read_json(uri, headers, false)?)
 }
 
 pub(crate) async fn lookup(

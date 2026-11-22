@@ -77,11 +77,11 @@ const VIDEO: usize = 13;
 const AUDIO: usize = 14;
 
 fn metadata<'a>(
-    row: &'a InfoRow,
+    before: &'a InfoRow,
     object: Option<&'a RawValue>,
     relation: Option<&'a RawValue>,
 ) -> Result<[Atom<'a>; 15], Error> {
-    let o = &row.object;
+    let o = &before.object;
     let mut data = [
         Atom::Text(&o.name),
         Atom::Text(o.description.as_deref().unwrap_or("")),
@@ -226,6 +226,16 @@ pub(crate) fn write(
     available_work: usize,
     out: &mut JsonBytes,
 ) -> Result<(), Error> {
+    write_after_refresh(row, row, origin, available_work, out)
+}
+
+pub(crate) fn write_after_refresh(
+    before: &InfoRow,
+    row: &InfoRow,
+    origin: &str,
+    available_work: usize,
+    out: &mut JsonBytes,
+) -> Result<(), Error> {
     let raw = row
         .object
         .heap_bytes()?
@@ -252,7 +262,7 @@ pub(crate) fn write(
         .as_deref()
         .map(vod_object::parse)
         .transpose()?;
-    let data = metadata(row, object, relation)?;
+    let data = metadata(before, object, relation)?;
     let artwork = vod_object::prefer(relation, object)?;
     let cover = if vod_lists::proxyable(&artwork.image) {
         Some(vod_lists::image_url(
@@ -424,6 +434,35 @@ mod tests {
         );
         assert_eq!(row.relation_modified, row.object.modified);
     }
+    #[test]
+    fn refresh_keeps_initial_basic_info_but_renders_current_movie_and_details() {
+        let (mut initial, _) = fixture();
+        let (mut current, _) = fixture();
+        initial.object.name = "Initial movie".into();
+        initial.object.description = Some("Old description".into());
+        initial.object.language.clear();
+        current.object.name = "Current movie".into();
+        current.object.description = Some("Current description".into());
+        current.object.language.clear();
+        current.object.properties = Some(r#"{"director":"Refreshed director"}"#.into());
+        current.relation_properties = Some(r#"{"detailed_info":{"rating":"9.5"}}"#.into());
+        let mut out = JsonBytes::new(1024 * 1024).unwrap();
+        write_after_refresh(
+            &initial,
+            &current,
+            "http://127.0.0.1:5657",
+            4 * 1024 * 1024,
+            &mut out,
+        )
+        .unwrap();
+        let value: serde_json::Value = serde_json::from_slice(&out.finish()).unwrap();
+        assert_eq!(value["info"]["name"], "Initial movie");
+        assert_eq!(value["info"]["plot"], "Old description");
+        assert_eq!(value["info"]["director"], "Refreshed director");
+        assert_eq!(value["info"]["rating"], "9.5");
+        assert_eq!(value["movie_data"]["name"], "Current movie");
+    }
+
     #[test]
     fn bulk_update_shape_error_does_not_leak_partial_custom_fields() {
         let (mut row, _) = fixture();
