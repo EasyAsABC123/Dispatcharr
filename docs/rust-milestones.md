@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [66b02c4a checkpoint](rust-m0-m6-66b02c4a-xmltv-hdhr-checkpoint.md)
+matched two linked saved XMLTV sources and their four causal children.
+The same ordinary image also matched both anonymous HDHomeRun status GET
+wire responses with exact cleanup.
+
 The [Original media and profile reference](rust-m9-original-media-profile-workflows.md)
 verified 16 A/V observations, natural source switch, FFmpeg/VLC profiles,
 and recovery on a fresh request. It supplies the retained Original media

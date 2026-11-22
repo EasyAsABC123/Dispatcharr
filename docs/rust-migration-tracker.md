@@ -14,13 +14,16 @@ separate candidates and cannot be added.
 [25dc report](rust-m9-25dc1502-core-and-m4.md) ·
 [4558 report](rust-m9-4558a85b-formal-compose.md)
 
-The latest published application checkpoint verified copied SQLite Streams
-account filters, Logo usage filters, dismiss-all, and normal provider rehash
-on `424880a9`. The reply-loss comparison returned HTTP 503 on Rust and
-HTTP 200 on Original. A separate paired comparison verified finite MPEG-TS
-fallback and two-viewer fMP4 sharing on their named earlier packages.
-[424880 checkpoint](rust-m6-m8-424880a9-compose-checkpoint.md) ·
-[Paired playback](rust-m2-m3-shared-playback-compose-followup.md) ·
+The latest ordinary application checkpoint on `66b02c4a` matched two
+linked saved XMLTV sources and both ordinary HDHomeRun status responses.
+The earlier `7f6b7016` image confirmed one due saved backup after restart.
+The XMLTV and backup tests used the same explicit Selected worker and
+Core Beat mode. The
+`424880a9` checkpoint records copied-data startup reads and dismissal,
+normal provider rehash, and the remaining reply-loss response difference.
+[XMLTV and HDHomeRun](rust-m0-m6-66b02c4a-xmltv-hdhr-checkpoint.md) ·
+[Scheduled backup](rust-m6-m8-7f6b7016-selected-core-beat.md) ·
+[Copied-data checkpoint](rust-m6-m8-424880a9-compose-checkpoint.md) ·
 [Measured build throughput](rust-migration-acceleration.md#november-22-build-and-acceptance-review)
 
 The `e740306c` package also qualified scheduled series and movie refreshes,

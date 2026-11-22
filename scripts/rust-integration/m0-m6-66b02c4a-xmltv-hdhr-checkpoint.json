@@ -1,0 +1,178 @@
+{
+  "application": "66b02c4a9d18ecb65d6b3acbbef443c34af9bd6a",
+  "comparative_application_performance_measured": false,
+  "first_HDHR_admission": {
+    "actual_exit": 1,
+    "physical_roles_started": 0,
+    "same_image_retry": true,
+    "stderr_sha256": "d3adbb617aaa7ece032d6c738d9830a27d0c70a1cb30c8b1ecac01c63a7a9630"
+  },
+  "fresh_full_milestone_passes": 0,
+  "hdhr": {
+    "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "Original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "build_manifest_sha256": "28a3d1d9e80b4a764b3f9355e1501d2451268e6547eadb219cd0022b47c8e683",
+    "candidate_image": "sha256:d99d2d100716a32b84dc57a538b8eac7f2fe4b167ab2e2a488985e9fa001df29",
+    "candidate_revision": "66b02c4a9d18ecb65d6b3acbbef443c34af9bd6a",
+    "cases": [
+      {
+        "case": "allowed",
+        "exact_wire_match": true,
+        "native": {
+          "accept": "application/json",
+          "body_bytes": 84,
+          "body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+          "case": "allowed",
+          "expected_outcome": true,
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "84",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": null
+          },
+          "method": "GET",
+          "path": "/hdhr/lineup_status.json",
+          "role": "anonymous",
+          "status": 200
+        },
+        "original": {
+          "accept": "application/json",
+          "body_bytes": 84,
+          "body_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37",
+          "case": "allowed",
+          "expected_outcome": true,
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "84",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": null
+          },
+          "method": "GET",
+          "path": "/hdhr/lineup_status.json",
+          "role": "anonymous",
+          "status": 200
+        }
+      },
+      {
+        "case": "policy-denied",
+        "exact_wire_match": true,
+        "native": {
+          "accept": "application/json",
+          "body_bytes": 22,
+          "body_sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+          "case": "policy-denied",
+          "expected_outcome": true,
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "22",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": null
+          },
+          "method": "GET",
+          "path": "/hdhr/lineup_status.json",
+          "role": "anonymous",
+          "status": 403
+        },
+        "original": {
+          "accept": "application/json",
+          "body_bytes": 22,
+          "body_sha256": "ff57a7441cf05c0ae2a6a631bcc9f068a205a3fba4a5d451309099a208db2962",
+          "case": "policy-denied",
+          "expected_outcome": true,
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "22",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": null
+          },
+          "method": "GET",
+          "path": "/hdhr/lineup_status.json",
+          "role": "anonymous",
+          "status": 403
+        }
+      }
+    ],
+    "exact_owned_cleanup": true,
+    "fully_verified": false,
+    "held_scope": [
+      "other authenticated roles and credential domains",
+      "other negotiation profiles",
+      "other allowed configurations",
+      "HEAD",
+      "OPTIONS",
+      "aliases"
+    ],
+    "historical_7f6b": {
+      "exact_owned_cleanup": true,
+      "literal_controller_exit": 1,
+      "proof_sha256": "8cbe0e70c9f63d61d362c11ad9965c9f3811694b5cc291aa99ba721e34141ea2",
+      "status_transferred": false
+    },
+    "historical_workload_proof_sha256": "15d8614223c69e62ef87e7e7122e15fb63234a6e5234bf5d6141ad06935d5a86",
+    "literal_controller_exit": 0,
+    "observed_method": "GET",
+    "owned_policy_restored": true,
+    "pattern_exact": "hdhr/lineup_status.json",
+    "prior_same_image_admission": {
+      "literal_exit": 1,
+      "physical_started": false,
+      "stderr_sha256": "d3adbb617aaa7ece032d6c738d9830a27d0c70a1cb30c8b1ecac01c63a7a9630"
+    },
+    "raw_sha256": "3cd4621c9de7d2d7cbb4141c0192d018c2201726f169d441ef7ae3bf7531f482",
+    "read_SQL_unchanged": true,
+    "resolver_ordinal": 376,
+    "runtime_binding_sha256": "6da389c2a6e3d03e9dd60473dc68a25e59ed446d6e01408d6bbfa0fcd0d1d48c",
+    "scoped_wire_equal": true,
+    "source_handler": "apps.hdhr.api_views.LineupStatusAPIView",
+    "stable_work_id": "route-9198a3509e35fbb64b8e:METHOD_UNRESOLVED",
+    "verified_parent_publication_sha256": "40e5b17dbac4f4c780f8dd98e25f34d0d674f701ab346b77b01ee5e8c287bdd0"
+  },
+  "host": {
+    "exact_source_sha256": "2f93493fe2ee4ac1d8112bc91342e1f281d31ab9b8a7c09a45fb6ee8e8d9e047",
+    "feature": {
+      "failed": 0,
+      "ignored": 271,
+      "passed": 1141
+    },
+    "strict_lint_modes": [
+      "ordinary",
+      "copied SQLite"
+    ],
+    "workspace": {
+      "failed": 0,
+      "ignored": 814,
+      "passed": 1583
+    }
+  },
+  "intermediate_package_unstarted_exit": 130,
+  "ordinary_rust_compile_seconds": 342.0,
+  "package": {
+    "feature_arg": 0,
+    "image": "sha256:d99d2d100716a32b84dc57a538b8eac7f2fe4b167ab2e2a488985e9fa001df29",
+    "manifest_sha256": "28a3d1d9e80b4a764b3f9355e1501d2451268e6547eadb219cd0022b47c8e683",
+    "revision": "66b02c4a9d18ecb65d6b3acbbef443c34af9bd6a"
+  },
+  "proof_sha256": {
+    "hdhr": "b462802318315c9d0a159c07ecfe0d234beaeadd44f9903176f3fceb4b652228",
+    "xmltv": "8deb96a3766385593ab17368003eb9ef663df60e25d25d76b77f539cbee44f1d"
+  },
+  "xmltv": {
+    "exact_cleanup": true,
+    "manifest_sha256": "28a3d1d9e80b4a764b3f9355e1501d2451268e6547eadb219cd0022b47c8e683",
+    "no_existing_status_transferred": true,
+    "one_composite_receiver_and_scheduler": true,
+    "performance_measured": false,
+    "revision": "66b02c4a9d18ecb65d6b3acbbef443c34af9bd6a",
+    "strict_pair_sha256": "58304a60494ed6a3097634193c5c9a54c45a375d98f57776b6335d5e86c54797",
+    "two_natural_roots_and_four_children_per_backend": true
+  }
+}
