@@ -17,7 +17,7 @@ use std::{
     sync::{Arc, Mutex as StateMutex, OnceLock},
     time::Duration,
 };
-use tokio::sync::{watch, Mutex, OwnedSemaphorePermit, Semaphore};
+use tokio::sync::{oneshot, watch, Mutex, OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 #[derive(Debug)]
 pub enum Error {
@@ -61,9 +61,11 @@ pub enum Status {
     Prepared,
     Running,
     Standby,
+    Contended,
     Acquired,
     Observed(Tick),
     ReceiverFault,
+    SettlingFault,
     Fault(Arc<Error>),
     Stopped,
 }
@@ -416,7 +418,8 @@ enum Admission {
 }
 enum Operation {
     Initialize,
-    Tick,
+    TimerTick,
+    ManualTick,
 }
 struct Lifecycle {
     admission: StateMutex<Admission>,
@@ -439,7 +442,7 @@ impl Lifecycle {
     fn reserve(&self, operation: Operation) -> Result<OwnedSemaphorePermit, Error> {
         let admission = self.admission.lock().map_err(|_| Error::Supervisor)?;
         if *admission == Admission::Closed
-            || (*admission == Admission::Started && matches!(operation, Operation::Initialize))
+            || (*admission == Admission::Started && !matches!(operation, Operation::TimerTick))
         {
             return Err(Error::Closed);
         }
@@ -485,6 +488,37 @@ struct Owner {
     _caller: Arc<dyn Send + Sync>,
     _slot: OwnedSemaphorePermit,
     _inner: Arc<Inner>,
+}
+
+struct BeatTickOwner {
+    _caller: Arc<dyn Send + Sync>,
+    _inner: Arc<Inner>,
+    _physical_permit: PhysicalPermit,
+}
+
+/// Return the permit to the waiter only after every retained transport owner
+/// has dropped. This keeps both the scheduler slot and its PG fence while a
+/// logically timed-out Redis command may still be physically running.
+struct PhysicalPermit {
+    return_on_drop: Option<(OwnedSemaphorePermit, oneshot::Sender<OwnedSemaphorePermit>)>,
+}
+impl PhysicalPermit {
+    fn new(permit: OwnedSemaphorePermit) -> (Self, oneshot::Receiver<OwnedSemaphorePermit>) {
+        let (release, completed) = oneshot::channel();
+        (
+            Self {
+                return_on_drop: Some((permit, release)),
+            },
+            completed,
+        )
+    }
+}
+impl Drop for PhysicalPermit {
+    fn drop(&mut self) {
+        if let Some((permit, release)) = self.return_on_drop.take() {
+            let _ = release.send(permit);
+        }
+    }
 }
 #[derive(Clone)]
 pub struct Scheduler {
@@ -581,30 +615,22 @@ impl Scheduler {
     /// the explicitly disabled legacy stats row, which is always disabled.
     pub async fn initialize(&self, caller: Arc<dyn Send + Sync>) -> Result<Setup, Error> {
         let slot = self.inner.lifecycle.reserve(Operation::Initialize)?;
-        let owner = Arc::new(Owner {
-            _caller: caller,
-            _slot: slot,
-            _inner: self.inner.clone(),
-        });
         let inner = self.inner.clone();
         tokio::spawn(async move {
-            let _owner = owner;
-            if inner.scope.uses_selected_receivers() {
-                let timeout = inner.pool.options().get_acquire_timeout();
-                let mut connection = connect_selected_core(&inner.pool, timeout).await?;
-                let observed = async {
-                    if !try_selected_core_owner(&mut connection, timeout).await? {
-                        return Ok(Setup::default());
-                    }
-                    install_defaults(&mut connection).await
-                }
-                .await;
-                return settle_selected_core(connection, observed, timeout).await;
-            }
-            let mut connection = inner.pool.acquire().await?.detach();
-            let observed = if inner.scope.is_core() {
+            let _owner = (caller, slot);
+            let Some(mut session) = BeatSession::connect(&inner.pool).await?.try_claim().await?
+            else {
+                return if inner.scope.uses_selected_receivers() {
+                    Ok(Setup::default())
+                } else {
+                    Err(Error::Configuration(
+                        "another configured Beat owner is active",
+                    ))
+                };
+            };
+            let observed = if inner.scope.is_core() && !inner.scope.uses_selected_receivers() {
                 install_default(
-                    &mut connection,
+                    &mut session.connection,
                     CLEANUP_PERIODIC_TASK,
                     CLEANUP_PERIODIC_TASK,
                     None,
@@ -615,9 +641,9 @@ impl Scheduler {
                     failed: Vec::new(),
                 })
             } else {
-                install_defaults(&mut connection).await
+                install_defaults(&mut session.connection).await
             };
-            settle(connection, observed).await
+            session.settle(observed).await
         })
         .await
         .map_err(|_| Error::Supervisor)?
@@ -643,54 +669,30 @@ impl Scheduler {
         let this = self.clone();
         let mut stop = self.inner.lifecycle.stop.subscribe();
         tokio::spawn(async move {
-            if this.inner.scope.uses_selected_receivers() {
-                let status = match this.serve_selected_core(&mut stop, caller).await {
-                    Ok(status) => status,
-                    Err(error) => Status::Fault(Arc::new(error)),
-                };
-                this.inner.lifecycle.finish(status);
-                return;
-            }
-            while !*stop.borrow() {
-                match this.tick_once(caller.clone()).await {
-                    Ok(tick) => {
-                        let delay = tick.delay_seconds;
-                        this.inner
-                            .lifecycle
-                            .status
-                            .send_replace(Status::Observed(tick));
-                        if delay > 0.0 {
-                            let duration =
-                                Duration::from_secs_f64(delay).min(this.inner.maximum_sleep);
-                            tokio::select! {_=tokio::time::sleep(duration)=>{},_=stop.changed()=>{}}
-                        }
-                    }
-                    Err(Error::Closed) => break,
-                    Err(error) => {
-                        this.inner.lifecycle.finish(Status::Fault(Arc::new(error)));
-                        return;
-                    }
-                }
-            }
-            this.inner.lifecycle.finish(Status::Stopped);
+            let status = match this.serve_owned(&mut stop, caller).await {
+                Ok(status) => status,
+                Err(error) => Status::Fault(Arc::new(error)),
+            };
+            this.inner.lifecycle.finish(status);
         });
         Ok(())
     }
-    fn selected_core_availability(&self) -> SelectedScheduleAvailability {
+
+    fn receiver_availability(&self) -> SelectedScheduleAvailability {
         match self.inner.backup_worker.as_ref() {
             Some(ScheduleConsumer::Selected(worker)) => worker.availability(),
-            _ => Terminal,
+            Some(ScheduleConsumer::Core(worker)) => worker.schedule_availability(),
+            None => Ready,
         }
     }
 
-    async fn serve_selected_core(
+    async fn serve_owned(
         &self,
         stop: &mut watch::Receiver<bool>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Status, Error> {
-        let timeout = self.inner.pool.options().get_acquire_timeout();
         while !*stop.borrow() {
-            match self.selected_core_availability() {
+            match self.receiver_availability() {
                 Terminal => return Ok(Status::ReceiverFault),
                 Waiting => {
                     tokio::select! {
@@ -701,26 +703,28 @@ impl Scheduler {
                 }
                 Ready => {}
             }
-            let mut connection = tokio::select! {
+            let session = tokio::select! {
                 biased;
                 _ = stop.changed() => return Ok(Status::Stopped),
-                connection = connect_selected_core(&self.inner.pool, timeout) => connection?,
+                session = BeatSession::connect(&self.inner.pool) => session?,
             };
-            // This socket is role-only. Cancellation drops it and cannot
-            // return a live advisory lock to a Main Store pool borrower.
-            match try_selected_core_owner(&mut connection, timeout).await {
-                Ok(true) => {
+            // Only connection setup may be cancelled by TERM. Once the SQL
+            // claim starts, settle its reply/socket within the role budget.
+            if let Some(mut session) = session.try_claim().await? {
+                if self.inner.scope.uses_selected_receivers() {
                     self.inner.lifecycle.status.send_replace(Status::Acquired);
-                    *self.inner.cache.lock().await = Cache::default();
-                    let observed = self.run_selected_core(&mut connection, stop, caller).await;
-                    return settle_selected_core(connection, observed, timeout).await;
                 }
-                Ok(false) => {
-                    settle_selected_core(connection, Ok(()), timeout).await?;
-                    self.inner.lifecycle.status.send_replace(Status::Standby);
-                }
-                Err(error) => return settle_selected_core(connection, Err(error), timeout).await,
+                *self.inner.cache.lock().await = Cache::default();
+                let observed = self.run_owned(&mut session.connection, stop, caller).await;
+                let observed = self.finish_owned(&mut session.connection, observed).await;
+                return session.settle(observed).await;
             }
+            if !self.inner.scope.uses_selected_receivers() {
+                // Legacy and standalone Core still admit a single configured
+                // owner. Only Selected/Core has a validated standby topology.
+                return Ok(Status::Contended);
+            }
+            self.inner.lifecycle.status.send_replace(Status::Standby);
             tokio::select! {
                 _ = tokio::time::sleep(self.inner.maximum_sleep) => {},
                 _ = stop.changed() => {},
@@ -729,18 +733,18 @@ impl Scheduler {
         Ok(Status::Stopped)
     }
 
-    async fn run_selected_core(
+    async fn run_owned(
         &self,
         connection: &mut PgConnection,
         stop: &mut watch::Receiver<bool>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Status, Error> {
-        let end = loop {
+        loop {
             if *stop.borrow() {
-                break Status::Stopped;
+                return Ok(Status::Stopped);
             }
-            match self.selected_core_availability() {
-                Terminal => break Status::ReceiverFault,
+            match self.receiver_availability() {
+                Terminal => return Ok(Status::ReceiverFault),
                 Waiting => {
                     self.inner.lifecycle.status.send_replace(Status::Acquired);
                     tokio::select! {
@@ -751,17 +755,27 @@ impl Scheduler {
                 }
                 Ready => {}
             }
-            let slot = match self.inner.lifecycle.reserve(Operation::Tick) {
+            let slot = match self.inner.lifecycle.reserve(Operation::TimerTick) {
                 Ok(slot) => slot,
-                Err(Error::Closed) => break Status::Stopped,
+                Err(Error::Closed) => return Ok(Status::Stopped),
                 Err(error) => return Err(error),
             };
-            let owner = Arc::new(Owner {
+            let (physical_permit, completed) = PhysicalPermit::new(slot);
+            let owner = Arc::new(BeatTickOwner {
                 _caller: caller.clone(),
-                _slot: slot,
                 _inner: self.inner.clone(),
+                _physical_permit: physical_permit,
             });
-            let observed = tick_owned(&self.inner, connection, owner).await?;
+            let observed = tick_owned(&self.inner, connection, owner).await;
+            if observed.is_err() {
+                self.inner
+                    .lifecycle
+                    .status
+                    .send_replace(Status::SettlingFault);
+            }
+            let slot = completed.await.map_err(|_| Error::Supervisor)?;
+            let observed = observed?;
+            drop(slot);
             let delay = observed.delay_seconds;
             self.inner
                 .lifecycle
@@ -774,13 +788,26 @@ impl Scheduler {
                     _ = stop.changed() => {},
                 }
             }
-        };
-        let mut cache = self.inner.cache.lock().await;
-        sync(connection, &mut cache, true).await?;
-        if !cache.dirty.is_empty() {
-            return Err(Error::Drain);
         }
-        Ok(end)
+    }
+
+    async fn finish_owned<T>(
+        &self,
+        connection: &mut PgConnection,
+        observed: Result<T, Error>,
+    ) -> Result<T, Error> {
+        let strict = self.inner.scope.uses_selected_receivers();
+        // Selected/Core does not advance a possibly failed occurrence on
+        // shutdown. Any attempted final sync must account for remaining dirty
+        // state before this process can report a clean fence release.
+        if !strict || observed.is_ok() {
+            let mut cache = self.inner.cache.lock().await;
+            sync(connection, &mut cache, true).await?;
+            if !cache.dirty.is_empty() {
+                return Err(Error::Drain);
+            }
+        }
+        observed
     }
 
     pub async fn tick_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Tick, Error> {
@@ -789,34 +816,42 @@ impl Scheduler {
                 "Selected Core ticks require the scheduler owner",
             ));
         }
-        let slot = self.inner.lifecycle.reserve(Operation::Tick)?;
-        if self
-            .inner
-            .backup_worker
-            .as_ref()
-            .is_some_and(|worker| !worker.ready())
-        {
+        let slot = self.inner.lifecycle.reserve(Operation::ManualTick)?;
+        if self.receiver_availability() != Ready {
             return Ok(Tick {
                 delay_seconds: self.inner.maximum_sleep.as_secs_f64(),
                 ..Tick::default()
             });
         }
-        let owner = Arc::new(Owner {
-            _caller: caller,
-            _slot: slot,
-            _inner: self.inner.clone(),
-        });
-        let inner = self.inner.clone();
-        // Detached on observer loss, but never aborted: one actual connection remains
-        // owned through all statements, broker reply, Ready and physical close.
+        let this = self.clone();
+        // Physical work outlives its observer and cannot publish without the
+        // same fence as the timer. Reload after each one-shot ownership claim.
         tokio::spawn(async move {
-            let mut connection = inner.pool.acquire().await?.detach();
-            let observed = tick_owned(&inner, &mut connection, owner).await;
-            settle(connection, observed).await
+            let Some(mut session) = BeatSession::connect(&this.inner.pool)
+                .await?
+                .try_claim()
+                .await?
+            else {
+                return Err(Error::Configuration(
+                    "another configured Beat owner is active",
+                ));
+            };
+            *this.inner.cache.lock().await = Cache::default();
+            let (physical_permit, completed) = PhysicalPermit::new(slot);
+            let owner = Arc::new(BeatTickOwner {
+                _caller: caller,
+                _inner: this.inner.clone(),
+                _physical_permit: physical_permit,
+            });
+            let observed = tick_owned(&this.inner, &mut session.connection, owner).await;
+            let _slot = completed.await.map_err(|_| Error::Supervisor)?;
+            let observed = this.finish_owned(&mut session.connection, observed).await;
+            session.settle(observed).await
         })
         .await
         .map_err(|_| Error::Supervisor)?
     }
+
     pub fn core_schedule_ready(&self) -> bool {
         !*self.inner.lifecycle.stop.borrow()
             && matches!(self.status(), Status::Observed(_))
@@ -842,34 +877,23 @@ impl Scheduler {
         })
         .await
         .map_err(|_| Error::Drain)??;
-        let slot =
+        let _slot =
             tokio::time::timeout_at(deadline, self.inner.lifecycle.slots.clone().acquire_owned())
                 .await
                 .map_err(|_| Error::Drain)?
                 .map_err(|_| Error::Drain)?;
-        if self.inner.scope.uses_selected_receivers() {
-            return match self.status() {
-                Status::Fault(_) => Err(Error::Drain),
-                _ => Ok(()),
-            };
-        }
-        if self.inner.cache.lock().await.dirty.is_empty() {
-            drop(slot);
-            return Ok(());
-        }
-        let inner = self.inner.clone();
-        // Final dirty sync itself is physically retained when its observer times out.
-        let task = tokio::spawn(async move {
-            let _slot = slot;
-            let mut connection = inner.pool.acquire().await?.detach();
-            let mut cache = inner.cache.lock().await;
-            let observed = sync(&mut connection, &mut cache, false).await.map(|_| ());
-            settle(connection, observed).await
-        });
-        tokio::time::timeout_at(deadline, task)
-            .await
-            .map_err(|_| Error::Drain)?
-            .map_err(|_| Error::Supervisor)?
+        shutdown_result(
+            &self.status(),
+            !self.inner.cache.lock().await.dirty.is_empty(),
+        )
+    }
+}
+
+fn shutdown_result(status: &Status, dirty: bool) -> Result<(), Error> {
+    if dirty || matches!(status, Status::SettlingFault | Status::Fault(_)) {
+        Err(Error::Drain)
+    } else {
+        Ok(())
     }
 }
 
@@ -892,41 +916,68 @@ impl dispatcharr_store::BackupScheduleEnableApi for Scheduler {
         })
     }
 }
-async fn connect_selected_core(pool: &PgPool, timeout: Duration) -> Result<PgConnection, Error> {
-    let options = pool.connect_options();
-    tokio::time::timeout(timeout, PgConnection::connect_with(options.as_ref()))
-        .await
-        .map_err(|_| Error::RoleDatabaseTimeout)?
-        .map_err(Error::from)
+/// An owned, unpooled session. Dropping it on any error or cancellation
+/// cannot return a still-locked connection to the Main pool.
+struct BeatSession {
+    connection: PgConnection,
+    timeout: Duration,
 }
 
-async fn try_selected_core_owner(
-    connection: &mut PgConnection,
-    timeout: Duration,
-) -> Result<bool, Error> {
-    let claim = sqlx::query_scalar(
-        "SELECT pg_try_advisory_lock(hashtext('dispatcharr:selected-core-beat'), 0)",
-    )
-    .fetch_one(connection);
-    tokio::time::timeout(timeout, claim)
-        .await
-        .map_err(|_| Error::RoleDatabaseTimeout)?
-        .map_err(Error::from)
+impl BeatSession {
+    async fn connect(pool: &PgPool) -> Result<Self, Error> {
+        let timeout = pool.options().get_acquire_timeout();
+        let options = pool.connect_options();
+        let connection =
+            tokio::time::timeout(timeout, PgConnection::connect_with(options.as_ref()))
+                .await
+                .map_err(|_| Error::RoleDatabaseTimeout)??;
+        Ok(Self {
+            connection,
+            timeout,
+        })
+    }
+
+    async fn try_claim(mut self) -> Result<Option<Self>, Error> {
+        let claim = sqlx::query_scalar(
+            "SELECT pg_try_advisory_lock(hashtext('dispatcharr:selected-core-beat'), 0)",
+        )
+        .fetch_one(&mut self.connection);
+        let observed = tokio::time::timeout(self.timeout, claim)
+            .await
+            .map_err(|_| Error::RoleDatabaseTimeout)
+            .and_then(|observed| observed.map_err(Error::from));
+        match observed {
+            Ok(true) => Ok(Some(self)),
+            outcome => self.settle(outcome.map(|_| None)).await,
+        }
+    }
+
+    async fn settle<T>(mut self, observed: Result<T, Error>) -> Result<T, Error> {
+        let deadline = tokio::time::Instant::now() + self.timeout;
+        let timed_out = || sqlx::Error::Io(std::io::ErrorKind::TimedOut.into());
+        let ready = tokio::time::timeout_at(deadline, self.connection.ping())
+            .await
+            .unwrap_or_else(|_| Err(timed_out()))
+            .err()
+            .map(Box::new);
+        let close = tokio::time::timeout_at(deadline, self.connection.close())
+            .await
+            .unwrap_or_else(|_| Err(timed_out()))
+            .err()
+            .map(Box::new);
+        settlement(observed, ready, close)
+    }
 }
 
 async fn tick_owned(
     inner: &Inner,
     connection: &mut PgConnection,
-    owner: Arc<Owner>,
+    owner: Arc<BeatTickOwner>,
 ) -> Result<Tick, Error> {
     if inner.scope.is_core()
         && crate::normal_backup_schedule::try_lock_due_occurrence(connection).await?
     {
         let backup = tick_backup(inner, connection, owner.clone()).await?;
-        if backup.synchronized != 0 && !inner.scope.uses_selected_receivers() {
-            // The legacy detached session will release the lock on close.
-            return Ok(backup);
-        }
         if !crate::normal_backup_schedule::release_due_occurrence(connection).await? {
             return Err(Error::Configuration("backup schedule lock settlement"));
         }
@@ -935,32 +986,6 @@ async fn tick_owned(
         }
     }
     tick(inner, connection, owner).await
-}
-
-async fn settle_selected_core<T>(
-    mut connection: PgConnection,
-    observed: Result<T, Error>,
-    timeout: Duration,
-) -> Result<T, Error> {
-    let deadline = tokio::time::Instant::now() + timeout;
-    let timed_out = || sqlx::Error::Io(std::io::ErrorKind::TimedOut.into());
-    let ready = tokio::time::timeout_at(deadline, connection.ping())
-        .await
-        .unwrap_or_else(|_| Err(timed_out()))
-        .err()
-        .map(Box::new);
-    let close = tokio::time::timeout_at(deadline, connection.close())
-        .await
-        .unwrap_or_else(|_| Err(timed_out()))
-        .err()
-        .map(Box::new);
-    settlement(observed, ready, close)
-}
-
-async fn settle<T>(mut connection: PgConnection, observed: Result<T, Error>) -> Result<T, Error> {
-    let ready = connection.ping().await.err().map(Box::new);
-    let close = connection.close().await.err().map(Box::new);
-    settlement(observed, ready, close)
 }
 
 fn settlement<T>(
@@ -995,7 +1020,7 @@ fn due_matches_config(entry: &Entry, expression: &str, retention: i64) -> bool {
 async fn tick_backup(
     inner: &Inner,
     connection: &mut PgConnection,
-    owner: Arc<Owner>,
+    owner: Arc<BeatTickOwner>,
 ) -> Result<Tick, Error> {
     let mut result = Tick {
         delay_seconds: 5.0,
@@ -1541,7 +1566,7 @@ async fn reserve_current_clocked_dvr(
 async fn tick(
     inner: &Inner,
     connection: &mut PgConnection,
-    owner: Arc<Owner>,
+    owner: Arc<BeatTickOwner>,
 ) -> Result<Tick, Error> {
     let now = Utc::now();
     let mut cache = inner.cache.lock().await;
@@ -2784,7 +2809,7 @@ mod tests {
             Err(Error::Closed)
         ));
         assert!(matches!(
-            lifecycle.reserve(Operation::Tick),
+            lifecycle.reserve(Operation::TimerTick),
             Err(Error::Closed)
         ));
     }
@@ -2805,13 +2830,17 @@ mod tests {
             lifecycle.reserve(Operation::Initialize),
             Err(Error::Closed)
         ));
-        let active_tick = lifecycle.reserve(Operation::Tick).unwrap();
+        assert!(matches!(
+            lifecycle.reserve(Operation::ManualTick),
+            Err(Error::Closed)
+        ));
+        let active_tick = lifecycle.reserve(Operation::TimerTick).unwrap();
         lifecycle.close();
         assert!(*lifecycle.stop.borrow());
         assert!(!*lifecycle.done.borrow());
         assert!(lifecycle.slots.try_acquire().is_err());
         assert!(matches!(
-            lifecycle.reserve(Operation::Tick),
+            lifecycle.reserve(Operation::TimerTick),
             Err(Error::Closed)
         ));
         drop(active_tick);
@@ -2820,6 +2849,47 @@ mod tests {
         assert!(matches!(*lifecycle.status.borrow(), Status::Stopped));
         assert!(lifecycle.slots.try_acquire().is_ok());
     }
+    #[test]
+    fn physical_owner_returns_the_permit_only_after_the_last_transport_reference() {
+        let slots = Arc::new(Semaphore::new(1));
+        let (physical, mut completed) =
+            PhysicalPermit::new(slots.clone().try_acquire_owned().unwrap());
+        let owner = Arc::new(physical);
+        let transport = Arc::clone(&owner);
+        drop(owner);
+        assert!(matches!(
+            completed.try_recv(),
+            Err(oneshot::error::TryRecvError::Empty)
+        ));
+        assert!(slots.clone().try_acquire_owned().is_err());
+        drop(transport);
+        let returned = completed.try_recv().unwrap();
+        assert!(slots.clone().try_acquire_owned().is_err());
+        drop(returned);
+        assert!(slots.try_acquire_owned().is_ok());
+    }
+
+    #[test]
+    fn settled_contender_admits_cleanup_but_dirty_or_faulted_does_not() {
+        assert!(shutdown_result(&Status::Contended, false).is_ok());
+        assert!(matches!(
+            shutdown_result(&Status::SettlingFault, false),
+            Err(Error::Drain)
+        ));
+        assert!(matches!(
+            shutdown_result(&Status::Contended, true),
+            Err(Error::Drain)
+        ));
+        assert!(matches!(
+            shutdown_result(&Status::Stopped, true),
+            Err(Error::Drain)
+        ));
+        assert!(matches!(
+            shutdown_result(&Status::Fault(Arc::new(Error::Supervisor)), false),
+            Err(Error::Drain)
+        ));
+    }
+
     fn model(task: &str) -> Entry {
         let now = DateTime::parse_from_rfc3339("2026-01-05T12:00:00+00:00")
             .unwrap()

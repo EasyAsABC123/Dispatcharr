@@ -4,8 +4,8 @@ use crate::{AuthService, EpgReadResource, StoreError};
 use axum::{
     body::Body,
     extract::{ConnectInfo, Path, State},
-    http::{HeaderMap, Method, Uri},
-    response::Response,
+    http::{header, HeaderMap, HeaderValue, Method, Uri},
+    response::{IntoResponse, Response},
     routing::get,
     Router,
 };
@@ -478,6 +478,32 @@ pub(crate) fn json_negotiation(headers: &HeaderMap, uri: &Uri) -> Result<(), Sto
 }
 const PROGRAMME_LIST_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
 const PROGRAMME_DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
+const PROGRAMME_JSON_VARY: &str = "Accept, origin";
+
+fn programme_json_authorization_error(error: &StoreError) -> bool {
+    match error {
+        StoreError::Unauthorized("Authentication credentials were not provided.")
+        | StoreError::PermissionDenied => true,
+        StoreError::AuthenticationBody(body) => body["code"] == "user_inactive",
+        _ => false,
+    }
+}
+
+fn canonical_programme_read_path(uri: &Uri, id: Option<&str>) -> bool {
+    match id {
+        None => uri.path() == "/api/epg/programs/",
+        Some(id) => uri
+            .path()
+            .strip_prefix("/api/epg/programs/")
+            .and_then(|path| path.strip_suffix('/'))
+            .is_some_and(|raw| {
+                raw == id
+                    && !raw.starts_with('0')
+                    && raw.bytes().all(|byte| byte.is_ascii_digit())
+                    && raw.parse::<i64>().is_ok()
+            }),
+    }
+}
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum ProgrammeMedia {
@@ -572,6 +598,19 @@ async fn respond(
     uri: Uri,
     media: Option<ProgrammeMedia>,
 ) -> Result<Response, StoreError> {
+    let allow = if id.is_some() {
+        PROGRAMME_DETAIL_ALLOW
+    } else {
+        PROGRAMME_LIST_ALLOW
+    };
+    let accept = headers.get_all(header::ACCEPT);
+    let mut accept = accept.iter();
+    let plain_json_get = method == Method::GET
+        && uri.query().is_none()
+        && accept
+            .next()
+            .is_some_and(|value| value == "application/json")
+        && accept.next().is_none();
     let (explicit_json, indentation) = match media {
         Some(ProgrammeMedia::ExplicitJson { indentation }) => (true, indentation),
         _ => {
@@ -585,21 +624,29 @@ async fn respond(
         }
     };
     let origin = origin(&state.auth, peer, &headers);
-    let data = state
+    let data = match state
         .read_with_indentation(peer, headers, id.as_deref(), origin, indentation)
-        .await?;
+        .await
+    {
+        Ok(data) => data,
+        Err(error)
+            if plain_json_get
+                && programme_json_authorization_error(&error)
+                && canonical_programme_read_path(&uri, id.as_deref()) =>
+        {
+            let mut response = error.into_response();
+            let headers = response.headers_mut();
+            headers.insert(header::ALLOW, HeaderValue::from_static(allow));
+            headers.insert(header::VARY, HeaderValue::from_static(PROGRAMME_JSON_VARY));
+            return Ok(response);
+        }
+        Err(error) => return Err(error),
+    };
     let mut response = Response::builder().header("content-type", "application/json");
     if explicit_json {
         response = response
-            .header("vary", "Accept, origin")
-            .header(
-                "allow",
-                if id.is_some() {
-                    PROGRAMME_DETAIL_ALLOW
-                } else {
-                    PROGRAMME_LIST_ALLOW
-                },
-            )
+            .header("vary", PROGRAMME_JSON_VARY)
+            .header("allow", allow)
             .header("content-length", data.len().to_string());
     }
     let body = if explicit_json && method == Method::HEAD {
@@ -685,12 +732,119 @@ async fn detail(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use axum::http::HeaderValue;
+    use axum::{
+        body::to_bytes,
+        http::{Request, StatusCode},
+        Extension,
+    };
+    use tower::ServiceExt;
 
     const BROWSER: &str = concat!(
         "text/html,application/xhtml+xml,application/xml;q=0.9,",
         "image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
     );
+
+    #[tokio::test]
+    async fn programme_json_get_authorization_headers_are_route_and_representation_specific() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("programme-router-test-only".into()).unwrap(),
+        );
+        let reads = EpgProgramReads::new(auth, EpgProgramReadLimits::default()).unwrap();
+        let peer: SocketAddr = "127.0.0.1:12345".parse().unwrap();
+        let router = reads
+            .clone()
+            .router()
+            .merge(reads.current_router())
+            .layer(Extension(ConnectInfo(peer)));
+        for (method, path, accept, allow, vary) in [
+            (
+                Method::GET,
+                "/api/epg/programs/",
+                "application/json",
+                Some(PROGRAMME_LIST_ALLOW),
+                Some(PROGRAMME_JSON_VARY),
+            ),
+            (
+                Method::GET,
+                "/api/epg/programs/7/",
+                "application/json",
+                Some(PROGRAMME_DETAIL_ALLOW),
+                Some(PROGRAMME_JSON_VARY),
+            ),
+            (
+                Method::GET,
+                "/api/epg/current-programs/",
+                "application/json",
+                Some("POST, OPTIONS"),
+                Some("Accept"),
+            ),
+            (
+                Method::GET,
+                "/api/epg/programs/7/?format=json",
+                "application/json",
+                None,
+                None,
+            ),
+            (Method::GET, "/api/epg/programs/7/", "*/*", None, None),
+            (
+                Method::HEAD,
+                "/api/epg/programs/7/",
+                "application/json",
+                None,
+                None,
+            ),
+        ] {
+            let request = Request::builder()
+                .method(method.clone())
+                .uri(path)
+                .header(header::ACCEPT, accept)
+                .body(Body::empty())
+                .unwrap();
+            let response = router.clone().oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::UNAUTHORIZED, "{path}");
+            let headers = response.headers();
+            assert_eq!(
+                headers.get(header::ALLOW).map(|v| v.to_str().unwrap()),
+                allow,
+                "{path}"
+            );
+            assert_eq!(
+                headers.get(header::VARY).map(|v| v.to_str().unwrap()),
+                vary,
+                "{path}"
+            );
+            assert_eq!(headers[header::WWW_AUTHENTICATE], "Bearer realm=\"api\"");
+            let bytes = to_bytes(response.into_body(), 128).await.unwrap();
+            let expected: &[u8] = if method == Method::HEAD {
+                b""
+            } else {
+                br#"{"detail":"Authentication credentials were not provided."}"#
+            };
+            assert_eq!(bytes.as_ref(), expected, "{path}");
+        }
+    }
+
+    #[test]
+    fn programme_json_get_only_decorates_observed_authorization_errors() {
+        for (error, expected) in [
+            (StoreError::PermissionDenied, true),
+            (
+                StoreError::AuthenticationBody(json!({"code": "user_inactive"})),
+                true,
+            ),
+            (
+                StoreError::AuthenticationBody(json!({"code": "user_not_found"})),
+                false,
+            ),
+            (StoreError::NotFound, false),
+            (unavailable(), false),
+        ] {
+            assert_eq!(programme_json_authorization_error(&error), expected);
+        }
+    }
 
     #[test]
     fn ordinary_programme_get_media_matches_captured_representations() {
