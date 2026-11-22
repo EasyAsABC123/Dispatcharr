@@ -1,0 +1,189 @@
+{
+  "all_ports_proof_accepted": false,
+  "candidate_revision": "f960875f26d26bf1108a299530064d24ecc462a3",
+  "credit": "Original Dispatcharr and dependency authors retain full application credit.",
+  "full_M9_verified": false,
+  "functional": {
+    "candidate_git": "f960875f26d26bf1108a299530064d24ecc462a3",
+    "candidate_image_inspection_sha256": "af070a9587cf0038103e947659688e41a4abfbb85861fed7c6a115917e564ef9",
+    "cleanup_uncertain": false,
+    "credit": "Original Dispatcharr and dependency authors retain all credit.",
+    "formal_required_nodes": 127,
+    "fresh_passed": {
+      "package/current-packaged": {
+        "cleanup_sha256": "7108c336f61e493f84496333ffde94e54893303be278bc374996d770393ea890",
+        "qualification_sha256": "61d8562c54ad9adfbdcd2373ac30acf3a42d9c0392634ad72db9b83e0bb0d27a"
+      },
+      "package/output-profile": {
+        "cleanup_sha256": "72caafbcd97570fb444e18b109b92cc9f0bb2da41cb08492888f9b5d9525332e",
+        "qualification_sha256": "784f98ee87cd4782951802b52770f005447ddf18576edfb298dd76551daf763f"
+      },
+      "package/user-agent": {
+        "cleanup_sha256": "58a86c341e9e333102a31c5b0961d272e9d848ee88e0c36d5340d7c106466b0a",
+        "qualification_sha256": "100e2761070ee4e97b880ecc90bbdfdf05e4aa9eed3364cb5a78207fbf651459"
+      }
+    },
+    "full_batch_passed": false,
+    "image_id": "sha256:f9b1e3a06997a15cc892a328763eb14ce753085620e9fdd4d2c82f30dfa54e2a",
+    "literal_coordinator_exit": 2,
+    "manifest_sha256": "4b2e7f2968b98ca07a5dacec396ac02b4259000e7f7521741cc715218bc43a8f",
+    "performance_measured": false,
+    "raw_report_sha256": "95d4c41876366996be5ac81aa89df7e06b3a6fc67550ff530d85b69dc78b3415",
+    "statuses": {
+      "blocked": 124,
+      "failed": 0,
+      "not_run": 0,
+      "passed": 3,
+      "retained_source_authority": 0
+    }
+  },
+  "image_id": "sha256:f9b1e3a06997a15cc892a328763eb14ce753085620e9fdd4d2c82f30dfa54e2a",
+  "manifest_sha256": "4b2e7f2968b98ca07a5dacec396ac02b4259000e7f7521741cc715218bc43a8f",
+  "new_required_rows_credited": 0,
+  "observations": {
+    "actual_three_project_inspection_samples": 40,
+    "all_configured_ports_observed": false,
+    "configured_mapping_count": 15,
+    "first_three_project_sample": {
+      "monotonic": 320545.092679888,
+      "sample_index": 4
+    },
+    "last_three_project_sample": {
+      "monotonic": 320570.769930963,
+      "sample_index": 43
+    },
+    "listing_to_inspection_races": [
+      {
+        "container_id": "b159e3a84327ac91a061f17c749501a82f916999dfc1a7c32858cc98c9dedb21",
+        "inspected_ports": {},
+        "inspected_running": false,
+        "listed_running": true,
+        "monotonic": 320560.288491788,
+        "node": "package/user-agent",
+        "sample_index": 27
+      },
+      {
+        "container_id": "1515cc0f6dcab30af71bdbb0ea299a897f196765b539ee3af1d08a1b16a51fb4",
+        "inspected_ports": {},
+        "inspected_running": false,
+        "listed_running": true,
+        "monotonic": 320561.188309566,
+        "node": "package/current-packaged",
+        "sample_index": 28
+      },
+      {
+        "container_id": "b043158d18cd0db58874276ba917164e7d33b059ec18eed5a5731cad0c4f1423",
+        "inspected_ports": {},
+        "inspected_running": false,
+        "listed_running": true,
+        "monotonic": 320566.281869382,
+        "node": "package/output-profile",
+        "sample_index": 36
+      }
+    ],
+    "observed_mapping_count": 14,
+    "observed_mappings": {
+      "package/current-packaged": [
+        [
+          5432,
+          "127.0.0.1",
+          61538
+        ],
+        [
+          5656,
+          "127.0.0.1",
+          61537
+        ],
+        [
+          6379,
+          "127.0.0.1",
+          61539
+        ],
+        [
+          8080,
+          "127.0.0.1",
+          61540
+        ]
+      ],
+      "package/output-profile": [
+        [
+          5432,
+          "127.0.0.1",
+          62921
+        ],
+        [
+          5656,
+          "127.0.0.1",
+          62920
+        ],
+        [
+          6379,
+          "127.0.0.1",
+          62922
+        ],
+        [
+          8080,
+          "127.0.0.1",
+          62923
+        ],
+        [
+          9192,
+          "127.0.0.1",
+          62924
+        ]
+      ],
+      "package/user-agent": [
+        [
+          5432,
+          "127.0.0.1",
+          63956
+        ],
+        [
+          5656,
+          "127.0.0.1",
+          63955
+        ],
+        [
+          6379,
+          "127.0.0.1",
+          63957
+        ],
+        [
+          8080,
+          "127.0.0.1",
+          63958
+        ],
+        [
+          9192,
+          "127.0.0.1",
+          63959
+        ]
+      ]
+    },
+    "unobserved_mappings": {
+      "package/current-packaged": [
+        [
+          9192,
+          "127.0.0.1",
+          61541
+        ]
+      ],
+      "package/output-profile": [],
+      "package/user-agent": []
+    }
+  },
+  "performance_measured": false,
+  "projects": {
+    "package/current-packaged": "dispatcharr-epg-reads-6dee8b53f5",
+    "package/output-profile": "dispatcharr-output-profiles-7cb1597fc2",
+    "package/user-agent": "dispatcharr-user-agents-124b729f92"
+  },
+  "raw_literal_exits": {
+    "cleanup": 0,
+    "overall_owner": 1,
+    "reduce": 1,
+    "run": 2
+  },
+  "scope": "actual concurrent fixture projects and exactly observed disjoint mappings; not all configured ports",
+  "scoped_overlap_receipt_sha256": "3449b4f5a4e56c1b3cfb4f9caf830871e07984683653d5983f5c651304bf2e5a"
+}

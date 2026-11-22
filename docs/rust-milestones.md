@@ -684,6 +684,8 @@ The register now includes the 16 [Original DRF root operations](rust-m0-original
 
 The [development and validation plan](rust-development-and-validation-plan.md) defines parallel implementation/acceptance/tooling lanes, affected-workflow batches and default-off fixture concurrency. Performance measurement remains exclusive.
 
+The [f960875 three-project Compose run](rust-m9-f960875-parallel-compose.md) passed three existing functional rows and exact cleanup on one host. The observer captured 40 simultaneous project samples and 14 of 15 configured port bindings. The strict overlap check remains open.
+
 The [XC account lifecycle Source capture](../scripts/rust-integration/milestone-batch67/xc-source11-checkpoint.json)
 completed all 12 calls in eleven cases, with controller exit 0 and verified
 cleanup. The retained capture review accounts for observed Redis queue pruning
