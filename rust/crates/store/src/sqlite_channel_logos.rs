@@ -1,9 +1,12 @@
-//! Read the direct unpaginated Logo collection from the detached SQLite copy.
+//! Read the Logo collection from the detached SQLite copy.
 //! Original Dispatcharr authors retain application and serializer credit.
 use crate::StoreError;
 use futures_util::TryStreamExt;
+use num_bigint::BigInt;
 use serde_json::{json, Value};
-use sqlx::{types::Json, SqliteConnection};
+use sqlx::{types::Json, Connection, SqliteConnection};
+use std::collections::HashMap;
+use url::Url;
 
 const ROW: i64 = 65_536;
 const QUERY: &str = "
@@ -15,10 +18,92 @@ const QUERY: &str = "
                                         THEN 'Channel: ' || name END)
             FROM (SELECT c.name FROM dispatcharr_channels_channel c
                   WHERE c.logo_id=l.id ORDER BY c.id LIMIT 5))
-    FROM dispatcharr_channels_logo l ORDER BY l.name";
+    FROM dispatcharr_channels_logo l ORDER BY l.name LIMIT ?2 OFFSET ?3";
 
-pub(crate) fn supports(query: Option<&str>) -> bool {
-    query == Some("no_pagination=true")
+pub(crate) fn params(uri: &axum::http::Uri) -> Result<HashMap<String, String>, StoreError> {
+    let values = crate::logos::params(uri)
+        .into_iter()
+        .collect::<HashMap<_, _>>();
+    if values
+        .keys()
+        .any(|key| !matches!(key.as_str(), "page" | "page_size" | "no_pagination"))
+    {
+        return Err(crate::logos::missing());
+    }
+    Ok(values)
+}
+
+pub(crate) struct Collection {
+    rows: Vec<Value>,
+    page: Option<Page>,
+}
+
+struct Page {
+    count: usize,
+    next: Option<String>,
+    previous: Option<String>,
+}
+
+fn page_window(
+    values: &HashMap<String, String>,
+    count: usize,
+) -> Result<(usize, usize, usize), StoreError> {
+    use crate::json_compat::python_int_string;
+    let invalid_page = || StoreError::StatusBody(404, json!({"detail":"Invalid page."}));
+    let size = values
+        .get("page_size")
+        .and_then(|value| python_int_string(value).ok())
+        .and_then(|value| usize::try_from(value.min(BigInt::from(1000))).ok())
+        .filter(|&value| value != 0)
+        .unwrap_or(50);
+    let pages = count.div_ceil(size).max(1);
+    let number = match values.get("page").map(String::as_str) {
+        Some("last") => pages,
+        None | Some("") => 1,
+        Some(raw) => {
+            let number = python_int_string(raw).map_err(|_| invalid_page())?;
+            usize::try_from(number).map_err(|_| invalid_page())?
+        }
+    };
+    if number == 0 || number > pages {
+        return Err(invalid_page());
+    }
+    Ok((number, size, pages))
+}
+
+pub(crate) async fn select(
+    connection: &mut SqliteConnection,
+    values: &HashMap<String, String>,
+    base: &Url,
+    limit: usize,
+) -> Result<Collection, StoreError> {
+    if values
+        .get("no_pagination")
+        .is_some_and(|value| value == "true")
+    {
+        let rows = rows(connection, limit, -1, 0).await?;
+        return Ok(Collection { rows, page: None });
+    }
+
+    // Django assembles count and results via its paginator. A copied file can
+    // get concurrent writes, so keep the count and page rows in one snapshot.
+    let mut transaction = connection.begin().await?;
+    let count: i64 = sqlx::query_scalar("SELECT count(*) FROM dispatcharr_channels_logo")
+        .fetch_one(&mut *transaction)
+        .await?;
+    let count = usize::try_from(count).map_err(|_| capacity())?;
+    let (number, size, pages) = page_window(values, count)?;
+    let offset = i64::try_from((number - 1) * size).map_err(|_| capacity())?;
+    let rows = rows(&mut transaction, limit, size as i64, offset).await?;
+    transaction.commit().await?;
+    Ok(Collection {
+        rows,
+        page: Some(Page {
+            count,
+            next: (number < pages).then(|| crate::channels::page_url(base, number + 1)),
+            previous: crate::streams::previous(base, number),
+        }),
+    })
 }
 
 fn capacity() -> StoreError {
@@ -28,9 +113,11 @@ fn capacity() -> StoreError {
     )
 }
 
-pub(crate) async fn rows(
+async fn rows(
     connection: &mut SqliteConnection,
     mut remaining: usize,
+    size: i64,
+    offset: i64,
 ) -> Result<Vec<Value>, StoreError> {
     let mut rows = sqlx::query_as::<
         _,
@@ -43,6 +130,8 @@ pub(crate) async fn rows(
         ),
     >(QUERY)
     .bind(ROW)
+    .bind(size)
+    .bind(offset)
     .fetch(connection);
     let mut selected = Vec::new();
     while let Some((id, name, url, channel_count, Json(names))) = rows.try_next().await? {
@@ -65,12 +154,30 @@ pub(crate) async fn rows(
 }
 
 pub(crate) fn document(
-    logos: Vec<Value>,
+    collection: Collection,
     origin: &str,
     response_limit: usize,
 ) -> Result<Vec<u8>, StoreError> {
-    let mut body = Vec::from(b"[".as_slice());
-    for row in logos {
+    let paged = collection.page.is_some();
+    let mut body = match collection.page {
+        Some(Page {
+            count,
+            next,
+            previous,
+        }) => {
+            let mut fields = crate::json_compat::compact_json_bytes(&json!({
+                "count": count, "next": next, "previous": previous,
+            }))
+            .map_err(|_| StoreError::UnhandledRestFault)?;
+            fields.pop();
+            fields.extend_from_slice(br#","results":["#);
+            fields
+        }
+        None => vec![b'['],
+    };
+    let end: &[u8] = if paged { b"]}" } else { b"]" };
+    let prefix = body.len();
+    for row in collection.rows {
         let mut logo = crate::logos::serialize(row, origin);
         let ordered = json!({
             "id": logo["id"].take(),
@@ -91,11 +198,11 @@ pub(crate) fn document(
                 .replace('\u{2028}', "\\u2028")
                 .replace('\u{2029}', "\\u2029");
         }
-        let comma = body.len() > 1;
+        let comma = body.len() > prefix;
         if body
             .len()
             .saturating_add(escaped.len())
-            .saturating_add(1 + usize::from(comma))
+            .saturating_add(end.len() + usize::from(comma))
             > response_limit
         {
             return Err(capacity());
@@ -105,7 +212,10 @@ pub(crate) fn document(
         }
         body.extend_from_slice(escaped.as_bytes());
     }
-    body.push(b']');
+    if body.len().saturating_add(end.len()) > response_limit {
+        return Err(capacity());
+    }
+    body.extend_from_slice(end);
     Ok(body)
 }
 
@@ -128,7 +238,10 @@ mod tests {
         .await
         .unwrap();
         let result = document(
-            rows(&mut db, 8192).await.unwrap(),
+            Collection {
+                rows: rows(&mut db, 8192, -1, 0).await.unwrap(),
+                page: None,
+            },
             "http://localhost:8300",
             8192,
         )
@@ -140,24 +253,117 @@ mod tests {
                 r#"{"id":7,"name":"Zebra","url":"xyz","cache_url":"http://localhost:8300/api/channels/logos/7/cache/?v=d16fb36f","channel_count":0,"is_used":false,"channel_names":[]}]"#,
             )
         );
-        assert!(rows(&mut db, 256).await.is_err());
+        assert!(rows(&mut db, 256, -1, 0).await.is_err());
         assert!(document(
-            rows(&mut db, 8192).await.unwrap(),
+            Collection {
+                rows: rows(&mut db, 8192, -1, 0).await.unwrap(),
+                page: None
+            },
             "http://localhost:8300",
             64
         )
         .is_err());
     }
 
-    #[test]
-    fn copied_logos_only_admit_the_initial_unpaginated_query() {
-        assert!(supports(Some("no_pagination=true")));
-        for other in [
-            None,
-            Some("no_pagination=false"),
-            Some("no_pagination=true&ids=1"),
+    #[tokio::test]
+    async fn copied_logo_pagination_preserves_default_and_followable_links() {
+        let mut db = SqliteConnection::connect("sqlite::memory:").await.unwrap();
+        sqlx::raw_sql(
+            "CREATE TABLE dispatcharr_channels_logo(id INTEGER PRIMARY KEY,name TEXT,url TEXT);
+             CREATE TABLE dispatcharr_channels_channel(id INTEGER PRIMARY KEY,logo_id INTEGER,name TEXT);
+             WITH RECURSIVE nums(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM nums WHERE n<51)
+             INSERT INTO dispatcharr_channels_logo SELECT n,printf('Logo %02d',n),printf('url-%d',n) FROM nums;
+             INSERT INTO dispatcharr_channels_channel VALUES(1,1,'Owned Channel');",
+        )
+        .execute(&mut db)
+        .await
+        .unwrap();
+
+        for (query, count, first_id, expected_next, expected_previous) in [
+            ("", 50, 1, Some("?page=2"), None),
+            ("?page=2", 1, 51, None, Some("")),
+            (
+                "?page_size=1&page=last",
+                1,
+                51,
+                None,
+                Some("?page=50&page_size=1"),
+            ),
+            (
+                "?page=2&page_size=1",
+                1,
+                2,
+                Some("?page=3&page_size=1"),
+                Some("?page_size=1"),
+            ),
+            ("?page_size=100", 51, 1, None, None),
+            ("?page_size=9999999999999999999999", 51, 1, None, None),
         ] {
-            assert!(!supports(other));
+            let route = format!("/api/channels/logos/{query}");
+            let base = Url::parse(&format!("http://127.0.0.1:8185{route}")).unwrap();
+            let options = params(&route.parse().unwrap()).unwrap();
+            let page = select(&mut db, &options, &base, 100_000).await.unwrap();
+            let doc = document(page, &base.origin().ascii_serialization(), 100_000).unwrap();
+            let response: Value = serde_json::from_slice(&doc).unwrap();
+            assert_eq!(response["count"], 51);
+            assert_eq!(response["results"].as_array().unwrap().len(), count);
+            assert_eq!(response["results"][0]["id"], first_id);
+            let href = |suffix| format!("http://127.0.0.1:8185/api/channels/logos/{suffix}");
+            assert_eq!(response["next"], json!(expected_next.map(href)));
+            assert_eq!(response["previous"], json!(expected_previous.map(href)));
+            if first_id == 1 {
+                assert_eq!(
+                    response["results"][0]["channel_names"],
+                    json!(["Channel: Owned Channel"])
+                );
+            }
+            assert!(doc.starts_with(br#"{"count":51,"next":"#));
+        }
+        let base = Url::parse("http://localhost/api/channels/logos/?page=52").unwrap();
+        let options = params(&"/api/channels/logos/?page=52".parse().unwrap()).unwrap();
+        assert!(matches!(
+            select(&mut db, &options, &base, 8192).await,
+            Err(StoreError::StatusBody(404, _))
+        ));
+        let base = Url::parse("http://localhost/api/channels/logos/").unwrap();
+        sqlx::query("DELETE FROM dispatcharr_channels_logo")
+            .execute(&mut db)
+            .await
+            .unwrap();
+        let empty = select(&mut db, &HashMap::new(), &base, 8192).await.unwrap();
+        assert_eq!(
+            document(empty, "http://localhost", 8192).unwrap(),
+            br#"{"count":0,"next":null,"previous":null,"results":[]}"#
+        );
+    }
+
+    #[test]
+    fn copied_logos_apply_original_page_number_and_size_coercion() {
+        let opts = |path: &str| params(&path.parse().unwrap()).unwrap();
+        assert_eq!(
+            page_window(&opts("/api/channels/logos/?page=%D9%A2&page_size=1_0"), 51).unwrap(),
+            (2, 10, 6)
+        );
+        assert_eq!(
+            page_window(&opts("/api/channels/logos/?page_size=-1"), 51).unwrap(),
+            (1, 50, 2)
+        );
+        assert_eq!(
+            page_window(&opts("/api/channels/logos/?page_size=999999"), 2030).unwrap(),
+            (1, 1000, 3)
+        );
+    }
+
+    #[test]
+    fn copied_logos_keep_filters_outside_the_pagination_slice() {
+        for query in ["", "?page=last", "?page_size=20", "?no_pagination=true"] {
+            assert!(params(&format!("/api/channels/logos/{query}").parse().unwrap()).is_ok());
+        }
+        for query in ["?ids=1", "?name=a", "?used=true"] {
+            assert!(matches!(
+                params(&format!("/api/channels/logos/{query}").parse().unwrap()),
+                Err(StoreError::StatusBody(404, _))
+            ));
         }
     }
 }
