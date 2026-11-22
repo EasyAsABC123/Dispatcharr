@@ -1,0 +1,91 @@
+{
+  "host_tests": {
+    "copied_sqlite_feature": {
+      "failed": 0,
+      "ignored": 271,
+      "passed": 1143
+    },
+    "workspace": {
+      "failed": 0,
+      "ignored": 814,
+      "passed": 1585
+    }
+  },
+  "ordinary_rust_compiler_step_elapsed_seconds": 348.0,
+  "paired_defaults": {
+    "actual_exits": [
+      0,
+      0,
+      0
+    ],
+    "observed": {
+      "exact_cleanup": true,
+      "formal_milestone_claimed": false,
+      "historical_status_transferred": false,
+      "image": "sha256:24cda428d40308290e9c086c51f306246a8376f7565a4464f4c527375b5cccef",
+      "manifest_sha256": "8400fa02bb5adb7a47398242c3ad591e970b53b8dc57008c55095475b8cc7f22",
+      "performance_measured": false,
+      "projection_sha256": "ec72b7a6f387f2e2a6c52d3307cf95a1f93eaca6caef95cce14c58484b98a1e0",
+      "revision": "c1b52dc8aa200a2dc70c263784e6714e733a962c",
+      "witness_sha256": {
+        "Native": "623fa6319f4105a78b0b3c6db6ec1075929722afda3772dd40301442c48e2e44",
+        "Original": "d6e29424c58d9d7f056e546fdab4cf57d0d4b8789e911602598bca493e6ab486"
+      }
+    },
+    "proof_sha256": "04f58c66ad2c5f53cdc5d65560c89372597931a83b0583bdb9f40616252edf3d"
+  },
+  "sequence_diagnostic": {
+    "actual_exit": 0,
+    "observed": {
+      "business_and_cleanup_exact": true,
+      "manifest_sha256": "8400fa02bb5adb7a47398242c3ad591e970b53b8dc57008c55095475b8cc7f22",
+      "outcomes": {
+        "Native": {
+          "after_sha256": "87297f12155829e46d4d8452b121c320c02af3dc041870a60985c82c0b73c169",
+          "before_sha256": "3649d54f091941d876683a823538b19d4a8b5af159253d33dc5df86d8dc27d94",
+          "is_called_unchanged": true,
+          "last_value_delta": 6
+        },
+        "Original": {
+          "after_sha256": "3649d54f091941d876683a823538b19d4a8b5af159253d33dc5df86d8dc27d94",
+          "before_sha256": "3649d54f091941d876683a823538b19d4a8b5af159253d33dc5df86d8dc27d94",
+          "is_called_unchanged": true,
+          "last_value_delta": 0
+        }
+      },
+      "revision": "c1b52dc8aa200a2dc70c263784e6714e733a962c",
+      "separate_observation": true,
+      "sequence": "public.django_celery_beat_periodictask_id_seq",
+      "sequence_parity": false
+    },
+    "proof_sha256": "6ed6f27475869d55896abb9b63f1de4fa925109072f4a781626f1a021293c2da"
+  },
+  "two_main": {
+    "first_run_exit": 1,
+    "first_run_stage": "Before Compose. The wrapper did not load the existing private engine environment.",
+    "observed": {
+      "DVR_recovery_deferred": false,
+      "candidate": "c1b52dc8aa200a2dc70c263784e6714e733a962c",
+      "cleanup": {
+        "exact_inventory_empty": true,
+        "normal_bootstrap_stop": true,
+        "owned_cids_absent": true,
+        "owned_host_generations_absent": true,
+        "passed": true
+      },
+      "formal_rows_promoted": 0,
+      "image": "sha256:24cda428d40308290e9c086c51f306246a8376f7565a4464f4c527375b5cccef",
+      "literal_exit": 0,
+      "manifest_sha256": "8400fa02bb5adb7a47398242c3ad591e970b53b8dc57008c55095475b8cc7f22",
+      "natural_cleanup": "one SUCCESS/null with 43200-second expiry",
+      "owned_roles_retired": 6,
+      "peer_web_ready_after_owner_stop": true,
+      "receipt_sha256": "2457c0f993939afe5c89bf15a63f19e39d2d597c2015626230e54e16cc8f2281",
+      "retained_scope_authority_sha256": "63f238cfeb1412f38d1c4b22db88f2a90445f383d55aab80f14f493568bd8c36",
+      "scope_complete": true,
+      "startup_DVR": "SUCCESS/Recovery complete",
+      "startup_version": "SUCCESS/null via one HTTP 503"
+    },
+    "proof_sha256": "5947631f427e9c20e249407a051099e846dc0e4b08c5638a3caafd9bd0aa9a28"
+  }
+}

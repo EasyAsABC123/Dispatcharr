@@ -9,6 +9,12 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [c1b52dc8 Selected/Core scheduler](rust-m6-c1b52dc8-selected-core-known-defaults.md)
+verified one assigned background owner, a ready web peer, real startup
+work and scheduled cleanup. The paired defaults fixture passed Scanner and
+Recurring Maintenance. Its restart observer found six Rust identity
+sequence increments compared with zero on Original.
+
 The [66b02c4a grouped Native media run](rust-m3-66b02c4a-native-profile-delivery-cohort.md)
 passed HLS, fMP4, equivalent and distinct profiles, fallback, and fresh
 FFmpeg child recovery, then exercised VLC in the same Compose fixture.
