@@ -26,6 +26,12 @@ The [5d9568f explicit worker rehearsal](rust-m6-5d9568f-explicit-role-compose.md
 verified startup, HTTP XMLTV import and descendants, natural scan and cleanup,
 durability after retirement, and a ready peer with exact teardown.
 
+The [08d3b455 media wave](rust-m3-m4-08d3-current-media.md) matched the active
+catch-up position and decoded range across both backends and verified a fresh
+fMP4 request on the ready Rust peer after planned lead retirement. The
+[stock Original AIO witness](rust-m6-original-stock-aio-job-graph.md) verified
+both worker queues, startup jobs and one natural Beat cleanup.
+
 The [4d3cfbb EPG library pair](rust-m0-4d3cfbb-epg-library-get.md) matched eight
 successful JSON GETs per backend across four operations, including the Original
 headers and body digests, with unchanged guide SQL and exact cleanup. The route
