@@ -1,0 +1,114 @@
+{
+  "arms": {
+    "Native": {
+      "decode_frames": {
+        "attached-peer": 75,
+        "lead": 74
+      },
+      "exact_cleanup": true,
+      "first_elapsed_s": 0.115,
+      "fresh_stream_requests_after_loss": 0,
+      "image_id": "sha256:f9b1e3a06997a15cc892a328763eb14ce753085620e9fdd4d2c82f30dfa54e2a",
+      "last": {
+        "actual_elapsed_s": 75.0,
+        "all_viewers": 1,
+        "attached_follower": {
+          "bytes": 1716069,
+          "errors": [],
+          "terminal": "body_eof"
+        },
+        "follower_process_generation_live": true,
+        "lead_media_generations_gone": true,
+        "lead_process_generation_gone": true,
+        "lead_reader": {
+          "bytes": 2306084,
+          "errors": [
+            "IncompleteRead"
+          ],
+          "terminal": "transport_error"
+        },
+        "matching_viewers": 0,
+        "origin": [
+          0,
+          1,
+          1
+        ],
+        "profile_generation": "same",
+        "profile_ttl_ms": 3509840,
+        "provider_slots": 0,
+        "reader_close_requested_by_harness": false,
+        "remux_generation": "absent",
+        "remux_ttl_ms": -2,
+        "requested_elapsed_s": 75,
+        "retained_fragment_index": 8,
+        "same_init_retained": true
+      },
+      "owner_loss": {
+        "actual_exit": 137,
+        "oom_killed": false,
+        "ordinary_primary_flags_off": true,
+        "signal": "SIGKILL",
+        "target_exact": true
+      },
+      "samples": 7
+    },
+    "Original": {
+      "decode_frames": {
+        "attached-peer": 75,
+        "lead": 74
+      },
+      "exact_cleanup": true,
+      "first_elapsed_s": 0.201,
+      "fresh_stream_requests_after_loss": 0,
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "last": {
+        "actual_elapsed_s": 75.0,
+        "all_viewers": 2,
+        "attached_follower": {
+          "bytes": 1716069,
+          "errors": [],
+          "terminal": "body_eof"
+        },
+        "follower_process_generation_live": true,
+        "lead_media_generations_gone": true,
+        "lead_process_generation_gone": true,
+        "lead_reader": {
+          "bytes": 2306084,
+          "errors": [],
+          "terminal": "body_eof"
+        },
+        "matching_viewers": 1,
+        "origin": [
+          0,
+          1,
+          1
+        ],
+        "profile_generation": "same",
+        "profile_ttl_ms": 3505166,
+        "provider_slots": 1,
+        "reader_close_requested_by_harness": false,
+        "remux_generation": "same",
+        "remux_ttl_ms": 3505168,
+        "requested_elapsed_s": 75,
+        "retained_fragment_index": 8,
+        "same_init_retained": true
+      },
+      "owner_loss": {
+        "actual_exit": 137,
+        "keeper_generation_preserved": true,
+        "oom_killed": false,
+        "signal": "SIGKILL",
+        "target_exact": true,
+        "target_kind": "dedicated_stock_web_container"
+      },
+      "samples": 7
+    }
+  },
+  "comparison_sha256": "aecec3511672de0de305a10a83e4cd086d9fd31c6b0ed318f0b8b3b6379233ae",
+  "fresh_reconnect_tested": false,
+  "full_M3_passed": false,
+  "native_revision": "f960875f26d26bf1108a299530064d24ecc462a3",
+  "original_source": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "same_socket_takeover_verified": false,
+  "source_topology": "isolated stock uWSGI; baseline survives"
+}
