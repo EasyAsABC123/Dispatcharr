@@ -1,0 +1,91 @@
+{
+  "browser": {
+    "arms": [
+      {
+        "SQL_comparisons_passed": true,
+        "arm": "original",
+        "exact_cleanup": true,
+        "profile_restored": true,
+        "receipt_sha256": "748842479f9d1db501f0698006cc6a716442af9b0b52948df3310face5bcdd43"
+      },
+      {
+        "SQL_comparisons_passed": true,
+        "arm": "native",
+        "exact_cleanup": true,
+        "profile_restored": true,
+        "receipt_sha256": "39798cb5aea53ad6fd7f9a3741e36ce15d6a2bf9120eb884cc341f9dc2bc5859"
+      }
+    ],
+    "performance_claim": false,
+    "receipt_sha256": "ee14a82521e64c8ac3c3ef87c2de1b862b6f8607c42d936a1e0b4af882998039",
+    "same_exact_React_assets": true,
+    "scope": "positive normal own profile edit/fresh readback/restore/logout",
+    "status": "passed"
+  },
+  "e68_application_revision": "e68fb950c7ed4abf2ab58da45104f4e2c5f13937",
+  "native_arm64_image": "sha256:ba228a4a8638aba8b8df77c5f9ac70626c2d6c05b58b3d4364fca2e5b1586068",
+  "schedule": {
+    "actual_exit": 0,
+    "business_HTTP_methods": [
+      "GET"
+    ],
+    "cells": [
+      {
+        "actual_exit": 0,
+        "app_exit": 0,
+        "arm": "original",
+        "exact_cleanup": true,
+        "probe_exit": 0,
+        "profile": "defaults",
+        "receipt_sha256": "6bffd4a1662210d35fa304a7d96ae64fe0df2ae667ad3cf354897a4d0a78829f"
+      },
+      {
+        "actual_exit": 0,
+        "app_exit": 0,
+        "arm": "native",
+        "exact_cleanup": true,
+        "probe_exit": 0,
+        "profile": "defaults",
+        "receipt_sha256": "7df765c8b7dc99f51afbba53f5067a10ae049a7611663dd66a2762be51b11c62"
+      },
+      {
+        "actual_exit": 0,
+        "app_exit": 0,
+        "arm": "original",
+        "exact_cleanup": true,
+        "probe_exit": 0,
+        "profile": "saved",
+        "receipt_sha256": "7da72cf6b83c642c2353fe58b2f1c320c1759c78ce6b4780228ff8348852a60b"
+      },
+      {
+        "actual_exit": 0,
+        "app_exit": 0,
+        "arm": "native",
+        "exact_cleanup": true,
+        "probe_exit": 0,
+        "profile": "saved",
+        "receipt_sha256": "902dd56bda3a0e79e3455f8c7829078191aa527e2d263c5ed5d840283f9c8f5f"
+      }
+    ],
+    "configured_roles": "Original stock Daphne/Redis configured; Native ordinary/Redis None; plugin opt-out on both; no worker/Beat",
+    "defaults_preserved": {
+      "cron_expression": "",
+      "day_of_week": 0,
+      "enabled": true,
+      "frequency": "daily",
+      "retention_count": 3,
+      "time": "03:00"
+    },
+    "qualifies_Redis_configured_startup": false,
+    "receipt_sha256": "65a057542078519b25ae3485089e384bc62cb97bb3311b82d1aa574006b99e5f",
+    "saved_readback": {
+      "cron_expression": "45 17 * * 4",
+      "day_of_week": 4,
+      "enabled": true,
+      "frequency": "weekly",
+      "retention_count": 7,
+      "time": "17:45"
+    },
+    "status": "passed paired GET scope"
+  }
+}
