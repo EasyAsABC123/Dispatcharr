@@ -50,7 +50,7 @@ struct Inner {
     xc_http: dispatcharr_store::xc_account_http::Http,
     compact: Arc<jobs::compact_coordination::CompactCoordinator>,
     recording_playback: dispatcharr_store::RecordingPlayback,
-    beat_enabled: bool,
+    beat: Beat,
     #[cfg(target_os = "linux")]
     taskless_shutdown: Option<Duration>,
     backups: dispatcharr_store::BackupFiles,
@@ -76,15 +76,57 @@ pub struct Existing {
     pub completions: jobs::ArtworkCompletions,
     pub backups: dispatcharr_store::BackupFiles,
 }
-pub fn enabled() -> Result<bool, String> {
-    let worker = flag("RUST_EXPERIMENTAL_SELECTED_JOBS")?;
-    let beat = flag("RUST_EXPERIMENTAL_SELECTED_BEAT")?;
-    if beat && !worker {
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum Beat {
+    Off,
+    Legacy,
+    Core,
+}
+
+impl Beat {
+    pub fn validate_owners(self, standalone_core: bool, taskless: bool) -> Result<(), String> {
+        if self == Self::Core && (standalone_core || taskless) {
+            return Err(
+                "Selected Core Beat requires an exclusive scheduler and no taskless restore".into(),
+            );
+        }
+        Ok(())
+    }
+
+    fn enabled(self) -> bool {
+        self != Self::Off
+    }
+}
+
+fn select_beat(worker: bool, legacy: bool, core: bool) -> Result<Beat, String> {
+    if core {
+        if !worker || legacy {
+            return Err(
+                "Selected Core Beat requires Selected workers and legacy Selected Beat disabled"
+                    .into(),
+            );
+        }
+        return Ok(Beat::Core);
+    }
+    if legacy && !worker {
         return Err(
             "Selected Beat requires selected workers; configure exactly one Beat instance".into(),
         );
     }
-    Ok(worker)
+    Ok(if legacy { Beat::Legacy } else { Beat::Off })
+}
+
+pub fn configuration() -> Result<(bool, Beat), String> {
+    const SCOPED: &str = "RUST_EXPERIMENTAL_SELECTED_CORE_BEAT";
+    let worker = flag("RUST_EXPERIMENTAL_SELECTED_JOBS")?;
+    let legacy = flag("RUST_EXPERIMENTAL_SELECTED_BEAT")?;
+    let value = env::var_os(SCOPED);
+    let core = match value.as_ref().map(|value| value.to_str()) {
+        None | Some(Some("0")) => false,
+        Some(Some("1")) => true,
+        _ => return Err(format!("{SCOPED} must be 0 or 1")),
+    };
+    Ok((worker, select_beat(worker, legacy, core)?))
 }
 fn flag(name: &str) -> Result<bool, String> {
     match env::var(name).as_deref() {
@@ -97,6 +139,34 @@ fn scheduler_ready(enabled: bool, status: &jobs::normal_beat::Status) -> bool {
     // Running is announced when the scheduler is spawned. Observed means its
     // first tick returned after the SQL and publication work settled.
     !enabled || matches!(status, jobs::normal_beat::Status::Observed(_))
+}
+
+async fn start_beat(
+    beat: Beat,
+    limit: Duration,
+    closed: &AtomicBool,
+    mut ready: impl FnMut() -> bool,
+    start: impl FnOnce() -> Result<(), jobs::normal_beat::Error>,
+) -> Result<(), &'static str> {
+    if beat == Beat::Off {
+        return Ok(());
+    }
+    if beat == Beat::Core {
+        tokio::time::timeout(limit, async {
+            loop {
+                if closed.load(Ordering::Acquire) {
+                    return Err("Selected startup closed");
+                }
+                if ready() {
+                    return Ok(());
+                }
+                tokio::time::sleep(Duration::from_millis(25)).await;
+            }
+        })
+        .await
+        .map_err(|_| "Selected Core Beat receiver did not become ready")??;
+    }
+    start().map_err(|_| "Selected normal Beat start failed")
 }
 
 fn loopback(actual: SocketAddr) -> Result<SocketAddr, String> {
@@ -130,9 +200,11 @@ impl SelectedJobs {
             jobs::normal_backup::VerifiedGuardedHelper,
         >,
         cache: &str,
+        beat: Beat,
     ) -> Result<Self, String> {
         let local = loopback(actual)?;
-        let beat_enabled = flag("RUST_EXPERIMENTAL_SELECTED_BEAT")?;
+        #[cfg(target_os = "linux")]
+        beat.validate_owners(false, taskless_helper.is_some())?;
         let beat_identity = auth.producer_identity_source();
         let cache = cache.to_owned();
         let broker = env::var("CELERY_BROKER_URL").unwrap_or_else(|_| cache.clone());
@@ -268,7 +340,7 @@ impl SelectedJobs {
         backup_jobs
             .bind_restore_plugins(restore_plugins)
             .map_err(|_| "Backup restore plugin reconciliation binding failed")?;
-        if backup_jobs.initialize_schedule(Arc::new(())).await.is_err() {
+        if beat != Beat::Core && backup_jobs.initialize_schedule(Arc::new(())).await.is_err() {
             eprintln!("Normal backup scheduler startup sync failed");
         }
         let backup_handler = Arc::new(backup_jobs.clone());
@@ -547,7 +619,7 @@ impl SelectedJobs {
             .map(|helper| helper.timeout() + Duration::from_secs(4));
         #[cfg(target_os = "linux")]
         if let Some(helper) = taskless_helper {
-            if beat_enabled {
+            if beat.enabled() {
                 return Err(
                     "Taskless restore requires the independent Selected scheduler disabled".into(),
                 );
@@ -579,13 +651,27 @@ impl SelectedJobs {
                     .map_err(|_| "Selected matching SD registry unavailable")?,
             )
             .map_err(|_| "Selected matching SD composition failed")?;
-        let scheduler = jobs::normal_beat::Scheduler::prepare(
-            store.pool().clone(),
-            shared_jobs.clone(),
-            beat_identity,
-            Duration::from_secs(5),
-        )
+        let scheduler = match beat {
+            Beat::Core => jobs::normal_beat::Scheduler::prepare_core_schedules_for_selected(
+                queue
+                    .core_schedule_receiver(&backup_handler)
+                    .map_err(|_| "Selected Core Beat receiver configuration failed")?,
+                Duration::from_secs(5),
+            ),
+            Beat::Off | Beat::Legacy => jobs::normal_beat::Scheduler::prepare(
+                store.pool().clone(),
+                shared_jobs.clone(),
+                beat_identity,
+                Duration::from_secs(5),
+            ),
+        }
         .map_err(|_| "Selected normal Beat initialization failed")?;
+        if beat == Beat::Core {
+            backup_jobs
+                .initialize_core_schedule(Arc::new(()))
+                .await
+                .map_err(|_| "Selected Core backup schedule initialization failed")?;
+        }
         if !std::env::var("DISPATCHARR_SKIP_PLUGIN_AUTODISCOVERY")
             .ok()
             .is_some_and(|v| matches!(v.to_ascii_lowercase().as_str(), "1" | "true" | "yes"))
@@ -596,7 +682,7 @@ impl SelectedJobs {
         {
             eprintln!("Could not set up plugin repository refresh schedule");
         }
-        if beat_enabled {
+        if beat.enabled() {
             let setup = scheduler
                 .initialize(Arc::new(()))
                 .await
@@ -627,7 +713,7 @@ impl SelectedJobs {
                 xc_http,
                 compact,
                 recording_playback,
-                beat_enabled,
+                beat,
                 #[cfg(target_os = "linux")]
                 taskless_shutdown,
                 backups,
@@ -674,11 +760,12 @@ impl SelectedJobs {
             && matches!(startup, Startup::Started)
             && control == jobs::normal_control::State::Subscribed
             && queue.ready
-            && scheduler_ready(self.inner.beat_enabled, &scheduler);
-        (
-            ready,
-            serde_json::json!({"scope":"experimental selected normal families plus startup recovery; not Source47 parity","ready":ready,"startup":format!("{startup:?}"),"startup_error":startup_error,"control":format!("{control:?}"),"celery":format!("{:?}",queue.celery),"dvr":format!("{:?}",queue.dvr),"clocked_scheduler":format!("{scheduler:?}"),"clocked_scheduler_enabled":self.inner.beat_enabled,"dvr_plugin_domain":self.inner.dvr.plugin_domain_capability(),"startup_recovery_deferred_unsupported_domain":self.inner.recovery.startup_recovery_deferred(),"parity_complete":false}),
-        )
+            && scheduler_ready(self.inner.beat.enabled(), &scheduler);
+        let mut report = serde_json::json!({"scope":"experimental selected normal families plus startup recovery; not Source47 parity","ready":ready,"startup":format!("{startup:?}"),"startup_error":startup_error,"control":format!("{control:?}"),"celery":format!("{:?}",queue.celery),"dvr":format!("{:?}",queue.dvr),"clocked_scheduler":format!("{scheduler:?}"),"clocked_scheduler_enabled":self.inner.beat.enabled(),"dvr_plugin_domain":self.inner.dvr.plugin_domain_capability(),"startup_recovery_deferred_unsupported_domain":self.inner.recovery.startup_recovery_deferred(),"parity_complete":false});
+        if self.inner.beat == Beat::Core {
+            report["clocked_scheduler_scope"] = serde_json::json!("core-saved-families");
+        }
+        (ready, report)
     }
     pub fn start_after_serving(&self) -> Result<(), String> {
         if self.inner.closed.load(Ordering::Acquire)
@@ -759,16 +846,21 @@ impl SelectedJobs {
         {
             eprintln!("Could not enqueue startup plugin repository refresh");
         }
-        if self.inner.beat_enabled {
-            self.inner
-                .scheduler
-                .start(Arc::new(()))
-                .map_err(|_| "Selected normal Beat start failed")?;
-        }
+        start_beat(
+            self.inner.beat,
+            Duration::from_secs(5),
+            &self.inner.closed,
+            || self.inner.queue.readiness().ready,
+            || self.inner.scheduler.start(Arc::new(())),
+        )
+        .await?;
         self.inner.startup.send_replace(Startup::Started);
         Ok(())
     }
     pub fn stop_producers(&self) {
+        if self.inner.beat == Beat::Core {
+            self.inner.scheduler.stop_admission();
+        }
         self.inner.publisher.stop_booking_backpressure();
         self.inner.backup_jobs.close_admission();
         self.inner.channel_http.close_admission();
@@ -781,7 +873,9 @@ impl SelectedJobs {
         self.inner.recording_playback.close_admission();
         self.inner.closed.store(true, Ordering::Release);
         self.inner.startup.send_replace(Startup::Stopping);
-        self.inner.scheduler.stop_admission();
+        if self.inner.beat != Beat::Core {
+            self.inner.scheduler.stop_admission();
+        }
         self.inner.recovery.stop_admission();
         self.inner.dvr.request_shutdown();
         self.inner.queue.stop_admission();
@@ -1047,6 +1141,92 @@ fn probe(local: SocketAddr, closed: &AtomicBool) -> bool {
 #[cfg(test)]
 mod readiness_tests {
     use super::*;
+
+    #[test]
+    fn selected_core_beat_requires_exclusive_explicit_configuration() {
+        assert_eq!(select_beat(false, false, false).unwrap(), Beat::Off);
+        assert_eq!(select_beat(true, false, false).unwrap(), Beat::Off);
+        assert_eq!(select_beat(true, true, false).unwrap(), Beat::Legacy);
+        assert_eq!(select_beat(true, false, true).unwrap(), Beat::Core);
+        assert!(select_beat(false, true, false).is_err());
+        assert!(select_beat(false, false, true).is_err());
+        assert!(select_beat(true, true, true).is_err());
+        assert!(Beat::Core.validate_owners(false, false).is_ok());
+        assert!(Beat::Core.validate_owners(true, false).is_err());
+        assert!(Beat::Core.validate_owners(false, true).is_err());
+        assert!(Beat::Off.validate_owners(false, true).is_ok());
+    }
+
+    #[tokio::test]
+    async fn selected_core_beat_starts_once_after_queue_readiness() {
+        let observations = std::cell::Cell::new(0);
+        let started = std::cell::Cell::new(0);
+        let closed = AtomicBool::new(false);
+        let ready = || {
+            observations.set(observations.get() + 1);
+            observations.get() >= 2
+        };
+        let start = || {
+            assert!(observations.get() >= 2);
+            started.set(started.get() + 1);
+            Ok(())
+        };
+        start_beat(Beat::Core, Duration::from_secs(1), &closed, ready, start)
+            .await
+            .unwrap();
+        assert_eq!(started.get(), 1);
+        assert_eq!(
+            start_beat(
+                Beat::Core,
+                Duration::ZERO,
+                &closed,
+                || false,
+                || panic!("started without the receiver"),
+            )
+            .await,
+            Err("Selected Core Beat receiver did not become ready")
+        );
+        closed.store(true, Ordering::Release);
+        assert_eq!(
+            start_beat(
+                Beat::Core,
+                Duration::from_secs(1),
+                &closed,
+                || panic!("inspected the receiver after closure"),
+                || panic!("started after closure"),
+            )
+            .await,
+            Err("Selected startup closed")
+        );
+    }
+
+    #[tokio::test]
+    async fn selected_legacy_and_off_startup_keep_existing_behavior() {
+        let closed = AtomicBool::new(false);
+        start_beat(
+            Beat::Off,
+            Duration::ZERO,
+            &closed,
+            || panic!("disabled scheduler inspected queue readiness"),
+            || panic!("disabled scheduler started"),
+        )
+        .await
+        .unwrap();
+        let started = std::cell::Cell::new(0);
+        start_beat(
+            Beat::Legacy,
+            Duration::ZERO,
+            &closed,
+            || panic!("legacy scheduler waited for scoped readiness"),
+            || {
+                started.set(started.get() + 1);
+                Ok(())
+            },
+        )
+        .await
+        .unwrap();
+        assert_eq!(started.get(), 1);
+    }
 
     #[test]
     fn configured_beat_waits_for_a_settled_tick() {

@@ -275,8 +275,12 @@ async fn combined_stats_legacy_alias(request: axum::extract::Request) -> Respons
 
 async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let admin_location = admin_ingress::configured_location()?;
-    let selected_jobs_enabled = selected_jobs::enabled()?;
+    let (selected_jobs_enabled, selected_beat) = selected_jobs::configuration()?;
     let core_scheduled_jobs_enabled = core_scheduled_jobs::enabled()?;
+    selected_beat.validate_owners(
+        core_scheduled_jobs_enabled,
+        env::var_os("RUST_BACKUP_TASKLESS_RESTORE_OWNER").is_some(),
+    )?;
     if selected_jobs_enabled && core_scheduled_jobs_enabled {
         return Err("Configure one application queue owner".into());
     }
@@ -1246,6 +1250,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
                 cache_url
                     .as_deref()
                     .ok_or("Selected jobs require Redis configuration")?,
+                selected_beat,
             )
             .await?,
         )

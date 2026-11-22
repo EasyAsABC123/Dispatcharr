@@ -25,6 +25,9 @@ impl NormalHead {
             peek: Arc::new(redis::Script::new(PEEK_CREATE)),
         })
     }
+    pub(crate) fn uses_configured_ports(&self, jobs: &Jobs) -> bool {
+        self.jobs.same_configured_ports(jobs)
+    }
     pub(crate) async fn shutdown(&self, timeout: Duration) -> Result<(), Error> {
         self.jobs.shutdown(timeout).await
     }

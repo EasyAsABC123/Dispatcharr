@@ -86,8 +86,41 @@ struct Inner {
     lifecycle: Lifecycle,
     maximum_sleep: Duration,
     scope: ScheduleScope,
-    backup_worker: Option<crate::normal_queue::CoreScheduledWorker>,
+    backup_worker: Option<ScheduleConsumer>,
 }
+
+enum ScheduleConsumer {
+    Core(crate::normal_queue::CoreScheduledWorker),
+    Selected(crate::normal_queue::SelectedCoreSchedules),
+}
+
+impl ScheduleConsumer {
+    fn ready(&self) -> bool {
+        match self {
+            Self::Core(worker) => worker.ready(),
+            Self::Selected(worker) => worker.ready(),
+        }
+    }
+
+    fn owns_plugin_refresh(&self) -> bool {
+        match self {
+            Self::Core(worker) => worker.owns_plugin_refresh(),
+            Self::Selected(worker) => worker.owns_plugin_refresh(),
+        }
+    }
+
+    fn enable_schedule(
+        &self,
+        data: Value,
+        caller: Arc<dyn Send + Sync>,
+    ) -> dispatcharr_contracts::BoxFuture<'_, Result<Value, dispatcharr_store::StoreError>> {
+        match self {
+            Self::Core(worker) => worker.enable_schedule(data, caller),
+            Self::Selected(worker) => worker.enable_schedule(data, caller),
+        }
+    }
+}
+
 const BACKUP_PERIODIC_NAME: &str = "backup-scheduled-task";
 const BACKUP_PERIODIC_TASK: &str = "apps.backups.tasks.scheduled_backup_task";
 const CLEANUP_PERIODIC_TASK: &str = "celery.backend_cleanup";
@@ -293,7 +326,28 @@ impl Scheduler {
         maximum_sleep: Duration,
         worker: crate::normal_queue::CoreScheduledWorker,
     ) -> Result<Self, Error> {
-        Self::prepare_scoped(pool, worker.jobs(), identity, maximum_sleep, Some(worker))
+        Self::prepare_scoped(
+            pool,
+            worker.jobs(),
+            identity,
+            maximum_sleep,
+            Some(ScheduleConsumer::Core(worker)),
+        )
+    }
+
+    /// Use the prepared Selected receiver for the existing bounded Core schedules.
+    /// The capability carries its own verified transports and backup schedule owner.
+    pub fn prepare_core_schedules_for_selected(
+        worker: crate::normal_queue::SelectedCoreSchedules,
+        maximum_sleep: Duration,
+    ) -> Result<Self, Error> {
+        Self::prepare_scoped(
+            worker.pool(),
+            worker.jobs(),
+            worker.identity(),
+            maximum_sleep,
+            Some(ScheduleConsumer::Selected(worker)),
+        )
     }
 
     fn prepare_scoped(
@@ -301,7 +355,7 @@ impl Scheduler {
         jobs: Jobs,
         identity: ProducerIdentitySource,
         maximum_sleep: Duration,
-        backup_worker: Option<crate::normal_queue::CoreScheduledWorker>,
+        backup_worker: Option<ScheduleConsumer>,
     ) -> Result<Self, Error> {
         if !jobs.allows_defaults()
             || maximum_sleep.is_zero()

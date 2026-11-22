@@ -70,6 +70,18 @@ impl Application {
         self.inner.jobs.clone()
     }
 
+    pub(crate) fn schedule_pool(&self) -> &sqlx::PgPool {
+        self.inner.schedule.pool()
+    }
+
+    pub(crate) fn schedule_identity(&self) -> ProducerIdentitySource {
+        self.inner.identity.clone()
+    }
+
+    pub(crate) fn scheduled_admission_open(&self) -> bool {
+        !self.inner.closed.load(Ordering::Acquire)
+    }
+
     #[allow(clippy::too_many_arguments)]
     pub fn prepare(
         jobs: Jobs,
