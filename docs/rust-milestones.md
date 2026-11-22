@@ -26,6 +26,10 @@ The [5d9568f explicit worker rehearsal](rust-m6-5d9568f-explicit-role-compose.md
 verified startup, HTTP XMLTV import and descendants, natural scan and cleanup,
 durability after retirement, and a ready peer with exact teardown.
 
+The [4d3cfbb EPG library pair](rust-m0-4d3cfbb-epg-library-get.md) matched eight
+successful JSON GETs per backend across four operations, including the Original
+headers and body digests, with unchanged guide SQL and exact cleanup.
+
 The [scoped Compose wave](rust-m5-m7-m8-scoped-compose.md) verified the manual
 channel edit on `5d9568f`, and realtime and ordinary plugin settings on `1124391`.
 Each workflow passed its owned cleanup checks.
