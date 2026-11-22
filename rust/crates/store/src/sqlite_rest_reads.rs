@@ -432,17 +432,14 @@ impl RetainedSqliteRestReads {
             .bearer_account_user(peer, headers.clone(), false)
             .await?;
         crate::channel_groups::collection_permission(subject.user())?;
-        if !channel_logos::supports(uri.query()) {
-            return Err(crate::logos::missing());
-        }
-        let origin = crate::channels::base_url(&headers, uri)?
-            .origin()
-            .ascii_serialization();
+        let params = channel_logos::params(uri)?;
+        let base = crate::channels::base_url(&headers, uri)?;
+        let origin = base.origin().ascii_serialization();
         let pool = self.pool.clone();
         let work_bytes = self.limits.work_bytes;
         supervised_sql_read(self.permit.clone(), async move {
             let mut connection = pool.acquire().await?;
-            let selected = channel_logos::rows(&mut connection, work_bytes).await;
+            let selected = channel_logos::select(&mut connection, &params, &base, work_bytes).await;
             settle(connection).await?;
             let selected = selected?;
             tokio::task::spawn_blocking(move || {
