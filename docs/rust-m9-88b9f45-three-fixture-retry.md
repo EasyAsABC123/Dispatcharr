@@ -1,0 +1,5 @@
+# Three isolated release fixtures passed after the Chromium scratch fix
+
+Current Packaged, UserAgent, and Clean Install passed concurrently on beepboop with ordinary Rust application `88b9f45`. All three fresh Compose projects verified exact teardown. The independent reducer observed three simultaneous running projects in 29 samples, and accounted for every configured port mapping. The controller returned 2 for a partial batch, with reducer 0 and cleanup 0. The other 124 release rows were outside this run.
+
+The earlier [partial run](rust-m9-88b9f45-three-fixture-partial.md) failed during browser startup before React first-admin setup. A diagnostic replay captured Chromium's ProcessSingleton socket path exceeding its limit. The successful rerun used a unique mode-0700 directory under `/tmp`, preserved the browser flags and scenario, and independently verified exact removal of that directory. The [machine-readable evidence](../scripts/rust-integration/m9-88b9f45-three-fixture-retry.json) records the literal results and source receipts. Full release acceptance and the later application revisions remain separate checks.
