@@ -106,6 +106,11 @@ method declarations. An exact [e68fb95 backup GET replay](rust-m0-e68fb95-backup
 passed inventory, direct owned archive download, repeated readback and cleanup
 on both backends.
 
+The [f960875 abrupt Native fMP4 observation](rust-m3-f960875-native-abrupt-fmp4.md)
+decoded both retained viewer prefixes and recorded the attached follower's EOF.
+Both backends passed the [six-default cold and warm scheduler rehearsal](rust-m6-f960875-cold-warm-scheduler-install.md)
+and the [assigned-number M3U, HDHomeRun and XMLTV comparison](rust-m7-f960875-assigned-numbers-guide.md).
+
 The [f960875 planned fMP4 replay](rust-m3-f960875-planned-fmp4-handoff.md) passed
 on Original and Native after the lead viewer disconnected and both media leases
 drained. Each backend decoded both clips and admitted a fresh viewer on the

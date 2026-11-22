@@ -1,0 +1,71 @@
+{
+  "candidate": {
+    "build_manifest_file": "/home/justin/github/Dispatcharr/artifacts/rust/m6-m9-4d3c-ordinary-aio-role-successor-package-1/actual-package-1/package/build.json",
+    "build_manifest_sha256": "4b2e7f2968b98ca07a5dacec396ac02b4259000e7f7521741cc715218bc43a8f",
+    "git": "f960875f26d26bf1108a299530064d24ecc462a3",
+    "image_id": "sha256:f9b1e3a06997a15cc892a328763eb14ce753085620e9fdd4d2c82f30dfa54e2a",
+    "source_archive_file": "/home/justin/github/Dispatcharr/artifacts/rust/m6-m9-4d3c-ordinary-aio-role-successor-package-1/actual-package-1/package/source.tar",
+    "source_archive_sha256": "31429dc58c275fbc6c9876aed6aceaca9656c903b5b0c4c6669df6b9628de68b",
+    "source_map_file": "/home/justin/github/Dispatcharr/artifacts/rust/m6-f960875-canonical-scheduler-install-5/source-map-348f178063fa.json",
+    "source_map_sha256": "1c34135aa6d0994d23509159fcbb2c253ec66ddfaa5e8a84dc06ef6357aebd19"
+  },
+  "canonical_matrix_promoted": false,
+  "credit": "Original Dispatcharr and the original Django/Celery authors retain full credit.",
+  "durable_SQL_and_broker_observed": true,
+  "entrypoint": "production-Main; owner full workflow evaluator required",
+  "execution_receipt_sha256": "a770b6760d01534e9b0ac95b36fea0795a44ed12e6e3d1e35aaf2e6f7e1d1a63",
+  "full_required_workflow": true,
+  "m6_node": "m6/scheduler-install-known-defaults",
+  "observation_mode": "physical",
+  "paired": [
+    {
+      "cold_installed": [
+        "celery.backend_cleanup",
+        "check-account-expirations",
+        "check-version-updates",
+        "fetch-channel-statuses",
+        "maintain-recurring-recordings",
+        "scan-files"
+      ],
+      "unrelated_saved_row_unchanged": true,
+      "warm_preserved": [
+        "celery.backend_cleanup",
+        "check-account-expirations",
+        "check-version-updates",
+        "maintain-recurring-recordings",
+        "scan-files"
+      ],
+      "warm_repaired": "fetch-channel-statuses"
+    },
+    {
+      "cold_installed": [
+        "celery.backend_cleanup",
+        "check-account-expirations",
+        "check-version-updates",
+        "fetch-channel-statuses",
+        "maintain-recurring-recordings",
+        "scan-files"
+      ],
+      "unrelated_saved_row_unchanged": true,
+      "warm_preserved": [
+        "celery.backend_cleanup",
+        "check-account-expirations",
+        "check-version-updates",
+        "maintain-recurring-recordings",
+        "scan-files"
+      ],
+      "warm_repaired": "fetch-channel-statuses"
+    }
+  ],
+  "performance_measured": false,
+  "physical_backends": [
+    "native"
+  ],
+  "raw_controller_receipt_sha256": "11222227dd9a7b5ebd420e1c71924ce769a611474162530027a0bad40ffd87bb",
+  "retained_original": {
+    "cleanup_report_sha256": "ae6739f4ce4ca75b036ada63b94b2e58a2a12c995f7771086c9db0fd1647a21f",
+    "receipt_sha256": "16827693efc5266c059d6f7afb5c262cedb574ede532816a618b4aeb2ebf35b7"
+  },
+  "semantic_assertions_passed": true,
+  "source_authority_verified": true
+}
