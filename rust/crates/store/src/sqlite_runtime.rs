@@ -4,13 +4,14 @@ use crate::{
     sqlite_identity::{LoginPersistence, SqliteIdentity},
     NotificationCache, RestReadLimits, RetainedSqliteRestReads,
 };
+use axum::extract::{OriginalUri, Query};
 use chrono::Utc;
 
 #[path = "sqlite_app_data.rs"]
 pub(crate) mod application_data;
 #[path = "sqlite_profile.rs"]
 pub(crate) mod profile;
-use std::path::Path;
+use std::{collections::HashMap, path::Path};
 use tokio::sync::Semaphore;
 
 #[derive(Clone)]
@@ -53,6 +54,7 @@ impl CopiedSqliteRuntime {
             .route("/api/accounts/token/refresh/", axum::routing::any(refresh))
             .route("/api/accounts/users/me/", axum::routing::any(profile::me))
             .route("/api/channels/groups/", axum::routing::get(groups))
+            .route("/api/channels/channels/", axum::routing::get(channels))
             .route("/healthz", axum::routing::get(readiness))
             .with_state(self.clone())
     }
@@ -232,6 +234,34 @@ async fn groups(
         .allocate()?
         .channel_group_collection(peer, headers)
         .await
+}
+
+async fn channels(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+    Query(params): Query<HashMap<String, String>>,
+) -> Response {
+    let read = async {
+        runtime
+            .allocate()?
+            .channel_collection(peer, headers, &uri, params)
+            .await
+    }
+    .await;
+    let mut response = match read {
+        Ok(value) => Json(value).into_response(),
+        Err(error) => error.into_response(),
+    };
+    response
+        .headers_mut()
+        .insert(axum::http::header::ALLOW, crate::channels::COLLECTION_ALLOW);
+    response.headers_mut().insert(
+        axum::http::header::VARY,
+        axum::http::HeaderValue::from_static("Accept, origin"),
+    );
+    response
 }
 
 async fn readiness(State(runtime): State<CopiedSqliteRuntime>) -> (StatusCode, Json<Value>) {

@@ -239,6 +239,7 @@ pub struct CoreScheduledWorker {
     head: Arc<NormalHead>,
     families: Arc<BTreeMap<Family, FamilyAdapter>>,
     backup: Arc<crate::normal_backup::Application>,
+    plugin_refresh: Option<crate::normal_plugin_repos::Prepared>,
     lifecycle: Arc<Mutex<(bool, bool)>>,
     stop: Arc<Lifetime>,
     poll: Duration,
@@ -293,7 +294,7 @@ impl CoreScheduledWorker {
         let mut families = BTreeMap::new();
         for (family, inner) in entries
             .into_iter()
-            .chain(plugin_refresh.map(|prepared| prepared.entry()))
+            .chain(plugin_refresh.as_ref().map(|prepared| prepared.entry()))
         {
             let maximum = inner.maximum_concurrency();
             validate_family_admission(family, maximum, inner.supports_selected_head())?;
@@ -322,6 +323,7 @@ impl CoreScheduledWorker {
             head,
             families: Arc::new(families),
             backup,
+            plugin_refresh,
             lifecycle: Arc::new(Mutex::new((false, false))),
             stop: Arc::new(Lifetime(watch::channel(false).0)),
             poll,
@@ -364,12 +366,34 @@ impl CoreScheduledWorker {
         dispatcharr_store::BackupJobApi::update_schedule(self.backup.as_ref(), data, owner)
     }
 
-    pub fn start(&self, owner: Arc<dyn Send + Sync>) -> Result<(), Error> {
-        let mut lifecycle = self.lifecycle.lock().map_err(|_| Error::Poisoned)?;
-        if lifecycle.0 || lifecycle.1 {
+    pub async fn start(
+        &self,
+        owner: Arc<dyn Send + Sync>,
+        plugin_startup: bool,
+    ) -> Result<(), Error> {
+        let plugin = if plugin_startup {
+            Some(self.plugin_refresh.as_ref().ok_or(Error::Configuration)?)
+        } else {
+            None
+        };
+        {
+            let mut lifecycle = self.lifecycle.lock().map_err(|_| Error::Poisoned)?;
+            if lifecycle.0 || lifecycle.1 {
+                return Err(Error::Closed);
+            }
+            lifecycle.0 = true;
+        }
+        // Source publishes at process startup independently of its worker.
+        // Attempt it before this lane can hold the plugin family's permit.
+        if let Some(plugin) = plugin {
+            if plugin.publish_startup(owner.clone()).await.is_err() {
+                eprintln!("Could not enqueue startup plugin repository refresh");
+            }
+        }
+        let lifecycle = self.lifecycle.lock().map_err(|_| Error::Poisoned)?;
+        if lifecycle.1 {
             return Err(Error::Closed);
         }
-        lifecycle.0 = true;
         self.lane.state.send_replace(State::Starting);
         self.lane.done.send_replace(false);
         tokio::spawn(celery_lane(

@@ -18,12 +18,17 @@ use std::{
     sync::OnceLock,
 };
 use url::Url;
-const COLLECTION_ALLOW: HeaderValue = HeaderValue::from_static("GET, POST, HEAD, OPTIONS");
+pub(crate) const COLLECTION_ALLOW: HeaderValue =
+    HeaderValue::from_static("GET, POST, HEAD, OPTIONS");
 const DETAIL_ALLOW: HeaderValue =
     HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS");
 const DETAIL_OPTIONS: &[u8; 5290] =
     include_bytes!("../datasets/source-channel-detail-options.json");
-const FIELDS: &[&str] = &[
+
+#[cfg(feature = "sqlite-copied-data-runtime")]
+#[path = "sqlite_channel_list.rs"]
+pub(crate) mod sqlite_list;
+pub(crate) const FIELDS: &[&str] = &[
     "id",
     "channel_number",
     "name",
@@ -44,7 +49,7 @@ const FIELDS: &[&str] = &[
     "auto_created",
     "auto_created_by_id",
 ];
-const OVERRIDE_FIELDS: &[&str] = &[
+pub(crate) const OVERRIDE_FIELDS: &[&str] = &[
     "name",
     "channel_number",
     "channel_group_id",
@@ -55,7 +60,7 @@ const OVERRIDE_FIELDS: &[&str] = &[
     "stream_profile_id",
     "is_radio",
 ];
-const STREAM_FIELDS: &[&str] = &[
+pub(crate) const STREAM_FIELDS: &[&str] = &[
     "id",
     "name",
     "url",
@@ -175,7 +180,7 @@ pub(crate) fn serialize(
     ))
 }
 
-fn serialize_channel(
+pub(crate) fn serialize_channel(
     raw: &Value,
     ov: Option<Value>,
     streams: &[Value],
@@ -426,7 +431,7 @@ pub(crate) async fn filters<'a>(
     }
     Ok(())
 }
-fn order(query: &mut QueryBuilder<'_, Postgres>, params: &HashMap<String, String>) {
+pub(crate) fn channel_ordering(params: &HashMap<String, String>) -> String {
     let clauses = params
         .get("ordering")
         .map(String::as_str)
@@ -445,11 +450,15 @@ fn order(query: &mut QueryBuilder<'_, Postgres>, params: &HashMap<String, String
             Some(format!("{field} {}", if desc { "DESC" } else { "ASC" }))
         })
         .collect::<Vec<_>>();
-    query.push(" ORDER BY ").push(if clauses.is_empty() {
+    if clauses.is_empty() {
         "COALESCE(o.channel_number,c.channel_number) DESC".into()
     } else {
         clauses.join(",")
-    });
+    }
+}
+
+fn order(query: &mut QueryBuilder<'_, Postgres>, params: &HashMap<String, String>) {
+    query.push(" ORDER BY ").push(channel_ordering(params));
 }
 pub(crate) fn base_url(headers: &HeaderMap, uri: &Uri) -> Result<Url, StoreError> {
     Url::parse(&format!(
@@ -474,6 +483,72 @@ pub(crate) fn page_url(base: &Url, page: usize) -> String {
     value.query_pairs_mut().clear().extend_pairs(pairs);
     value.to_string()
 }
+
+pub(crate) fn channel_page_size(params: &HashMap<String, String>) -> usize {
+    params
+        .get("page_size")
+        .and_then(|value| value.parse::<usize>().ok())
+        .filter(|value| *value > 0)
+        .unwrap_or(50)
+        .min(10000)
+}
+
+pub(crate) fn channel_page(
+    params: &HashMap<String, String>,
+    paginated: bool,
+    count: usize,
+    size: usize,
+) -> Result<(usize, usize), StoreError> {
+    let invalid = || StoreError::StatusBody(404, json!({"detail":"Invalid page."}));
+    let pages = count.div_ceil(size).max(1);
+    let page = if !paginated {
+        1
+    } else if params.get("page").is_some_and(|value| value == "last") {
+        pages
+    } else {
+        params
+            .get("page")
+            .filter(|value| !value.is_empty())
+            .map(|value| value.parse::<usize>())
+            .transpose()
+            .map_err(|_| invalid())?
+            .unwrap_or(1)
+    };
+    if paginated && (page == 0 || page > pages) {
+        return Err(invalid());
+    }
+    Ok((page, pages))
+}
+
+pub(crate) fn channel_page_response(
+    base: &Url,
+    page: usize,
+    pages: usize,
+    count: usize,
+    results: Vec<Value>,
+    unassigned: bool,
+) -> Value {
+    let next = (page < pages).then(|| page_url(base, page + 1));
+    let previous = (page > 1).then(|| {
+        let value = page_url(base, page - 1);
+        if page != 2 {
+            return value;
+        }
+        let mut parsed = Url::parse(&value).expect("generated URL");
+        let pairs = parsed
+            .query_pairs()
+            .filter(|(key, _)| key != "page")
+            .map(|(key, value)| (key.into_owned(), value.into_owned()))
+            .collect::<Vec<_>>();
+        parsed.query_pairs_mut().clear().extend_pairs(pairs);
+        if parsed.query() == Some("") {
+            parsed.set_query(None);
+        }
+        parsed.to_string()
+    });
+    json!({"count":count,"next":next,"previous":previous,"results":results,"has_unassigned_epg_channels":unassigned})
+}
+
 pub(crate) async fn read(
     auth: AuthService,
     user: User,
@@ -485,12 +560,7 @@ pub(crate) async fn read(
         && ["page", "page_size"]
             .iter()
             .any(|key| params.get(*key).is_some_and(|value| !value.is_empty()));
-    let size = params
-        .get("page_size")
-        .and_then(|value| value.parse::<usize>().ok())
-        .filter(|value| *value > 0)
-        .unwrap_or(50)
-        .min(10000);
+    let size = channel_page_size(&params);
     let count = if paginated {
         let (_, from) = SELECT
             .split_once(" FROM dispatcharr_channels_channel c LEFT JOIN")
@@ -506,26 +576,7 @@ pub(crate) async fn read(
     } else {
         0
     };
-    let pages = count.div_ceil(size).max(1);
-    let page = if !paginated {
-        1
-    } else if params.get("page").is_some_and(|value| value == "last") {
-        pages
-    } else {
-        params
-            .get("page")
-            .filter(|value| !value.is_empty())
-            .map(|value| value.parse::<usize>())
-            .transpose()
-            .map_err(|_| StoreError::StatusBody(404, json!({"detail":"Invalid page."})))?
-            .unwrap_or(1)
-    };
-    if paginated && (page == 0 || page > pages) {
-        return Err(StoreError::StatusBody(
-            404,
-            json!({"detail":"Invalid page."}),
-        ));
-    }
+    let (page, pages) = channel_page(&params, paginated, count, size)?;
     let mut query = QueryBuilder::new(SELECT);
     filters(&mut query, &params, &user, &auth, detail.is_some()).await?;
     if let Some(id) = detail {
@@ -554,9 +605,9 @@ pub(crate) async fn read(
         return Ok(Json(Value::Array(values)));
     }
     let unassigned:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE c.epg_data_id IS NULL AND o.epg_data_id IS NULL)").fetch_one(auth.store.pool()).await?;
-    Ok(Json(
-        json!({"count":count,"next":if page<pages{Some(page_url(&base,page+1))}else{None},"previous":if page>1{let mut url=page_url(&base,page-1);if page==2{let mut parsed=Url::parse(&url).expect("generated URL");let pairs=parsed.query_pairs().filter(|(key,_)|key!="page").map(|(key,value)|(key.into_owned(),value.into_owned())).collect::<Vec<_>>();parsed.query_pairs_mut().clear().extend_pairs(pairs);if parsed.query()==Some(""){parsed.set_query(None);}url=parsed.to_string();}Some(url)}else{None},"results":values,"has_unassigned_epg_channels":unassigned}),
-    ))
+    Ok(Json(channel_page_response(
+        &base, page, pages, count, values, unassigned,
+    )))
 }
 async fn list(
     State(auth): State<AuthService>,

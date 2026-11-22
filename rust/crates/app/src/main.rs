@@ -282,6 +282,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     }
     let core_plugin_refresh =
         core_scheduled_jobs::plugin_refresh_enabled(core_scheduled_jobs_enabled)?;
+    let core_plugin_startup = core_scheduled_jobs::plugin_startup_enabled(core_plugin_refresh)?;
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
     let core_restore_grace =
         core_scheduled_jobs::restore_grace(core_scheduled_jobs_enabled, shutdown_timeout)?;
@@ -1437,7 +1438,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             owner.start().map_err(|_| "Manual backup intake failed")?;
         }
         if let Some(owner) = &core_scheduled {
-            owner.start().await?;
+            owner.start(core_plugin_startup).await?;
         }
     }
     let manual_backup_enabled = manual_backup.is_some();
