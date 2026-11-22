@@ -9,6 +9,28 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [a99e1772 ordinary checkpoint](rust-m0-m9-a99e1772-compose.md)
+matched all 224 reviewed requests to the fixed HDHomeRun lineup status GET.
+The [standalone verifier](../scripts/rust-contracts/observed-hdhr-get-a99e/README.md)
+rechecks 208 raw wire pairs and 16 browser responses against their two
+Original HTML witnesses. The same image passed a saved local M3U interval
+and a copied clocked DVR booking through explicit Selected/Core, with
+playable audio and video and exact teardown.
+
+The [a99e1772 required Compose wave](rust-m9-a99e1772-required-seven.md)
+passed seven fresh workflows. Two retained Original dependencies supported
+Native profile delivery, and 118 rows were blocked in this scoped wave.
+Release-wide parity, performance, soak, and cutover remain open.
+
+The [guide workflows and HDHomeRun observations](rust-m0-m7-a99e-observations.md)
+record the fresh 17-route metadata pair and Original evidence for linked
+XMLTV cron, channel creation with a real guide, and fixed HEAD/OPTIONS.
+
+The [949c864f runtime checkpoint](rust-m0-m6-949c864f-runtime-checkpoint.md)
+verified inherited Redis with one scheduler owner and a web peer, recurring
+recording repeat, account expiration, Newfoundland cleanup, profile restart,
+and ordinary backup inventory and direct download.
+
 The [949c864f ordinary checkpoint](rust-m0-m6-949c864f-stats-and-hdhr.md)
 matched two receiver-backed saved Stats schedules and eight browsable
 HDHomeRun authentication cases with exact retirement. Its predecessor
@@ -1227,16 +1249,16 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 
 | ID | Deliverable | Depends on | Current status | Evidence required to pass |
 | --- | --- | --- | --- | --- |
-| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 798 partial HTTP Original assignments and 250 partial typed Original assignments; coverage incomplete) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
+| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; fixed HDHomeRun GET matched 224 reviewed pairs; wider HTTP and typed coverage open) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
 | M1 | Shared bounded streaming core | M0 | In progress (technical core gates passed; M0 executable-contract prerequisite open) | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
 | M2 | Authenticated live TS vertical slice | M1 | In progress (three scoped 100-viewer pairs passed with one upstream per side) | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
 | M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
 | M4 | VOD and timeshift parity | M2 | In progress (ordinary DVR functional slice and one- and ten-viewer completed playback budgets passed) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
 | M5 | Accounts, settings, and channel control APIs | M2 | In progress (stock React provider modals, group cleanup and prior guide edits verified) | API/permission/database/React workflow parity and API benchmarks |
-| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (selected batch guide worker terminals and scoped startup verified) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
-| M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (Auto Sync regex preview and Connect workflows verified in scoped Compose runs) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
-| M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (trusted selected actions, managed logs and scoped operator checks passed. Default plugin attachment and wider restore and admin coverage remain open.) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
-| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (copied PostgreSQL rollback passed with four matched Original restart timestamp updates; strict fingerprint and final suite open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
+| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (saved Stats, local M3U and clocked DVR passed with explicit worker ownership; default scheduler graph open) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
+| M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (fixed HDHomeRun GET, Auto Sync regex preview and scoped Connect workflows verified) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
+| M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (ordinary backup inventory and direct downloads, trusted selected actions and scoped operator checks passed; default jobs and wider restore/admin coverage open) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
+| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (seven fresh required Compose passes on a99e1772; copied PostgreSQL rollback with matched restart timestamps; final suite and soak open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 | M10 | Controlled rollout | M9 | Proposed ([native ARM64 package, startup, React and first-run auth verified](rust-m10-a8ea333d-native-arm64-docker-desktop.md) on a8ea333d) | Scoped rollout plan, monitoring and rollback on the selected release image |
 | M11 | Default switch and operator handoff | M10 | Proposed | Released image and configuration, upgrade evidence, attribution and monitored fallback |
 

@@ -1,0 +1,468 @@
+{
+  "HDHomeRun_metadata_pair": {
+    "application_revision": "a99e1772d1041d053c9e8716f662370dcff39bde",
+    "distinct_routes": 17,
+    "image": "sha256:762a98b739c1d44ba076157c1f5d049045aa3527d6e30ff90632e81da6ee6fda",
+    "independent_cleanup": {
+      "compose_down_passed": true,
+      "exact_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "literal_exits": {
+      "owner": 0,
+      "reduce": 0,
+      "run": 0
+    },
+    "manifest_sha256": "916f1623300570485cd67487d1cd36ada19c7dedca22ef91fff61caf3dd309d5",
+    "new_complete_operation_rows": 0,
+    "positive_GETs_per_backend": 28,
+    "proof_sha256": "b4d48fffee906ee2d169af36ecebb89b0a49520e757c8d456926a036f3192d66",
+    "raw_receipt_sha256": "f9da87caa294ce1df6c36771c21d90cd878284272d87b102ec637ac9f1fc2188",
+    "stage": "m7-a99e-hdhr-seventeen-1",
+    "stage_seal_sha256": "924f9f1afd842b99a2e3e8b5c677de11f92af49116540c7d46ae713ac946ef02"
+  },
+  "Original_HDHomeRun_fixed_methods": {
+    "Native_measured": false,
+    "exact_cleanup_sha256": "1ea39352aca6265bf4da48695e735940b1a11b33060f4c68594dfb4320abd16e",
+    "literal_exits": {
+      "owner": 0,
+      "probe": 0,
+      "reduce": 0
+    },
+    "observed": [
+      {
+        "accept": "application/json",
+        "auth_challenge_present": false,
+        "cookie_present": false,
+        "entity_bytes": 0,
+        "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "84"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "transfer-encoding": [],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "location": null,
+        "method": "HEAD",
+        "negotiation": "json",
+        "options_metadata": null,
+        "path": "/hdhr/lineup_status.json",
+        "policy": "allowed",
+        "query": "",
+        "role": "anonymous",
+        "status": 200
+      },
+      {
+        "accept": "application/json",
+        "auth_challenge_present": false,
+        "cookie_present": false,
+        "entity_bytes": 221,
+        "entity_sha256": "8093263a60aafcc8172948996a0a588cfcd7a536cb66526e491d10192029a4ed",
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "221"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "transfer-encoding": [],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "location": null,
+        "method": "OPTIONS",
+        "negotiation": "json",
+        "options_metadata": {
+          "known_metadata": {
+            "description": "Returns the current status of the HDHR lineup",
+            "name": "Lineup Status Api",
+            "parses": [
+              "application/json",
+              "application/x-www-form-urlencoded",
+              "multipart/form-data"
+            ],
+            "renders": [
+              "application/json",
+              "text/html"
+            ]
+          },
+          "ordered_keys": [
+            "name",
+            "description",
+            "renders",
+            "parses"
+          ]
+        },
+        "path": "/hdhr/lineup_status.json",
+        "policy": "allowed",
+        "query": "",
+        "role": "anonymous",
+        "status": 200
+      },
+      {
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "auth_challenge_present": false,
+        "cookie_present": false,
+        "entity_bytes": 0,
+        "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "84"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "transfer-encoding": [],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "location": null,
+        "method": "HEAD",
+        "negotiation": "forced-browser",
+        "options_metadata": null,
+        "path": "/hdhr/lineup_status.json",
+        "policy": "allowed",
+        "query": "format=api",
+        "role": "anonymous",
+        "status": 200
+      },
+      {
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "auth_challenge_present": false,
+        "cookie_present": true,
+        "entity_bytes": 10642,
+        "entity_sha256": "a179b0b6533b246edd78de15910af18de5046cb24976eef28ccf533727bb34a6",
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "10642"
+          ],
+          "content-type": [
+            "text/html; charset=utf-8"
+          ],
+          "transfer-encoding": [],
+          "vary": [
+            "Accept, origin, Cookie"
+          ]
+        },
+        "location": null,
+        "method": "OPTIONS",
+        "negotiation": "forced-browser",
+        "options_metadata": {
+          "known_metadata": {
+            "description": "Returns the current status of the HDHR lineup",
+            "name": "Lineup Status Api",
+            "parses": [
+              "application/json",
+              "application/x-www-form-urlencoded",
+              "multipart/form-data"
+            ],
+            "renders": [
+              "application/json",
+              "text/html"
+            ]
+          },
+          "ordered_keys": [
+            "name",
+            "description",
+            "renders",
+            "parses"
+          ]
+        },
+        "path": "/hdhr/lineup_status.json",
+        "policy": "allowed",
+        "query": "format=api",
+        "role": "anonymous",
+        "status": 200
+      },
+      {
+        "accept": "application/json",
+        "auth_challenge_present": false,
+        "cookie_present": false,
+        "entity_bytes": 0,
+        "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "22"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "transfer-encoding": [],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "location": null,
+        "method": "HEAD",
+        "negotiation": "json",
+        "options_metadata": null,
+        "path": "/hdhr/lineup_status.json",
+        "policy": "policy-denied",
+        "query": "",
+        "role": "anonymous",
+        "status": 403
+      },
+      {
+        "accept": "application/json",
+        "auth_challenge_present": false,
+        "cookie_present": false,
+        "entity_bytes": 221,
+        "entity_sha256": "8093263a60aafcc8172948996a0a588cfcd7a536cb66526e491d10192029a4ed",
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "221"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "transfer-encoding": [],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "location": null,
+        "method": "OPTIONS",
+        "negotiation": "json",
+        "options_metadata": {
+          "known_metadata": {
+            "description": "Returns the current status of the HDHR lineup",
+            "name": "Lineup Status Api",
+            "parses": [
+              "application/json",
+              "application/x-www-form-urlencoded",
+              "multipart/form-data"
+            ],
+            "renders": [
+              "application/json",
+              "text/html"
+            ]
+          },
+          "ordered_keys": [
+            "name",
+            "description",
+            "renders",
+            "parses"
+          ]
+        },
+        "path": "/hdhr/lineup_status.json",
+        "policy": "policy-denied",
+        "query": "",
+        "role": "anonymous",
+        "status": 200
+      },
+      {
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "auth_challenge_present": false,
+        "cookie_present": false,
+        "entity_bytes": 0,
+        "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "22"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "transfer-encoding": [],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "location": null,
+        "method": "HEAD",
+        "negotiation": "forced-browser",
+        "options_metadata": null,
+        "path": "/hdhr/lineup_status.json",
+        "policy": "policy-denied",
+        "query": "format=api",
+        "role": "anonymous",
+        "status": 403
+      },
+      {
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "auth_challenge_present": false,
+        "cookie_present": true,
+        "entity_bytes": 10642,
+        "entity_sha256": "48b4909bccab572537f02d3e5605613386040fa1e8091ecf903df296bc665e7e",
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "10642"
+          ],
+          "content-type": [
+            "text/html; charset=utf-8"
+          ],
+          "transfer-encoding": [],
+          "vary": [
+            "Accept, origin, Cookie"
+          ]
+        },
+        "location": null,
+        "method": "OPTIONS",
+        "negotiation": "forced-browser",
+        "options_metadata": {
+          "known_metadata": {
+            "description": "Returns the current status of the HDHR lineup",
+            "name": "Lineup Status Api",
+            "parses": [
+              "application/json",
+              "application/x-www-form-urlencoded",
+              "multipart/form-data"
+            ],
+            "renders": [
+              "application/json",
+              "text/html"
+            ]
+          },
+          "ordered_keys": [
+            "name",
+            "description",
+            "renders",
+            "parses"
+          ]
+        },
+        "path": "/hdhr/lineup_status.json",
+        "policy": "policy-denied",
+        "query": "format=api",
+        "role": "anonymous",
+        "status": 200
+      }
+    ],
+    "owned_cleanup_passed": true,
+    "proof_sha256": "f91f1e81f2ffedff69c90a852af3be889c27144892cd000dfc4631cbbbe18927",
+    "scope": "stock Original fixed lineup status anonymous HEAD and OPTIONS",
+    "stage": "m0-stock-hdhr-fixed-status-methods-1",
+    "stage_seal_sha256": "2b22688c1de8469d38f787d5f32debefc0664d3edf210e13aaae00246a379d55",
+    "stock_image": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3",
+    "stock_receipt_sha256": "fe1876b1858b5963a00b06a47abeef16b80713cf89c2f72ea226c4ff559e508a"
+  },
+  "Original_XMLTV_guide_channel_create": {
+    "HTTP_status": 201,
+    "Original_exit": 0,
+    "Original_only": true,
+    "cache_generation_delta": 1,
+    "exact_Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "exact_cleanup": true,
+    "exact_retained_Source25_sha256": "2622134ad52d2111e6a71bf051dee735ab94007b8c37e5f95d0d87432e2773cc",
+    "literal_exits": {
+      "owner": 0,
+      "preflight": 0,
+      "reduce": 0,
+      "run": 0
+    },
+    "matching_programme_roots": 1,
+    "next_XMLTV_readback": true,
+    "observer_sha256": "b6888eaaf73d66cbde29efa98a06fc4142b5d61b6013b65863174f82543680d7",
+    "ordered_streams": 2,
+    "programme_rows_changed": false,
+    "proof_sha256": "aad90802bb98a6a16156e4408b4e3d808fd7edf5eb8160f7e744cd8cc922ab87",
+    "request_receipt_sha256": "b0b90d8857f25d91dc340e4072b75dd0e9eca3ef4e8fa630579951ec9dd2c7fd",
+    "scope": "Source25 follow-up: one real XMLTV guide channel create, two ordered streams, one selected profile",
+    "selected_profiles": 1,
+    "stage": "m5-original-manual-xmltv-guide-channel-create-1",
+    "stage_seal_sha256": "9b4bee72415784d3015912adcb92ac27eb5c8e371a43f9f06a25ce84e05a0d37"
+  },
+  "Original_linked_XMLTV_cron": {
+    "actual_original_exit": 0,
+    "exact_owned_cleanup": true,
+    "literal_exits": {
+      "owner": 0,
+      "preflight": 0,
+      "reduce": 0,
+      "run": 0
+    },
+    "native_executed": false,
+    "proof_sha256": "19cf785570d689fbeb1aa2ee6a24f7b1033969984813ebfabb588bdec634cc6d",
+    "scope": {
+      "actual_success_null": true,
+      "armed_utc": "2026-11-22T11:19:51.465117+00:00",
+      "children": [
+        "apps.epg.tasks.build_programme_index_task",
+        "apps.channels.tasks.evaluate_series_rules"
+      ],
+      "cron_fields": [
+        "21",
+        "11",
+        "*",
+        "*",
+        "*"
+      ],
+      "due_utc": "2026-11-22T11:21:00+00:00",
+      "exact_child_lineage": true,
+      "index_present": true,
+      "origin": {
+        "requests": 1,
+        "sha256": "8326273c6615e4f8356bc35827961907b3df1273bbac026d7203d3515b4734ea"
+      },
+      "periodic_model_kind": "epg_source-refresh",
+      "pre_arm_guide_empty": true,
+      "pre_arm_origin_requests": 0,
+      "programme_rows": [
+        [
+          "Owned scheduled guide programme",
+          "owned-scheduled-tvg"
+        ]
+      ],
+      "raw_journal_sha256": "782855622d911715e26dd546e5ab9a8c4a9bfd6c2387c3adf08570582374293e",
+      "real_run_count_delta": 1,
+      "remaining_ready_or_reserved": 0,
+      "result_settled": 2,
+      "root_publish_redis_time": 1795346460.013931,
+      "schedule_timezone": "UTC",
+      "source_status": "success",
+      "timelimit": [
+        14400,
+        null
+      ]
+    },
+    "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "stage": "m6-original-linked-xmltv-cron-1",
+    "stage_seal_sha256": "5fffe284bf471f3a314742b1dd0c0b9f3bf0a42db15f6e6fbe9e37edf1cb2392"
+  },
+  "application_performance_measured": false,
+  "credit": "Original Dispatcharr and dependency authors retain full credit and licenses",
+  "milestones_closed": [],
+  "schema_version": 1
+}
