@@ -7,6 +7,8 @@ mod combined_statistics_wire;
 mod control;
 mod core_scheduled_jobs;
 mod database_config;
+#[cfg(feature = "direct-modeladmin-read")]
+mod direct_modeladmin;
 mod drf_api_roots;
 mod m3u_refresh_all_config;
 mod managed_logs;
@@ -1223,6 +1225,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             .map_err(|_| "Core settings must share the original Auth writer budget")?,
         None => auth.clone().router(),
     };
+    #[cfg(feature = "direct-modeladmin-read")]
+    let direct_modeladmin = direct_modeladmin::prepare(auth.clone()).await?;
     let listener = tokio::net::TcpListener::bind(bind)
         .await
         .map_err(|_| "Cannot bind HTTP listener")?;
@@ -1529,6 +1533,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             })?;
     }
     let signal_services = services.clone();
+    #[cfg(feature = "direct-modeladmin-read")]
+    let (direct_stop, direct_stop_notice) = tokio::sync::watch::channel(false);
     let server = axum::serve(
         listener,
         app.into_make_service_with_connect_info::<SocketAddr>(),
@@ -1538,12 +1544,22 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             Some(mut signal) => signal.wait().await,
             None => shutdown_signal().await,
         }
+        #[cfg(feature = "direct-modeladmin-read")]
+        let _ = direct_stop.send(true);
         stop_service_admission(&signal_services);
         let cleanup = tokio::spawn(shutdown_components(signal_services));
         let _ = shutdown_started.send(cleanup);
         // Return immediately: Axum stops accepting while cleanup runs.
     })
     .into_future();
+    #[cfg(feature = "direct-modeladmin-read")]
+    let server = async {
+        tokio::try_join!(
+            server,
+            direct_modeladmin::serve(direct_modeladmin, direct_stop_notice)
+        )
+        .map(|_| ())
+    };
     tokio::pin!(server);
     let shutdown_mode = if refresh_enabled && !selected_jobs_enabled {
         "Refresh worker"

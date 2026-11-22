@@ -6,6 +6,7 @@ edition.workspace = true
 license.workspace = true
 
 [features]
+direct-modeladmin-read = ["dispatcharr-store/direct-modeladmin-read"]
 sqlite-copied-data-runtime = ["dispatcharr-store/sqlite-copied-data-runtime"]
 sqlite-runtime-readiness = ["dispatcharr-store/sqlite-identity"]
 sqlite-historical-upgrade = ["dispatcharr-store/sqlite-historical-upgrade"]
