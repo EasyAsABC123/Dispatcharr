@@ -4,6 +4,7 @@ use super::{
     response_headers, static_assets, LatchedShutdown,
 };
 use axum::{middleware, routing::get_service, Router};
+use dispatcharr_realtime::RealtimeGateway;
 use dispatcharr_store::{AuthConfig, CopiedSqliteRuntime};
 use std::{
     net::SocketAddr,
@@ -17,6 +18,7 @@ async fn frontend(root: &Path) -> Result<Router, String> {
     let shell = get_service(ServeFile::new(index));
     let app = Router::new()
         .route("/", shell.clone())
+        .route("/login", shell.clone())
         .route("/channels", shell);
     Ok(static_assets::with_directories(app, root)
         .await?
@@ -78,11 +80,18 @@ pub(super) async fn run() -> Result<(), String> {
         Ok(path) => frontend(Path::new(&path)).await?,
         Err(_) => Router::new(),
     };
-    let ip_bus = super::realtime::bus(Some(&redis)).await?;
+    let bus = super::realtime::bus(Some(&redis))
+        .await?
+        .ok_or("SQLite copied runtime realtime Redis unavailable")?;
+    let config = super::realtime::gateway_config()?;
     let runtime = CopiedSqliteRuntime::open(&copy, auth, &redis).await?;
-    let runtime = match ip_bus {
-        Some(bus) => runtime.with_ip_event_sink(Arc::new(bus)),
-        None => runtime,
+    let runtime = runtime.with_ip_event_sink(Arc::new(bus.clone()));
+    let gateway = match RealtimeGateway::with_identity(runtime.websocket_identity(), bus, config) {
+        Ok(gateway) => gateway,
+        Err(_) => {
+            runtime.close().await?;
+            return Err("Invalid copied SQLite realtime configuration".into());
+        }
     };
     let result = async {
         let listener = tokio::net::TcpListener::bind(bind)
@@ -92,20 +101,33 @@ pub(super) async fn run() -> Result<(), String> {
             .local_addr()
             .map_err(|_| "SQLite copied runtime bind address unavailable")?;
         println!("dispatcharr-sqlite-copied-ready {address}");
+        let shutdown_gateway = gateway.clone();
         axum::serve(
             listener,
             runtime
                 .router()
                 .merge(frontend)
+                .merge(gateway.router())
                 .into_make_service_with_connect_info::<SocketAddr>(),
         )
-        .with_graceful_shutdown(async move { stop.wait().await })
+        .with_graceful_shutdown(async move {
+            stop.wait().await;
+            shutdown_gateway.begin_shutdown();
+        })
         .await
         .map_err(|_| "SQLite copied runtime HTTP stopped with an error")
     }
     .await;
+    let drained = gateway.shutdown().await;
+    drop(gateway);
     let retired = runtime.close().await;
-    result.and(retired).map_err(str::to_owned)
+    let realtime_retired = drained
+        .then_some(())
+        .ok_or("Copied SQLite realtime drain deadline");
+    result
+        .and(realtime_retired)
+        .and(retired)
+        .map_err(str::to_owned)
 }
 
 #[cfg(test)]
@@ -133,6 +155,7 @@ mod tests {
             .merge(frontend(&root).await.unwrap());
         for (path, body, mime) in [
             ("/", index.as_slice(), "text/html; charset=utf-8"),
+            ("/login", index.as_slice(), "text/html; charset=utf-8"),
             ("/channels", index.as_slice(), "text/html; charset=utf-8"),
             ("/assets/index.js", script.as_slice(), "text/javascript"),
         ] {

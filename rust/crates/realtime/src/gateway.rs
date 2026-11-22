@@ -14,7 +14,7 @@ use axum::{
 };
 use bytes::Bytes;
 use dispatcharr_contracts::{BoxFuture, UpdateEventError};
-use dispatcharr_store::AuthService;
+use dispatcharr_store::{realtime::WebsocketIdentity, AuthService};
 use futures_util::{stream::SplitSink, SinkExt, StreamExt};
 use hyper::upgrade::Upgraded;
 use hyper_util::rt::TokioIo;
@@ -100,7 +100,7 @@ pub struct RealtimeGateway {
     inner: Arc<Inner>,
 }
 struct Inner {
-    auth: AuthService,
+    identity: Box<dyn WebsocketIdentity>,
     bus: RealtimeBus,
     hub: Arc<Hub>,
     config: GatewayConfig,
@@ -134,6 +134,14 @@ impl RealtimeGateway {
         bus: RealtimeBus,
         config: GatewayConfig,
     ) -> Result<Self, UpdateEventError> {
+        Self::with_identity(auth, bus, config)
+    }
+
+    pub fn with_identity(
+        identity: impl WebsocketIdentity + 'static,
+        bus: RealtimeBus,
+        config: GatewayConfig,
+    ) -> Result<Self, UpdateEventError> {
         if config.max_private_wire_bytes < 1024
             || config.max_private_wire_bytes > u32::MAX as usize
             || config.max_socket_output_bytes < SOCKET_OUTPUT_CREDIT
@@ -156,7 +164,7 @@ impl RealtimeGateway {
             capacity_wait: config.send_timeout,
         })?;
         let inner = Arc::new(Inner {
-            auth,
+            identity: Box::new(identity),
             bus,
             hub,
             private_bytes: Arc::new(Semaphore::new(config.max_private_wire_bytes)),
@@ -192,12 +200,16 @@ impl RealtimeGateway {
         "private_live_bytes":self.inner.config.max_private_wire_bytes-self.inner.private_bytes.available_permits(),
         "socket_output_reserved_bytes":self.inner.config.max_socket_output_bytes-self.inner.socket_buffers.available_permits()})
     }
-    pub async fn shutdown(&self) -> bool {
+    pub fn begin_shutdown(&self) {
         self.inner.shutdown.send_replace(true);
         self.inner.bus.stop_accepting();
         self.inner.hub.shutdown();
         self.inner.socket_buffers.close();
         self.inner.private_bytes.close();
+    }
+
+    pub async fn shutdown(&self) -> bool {
+        self.begin_shutdown();
         let deadline = Instant::now() + Duration::from_secs(5);
         loop {
             if self.inner.workers.load(Ordering::Acquire) == 0
@@ -246,8 +258,8 @@ async fn upgrade(
     let query = url::form_urlencoded::parse(request.uri().query().unwrap_or("").as_bytes())
         .into_owned()
         .collect::<Vec<_>>();
-    let user = match inner.auth.websocket_user(&query).await {
-        Ok(Some(user)) => user,
+    let role = match inner.identity.role(&query).await {
+        Ok(Some(role)) => role,
         _ => return status(StatusCode::FORBIDDEN),
     };
     if *inner.shutdown.borrow() {
@@ -255,7 +267,6 @@ async fn upgrade(
     }
     let upgraded = hyper::upgrade::on(&mut request);
     let inner = inner.clone();
-    let role = user.user_level;
     inner.workers.fetch_add(1, Ordering::AcqRel);
     tokio::spawn(async move {
         let _worker = Worker(Arc::downgrade(&inner));
@@ -389,6 +400,10 @@ async fn serve(
     buffers: OwnedSemaphorePermit,
     role: i32,
 ) {
+    let mut shutdown = inner.shutdown.subscribe();
+    if *shutdown.borrow() {
+        return;
+    }
     let config = WebSocketConfig::default()
         .read_buffer_size(16 * 1024)
         .write_buffer_size(0)
@@ -403,7 +418,6 @@ async fn serve(
         Err(_) => return,
     };
     let mut subscription_stopped = subscription.stopped();
-    let mut shutdown = inner.shutdown.subscribe();
     let (control_sender, mut control) = watch::channel(None::<End>);
     let (command_sender, mut commands) = mpsc::channel(1);
     let (pong_sender, mut pongs) = watch::channel(Bytes::new());
@@ -464,7 +478,7 @@ async fn serve(
             inner.config.send_timeout,
         )
         .await?;
-        if let Ok(Some(payload)) = inner.auth.websocket_cached_ip().await {
+        if let Ok(Some(payload)) = inner.identity.cached_ip().await {
             let mut data = serde_json::Map::new();
             data.insert("type".into(), Value::String("ip_lookup_complete".into()));
             if let Value::Object(payload) = payload {

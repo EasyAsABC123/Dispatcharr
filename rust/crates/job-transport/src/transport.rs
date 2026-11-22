@@ -1646,14 +1646,30 @@ fn map(error: ClassifiedError) -> Error {
         ClassifiedError::Server => Error::Corrupt,
     }
 }
-const PUBLISH: &str = r#"
+macro_rules! publish_script {
+    ($enqueue:literal) => {
+        concat!(
+            r#"
 local q=redis.call('TYPE',KEYS[1]).ok;local b=redis.call('TYPE',KEYS[2]).ok
 if(q~='none'and q~='list')or(b~='none'and b~='set')then return -3 end
 if #ARGV[1]>65536 then return -1 end
 if redis.call('LLEN',KEYS[1])>=tonumber(ARGV[2])then return -2 end
 redis.call('SADD',KEYS[2],'celery'..string.char(6,22)..string.char(6,22)..'celery')
-return redis.call('LPUSH',KEYS[1],ARGV[1])
-"#;
+"#,
+            $enqueue
+        )
+    };
+}
+const PUBLISH: &str = publish_script!("return redis.call('LPUSH',KEYS[1],ARGV[1])\n");
+// A server reply for the rejected LPUSH is conclusive. If the transport
+// loses the script reply, the result remains ambiguous.
+const PUBLISH_PROVIDER_REHASH: &str = publish_script!(
+    r#"
+local pushed=redis.pcall('LPUSH',KEYS[1],ARGV[1])
+if type(pushed)=='table' and pushed.err then return -4 end
+return pushed
+"#
+);
 const READ: &str = r#"
 local t=redis.call('TYPE',KEYS[1]).ok
 if t=='none'then return{0,''}end

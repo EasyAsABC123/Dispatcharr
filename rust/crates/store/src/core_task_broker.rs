@@ -68,6 +68,8 @@ impl ProviderRehashPublication {
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum ProviderRehashResult {
     Acknowledged,
+    /// Redis acknowledged that the LPUSH command was rejected.
+    Refused,
     Uncertain,
 }
 
