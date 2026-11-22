@@ -9,6 +9,12 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [4558a85b standalone wave](rust-m9-4558a85b-standalone-compose.md)
+passed six current-image Compose checks with verified cleanup. Nineteen other
+bindings passed preflight and still needed physical execution at this checkpoint.
+The remaining matrix entries include 101 blocked rows and one retained Original
+reference.
+
 The [f75cac4e formal wave](rust-m9-f75cac4e-formal-and-auth-hash.md) recorded
 four passes, one Auth Hash callback failure, 121 blocked nodes and one retained
 Original result across 127 required nodes. The Auth Hash workload and later
