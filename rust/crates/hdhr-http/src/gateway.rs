@@ -325,18 +325,7 @@ impl HdhrGateway {
                 lineup_status_auth_html(content, headers, self.inner.config.max_response_bytes)?;
             let mut response =
                 self.retained(StatusCode::UNAUTHORIZED, Some(body), memory, false)?;
-            response.headers_mut().extend([
-                (
-                    header::CONTENT_TYPE,
-                    HeaderValue::from_static("text/html; charset=utf-8"),
-                ),
-                (header::VARY, BROWSABLE_AUTH_VARY),
-                (
-                    header::WWW_AUTHENTICATE,
-                    HeaderValue::from_static("Bearer realm=\"api\""),
-                ),
-                (header::SET_COOKIE, set_cookie),
-            ]);
+            set_lineup_status_auth_headers(response.headers_mut(), set_cookie);
             return Ok(response);
         }
         let mut response = if method == Method::OPTIONS {
@@ -399,6 +388,23 @@ fn forced_browser_format(method: &Method, path: &str, format: Option<&str>) -> b
 
 const BROWSABLE_AUTH_VARY: HeaderValue = HeaderValue::from_static("Accept, origin, Cookie");
 const LINEUP_STATUS_AUTH_SHELL: &str = include!("../datasets/lineup-status-auth.rs");
+
+fn set_lineup_status_auth_headers(headers: &mut HeaderMap, set_cookie: HeaderValue) {
+    for (name, value) in [
+        (
+            header::CONTENT_TYPE,
+            HeaderValue::from_static("text/html; charset=utf-8"),
+        ),
+        (header::VARY, BROWSABLE_AUTH_VARY),
+        (
+            header::WWW_AUTHENTICATE,
+            HeaderValue::from_static("Bearer realm=\"api\""),
+        ),
+        (header::SET_COOKIE, set_cookie),
+    ] {
+        headers.insert(name, value);
+    }
+}
 
 fn lineup_status_auth_content(error: &StoreError) -> Option<&'static str> {
     let value = match error {
@@ -525,16 +531,17 @@ async fn dispatch(State(gateway): State<HdhrGateway>, request: Request<Body>) ->
         .handle(request)
         .await
         .unwrap_or_else(IntoResponse::into_response);
-    response
-        .headers_mut()
-        .insert("allow", allow.parse().unwrap());
-    if response.headers().get(header::VARY) != Some(&BROWSABLE_AUTH_VARY) {
-        response
-            .headers_mut()
-            .insert(header::VARY, HeaderValue::from_static("Accept, origin"));
-    }
+    set_dispatch_headers(response.headers_mut(), allow);
     response
 }
+
+fn set_dispatch_headers(headers: &mut HeaderMap, allow: &'static str) {
+    headers.insert(header::ALLOW, HeaderValue::from_static(allow));
+    if headers.get(header::VARY) != Some(&BROWSABLE_AUTH_VARY) {
+        headers.insert(header::VARY, HeaderValue::from_static("Accept, origin"));
+    }
+}
+
 pub(crate) fn unavailable() -> StoreError {
     StoreError::StatusBody(
         503,
@@ -741,6 +748,54 @@ mod tests {
         }
         assert!(lineup_status_auth_content(&StoreError::Unauthorized("Invalid API key")).is_none());
         assert!(lineup_status_auth_content(&StoreError::RateLimited(1)).is_none());
+    }
+
+    #[test]
+    fn browsable_auth_replaces_retained_json_type_without_duplicate_headers() {
+        let mut response = StoreError::Unauthorized("User inactive").into_response();
+        let headers = response.headers_mut();
+        // The body-retention helper initializes Content-Type and Content-Length.
+        headers.insert(header::CONTENT_LENGTH, HeaderValue::from_static("10317"));
+        let (_, _, cookie) = source_browsable_csrf(None);
+        let cookie = cookie.parse::<HeaderValue>().unwrap();
+        set_lineup_status_auth_headers(headers, cookie.clone());
+        set_dispatch_headers(headers, "GET, HEAD, OPTIONS");
+
+        for (name, expected) in [
+            (
+                header::CONTENT_TYPE,
+                HeaderValue::from_static("text/html; charset=utf-8"),
+            ),
+            (header::CONTENT_LENGTH, HeaderValue::from_static("10317")),
+            (header::VARY, BROWSABLE_AUTH_VARY),
+            (
+                header::WWW_AUTHENTICATE,
+                HeaderValue::from_static("Bearer realm=\"api\""),
+            ),
+            (
+                header::ALLOW,
+                HeaderValue::from_static("GET, HEAD, OPTIONS"),
+            ),
+            (header::SET_COOKIE, cookie),
+        ] {
+            assert_eq!(
+                headers.get_all(name).iter().collect::<Vec<_>>(),
+                [&expected]
+            );
+        }
+
+        let mut json = StoreError::Unauthorized("Invalid API key").into_response();
+        set_dispatch_headers(json.headers_mut(), "GET, HEAD, OPTIONS");
+        assert_eq!(json.headers()[header::CONTENT_TYPE], "application/json");
+        assert_eq!(json.headers()[header::VARY], "Accept, origin");
+        assert!(json.headers().get(header::SET_COOKIE).is_none());
+
+        let mut success = Json(json!({"ScanInProgress": 0})).into_response();
+        set_dispatch_headers(success.headers_mut(), "GET, HEAD, OPTIONS");
+        assert_eq!(success.status(), StatusCode::OK);
+        assert_eq!(success.headers()[header::CONTENT_TYPE], "application/json");
+        assert_eq!(success.headers()[header::VARY], "Accept, origin");
+        assert!(success.headers().get(header::WWW_AUTHENTICATE).is_none());
     }
 
     #[tokio::test]
