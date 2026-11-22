@@ -172,6 +172,32 @@ pub(crate) async fn publish(
     Ok(id)
 }
 
+pub(crate) async fn publish_provider_rehash(
+    auth: &AuthService,
+    scratch: &Scratch,
+    keys: Vec<String>,
+    account: i64,
+    token: &str,
+    admission: Option<&Arc<dyn crate::ProviderRehashAdmission>>,
+) -> Result<crate::ProviderRehashResult, StoreError> {
+    let task = "core.tasks.rehash_streams";
+    let args = json!([keys]);
+    let kwargs = json!({"account_id":account,"locks_preacquired":true,
+        "preacquired_lock_ids":[account],"preacquired_lock_token":token});
+    match admission {
+        Some(admission) => {
+            let (raw, id, charge) = build_frame(auth, scratch, task, args, kwargs)?;
+            let publication = crate::ProviderRehashPublication(CoreTaskPublication::new(raw, &id)?);
+            let owner = Arc::new((auth.core_publication_owner(charge), admission.clone()));
+            admission.publish(publication, owner).await
+        }
+        None => {
+            publish(auth, scratch, task, args, kwargs).await?;
+            Ok(crate::ProviderRehashResult::Acknowledged)
+        }
+    }
+}
+
 pub(crate) async fn publish_tvg_programmes(
     auth: &AuthService,
     epg_data_id: i64,

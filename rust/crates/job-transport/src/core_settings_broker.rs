@@ -3,7 +3,17 @@
 use crate::transport::{Error, Jobs};
 use dispatcharr_contracts::BoxFuture;
 use dispatcharr_store::{CoreProfilePublication, CoreTaskBroker, CoreTaskPublication, StoreError};
-use std::sync::Arc;
+use dispatcharr_store::{
+    ProviderRehashAdmission, ProviderRehashBroker, ProviderRehashPublication, ProviderRehashResult,
+};
+use std::{
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    time::Duration,
+};
+use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 pub struct Publisher {
     jobs: Jobs,
 }
@@ -45,6 +55,92 @@ impl CoreTaskBroker for Publisher {
                 Err(_) => Err(StoreError::Unsupported(
                     "Actual shared Core broker publication did not acknowledge",
                 )),
+            }
+        })
+    }
+}
+
+/// Scoped provider producer over the registry's same Jobs. The route guards
+/// are unrelated to the broad Selected broker above.
+pub struct ProviderRehashProducer {
+    jobs: Jobs,
+    closed: AtomicBool,
+    slot: Arc<Semaphore>,
+}
+
+impl ProviderRehashProducer {
+    pub fn new(jobs: Jobs) -> Self {
+        Self {
+            jobs,
+            closed: AtomicBool::new(false),
+            slot: Arc::new(Semaphore::new(1)),
+        }
+    }
+
+    pub fn stop_admission(&self) {
+        self.closed.store(true, Ordering::Release);
+    }
+
+    pub async fn drain(&self, budget: Duration) -> bool {
+        self.stop_admission();
+        tokio::time::timeout(budget, self.slot.clone().acquire_owned())
+            .await
+            .is_ok_and(|result| result.is_ok())
+    }
+}
+
+struct RehashAdmission {
+    jobs: Jobs,
+    _permit: OwnedSemaphorePermit,
+}
+
+fn provider_rehash_unavailable() -> StoreError {
+    StoreError::Unsupported("Scoped provider rehash publisher unavailable")
+}
+
+impl ProviderRehashBroker for ProviderRehashProducer {
+    fn admit(&self) -> Result<Arc<dyn ProviderRehashAdmission>, StoreError> {
+        if self.closed.load(Ordering::Acquire) {
+            return Err(provider_rehash_unavailable());
+        }
+        let permit = self
+            .slot
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| provider_rehash_unavailable())?;
+        if self.closed.load(Ordering::Acquire) {
+            return Err(provider_rehash_unavailable());
+        }
+        Ok(Arc::new(RehashAdmission {
+            jobs: self.jobs.clone(),
+            _permit: permit,
+        }))
+    }
+}
+
+impl ProviderRehashAdmission for RehashAdmission {
+    fn publish(
+        &self,
+        publication: ProviderRehashPublication,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<ProviderRehashResult, StoreError>> {
+        Box::pin(async move {
+            let frame = publication.into_core();
+            let parsed = crate::normal_core_tasks::parse(frame.bytes())
+                .map_err(|_| provider_rehash_unavailable())?;
+            if !crate::normal_core_tasks::owned_provider_rehash(&parsed.kind) {
+                return Err(provider_rehash_unavailable());
+            }
+            match self.jobs.publish_core_settings(frame, owner).await {
+                Ok(()) => Ok(ProviderRehashResult::Acknowledged),
+                Err(
+                    Error::Capacity
+                    | Error::Closed
+                    | Error::Configuration
+                    | Error::Protocol
+                    | Error::UnsupportedTask,
+                ) => Err(provider_rehash_unavailable()),
+                Err(_) => Ok(ProviderRehashResult::Uncertain),
             }
         })
     }

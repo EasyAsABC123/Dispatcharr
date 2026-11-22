@@ -283,6 +283,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let core_plugin_refresh =
         core_scheduled_jobs::plugin_refresh_enabled(core_scheduled_jobs_enabled)?;
     let core_plugin_startup = core_scheduled_jobs::plugin_startup_enabled(core_plugin_refresh)?;
+    let core_provider_rehash =
+        core_scheduled_jobs::provider_rehash_enabled(core_scheduled_jobs_enabled)?;
     let shutdown_timeout = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
     let core_restore_grace =
         core_scheduled_jobs::restore_grace(core_scheduled_jobs_enabled, shutdown_timeout)?;
@@ -770,28 +772,34 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         let counts = dispatcharr_xc_http::counts::ConnectionCounts::connect_source(redis_url)
             .await
             .map_err(|_| "XC counter initialization failed (credentials omitted)")?;
+        let gateway = dispatcharr_xc_http::XcGateway::new(
+            store.clone(),
+            auth.clone(),
+            counts,
+            dispatcharr_xc_http::XcConfig {
+                max_requests: positive("RUST_MAX_XC_REQUESTS", 32)?,
+                max_rows: positive("RUST_MAX_XC_CHANNELS", 50000)?,
+                max_body_bytes: positive("RUST_XC_BODY_BYTES", 64 * 1024)?,
+                max_metadata_bytes: positive("RUST_XC_METADATA_BYTES", 8 * 1024 * 1024)?,
+                max_response_bytes: positive("RUST_XC_RESPONSE_BYTES", 16 * 1024 * 1024)?,
+                max_number_bytes: positive("RUST_XC_NUMBER_BYTES", 128 * 1024 * 1024)?,
+                max_memory_bytes: positive("RUST_XC_MEMORY_BYTES", 192 * 1024 * 1024)?,
+                request_deadline: Duration::from_secs(positive(
+                    "RUST_XC_REQUEST_TIMEOUT_SECONDS",
+                    15,
+                )? as u64),
+            },
+        )
+        .map_err(|_| "XC initialization failed (credentials omitted)")?
+        .with_epg()
+        .with_vod_lists();
         Some(
-            dispatcharr_xc_http::XcGateway::new(
-                store.clone(),
-                auth.clone(),
-                counts,
-                dispatcharr_xc_http::XcConfig {
-                    max_requests: positive("RUST_MAX_XC_REQUESTS", 32)?,
-                    max_rows: positive("RUST_MAX_XC_CHANNELS", 50000)?,
-                    max_body_bytes: positive("RUST_XC_BODY_BYTES", 64 * 1024)?,
-                    max_metadata_bytes: positive("RUST_XC_METADATA_BYTES", 8 * 1024 * 1024)?,
-                    max_response_bytes: positive("RUST_XC_RESPONSE_BYTES", 16 * 1024 * 1024)?,
-                    max_number_bytes: positive("RUST_XC_NUMBER_BYTES", 128 * 1024 * 1024)?,
-                    max_memory_bytes: positive("RUST_XC_MEMORY_BYTES", 192 * 1024 * 1024)?,
-                    request_deadline: Duration::from_secs(positive(
-                        "RUST_XC_REQUEST_TIMEOUT_SECONDS",
-                        15,
-                    )? as u64),
-                },
-            )
-            .map_err(|_| "XC initialization failed (credentials omitted)")?
-            .with_epg()
-            .with_vod_lists(),
+            if env::var_os("RUST_XC_CACHED_VOD_INFO").as_deref() == Some(std::ffi::OsStr::new("1"))
+            {
+                gateway.with_cached_vod_info()
+            } else {
+                gateway
+            },
         )
     } else {
         None
@@ -1142,6 +1150,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
                 ),
                 version_task_options(),
                 core_plugin_refresh,
+                core_provider_rehash,
                 selected_jobs_enabled
                     || refresh_enabled
                     || version_tasks_enabled

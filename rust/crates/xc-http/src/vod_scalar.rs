@@ -1,7 +1,7 @@
 //! Borrowed Source Python scalar str()/float() for XC info fields.
 //! Composite repr and nonfinite values remain explicit unqualified grammar.
 //! Original Dispatcharr/CPython authors retain algorithm credit.
-use crate::vod_span::{self, RawValue};
+use crate::vod_span::RawValue;
 use crate::{vod_json, vod_lists::Error};
 use std::borrow::Cow;
 
@@ -64,7 +64,7 @@ pub(crate) fn duration(seconds: Option<i32>) -> String {
 mod tests {
     use super::*;
     fn raw(s: &str) -> &RawValue {
-        vod_span::parse(s).unwrap()
+        crate::vod_span::parse(s).unwrap()
     }
     #[test]
     fn scalar_representations_preserve_source_types() {

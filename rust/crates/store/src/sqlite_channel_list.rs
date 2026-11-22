@@ -2,6 +2,7 @@
 //! Original Dispatcharr authors retain full credit.
 use crate::{channels, StoreError, User};
 use chrono::NaiveDateTime;
+use futures_util::TryStreamExt;
 use serde_json::{json, Value};
 use sqlx::{QueryBuilder, Row, Sqlite, SqliteConnection};
 use std::collections::HashMap;
@@ -68,6 +69,7 @@ fn filters(
     query: &mut QueryBuilder<'_, Sqlite>,
     params: &HashMap<String, String>,
     user: &User,
+    detail: bool,
 ) -> Result<(), StoreError> {
     if user.user_level < 10 {
         query.push(" AND c.user_level<=").push_bind(user.user_level);
@@ -79,13 +81,15 @@ fn filters(
             .push(") OR EXISTS(SELECT 1 FROM accounts_user_channel_profiles up JOIN dispatcharr_channels_channelprofilemembership m ON m.channel_profile_id=up.channelprofile_id WHERE up.user_id=")
             .push_bind(user.id).push(" AND m.channel_id=c.id AND m.enabled))");
     }
-    match params.get("visibility_filter").map(String::as_str) {
-        Some("hidden") => {
-            query.push(" AND c.hidden_from_output");
-        }
-        Some("all") => {}
-        _ => {
-            query.push(" AND NOT c.hidden_from_output");
+    if !detail {
+        match params.get("visibility_filter").map(String::as_str) {
+            Some("hidden") => {
+                query.push(" AND c.hidden_from_output");
+            }
+            Some("all") => {}
+            _ => {
+                query.push(" AND NOT c.hidden_from_output");
+            }
         }
     }
     if let Some(profile) = params
@@ -186,13 +190,8 @@ fn project(
     base: &Url,
 ) -> Result<Value, StoreError> {
     let mut raw: Value = json_column(&row, "raw")?;
-    let identity = raw["uuid"]
-        .as_str()
-        .and_then(|value| uuid::Uuid::parse_str(value).ok())
-        .ok_or(StoreError::Unsupported(
-            "Malformed copied SQLite channel UUID",
-        ))?;
-    raw["uuid"] = Value::String(identity.to_string());
+    let identity = channel_uuid(raw["uuid"].as_str())?;
+    raw["uuid"] = Value::String(identity);
     let overrides: Option<Value> = json_column(&row, "overrides")?;
     let mut streams: Vec<Value> = json_column(&row, "streams")?;
     for stream in &mut streams {
@@ -216,19 +215,78 @@ fn project(
     ))
 }
 
-pub(crate) async fn collection(
+fn channel_uuid(value: Option<&str>) -> Result<String, StoreError> {
+    value
+        .and_then(|value| uuid::Uuid::parse_str(value).ok())
+        .map(|identity| identity.to_string())
+        .ok_or(StoreError::Unsupported(
+            "Malformed copied SQLite channel UUID",
+        ))
+}
+
+#[derive(Clone, Copy)]
+pub(crate) enum ChannelProjection {
+    Ids,
+    Summary,
+}
+
+pub(crate) async fn read_projection(
+    connection: &mut SqliteConnection,
+    user: &User,
+    params: &HashMap<String, String>,
+    projection: ChannelProjection,
+) -> Result<Value, StoreError> {
+    let fields = match projection {
+        ChannelProjection::Ids => "c.id",
+        ChannelProjection::Summary => {
+            "c.id, c.uuid, COALESCE(o.name,c.name) AS name,
+            COALESCE(o.logo_id,c.logo_id) AS logo_id,
+            COALESCE(o.channel_number,c.channel_number) AS channel_number,
+            COALESCE(o.epg_data_id,c.epg_data_id) AS epg_data_id,
+            COALESCE(o.channel_group_id,c.channel_group_id) AS channel_group_id"
+        }
+    };
+    let mut query = QueryBuilder::new(format!("SELECT {fields}{CHANNELS}"));
+    filters(&mut query, params, user, false)?;
+    query
+        .push(" ORDER BY ")
+        .push(channels::channel_ordering(params));
+    let mut rows = query.build().fetch(connection);
+    let mut values = Vec::new();
+    while let Some(row) = rows.try_next().await? {
+        let id: i64 = row.try_get("id")?;
+        let value = match projection {
+            ChannelProjection::Ids => Value::from(id),
+            ChannelProjection::Summary => json!({
+                "id": id,
+                "uuid": channel_uuid(Some(row.try_get::<&str, _>("uuid")?))?,
+                "name": row.try_get::<String, _>("name")?,
+                "logo_id": row.try_get::<Option<i64>, _>("logo_id")?,
+                "channel_number": row.try_get::<f64, _>("channel_number")?,
+                "epg_data_id": row.try_get::<Option<i64>, _>("epg_data_id")?,
+                "channel_group_id": row.try_get::<Option<i64>, _>("channel_group_id")?,
+            }),
+        };
+        values.push(value);
+    }
+    Ok(Value::Array(values))
+}
+
+pub(crate) async fn read(
     connection: &mut SqliteConnection,
     user: &User,
     params: &HashMap<String, String>,
     base: &Url,
+    detail: Option<i64>,
 ) -> Result<Value, StoreError> {
-    let paginated = ["page", "page_size"]
-        .iter()
-        .any(|key| params.get(*key).is_some_and(|value| !value.is_empty()));
+    let paginated = detail.is_none()
+        && ["page", "page_size"]
+            .iter()
+            .any(|key| params.get(*key).is_some_and(|value| !value.is_empty()));
     let size = channels::channel_page_size(params);
     let count = if paginated {
         let mut count_query = QueryBuilder::new(format!("SELECT count(*){CHANNELS}"));
-        filters(&mut count_query, params, user)?;
+        filters(&mut count_query, params, user, false)?;
         count_query
             .build_query_scalar::<i64>()
             .fetch_one(&mut *connection)
@@ -238,7 +296,20 @@ pub(crate) async fn collection(
     };
     let (page, pages) = channels::channel_page(params, paginated, count, size)?;
     let mut query = QueryBuilder::new(projected_select());
-    filters(&mut query, params, user)?;
+    filters(&mut query, params, user, detail.is_some())?;
+    let include = params
+        .get("include_streams")
+        .is_some_and(|value| value == "true");
+    let admin = user.user_level >= 10;
+    if let Some(id) = detail {
+        query.push(" AND c.id=").push_bind(id);
+        let row = query
+            .build()
+            .fetch_optional(connection)
+            .await?
+            .ok_or_else(channels::missing)?;
+        return project(row, include, admin, base);
+    }
     query
         .push(" ORDER BY ")
         .push(channels::channel_ordering(params));
@@ -250,12 +321,9 @@ pub(crate) async fn collection(
             .push_bind(((page - 1) * size) as i64);
     }
     let rows = query.build().fetch_all(&mut *connection).await?;
-    let include = params
-        .get("include_streams")
-        .is_some_and(|value| value == "true");
     let payload = rows
         .into_iter()
-        .map(|row| project(row, include, user.user_level >= 10, base))
+        .map(|row| project(row, include, admin, base))
         .collect::<Result<Vec<_>, _>>()?;
     if !paginated {
         return Ok(Value::Array(payload));

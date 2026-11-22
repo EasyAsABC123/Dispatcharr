@@ -3,10 +3,18 @@
 
 use super::*;
 use crate::{auth, auth_throttle, AuthConfig, NotificationCache};
+
 use sqlx::{sqlite::SqliteRow, SqlitePool};
 #[cfg(feature = "sqlite-copied-data-runtime")]
 use std::collections::HashMap;
 use tokio::sync::Semaphore;
+
+#[cfg(feature = "sqlite-copied-data-runtime")]
+pub(crate) enum ChannelRead {
+    Collection,
+    Detail(String),
+    Projection(crate::channels::sqlite_list::ChannelProjection),
+}
 
 const SUBJECT_SQL: &str = "SELECT id,is_active,user_level,stream_limit,CASE WHEN length(CAST(username AS BLOB))+length(CAST(password AS BLOB))<=2048 THEN username END AS username,CASE WHEN length(CAST(username AS BLOB))+length(CAST(password AS BLOB))<=2048 THEN password END AS password,length(CAST(COALESCE(custom_properties,'{}') AS BLOB)) AS properties_bytes,CASE WHEN length(CAST(COALESCE(custom_properties,'{}') AS BLOB))<=?2 THEN COALESCE(custom_properties,'{}') END AS properties_text FROM accounts_user WHERE id=?1 LIMIT 2";
 const SQLITE_GROUP_SQL: &str = "SELECT value IS NULL AS sql_null,length(CAST(value AS BLOB)) AS bytes,CASE WHEN length(CAST(value AS BLOB))<=?2 THEN value END AS raw FROM core_coresettings WHERE key=?1";
@@ -112,30 +120,52 @@ impl RetainedSqliteRestReads {
     }
 
     #[cfg(feature = "sqlite-copied-data-runtime")]
-    pub(crate) async fn channel_collection(
+    pub(crate) async fn channel_read(
         &self,
         peer: SocketAddr,
         headers: HeaderMap,
         uri: &axum::http::Uri,
         params: HashMap<String, String>,
+        operation: ChannelRead,
     ) -> Result<Value, StoreError> {
         let subject = self
             .bearer_account_user(peer, headers.clone(), false)
             .await?;
         crate::channel_groups::collection_permission(subject.user())?;
+        let detail = match &operation {
+            ChannelRead::Detail(id) => Some(
+                id.parse()
+                    .map_err(|_| StoreError::StatusBody(404, json!({"detail":"Not found."})))?,
+            ),
+            _ => None,
+        };
         let base = crate::channels::base_url(&headers, uri)?;
         let pool = self.pool.clone();
         supervised_sql_read(self.permit.clone(), async move {
             let mut connection = pool.acquire().await?;
             let result = async {
                 let mut transaction = connection.begin().await?;
-                let read = crate::channels::sqlite_list::collection(
-                    &mut transaction,
-                    subject.user(),
-                    &params,
-                    &base,
-                )
-                .await;
+                let read = match operation {
+                    ChannelRead::Projection(projection) => {
+                        crate::channels::sqlite_list::read_projection(
+                            &mut transaction,
+                            subject.user(),
+                            &params,
+                            projection,
+                        )
+                        .await
+                    }
+                    _ => {
+                        crate::channels::sqlite_list::read(
+                            &mut transaction,
+                            subject.user(),
+                            &params,
+                            &base,
+                            detail,
+                        )
+                        .await
+                    }
+                };
                 if read.is_ok() {
                     transaction.commit().await?;
                 } else {

@@ -512,7 +512,8 @@ pub mod channel_maintenance_http;
 
 mod core_task_broker;
 pub use core_task_broker::{
-    CoreProfilePublication, CoreTaskBroker, CoreTaskPublication, TvgProgrammePublication,
+    CoreProfilePublication, CoreTaskBroker, CoreTaskPublication, ProviderRehashAdmission,
+    ProviderRehashBroker, ProviderRehashPublication, ProviderRehashResult, TvgProgrammePublication,
     TvgProgrammePublisher,
 };
 pub mod xc_account_http;

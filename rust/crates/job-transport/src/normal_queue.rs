@@ -254,6 +254,10 @@ impl CoreScheduledWorker {
             dispatcharr_store::AuthService,
             crate::normal_revocation::Revoked,
         )>,
+        rehash: Option<(
+            dispatcharr_store::AuthService,
+            crate::normal_revocation::Revoked,
+        )>,
         poll: Duration,
     ) -> Result<Self, Error> {
         let jobs = backup.scheduled_jobs();
@@ -272,7 +276,7 @@ impl CoreScheduledWorker {
         .map_err(|_| Error::Configuration)?;
         let version = crate::version_application::prepare_shared_handler(
             store,
-            events,
+            events.clone(),
             jobs.clone(),
             version_options,
         )
@@ -281,6 +285,18 @@ impl CoreScheduledWorker {
         let plugin_refresh = plugin_refresh
             .map(|(auth, revoked)| {
                 crate::normal_plugin_repos::Prepared::new(jobs.clone(), auth, revoked)
+            })
+            .transpose()
+            .map_err(|_| Error::Configuration)?;
+        let rehash = rehash
+            .map(|(auth, revoked)| {
+                crate::normal_core_tasks::prepare_provider_rehash(
+                    jobs.clone(),
+                    store,
+                    auth,
+                    events,
+                    revoked,
+                )
             })
             .transpose()
             .map_err(|_| Error::Configuration)?;
@@ -295,6 +311,7 @@ impl CoreScheduledWorker {
         for (family, inner) in entries
             .into_iter()
             .chain(plugin_refresh.as_ref().map(|prepared| prepared.entry()))
+            .chain(rehash.map(|handler| (Family::RehashStreams, handler)))
         {
             let maximum = inner.maximum_concurrency();
             validate_family_admission(family, maximum, inner.supports_selected_head())?;

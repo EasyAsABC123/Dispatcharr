@@ -3,6 +3,49 @@ use num_bigint::BigInt;
 use serde_json::{Number, Value};
 use std::str::FromStr;
 
+pub(crate) enum DefaultJsonError {
+    Invalid,
+    Capacity,
+}
+
+/// Match Python JSON's default number formatting, separators, ASCII escaping,
+/// and object member order.
+pub(crate) fn default_json_bytes(value: &Value, limit: usize) -> Result<Vec<u8>, DefaultJsonError> {
+    let raw = compact_json_bytes(value).map_err(|_| DefaultJsonError::Invalid)?;
+    if raw.len() > limit {
+        return Err(DefaultJsonError::Capacity);
+    }
+    let raw = std::str::from_utf8(&raw).map_err(|_| DefaultJsonError::Invalid)?;
+    let mut output = Vec::new();
+    let (mut quoted, mut escaped) = (false, false);
+    for ch in raw.chars() {
+        if ch > '\u{7e}' {
+            for unit in ch.encode_utf16(&mut [0; 2]) {
+                output.extend_from_slice(format!("\\u{unit:04x}").as_bytes());
+            }
+        } else {
+            output.push(ch as u8);
+        }
+        if quoted {
+            if escaped {
+                escaped = false
+            } else if ch == '\\' {
+                escaped = true
+            } else if ch == '"' {
+                quoted = false
+            }
+        } else if ch == '"' {
+            quoted = true
+        } else if matches!(ch, ',' | ':') {
+            output.push(b' ')
+        }
+        if output.len() > limit {
+            return Err(DefaultJsonError::Capacity);
+        }
+    }
+    Ok(output)
+}
+
 /// Callers validate finite JSON floats before formatting. Keep Python's
 /// notation thresholds while using the existing round-to-even shortest digits.
 pub(crate) fn float_string(value: f64) -> String {

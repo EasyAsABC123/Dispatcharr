@@ -4,6 +4,29 @@ use super::*;
 use dispatcharr_store::{AuthConfig, NotificationCache};
 use http_body_util::BodyExt;
 use std::future::IntoFuture;
+#[test]
+fn cached_info_live_scope_uses_wall_clock_and_accepts_only_ordinary_get_ids() {
+    for value in ["1", "20", "9223372036854775807"] {
+        assert!(ordinary_cached_info_request(&Method::GET, Some(value)));
+        assert!(!ordinary_cached_info_request(&Method::HEAD, Some(value)));
+        assert!(!ordinary_cached_info_request(&Method::POST, Some(value)));
+    }
+    for value in [
+        None,
+        Some(""),
+        Some("0"),
+        Some("01"),
+        Some("1.0"),
+        Some("9223372036854775808"),
+    ] {
+        assert!(!ordinary_cached_info_request(&Method::GET, value));
+    }
+    let before = chrono::Utc::now().timestamp_micros();
+    let current = CachedInfoClock::Wall.micros();
+    let after = chrono::Utc::now().timestamp_micros();
+    assert!((before..=after).contains(&current));
+    assert_eq!(CachedInfoClock::Fixture(365).micros(), 365);
+}
 async fn fixture() -> (XcGateway, String) {
     let url = std::env::var("DATABASE_TEST_URL").expect("disposable original PostgreSQL fixture");
     assert!(url.contains("playback-fixture-only"));

@@ -222,19 +222,64 @@ pub(crate) fn parse(raw: &[u8]) -> Result<Message, ()> {
         kind,
     })
 }
-struct Inner {
-    jobs: Jobs,
+struct SelectedResources {
     store: Store,
-    auth: AuthService,
     recordings: Arc<dyn RecordingJobs>,
     recording_http: RecordingHttp,
     scheduled_vod: ScheduledVod,
+}
+struct Inner {
+    jobs: Jobs,
+    auth: AuthService,
+    selected: Option<SelectedResources>,
     events: Arc<dyn UpdateEventSink>,
     revoked: Revoked,
     closed: AtomicBool,
     slots: Arc<Semaphore>,
     uncertain: Mutex<Vec<Arc<dyn Send + Sync>>>,
 }
+impl Inner {
+    fn selected(&self) -> Result<&SelectedResources, D> {
+        self.selected.as_ref().ok_or(D::UnsupportedDomain)
+    }
+
+    fn closed_before_claim(&self, selected_reason: &'static str) -> Result<D, D> {
+        if self.selected.is_none() {
+            Ok(D::NotDue)
+        } else {
+            Err(D::Operational(selected_reason.into()))
+        }
+    }
+}
+
+pub(super) fn owned_provider_rehash(kind: &Kind) -> bool {
+    matches!(kind, Kind::Rehash(Request {account: Some(account), preacquired: true, ids, token: Some(token), ..})
+        if ids.as_slice() == [*account]
+            && token.len() == 32
+            && token.bytes().all(|value| value.is_ascii_digit() || (b'a'..=b'f').contains(&value)))
+}
+
+/// Prepare only the qualified provider rehash consumer on already-owned Jobs.
+/// The future registry owns the shared queue and transport retirement.
+pub fn prepare_provider_rehash(
+    jobs: Jobs,
+    store: &Store,
+    auth: AuthService,
+    events: Arc<dyn UpdateEventSink>,
+    revoked: Revoked,
+) -> Result<Arc<dyn Handler>, D> {
+    if !jobs.allows_defaults()
+        || !auth.uses_store_pool(store)
+        || !dispatcharr_store::core_task_rehash::available(&auth)
+    {
+        return Err(D::UnsupportedDomain);
+    }
+    Ok(Arc::new(Worker {
+        inner: Prepared::resources(jobs, auth, events, revoked, None),
+        family: Family::RehashStreams,
+    }))
+}
+
 #[derive(Clone)]
 pub struct Prepared {
     inner: Arc<Inner>,
@@ -262,21 +307,41 @@ impl Prepared {
             return Err(D::UnsupportedDomain);
         }
         Ok(Self {
-            inner: Arc::new(Inner {
+            inner: Self::resources(
                 jobs,
-                store,
                 auth,
-                recordings,
-                recording_http,
-                scheduled_vod,
                 events,
                 revoked,
-                closed: AtomicBool::new(false),
-                slots: Arc::new(Semaphore::new(2)),
-                uncertain: Mutex::new(Vec::with_capacity(2)),
-            }),
+                Some(SelectedResources {
+                    store,
+                    recordings,
+                    recording_http,
+                    scheduled_vod,
+                }),
+            ),
         })
     }
+
+    fn resources(
+        jobs: Jobs,
+        auth: AuthService,
+        events: Arc<dyn UpdateEventSink>,
+        revoked: Revoked,
+        selected: Option<SelectedResources>,
+    ) -> Arc<Inner> {
+        let capacity = if selected.is_some() { 2 } else { 1 };
+        Arc::new(Inner {
+            jobs,
+            auth,
+            selected,
+            events,
+            revoked,
+            closed: AtomicBool::new(false),
+            slots: Arc::new(Semaphore::new(capacity)),
+            uncertain: Mutex::new(Vec::with_capacity(capacity)),
+        })
+    }
+
     pub fn entries(&self) -> Vec<(Family, Arc<dyn Handler>)> {
         [
             Family::RehashStreams,
@@ -364,9 +429,9 @@ where
             run
         }
     };
+    let scheduled_vod = &inner.selected()?.scheduled_vod;
     let claimed = match task {
-        ScheduledVodTask::Series(account) => inner
-            .scheduled_vod
+        ScheduledVodTask::Series(account) => scheduled_vod
             .run_series(account, owner.clone(), authorizer)
             .await
             .map(|count| {
@@ -376,8 +441,7 @@ where
                     ))
                 })
             }),
-        ScheduledVodTask::Movie(relation) => inner
-            .scheduled_vod
+        ScheduledVodTask::Movie(relation) => scheduled_vod
             .run_movie(relation, owner.clone(), authorizer)
             .await
             .map(|result| result.map(|result| json!(result))),
@@ -447,7 +511,7 @@ struct Worker {
 impl Worker {
     async fn run(&self, expected: Option<Arc<[u8]>>, caller: Arc<dyn Send + Sync>) -> Result<D, D> {
         if self.inner.closed.load(Ordering::Acquire) {
-            return Err(D::Operational("Core workers closed".into()));
+            return self.inner.closed_before_claim("Core workers closed");
         }
         let slot = self
             .inner
@@ -479,6 +543,9 @@ impl Worker {
             if candidate.message.kind.family() != family {
                 return Err(D::UnsupportedHead);
             }
+            if inner.selected.is_none() && !owned_provider_rehash(&candidate.message.kind) {
+                return Err(D::UnsupportedDomain);
+            }
             let scheduled = match candidate.message.kind {
                 Kind::ScheduledSeriesEpisodes(account) => Some(ScheduledVodTask::Series(account)),
                 Kind::ScheduledMovieAdvanced(relation) => Some(ScheduledVodTask::Movie(relation)),
@@ -494,12 +561,12 @@ impl Worker {
                 Kind::Rehash(_) => {
                     dispatcharr_store::core_task_rehash::preflight(&inner.auth).await
                 }
-                Kind::RecurringPurge(rule) => preflight_recurring_purge(&inner.store, *rule).await,
-                Kind::RecurringRebuild { rule, schedule } => inner.recording_http
+                Kind::RecurringPurge(rule) => preflight_recurring_purge(&inner.selected()?.store, *rule).await,
+                Kind::RecurringRebuild { rule, schedule } => inner.selected()?.recording_http
                     .preflight_configured_recurring_rebuild(*rule, schedule, owner.clone()).await,
                 Kind::ScheduledSeriesEpisodes(_) | Kind::ScheduledMovieAdvanced(_) => unreachable!("separate pre-claim refresh admission"),
                 Kind::Offsets => {
-                    inner
+                    inner.selected()?
                         .recordings
                         .admit_scheduling(owner.clone())
                         .await
@@ -507,12 +574,12 @@ impl Worker {
                             dispatcharr_store::recording_http::RecordingEffectError::Unsupported => D::UnsupportedDomain,
                             _ => D::Operational("Recording domain admission is unsettled".into()),
                         })?;
-                    dispatcharr_store::core_task_offsets::preflight(&inner.store).await
+                    dispatcharr_store::core_task_offsets::preflight(&inner.selected()?.store).await
                 }
             }
             .map_err(|_| D::UnsupportedDomain)?;
             if inner.closed.load(Ordering::Acquire) {
-                return Err(D::Operational("Core intake stopped before claim".into()));
+                return inner.closed_before_claim("Core intake stopped before claim");
             }
             let message = match inner.jobs.claim_core_task(candidate, owner.clone()).await {
                 Ok(v) => v,
@@ -544,7 +611,7 @@ impl Worker {
                         ),
                         Kind::RecurringPurge(rule) => (
                             json!(execute_recurring_purge(
-                                &inner.store,
+                                &inner.selected()?.store,
                                 &inner.auth,
                                 inner.events.clone(),
                                 *rule,
@@ -555,16 +622,17 @@ impl Worker {
                             Vec::new(),
                         ),
                         Kind::RecurringRebuild { rule, schedule } => {
-                            let report = inner.recording_http
+                            let report = inner.selected()?.recording_http
                                 .execute_configured_recurring_rebuild(*rule, schedule, message.id, owner.clone())
                                 .await.map_err(|error| D::Operational(format!("Recurring rebuild effects {error:?}")))?;
                             (report.value, report.children)
                         }
                         Kind::ScheduledSeriesEpisodes(_) | Kind::ScheduledMovieAdvanced(_) => unreachable!("separate pre-claim refresh admission"),
                         Kind::Offsets => {
+                            let selected = inner.selected()?;
                             let report = dispatcharr_store::core_task_offsets::execute(
-                                inner.store.clone(),
-                                inner.recordings.clone(),
+                                selected.store.clone(),
+                                selected.recordings.clone(),
                                 inner.events.clone(),
                                 message.id,
                                 owner.clone(),
@@ -635,11 +703,16 @@ impl Lifecycle for Worker {
     fn shutdown(&self, timeout: Duration) -> BoxFuture<'_, Result<(), D>> {
         Box::pin(async move {
             self.stop_admission();
-            let owned =
-                tokio::time::timeout(timeout, self.inner.slots.clone().acquire_many_owned(2))
-                    .await
-                    .map_err(|_| D::Operational("Core physical drain incomplete".into()))?
-                    .map_err(|_| D::Operational("Core permits closed".into()))?;
+            let owned = tokio::time::timeout(
+                timeout,
+                self.inner
+                    .slots
+                    .clone()
+                    .acquire_many_owned(if self.inner.selected.is_some() { 2 } else { 1 }),
+            )
+            .await
+            .map_err(|_| D::Operational("Core physical drain incomplete".into()))?
+            .map_err(|_| D::Operational("Core permits closed".into()))?;
             drop(owned);
             Ok(())
         })
@@ -649,6 +722,38 @@ impl Lifecycle for Worker {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn provider_rehash_owns_only_the_single_account_handoff() {
+        let request = Request {
+            keys: vec!["name".into()],
+            account: Some(27),
+            preacquired: true,
+            ids: vec![27],
+            token: Some("a".repeat(32)),
+        };
+        assert!(owned_provider_rehash(&Kind::Rehash(request.clone())));
+        assert!(!owned_provider_rehash(&Kind::Rehash(Request {
+            account: None,
+            ..request.clone()
+        })));
+        assert!(!owned_provider_rehash(&Kind::Rehash(Request {
+            ids: vec![27, 31],
+            ..request.clone()
+        })));
+        assert!(!owned_provider_rehash(&Kind::Rehash(Request {
+            preacquired: false,
+            ..request.clone()
+        })));
+        assert!(!owned_provider_rehash(&Kind::Rehash(Request {
+            token: Some("a".repeat(31)),
+            ..request.clone()
+        })));
+        assert!(!owned_provider_rehash(&Kind::Rehash(Request {
+            token: None,
+            ..request
+        })));
+        assert!(!owned_provider_rehash(&Kind::Offsets));
+    }
     #[test]
     fn configured_rebuild_requires_exact_saved_rule_and_two_day_horizon() {
         let task = Uuid::new_v4();

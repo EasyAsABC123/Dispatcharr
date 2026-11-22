@@ -1202,6 +1202,16 @@ async fn edit_without_broker(
         .await?
 }
 
+fn provider_rehash_patch(input: &Map<String, Value>, existing: bool, partial: bool) -> bool {
+    existing
+        && partial
+        && input.len() == 1
+        && input
+            .get("hash_key")
+            .and_then(Value::as_str)
+            .is_some_and(|value| !crate::core_settings_special::hash_fields_text(value).is_empty())
+}
+
 async fn change(
     auth: AuthService,
     peer: SocketAddr,
@@ -1216,6 +1226,14 @@ async fn change(
     let broker_missing = auth.core_task_broker.get().is_none();
     let queue_free_edit = if broker_missing && partial && id.is_some() {
         queue_free_provider_edit(&input)
+    } else {
+        None
+    };
+    let rehash = if broker_missing && provider_rehash_patch(&input, id.is_some(), partial) {
+        auth.provider_rehash_broker
+            .get()
+            .map(|broker| broker.admit())
+            .transpose()?
     } else {
         None
     };
@@ -1249,7 +1267,7 @@ async fn change(
     };
     if auth.profile_save_signal.is_none()
         || auth.event_sink.is_none()
-        || (broker_missing && queue_free_edit.is_none())
+        || (broker_missing && queue_free_edit.is_none() && rehash.is_none())
     {
         return Err(unsupported());
     }
@@ -1264,6 +1282,9 @@ async fn change(
                 let raw:Option<Value>=row.try_get("raw")?;let old=raw.ok_or_else(unsupported)?;
                 let cron:String=row.try_get("cron")?;
                 if queue_free_edit.is_some_and(|edit| !eligible_queue_free_edit(edit, &old, &cron)) {
+                    return Err(unsupported());
+                }
+                if rehash.is_some() && (old["account_type"] != "STD" || old["is_active"] != false) {
                     return Err(unsupported());
                 }
                 if old["locked"]==true{return Err(locked())}
@@ -1322,7 +1343,15 @@ async fn change(
             if let Some(owned)=&lock{
                 let override_keys=crate::core_settings_special::hash_fields_text(saved["custom_properties"].get("hash_key").and_then(Value::as_str).unwrap_or(""));
                 let keys=if override_keys.is_empty(){crate::core_settings_special::hash_fields_text(global["m3u_hash_key"].as_str().unwrap_or("name,url,tvg_id"))}else{override_keys};
-                crate::core_settings_special_broker::publish(&auth,&scratch,"core.tasks.rehash_streams",json!([keys]),json!({"account_id":account,"locks_preacquired":true,"preacquired_lock_ids":[account],"preacquired_lock_token":owned.token})).await?;handed_off=true;
+                let publication = crate::core_settings_special_broker::publish_provider_rehash(
+                    &auth, &scratch, keys, account, &owned.token, rehash.as_ref(),
+                ).await?;
+                handed_off = true;
+                if publication == crate::ProviderRehashResult::Uncertain {
+                    return Err(StoreError::StatusBody(
+                        503, json!({"detail":"Provider rehash publication outcome is unsettled."}),
+                    ));
+                }
             }
             let response=if direct_xc {
                 let mut response=project(&session,account,cron.clone()).await?;
@@ -1730,6 +1759,25 @@ pub(crate) async fn delete(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn provider_rehash_covers_only_the_existing_partial_hash_override() {
+        let fields = |value: Value| value.as_object().unwrap().clone();
+        let exact = fields(json!({"hash_key":"name"}));
+        assert!(provider_rehash_patch(&exact, true, true));
+        assert!(!provider_rehash_patch(&exact, false, true));
+        assert!(!provider_rehash_patch(&exact, true, false));
+        for value in [
+            json!({"hash_key":"name","name":"other"}),
+            json!({"hash_key":"name","enable_vod":true}),
+            json!({"hash_key":null}),
+            json!({"hash_key":"unknown"}),
+            json!({"refresh_interval":3}),
+            json!({"is_active":false}),
+        ] {
+            assert!(!provider_rehash_patch(&fields(value), true, true));
+        }
+    }
+
     #[test]
     fn vod_collector_requires_exactly_the_pinned_reverse_reference() {
         let known = || VodCollectorReference {
