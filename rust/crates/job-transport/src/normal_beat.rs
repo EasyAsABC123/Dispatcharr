@@ -124,6 +124,7 @@ impl ScheduleConsumer {
 const BACKUP_PERIODIC_NAME: &str = "backup-scheduled-task";
 const BACKUP_PERIODIC_TASK: &str = "apps.backups.tasks.scheduled_backup_task";
 const CLEANUP_PERIODIC_TASK: &str = "celery.backend_cleanup";
+const CLOCKED_DVR_TASK: &str = "apps.channels.tasks.run_recording";
 const EXPIRATION_PERIODIC_NAME: &str = "check-account-expirations";
 const EXPIRATION_PERIODIC_TASK: &str = "apps.m3u.tasks.check_account_expirations";
 const VERSION_PERIODIC_NAME: &str = "check-version-updates";
@@ -165,13 +166,13 @@ impl ScheduleScope {
         })
     }
 
-    fn loads_linked_xmltv(self) -> bool {
+    fn uses_selected_receivers(self) -> bool {
         matches!(self, Self::CoreWithXmltv { .. })
     }
 
     fn selected_default_interval(self, name: &str, task: &str) -> Option<i32> {
         // Only this scope is bound to the complete Selected dispatcher.
-        if !self.loads_linked_xmltv() {
+        if !self.uses_selected_receivers() {
             return None;
         }
         [SCAN_FILES, MAINTAIN_RECURRING]
@@ -181,19 +182,29 @@ impl ScheduleScope {
     }
 
     fn is_linked_xmltv_task(self, task: &str) -> bool {
-        self.loads_linked_xmltv() && task == crate::refresh_protocol::NAME
+        self.uses_selected_receivers() && task == crate::refresh_protocol::NAME
     }
 
     fn xmltv_source_id(self, entry: &Entry) -> Option<i64> {
         if !self.is_linked_xmltv_task(&entry.task) {
             return None;
         }
-        let kwargs = entry
-            .kwargs
-            .as_object()
-            .filter(|kwargs| kwargs.len() == 1)?;
-        let id = kwargs.get("source_id")?.as_i64().filter(|id| *id > 0)?;
-        (entry.name == format!("epg_source-refresh-{id}")).then_some(id)
+        linked_id(entry, "source_id", "epg_source-refresh-")
+    }
+
+    fn is_linked_clocked_dvr(self, task: &str) -> bool {
+        self.uses_selected_receivers() && task == CLOCKED_DVR_TASK
+    }
+
+    fn is_linked_local_m3u_task(self, task: &str) -> bool {
+        self.uses_selected_receivers() && task == crate::normal_xc_live::SINGLE_TASK_NAME
+    }
+
+    fn local_m3u_account_id(self, entry: &Entry) -> Option<i64> {
+        if !self.is_linked_local_m3u_task(&entry.task) {
+            return None;
+        }
+        linked_id(entry, "account_id", "m3u_account-refresh-")
     }
 
     fn includes_plugin_refresh(self) -> bool {
@@ -311,7 +322,8 @@ impl ScheduleScope {
                     .as_ref()
                     .is_some_and(|(every, period)| *every > 0 && period == "hours")
                 && entry.expire_seconds.is_none();
-            let xmltv = self.xmltv_source_id(entry).is_some()
+            let linked_refresh = (self.xmltv_source_id(entry).is_some()
+                || self.local_m3u_account_id(entry).is_some())
                 && entry.enabled
                 && entry.crontab.is_none()
                 && entry
@@ -334,7 +346,7 @@ impl ScheduleScope {
                     .kwargs
                     .as_object()
                     .is_some_and(|kwargs| kwargs.is_empty());
-            return (ordinary || xmltv)
+            return (ordinary || linked_refresh)
                 && !entry.one_off
                 && entry.start_time.is_none()
                 && entry.expires.is_none()
@@ -555,7 +567,7 @@ impl Scheduler {
         tokio::spawn(async move {
             let _owner = owner;
             let mut connection = inner.pool.acquire().await?.detach();
-            let observed = if inner.scope.is_core() && !inner.scope.loads_linked_xmltv() {
+            let observed = if inner.scope.is_core() && !inner.scope.uses_selected_receivers() {
                 install_default(
                     &mut connection,
                     CLEANUP_PERIODIC_TASK,
@@ -971,7 +983,58 @@ WHERE p.id=$2::bigint AND p.name=$3::text AND p.task=$4::text
   AND octet_length(p.headers)<=65536
 FOR SHARE OF p,i NOWAIT"#;
 
-fn xmltv_arguments_current(args: &str, kwargs: &str, headers: &str, entry: &Entry) -> bool {
+// Match the local Single receiver's bounded account and default interval lane.
+// Both SQL paths use these same predicates before admitting a row.
+macro_rules! local_m3u_account {
+    () => {
+        r#"a.account_type='STD' AND a.is_active
+           AND a.server_url IS NULL AND a.file_path <> ''
+           AND a.user_agent_id IS NULL AND a.stream_profile_id IS NULL
+           AND a.username IS NULL AND a.password IS NULL
+           AND a.custom_properties IN (
+             '{}'::jsonb,
+             '{"enable_vod":false,"auto_enable_new_groups_live":true,
+               "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true}'::jsonb
+           )
+           AND octet_length(a.name)<=512 AND octet_length(a.file_path)<=4096
+           AND COALESCE(octet_length(a.last_message),0)<=8192"#
+    };
+}
+macro_rules! local_m3u_interval {
+    () => {
+        r#"NOT p.one_off AND p.start_time IS NULL
+           AND p.expires IS NULL AND p.expire_seconds IS NULL
+           AND p.queue IS NULL AND p.exchange IS NULL AND p.routing_key IS NULL AND p.priority IS NULL
+           AND i.period='hours' AND i.every=a.refresh_interval AND i.every>0
+           AND octet_length(p.args) BETWEEN 1 AND 64
+           AND octet_length(p.kwargs) BETWEEN 1 AND 128
+           AND octet_length(p.headers) BETWEEN 1 AND 64"#
+    };
+}
+// Match the normal Store write order and retire the locks before Redis work.
+const LOCK_CURRENT_LOCAL_M3U: &str = concat!(
+    r#"WITH account AS MATERIALIZED (
+    SELECT a.refresh_task_id,a.refresh_interval FROM m3u_m3uaccount a
+    WHERE a.id=$1::bigint AND "#,
+    local_m3u_account!(),
+    r#"
+    FOR SHARE NOWAIT
+)
+SELECT p.args,p.kwargs,p.headers
+FROM account a
+JOIN django_celery_beat_periodictask p ON p.id=a.refresh_task_id
+JOIN django_celery_beat_intervalschedule i ON i.id=p.interval_id
+WHERE p.id=$2::bigint AND p.name=$3::text AND p.task=$4::text
+  AND p.enabled AND p.solar_id IS NULL AND p.clocked_id IS NULL AND p.crontab_id IS NULL
+  AND i.every=$5::integer
+  AND p.total_run_count=$6::bigint
+  AND COALESCE(p.last_run_at,p.date_changed)=$7::timestamptz
+  AND "#,
+    local_m3u_interval!(),
+    " FOR SHARE OF p,i NOWAIT"
+);
+
+fn linked_arguments_current(args: &str, kwargs: &str, headers: &str, entry: &Entry) -> bool {
     fn matches(raw: &str, empty: &str, expected: &Value) -> bool {
         serde_json::from_str::<Value>(if raw.is_empty() { empty } else { raw })
             .is_ok_and(|actual| actual == *expected)
@@ -981,21 +1044,31 @@ fn xmltv_arguments_current(args: &str, kwargs: &str, headers: &str, entry: &Entr
         && matches(headers, "{}", &entry.headers)
 }
 
-enum XmltvReservation {
+fn linked_id(entry: &Entry, key: &str, name_prefix: &str) -> Option<i64> {
+    let kwargs = entry
+        .kwargs
+        .as_object()
+        .filter(|kwargs| kwargs.len() == 1)?;
+    let id = kwargs.get(key)?.as_i64().filter(|id| *id > 0)?;
+    (entry.name == format!("{name_prefix}{id}")).then_some(id)
+}
+
+enum LinkedReservation {
     Reserved,
     Stale,
     Busy,
 }
 
-async fn reserve_current_xmltv(
+async fn reserve_linked_interval(
     connection: &mut PgConnection,
-    source_id: i64,
+    query: &str,
+    linked_id: i64,
     snapshot: &mut Entry,
-) -> Result<XmltvReservation, Error> {
+) -> Result<LinkedReservation, Error> {
     let (every, _) = snapshot.interval.as_ref().ok_or(Error::Supervisor)?;
     let mut transaction = connection.begin().await?;
-    let current = sqlx::query_as::<_, (String, String, String)>(LOCK_CURRENT_XMLTV)
-        .bind(source_id)
+    let current = sqlx::query_as::<_, (String, String, String)>(query)
+        .bind(linked_id)
         .bind(snapshot.id)
         .bind(&snapshot.name)
         .bind(&snapshot.task)
@@ -1014,22 +1087,150 @@ async fn reserve_current_xmltv(
                 .as_deref()
                 == Some("55P03")
             {
-                return Ok(XmltvReservation::Busy);
+                return Ok(LinkedReservation::Busy);
             }
             return Err(error.into());
         }
     };
     let outcome = if current.is_some_and(|(args, kwargs, headers)| {
-        xmltv_arguments_current(&args, &kwargs, &headers, snapshot)
+        linked_arguments_current(&args, &kwargs, &headers, snapshot)
     }) {
         snapshot.total_run_count = snapshot
             .total_run_count
             .checked_add(1)
             .ok_or(Error::Capacity)?;
         snapshot.last_run_at = Utc::now();
-        XmltvReservation::Reserved
+        LinkedReservation::Reserved
     } else {
-        XmltvReservation::Stale
+        LinkedReservation::Stale
+    };
+    transaction.commit().await?;
+    Ok(outcome)
+}
+
+struct ClockedDvr {
+    recording: i64,
+    channel: i64,
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+}
+
+fn clocked_dvr(row: &Entry, clocked: Option<DateTime<Utc>>) -> Option<ClockedDvr> {
+    if row.task != CLOCKED_DVR_TASK
+        || !row.enabled
+        || !row.one_off
+        || row.interval.is_some()
+        || row.crontab.is_some()
+        || row.start_time.is_some()
+        || row.expires.is_some()
+        || row.expire_seconds.is_some()
+        || row.priority.is_some()
+        || row.queue.is_some()
+        || row.exchange.is_some()
+        || row.routing_key.is_some()
+        || row.total_run_count < 0
+        || !row
+            .kwargs
+            .as_object()
+            .is_some_and(serde_json::Map::is_empty)
+        || !row
+            .headers
+            .as_object()
+            .is_some_and(serde_json::Map::is_empty)
+    {
+        return None;
+    }
+    let [recording, channel, start, end] = row.args.as_array()?.as_slice() else {
+        return None;
+    };
+    let recording = recording.as_i64()?;
+    let channel = channel.as_i64()?;
+    if !(1..=i64::from(i32::MAX)).contains(&recording)
+        || !(1..=i64::from(i32::MAX)).contains(&channel)
+        || row.name != format!("dvr-recording-{recording}")
+    {
+        return None;
+    }
+    let date = crate::clocked_recording_envelope::normal_source_date;
+    let start = date(start.as_str()?).ok()?;
+    let end = date(end.as_str()?).ok()?;
+    (clocked == Some(start) && end > start).then_some(ClockedDvr {
+        recording,
+        channel,
+        start,
+        end,
+    })
+}
+
+// The saved row can be rescheduled or cancelled between the heap reload and its
+// due tick. Reserve the still-linked model under the recording and schedule
+// locks before offering the canonical envelope to the existing DVR receiver.
+const LOCK_CURRENT_CLOCKED_DVR: &str = r#"
+WITH recording AS MATERIALIZED (
+    SELECT task_id FROM dispatcharr_channels_recording
+    WHERE id=$1::bigint AND channel_id=$2::bigint
+      AND start_time=$3::timestamptz AND end_time=$4::timestamptz
+    FOR SHARE NOWAIT
+)
+SELECT p.args,p.kwargs,p.headers
+FROM recording r
+JOIN django_celery_beat_periodictask p ON p.name=r.task_id
+JOIN django_celery_beat_clockedschedule c ON c.id=p.clocked_id
+WHERE p.id=$5::bigint AND p.name=$6::text AND p.task=$7::text
+  AND p.enabled AND p.one_off AND p.solar_id IS NULL
+  AND p.interval_id IS NULL AND p.crontab_id IS NULL
+  AND p.start_time IS NULL AND p.expires IS NULL AND p.expire_seconds IS NULL
+  AND p.queue IS NULL AND p.exchange IS NULL AND p.routing_key IS NULL AND p.priority IS NULL
+  AND p.total_run_count=$8::bigint
+  AND COALESCE(p.last_run_at,p.date_changed)=$9::timestamptz
+  AND c.clocked_time=$3::timestamptz
+  AND octet_length(p.args)<=8192 AND octet_length(p.kwargs)<=8192 AND octet_length(p.headers)<=8192
+FOR SHARE OF p,c NOWAIT"#;
+
+async fn reserve_current_clocked_dvr(
+    connection: &mut PgConnection,
+    binding: ClockedDvr,
+    snapshot: &mut Entry,
+) -> Result<LinkedReservation, Error> {
+    let mut transaction = connection.begin().await?;
+    let current = sqlx::query_as::<_, (String, String, String)>(LOCK_CURRENT_CLOCKED_DVR)
+        .bind(binding.recording)
+        .bind(binding.channel)
+        .bind(binding.start)
+        .bind(binding.end)
+        .bind(snapshot.id)
+        .bind(&snapshot.name)
+        .bind(CLOCKED_DVR_TASK)
+        .bind(snapshot.total_run_count)
+        .bind(snapshot.last_run_at)
+        .fetch_optional(&mut *transaction)
+        .await;
+    let current = match current {
+        Ok(current) => current,
+        Err(error) => {
+            transaction.rollback().await?;
+            if error
+                .as_database_error()
+                .and_then(|error| error.code())
+                .as_deref()
+                == Some("55P03")
+            {
+                return Ok(LinkedReservation::Busy);
+            }
+            return Err(error.into());
+        }
+    };
+    let outcome = if current.is_some_and(|(args, kwargs, headers)| {
+        linked_arguments_current(&args, &kwargs, &headers, snapshot)
+    }) {
+        snapshot.total_run_count = snapshot
+            .total_run_count
+            .checked_add(1)
+            .ok_or(Error::Capacity)?;
+        snapshot.last_run_at = Utc::now();
+        LinkedReservation::Reserved
+    } else {
+        LinkedReservation::Stale
     };
     transaction.commit().await?;
     Ok(outcome)
@@ -1104,35 +1305,49 @@ async fn tick(
     }
     // Reserve BEFORE serialization/publication, retaining the advanced cached
     // count even on a known rejection. An ambiguous actual reply is never retried.
-    let snapshot = if inner.scope.is_linked_xmltv_task(&entry.entry.task) {
+    let mut snapshot = entry.entry.clone();
+    let reservation = if inner.scope.is_linked_xmltv_task(&entry.entry.task) {
         let source_id = inner
             .scope
             .xmltv_source_id(&entry.entry)
             .ok_or(Error::Supervisor)?;
-        let mut snapshot = entry.entry.clone();
-        match reserve_current_xmltv(connection, source_id, &mut snapshot).await? {
-            XmltvReservation::Reserved => entry.entry = snapshot.clone(),
-            XmltvReservation::Stale => {
-                cache.loaded = false;
-                return Ok(result);
-            }
-            XmltvReservation::Busy => {
-                // Defer only the locked XMLTV row, so other due work can proceed.
-                entry.when = when(inner.maximum_sleep.as_secs_f64())?;
-                result.delay_seconds = 0.0;
-                return Ok(result);
-            }
-        }
-        snapshot
+        reserve_linked_interval(connection, LOCK_CURRENT_XMLTV, source_id, &mut snapshot).await?
+    } else if inner.scope.is_linked_local_m3u_task(&snapshot.task) {
+        let account_id = inner
+            .scope
+            .local_m3u_account_id(&snapshot)
+            .ok_or(Error::Supervisor)?;
+        reserve_linked_interval(
+            connection,
+            LOCK_CURRENT_LOCAL_M3U,
+            account_id,
+            &mut snapshot,
+        )
+        .await?
+    } else if inner.scope.is_linked_clocked_dvr(&snapshot.task) {
+        let binding = clocked_dvr(&snapshot, entry.clocked).ok_or(Error::Supervisor)?;
+        reserve_current_clocked_dvr(connection, binding, &mut snapshot).await?
     } else {
-        entry.entry.last_run_at = Utc::now();
-        entry.entry.total_run_count = entry
-            .entry
+        snapshot.last_run_at = Utc::now();
+        snapshot.total_run_count = snapshot
             .total_run_count
             .checked_add(1)
             .ok_or(Error::Capacity)?;
-        entry.entry.clone()
+        LinkedReservation::Reserved
     };
+    match reservation {
+        LinkedReservation::Reserved => entry.entry = snapshot.clone(),
+        LinkedReservation::Stale => {
+            cache.loaded = false;
+            return Ok(result);
+        }
+        LinkedReservation::Busy => {
+            // Defer only the locked saved row so other work can proceed.
+            entry.when = when(inner.maximum_sleep.as_secs_f64())?;
+            result.delay_seconds = 0.0;
+            return Ok(result);
+        }
+    }
     cache.dirty.insert(name.clone());
     let id = Uuid::new_v4();
     let publication = prepare_publication(&snapshot, id, &inner.identity);
@@ -1204,19 +1419,20 @@ fn date(value: &Value, key: &str) -> Result<Option<DateTime<Utc>>, Error> {
 // Remaining capacity is intentionally unchanged: >256 ELIGIBLE models or a
 // >1MiB aggregate eligible reply refuses. Generic pagination is still open.
 macro_rules! load_query {
-    ($selected:literal) => {
+    ($selected:expr, $dvr_join:literal, $dvr_columns:literal, $selected_clocked:literal $(,)?) => {
         concat!(r#"WITH zone_offsets AS (SELECT * FROM unnest($4::text[],$5::integer[]) AS z(zone_name,hour_offset)),
 candidates AS MATERIALIZED (
  SELECT to_jsonb(p)::text AS raw,
         (SELECT to_jsonb(i)::text FROM django_celery_beat_intervalschedule i WHERE i.id=p.interval_id) AS interval_spec,
         to_jsonb(cr)::text AS crontab_spec,
-        cl.clocked_time
+        cl.clocked_time, "#, $dvr_columns, r#"
  FROM django_celery_beat_periodictask p
  LEFT JOIN django_celery_beat_clockedschedule cl ON cl.id=p.clocked_id
  LEFT JOIN django_celery_beat_crontabschedule cr ON cr.id=p.crontab_id
  LEFT JOIN zone_offsets z ON z.zone_name=cr.timezone
+"#, $dvr_join, r#"
  WHERE p.enabled
-   AND ($6::text IS NULL OR (p.solar_id IS NULL AND p.clocked_id IS NULL AND (
+   AND ($6::text IS NULL OR (p.solar_id IS NULL AND ((p.clocked_id IS NULL AND (
         (p.name=$6 AND p.task=$7::text AND p.interval_id IS NULL AND p.crontab_id IS NOT NULL)
         OR (p.interval_id IS NOT NULL AND p.crontab_id IS NULL
             AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
@@ -1225,7 +1441,8 @@ candidates AS MATERIALIZED (
         OR (p.name=$13::text AND p.task=$14::text AND p.crontab_id IS NULL
             AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
                         WHERE i.id=p.interval_id AND i.every>0 AND i.period='hours'))
-"#, $selected, r#"   )))
+"#, $selected, r#"   ))
+"#, $selected_clocked, r#"   )))
    AND (p.clocked_id IS NULL OR cl.clocked_time IS NULL OR cl.clocked_time <= $1::timestamptz)
    AND (p.crontab_id IS NULL OR cr.id IS NULL OR NOT (cr.hour=ANY($3::text[])) OR z.hour_offset IS NULL
         OR CASE WHEN cr.hour=ANY($3::text[]) THEN (cr.hour::integer+z.hour_offset+24)%24 END=ANY($2::integer[]))
@@ -1239,13 +1456,20 @@ SELECT b.rows,b.bytes,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.raw END AS raw,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.interval_spec END AS interval_spec,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.crontab_spec END AS crontab_spec,
- CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.clocked_time END AS clocked_time
+ CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.clocked_time END AS clocked_time,
+ c.dvr_channel,c.dvr_end
 FROM budget b LEFT JOIN candidates c ON b.rows<=256 AND b.bytes<=1048576"#)
     };
 }
-const LOAD_QUERY: &str = load_query!("");
+const LOAD_QUERY: &str = load_query!(
+    "",
+    "",
+    "NULL::bigint AS dvr_channel,NULL::timestamptz AS dvr_end",
+    ""
+);
 const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
-    r#"        OR (p.task=$15::text AND p.interval_id IS NOT NULL AND p.crontab_id IS NULL
+    concat!(
+        r#"        OR (p.task=$15::text AND p.interval_id IS NOT NULL AND p.crontab_id IS NULL
            AND EXISTS (SELECT 1 FROM epg_epgsource s
                        WHERE s.id>0 AND s.is_active AND s.source_type='xmltv'
                          AND s.refresh_task_id=p.id AND p.name='epg_source-refresh-' || s.id::text)
@@ -1267,7 +1491,29 @@ const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
                      AND cr.timezone='UTC' AND cr.minute ~ '^[0-5]?[0-9]$'
                      AND cr.hour ~ '^(0?[0-9]|1[0-9]|2[0-3])$'
                      AND cr.day_of_week='*' AND cr.day_of_month='*' AND cr.month_of_year='*')))
-"#
+         OR (p.task=$24::text AND p.interval_id IS NOT NULL AND p.crontab_id IS NULL
+             AND EXISTS (SELECT 1 FROM m3u_m3uaccount a
+                         JOIN django_celery_beat_intervalschedule i ON i.id=p.interval_id
+                         WHERE a.id>0 AND a.refresh_task_id=p.id
+                           AND p.name='m3u_account-refresh-' || a.id::text
+                           AND "#,
+        local_m3u_account!(),
+        " AND ",
+        local_m3u_interval!(),
+        "))"
+    ),
+    r#" LEFT JOIN dispatcharr_channels_recording r ON p.task=$25::text
+      AND p.name=r.task_id AND p.name='dvr-recording-' || r.id::text
+      AND r.start_time=cl.clocked_time AND r.end_time>r.start_time
+"#,
+    "r.channel_id::bigint AS dvr_channel,r.end_time AS dvr_end",
+    r#"        OR (p.task=$25::text AND p.one_off
+           AND p.interval_id IS NULL AND p.crontab_id IS NULL AND p.clocked_id IS NOT NULL
+           AND p.start_time IS NULL AND p.expires IS NULL AND p.expire_seconds IS NULL
+           AND p.queue IS NULL AND p.exchange IS NULL AND p.routing_key IS NULL AND p.priority IS NULL
+           AND octet_length(p.args)<=8192 AND octet_length(p.kwargs)<=8192 AND octet_length(p.headers)<=8192
+           AND cl.clocked_time<=$1::timestamptz AND r.id IS NOT NULL)
+"#,
 );
 struct ZoneHours {
     names: Vec<&'static str>,
@@ -1328,8 +1574,8 @@ async fn load(
         plugin_startup_schedule::NAME,
         crate::normal_plugin_repos::TASK,
     ));
-    let linked_xmltv = scope.loads_linked_xmltv();
-    let query = if linked_xmltv {
+    let selected_receivers = scope.uses_selected_receivers();
+    let query = if selected_receivers {
         LOAD_SELECTED_CORE_QUERY
     } else {
         LOAD_QUERY
@@ -1349,7 +1595,7 @@ async fn load(
         .bind(DAILY_SECONDS)
         .bind(plugin_refresh.map(|(name, _)| name))
         .bind(plugin_refresh.map(|(_, task)| task));
-    let query = if linked_xmltv {
+    let query = if selected_receivers {
         query
             .bind(crate::refresh_protocol::NAME)
             .bind(SCAN_FILES.0)
@@ -1360,6 +1606,8 @@ async fn load(
             .bind(MAINTAIN_RECURRING.2)
             .bind(scope.includes_saved_stats().then_some(STATS_TASK))
             .bind(DISABLED_STATS_DEFAULT)
+            .bind(crate::normal_xc_live::SINGLE_TASK_NAME)
+            .bind(CLOCKED_DVR_TASK)
     } else {
         query
     };
@@ -1380,6 +1628,8 @@ async fn load(
         let task = text(&value, "task")?;
         let name = text(&value, "name")?;
         let skip_invalid = scope.is_linked_xmltv_task(&task)
+            || scope.is_linked_local_m3u_task(&task)
+            || scope.is_linked_clocked_dvr(&task)
             || scope.selected_default_interval(&name, &task).is_some();
         let interval: Option<String> = row.try_get("interval_spec")?;
         let crontab: Option<String> = row.try_get("crontab_spec")?;
@@ -1510,7 +1760,15 @@ async fn load(
                 )
             }),
         };
-        if !scope.admits(&model) {
+        let admitted = if scope.is_linked_clocked_dvr(&model.task) {
+            let channel: Option<i64> = row.try_get("dvr_channel")?;
+            let end: Option<DateTime<Utc>> = row.try_get("dvr_end")?;
+            clocked_dvr(&model, clocked)
+                .is_some_and(|dvr| Some(dvr.channel) == channel && Some(dvr.end) == end)
+        } else {
+            scope.admits(&model)
+        };
+        if !admitted {
             if skip_invalid {
                 invalid += 1;
                 continue;
@@ -1592,7 +1850,7 @@ fn prepare_publication(
     let (argsrepr, kwargsrepr) = identity
         .periodic_representations(&entry.args, &entry.kwargs)
         .map_err(|_| Error::Configuration("periodic repr capacity/types"))?;
-    let default_queue = if entry.task == "apps.channels.tasks.run_recording" {
+    let default_queue = if entry.task == CLOCKED_DVR_TASK {
         "dvr"
     } else {
         "celery"
@@ -1856,6 +2114,133 @@ fn cron_names(raw: &str) -> String {
 mod tests {
     use super::*;
 
+    #[tokio::test]
+    async fn selected_core_clocked_dvr_uses_the_existing_recording_receiver_envelope() {
+        let scope = ScheduleScope::core_with_xmltv(false, true, false).unwrap();
+        assert!(scope.is_linked_clocked_dvr(CLOCKED_DVR_TASK));
+        assert!(!ScheduleScope::Core.is_linked_clocked_dvr(CLOCKED_DVR_TASK));
+        assert!(!ScheduleScope::Backup.is_linked_clocked_dvr(CLOCKED_DVR_TASK));
+        let mut entry = model(CLOCKED_DVR_TASK);
+        entry.name = "dvr-recording-17".into();
+        entry.interval = None;
+        entry.crontab = None;
+        entry.one_off = true;
+        entry.args = json!([
+            17,
+            3,
+            "2026-07-20 04:30:00.120000+00:00",
+            "2026-07-20 04:31:00+00:00"
+        ]);
+        let scheduled = DateTime::parse_from_rfc3339("2026-07-20T04:30:00.120000Z")
+            .unwrap()
+            .to_utc();
+        let binding = clocked_dvr(&entry, Some(scheduled)).unwrap();
+        assert_eq!(
+            (binding.recording, binding.channel, binding.start),
+            (17, 3, scheduled)
+        );
+        assert!(!scope.admits(&entry));
+        assert!(clocked_dvr(&entry, None).is_none());
+        assert!(clocked_dvr(&entry, Some(scheduled + chrono::Duration::seconds(1))).is_none());
+        let mut changed = entry.clone();
+        changed.name = "dvr-recording-18".into();
+        assert!(clocked_dvr(&changed, Some(scheduled)).is_none());
+        changed = entry.clone();
+        changed.args[1] = json!(0);
+        assert!(clocked_dvr(&changed, Some(scheduled)).is_none());
+        changed = entry.clone();
+        changed.args[3] = json!("2026-07-20T04:31:00Z");
+        assert!(clocked_dvr(&changed, Some(scheduled)).is_none());
+        changed = entry.clone();
+        changed.queue = Some("celery".into());
+        assert!(clocked_dvr(&changed, Some(scheduled)).is_none());
+        changed = entry.clone();
+        changed.one_off = false;
+        assert!(clocked_dvr(&changed, Some(scheduled)).is_none());
+        assert!(linked_arguments_current(
+            &entry.args.to_string(),
+            "{}",
+            "{}",
+            &entry
+        ));
+        assert!(!linked_arguments_current(
+            "[17,3,\"2026-07-20 04:30:00.120000+00:00\",\"2026-07-20 04:32:00+00:00\"]",
+            "{}",
+            "{}",
+            &entry
+        ));
+        let link = "p.name=r.task_id AND p.name='dvr-recording-' || r.id::text";
+        assert!(!LOAD_QUERY.contains(link));
+        assert!(
+            LOAD_SELECTED_CORE_QUERY.find(link).unwrap()
+                < LOAD_SELECTED_CORE_QUERY.find("LIMIT 257").unwrap()
+        );
+        assert!(LOCK_CURRENT_CLOCKED_DVR.contains("FOR SHARE OF p,c NOWAIT"));
+        assert!(LOCK_CURRENT_CLOCKED_DVR.contains("c.clocked_time=$3::timestamptz"));
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
+            .unwrap();
+        let auth = dispatcharr_store::AuthService::new(
+            dispatcharr_store::Store::from_pool(pool),
+            dispatcharr_store::AuthConfig::new("unused-metadata-only".into()).unwrap(),
+        );
+        let id = Uuid::new_v4();
+        let publication =
+            prepare_publication(&entry, id, &auth.producer_identity_source()).unwrap();
+        let parsed =
+            crate::clocked_recording_envelope::parse_normal_head(publication.bytes()).unwrap();
+        assert_eq!(publication.redis_queue(), "dvr");
+        assert_eq!(parsed.task_id(), id);
+        assert_eq!(parsed.periodic_name(), "dvr-recording-17");
+        assert_eq!((parsed.recording_id(), parsed.channel_id()), (17, 3));
+        assert_eq!((parsed.start(), parsed.end()), (binding.start, binding.end));
+    }
+
+    #[test]
+    fn selected_core_admits_only_canonical_saved_local_m3u_interval() {
+        let scope = ScheduleScope::core_with_xmltv(false, true, false).unwrap();
+        let mut entry = model(crate::normal_xc_live::SINGLE_TASK_NAME);
+        entry.name = "m3u_account-refresh-101".into();
+        entry.interval = Some((2, "hours".into()));
+        entry.kwargs = json!({"account_id":101});
+        assert_eq!(scope.local_m3u_account_id(&entry), Some(101));
+        assert!(scope.admits(&entry));
+        assert!(!ScheduleScope::Core.admits(&entry));
+        assert!(linked_arguments_current(
+            "[]",
+            r#"{"account_id": 101}"#,
+            "{}",
+            &entry
+        ));
+        assert!(!linked_arguments_current(
+            "[]",
+            r#"{"account_id": 99}"#,
+            "{}",
+            &entry
+        ));
+
+        for kwargs in [
+            json!({"account_id":102}),
+            json!({"account_id":"101"}),
+            json!({"account_id":101,"force":false}),
+            json!({}),
+        ] {
+            let mut candidate = entry.clone();
+            candidate.kwargs = kwargs;
+            assert!(!scope.admits(&candidate));
+        }
+        let mut invalid = entry.clone();
+        invalid.interval = Some((2, "seconds".into()));
+        assert!(!scope.admits(&invalid));
+        let mut invalid = entry.clone();
+        invalid.one_off = true;
+        assert!(!scope.admits(&invalid));
+        let mut invalid = entry;
+        invalid.queue = Some("celery".into());
+        assert!(!scope.admits(&invalid));
+    }
+
     #[test]
     fn scoped_xmltv_rechecks_actual_link_and_rejects_changed_arguments() {
         let mut entry = model(crate::refresh_protocol::NAME);
@@ -1886,13 +2271,13 @@ mod tests {
         unsupported = second;
         unsupported.interval = Some((1, "minutes".into()));
         assert!(!scope.admits(&unsupported));
-        assert!(xmltv_arguments_current(
+        assert!(linked_arguments_current(
             "[]",
             "{\"source_id\": 17}",
             "{}",
             &entry
         ));
-        assert!(xmltv_arguments_current(
+        assert!(linked_arguments_current(
             "",
             "{\"source_id\":17}",
             "",
@@ -1905,15 +2290,15 @@ mod tests {
             "{\"source_id\":17, \"force\":false}",
             "{}",
         ] {
-            assert!(!xmltv_arguments_current("[]", kwargs, "{}", &entry));
+            assert!(!linked_arguments_current("[]", kwargs, "{}", &entry));
         }
-        assert!(!xmltv_arguments_current(
+        assert!(!linked_arguments_current(
             "[1]",
             "{\"source_id\":17}",
             "{}",
             &entry
         ));
-        assert!(!xmltv_arguments_current(
+        assert!(!linked_arguments_current(
             "[]",
             "{\"source_id\":17}",
             "{\"extra\":true}",

@@ -219,7 +219,7 @@ pub fn parse_head(raw: &[u8]) -> Result<ObservedProducerEnvelope, Refusal> {
 pub fn parse_normal_head(raw: &[u8]) -> Result<ObservedProducerEnvelope, Refusal> {
     parse_with_date(raw, normal_source_date)
 }
-fn normal_source_date(text: &str) -> Result<DateTime<Utc>, Refusal> {
+pub(super) fn normal_source_date(text: &str) -> Result<DateTime<Utc>, Refusal> {
     if source_date(text).is_ok() {
         return source_date(text);
     }

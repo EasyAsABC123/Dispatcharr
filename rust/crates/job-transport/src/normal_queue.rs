@@ -339,6 +339,9 @@ fn selected_schedules_match(
         ]
         .iter()
         .all(|family| families.contains_key(family))
+        && families
+            .get(&Family::Recording)
+            .is_some_and(|recording| recording.inner.supports_selected_head())
 }
 
 /// Shared Core Celery receiver for backup requests and prepared periodic families.
@@ -1529,6 +1532,7 @@ mod tests {
             Family::BackendCleanup,
             Family::AccountExpiration,
             Family::VersionCheck,
+            Family::Recording,
         ]
         .into_iter()
         .map(|family| (family, entry(actual.clone())))
@@ -1542,6 +1546,7 @@ mod tests {
             Family::BackendCleanup,
             Family::AccountExpiration,
             Family::VersionCheck,
+            Family::Recording,
         ] {
             let removed = families.remove(&family).unwrap();
             assert!(!selected_schedules_match(&families, &actual));
