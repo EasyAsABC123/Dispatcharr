@@ -9,6 +9,10 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [66b02c4a Native FFmpeg recovery](rust-m3-66b02c4a-profile-recovery.md)
+verified fresh profile playback after owned child loss. The unprofiled
+viewer continued on one upstream. Exact child and Compose cleanup passed.
+
 The [66b02c4a checkpoint](rust-m0-m6-66b02c4a-xmltv-hdhr-checkpoint.md)
 matched two linked saved XMLTV sources and their four causal children.
 The same ordinary image also matched both anonymous HDHomeRun status GET
