@@ -18,6 +18,8 @@ mask against its cookie. The actual body hashes are retained in the local
 evidence, as are the exact four resource generation digests, policy
 restoration, and unchanged SQL. The controller and reducer both exited 0.
 HEAD, OPTIONS, aliases, and the wider route register have separate gates.
+The standalone verifier recomputes all 224 pairs from sanitized records.
+[Evidence and verifier](../scripts/rust-contracts/observed-hdhr-get-a99e/README.md)
 
 ## Saved local M3U interval
 

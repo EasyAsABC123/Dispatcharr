@@ -1,0 +1,1625 @@
+{
+  "Original": {
+    "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "Original_HTML": {
+    "browser": {
+      "path": "scripts/rust-contracts/observed-hdhr-get-a99e/authority/ordinary-browser-proof.json",
+      "sha256": "801f7557144aedd9aea011a5abe0dca8b437636a62b59b9d4afd73908c029f8f"
+    },
+    "format-api-browser": {
+      "path": "scripts/rust-contracts/observed-hdhr-get-a99e/authority/forced-browser-proof.json",
+      "sha256": "7d463ea0a09d98103108069742d78630d626c46f0cd7b880326a03f936c1f924"
+    }
+  },
+  "candidate": {
+    "image": "sha256:762a98b739c1d44ba076157c1f5d049045aa3527d6e30ff90632e81da6ee6fda",
+    "manifest_sha256": "916f1623300570485cd67487d1cd36ada19c7dedca22ef91fff61caf3dd309d5",
+    "revision": "a99e1772d1041d053c9e8716f662370dcff39bde",
+    "runtime_binding_sha256": "aa44dfac59e3ff72a94881599ec765140a9c78e607a112c74571921c52490bb6",
+    "verified_publication_sha256": "0962bbffc1365b50f090aa99d4d819313e287dbd85472336a0dd19a7f8b7a45c"
+  },
+  "capture_id": "3f8c8bd84e6e88ff90db6eacc4624c15a3e4ae9af851bdb76a32f2c81f629d4a",
+  "execution": {
+    "actual_exit": {
+      "path": "scripts/rust-contracts/observed-hdhr-get-a99e/actual-pair-1/actual-exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "generation_custody": {
+      "path": "scripts/rust-contracts/observed-hdhr-get-a99e/actual-pair-1/generation-custody.json",
+      "sha256": "87370c0890fa0789ef3d89e112b6051a486615e6228dc483067541808ba056da"
+    },
+    "receipt": {
+      "path": "scripts/rust-contracts/observed-hdhr-get-a99e/actual-pair-1/receipt.json",
+      "sha256": "af43b0f7b2bcf60340051c6a8ef9a4e2d37851a430307a9ecc5b8cf74d759490"
+    }
+  },
+  "fixture": {
+    "path": "scripts/rust-contracts/observed-hdhr-get-a99e/authority/fixture-SHA256SUMS",
+    "sha256": "39b9c598dce53822c634ad057c782de9e401f3b1f41a7addb64ae8d42b715baa"
+  },
+  "held_other_methods": [
+    "HEAD",
+    "OPTIONS"
+  ],
+  "kind": "complete_observed_hdhr_get_v2",
+  "required_cases": [
+    {
+      "credential": "none",
+      "expected_status": 200,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 200,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 200,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 200,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 200,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 403,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 403,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 403,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 403,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 403,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "anonymous"
+    },
+    {
+      "credential": "none",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "anonymous"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "basic"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 200,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 403,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 200,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 403,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 200,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 403,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "admin"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 401,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 401,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 401,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 401,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 401,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 401,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 401,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 401,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 401,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 401,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "bearer",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 401,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 401,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 401,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 401,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 401,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 401,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 401,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 401,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 401,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 401,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-header",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 401,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 401,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 401,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 401,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 401,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 401,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 401,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 401,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 401,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 401,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "api-key-authorization",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "inactive"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 401,
+      "negotiation": "implicit",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 401,
+      "negotiation": "json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 401,
+      "negotiation": "browser",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 401,
+      "negotiation": "format-json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 401,
+      "negotiation": "format-api-browser",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "allowed",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 401,
+      "negotiation": "implicit",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 401,
+      "negotiation": "json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 401,
+      "negotiation": "browser",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 401,
+      "negotiation": "format-json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 401,
+      "negotiation": "format-api-browser",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 406,
+      "negotiation": "format-api-json",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 406,
+      "negotiation": "unavailable-media",
+      "policy": "policy-denied",
+      "role": "standard"
+    },
+    {
+      "credential": "expired-bearer",
+      "expected_status": 404,
+      "negotiation": "unknown-format",
+      "policy": "policy-denied",
+      "role": "standard"
+    }
+  ],
+  "route": {
+    "observed_method": "GET",
+    "pattern_exact": "hdhr/lineup_status.json",
+    "resolver_ordinal": 376,
+    "source_handler": "apps.hdhr.api_views.LineupStatusAPIView",
+    "stable_work_id": "route-9198a3509e35fbb64b8e:METHOD_UNRESOLVED"
+  }
+}
