@@ -13,6 +13,10 @@ The [9cf6407 HTTP attachment packets](../scripts/rust-contracts/observed-http-9c
 record 16 Channels and M3U directory requests and 16 Programme Guide requests. Portable
 offline verification covers the tested route identities, response projections and physical cleanup.
 
+The [current 9cf6407 workflow evidence](rust-m9-9cf6407-seventeen-workflows.md) links
+17 distinct fresh passes across three scoped Compose waves. The latest checks cover Guide
+Grid, shared streaming including 100-viewer retention, and two scoped operator suites.
+
 The [combined 9cf6407 workflow evidence](rust-m9-9cf6407-eleven-workflows.md) links
 eleven distinct fresh passes across two scoped Compose waves, including clean install,
 React/Stats, profiles, and VOD/timeshift. The formal 127-row release gate remains open.
@@ -1292,7 +1296,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (saved jobs and warm Core failover verified in explicit worker scopes; default graph open) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (fixed HDHomeRun GET, Auto Sync regex preview and scoped Connect workflows verified) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (ordinary backup inventory and direct downloads, trusted selected actions and scoped operator checks passed; default jobs and wider restore/admin coverage open) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
-| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (eleven fresh required Compose passes on 9cf6407; local copied PostgreSQL rollback passed; final suite and soak open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
+| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (17 fresh required Compose passes on 9cf6407; local copied PostgreSQL rollback passed; final suite and soak open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 | M10 | Controlled rollout | M9 | Proposed ([native ARM64 package, startup, React and first-run auth verified](rust-m10-a8ea333d-native-arm64-docker-desktop.md) on a8ea333d) | Scoped rollout plan, monitoring and rollback on the selected release image |
 | M11 | Default switch and operator handoff | M10 | Proposed | Released image and configuration, upgrade evidence, attribution and monitored fallback |
 
