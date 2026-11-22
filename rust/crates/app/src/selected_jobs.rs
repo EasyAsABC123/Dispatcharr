@@ -173,7 +173,7 @@ fn core_receivers_ready(readiness: jobs::normal_queue::Readiness) -> Result<bool
     use jobs::normal_queue::State;
     if [&readiness.celery, &readiness.dvr]
         .into_iter()
-        .any(|lane| matches!(lane, State::Blocked(_) | State::Fault(_) | State::Stopped))
+        .any(|lane| matches!(lane, State::Fault(_) | State::Stopped))
     {
         return Err("Selected Core receiver stopped or could not admit work");
     }
@@ -1262,7 +1262,7 @@ mod readiness_tests {
             || {
                 polls.set(polls.get() + 1);
                 core_receivers_ready(readiness(if polls.get() == 1 {
-                    State::Starting
+                    State::Blocked(jobs::milestone_dispatch::Disposition::UnsupportedHead)
                 } else {
                     State::Working(0)
                 }))
