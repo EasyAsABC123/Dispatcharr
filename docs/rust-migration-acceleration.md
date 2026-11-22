@@ -41,11 +41,24 @@ The two Rust compiler steps took 708.9 seconds on `25dc1502` and 707.0
 seconds on `9ace9f66` across the ordinary and copied-data images. Both
 modes rebuilt 26 local crates. The copied-data build already reused the
 ordinary compiler layer. The frontend, media, and helper layers were
-cached. The largest measured opportunity is to reuse verified unchanged
-Rust inputs across candidates. Measure content-aware cache invalidation
-with distinct warmed cache namespaces and verify both binaries, image
-provenance, packaged behavior, and same-path source changes. Savings
-from this experiment are unmeasured.
+cached. The `e0016d42` ordinary and copied-data compiler steps totaled
+698.8 seconds.
+
+A controlled host release comparison used separate cold caches for the exact
+`9ace9f66` base and the same nine-path change to `424880a9`. Both policies
+built 28 local crates cold in 440.3 and 436.6 seconds. The subsequent warm
+all-touch rebuild took 334.6 seconds and recompiled 28 local crates. Updating
+timestamps only on changed inputs took 140.6 seconds and recompiled two.
+That reduced warm Cargo time by 58.0% and saved 194.0 seconds. The policies
+produced byte-identical executables for each revision. The first experiment
+stopped after Cargo completed because the target inventory rejected an
+internal libtool symlink. The corrected inventory checked that link's
+contained regular referent, then both arms started with fresh caches.
+
+The next packaging experiment needs an isolated ordinary Docker build with
+both cache policies, exact input and output verification, and packaged
+functional checks. The host comparison has no Docker timing or application
+resource measurements. [Host build evidence](../scripts/rust-integration/m10-host-release-cache-ab.json)
 
 The historical best required matrix passed 26 of 127 rows on `4558a85b`.
 Of the 100 blocked rows, 47 have `m6/` identifiers. The separate

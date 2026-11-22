@@ -1,0 +1,71 @@
+{
+  "actual_exit": 0,
+  "builds": {
+    "all-touch-base": {
+      "Cargo_wall_seconds": 440.27895269700093,
+      "actual_exit": 0,
+      "binary_sha256": "ef37bac386ebee9c3fbda0208441694df8d1bad01a6501f3435cb7259f6593ea",
+      "local_crates_compiled": 28,
+      "reuse_verified": false,
+      "wall_seconds": 441.7431135579827
+    },
+    "all-touch-child": {
+      "Cargo_wall_seconds": 334.5641178350197,
+      "actual_exit": 0,
+      "binary_sha256": "4e8dcb1349aadf78e8028373ed67861a215a13fe86000fa09cceb5e73e42a47c",
+      "local_crates_compiled": 28,
+      "reuse_verified": true,
+      "wall_seconds": 336.4086302209762
+    },
+    "content-aware-base": {
+      "Cargo_wall_seconds": 436.64232327003265,
+      "actual_exit": 0,
+      "binary_sha256": "ef37bac386ebee9c3fbda0208441694df8d1bad01a6501f3435cb7259f6593ea",
+      "local_crates_compiled": 28,
+      "reuse_verified": false,
+      "wall_seconds": 437.9537378650275
+    },
+    "content-aware-child": {
+      "Cargo_wall_seconds": 140.55411624297267,
+      "actual_exit": 0,
+      "binary_sha256": "4e8dcb1349aadf78e8028373ed67861a215a13fe86000fa09cceb5e73e42a47c",
+      "local_crates_compiled": 2,
+      "reuse_verified": true,
+      "wall_seconds": 141.9505115590291
+    }
+  },
+  "cargo_argv": [
+    "cargo",
+    "build",
+    "--manifest-path",
+    "rust/Cargo.toml",
+    "--locked",
+    "--offline",
+    "--release",
+    "--jobs",
+    "2",
+    "-p",
+    "dispatcharr-rs",
+    "--bin",
+    "dispatcharr-rs",
+    "--message-format=json"
+  ],
+  "changed_inputs": [
+    "rust/crates/job-transport/src/core_settings_broker_transport.rs",
+    "rust/crates/job-transport/src/core_tasks_transport.rs",
+    "rust/crates/job-transport/src/transport.rs",
+    "rust/crates/store/src/sqlite_channel_logos.rs",
+    "rust/crates/store/src/sqlite_notifications.rs",
+    "rust/crates/store/src/sqlite_rest_reads.rs",
+    "rust/crates/store/src/sqlite_runtime.rs",
+    "rust/crates/store/src/sqlite_stream_filter_options.rs",
+    "rust/crates/store/src/sqlite_streams.rs"
+  ],
+  "engine_calls": 0,
+  "full_image_AB_measured": false,
+  "report_sha256": "ca8283fa8b1985c11ec34d0e5584904ca1a26067c701397b866902e87164fcd8",
+  "runtime_performance_measured": false,
+  "same_path_output_equivalence": true,
+  "scope": "One isolated host release A/B on exact 9ace9f66 and 424880a9 archives with two fresh caches",
+  "warm_cargo_reduction_fraction": 0.5798888501477534
+}
