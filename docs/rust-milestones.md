@@ -70,6 +70,10 @@ seven persistent PostgreSQL processes whose sockets matched the same Native Main
 pool-state diagnostic linked all seven to SQLx maintenance resetting their idle
 timestamps. The original short resource gate remains open.
 
+The [f960875 workflow wave and soak prefix](rust-m9-f960875-functional-wave-and-soak-prefix.md)
+verified 16 fresh workflows and a separate 360-second soak on one exact image.
+The two-hour soak and full 127-row release suite remain open.
+
 The [1124391 grouped Compose run](rust-m9-1124391-sixteen-compose-workflows.md)
 passed 16 selected workflows, with three retained Original authorities, 108 blocked
 rows and exact cleanup. The full 127-row gate remains open.
@@ -1394,10 +1398,10 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
 | M4 | VOD and timeshift parity | M2 | In progress (ordinary DVR functional slice and one- and ten-viewer completed playback budgets passed) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
 | M5 | Accounts, settings, and channel control APIs | M2 | In progress (stock React provider modals and group cleanup verified on prior revisions; both guide-create orders matched) | API/permission/database/React workflow parity and API benchmarks |
-| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (saved jobs and warm Core failover verified in explicit worker scopes; default graph open) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
+| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (stock-profile AIO scheduler and modular web peer verified on f960875; broader jobs and recovery open) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (fixed HDHomeRun GET, Auto Sync regex preview and scoped Connect workflows verified) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (ordinary backup inventory and direct downloads, trusted selected actions and scoped operator checks passed; default jobs and wider restore/admin coverage open) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
-| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (17 fresh required Compose passes on 9cf6407; local copied PostgreSQL rollback passed; final suite and soak open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
+| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (16 fresh Compose workflows and 360-second soak pass on f960875; full suite, two-hour soak and release performance open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 | M10 | Controlled rollout | M9 | Proposed ([native ARM64 package, startup, React and first-run auth verified](rust-m10-a8ea333d-native-arm64-docker-desktop.md) on a8ea333d) | Scoped rollout plan, monitoring and rollback on the selected release image |
 | M11 | Default switch and operator handoff | M10 | Proposed | Released image and configuration, upgrade evidence, attribution and monitored fallback |
 
