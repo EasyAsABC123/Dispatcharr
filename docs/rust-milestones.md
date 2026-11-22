@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [e65b4318 native ARM64 restart](rust-m10-e65b4318-native-arm64.md) passed
+on lappy with a locally generated copied SQLite fixture, protected React
+shell and assets, the direct login shell, and five Core reads across both
+generations. Exact cleanup passed.
+
 The [fault references and e65b4318 warm cutback](rust-e65b4318-original-faults-and-warm-cutback.md)
 record Original's broker reply-loss, Xtream fallback and recovery, and single
 notification dismissal behavior. The exact e65b4318 image also passed the
