@@ -9,6 +9,10 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [e0016d42 HDHomeRun browser authentication comparison](rust-m0-e0016d42-hdhr-browser-auth.md)
+matched eight 401 statuses and bearer challenges. Original used its
+browsable HTML response and Rust used JSON. Both scopes retired cleanly.
+
 The [e0016d42 ordinary and copied-data checkpoint](rust-m6-m8-e0016d42-scheduler-copied-preview.md)
 matched saved schedule identities, Scanner and Recurring work, four Version
 outcomes, and daily expiration. The copied-feature image also served two

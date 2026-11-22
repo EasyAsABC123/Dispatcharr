@@ -1,0 +1,456 @@
+{
+  "Native_comparison_proof_sha256": "3161deba730c514b53c055ef3f1df2e78e7b4195f22ee768d64d4a32ed8f86df",
+  "Original_proof_sha256": "c4427a9cd633674edf4be3fdf5d76a7af4bc9d18f7f4b1039768939727a1836e",
+  "observed": {
+    "Native_observed": 8,
+    "all_wire_equal": false,
+    "application": {
+      "Original_proof_sha256": "c4427a9cd633674edf4be3fdf5d76a7af4bc9d18f7f4b1039768939727a1836e",
+      "Original_raw_sha256": "95071146ad2dc05ffdf0e5019836d1fe32a1fe7d58480985bbc2d6dc8454c9d3",
+      "image_id": "sha256:424e93b50c8a9066505cdd4d11f638d8917f3d8305a90b44377deec9b9a50252",
+      "manifest_sha256": "000164b68032d96095ec4f3a63efd8f2cbdc1e78d30a97baf4765a0c9fa4b13e",
+      "review_sha256": "108b2e6e5200282f14d10ae183a04dfa29c54ee2324cd1bff265b011869e0ed3",
+      "revision": "e0016d42cd2e4752e8be5c12fdcfd5b85a3c994d"
+    },
+    "cases": {
+      "allowed-inactive-api-key-authorization": {
+        "Native": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 26,
+          "body_sha256": "adfd3537cd68e4e91393d36b425b6bd5ad3a47b78078516022d9d795a54f787b",
+          "credential": "api-key-authorization",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "26",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "allowed",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "Original": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 10317,
+          "body_sha256": "d9fffd5ab0f55ddbd7dbb720e15a207c24a8ec43069dbae87d9b6ae29f01af46",
+          "credential": "api-key-authorization",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "10317",
+            "content-type": "text/html; charset=utf-8",
+            "location": null,
+            "vary": "Accept, origin, Cookie",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "allowed",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "changed_fields": [
+          "headers",
+          "body_bytes",
+          "body_sha256"
+        ],
+        "changed_headers": [
+          "content-length",
+          "content-type",
+          "vary"
+        ]
+      },
+      "allowed-inactive-api-key-header": {
+        "Native": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 26,
+          "body_sha256": "adfd3537cd68e4e91393d36b425b6bd5ad3a47b78078516022d9d795a54f787b",
+          "credential": "api-key-header",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "26",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "allowed",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "Original": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 10317,
+          "body_sha256": "40af9ca025cf8cc22ee201a1f20b7ac0b24bac23b8ed06261c94bd3b78e8b85d",
+          "credential": "api-key-header",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "10317",
+            "content-type": "text/html; charset=utf-8",
+            "location": null,
+            "vary": "Accept, origin, Cookie",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "allowed",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "changed_fields": [
+          "headers",
+          "body_bytes",
+          "body_sha256"
+        ],
+        "changed_headers": [
+          "content-length",
+          "content-type",
+          "vary"
+        ]
+      },
+      "allowed-inactive-bearer": {
+        "Native": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 52,
+          "body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "credential": "bearer",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "52",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "allowed",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "Original": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 10369,
+          "body_sha256": "9fe1c208e64c2b50be3047c29f3242cb906b45e1cf6209081b291584fd947c9a",
+          "credential": "bearer",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "10369",
+            "content-type": "text/html; charset=utf-8",
+            "location": null,
+            "vary": "Accept, origin, Cookie",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "allowed",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "changed_fields": [
+          "headers",
+          "body_bytes",
+          "body_sha256"
+        ],
+        "changed_headers": [
+          "content-length",
+          "content-type",
+          "vary"
+        ]
+      },
+      "allowed-standard-expired-bearer": {
+        "Native": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 172,
+          "body_sha256": "6891825c99d84f0091af9066449eb45463067cbe64ab2cb87faa74eb0efa5e25",
+          "credential": "expired-bearer",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "172",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "allowed",
+          "query": "format=api",
+          "role": "standard",
+          "status": 401
+        },
+        "Original": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 10630,
+          "body_sha256": "7fb406b07538fd90a8f2d2aa38ec13a5297799a5d1da0573057d94a9a326d7a2",
+          "credential": "expired-bearer",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "10630",
+            "content-type": "text/html; charset=utf-8",
+            "location": null,
+            "vary": "Accept, origin, Cookie",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "allowed",
+          "query": "format=api",
+          "role": "standard",
+          "status": 401
+        },
+        "changed_fields": [
+          "headers",
+          "body_bytes",
+          "body_sha256"
+        ],
+        "changed_headers": [
+          "content-length",
+          "content-type",
+          "vary"
+        ]
+      },
+      "policy-denied-inactive-api-key-authorization": {
+        "Native": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 26,
+          "body_sha256": "adfd3537cd68e4e91393d36b425b6bd5ad3a47b78078516022d9d795a54f787b",
+          "credential": "api-key-authorization",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "26",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "policy-denied",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "Original": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 10317,
+          "body_sha256": "821a20539e9bd32f1220b9268d634b3ecd9ca886a7ccf409011d6e45e1b86366",
+          "credential": "api-key-authorization",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "10317",
+            "content-type": "text/html; charset=utf-8",
+            "location": null,
+            "vary": "Accept, origin, Cookie",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "policy-denied",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "changed_fields": [
+          "headers",
+          "body_bytes",
+          "body_sha256"
+        ],
+        "changed_headers": [
+          "content-length",
+          "content-type",
+          "vary"
+        ]
+      },
+      "policy-denied-inactive-api-key-header": {
+        "Native": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 26,
+          "body_sha256": "adfd3537cd68e4e91393d36b425b6bd5ad3a47b78078516022d9d795a54f787b",
+          "credential": "api-key-header",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "26",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "policy-denied",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "Original": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 10317,
+          "body_sha256": "c5e51fefd29bc424a2e81c58de3f37af96f50b11e012f65df291de4f9a0ff98f",
+          "credential": "api-key-header",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "10317",
+            "content-type": "text/html; charset=utf-8",
+            "location": null,
+            "vary": "Accept, origin, Cookie",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "policy-denied",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "changed_fields": [
+          "headers",
+          "body_bytes",
+          "body_sha256"
+        ],
+        "changed_headers": [
+          "content-length",
+          "content-type",
+          "vary"
+        ]
+      },
+      "policy-denied-inactive-bearer": {
+        "Native": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 52,
+          "body_sha256": "558bd4eda725d6bb968a3e76424d03750d955c4a05da18e5346469e01ab7269a",
+          "credential": "bearer",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "52",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "policy-denied",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "Original": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 10369,
+          "body_sha256": "cdf9db54f64d499e47abbfff25cae8a966e72335b4ef8db2ddb362f1cea69e5b",
+          "credential": "bearer",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "10369",
+            "content-type": "text/html; charset=utf-8",
+            "location": null,
+            "vary": "Accept, origin, Cookie",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "policy-denied",
+          "query": "format=api",
+          "role": "inactive",
+          "status": 401
+        },
+        "changed_fields": [
+          "headers",
+          "body_bytes",
+          "body_sha256"
+        ],
+        "changed_headers": [
+          "content-length",
+          "content-type",
+          "vary"
+        ]
+      },
+      "policy-denied-standard-expired-bearer": {
+        "Native": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 172,
+          "body_sha256": "6891825c99d84f0091af9066449eb45463067cbe64ab2cb87faa74eb0efa5e25",
+          "credential": "expired-bearer",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "172",
+            "content-type": "application/json",
+            "location": null,
+            "vary": "Accept, origin",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "policy-denied",
+          "query": "format=api",
+          "role": "standard",
+          "status": 401
+        },
+        "Original": {
+          "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "body_bytes": 10630,
+          "body_sha256": "2560adc7dd9535edc59989695fb43c71621ad0e78a8d4ab8e22e6ae633e1e0ad",
+          "credential": "expired-bearer",
+          "headers": {
+            "allow": "GET, HEAD, OPTIONS",
+            "content-length": "10630",
+            "content-type": "text/html; charset=utf-8",
+            "location": null,
+            "vary": "Accept, origin, Cookie",
+            "www-authenticate": "Bearer realm=\"api\""
+          },
+          "method": "GET",
+          "negotiation": "format-api-browser",
+          "path": "/hdhr/lineup_status.json",
+          "policy": "policy-denied",
+          "query": "format=api",
+          "role": "standard",
+          "status": 401
+        },
+        "changed_fields": [
+          "headers",
+          "body_bytes",
+          "body_sha256"
+        ],
+        "changed_headers": [
+          "content-length",
+          "content-type",
+          "vary"
+        ]
+      }
+    },
+    "exact_cleanup": true,
+    "formal_node_promoted": false,
+    "literal_native_exit": 0,
+    "native_normal_stop": true,
+    "raw_body_digests_compared_without_normalization": true,
+    "raw_report_sha256": "d5718c32e218f803924e10a411e3c302b2f6549c8b6fc7f10f09d7bcb7672713"
+  }
+}
