@@ -70,6 +70,16 @@ seven persistent PostgreSQL processes whose sockets matched the same Native Main
 pool-state diagnostic linked all seven to SQLx maintenance resetting their idle
 timestamps. The original short resource gate remains open.
 
+The dedicated [f960875 Movie and Series provider-modal replay](rust-m9-f960875-provider-modal-browser.md)
+passed both real Chromium arms with unchanged React and exact cleanup. The
+[local copied PostgreSQL rollback](rust-m10-m11-f960875-local-rollback.md)
+reconciled one accepted write through the warm Original endpoint in 7.929 s.
+
+Fresh native ARM64 projects matched the [ordinary account API](rust-m5-f960875-arm64-ordinary-account-pair.md)
+and verified [both owned AIO startup task terminals](rust-m6-f960875-arm64-aio-downstream-startup.md).
+The AMD64 [AppData comparisons](rust-m0-m5-f960875-numeric-app-data.md)
+matched scoped SQL, roles, statuses, and bodies while retaining specific wire-header differences.
+
 The [f960875 two-hour soak](rust-m9-f960875-two-hour-soak.md) passed with ten viewers,
 12 scheduled XMLTV imports, 140 decoded clips, and exact cleanup. The release
 workflow-parity prerequisite and whole-service comparison remain open.
@@ -1405,7 +1415,7 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (stock-profile AIO scheduler and modular web peer verified on f960875; broader jobs and recovery open) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (fixed HDHomeRun GET, Auto Sync regex preview and scoped Connect workflows verified) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (ordinary backup inventory and direct downloads, trusted selected actions and scoped operator checks passed; default jobs and wider restore/admin coverage open) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
-| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (16 fresh Compose workflows and two-hour owned soak pass on f960875; full suite and release performance open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
+| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (16 grouped workflows, separate provider-modal, two-hour soak and local copied-data rollback pass on f960875; full suite and release performance open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 | M10 | Controlled rollout | M9 | Proposed ([current ordinary ARM64 package, startup, React HTML, and scoped account checks verified](rust-m10-f960875-native-arm64-docker-desktop.md) on f960875) | Scoped rollout plan, monitoring and rollback on the selected release image |
 | M11 | Default switch and operator handoff | M10 | Proposed | Released image and configuration, upgrade evidence, attribution and monitored fallback |
 

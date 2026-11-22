@@ -1,0 +1,213 @@
+{
+  "build_manifest_sha256": "4b2e7f2968b98ca07a5dacec396ac02b4259000e7f7521741cc715218bc43a8f",
+  "candidate_revision": "f960875f26d26bf1108a299530064d24ecc462a3",
+  "full_wire_parity_verified": false,
+  "performance_verified": false,
+  "read_family": {
+    "candidate": "f960875f26d26bf1108a299530064d24ecc462a3",
+    "canonical_operations": [
+      "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+      "route-f7f70739debd2202db5e:METHOD_UNRESOLVED"
+    ],
+    "exact_NO_SQL_write_and_same_scoped_state": true,
+    "exact_cleanup": true,
+    "formal_rows_promoted": [],
+    "fresh_original_and_native": true,
+    "fresh_receipt_sha256": "bd6a9d7e85fd096b8c5a8a8e30f382de8977e55728f74b5d5a1e69c085de3694",
+    "literal_exit": 0,
+    "manifest_sha256": "4b2e7f2968b98ca07a5dacec396ac02b4259000e7f7521741cc715218bc43a8f",
+    "method": "GET",
+    "roles_and_statuses_each": [
+      [
+        "owner",
+        200
+      ],
+      [
+        "admin",
+        200
+      ],
+      [
+        "other_standard",
+        403
+      ]
+    ],
+    "valid_Bearer_identities_verified": true,
+    "wire_differential": [
+      {
+        "contract_id": "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "payload_shape": "collection_summary",
+        "role": "owner"
+      },
+      {
+        "contract_id": "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "payload_shape": "collection_summary",
+        "role": "admin"
+      },
+      {
+        "contract_id": "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "payload_shape": "collection_summary",
+        "role": "other_standard"
+      },
+      {
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "payload_shape": "stored_value",
+        "role": "owner"
+      },
+      {
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "payload_shape": "stored_value",
+        "role": "admin"
+      },
+      {
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "payload_shape": "stored_value",
+        "role": "other_standard"
+      }
+    ]
+  },
+  "whole_M0_or_M5_verified": false,
+  "write_family": {
+    "candidate": "f960875f26d26bf1108a299530064d24ecc462a3",
+    "canonical_operations": [
+      "route-f7f70739debd2202db5e:METHOD_UNRESOLVED"
+    ],
+    "exact_cleanup": true,
+    "exact_scoped_restoration_and_unchanged_unrelated_state": true,
+    "formal_rows_promoted": [],
+    "fresh_original_and_native": true,
+    "fresh_receipt_sha256": "b1ad8d1690981673d834fd6a866a13228529088d1d90575f70f6de9716dafa5b",
+    "literal_exit": 0,
+    "manifest_sha256": "4b2e7f2968b98ca07a5dacec396ac02b4259000e7f7521741cc715218bc43a8f",
+    "methods": [
+      "PUT",
+      "DELETE"
+    ],
+    "role_method_statuses": [
+      [
+        "other_standard",
+        "PUT",
+        403
+      ],
+      [
+        "other_standard",
+        "DELETE",
+        403
+      ],
+      [
+        "owner",
+        "PUT",
+        200
+      ],
+      [
+        "owner",
+        "DELETE",
+        204
+      ],
+      [
+        "admin",
+        "PUT",
+        200
+      ],
+      [
+        "admin",
+        "DELETE",
+        204
+      ]
+    ],
+    "valid_Bearer_identities_verified": true,
+    "wire_differential": [
+      {
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "method": "PUT",
+        "role": "other_standard"
+      },
+      {
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "method": "DELETE",
+        "role": "other_standard"
+      },
+      {
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "method": "PUT",
+        "role": "owner"
+      },
+      {
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Content-Length",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "method": "DELETE",
+        "role": "owner"
+      },
+      {
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "method": "PUT",
+        "role": "admin"
+      },
+      {
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "headers_differ": [
+          "Allow",
+          "Content-Length",
+          "Vary"
+        ],
+        "literal_body_equal": true,
+        "method": "DELETE",
+        "role": "admin"
+      }
+    ]
+  }
+}
