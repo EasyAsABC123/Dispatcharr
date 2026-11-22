@@ -351,7 +351,7 @@ async fn combined_stats_legacy_alias(request: axum::extract::Request) -> Respons
 
 async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let admin_location = admin_ingress::configured_location()?;
-    let (selected_jobs_enabled, selected_beat) = selected_jobs::configuration()?;
+    let (selected_jobs_enabled, selected_beat) = selected_jobs::main_configuration()?;
     let core_scheduled_jobs_enabled = core_scheduled_jobs::enabled()?;
     selected_beat.validate_owners(
         core_scheduled_jobs_enabled,
