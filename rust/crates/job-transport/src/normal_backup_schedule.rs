@@ -171,6 +171,9 @@ impl Schedule {
     pub(crate) fn new(store: Store, cache: String) -> Self {
         Self { store, cache }
     }
+    pub(crate) fn pool(&self) -> &sqlx::PgPool {
+        self.store.pool()
+    }
     pub(crate) async fn initialize(&self, owner: Arc<dyn Send + Sync>) -> Result<(), StoreError> {
         self.apply(None, owner, None, ReconcilePolicy::Refresh)
             .await

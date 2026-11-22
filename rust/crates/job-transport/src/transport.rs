@@ -122,7 +122,41 @@ enum Authority {
     Backup,
     BackupRestore,
 }
+fn same_redis_endpoint(left: &redis::ConnectionInfo, right: &redis::ConnectionInfo) -> bool {
+    left.addr == right.addr
+        && left.redis.db == right.redis.db
+        && left.redis.username == right.redis.username
+        && left.redis.password == right.redis.password
+        && left.redis.protocol == right.redis.protocol
+}
+
+#[cfg(test)]
+#[test]
+fn core_schedule_binding_rejects_foreign_redis_address_db_auth_or_protocol() {
+    let local: redis::ConnectionInfo = "redis://127.0.0.1:6379/8".parse().unwrap();
+    for change in [
+        "redis://127.0.0.1:6379/9",
+        "redis://127.0.0.1:6380/8",
+        "redis://localhost:6379/8",
+        "redis://fixture:example@127.0.0.1:6379/8",
+        "redis://127.0.0.1:6379/8?protocol=resp3",
+    ] {
+        let foreign: redis::ConnectionInfo = change.parse().unwrap();
+        assert!(!same_redis_endpoint(&local, &foreign));
+    }
+    assert!(same_redis_endpoint(&local, &local.clone()));
+}
+
 impl Jobs {
+    pub(crate) fn same_configured_ports(&self, other: &Self) -> bool {
+        same_redis_endpoint(
+            self.inner.broker.configured_endpoint(),
+            other.inner.broker.configured_endpoint(),
+        ) && same_redis_endpoint(
+            self.inner.result.configured_endpoint(),
+            other.inner.result.configured_endpoint(),
+        )
+    }
     // Positive allowlist preserves every old role truth table, including the
     // existing cfgtest LocalArtworkFixture behavior. New DVR is never admitted
     // to any of the13 generic Index/ETA methods merely by adding an enum variant.

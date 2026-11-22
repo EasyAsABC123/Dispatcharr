@@ -219,6 +219,23 @@ struct Inner {
     poll: Duration,
     lifecycle: Mutex<(bool, bool)>,
     require_registered: bool,
+    schedule_owner: Mutex<ScheduleOwner>,
+}
+#[derive(Clone, Copy, Default, PartialEq, Eq)]
+enum ScheduleOwner {
+    #[default]
+    Unbound,
+    Core,
+    Taskless,
+}
+impl ScheduleOwner {
+    fn bind(&mut self, requested: Self) -> Result<(), Error> {
+        if *self != Self::Unbound && !(*self == Self::Taskless && requested == Self::Taskless) {
+            return Err(Error::Configuration);
+        }
+        *self = requested;
+        Ok(())
+    }
 }
 struct Lifetime(watch::Sender<bool>);
 impl Drop for Lifetime {
@@ -230,6 +247,85 @@ impl Drop for Lifetime {
 pub struct Application {
     inner: Arc<Inner>,
     lifetime: Arc<Lifetime>,
+}
+
+/// Capability issued by the exact complete Selected receiver before starting it.
+/// This does not start a queue or grant taskless restore authority.
+pub struct SelectedCoreSchedules {
+    receiver: Weak<Inner>,
+    stop: Weak<Lifetime>,
+    backup: Arc<crate::normal_backup::Application>,
+    plugin_refresh: bool,
+}
+
+impl SelectedCoreSchedules {
+    pub(super) fn jobs(&self) -> crate::transport::Jobs {
+        self.backup.scheduled_jobs()
+    }
+
+    pub(super) fn pool(&self) -> sqlx::PgPool {
+        self.backup.schedule_pool().clone()
+    }
+
+    pub(super) fn identity(&self) -> dispatcharr_store::ProducerIdentitySource {
+        self.backup.schedule_identity()
+    }
+
+    pub(super) fn ready(&self) -> bool {
+        let Some((receiver, stop)) = self.receiver.upgrade().zip(self.stop.upgrade()) else {
+            return false;
+        };
+        let stopping = *stop.0.borrow();
+        let celery = receiver.celery.state.borrow();
+        let dvr = receiver.dvr.state.borrow();
+        selected_schedules_ready(
+            stopping,
+            self.backup.scheduled_admission_open(),
+            &celery,
+            &dvr,
+        )
+    }
+
+    pub(super) fn owns_plugin_refresh(&self) -> bool {
+        self.plugin_refresh
+    }
+
+    pub(super) fn enable_schedule(
+        &self,
+        data: serde_json::Value,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<serde_json::Value, dispatcharr_store::StoreError>> {
+        dispatcharr_store::BackupJobApi::update_schedule(self.backup.as_ref(), data, owner)
+    }
+}
+
+fn selected_schedules_ready(
+    stopping: bool,
+    backup_open: bool,
+    celery: &State,
+    dvr: &State,
+) -> bool {
+    !stopping && backup_open && celery.ready() && dvr.ready()
+}
+
+fn selected_schedules_match(
+    families: &BTreeMap<Family, Arc<OwnedFamily>>,
+    backup: &Arc<dyn Handler>,
+) -> bool {
+    [Family::BackupCreate, Family::BackupScheduled]
+        .iter()
+        .all(|family| {
+            families
+                .get(family)
+                .is_some_and(|actual| Arc::ptr_eq(&actual.inner, backup))
+        })
+        && [
+            Family::BackendCleanup,
+            Family::AccountExpiration,
+            Family::VersionCheck,
+        ]
+        .iter()
+        .all(|family| families.contains_key(family))
 }
 
 /// Shared Core Celery receiver for backup requests and prepared periodic families.
@@ -617,6 +713,42 @@ impl Application {
             .get(&family)
             .is_some_and(|prepared| Arc::ptr_eq(&prepared.inner, expected))
     }
+    /// Bind one scoped scheduler to this already prepared Selected receiver.
+    /// Call before starting either lifecycle. The caller must replace any other Beat.
+    pub fn core_schedule_receiver(
+        &self,
+        backup: &Arc<crate::normal_backup::Application>,
+    ) -> Result<SelectedCoreSchedules, Error> {
+        let handler: Arc<dyn Handler> = backup.clone();
+        let jobs = backup.scheduled_jobs();
+        if !jobs.allows_defaults()
+            || !backup.scheduled_admission_open()
+            || !selected_schedules_match(&self.inner.families, &handler)
+            || self
+                .inner
+                .heads
+                .iter()
+                .any(|head| !head.uses_configured_ports(&jobs))
+        {
+            return Err(Error::Configuration);
+        }
+        let lifecycle = self.inner.lifecycle.lock().map_err(|_| Error::Poisoned)?;
+        if lifecycle.0 || lifecycle.1 || *self.lifetime.0.borrow() {
+            return Err(Error::Closed);
+        }
+        self.inner
+            .schedule_owner
+            .lock()
+            .map_err(|_| Error::Poisoned)?
+            .bind(ScheduleOwner::Core)?;
+        Ok(SelectedCoreSchedules {
+            receiver: Arc::downgrade(&self.inner),
+            stop: Arc::downgrade(&self.lifetime),
+            backup: backup.clone(),
+            plugin_refresh: self.inner.families.contains_key(&Family::PluginRefresh),
+        })
+    }
+
     /// Only actual Selected family pointers may bind this read-only authority.
     pub fn taskless_builtin_authority(
         &self,
@@ -640,6 +772,11 @@ impl Application {
         {
             return Err(Error::Configuration);
         }
+        self.inner
+            .schedule_owner
+            .lock()
+            .map_err(|_| Error::Poisoned)?
+            .bind(ScheduleOwner::Taskless)?;
         Ok(TasklessBuiltins {
             selected: Arc::downgrade(&self.inner),
             plugins: Arc::downgrade(plugins),
@@ -747,6 +884,7 @@ impl Application {
                 families,
                 poll,
                 lifecycle: Mutex::new((false, false)),
+                schedule_owner: Mutex::new(ScheduleOwner::Unbound),
             }),
             lifetime: Arc::new(Lifetime(watch::channel(false).0)),
         })
@@ -1344,6 +1482,86 @@ mod tests {
             })
         }
     }
+    #[test]
+    fn core_schedule_binding_requires_both_actual_backup_entries_and_supported_due_families() {
+        fn handler() -> Arc<dyn Handler> {
+            Arc::new(Probe {
+                queue: Mutex::new(VecDeque::new()),
+                starts: AtomicUsize::new(0),
+                claims: AtomicUsize::new(0),
+                active: AtomicUsize::new(0),
+                duplicates: AtomicUsize::new(0),
+                peeked: AtomicUsize::new(0),
+                claim_gate: Arc::new(Semaphore::new(0)),
+                finish_gate: Arc::new(Semaphore::new(0)),
+                advanced: Arc::new(tokio::sync::Notify::new()),
+            })
+        }
+        let actual = handler();
+        let unrelated = handler();
+        let entry = |inner| {
+            Arc::new(OwnedFamily {
+                inner,
+                slot: Arc::new(Semaphore::new(1)),
+                closed: AtomicBool::new(false),
+            })
+        };
+        let mut families = [
+            Family::BackupCreate,
+            Family::BackupScheduled,
+            Family::BackendCleanup,
+            Family::AccountExpiration,
+            Family::VersionCheck,
+        ]
+        .into_iter()
+        .map(|family| (family, entry(actual.clone())))
+        .collect::<BTreeMap<_, _>>();
+        assert!(selected_schedules_match(&families, &actual));
+        assert!(!selected_schedules_match(&families, &unrelated));
+        families.insert(Family::BackupScheduled, entry(unrelated));
+        assert!(!selected_schedules_match(&families, &actual));
+        families.insert(Family::BackupScheduled, entry(actual.clone()));
+        for family in [
+            Family::BackendCleanup,
+            Family::AccountExpiration,
+            Family::VersionCheck,
+        ] {
+            let removed = families.remove(&family).unwrap();
+            assert!(!selected_schedules_match(&families, &actual));
+            families.insert(family, removed);
+        }
+    }
+
+    #[test]
+    fn core_schedule_binding_rejects_duplicate_owner_and_taskless_conflict_in_either_order() {
+        let mut mode = ScheduleOwner::Unbound;
+        assert!(mode.bind(ScheduleOwner::Core).is_ok());
+        assert!(mode.bind(ScheduleOwner::Core).is_err());
+        assert!(mode.bind(ScheduleOwner::Taskless).is_err());
+
+        let mut mode = ScheduleOwner::Unbound;
+        assert!(mode.bind(ScheduleOwner::Taskless).is_ok());
+        assert!(mode.bind(ScheduleOwner::Taskless).is_ok());
+        assert!(mode.bind(ScheduleOwner::Core).is_err());
+    }
+
+    #[test]
+    fn core_schedule_binding_requires_live_selected_lanes_and_open_backup() {
+        let running = State::Observed(Disposition::Empty);
+        assert!(selected_schedules_ready(false, true, &running, &running));
+        assert!(!selected_schedules_ready(true, true, &running, &running));
+        assert!(!selected_schedules_ready(false, false, &running, &running));
+        for blocked in [
+            State::Prepared,
+            State::Starting,
+            State::Stopped,
+            State::Blocked(Disposition::UnsupportedHead),
+        ] {
+            assert!(!selected_schedules_ready(false, true, &blocked, &running));
+            assert!(!selected_schedules_ready(false, true, &running, &blocked));
+        }
+    }
+
     async fn until(mut test: impl FnMut() -> bool) {
         tokio::time::timeout(Duration::from_secs(3), async {
             while !test() {
