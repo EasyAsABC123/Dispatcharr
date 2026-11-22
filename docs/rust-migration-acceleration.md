@@ -55,10 +55,13 @@ stopped after Cargo completed because the target inventory rejected an
 internal libtool symlink. The corrected inventory checked that link's
 contained regular referent, then both arms started with fresh caches.
 
-The next packaging experiment needs an isolated ordinary Docker build with
-both cache policies, exact input and output verification, and packaged
-functional checks. The host comparison has no Docker timing or application
-resource measurements. [Host build evidence](../scripts/rust-integration/m10-host-release-cache-ab.json)
+The corrected isolated BuildKit comparison used the same revisions, identical
+absolute compiler paths and separate cold caches. Warm Cargo fell from 341.1
+to 145.3 seconds, and the outer Docker build fell from 345.8 to 148.3 seconds.
+The warm arms compiled 29 and three local crates. Both Main and operator
+executables matched byte for byte and by mode. Production-path packaging
+and application resource measurements have separate gates.
+[Host build evidence](../scripts/rust-integration/m10-host-release-cache-ab.json) · [Docker timing evidence](rust-m10-docker-build-cache-ab.md)
 
 The historical best required matrix passed 26 of 127 rows on `4558a85b`.
 Of the 100 blocked rows, 47 have `m6/` identifiers. The separate
