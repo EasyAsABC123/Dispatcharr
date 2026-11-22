@@ -48,14 +48,37 @@ provenance, packaged behavior, and same-path source changes. Savings
 from this experiment are unmeasured.
 
 The historical best required matrix passed 26 of 127 rows on `4558a85b`.
-The separate `25dc1502` report passed 21. The next throughput target is one
-current image with the existing package selectors bound to a shared set
-of fixtures, followed by whole production workflows. For playback and
-React, share the paired media, database, and player setup while retaining
-each row's assertions and cleanup. For scheduled work, prioritize natural
-producer-to-worker execution and descendant results. That remains a
-product gap. Finish functional qualification before the paired
-application resource comparison.
+Of the 100 blocked rows, 47 have `m6/` identifiers. The separate
+`Main/settings-task-consumers` row was also blocked. These are acceptance
+counts for required workflows on that exact package.
+The separate `25dc1502` report passed 21 on its own package.
+[Formal matrix and scopes](rust-m9-4558a85b-formal-compose.md)
+
+Prioritize the ordinary producer, worker, and scheduler graph. Recent
+explicit Selected/Core pairs demonstrated actual scheduled backup and two
+linked XMLTV schedules. The next scope is installed known schedules,
+restart retention, and actual Scanner and Recurring jobs. Resolve normal
+receiver readiness and single Beat ownership before treating opt-in
+results as evidence for normal startup. Continue independent playback
+and copied-data work while the scheduler change is prepared.
+[Worker coverage](rust-default-worker-graph.md)
+
+Two ordinary-only candidates spent 347.3 and 342.3 seconds in the Rust
+compiler step. `66b02c4a` used one build for the XMLTV scheduler and the
+HDHomeRun response fix. Its queued XMLTV-only build ended before contacting
+the engine. The same built application also verified a separate Native
+profile recovery workflow. Keep using one immutable image for related
+runtime changes and shared fixture bootstraps with independently asserted
+results. Test observer corrections on the same image. Use the coordinator's
+full workflow binding early when the acceptance scope is already known.
+[Combined Compose checks](rust-m0-m6-66b02c4a-xmltv-hdhr-checkpoint.md)
+
+Reserve the final whole-matrix rehearsal, soak, and release resource
+comparison for one candidate. The historical 100-viewer shared VLC MPEG-TS
+comparison continues to demonstrate one upstream, equivalent decoded work,
+82.6% lower CPU, and 71.0% lower peak working memory on its named image.
+The current release-wide resource gate remains open.
+[100-viewer measurement](rust-m2-100-viewer-measured.md)
 
 ## Parallel ownership with a bounded integration queue
 

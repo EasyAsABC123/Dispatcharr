@@ -9,6 +9,12 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [66b02c4a grouped Native media run](rust-m3-66b02c4a-native-profile-delivery-cohort.md)
+passed HLS, fMP4, equivalent and distinct profiles, fallback, and fresh
+FFmpeg child recovery, then exercised VLC in the same Compose fixture.
+Sixteen A/V observations and exact teardown passed. Formal coordinator
+qualification remains open.
+
 The [66b02c4a Native FFmpeg recovery](rust-m3-66b02c4a-profile-recovery.md)
 verified fresh profile playback after owned child loss. The unprofiled
 viewer continued on one upstream. Exact child and Compose cleanup passed.
@@ -21,7 +27,12 @@ wire responses with exact cleanup.
 The [Original media and profile reference](rust-m9-original-media-profile-workflows.md)
 verified 16 A/V observations, natural source switch, FFmpeg/VLC profiles,
 and recovery on a fresh request. It supplies the retained Original media
-dependency. Native profile delivery still requires its own complete run.
+dependency for the coordinator-owned Native profile delivery row.
+
+The [66b02c4a grouped Core preview](rust-m6-66b02c4a-core-cleanup-version-preview.md)
+matched saved Version HTTP 503, scheduled backend cleanup, and normal
+stop in one Compose fixture per backend. The same image qualified both
+scopes through the explicit Core preview.
 
 The [7f6b7016 scheduled-backup pilot](rust-m6-m8-7f6b7016-selected-core-beat.md)
 matched the ordinary saved UTC backup workflow using one Selected worker
@@ -31,6 +42,11 @@ pilot.
 The [424880a9 browser checkpoint](rust-m9-424880a9-browser-checkpoint.md)
 records fresh full passes for Unified HTML and Static Chrome on the same
 ordinary image. Both verified shipped React assets and exact cleanup.
+
+The [424880a9 migrated Standard Preview](rust-m8-424880-migrated-standard-preview.md)
+verified the historical SQLite-to-PostgreSQL upgrade, real imported login,
+advancing Chromium video through unchanged React, one origin connection,
+and exact normal retirement. Direct copied-SQLite playback remains open.
 
 The [424880a9 Compose checkpoint](rust-m6-m8-424880a9-compose-checkpoint.md)
 verified copied Streams account filters, Logo usage filters, and dismiss-all.

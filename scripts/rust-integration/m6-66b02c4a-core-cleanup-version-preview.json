@@ -1,0 +1,81 @@
+{
+  "actual_exits": {
+    "physical": 0,
+    "preflight": 0,
+    "proof": 0
+  },
+  "first_physical_actual_exit": 1,
+  "first_physical_exact_cleanup": true,
+  "first_physical_observation": "Original returned Version HTTP 503 and a terminal result. The observer waited for durable Beat count before causing its next normal marker reload. It stopped before cleanup admission with Native unstarted.",
+  "first_physical_raw_sha256": "76746de2237277828e14a2977a4de2a5c9c9690945ab3be6f3ab71b9de2795c4",
+  "observed": {
+    "backend_cleanup": "canonical cleanup SUCCESS/null, expiry 43200",
+    "business_observations": {
+      "actual_origin_HTTP": 503,
+      "cache_guard_deadline_preserved": true,
+      "durable_run_count_delta": 1,
+      "interval_seconds": 86400,
+      "observed_terminal_result": "SUCCESS/null",
+      "origin_requests": 1,
+      "periodic_name": "check-version-updates",
+      "version_SQL_notices": 0,
+      "version_notice_events": 0,
+      "version_roots": 1,
+      "worker_exit": 0,
+      "worker_ready_publications": 0
+    },
+    "candidate": "66b02c4a9d18ecb65d6b3acbbef443c34af9bd6a",
+    "canonical_rows_promoted": 0,
+    "comparative_performance": false,
+    "credit": "Original Dispatcharr, Django, Celery and django-celery-beat authors retain original credit.",
+    "formal_row_promoted": false,
+    "frozen_review_sha256": "11779ce05c2150fc6f8d697d4cd6d89b55dda99762984d69022271e2a1e00509",
+    "historical_status_transferred": false,
+    "image": "sha256:d99d2d100716a32b84dc57a538b8eac7f2fe4b167ab2e2a488985e9fa001df29",
+    "literal_exit": 0,
+    "manifest_sha256": "28a3d1d9e80b4a764b3f9355e1501d2451268e6547eadb219cd0022b47c8e683",
+    "normal_stop_exact": true,
+    "pairs": [
+      {
+        "cleanup": {
+          "exact_inventory_empty": true,
+          "normal_bootstrap_stop": true,
+          "owned_cids_absent": true,
+          "owned_host_generations_absent": true,
+          "passed": true
+        },
+        "complete": true,
+        "side": "original"
+      },
+      {
+        "cleanup": {
+          "exact_inventory_empty": true,
+          "normal_bootstrap_stop": true,
+          "owned_cids_absent": true,
+          "owned_host_generations_absent": true,
+          "passed": true
+        },
+        "complete": true,
+        "side": "native"
+      }
+    ],
+    "raw_receipt_sha256": "1e00f47d9e0c92f1eb7e4e36e27ec73a6f8f8a29f4ef6a22f7f8d56737757912",
+    "role_receipts": {
+      "native": {
+        "exact_cleanup": true,
+        "owned_roles": 5,
+        "state_sha256": "e847ac7036f2156b6dcdcbf86828638ad2a1784d91c70ee6b0d22b27abcba327"
+      },
+      "original": {
+        "exact_cleanup": true,
+        "owned_roles": 6,
+        "state_sha256": "3ffd1d389572fcc170040213b29c8003456d128b4262e28cead349b9dc300e6d"
+      }
+    },
+    "scope": "Shared ordinary opt-in Core preview with saved Version 503 and UTC backend cleanup",
+    "scoped_Core_preview_only": true,
+    "stock_existing_authority_sha256": "f7350b9e1b664fa1e6a957cdf8cf88ef5a665354c6d3ee4777c95183d33d287a",
+    "whole_M6": false
+  },
+  "proof_sha256": "63f238cfeb1412f38d1c4b22db88f2a90445f383d55aab80f14f493568bd8c36"
+}
