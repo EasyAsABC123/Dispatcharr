@@ -1,0 +1,109 @@
+{
+  "browser": {
+    "native": {
+      "actual_exit": 0,
+      "app_image": "sha256:1768853cb610b52b6311b0d37a92526650f2d6b472d6ffe0a3e2682fe2c98595",
+      "arm": "native",
+      "before_census": "62|184|0|0",
+      "blocked_http": 0,
+      "blocked_websocket": 0,
+      "browser_closed": true,
+      "browser_result_sha256": "c181d50dbcb569fefa53dc515f0afef901ce7195108d43cc366d5693e79acbce",
+      "browser_tmp_retired": true,
+      "browser_version": "140.0.7339.16",
+      "exact_cleanup": true,
+      "final_observed_account_state": "1|1|0",
+      "observer_actions_sha256": "e7db84a7c70147f529e07ec32f1f984fe554b5fbade2c861b6fe8d6016cfd86d",
+      "receipt_sha256": "8bbc33c46fe500c5036a9337faed2db10a3e28ecc60318fbc0e3de2669f9bc0b",
+      "scenario_sha256": "9ed8fd0c4603e2d0ef21a870dbc595041a49ec6102da400e464bd468f6624bd5",
+      "steps": [
+        "normal-setup-render",
+        "setup.submit",
+        "signin.submit",
+        "authenticated-render",
+        "account-dialog-read",
+        "normal-sign-out"
+      ],
+      "tooling_version": "1.55.0"
+    },
+    "original": {
+      "actual_exit": 0,
+      "app_image": "ghcr.io/dispatcharr/dispatcharr@sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+      "arm": "original",
+      "before_census": "62|184|0|0",
+      "blocked_http": 0,
+      "blocked_websocket": 0,
+      "browser_closed": true,
+      "browser_result_sha256": "07fd116f74ddf20a82182093c3d50fb366a43700b9895980731ed91fcaa7c138",
+      "browser_tmp_retired": true,
+      "browser_version": "140.0.7339.16",
+      "exact_cleanup": true,
+      "final_observed_account_state": "1|1|0",
+      "observer_actions_sha256": "e7db84a7c70147f529e07ec32f1f984fe554b5fbade2c861b6fe8d6016cfd86d",
+      "receipt_sha256": "61350261d9d83f5b04d0c75d683bb2986b2de4deafbc3d85d8bf1244488b1c51",
+      "scenario_sha256": "9ed8fd0c4603e2d0ef21a870dbc595041a49ec6102da400e464bd468f6624bd5",
+      "steps": [
+        "normal-setup-render",
+        "setup.submit",
+        "signin.submit",
+        "authenticated-render",
+        "account-dialog-read",
+        "normal-sign-out"
+      ],
+      "tooling_version": "1.55.0"
+    }
+  },
+  "credit": "The original Dispatcharr and React authors retain full application credit.",
+  "full_release_matrix_verified": false,
+  "native_application_revision": "f960875f26d26bf1108a299530064d24ecc462a3",
+  "output": {
+    "actual_exit": 0,
+    "exact_cleanup": true,
+    "image": "sha256:1768853cb610b52b6311b0d37a92526650f2d6b472d6ffe0a3e2682fe2c98595",
+    "ordinary_production_routes": [
+      "/get.php",
+      "/xmltv.php"
+    ],
+    "revision": "f960875f26d26bf1108a299530064d24ecc462a3"
+  },
+  "output_receipt_sha256": "61072c8996b4f40a668d7557fca9a2ef5030a198b4f526dd026a933550045ac3",
+  "performance_measured": false,
+  "restore": {
+    "actual_exit": 0,
+    "exact_cleanup": true,
+    "original_arm": "passed",
+    "original_exit": 0,
+    "probe_guest_exit": 0,
+    "worker_exit": 0
+  },
+  "restore_receipt_sha256": "59fee84e4921cd5bbbb3c6edf2c6537a615689a096fbcc99b7f0bce755e16d1f",
+  "samples_sha256": "46d06673927a0faa4d283777de7f72b4dbb269e07689d6d848e83645a7371883",
+  "summary": {
+    "all_three_active_samples": 5,
+    "lanes": {
+      "browser": {
+        "actual_exit": 0,
+        "exited_at": "2026-11-22T21:54:32.531664+00:00",
+        "started_at": "2026-11-22T21:53:44.458352+00:00"
+      },
+      "output": {
+        "actual_exit": 0,
+        "exited_at": "2026-11-22T21:53:48.904394+00:00",
+        "started_at": "2026-11-22T21:53:44.459471+00:00"
+      },
+      "restore": {
+        "actual_exit": 0,
+        "exited_at": "2026-11-22T21:54:06.208075+00:00",
+        "started_at": "2026-11-22T21:53:44.460720+00:00"
+      }
+    },
+    "observer_failure": null,
+    "running_owned_projects_at_end": {
+      "browser": [],
+      "output": [],
+      "restore": []
+    },
+    "samples": 75
+  },
+  "summary_sha256": "4143b93fe56b174b30044de4a7dff3f23c2b448c481e3482cb90cc85f5816555"
+}

@@ -94,6 +94,12 @@ matched four owned provider selection phases. Lappy concurrently ran three
 observed three-project samples, one generated-output pass, two failed fixtures
 and verified teardown in all three.
 
+Lappy's [fresh concurrent repeat](rust-m9-f960875-arm64-three-fixtures-pass.md)
+passed all three isolated lanes with five overlapping samples and exact teardown.
+The [paired real React browser proof](rust-m5-f960875-arm64-account-browser-pair.md)
+covers initial account creation, sign-in, authenticated rendering, profile
+read and sign-out on both backends.
+
 The [e68fb95 streaming core and runtime](rust-m1-e68fb95-bounded-stream-core.md)
 passed 33 deterministic host tests. The [f960875 growing DVR replay](rust-m4-f960875-growing-dvr-playback.md)
 passed on both images with two playlist generations and matching segment bytes.
