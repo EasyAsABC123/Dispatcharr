@@ -57,42 +57,11 @@ fn capacity(error: &io::Error) -> bool {
     }
     false
 }
-/// Exact Requests json= spelling: Python numeric formatter, default separators,
-/// ensure_ascii=True including non-BMP surrogate pairs, insertion-order objects.
 fn request_json(value: &Value) -> Result<Vec<u8>, Error> {
-    let raw = crate::json_compat::compact_json_bytes(value).map_err(|_| Error::Unsupported)?;
-    if raw.len() > REQUEST {
-        return Err(Error::Capacity);
-    }
-    let raw = std::str::from_utf8(&raw).map_err(|_| Error::Unsupported)?;
-    let mut output = Vec::new();
-    let (mut quoted, mut escaped) = (false, false);
-    for ch in raw.chars() {
-        if ch > '\u{7e}' {
-            for unit in ch.encode_utf16(&mut [0; 2]) {
-                output.extend_from_slice(format!("\\u{unit:04x}").as_bytes());
-            }
-        } else {
-            output.push(ch as u8);
-        }
-        if quoted {
-            if escaped {
-                escaped = false
-            } else if ch == '\\' {
-                escaped = true
-            } else if ch == '"' {
-                quoted = false
-            }
-        } else if ch == '"' {
-            quoted = true
-        } else if matches!(ch, ',' | ':') {
-            output.push(b' ')
-        }
-        if output.len() > REQUEST {
-            return Err(Error::Capacity);
-        }
-    }
-    Ok(output)
+    crate::json_compat::default_json_bytes(value, REQUEST).map_err(|error| match error {
+        crate::json_compat::DefaultJsonError::Invalid => Error::Unsupported,
+        crate::json_compat::DefaultJsonError::Capacity => Error::Capacity,
+    })
 }
 pub(super) fn integer_code(value: &Value) -> Result<Option<i64>, Error> {
     match value {

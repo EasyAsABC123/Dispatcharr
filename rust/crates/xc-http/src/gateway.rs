@@ -64,6 +64,7 @@ struct Inner {
     stopped: AtomicBool,
     epg_enabled: AtomicBool,
     vod_lists_enabled: AtomicBool,
+    cached_vod_info_enabled: AtomicBool,
     #[cfg(test)]
     vod_info_clock: std::sync::OnceLock<i64>,
     workers: AtomicUsize,
@@ -73,6 +74,34 @@ struct Inner {
 #[derive(Clone)]
 pub struct XcGateway {
     inner: Arc<Inner>,
+}
+enum CachedInfoClock {
+    Wall,
+    #[cfg(test)]
+    Fixture(i64),
+}
+impl CachedInfoClock {
+    fn micros(&self) -> i64 {
+        match self {
+            Self::Wall => chrono::Utc::now().timestamp_micros(),
+            #[cfg(test)]
+            Self::Fixture(value) => *value,
+        }
+    }
+}
+fn unsupported_action() -> StoreError {
+    StoreError::StatusBody(
+        501,
+        json!({"detail":"This XC action has not yet completed its Source migration gates."}),
+    )
+}
+fn ordinary_cached_info_request(method: &Method, id: Option<&str>) -> bool {
+    method == Method::GET
+        && id.is_some_and(|raw| {
+            matches!(raw.as_bytes().first(), Some(b'1'..=b'9'))
+                && raw.bytes().all(|byte| byte.is_ascii_digit())
+                && raw.parse::<i64>().is_ok()
+        })
 }
 struct Worker(Arc<Inner>);
 impl Drop for Worker {
@@ -147,6 +176,7 @@ impl XcGateway {
                 stopped: AtomicBool::new(false),
                 epg_enabled: AtomicBool::new(false),
                 vod_lists_enabled: AtomicBool::new(false),
+                cached_vod_info_enabled: AtomicBool::new(false),
                 #[cfg(test)]
                 vod_info_clock: std::sync::OnceLock::new(),
                 workers: AtomicUsize::new(0),
@@ -179,6 +209,14 @@ impl XcGateway {
     fn with_vod_lists_for_test(self) -> Self {
         self.with_vod_lists()
     }
+    /// Enable the ordinary fresh-cache Movie and Series info reads.
+    /// Requests that need provider refresh still use the existing unsupported response.
+    pub fn with_cached_vod_info(self) -> Self {
+        self.inner
+            .cached_vod_info_enabled
+            .store(true, Ordering::Release);
+        self
+    }
     /// Fixture-only eligibility clock, never an environment-controlled Main capability.
     #[cfg(test)]
     fn with_vod_info_for_test(self, eligibility_micros: i64) -> Self {
@@ -188,17 +226,22 @@ impl XcGateway {
             .expect("single fixture clock");
         self
     }
-    fn accepts_vod_info(&self, action: &str) -> bool {
+    fn cached_vod_info_clock(
+        &self,
+        method: &Method,
+        action: &str,
+        id: Option<&str>,
+    ) -> Option<CachedInfoClock> {
+        if !matches!(action, "get_vod_info" | "get_series_info") {
+            return None;
+        }
         #[cfg(test)]
-        {
-            self.inner.vod_info_clock.get().is_some()
-                && matches!(action, "get_vod_info" | "get_series_info")
+        if let Some(clock) = self.inner.vod_info_clock.get() {
+            return Some(CachedInfoClock::Fixture(*clock));
         }
-        #[cfg(not(test))]
-        {
-            let _ = action;
-            false
-        }
+        (self.inner.cached_vod_info_enabled.load(Ordering::Acquire)
+            && ordinary_cached_info_request(method, id))
+        .then_some(CachedInfoClock::Wall)
     }
     fn accepts_vod_list(&self, action: &str) -> bool {
         self.inner.vod_lists_enabled.load(Ordering::Acquire)
@@ -356,6 +399,11 @@ impl XcGateway {
             return Err(reader::capacity());
         }
         let action = identity.parameter("action").unwrap_or("");
+        let info_id = identity.parameter(if action == "get_series_info" {
+            "series_id"
+        } else {
+            "vod_id"
+        });
         let mut out = JsonBytes::new(config.max_response_bytes)?;
         let limits = ReadLimit {
             max_rows: config.max_rows,
@@ -436,63 +484,44 @@ impl XcGateway {
                 &mut out,
             )
             .await?;
-        } else if self.accepts_vod_info(action) {
-            #[cfg(test)]
-            {
-                use crate::vod_info_stage::{Context, Error, Prepared};
-                let origin = dispatcharr_output_http::source_output_origin(&auth, &identity);
-                let family = if action == "get_series_info" {
-                    crate::vod_priority::Family::Series
-                } else {
-                    crate::vod_priority::Family::Movie
-                };
-                let ctx = Context {
-                    store: &self.inner.store,
-                    user: &user,
-                    family,
-                    id: identity.parameter(if action == "get_series_info" {
-                        "series_id"
-                    } else {
-                        "vod_id"
-                    }),
-                    origin: &origin,
-                    limits: &limits,
-                    available_work_bytes: available_work_bytes
-                        .checked_sub(origin.capacity())
-                        .ok_or_else(reader::capacity)?,
-                };
-                let clock = *self
-                    .inner
-                    .vod_info_clock
-                    .get()
-                    .expect("accepted fixture clock");
-                let result = async {
-                    match crate::vod_info_stage::prepare(&ctx, || clock).await? {
-                        Prepared::Fresh(fresh) => {
-                            crate::vod_info_stage::write_cached(&ctx, &fresh, &mut out).await
-                        }
-                        Prepared::RefreshRequired(_) | Prepared::PropertyCheckFailed(_) => {
-                            Err(Error::UnsupportedContext)
-                        }
+        } else if let Some(clock) = self.cached_vod_info_clock(&method, action, info_id) {
+            use crate::vod_info_stage::{Context, Error, Prepared};
+            let origin = dispatcharr_output_http::source_output_origin(&auth, &identity);
+            let family = if action == "get_series_info" {
+                crate::vod_priority::Family::Series
+            } else {
+                crate::vod_priority::Family::Movie
+            };
+            let ctx = Context {
+                store: &self.inner.store,
+                user: &user,
+                family,
+                id: info_id,
+                origin: &origin,
+                limits: &limits,
+                available_work_bytes: available_work_bytes
+                    .checked_sub(origin.capacity())
+                    .ok_or_else(reader::capacity)?,
+            };
+            let result = async {
+                match crate::vod_info_stage::prepare(&ctx, || clock.micros()).await? {
+                    Prepared::Fresh(fresh) => {
+                        crate::vod_info_stage::write_cached(&ctx, &fresh, &mut out).await
                     }
-                }
-                .await;
-                if let Err(error) = result {
-                    match error.separate_backend()? {
-                        Error::NotFound => return Ok(django_page(404)),
-                        Error::MovieInvalidId
-                        | Error::Projection(crate::vod_lists::Error::Source) => {
-                            return Ok(django_page(500))
-                        }
-                        _ => return Err(StoreError::Unsupported(
-                            "XC cached-info staging has not completed its Source migration gates",
-                        )),
+                    Prepared::RefreshRequired(_) | Prepared::PropertyCheckFailed(_) => {
+                        Err(Error::UnsupportedContext)
                     }
                 }
             }
-            #[cfg(not(test))]
-            {
-                return Err(StoreError::Unsupported("XC info staging is test-only"));
+            .await;
+            if let Err(error) = result {
+                match error.separate_backend()? {
+                    Error::NotFound => return Ok(django_page(404)),
+                    Error::MovieInvalidId | Error::Projection(crate::vod_lists::Error::Source) => {
+                        return Ok(django_page(500))
+                    }
+                    _ => return Err(unsupported_action()),
+                }
             }
         } else if self.accepts_vod_list(action) {
             let origin = dispatcharr_output_http::source_output_origin(&auth, &identity);
@@ -536,10 +565,7 @@ impl XcGateway {
                 | "get_series_info"
                 | "get_vod_info"
         ) {
-            return Err(StoreError::StatusBody(
-                501,
-                json!({"detail":"This XC action has not yet completed its Source migration gates."}),
-            ));
+            return Err(unsupported_action());
         } else {
             out.value(
                 &project::info(

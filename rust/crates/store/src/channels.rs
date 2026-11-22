@@ -20,7 +20,7 @@ use std::{
 use url::Url;
 pub(crate) const COLLECTION_ALLOW: HeaderValue =
     HeaderValue::from_static("GET, POST, HEAD, OPTIONS");
-const DETAIL_ALLOW: HeaderValue =
+pub(crate) const DETAIL_ALLOW: HeaderValue =
     HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS");
 const DETAIL_OPTIONS: &[u8; 5290] =
     include_bytes!("../datasets/source-channel-detail-options.json");
@@ -86,7 +86,7 @@ pub(crate) const STREAM_FIELDS: &[&str] = &[
     "is_radio",
 ];
 pub(crate) const SELECT:&str="SELECT to_jsonb(c) AS raw,CASE WHEN o.id IS NULL THEN NULL ELSE to_jsonb(o) END AS ov,a.name AS account_name,COALESCE((SELECT jsonb_agg(jsonb_build_object('raw',to_jsonb(s),'account_name',ma.name) ORDER BY cs.\"order\") FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id LEFT JOIN m3u_m3uaccount ma ON ma.id=s.m3u_account_id WHERE cs.channel_id=c.id),'[]'::jsonb) AS streams FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id LEFT JOIN m3u_m3uaccount a ON a.id=c.auto_created_by_id LEFT JOIN dispatcharr_channels_channelgroup g ON g.id=c.channel_group_id LEFT JOIN dispatcharr_channels_channelgroup og ON og.id=o.channel_group_id LEFT JOIN epg_epgdata e ON e.id=c.epg_data_id LEFT JOIN epg_epgdata oe ON oe.id=o.epg_data_id LEFT JOIN epg_epgsource es ON es.id=e.epg_source_id LEFT JOIN epg_epgsource oes ON oes.id=oe.epg_source_id WHERE true";
-fn missing() -> StoreError {
+pub(crate) fn missing() -> StoreError {
     StoreError::StatusBody(404, json!({"detail":"No Channel matches the given query."}))
 }
 pub(crate) fn truthy(value: Option<&Value>) -> bool {

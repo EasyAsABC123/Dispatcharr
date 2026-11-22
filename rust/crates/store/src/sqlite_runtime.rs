@@ -1,10 +1,14 @@
 //! Loopback copied SQLite prototype. Original Dispatcharr authors retain credit.
 use super::*;
+use crate::{channels::sqlite_list::ChannelProjection, rest_reads::sqlite::ChannelRead};
 use crate::{
     sqlite_identity::{LoginPersistence, SqliteIdentity},
     NotificationCache, RestReadLimits, RetainedSqliteRestReads,
 };
-use axum::extract::{OriginalUri, Query};
+use axum::{
+    extract::{OriginalUri, Path as RoutePath, Query},
+    Extension,
+};
 use chrono::Utc;
 
 #[path = "sqlite_app_data.rs"]
@@ -55,6 +59,18 @@ impl CopiedSqliteRuntime {
             .route("/api/accounts/users/me/", axum::routing::any(profile::me))
             .route("/api/channels/groups/", axum::routing::get(groups))
             .route("/api/channels/channels/", axum::routing::get(channels))
+            .route(
+                "/api/channels/channels/ids/",
+                axum::routing::get(channel_projection).layer(Extension(ChannelProjection::Ids)),
+            )
+            .route(
+                "/api/channels/channels/summary/",
+                axum::routing::get(channel_projection).layer(Extension(ChannelProjection::Summary)),
+            )
+            .route(
+                "/api/channels/channels/{id}/",
+                axum::routing::get(channel_detail),
+            )
             .route("/healthz", axum::routing::get(readiness))
             .with_state(self.clone())
     }
@@ -243,20 +259,102 @@ async fn channels(
     OriginalUri(uri): OriginalUri,
     Query(params): Query<HashMap<String, String>>,
 ) -> Response {
-    let read = async {
-        runtime
-            .allocate()?
-            .channel_collection(peer, headers, &uri, params)
-            .await
-    }
+    let read = read_channel(
+        runtime,
+        peer,
+        headers,
+        &uri,
+        params,
+        ChannelRead::Collection,
+    )
     .await;
-    let mut response = match read {
+    channel_read_response(read, crate::channels::COLLECTION_ALLOW)
+}
+
+async fn channel_detail(
+    State(runtime): State<CopiedSqliteRuntime>,
+    RoutePath(id): RoutePath<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+    Query(params): Query<HashMap<String, String>>,
+) -> Response {
+    let read = read_channel(
+        runtime,
+        peer,
+        headers,
+        &uri,
+        params,
+        ChannelRead::Detail(id),
+    )
+    .await;
+    channel_read_response(read, crate::channels::DETAIL_ALLOW)
+}
+
+async fn channel_projection(
+    State(runtime): State<CopiedSqliteRuntime>,
+    Extension(projection): Extension<ChannelProjection>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+    Query(params): Query<HashMap<String, String>>,
+) -> Response {
+    let read = read_channel(
+        runtime,
+        peer,
+        headers,
+        &uri,
+        params,
+        ChannelRead::Projection(projection),
+    )
+    .await
+    .and_then(|value| {
+        crate::json_compat::default_json_bytes(&value, usize::MAX)
+            .map_err(|_| StoreError::Unsupported("Copied SQLite channel projection JSON"))
+    });
+    let response = match read {
+        Ok(body) => (
+            [(axum::http::header::CONTENT_TYPE, "application/json")],
+            body,
+        )
+            .into_response(),
+        Err(error) => error.into_response(),
+    };
+    channel_response_headers(
+        response,
+        axum::http::HeaderValue::from_static("GET, HEAD, OPTIONS"),
+    )
+}
+
+async fn read_channel(
+    runtime: CopiedSqliteRuntime,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    uri: &axum::http::Uri,
+    params: HashMap<String, String>,
+    operation: ChannelRead,
+) -> Result<Value, StoreError> {
+    runtime
+        .allocate()?
+        .channel_read(peer, headers, uri, params, operation)
+        .await
+}
+
+fn channel_read_response(
+    read: Result<Value, StoreError>,
+    allow: axum::http::HeaderValue,
+) -> Response {
+    let response = match read {
         Ok(value) => Json(value).into_response(),
         Err(error) => error.into_response(),
     };
+    channel_response_headers(response, allow)
+}
+
+fn channel_response_headers(mut response: Response, allow: axum::http::HeaderValue) -> Response {
     response
         .headers_mut()
-        .insert(axum::http::header::ALLOW, crate::channels::COLLECTION_ALLOW);
+        .insert(axum::http::header::ALLOW, allow);
     response.headers_mut().insert(
         axum::http::header::VARY,
         axum::http::HeaderValue::from_static("Accept, origin"),

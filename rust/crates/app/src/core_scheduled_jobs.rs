@@ -53,6 +53,23 @@ fn plugin_startup_enabled_for(value: Option<&OsStr>, plugin_refresh: bool) -> Re
     }
 }
 
+pub fn provider_rehash_enabled(core: bool) -> Result<bool, String> {
+    provider_rehash_selection(
+        env::var_os("RUST_CORE_PROVIDER_REHASH_OWNER").as_deref(),
+        core,
+    )
+}
+
+fn provider_rehash_selection(value: Option<&OsStr>, core: bool) -> Result<bool, String> {
+    match value {
+        None => Ok(false),
+        Some(value) if value == OsStr::new("rust") && core => Ok(true),
+        Some(_) => {
+            Err("RUST_CORE_PROVIDER_REHASH_OWNER requires rust and the Core schedule owner".into())
+        }
+    }
+}
+
 pub fn restore_grace(core_enabled: bool, shutdown: Duration) -> Result<Option<Duration>, String> {
     match env::var_os("RUST_CORE_BACKUP_RESTORE_OWNER") {
         None => Ok(None),
@@ -82,6 +99,8 @@ fn restore_grace_for(
 pub struct CoreScheduledJobs {
     worker: CoreScheduledWorker,
     scheduler: Scheduler,
+    provider_rehash:
+        Option<Arc<dispatcharr_job_transport::core_settings_broker::ProviderRehashProducer>>,
 }
 impl CoreScheduledJobs {
     #[allow(clippy::too_many_arguments)]
@@ -92,6 +111,7 @@ impl CoreScheduledJobs {
         events: Arc<dyn UpdateEventSink>,
         version: dispatcharr_job_transport::version_service::Options,
         plugin_refresh: bool,
+        provider_rehash: bool,
         competing_owner: bool,
     ) -> Result<Self, String> {
         if competing_owner {
@@ -114,6 +134,7 @@ impl CoreScheduledJobs {
             events,
             version,
             plugin_refresh,
+            provider_rehash,
             database,
             runtime,
             root,
@@ -137,6 +158,7 @@ impl CoreScheduledJobs {
         events: Arc<dyn UpdateEventSink>,
         version: dispatcharr_job_transport::version_service::Options,
         plugin_refresh: bool,
+        provider_rehash: bool,
         database: dispatcharr_job_transport::normal_backup::PgConfig,
         runtime: dispatcharr_job_transport::normal_backup::Runtime,
         root: std::path::PathBuf,
@@ -145,11 +167,12 @@ impl CoreScheduledJobs {
         let identity = auth.producer_identity_source();
         let revoked = Revoked::new();
         let plugin_refresh = plugin_refresh.then(|| (auth.clone(), revoked.clone()));
+        let rehash = provider_rehash.then(|| (auth.clone(), revoked.clone()));
         let application = Application::prepare(
-            jobs,
+            jobs.clone(),
             revoked,
             store.clone(),
-            auth,
+            auth.clone(),
             cache.to_owned(),
             database,
             runtime,
@@ -165,6 +188,7 @@ impl CoreScheduledJobs {
             events,
             version,
             plugin_refresh,
+            rehash,
             Duration::from_millis(100),
         )
         .map_err(|_| "Core scheduled worker configuration failed")?;
@@ -183,7 +207,20 @@ impl CoreScheduledJobs {
             .initialize(Arc::new(()))
             .await
             .map_err(|_| "Core scheduler initialization failed")?;
-        Ok(Self { worker, scheduler })
+        let provider_rehash = provider_rehash.then(|| {
+            Arc::new(
+                dispatcharr_job_transport::core_settings_broker::ProviderRehashProducer::new(jobs),
+            )
+        });
+        if let Some(producer) = &provider_rehash {
+            auth.bind_provider_rehash_broker(producer.clone())
+                .map_err(|_| "Core provider rehash producer binding failed")?;
+        }
+        Ok(Self {
+            worker,
+            scheduler,
+            provider_rehash,
+        })
     }
 
     pub fn scheduler(&self) -> Scheduler {
@@ -232,6 +269,9 @@ impl CoreScheduledJobs {
     pub fn stop_admission(&self) {
         self.scheduler.stop_admission();
         self.worker.stop_backup_admission();
+        if let Some(producer) = &self.provider_rehash {
+            producer.stop_admission();
+        }
     }
 
     pub async fn shutdown(&self, grace: Duration) -> Result<(), String> {
@@ -239,13 +279,23 @@ impl CoreScheduledJobs {
         self.stop_admission();
         let publisher = self.scheduler.shutdown(grace).await;
         let publisher_faulted = matches!(self.scheduler.status(), Status::Fault(_));
+        let producer_drained = if let Some(producer) = &self.provider_rehash {
+            producer
+                .drain(deadline.saturating_duration_since(tokio::time::Instant::now()))
+                .await
+        } else {
+            true
+        };
         let remaining = deadline.saturating_duration_since(tokio::time::Instant::now());
-        let worker = if publisher.is_ok() {
+        let worker = if publisher.is_ok() && producer_drained {
             self.worker.shutdown(remaining).await
         } else {
             self.worker.drain(remaining).await
         };
         publisher.map_err(|_| "Core periodic publisher did not settle")?;
+        if !producer_drained {
+            return Err("Core provider rehash producer did not settle".into());
+        }
         worker.map_err(|_| "Core scheduled worker did not settle")?;
         if publisher_faulted {
             return Err("Core periodic publisher faulted after startup".into());
@@ -291,4 +341,15 @@ fn core_plugin_startup_requires_the_prepared_plugin_refresh_owner() {
     assert_eq!(plugin_startup_enabled_for(Some(rust), true), Ok(true));
     assert!(plugin_startup_enabled_for(Some(rust), false).is_err());
     assert!(plugin_startup_enabled_for(Some(OsStr::new("yes")), true).is_err());
+}
+
+#[cfg(test)]
+#[test]
+fn provider_rehash_selection_is_explicit_and_requires_core() {
+    let rust = OsStr::new("rust");
+    assert_eq!(provider_rehash_selection(None, true), Ok(false));
+    assert_eq!(provider_rehash_selection(None, false), Ok(false));
+    assert_eq!(provider_rehash_selection(Some(rust), true), Ok(true));
+    assert!(provider_rehash_selection(Some(rust), false).is_err());
+    assert!(provider_rehash_selection(Some(OsStr::new("1")), true).is_err());
 }

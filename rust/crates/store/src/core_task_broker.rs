@@ -55,6 +55,34 @@ pub trait CoreTaskBroker: Send + Sync {
         })
     }
 }
+/// A provider's exact one-account rehash frame, minted inside Store.
+pub struct ProviderRehashPublication(pub(crate) CoreTaskPublication);
+impl ProviderRehashPublication {
+    pub fn into_core(self) -> CoreTaskPublication {
+        self.0
+    }
+}
+
+/// The HTTP actor retains the lock on uncertain publication. It can only
+/// release after an adapter proves that publication did not occur.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum ProviderRehashResult {
+    Acknowledged,
+    Uncertain,
+}
+
+pub trait ProviderRehashAdmission: Send + Sync {
+    fn publish(
+        &self,
+        publication: ProviderRehashPublication,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<ProviderRehashResult, StoreError>>;
+}
+
+pub trait ProviderRehashBroker: Send + Sync {
+    fn admit(&self) -> Result<Arc<dyn ProviderRehashAdmission>, StoreError>;
+}
+
 /// A root of the Channel guide programme task. Construction stays inside Store.
 pub struct TvgProgrammePublication(pub(crate) CoreTaskPublication);
 impl TvgProgrammePublication {
@@ -77,6 +105,15 @@ pub trait TvgProgrammePublisher: Send + Sync {
 }
 
 impl AuthService {
+    pub fn bind_provider_rehash_broker(
+        &self,
+        broker: Arc<dyn ProviderRehashBroker>,
+    ) -> Result<(), StoreError> {
+        self.provider_rehash_broker
+            .set(broker)
+            .map_err(|_| StoreError::Unsupported("Provider rehash broker already composed"))
+    }
+
     pub fn bind_tvg_programme_publisher(
         &self,
         publisher: Arc<dyn TvgProgrammePublisher>,
@@ -130,6 +167,48 @@ mod tests {
             crate::AuthConfig::new("fixture-only-signing".into()).unwrap(),
         )
     }
+    struct ProviderOnly;
+    impl ProviderRehashBroker for ProviderOnly {
+        fn admit(&self) -> Result<Arc<dyn ProviderRehashAdmission>, StoreError> {
+            Err(StoreError::Unsupported("test provider-only admission"))
+        }
+    }
+
+    #[tokio::test]
+    async fn provider_rehash_binding_does_not_admit_other_core_publications() {
+        let mut auth = auth();
+        auth.normal_core_task_broker = true;
+        let early = auth.clone();
+        auth.bind_provider_rehash_broker(Arc::new(ProviderOnly))
+            .unwrap();
+        assert!(early.provider_rehash_broker.get().is_some());
+        assert!(early.core_task_broker.get().is_none());
+        assert!(early.tvg_programme_publisher.get().is_none());
+        assert!(auth
+            .bind_provider_rehash_broker(Arc::new(ProviderOnly))
+            .is_err());
+        let scratch = crate::core_settings_special_budget::Scratch::new();
+        assert!(
+            crate::core_settings_special_broker::publish_profiles_root(&early, &scratch, 1)
+                .await
+                .is_err()
+        );
+        assert!(
+            crate::core_settings_special_broker::publish_tvg_programmes(&early, 1)
+                .await
+                .is_err()
+        );
+        assert!(crate::core_settings_special_broker::publish(
+            &early,
+            &scratch,
+            "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
+            json!([]),
+            json!({}),
+        )
+        .await
+        .is_err());
+    }
+
     #[tokio::test]
     async fn early_core_clone_observes_late_main_broker_and_retains_original_writer() {
         let auth = auth();

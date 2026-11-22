@@ -21,28 +21,18 @@ mod vod_lists;
 mod vod_priority;
 mod vod_properties;
 
-#[cfg(test)]
 mod vod_object;
 
-#[cfg(test)]
 mod vod_info_refresh;
-#[cfg(test)]
 mod vod_info_row;
 
-#[cfg(test)]
 mod vod_movie_info;
 
-// Uncompiled Series-info draft; remains excluded from production routing.
-#[cfg(test)]
 mod vod_episode_rows;
-#[cfg(test)]
 mod vod_scalar;
-#[cfg(test)]
 mod vod_seasons;
-#[cfg(test)]
 mod vod_series_info;
 
 mod vod_span;
 
-#[cfg(test)]
 mod vod_info_stage;
