@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [provider fault and resolver checkpoint](rust-25dc1502-provider-faults-and-resolver.md)
+matched all 16 Xtream fallback and recovery cases on 25dc1502. It preserves
+the measured e65b4318 broker reply-loss response difference and records 187
+Original resolver samples separately from HTTP operation coverage.
+
 The [25dc1502 copied SQLite workflow](rust-m8-25dc1502-copied-streams-dismissal.md)
 passed 34 Streams startup reads, 20 Streams Name reads, and five personal
 dismissal responses. The exact image preserved notification state after
