@@ -82,6 +82,7 @@ pub struct PoolOptions<DB: Database> {
     pub(crate) min_connections: u32,
     pub(crate) max_lifetime: Option<Duration>,
     pub(crate) idle_timeout: Option<Duration>,
+    pub(crate) maintenance_max_interval: Option<Duration>,
     pub(crate) fair: bool,
 
     pub(crate) parent_pool: Option<Pool<DB>>,
@@ -105,6 +106,7 @@ impl<DB: Database> Clone for PoolOptions<DB> {
             min_connections: self.min_connections,
             max_lifetime: self.max_lifetime,
             idle_timeout: self.idle_timeout,
+            maintenance_max_interval: self.maintenance_max_interval,
             fair: self.fair,
             parent_pool: self.parent_pool.clone(),
         }
@@ -159,6 +161,7 @@ impl<DB: Database> PoolOptions<DB> {
             acquire_slow_threshold: Duration::from_secs(2),
             acquire_timeout: Duration::from_secs(30),
             idle_timeout: Some(Duration::from_secs(10 * 60)),
+            maintenance_max_interval: None,
             max_lifetime: Some(Duration::from_secs(30 * 60)),
             fair: true,
             parent_pool: None,
@@ -305,6 +308,23 @@ impl<DB: Database> PoolOptions<DB> {
     /// Get the maximum idle duration for individual connections.
     pub fn get_idle_timeout(&self) -> Option<Duration> {
         self.idle_timeout
+    }
+
+    /// Cap the interval between background idle and lifetime checks.
+    ///
+    /// This cap leaves the configured expiration times unchanged. Maintenance
+    /// still requires an idle timeout or a maximum lifetime.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the interval is zero.
+    pub fn maintenance_max_interval(mut self, interval: Duration) -> Self {
+        assert!(
+            !interval.is_zero(),
+            "pool maintenance interval must be positive"
+        );
+        self.maintenance_max_interval = Some(interval);
+        self
     }
 
     /// If true, the health of a connection will be verified by a call to [`Connection::ping`]

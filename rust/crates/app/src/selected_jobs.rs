@@ -116,15 +116,43 @@ fn select_beat(worker: bool, legacy: bool, core: bool) -> Result<Beat, String> {
     Ok(if legacy { Beat::Legacy } else { Beat::Off })
 }
 
+const WORKERS: &str = "RUST_EXPERIMENTAL_SELECTED_JOBS";
+const LEGACY_BEAT: &str = "RUST_EXPERIMENTAL_SELECTED_BEAT";
+const CORE_BEAT: &str = "RUST_EXPERIMENTAL_SELECTED_CORE_BEAT";
+
+pub fn main_configuration() -> Result<(bool, Beat), String> {
+    // The deployment must actually assign AIO ownership. The descriptive
+    // fallback used by configuration reporting does not assign a queue role.
+    if env::var("DISPATCHARR_ENV").as_deref() == Ok("aio")
+        && ![
+            WORKERS,
+            LEGACY_BEAT,
+            CORE_BEAT,
+            "RUST_CORE_SCHEDULE_OWNER",
+            "RUST_BACKUP_TASKLESS_RESTORE_OWNER",
+            "RUST_BACKUP_CREATE_OWNER",
+            "RUST_BACKUP_RESTORE_OWNER",
+            "RUST_VERSION_STARTUP_OWNER",
+            "RUST_VERSION_TASKS_ENABLED",
+            "RUST_EPG_REFRESH_ENABLED",
+            "RUST_M3U_REFRESH_ALL_OWNER",
+        ]
+        .iter()
+        .any(|name| env::var_os(name).is_some())
+    {
+        return Ok((true, Beat::Core));
+    }
+    configuration()
+}
+
 pub fn configuration() -> Result<(bool, Beat), String> {
-    const SCOPED: &str = "RUST_EXPERIMENTAL_SELECTED_CORE_BEAT";
-    let worker = flag("RUST_EXPERIMENTAL_SELECTED_JOBS")?;
-    let legacy = flag("RUST_EXPERIMENTAL_SELECTED_BEAT")?;
-    let value = env::var_os(SCOPED);
+    let worker = flag(WORKERS)?;
+    let legacy = flag(LEGACY_BEAT)?;
+    let value = env::var_os(CORE_BEAT);
     let core = match value.as_ref().map(|value| value.to_str()) {
         None | Some(Some("0")) => false,
         Some(Some("1")) => true,
-        _ => return Err(format!("{SCOPED} must be 0 or 1")),
+        _ => return Err(format!("{CORE_BEAT} must be 0 or 1")),
     };
     Ok((worker, select_beat(worker, legacy, core)?))
 }

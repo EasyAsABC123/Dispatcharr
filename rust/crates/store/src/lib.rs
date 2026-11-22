@@ -223,6 +223,7 @@ impl Store {
             .max_connections(max_connections)
             .acquire_timeout(Duration::from_secs(5))
             .idle_timeout(Duration::from_secs(60))
+            .maintenance_max_interval(Duration::from_secs(5))
             .connect(url)
             .await?;
         Ok(Self { pool })

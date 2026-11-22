@@ -200,7 +200,11 @@ impl<DB: Database> PoolInner<DB> {
     pub(super) fn release(&self, floating: Floating<DB, Live<DB>>) {
         // `options.after_release` and other checks are in `PoolConnection::return_to_pool()`.
 
-        let Floating { inner: idle, guard } = floating.into_idle();
+        self.release_idle(floating.into_idle());
+    }
+
+    fn release_idle(&self, floating: Floating<DB, Idle<DB>>) {
+        let Floating { inner: idle, guard } = floating;
 
         if self.idle_conns.push(idle).is_err() {
             panic!("BUG: connection queue overflow in release()");
@@ -523,6 +527,11 @@ fn spawn_maintenance_tasks<DB: Database>(pool: &Arc<PoolInner<DB>>) {
         }
     };
 
+    let period = pool
+        .options
+        .maintenance_max_interval
+        .map_or(period, |interval| cmp::min(period, interval));
+
     // Immediately cancel this task if the pool is closed.
     let mut close_event = pool.close_event();
 
@@ -549,7 +558,8 @@ fn spawn_maintenance_tasks<DB: Database>(pool: &Arc<PoolInner<DB>>) {
                                 let _ = conn.close().await;
                                 pool.min_connections_maintenance(Some(next_run)).await;
                             } else {
-                                pool.release(conn.into_live());
+                                // Sweeping the idle queue is not a checkout. Keep its idle age.
+                                pool.release_idle(conn);
                             }
                         }
                     }
