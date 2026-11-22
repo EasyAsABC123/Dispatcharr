@@ -135,17 +135,61 @@ enum ScheduleScope {
     Backup,
     Core,
     CoreWithPluginRefresh,
+    CoreWithXmltv { plugin_refresh: bool },
 }
 impl ScheduleScope {
+    fn core_with_xmltv(plugin_refresh: bool, xmltv_worker_available: bool) -> Result<Self, Error> {
+        if !xmltv_worker_available {
+            return Err(Error::Configuration(
+                "Core linked XMLTV receiver unavailable",
+            ));
+        }
+        Ok(Self::CoreWithXmltv { plugin_refresh })
+    }
+
+    fn loads_linked_xmltv(self) -> bool {
+        matches!(self, Self::CoreWithXmltv { .. })
+    }
+
+    fn is_linked_xmltv_task(self, task: &str) -> bool {
+        self.loads_linked_xmltv() && task == crate::refresh_protocol::NAME
+    }
+
+    fn xmltv_source_id(self, entry: &Entry) -> Option<i64> {
+        if !self.is_linked_xmltv_task(&entry.task) {
+            return None;
+        }
+        let kwargs = entry
+            .kwargs
+            .as_object()
+            .filter(|kwargs| kwargs.len() == 1)?;
+        let id = kwargs.get("source_id")?.as_i64().filter(|id| *id > 0)?;
+        (entry.name == format!("epg_source-refresh-{id}")).then_some(id)
+    }
+
+    fn includes_plugin_refresh(self) -> bool {
+        matches!(
+            self,
+            Self::CoreWithPluginRefresh
+                | Self::CoreWithXmltv {
+                    plugin_refresh: true,
+                    ..
+                }
+        )
+    }
+
     fn is_core(self) -> bool {
-        matches!(self, Self::Core | Self::CoreWithPluginRefresh)
+        matches!(
+            self,
+            Self::Core | Self::CoreWithPluginRefresh | Self::CoreWithXmltv { .. }
+        )
     }
 
     fn row_identity(self) -> (Option<&'static str>, Option<&'static str>) {
         match self {
             Self::All => (None, None),
             Self::Backup => (Some(BACKUP_PERIODIC_NAME), Some(BACKUP_PERIODIC_TASK)),
-            Self::Core | Self::CoreWithPluginRefresh => {
+            Self::Core | Self::CoreWithPluginRefresh | Self::CoreWithXmltv { .. } => {
                 (Some(CLEANUP_PERIODIC_TASK), Some(CLEANUP_PERIODIC_TASK))
             }
         }
@@ -170,7 +214,7 @@ impl ScheduleScope {
                     .as_ref()
                     .is_some_and(|(every, period)| *every == DAILY_SECONDS && period == "seconds")
                 && entry.expire_seconds.is_none();
-            let plugin_refresh = self == Self::CoreWithPluginRefresh
+            let plugin_refresh = self.includes_plugin_refresh()
                 && entry.name == plugin_startup_schedule::NAME
                 && entry.task == crate::normal_plugin_repos::TASK
                 && entry.crontab.is_none()
@@ -179,7 +223,20 @@ impl ScheduleScope {
                     .as_ref()
                     .is_some_and(|(every, period)| *every > 0 && period == "hours")
                 && entry.expire_seconds.is_none();
-            return (cleanup || daily || plugin_refresh)
+            let xmltv = self.xmltv_source_id(entry).is_some()
+                && entry.enabled
+                && entry.crontab.is_none()
+                && entry
+                    .interval
+                    .as_ref()
+                    .is_some_and(|(every, period)| *every > 0 && period == "hours")
+                && entry.expire_seconds.is_none();
+            let ordinary = (cleanup || daily || plugin_refresh)
+                && entry
+                    .kwargs
+                    .as_object()
+                    .is_some_and(|kwargs| kwargs.is_empty());
+            return (ordinary || xmltv)
                 && !entry.one_off
                 && entry.start_time.is_none()
                 && entry.expires.is_none()
@@ -189,10 +246,6 @@ impl ScheduleScope {
                 && entry.priority.is_none()
                 && entry
                     .headers
-                    .as_object()
-                    .is_some_and(|value| value.is_empty())
-                && entry
-                    .kwargs
                     .as_object()
                     .is_some_and(|value| value.is_empty())
                 && entry.args.as_array().is_some_and(|value| value.is_empty());
@@ -314,7 +367,7 @@ impl Scheduler {
         identity: ProducerIdentitySource,
         maximum_sleep: Duration,
     ) -> Result<Self, Error> {
-        Self::prepare_scoped(pool, jobs, identity, maximum_sleep, None)
+        Self::prepare_scoped(pool, jobs, identity, maximum_sleep, None, None)
     }
 
     /// Route a backup-only periodic owner through the same model/reload and
@@ -332,21 +385,27 @@ impl Scheduler {
             identity,
             maximum_sleep,
             Some(ScheduleConsumer::Core(worker)),
+            None,
         )
     }
 
-    /// Use the prepared Selected receiver for the existing bounded Core schedules.
-    /// The capability carries its own verified transports and backup schedule owner.
+    /// Use the one prepared Selected receiver for bounded Core schedules and
+    /// individually linked saved XMLTV schedules. This starts neither owner.
     pub fn prepare_core_schedules_for_selected(
         worker: crate::normal_queue::SelectedCoreSchedules,
         maximum_sleep: Duration,
     ) -> Result<Self, Error> {
+        let scope = ScheduleScope::core_with_xmltv(
+            worker.owns_plugin_refresh(),
+            worker.owns_xmltv_refresh(),
+        )?;
         Self::prepare_scoped(
             worker.pool(),
             worker.jobs(),
             worker.identity(),
             maximum_sleep,
             Some(ScheduleConsumer::Selected(worker)),
+            Some(scope),
         )
     }
 
@@ -356,6 +415,7 @@ impl Scheduler {
         identity: ProducerIdentitySource,
         maximum_sleep: Duration,
         backup_worker: Option<ScheduleConsumer>,
+        scope: Option<ScheduleScope>,
     ) -> Result<Self, Error> {
         if !jobs.allows_defaults()
             || maximum_sleep.is_zero()
@@ -371,13 +431,13 @@ impl Scheduler {
                 cache: Mutex::new(Cache::default()),
                 lifecycle: Lifecycle::new(),
                 maximum_sleep,
-                scope: match &backup_worker {
+                scope: scope.unwrap_or_else(|| match &backup_worker {
                     Some(worker) if worker.owns_plugin_refresh() => {
                         ScheduleScope::CoreWithPluginRefresh
                     }
                     Some(_) => ScheduleScope::Core,
                     None => ScheduleScope::All,
-                },
+                }),
                 backup_worker,
             }),
         })
@@ -787,6 +847,95 @@ async fn sync(connection: &mut PgConnection, cache: &mut Cache) -> Result<(usize
     cache.dirty.extend(missing);
     Ok((saved, count))
 }
+// Close the read/claim window against normal source, task, and interval edits.
+// Source is locked before the task join, matching the app's EPG write order.
+// PostgreSQL locks cover local reservation only and retire before Redis work.
+const LOCK_CURRENT_XMLTV: &str = r#"
+WITH source AS MATERIALIZED (
+    SELECT refresh_task_id FROM epg_epgsource
+    WHERE id=$1::bigint AND is_active AND source_type='xmltv'
+    FOR SHARE NOWAIT
+)
+SELECT p.args,p.kwargs,p.headers
+FROM source s
+JOIN django_celery_beat_periodictask p ON p.id=s.refresh_task_id
+JOIN django_celery_beat_intervalschedule i ON i.id=p.interval_id
+WHERE p.id=$2::bigint AND p.name=$3::text AND p.task=$4::text
+  AND p.enabled AND NOT p.one_off AND p.solar_id IS NULL
+  AND p.clocked_id IS NULL AND p.crontab_id IS NULL
+  AND p.start_time IS NULL AND p.expires IS NULL AND p.expire_seconds IS NULL
+  AND p.queue IS NULL AND p.exchange IS NULL AND p.routing_key IS NULL AND p.priority IS NULL
+  AND i.every=$5::integer AND i.every>0 AND i.period='hours'
+  AND p.total_run_count=$6::bigint
+  AND COALESCE(p.last_run_at,p.date_changed)=$7::timestamptz
+  AND octet_length(p.args)<=65536 AND octet_length(p.kwargs)<=65536
+  AND octet_length(p.headers)<=65536
+FOR SHARE OF p,i NOWAIT"#;
+
+fn xmltv_arguments_current(args: &str, kwargs: &str, headers: &str, entry: &Entry) -> bool {
+    fn matches(raw: &str, empty: &str, expected: &Value) -> bool {
+        serde_json::from_str::<Value>(if raw.is_empty() { empty } else { raw })
+            .is_ok_and(|actual| actual == *expected)
+    }
+    matches(args, "[]", &entry.args)
+        && matches(kwargs, "{}", &entry.kwargs)
+        && matches(headers, "{}", &entry.headers)
+}
+
+enum XmltvReservation {
+    Reserved,
+    Stale,
+    Busy,
+}
+
+async fn reserve_current_xmltv(
+    connection: &mut PgConnection,
+    source_id: i64,
+    snapshot: &mut Entry,
+) -> Result<XmltvReservation, Error> {
+    let (every, _) = snapshot.interval.as_ref().ok_or(Error::Supervisor)?;
+    let mut transaction = connection.begin().await?;
+    let current = sqlx::query_as::<_, (String, String, String)>(LOCK_CURRENT_XMLTV)
+        .bind(source_id)
+        .bind(snapshot.id)
+        .bind(&snapshot.name)
+        .bind(&snapshot.task)
+        .bind(every)
+        .bind(snapshot.total_run_count)
+        .bind(snapshot.last_run_at)
+        .fetch_optional(&mut *transaction)
+        .await;
+    let current = match current {
+        Ok(current) => current,
+        Err(error) => {
+            transaction.rollback().await?;
+            if error
+                .as_database_error()
+                .and_then(|error| error.code())
+                .as_deref()
+                == Some("55P03")
+            {
+                return Ok(XmltvReservation::Busy);
+            }
+            return Err(error.into());
+        }
+    };
+    let outcome = if current.is_some_and(|(args, kwargs, headers)| {
+        xmltv_arguments_current(&args, &kwargs, &headers, snapshot)
+    }) {
+        snapshot.total_run_count = snapshot
+            .total_run_count
+            .checked_add(1)
+            .ok_or(Error::Capacity)?;
+        snapshot.last_run_at = Utc::now();
+        XmltvReservation::Reserved
+    } else {
+        XmltvReservation::Stale
+    };
+    transaction.commit().await?;
+    Ok(outcome)
+}
+
 async fn tick(
     inner: &Inner,
     connection: &mut PgConnection,
@@ -856,13 +1005,35 @@ async fn tick(
     }
     // Reserve BEFORE serialization/publication, retaining the advanced cached
     // count even on a known rejection. An ambiguous actual reply is never retried.
-    entry.entry.last_run_at = Utc::now();
-    entry.entry.total_run_count = entry
-        .entry
-        .total_run_count
-        .checked_add(1)
-        .ok_or(Error::Capacity)?;
-    let snapshot = entry.entry.clone();
+    let snapshot = if inner.scope.is_linked_xmltv_task(&entry.entry.task) {
+        let source_id = inner
+            .scope
+            .xmltv_source_id(&entry.entry)
+            .ok_or(Error::Supervisor)?;
+        let mut snapshot = entry.entry.clone();
+        match reserve_current_xmltv(connection, source_id, &mut snapshot).await? {
+            XmltvReservation::Reserved => entry.entry = snapshot.clone(),
+            XmltvReservation::Stale => {
+                cache.loaded = false;
+                return Ok(result);
+            }
+            XmltvReservation::Busy => {
+                // Defer only the locked XMLTV row, so other due work can proceed.
+                entry.when = when(inner.maximum_sleep.as_secs_f64())?;
+                result.delay_seconds = 0.0;
+                return Ok(result);
+            }
+        }
+        snapshot
+    } else {
+        entry.entry.last_run_at = Utc::now();
+        entry.entry.total_run_count = entry
+            .entry
+            .total_run_count
+            .checked_add(1)
+            .ok_or(Error::Capacity)?;
+        entry.entry.clone()
+    };
     cache.dirty.insert(name.clone());
     let id = Uuid::new_v4();
     let publication = prepare_publication(&snapshot, id, &inner.identity);
@@ -933,7 +1104,9 @@ fn date(value: &Value, key: &str) -> Result<Option<DateTime<Utc>>, Error> {
 }
 // Remaining capacity is intentionally unchanged: >256 ELIGIBLE models or a
 // >1MiB aggregate eligible reply refuses. Generic pagination is still open.
-const LOAD_QUERY: &str = r#"WITH zone_offsets AS (SELECT * FROM unnest($4::text[],$5::integer[]) AS z(zone_name,hour_offset)),
+macro_rules! load_query {
+    ($xmltv:literal) => {
+        concat!(r#"WITH zone_offsets AS (SELECT * FROM unnest($4::text[],$5::integer[]) AS z(zone_name,hour_offset)),
 candidates AS MATERIALIZED (
  SELECT to_jsonb(p)::text AS raw,
         (SELECT to_jsonb(i)::text FROM django_celery_beat_intervalschedule i WHERE i.id=p.interval_id) AS interval_spec,
@@ -953,7 +1126,7 @@ candidates AS MATERIALIZED (
         OR (p.name=$13::text AND p.task=$14::text AND p.crontab_id IS NULL
             AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
                         WHERE i.id=p.interval_id AND i.every>0 AND i.period='hours'))
-   )))
+"#, $xmltv, r#"   )))
    AND (p.clocked_id IS NULL OR cl.clocked_time IS NULL OR cl.clocked_time <= $1::timestamptz)
    AND (p.crontab_id IS NULL OR cr.id IS NULL OR NOT (cr.hour=ANY($3::text[])) OR z.hour_offset IS NULL
         OR CASE WHEN cr.hour=ANY($3::text[]) THEN (cr.hour::integer+z.hour_offset+24)%24 END=ANY($2::integer[]))
@@ -968,7 +1141,19 @@ SELECT b.rows,b.bytes,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.interval_spec END AS interval_spec,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.crontab_spec END AS crontab_spec,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.clocked_time END AS clocked_time
-FROM budget b LEFT JOIN candidates c ON b.rows<=256 AND b.bytes<=1048576"#;
+FROM budget b LEFT JOIN candidates c ON b.rows<=256 AND b.bytes<=1048576"#)
+    };
+}
+const LOAD_QUERY: &str = load_query!("");
+const LOAD_XMLTV_QUERY: &str = load_query!(
+    r#"        OR (p.task=$15::text AND p.interval_id IS NOT NULL AND p.crontab_id IS NULL
+           AND EXISTS (SELECT 1 FROM epg_epgsource s
+                       WHERE s.id>0 AND s.is_active AND s.source_type='xmltv'
+                         AND s.refresh_task_id=p.id AND p.name='epg_source-refresh-' || s.id::text)
+           AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
+                       WHERE i.id=p.interval_id AND i.every>0 AND i.period='hours'))
+"#
+);
 struct ZoneHours {
     names: Vec<&'static str>,
     offsets: Vec<i32>,
@@ -1024,11 +1209,17 @@ async fn load(
     let version = scope
         .is_core()
         .then_some((VERSION_PERIODIC_NAME, crate::version_protocol::TASK));
-    let plugin_refresh = (scope == ScheduleScope::CoreWithPluginRefresh).then_some((
+    let plugin_refresh = scope.includes_plugin_refresh().then_some((
         plugin_startup_schedule::NAME,
         crate::normal_plugin_repos::TASK,
     ));
-    let rows = sqlx::query(LOAD_QUERY)
+    let linked_xmltv = scope.loads_linked_xmltv();
+    let query = if linked_xmltv {
+        LOAD_XMLTV_QUERY
+    } else {
+        LOAD_QUERY
+    };
+    let query = sqlx::query(query)
         .bind(filters.cutoff)
         .bind(&filters.hours)
         .bind(&filters.numeric_hours)
@@ -1042,9 +1233,13 @@ async fn load(
         .bind(version.map(|(_, task)| task))
         .bind(DAILY_SECONDS)
         .bind(plugin_refresh.map(|(name, _)| name))
-        .bind(plugin_refresh.map(|(_, task)| task))
-        .fetch_all(&mut *connection)
-        .await?;
+        .bind(plugin_refresh.map(|(_, task)| task));
+    let query = if linked_xmltv {
+        query.bind(crate::refresh_protocol::NAME)
+    } else {
+        query
+    };
+    let rows = query.fetch_all(&mut *connection).await?;
     let budget = rows.first().ok_or(Error::Capacity)?;
     if budget.try_get::<i64, _>("rows")? > 256 || budget.try_get::<i64, _>("bytes")? > 1048576 {
         return Err(Error::Capacity);
@@ -1058,6 +1253,8 @@ async fn load(
         let value: Value =
             serde_json::from_str(&raw).map_err(|_| Error::Configuration("periodic row JSON"))?;
         let id = integer(&value, "id")?;
+        let task = text(&value, "task")?;
+        let is_xmltv = scope.is_linked_xmltv_task(&task);
         let interval: Option<String> = row.try_get("interval_spec")?;
         let crontab: Option<String> = row.try_get("crontab_spec")?;
         let mut clocked: Option<DateTime<Utc>> = row.try_get("clocked_time")?;
@@ -1118,12 +1315,20 @@ async fn load(
             .iter()
             .any(|v| *v > 65536)
         {
+            if is_xmltv {
+                invalid += 1;
+                continue;
+            }
             return Err(Error::Capacity);
         }
         let args = serde_json::from_str::<Value>(if args.is_empty() { "[]" } else { &args });
         let kwargs = serde_json::from_str::<Value>(if kwargs.is_empty() { "{}" } else { &kwargs });
         let mut enabled = true;
         if args.is_err() || kwargs.is_err() {
+            if is_xmltv {
+                invalid += 1;
+                continue;
+            }
             if scope != ScheduleScope::All {
                 return Err(Error::Configuration("stored Core periodic arguments"));
             }
@@ -1150,7 +1355,7 @@ async fn load(
         let model = Entry {
             id,
             name: text(&value, "name")?,
-            task: text(&value, "task")?,
+            task,
             enabled,
             args: args.unwrap_or(Value::Null),
             kwargs: kwargs.unwrap_or(Value::Null),
@@ -1180,6 +1385,10 @@ async fn load(
             }),
         };
         if !scope.admits(&model) {
+            if is_xmltv {
+                invalid += 1;
+                continue;
+            }
             return Err(Error::Configuration("stored scoped schedule admission"));
         }
         if model.crontab.is_some()
@@ -1474,6 +1683,88 @@ fn cron_names(raw: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn scoped_xmltv_rechecks_actual_link_and_rejects_changed_arguments() {
+        let mut entry = model(crate::refresh_protocol::NAME);
+        entry.name = "epg_source-refresh-17".into();
+        entry.task = crate::refresh_protocol::NAME.into();
+        entry.interval = Some((1, "hours".into()));
+        entry.crontab = None;
+        entry.kwargs = json!({"source_id":17});
+        let scope = ScheduleScope::core_with_xmltv(true, true).unwrap();
+        assert!(scope.admits(&entry));
+        assert!(!ScheduleScope::CoreWithPluginRefresh.admits(&entry));
+        assert!(ScheduleScope::core_with_xmltv(false, false).is_err());
+        assert_eq!(scope.xmltv_source_id(&entry), Some(17));
+        let mut second = entry.clone();
+        second.name = "epg_source-refresh-29".into();
+        assert!(!scope.admits(&second));
+        second.kwargs = json!({"source_id":29});
+        assert_eq!(scope.xmltv_source_id(&second), Some(29));
+        assert!(scope.admits(&second));
+        assert!(scope.admits(&entry));
+        let mut unsupported = second.clone();
+        unsupported.kwargs = json!({"source_id":0});
+        unsupported.name = "epg_source-refresh-0".into();
+        assert!(!scope.admits(&unsupported));
+        unsupported = second.clone();
+        unsupported.task = crate::refresh_aggregate::NAME.into();
+        assert!(!scope.admits(&unsupported));
+        unsupported = second;
+        unsupported.interval = Some((1, "minutes".into()));
+        assert!(!scope.admits(&unsupported));
+        assert!(xmltv_arguments_current(
+            "[]",
+            "{\"source_id\": 17}",
+            "{}",
+            &entry
+        ));
+        assert!(xmltv_arguments_current(
+            "",
+            "{\"source_id\":17}",
+            "",
+            &entry
+        ));
+        for kwargs in [
+            "{",
+            "{\"source_id\": 18}",
+            "{\"source_id\": \"17\"}",
+            "{\"source_id\":17, \"force\":false}",
+            "{}",
+        ] {
+            assert!(!xmltv_arguments_current("[]", kwargs, "{}", &entry));
+        }
+        assert!(!xmltv_arguments_current(
+            "[1]",
+            "{\"source_id\":17}",
+            "{}",
+            &entry
+        ));
+        assert!(!xmltv_arguments_current(
+            "[]",
+            "{\"source_id\":17}",
+            "{\"extra\":true}",
+            &entry
+        ));
+        assert!(LOCK_CURRENT_XMLTV.contains("s.refresh_task_id"));
+        assert!(LOCK_CURRENT_XMLTV.contains("AND is_active AND source_type='xmltv'"));
+        assert!(LOCK_CURRENT_XMLTV.contains("p.enabled AND NOT p.one_off"));
+        assert!(LOCK_CURRENT_XMLTV.contains("FOR SHARE NOWAIT"));
+        assert!(LOCK_CURRENT_XMLTV.contains("FOR SHARE OF p,i NOWAIT"));
+        assert!(LOCK_CURRENT_XMLTV.contains("p.total_run_count=$6::bigint"));
+        assert!(
+            LOCK_CURRENT_XMLTV.contains("COALESCE(p.last_run_at,p.date_changed)=$7::timestamptz")
+        );
+        assert!(LOAD_XMLTV_QUERY.contains("s.refresh_task_id=p.id"));
+        assert!(LOAD_XMLTV_QUERY.contains("s.id>0 AND s.is_active AND s.source_type='xmltv'"));
+        assert!(LOAD_XMLTV_QUERY.contains("p.name='epg_source-refresh-' || s.id::text"));
+        assert!(!LOAD_XMLTV_QUERY.contains("s.id=$"));
+        assert!(!LOAD_QUERY.contains("epg_epgsource"));
+        assert!(
+            LOAD_XMLTV_QUERY.find("s.refresh_task_id=p.id") < LOAD_XMLTV_QUERY.find("LIMIT 257")
+        );
+    }
 
     #[test]
     fn scheduler_lifecycle_keeps_dormant_stop_closed() {
