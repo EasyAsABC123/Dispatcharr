@@ -1,0 +1,120 @@
+{
+  "application_performance_measured": false,
+  "exact_candidate": {
+    "build_manifest_sha256": "f321560b437b189d7e77d69aa59f509ab3849d3ed0d255c01d5512e2ffcd2d9c",
+    "git": "424880a9ba0a375eab8f985b1a279252c4d0a54b",
+    "image_id": "sha256:24acf305882ecc211c8b79087fb0b6becb6e9792dd3e41502b01bed7f450ac39",
+    "source_map_sha256": "cc70c98ae57a218e12d64fa1577b9587297bb4ea97076631f6224c605d86e09f"
+  },
+  "fresh_required_workflows_passed": 2,
+  "full_matrix_passed": false,
+  "observed": {
+    "static-chrome": {
+      "candidate": {
+        "build_manifest_sha256": "f321560b437b189d7e77d69aa59f509ab3849d3ed0d255c01d5512e2ffcd2d9c",
+        "git": "424880a9ba0a375eab8f985b1a279252c4d0a54b",
+        "image_id": "sha256:24acf305882ecc211c8b79087fb0b6becb6e9792dd3e41502b01bed7f450ac39",
+        "source_map_sha256": "cc70c98ae57a218e12d64fa1577b9587297bb4ea97076631f6224c605d86e09f"
+      },
+      "cases": {
+        "Chrome_Accept_HTML_comparisons": 32,
+        "HTML_GET_HEAD_cases": 56,
+        "Original_HTTP_captures": 592,
+        "packaged_ordinary_HTTP_cases": 393,
+        "real_Native_browsable_required_assets": 11,
+        "static_assets": 27,
+        "static_comparisons": 68,
+        "unchanged_React_assets": 112,
+        "unified_HTTP_cases": 188
+      },
+      "coordinator_actual_exit": 2,
+      "credits": "The original Dispatcharr authors and dependencies' contributors retain full credit.",
+      "entrypoint": "production-Main",
+      "evidence_sha256": {
+        "packaged-Chrome-HTML.json": "c5b80e0e8570be2b0e0a32aab481e5ec4c2b27ff8b055cb040b27d5857a181b2",
+        "packaged-HTML.json": "6f4302c1a2b85140f42657efa1c9e54c54c795f77cc38ed5d5f27f6004e7b6ac",
+        "packaged-static.json": "ceb4df3ce2f68fbda3453854c1f7cbb083c419935b456716e221e83cc2af1754",
+        "packaged-unified-browser.json": "8fc011761fd965552bc942397c8e91cea07ba0a73d940b4e36e24f4839571df7",
+        "packaged-unified-http.json": "cb0be6fa7b3f9633bede19323b6204a3d0e0326838bace95e16e02e74579377b",
+        "source-run.json": "ff791ad1bc18c5db2834502358c277c81fe27b2b7bb09f0b3c961be546966010"
+      },
+      "exact_asset_donor_absence": true,
+      "exact_browser_groups_absent": 2,
+      "full_M9_passed": false,
+      "literal_step_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "node_result_sha256": "57dde1783a5b2943921db1fd8b3a19616700cfadcbb0aa3d095815362438f480",
+      "performance_measured": false,
+      "physical_cleanup_verified": true,
+      "real_Native_browsable_styles_and_fonts": true,
+      "scope": "package/static-Chrome-HTML-browser",
+      "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "status": "passed",
+      "terminal_sha256": "20e167ba70c2affce986fdc692b069880f529941dd446d8652cfbe8699947693"
+    },
+    "unified": {
+      "candidate": {
+        "build_manifest_sha256": "f321560b437b189d7e77d69aa59f509ab3849d3ed0d255c01d5512e2ffcd2d9c",
+        "git": "424880a9ba0a375eab8f985b1a279252c4d0a54b",
+        "image_id": "sha256:24acf305882ecc211c8b79087fb0b6becb6e9792dd3e41502b01bed7f450ac39",
+        "source_map_sha256": "cc70c98ae57a218e12d64fa1577b9587297bb4ea97076631f6224c605d86e09f"
+      },
+      "candidate_literal_shutdown_exit": 0,
+      "cases": {
+        "HTML_GET_HEAD": 56,
+        "ordinary_HTTP_captured": 592,
+        "ordinary_HTTP_outside_component": 199,
+        "ordinary_HTTP_packaged_compared": 393,
+        "unchanged_React_assets": 112,
+        "unified_HTTP": 188
+      },
+      "cleanup_verified": true,
+      "coordinator_actual_exit": 2,
+      "credits": "The Original Dispatcharr authors and contributors retain full application and workflow credit.",
+      "detached_children_reaped": 20,
+      "empty_owned_OCI_inventory": true,
+      "entrypoint": "production-Main",
+      "evidence_sha256": {
+        "packaged-HTML.json": "7dc312a95f197c7a6ab14d17de2fdfec789f8408b1a1774687a14703ac2706ba",
+        "packaged-http.json": "ec02732300b0c535897ff3991fc4dec24503f5b297cee76b1fdac998ef7c80e3",
+        "packaged-unified-browser.json": "2117f69d94ecf02504997324172770031fe422a8ee1ee5a3f37c788e1eebcbba",
+        "packaged-unified-http.json": "41b99da994fad3f6d5b66c5d186137bcda6029821cd39c02b0c6fa5310c6bb78",
+        "source-run.json": "21fbf6b57bafb478bab3fec0a1ae5793689b6bd11e9e87879dcdd1018755ebf7"
+      },
+      "exact_browser_groups_absent": 2,
+      "full_M9_passed": false,
+      "historical_8241_fixture_first_attempt": {
+        "coordinator_actual_exit": 2,
+        "formal_status": "failed",
+        "independent_late_retirement_sha256": "eab2706ce3e806a663e72b4f95da013b90967c99f64e4b883d441f5a288e7bed",
+        "independent_late_retirement_verified": true,
+        "literal_step_exits": {
+          "cleanup": 1,
+          "evaluation": 1,
+          "execution": 0
+        }
+      },
+      "literal_step_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "node_result_sha256": "8eb73993b91f4dcc03c994acde4a7eeab09ca6aa21725adf4d8868af3307d90c",
+      "paired_real_React_equal_and_fixture_restored": true,
+      "performance_measured": false,
+      "required_node_status": "passed",
+      "scope": "package/unified-HTML-browser",
+      "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "terminal_sha256": "b69a1814f657cb2751aa0d1d74bf7dfaa2f082a4200559aca38a2ba14444a01f"
+    }
+  },
+  "proof_sha256": {
+    "static-chrome": "d1e1d146d18a20087b72e6f654b29a3c88d6e90a0044bda6ad43f9845f56e281",
+    "unified": "b9e0ad73e8b36614a0d72ac389d119dc201d148cb801eaa488d4947336046e69"
+  }
+}

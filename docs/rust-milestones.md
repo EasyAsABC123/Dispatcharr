@@ -9,6 +9,10 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [424880a9 browser checkpoint](rust-m9-424880a9-browser-checkpoint.md)
+records fresh full passes for Unified HTML and Static Chrome on the same
+ordinary image. Both verified shipped React assets and exact cleanup.
+
 The [424880a9 Compose checkpoint](rust-m6-m8-424880a9-compose-checkpoint.md)
 verified copied Streams account filters, Logo usage filters, and dismiss-all.
 The ordinary rehash matched Original. Reply loss returned HTTP 503 on Rust
