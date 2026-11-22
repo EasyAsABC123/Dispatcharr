@@ -111,6 +111,10 @@ decoded both retained viewer prefixes and recorded the attached follower's EOF.
 Both backends passed the [six-default cold and warm scheduler rehearsal](rust-m6-f960875-cold-warm-scheduler-install.md)
 and the [assigned-number M3U, HDHomeRun and XMLTV comparison](rust-m7-f960875-assigned-numbers-guide.md).
 
+The [f960875 ordinary React API read wave](rust-m0-f960875-react-read-wave.md)
+matched eight EPG library reads and four Channel Profile reads per backend
+with preserved scoped SQL and exact cleanup.
+
 The [f960875 planned fMP4 replay](rust-m3-f960875-planned-fmp4-handoff.md) passed
 on Original and Native after the lead viewer disconnected and both media leases
 drained. Each backend decoded both clips and admitted a fresh viewer on the

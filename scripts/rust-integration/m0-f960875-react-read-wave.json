@@ -1,0 +1,117 @@
+{
+  "EPG": {
+    "component_map_sha256": {
+      "aio_role_selection": "82576cb71080a016eb6d520a639d750a0743096551f024b00aac753e1f92d332",
+      "retained_epg_library_json_get": "83c5a7db3200446f63a1e9fb3e4790e38842151a3949dec33fcc33c9770736dd",
+      "sqlx_idle_maintenance": "5a9f0d9963887225ae32ded82961a9e01c2b2a0b4ea48756a7bbe4a83d8269fe"
+    },
+    "exact_cleanup": true,
+    "exact_inputs": 2159,
+    "formal_register_changed": false,
+    "image_id": "sha256:f9b1e3a06997a15cc892a328763eb14ce753085620e9fdd4d2c82f30dfa54e2a",
+    "literal_actual_exit": 0,
+    "manifest_sha256": "4b2e7f2968b98ca07a5dacec396ac02b4259000e7f7521741cc715218bc43a8f",
+    "ordinary_operations": 4,
+    "package_seal_sha256": "b89ae273aac53d682ea8d8499d0310fa5a3a9eea40ed8b67b0ebd4c56b945db5",
+    "paired_cases_per_backend": 8,
+    "paired_receipt_sha256": "2c5876b074035c9d4e8846b6ebdfaf346da15fdeeb245537fb15e2170fe0aaff",
+    "planned_positive_cases_per_arm": 8,
+    "previous_failing_receipt_sha256": "32e3e240dfdcc71eedc040401d62b1bcce428054736d6751a9698dde8d5de870",
+    "protected_inputs": 497,
+    "review_sha256": "d1694643a3bb4d06be9d2562f4753e38ed33c4a3fcb6ebf3e5500c088fdda9a3",
+    "revision": "f960875f26d26bf1108a299530064d24ecc462a3",
+    "source_framework_intake_sha256": "44c1679a31be4c5b99f8eca843d942a2aac14615d378a4f1a5427b0d17a7d9f4"
+  },
+  "Channel_Profiles": {
+    "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "candidate": {
+      "image_id": "sha256:f9b1e3a06997a15cc892a328763eb14ce753085620e9fdd4d2c82f30dfa54e2a",
+      "manifest_sha256": "4b2e7f2968b98ca07a5dacec396ac02b4259000e7f7521741cc715218bc43a8f",
+      "revision": "f960875f26d26bf1108a299530064d24ecc462a3",
+      "source_archive_sha256": "31429dc58c275fbc6c9876aed6aceaca9656c903b5b0c4c6669df6b9628de68b",
+      "source_tree_sha256": "e3f36b0bbaf0114195c230aff505625c5995969d7492eff4715fea2f68b25695",
+      "tag": "dispatcharr-rust-candidate:4d3c-aio-sqlx-ordinary-f960875f26d2"
+    },
+    "credit": "Original Dispatcharr and dependency authors and contributors retain full credit.",
+    "cross_backend_equal": true,
+    "effects": {
+      "opt_in_jobs": false,
+      "owned_SQL_preserved_until_fixture_cleanup": true
+    },
+    "evidence": {
+      "Native": {
+        "cleanup_sha256": "c77cb0e31b81022f9360033395a4d0cc3d2c3bd61d645012cd57b26481d0f273",
+        "exact_retired_roles": 4,
+        "probe_stdout_sha256": "a06c650bc5e360fc55713d58b5de2536a0373786bdfab655dea91b1b7aca7dce",
+        "receipt_sha256": "cf9a7c83141523d15b5b2bbf07106f1c02c220bb873f70cc44f96ffdd532bd8d"
+      },
+      "Original": {
+        "cleanup_sha256": "58a2520db3baf4bb0a3c8d2bdf87773520b968d62960dcc4ba37d0253c78b164",
+        "exact_retired_roles": 2,
+        "probe_stdout_sha256": "e17b6ef9e0ce808feb6a2653924b6255784c4699aaa5f648efe1384bb6e8f9ae",
+        "receipt_sha256": "301708075603fa3f0b9dfa3ef437f38935b44f39e6d2affd3bee279938b67b52"
+      }
+    },
+    "formal_node_count_claimed": 0,
+    "observations": {
+      "admin-list": {
+        "mime": "application/json",
+        "status": 200,
+        "unassigned_peer_visible": true,
+        "visible_profiles": [
+          {
+            "channels": [
+              "owned-m0-profile-roles-visible"
+            ],
+            "name": "owned-m0-profile-roles-assigned"
+          },
+          {
+            "channels": [
+              "owned-m0-profile-roles-peer"
+            ],
+            "name": "owned-m0-profile-roles-peer"
+          }
+        ]
+      },
+      "admin-selected-detail": {
+        "mime": "application/json",
+        "profile": {
+          "channels": [
+            "owned-m0-profile-roles-peer"
+          ],
+          "name": "owned-m0-profile-roles-peer"
+        },
+        "status": 200
+      },
+      "standard-list": {
+        "mime": "application/json",
+        "status": 200,
+        "unassigned_peer_visible": false,
+        "visible_profiles": [
+          {
+            "channels": [
+              "owned-m0-profile-roles-visible"
+            ],
+            "name": "owned-m0-profile-roles-assigned"
+          }
+        ]
+      },
+      "standard-selected-detail": {
+        "mime": "application/json",
+        "profile": {
+          "channels": [
+            "owned-m0-profile-roles-visible"
+          ],
+          "name": "owned-m0-profile-roles-assigned"
+        },
+        "status": 200
+      }
+    },
+    "paired_controller_exit": 0,
+    "performance_measured": false,
+    "strict_scoped_cases_per_backend": 4
+  },
+  "full_M0_accepted": false,
+  "performance_measured": false
+}
