@@ -15,6 +15,10 @@ offline verification covers the tested route identities, response projections an
 [executable contract register](rust-contract-register.md) now binds the 16 Programme
 Guide cases to the two declared list and detail GET rows as partial evidence.
 
+The [ordinary M7/M8 Compose comparisons](rust-m7-m8-9cf6407-ordinary-compose.md)
+matched 19 M3U and 13 XMLTV cases per backend, plus real PostgreSQL backup inventory
+and exact download output on the same `9cf6407` image.
+
 The [checkout-only Clean Install replay](rust-m9-local-clean-install/README.md) rebuilds
 the exact `9cf6407` application inputs, runs the tracked React bootstrap and restart
 workflow, and checks the local image and exact Compose cleanup.
