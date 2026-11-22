@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [25dc1502 Core and timeshift follow-up](rust-m9-25dc1502-core-and-m4.md)
+adds one qualified exact-source Core component row and records 21 fresh
+passes across 127 required rows. The separate numeric seek and calendar
+Range replay matched 20 fresh HTTP 206 responses.
+
 The [25dc1502 release rehearsal](rust-m9-25dc1502-formal-and-package-scopes.md)
 recorded 20 fresh passes across 127 required rows after the same-image
 first-admin browser replay. The first failure remains in the ledger.
