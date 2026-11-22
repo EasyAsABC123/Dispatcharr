@@ -18,6 +18,11 @@ Guide cases to the two declared list and detail GET rows as partial evidence.
 The [9cf6407 profiled HLS pair](rust-m3-9cf6407-profiled-hls-performance.md) matched
 30 complete segments with 32.4% lower CPU and 47.4% lower peak working memory.
 
+The [fixed-path BuildKit experiment](rust-m10-fixed-path-build-comparison.md)
+measured warm full-image build time on the same source and checked identical cold
+and warm executable bytes. The [Original STD pool reference](rust-m2-original-std-sample-pool.md)
+verified actual shared-capacity refusal and admission after release.
+
 The [5d9568f explicit scheduler restart](rust-m6-5d9568f-retained-producer.md)
 preserved one Native-published pending task across producer replacement and
 verified completion by a fresh receiver, with exact cleanup.
