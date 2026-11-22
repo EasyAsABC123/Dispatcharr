@@ -18,6 +18,14 @@ Guide cases to the two declared list and detail GET rows as partial evidence.
 The [9cf6407 profiled HLS pair](rust-m3-9cf6407-profiled-hls-performance.md) matched
 30 complete segments with 32.4% lower CPU and 47.4% lower peak working memory.
 
+The [1124391 Guide and mixed Beat scope](rust-m0-m6-1124391-compose.md) passed
+ten Programme Guide cases per backend and verified one publisher per scheduled
+occurrence across Selected/Core retirement and Legacy acquisition.
+
+The [65dbbbd fMP4 pair](rust-m3-65dbbbd-profiled-fmp4.md) confirmed two overlapping
+readers on one upstream, one transform, and one remux. The remaining reader continued
+after the lead reader detached.
+
 The [65dbbbd standalone restore](rust-m8-65dbbbd-standalone-restore.md) used a
 genuine Original archive and verified copied database rows, signed task completion,
 same-process reads and teardown.

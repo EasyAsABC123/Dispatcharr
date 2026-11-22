@@ -1,0 +1,89 @@
+{
+  "application_revision": "65dbbbd267ad319a791e3558df9228362cd73c38",
+  "backends": [
+    {
+      "backend": "Original",
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "mapped_codecs": {
+        "audio": "aac",
+        "video": "h264"
+      },
+      "pipeline": {
+        "fmp4_remux": 1,
+        "origin": 1,
+        "profile_transform": 1
+      },
+      "retired_generations": 2,
+      "settled_cleanup": true,
+      "shared_complete_fragments": 6,
+      "survivor_fresh_bytes": 826598,
+      "verified_decodes": {
+        "late": {
+          "cut_bytes": 0,
+          "frames": 75,
+          "original_bytes": 3126336,
+          "playable_bytes": 3126336
+        },
+        "lead": {
+          "cut_bytes": 0,
+          "frames": 74,
+          "original_bytes": 2306084,
+          "playable_bytes": 2306084
+        }
+      },
+      "viewers": [
+        1,
+        2,
+        1,
+        1
+      ]
+    },
+    {
+      "backend": "Native",
+      "image_id": "sha256:a8e91361905b12d33b9c35e96b8662e18704523de93af322e83a661247b77304",
+      "mapped_codecs": {
+        "audio": "aac",
+        "video": "h264"
+      },
+      "pipeline": {
+        "fmp4_remux": 1,
+        "origin": 1,
+        "profile_transform": 1
+      },
+      "retired_generations": 3,
+      "settled_cleanup": true,
+      "shared_complete_fragments": 6,
+      "survivor_fresh_bytes": 854025,
+      "verified_decodes": {
+        "late": {
+          "cut_bytes": 0,
+          "frames": 75,
+          "original_bytes": 2570094,
+          "playable_bytes": 2570094
+        },
+        "lead": {
+          "cut_bytes": 0,
+          "frames": 74,
+          "original_bytes": 2306084,
+          "playable_bytes": 2306084
+        }
+      },
+      "viewers": [
+        1,
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "coordinator_exit": 0,
+  "fixture_freeze_sha256": "b0870a494ce7d68a3a78148f3a3f02b402edbc6c2a19f20f69c0d2d9e244258c",
+  "full_M3_passed": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owned_controller_exit": 0,
+  "package_manifest_sha256": "52ec1cd402a7753bd6dcfb152c7c8a49eee00d7d7bdf580aa62514b3b98edc60",
+  "performance_verified": false,
+  "private_pair_report_sha256": "4190dea3e5230730ccfbb465c31149ab3a1d0b09e1c1bd84de1b3d2166abe5e6",
+  "scope": "two equivalent fMP4 readers share one origin, profile transform and remux",
+  "terminal_execution_sha256": "82240b2b57427ce3a977ecaeb246fca130b9abffcb3ac53f0c66643473b050e1"
+}
