@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+Four [required M9 Compose rows](rust-m9-9cf6407-four-required-compose.md) passed fresh on
+9cf6407, including Complete Refresh with its immediately preceding Original reference. The
+same image passed a [local warm rollback](rust-m10-m11-9cf6407-local-rollback.md) with one
+acknowledged Native write reconciled on copied Original data. The full release gate remains open.
+
 The [9cf6407 ordinary checkpoint](rust-m0-m6-9cf6407-compose.md) verified the two fixed
 HDHomeRun browser OPTIONS cases and an opt-in Selected/Core warm handoff. The same peer
 took over the scheduler and ran the second naturally due cleanup after the leader retired.
