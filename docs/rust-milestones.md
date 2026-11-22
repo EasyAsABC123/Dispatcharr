@@ -18,6 +18,10 @@ Guide cases to the two declared list and detail GET rows as partial evidence.
 The [9cf6407 profiled HLS pair](rust-m3-9cf6407-profiled-hls-performance.md) matched
 30 complete segments with 32.4% lower CPU and 47.4% lower peak working memory.
 
+The [1124391 grouped Compose run](rust-m9-1124391-sixteen-compose-workflows.md)
+passed 16 selected workflows, with three retained Original authorities, 108 blocked
+rows and exact cleanup. The full 127-row gate remains open.
+
 The [1124391 Guide and mixed Beat scope](rust-m0-m6-1124391-compose.md) passed
 ten Programme Guide cases per backend and verified one publisher per scheduled
 occurrence across Selected/Core retirement and Legacy acquisition.
