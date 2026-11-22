@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [c1b52dc8 formal Compose wave](rust-m9-c1b52dc8-profile-browser-wave.md)
+passed clean install, live playback with Stats in unchanged React, and
+Native profile delivery. It verified 16 fresh A/V observations and exact
+retirement. Two retained Original dependencies supported the profile check.
+
 The [c1b52dc8 Selected/Core scheduler](rust-m6-c1b52dc8-selected-core-known-defaults.md)
 verified one assigned background owner, a ready web peer, real startup
 work and scheduled cleanup. The paired defaults fixture passed Scanner and
