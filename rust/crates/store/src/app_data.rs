@@ -6,7 +6,9 @@ use crate::{
 use axum::{
     body::to_bytes,
     extract::{ConnectInfo, Path, Request, State},
-    http::{HeaderMap, StatusCode},
+    http::{header, HeaderMap, HeaderValue, Method, StatusCode},
+    middleware::{self, Next},
+    response::Response,
     routing::get,
     Json, Router,
 };
@@ -20,6 +22,48 @@ const MAX_APPS: i64 = 25;
 const MAX_DEPTH: usize = 8;
 const MAX_CONTENT: usize = MAX_VALUE + 1024;
 
+const NUMERIC_COLLECTION_ALLOW: &str = "GET, DELETE, HEAD, OPTIONS";
+const NUMERIC_KEY_ALLOW: &str = "GET, PUT, DELETE, HEAD, OPTIONS";
+
+#[derive(Clone, Copy)]
+enum NumericAppDataRoute {
+    Collection,
+    Key,
+}
+
+async fn numeric_app_data_headers(
+    State(route): State<NumericAppDataRoute>,
+    request: Request,
+    next: Next,
+) -> Response {
+    let is_key = matches!(route, NumericAppDataRoute::Key);
+    let read = request.method() == Method::GET;
+    let replace_key = is_key && request.method() == Method::PUT;
+    let delete_key = is_key && request.method() == Method::DELETE;
+    let mut response = next.run(request).await;
+    let json = response
+        .headers()
+        .get(header::CONTENT_TYPE)
+        .is_some_and(|value| value == "application/json");
+    let observed = match response.status() {
+        StatusCode::OK => json && (read || replace_key),
+        StatusCode::FORBIDDEN => json && (read || replace_key || delete_key),
+        StatusCode::NO_CONTENT => delete_key,
+        _ => false,
+    };
+    if observed {
+        let allow = match route {
+            NumericAppDataRoute::Collection => NUMERIC_COLLECTION_ALLOW,
+            NumericAppDataRoute::Key => NUMERIC_KEY_ALLOW,
+        };
+        let headers = response.headers_mut();
+        headers.insert(header::ALLOW, HeaderValue::from_static(allow));
+        // The ordinary Main response middleware adds the origin token.
+        headers.insert(header::VARY, HeaderValue::from_static("Accept"));
+    }
+    response
+}
+
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route(
@@ -32,11 +76,22 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/accounts/users/{id}/app-data/",
-            get(list_user).delete(clear_user),
+            get(list_user)
+                .delete(clear_user)
+                .layer(middleware::from_fn_with_state(
+                    NumericAppDataRoute::Collection,
+                    numeric_app_data_headers,
+                )),
         )
         .route(
             "/api/accounts/users/{id}/app-data/{key}/",
-            get(get_user).put(put_user).delete(delete_user),
+            get(get_user)
+                .put(put_user)
+                .delete(delete_user)
+                .layer(middleware::from_fn_with_state(
+                    NumericAppDataRoute::Key,
+                    numeric_app_data_headers,
+                )),
         )
         .with_state(auth)
 }
@@ -456,6 +511,96 @@ async fn put_user(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn numeric_app_data_headers_match_observed_methods_and_responses() {
+        use axum::{body::Body, response::IntoResponse, routing::any};
+        use tower::ServiceExt;
+
+        use NumericAppDataRoute::{Collection, Key};
+        use StatusCode as Status;
+        let json = Some("application/json");
+        let collection = [
+            (Method::GET, Status::OK, json, true),
+            (Method::GET, Status::FORBIDDEN, json, true),
+            (Method::DELETE, Status::NO_CONTENT, None, false),
+            (Method::GET, Status::OK, Some("text/html"), false),
+        ];
+        let key = [
+            (Method::GET, Status::OK, json, true),
+            (Method::GET, Status::FORBIDDEN, json, true),
+            (Method::PUT, Status::OK, json, true),
+            (Method::PUT, Status::FORBIDDEN, json, true),
+            (Method::DELETE, Status::FORBIDDEN, json, true),
+            (Method::DELETE, Status::NO_CONTENT, None, true),
+            (Method::HEAD, Status::OK, json, false),
+            (Method::OPTIONS, Status::METHOD_NOT_ALLOWED, None, false),
+            (Method::GET, Status::UNAUTHORIZED, json, false),
+            (Method::GET, Status::NOT_FOUND, json, false),
+            (Method::PUT, Status::BAD_REQUEST, json, false),
+        ];
+
+        for (route, allow, cases) in [
+            (Collection, NUMERIC_COLLECTION_ALLOW, collection.as_slice()),
+            (Key, NUMERIC_KEY_ALLOW, key.as_slice()),
+        ] {
+            for (method, status, mime, decorated) in cases {
+                let status = *status;
+                let mime = *mime;
+                let handler = any(move || async move {
+                    let mut response = status.into_response();
+                    if let Some(mime) = mime {
+                        response
+                            .headers_mut()
+                            .insert(header::CONTENT_TYPE, HeaderValue::from_static(mime));
+                    }
+                    response
+                });
+                let request = || {
+                    Request::builder()
+                        .uri("/")
+                        .method(method.clone())
+                        .body(Body::empty())
+                        .unwrap()
+                };
+                let baseline = Router::new()
+                    .route("/", handler.clone())
+                    .oneshot(request())
+                    .await
+                    .unwrap();
+                let app = Router::new().route(
+                    "/",
+                    handler.layer(middleware::from_fn_with_state(
+                        route,
+                        numeric_app_data_headers,
+                    )),
+                );
+                let response = app.oneshot(request()).await.unwrap();
+                assert_eq!(response.status(), status);
+                for (name, value) in [(header::ALLOW, allow), (header::VARY, "Accept")] {
+                    assert_eq!(
+                        response
+                            .headers()
+                            .get_all(name)
+                            .iter()
+                            .map(|value| value.to_str().unwrap())
+                            .collect::<Vec<_>>(),
+                        decorated.then_some(value).into_iter().collect::<Vec<_>>(),
+                    );
+                }
+                for name in [header::CONTENT_LENGTH, header::CONTENT_TYPE] {
+                    assert_eq!(response.headers().get(&name), baseline.headers().get(&name));
+                }
+                if status == Status::NO_CONTENT {
+                    assert!(axum::body::to_bytes(response.into_body(), 1)
+                        .await
+                        .unwrap()
+                        .is_empty());
+                }
+            }
+        }
+    }
+
     #[test]
     fn namespaces_and_structure_follow_source_error_codes() {
         assert!(validate_key("org.example.app").is_ok());
