@@ -84,6 +84,16 @@ named Version rows under ordinary AIO ownership. The two empty DELETE 204
 responses retain their original framing difference. The named cleanup shape
 passed host checks and awaits its dedicated Compose replay.
 
+The fresh [e68fb95 ten-viewer XMLTV pair](rust-m2-e68fb95-live-xmltv-performance.md)
+measured 55.3% lower backend and infrastructure CPU and 78.3% lower peak working
+set on AMD64. Both arms served ten progressing viewers through one upstream
+connection and completed the same XMLTV job and media decode.
+The [f960875 paired direct M3U replay](rust-m7-f960875-direct-provider-m3u.md)
+matched four owned provider selection phases. Lappy concurrently ran three
+[isolated ARM64 fixtures](rust-m9-f960875-arm64-parallel-compose.md), with five
+observed three-project samples, one generated-output pass, two failed fixtures
+and verified teardown in all three.
+
 The [f960875 planned fMP4 replay](rust-m3-f960875-planned-fmp4-handoff.md) passed
 on Original and Native after the lead viewer disconnected and both media leases
 drained. Each backend decoded both clips and admitted a fresh viewer on the

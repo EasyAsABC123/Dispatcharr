@@ -1,0 +1,129 @@
+{
+  "browser": {
+    "actual_exit": 1,
+    "browser_executed": false,
+    "compose_exact_cleanup": true,
+    "exact_cleanup": true,
+    "failure_checkpoint": "sealed-browser-ui"
+  },
+  "credit": "Original Dispatcharr authors and contributors retain full application credit.",
+  "observed_all_three_sample_count": 5,
+  "original_restore": {
+    "actual_exit": 1,
+    "exact_cleanup": true,
+    "label_absence": {
+      "container": true,
+      "network": true,
+      "volume": true
+    },
+    "original_arm": "failed"
+  },
+  "output": {
+    "actual_exit": 0,
+    "architecture": "aarch64",
+    "candidate_engine_exit": 0,
+    "cases": [
+      {
+        "authenticated": true,
+        "body_bytes": 512,
+        "content_length": "512",
+        "content_type": "audio/x-mpegurl",
+        "entries": 1,
+        "local_authenticated_guide_link": true,
+        "local_authenticated_live_link": true,
+        "passed": true,
+        "path": "/get.php",
+        "programme_count": null,
+        "sha256": "c83f383b6b85a3d7aa804c8ce14b7f289f91995eb5357b3bb48e93aaaad67110",
+        "status": 200
+      },
+      {
+        "authenticated": true,
+        "body_bytes": 467,
+        "content_length": null,
+        "content_type": "application/xml",
+        "entries": null,
+        "local_authenticated_guide_link": null,
+        "local_authenticated_live_link": null,
+        "passed": true,
+        "path": "/xmltv.php",
+        "programme_count": 1,
+        "sha256": "04e367ead78536de1cd15694df9f3b0a6cccc0f36772fcb1f2f5d099398146ab",
+        "status": 200
+      },
+      {
+        "authenticated": false,
+        "body_bytes": 24,
+        "content_length": "24",
+        "content_type": "application/json",
+        "entries": null,
+        "local_authenticated_guide_link": null,
+        "local_authenticated_live_link": null,
+        "passed": true,
+        "path": "/get.php",
+        "programme_count": null,
+        "sha256": "3be5b8e53fdc8b0a2996590589456db33504977f3d1ce9bb75016c8a707e1a71",
+        "status": 401
+      },
+      {
+        "authenticated": false,
+        "body_bytes": 25,
+        "content_length": "25",
+        "content_type": "application/json",
+        "entries": null,
+        "local_authenticated_guide_link": null,
+        "local_authenticated_live_link": null,
+        "passed": true,
+        "path": "/xmltv.php",
+        "programme_count": null,
+        "sha256": "ee3cf315d0fbfe54d808ccee83b60082a3b45d66170e264840f2cc228dcbf630",
+        "status": 401
+      }
+    ],
+    "exact_cleanup": true,
+    "external_http": false,
+    "image": "sha256:1768853cb610b52b6311b0d37a92526650f2d6b472d6ffe0a3e2682fe2c98595",
+    "matching_channel_ids": true,
+    "ordinary_production_routes": [
+      "/get.php",
+      "/xmltv.php"
+    ],
+    "ownership_overrides": [],
+    "package_sha256": "7b497082e733ca29fabd526f28985e26b6b7bbd20928baa3bddd9316a151a09f",
+    "revision": "f960875f26d26bf1108a299530064d24ecc462a3",
+    "unchanged_owned_storage": true
+  },
+  "performance_measured": false,
+  "raw_sha256": {
+    "live_projects": "81b97251c75c749fec826b53f90255fc27d1c2b18a94659863cf8cf626147eed",
+    "output": "ec793169be8200e3c06759540cb76a686df531186e21291a7a204969bc30dc8c",
+    "summary": "24579b7922d6c5ab9603f2b7f9dad74ee59004c617d74c8054b0b2b352117a21"
+  },
+  "schedule": {
+    "all_three_active_samples": 5,
+    "lanes": {
+      "browser": {
+        "actual_exit": 1,
+        "exited_at": "2026-11-22T21:17:03.012824+00:00",
+        "started_at": "2026-11-22T21:16:24.402114+00:00"
+      },
+      "output": {
+        "actual_exit": 0,
+        "exited_at": "2026-11-22T21:16:30.712502+00:00",
+        "started_at": "2026-11-22T21:16:24.403619+00:00"
+      },
+      "restore": {
+        "actual_exit": 1,
+        "exited_at": "2026-11-22T21:16:50.757721+00:00",
+        "started_at": "2026-11-22T21:16:24.404823+00:00"
+      }
+    },
+    "observer_failure": null,
+    "running_owned_projects_at_end": {
+      "browser": [],
+      "output": [],
+      "restore": []
+    },
+    "samples": 60
+  }
+}
