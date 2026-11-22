@@ -15,6 +15,10 @@ offline verification covers the tested route identities, response projections an
 [executable contract register](rust-contract-register.md) now binds the 16 Programme
 Guide cases to the two declared list and detail GET rows as partial evidence.
 
+The [65dbbbd HDHomeRun successor](rust-m0-65dbbbd-browser-options.md) matches four
+ordinary and forced browser OPTIONS responses on the fixed status route across both
+network policies. The evidence includes the exact ordinary package and owned cleanup.
+
 The [ordinary M7/M8 Compose comparisons](rust-m7-m8-9cf6407-ordinary-compose.md)
 matched 19 M3U and 13 XMLTV cases per backend, plus real PostgreSQL backup inventory
 and exact download output on the same `9cf6407` image.

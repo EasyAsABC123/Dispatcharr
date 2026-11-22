@@ -1,0 +1,617 @@
+{
+  "M3U": {
+    "event_deltas": {
+      "Original": {
+        "get_exports": {
+          "m3u_blocked": 0,
+          "m3u_download": 15
+        },
+        "named_methods": {
+          "m3u_blocked": 0,
+          "m3u_download": 3
+        }
+      },
+      "Rust": {
+        "get_exports": {
+          "m3u_blocked": 0,
+          "m3u_download": 15
+        },
+        "named_methods": {
+          "m3u_blocked": 0,
+          "m3u_download": 3
+        }
+      }
+    },
+    "exact_roles_retired": [
+      "baseline",
+      "candidate",
+      "data-init",
+      "origin"
+    ],
+    "exact_started_roster_verified": true,
+    "get_exports": [
+      {
+        "Original_sha256": "289b554e85e087f0e11a1b33220742f6ebb03f37b7ed68a74f4bfe67aa022a9d",
+        "Rust_sha256": "289b554e85e087f0e11a1b33220742f6ebb03f37b7ed68a74f4bfe67aa022a9d",
+        "body_bytes": 4445,
+        "case": "anonymous-basic",
+        "entries": 17,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u?_fixture_case=anonymous-basic"
+      },
+      {
+        "Original_sha256": "289b554e85e087f0e11a1b33220742f6ebb03f37b7ed68a74f4bfe67aa022a9d",
+        "Rust_sha256": "289b554e85e087f0e11a1b33220742f6ebb03f37b7ed68a74f4bfe67aa022a9d",
+        "body_bytes": 4445,
+        "case": "anonymous-trailing",
+        "entries": 17,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/?_fixture_case=anonymous-trailing"
+      },
+      {
+        "Original_sha256": "7cdadccd9da03ef427fbf7ca9b58b190429f01bf9517a3a1c2a78dba9ba1a0a9",
+        "Rust_sha256": "7cdadccd9da03ef427fbf7ca9b58b190429f01bf9517a3a1c2a78dba9ba1a0a9",
+        "body_bytes": 1653,
+        "case": "profile",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?_fixture_case=profile"
+      },
+      {
+        "Original_sha256": "7cdadccd9da03ef427fbf7ca9b58b190429f01bf9517a3a1c2a78dba9ba1a0a9",
+        "Rust_sha256": "7cdadccd9da03ef427fbf7ca9b58b190429f01bf9517a3a1c2a78dba9ba1a0a9",
+        "body_bytes": 1653,
+        "case": "profile-trailing",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile/?_fixture_case=profile-trailing"
+      },
+      {
+        "Original_sha256": "d602c17c52338dd4a00950cfb3ab1137041a42637ab04987f7b00adc83c46e60",
+        "Rust_sha256": "d602c17c52338dd4a00950cfb3ab1137041a42637ab04987f7b00adc83c46e60",
+        "body_bytes": 1645,
+        "case": "profile-ampersand",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/Kids%20&%20News?_fixture_case=profile-ampersand"
+      },
+      {
+        "Original_sha256": "ddf3b6c90516b589b0be17f2264bad2fad1daf3dcd0c91074dbc04089c8eae92",
+        "Rust_sha256": "ddf3b6c90516b589b0be17f2264bad2fad1daf3dcd0c91074dbc04089c8eae92",
+        "body_bytes": 1633,
+        "case": "profile-plus",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/Plus+News?_fixture_case=profile-plus"
+      },
+      {
+        "Original_sha256": "24fd0e966923055805c0cbcafe0392153bbe5aac1d60a19a580b347e3bb01613",
+        "Rust_sha256": "24fd0e966923055805c0cbcafe0392153bbe5aac1d60a19a580b347e3bb01613",
+        "body_bytes": 1675,
+        "case": "profile-unicode",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/Caf%C3%A9%20%E6%9D%B1%E4%BA%AC?_fixture_case=profile-unicode"
+      },
+      {
+        "Original_sha256": "48b7b261941e0677faf8d2df8600830c0d8fab5fce83fb6ab952d49a2447e77a",
+        "Rust_sha256": "48b7b261941e0677faf8d2df8600830c0d8fab5fce83fb6ab952d49a2447e77a",
+        "body_bytes": 1647,
+        "case": "profile-percent-once",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/Percent%2526News?_fixture_case=profile-percent-once"
+      },
+      {
+        "Original_sha256": "74189f4942886859a95e9595b62c996b948c3fcc16fd36a329f2ed163f57e19a",
+        "Rust_sha256": "74189f4942886859a95e9595b62c996b948c3fcc16fd36a329f2ed163f57e19a",
+        "body_bytes": 1617,
+        "case": "uncached-logos",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?cachedlogos=false&_fixture_case=uncached-logos"
+      },
+      {
+        "Original_sha256": "bfe2f87a85b9591838e23c6bf62419a253086999b1d64e8a35786a49112512cc",
+        "Rust_sha256": "bfe2f87a85b9591838e23c6bf62419a253086999b1d64e8a35786a49112512cc",
+        "body_bytes": 1735,
+        "case": "tvg-id",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?tvg_id_source=tvg_id&_fixture_case=tvg-id"
+      },
+      {
+        "Original_sha256": "ac19f32d580fb7d693a7e76404394cc8fac2a79cb3d89db91b76b7c4974209fe",
+        "Rust_sha256": "ac19f32d580fb7d693a7e76404394cc8fac2a79cb3d89db91b76b7c4974209fe",
+        "body_bytes": 1720,
+        "case": "gracenote",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?tvg_id_source=gracenote&_fixture_case=gracenote"
+      },
+      {
+        "Original_sha256": "c82dabeee3cdeb71f15b4ceece6eb09b975822d0ec9344fb35d9083249b1b2ff",
+        "Rust_sha256": "c82dabeee3cdeb71f15b4ceece6eb09b975822d0ec9344fb35d9083249b1b2ff",
+        "body_bytes": 1833,
+        "case": "output-legacy",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?output=hls&output_profile=23&_fixture_case=output-legacy"
+      },
+      {
+        "Original_sha256": "a652574501aed907fda046c34bf15d38baa6b10d6ce231ac03ac21d3bb7429e9",
+        "Rust_sha256": "a652574501aed907fda046c34bf15d38baa6b10d6ce231ac03ac21d3bb7429e9",
+        "body_bytes": 1868,
+        "case": "output-format-wins",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?output=hls&output_format=fmp4&output_profile=a%2Ab~+c&_fixture_case=output-format-wins"
+      },
+      {
+        "Original_sha256": "6c4bdbd8f5288313dd5613407b2838d2551003c0caf563e554a9dbeb9add85b8",
+        "Rust_sha256": "6c4bdbd8f5288313dd5613407b2838d2551003c0caf563e554a9dbeb9add85b8",
+        "body_bytes": 1737,
+        "case": "epg-params",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?prev_days=2&tvg_id_source=tvg_id&cachedlogos=false&days=3&_fixture_case=epg-params"
+      },
+      {
+        "Original_sha256": "4938fb57bd3b67261031777b8c7781cd3b078b71d1f5e8473b53e1b0a1a2149c",
+        "Rust_sha256": "4938fb57bd3b67261031777b8c7781cd3b078b71d1f5e8473b53e1b0a1a2149c",
+        "body_bytes": 1810,
+        "case": "duplicates",
+        "entries": 5,
+        "method": "GET",
+        "observed_wire_fields_matched": true,
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?output_format=ts&output_format=hls&tvg_id_source=bad&tvg_id_source=gracenote&_fixture_case=duplicates"
+      }
+    ],
+    "literal_actual_exit": 0,
+    "named_methods": [
+      {
+        "Original_sha256": "7cdadccd9da03ef427fbf7ca9b58b190429f01bf9517a3a1c2a78dba9ba1a0a9",
+        "Rust_sha256": "7cdadccd9da03ef427fbf7ca9b58b190429f01bf9517a3a1c2a78dba9ba1a0a9",
+        "body_bytes": 1653,
+        "case": "named-get",
+        "entries": 5,
+        "headers": {
+          "content-disposition": [
+            "attachment; filename=\"channels.m3u\""
+          ],
+          "content-length": [
+            "1653"
+          ],
+          "content-type": [
+            "audio/x-mpegurl"
+          ],
+          "x-content-type-options": [
+            "nosniff"
+          ]
+        },
+        "method": "GET",
+        "request_body_shape": "absent",
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?_fixture_case=named-get"
+      },
+      {
+        "Original_sha256": "7cdadccd9da03ef427fbf7ca9b58b190429f01bf9517a3a1c2a78dba9ba1a0a9",
+        "Rust_sha256": "7cdadccd9da03ef427fbf7ca9b58b190429f01bf9517a3a1c2a78dba9ba1a0a9",
+        "body_bytes": 1653,
+        "case": "named-empty-post",
+        "entries": 5,
+        "headers": {
+          "content-disposition": [
+            "attachment; filename=\"channels.m3u\""
+          ],
+          "content-length": [
+            "1653"
+          ],
+          "content-type": [
+            "audio/x-mpegurl"
+          ],
+          "x-content-type-options": [
+            "nosniff"
+          ]
+        },
+        "method": "POST",
+        "request_body_shape": "empty",
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?_fixture_case=named-empty-post"
+      },
+      {
+        "Original_sha256": "7cdadccd9da03ef427fbf7ca9b58b190429f01bf9517a3a1c2a78dba9ba1a0a9",
+        "Rust_sha256": "7cdadccd9da03ef427fbf7ca9b58b190429f01bf9517a3a1c2a78dba9ba1a0a9",
+        "body_bytes": 1653,
+        "case": "named-object-post",
+        "entries": 5,
+        "headers": {
+          "content-disposition": [
+            "attachment; filename=\"channels.m3u\""
+          ],
+          "content-length": [
+            "1653"
+          ],
+          "content-type": [
+            "audio/x-mpegurl"
+          ],
+          "x-content-type-options": [
+            "nosniff"
+          ]
+        },
+        "method": "POST",
+        "request_body_shape": "empty-json-object",
+        "status": 200,
+        "target": "/output/m3u/rust-export-profile?_fixture_case=named-object-post"
+      },
+      {
+        "Original_sha256": "5e6697622341bccb01c108d68ee83991ac356e952c0cca7113e9e5ad1a862641",
+        "Rust_sha256": "5e6697622341bccb01c108d68ee83991ac356e952c0cca7113e9e5ad1a862641",
+        "body_bytes": 40,
+        "case": "named-body-post",
+        "entries": 0,
+        "headers": {
+          "content-disposition": [],
+          "content-length": [
+            "40"
+          ],
+          "content-type": [
+            "text/html; charset=utf-8"
+          ],
+          "x-content-type-options": [
+            "nosniff"
+          ]
+        },
+        "method": "POST",
+        "request_body_shape": "ordinary-nonempty-json",
+        "status": 403,
+        "target": "/output/m3u/rust-export-profile?_fixture_case=named-body-post"
+      }
+    ],
+    "physical_receipt_sha256": "7818c6fb4c077647526efe644301d9cdf1449a8241fec799917ed00e1ae0e3d7",
+    "proof_sha256": "f96e5b5ebb8e17808fe95eac616c3f23505c52d4deec1c7ff642bf076458b321",
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    },
+    "resolver": {
+      "contract_id": "route-b4a3f38e76ae962a071f:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "handler": "apps.output.views.m3u_endpoint",
+      "ordinal": 362,
+      "registry_pattern": "output/^m3u(?:/(?P<profile_name>[^/]+))?/?$"
+    },
+    "role": "anonymous"
+  },
+  "XMLTV": {
+    "cases": [
+      {
+        "Original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "Rust_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "body_bytes": 0,
+        "case": "normal HEAD cold",
+        "method": "HEAD",
+        "path": "/output/epg",
+        "status": 200
+      },
+      {
+        "Original_sha256": "4f44d3d5aed464e8f7e3d71f389eb38baba1e071bb21d6febc8fcbbb2d219327",
+        "Rust_sha256": "4f44d3d5aed464e8f7e3d71f389eb38baba1e071bb21d6febc8fcbbb2d219327",
+        "body_bytes": 30863,
+        "case": "normal first",
+        "channel_ids": [
+          "-1.5",
+          "0",
+          "800.5",
+          "801",
+          "802",
+          "803",
+          "804",
+          "805",
+          "14"
+        ],
+        "method": "GET",
+        "path": "/output/epg",
+        "programmes": 123,
+        "status": 200
+      },
+      {
+        "Original_sha256": "4f44d3d5aed464e8f7e3d71f389eb38baba1e071bb21d6febc8fcbbb2d219327",
+        "Rust_sha256": "4f44d3d5aed464e8f7e3d71f389eb38baba1e071bb21d6febc8fcbbb2d219327",
+        "body_bytes": 30863,
+        "case": "normal replay",
+        "channel_ids": [
+          "-1.5",
+          "0",
+          "800.5",
+          "801",
+          "802",
+          "803",
+          "804",
+          "805",
+          "14"
+        ],
+        "method": "GET",
+        "path": "/output/epg",
+        "programmes": 123,
+        "status": 200
+      },
+      {
+        "Original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "Rust_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "body_bytes": 0,
+        "case": "normal HEAD cached",
+        "method": "HEAD",
+        "path": "/output/epg",
+        "status": 200
+      },
+      {
+        "Original_sha256": "4f44d3d5aed464e8f7e3d71f389eb38baba1e071bb21d6febc8fcbbb2d219327",
+        "Rust_sha256": "4f44d3d5aed464e8f7e3d71f389eb38baba1e071bb21d6febc8fcbbb2d219327",
+        "body_bytes": 30863,
+        "case": "path /output/epg/",
+        "channel_ids": [
+          "-1.5",
+          "0",
+          "800.5",
+          "801",
+          "802",
+          "803",
+          "804",
+          "805",
+          "14"
+        ],
+        "method": "GET",
+        "path": "/output/epg/",
+        "programmes": 123,
+        "status": 200
+      },
+      {
+        "Original_sha256": "f7e8bcebab8f5238afbed2121b9dba6a8d3d75924e9d7620f0e24fc9dca7e9ab",
+        "Rust_sha256": "f7e8bcebab8f5238afbed2121b9dba6a8d3d75924e9d7620f0e24fc9dca7e9ab",
+        "body_bytes": 9285,
+        "case": "path /output/epg/XC%20assigned%20profile",
+        "channel_ids": [
+          "800.5",
+          "801",
+          "803"
+        ],
+        "method": "GET",
+        "path": "/output/epg/XC%20assigned%20profile",
+        "programmes": 28,
+        "status": 200
+      },
+      {
+        "Original_sha256": "f7e8bcebab8f5238afbed2121b9dba6a8d3d75924e9d7620f0e24fc9dca7e9ab",
+        "Rust_sha256": "f7e8bcebab8f5238afbed2121b9dba6a8d3d75924e9d7620f0e24fc9dca7e9ab",
+        "body_bytes": 9285,
+        "case": "path /output/epg/XC%20assigned%20profile/",
+        "channel_ids": [
+          "800.5",
+          "801",
+          "803"
+        ],
+        "method": "GET",
+        "path": "/output/epg/XC%20assigned%20profile/",
+        "programmes": 28,
+        "status": 200
+      },
+      {
+        "Original_sha256": "b2557593cc70d7ba4d32ee9b5a3130e65f51c2b69d14bbcf0e069e44e2d62bb6",
+        "Rust_sha256": "b2557593cc70d7ba4d32ee9b5a3130e65f51c2b69d14bbcf0e069e44e2d62bb6",
+        "body_bytes": 30799,
+        "case": "query [('cachedlogos', 'false')]",
+        "channel_ids": [
+          "-1.5",
+          "0",
+          "800.5",
+          "801",
+          "802",
+          "803",
+          "804",
+          "805",
+          "14"
+        ],
+        "method": "GET",
+        "path": "/output/epg?cachedlogos=false",
+        "programmes": 123,
+        "status": 200
+      },
+      {
+        "Original_sha256": "4f44d3d5aed464e8f7e3d71f389eb38baba1e071bb21d6febc8fcbbb2d219327",
+        "Rust_sha256": "4f44d3d5aed464e8f7e3d71f389eb38baba1e071bb21d6febc8fcbbb2d219327",
+        "body_bytes": 30863,
+        "case": "query [('cachedlogos', '0')]",
+        "channel_ids": [
+          "-1.5",
+          "0",
+          "800.5",
+          "801",
+          "802",
+          "803",
+          "804",
+          "805",
+          "14"
+        ],
+        "method": "GET",
+        "path": "/output/epg?cachedlogos=0",
+        "programmes": 123,
+        "status": 200
+      },
+      {
+        "Original_sha256": "019b6f7d7e0a0cd67a6c7bbb16e0cf4239b097b566ad008fb23ef22456341c10",
+        "Rust_sha256": "019b6f7d7e0a0cd67a6c7bbb16e0cf4239b097b566ad008fb23ef22456341c10",
+        "body_bytes": 30995,
+        "case": "query [('tvg_id_source', 'tvg_id')]",
+        "channel_ids": [
+          "-1.5",
+          "0",
+          "override&id",
+          "base<&id",
+          "802",
+          "803",
+          "804",
+          "805",
+          "14"
+        ],
+        "method": "GET",
+        "path": "/output/epg?tvg_id_source=tvg_id",
+        "programmes": 123,
+        "status": 200
+      },
+      {
+        "Original_sha256": "e8de8c735567ccdfb6654f9e184a6af3221dcffc4e11c20b02f9d8a8617d6ac3",
+        "Rust_sha256": "e8de8c735567ccdfb6654f9e184a6af3221dcffc4e11c20b02f9d8a8617d6ac3",
+        "body_bytes": 30977,
+        "case": "query [('tvg_id_source', 'gracenote')]",
+        "channel_ids": [
+          "-1.5",
+          "0",
+          "station\"id",
+          "station-base",
+          "802",
+          "803",
+          "804",
+          "805",
+          "14"
+        ],
+        "method": "GET",
+        "path": "/output/epg?tvg_id_source=gracenote",
+        "programmes": 123,
+        "status": 200
+      },
+      {
+        "Original_sha256": "73715730b4edc93a56349eb5576a1cd2c4060eb2f683ec2009cd517161afe618",
+        "Rust_sha256": "73715730b4edc93a56349eb5576a1cd2c4060eb2f683ec2009cd517161afe618",
+        "body_bytes": 15529,
+        "case": "query [('days', '1')]",
+        "channel_ids": [
+          "-1.5",
+          "0",
+          "800.5",
+          "801",
+          "802",
+          "803",
+          "804",
+          "805",
+          "14"
+        ],
+        "method": "GET",
+        "path": "/output/epg?days=1",
+        "programmes": 45,
+        "status": 200
+      },
+      {
+        "Original_sha256": "a2565028eb8f0d4df3fcd71cc82c9c822c49bb6aa44e6d36fa213ca670cca3f6",
+        "Rust_sha256": "a2565028eb8f0d4df3fcd71cc82c9c822c49bb6aa44e6d36fa213ca670cca3f6",
+        "body_bytes": 15933,
+        "case": "query [('days', '1'), ('prev_days', '1')]",
+        "channel_ids": [
+          "-1.5",
+          "0",
+          "800.5",
+          "801",
+          "802",
+          "803",
+          "804",
+          "805",
+          "14"
+        ],
+        "method": "GET",
+        "path": "/output/epg?days=1&prev_days=1",
+        "programmes": 48,
+        "status": 200
+      }
+    ],
+    "exact_roles_retired": [
+      "baseline",
+      "candidate",
+      "data-init",
+      "origin"
+    ],
+    "headers": {
+      "cache-control": "no-cache",
+      "content-disposition": "attachment; filename=\"Dispatcharr.xml\"",
+      "content-type": "application/xml"
+    },
+    "literal_actual_exit": 0,
+    "physical_receipt_sha256": "ec342756cfe9812a1c0234fdc75f7c76aa6c8d9807ba1007d2fb418a32b5a6e9",
+    "proof_sha256": "7b7f2bd969d00f4d8e15b313c6a8d6169ac5d9992bdc5195e6ef8dc8a600171f",
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    },
+    "resolver": {
+      "contract_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+      "declared_method": null,
+      "handler": "apps.output.views.epg_endpoint",
+      "ordinal": 363,
+      "registry_pattern": "output/^epg(?:/(?P<profile_name>[^/]+))?/?$"
+    },
+    "role": "anonymous",
+    "shared_utc_half_hour": true
+  },
+  "application": {
+    "application_revision": "9cf640701dacea07ea5f394ce7b18a6fa7c8c088",
+    "image": "sha256:fd1a839e1fce4835039b7b079cd0929cd3c658261374cea2c7bbebf813fae3a9",
+    "manifest_sha256": "19d618bfe72657a0adfc65fd93094ad42cbaffbe8b609bdc68ba8eddfb7e17a1"
+  },
+  "initial_M3U_observer_failure": {
+    "Rust_started": false,
+    "exact_started_roles_retired": [
+      "baseline",
+      "origin"
+    ],
+    "independent_cleanup_sha256": "a543ecbd81069f60d690bf0f7dd9ce9a3d6140f7d4e1333a55a530e284ca0bec",
+    "literal_exit": 1,
+    "original_get_cases_passed": 15,
+    "receipt_sha256": "d9bbda65b22a1656cbd87f58f093b973532e2b8f6fa0c977af50a46e11e4d678",
+    "root_cause": "Fixture callback reopened single-use Original snapshot"
+  },
+  "original": {
+    "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "historical_authorities": {
+      "M3U": "3750d1f048d905cc8611db81aede4c1beccc72f25432af7e14581f983b9f28e8",
+      "XMLTV": "7628f3cfadf16b67421805e668ffd93849d0f8e933dbf5b2c3f7bf63941116d4"
+    },
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "publication": {
+    "commit": "9c8fa60f3a7ecf6fbfc31b7cd8a076ffcd938791",
+    "docs_sha256": "8deee5731cf6adca06c7774d662ed836dafef7bfd781392de18ddafacbe485d1",
+    "register_sha256": "c84e049dc2aa05df8b35e6fac1b09799790fe89c8ad16115d278feaaaff80998",
+    "summary_sha256": "5800df5a1469d2febdfbee856417251e3a13f37e8b574e7eba31249a933cc1a1"
+  },
+  "schema": 1
+}
