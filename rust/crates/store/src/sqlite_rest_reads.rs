@@ -4,6 +4,8 @@
 use super::*;
 use crate::{auth, auth_throttle, AuthConfig, NotificationCache};
 use sqlx::{sqlite::SqliteRow, SqlitePool};
+#[cfg(feature = "sqlite-copied-data-runtime")]
+use std::collections::HashMap;
 use tokio::sync::Semaphore;
 
 const SUBJECT_SQL: &str = "SELECT id,is_active,user_level,stream_limit,CASE WHEN length(CAST(username AS BLOB))+length(CAST(password AS BLOB))<=2048 THEN username END AS username,CASE WHEN length(CAST(username AS BLOB))+length(CAST(password AS BLOB))<=2048 THEN password END AS password,length(CAST(COALESCE(custom_properties,'{}') AS BLOB)) AS properties_bytes,CASE WHEN length(CAST(COALESCE(custom_properties,'{}') AS BLOB))<=?2 THEN COALESCE(custom_properties,'{}') END AS properties_text FROM accounts_user WHERE id=?1 LIMIT 2";
@@ -105,6 +107,45 @@ impl RetainedSqliteRestReads {
                 result?,
                 axum::http::Method::GET,
             ))
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn channel_collection(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        uri: &axum::http::Uri,
+        params: HashMap<String, String>,
+    ) -> Result<Value, StoreError> {
+        let subject = self
+            .bearer_account_user(peer, headers.clone(), false)
+            .await?;
+        crate::channel_groups::collection_permission(subject.user())?;
+        let base = crate::channels::base_url(&headers, uri)?;
+        let pool = self.pool.clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = async {
+                let mut transaction = connection.begin().await?;
+                let read = crate::channels::sqlite_list::collection(
+                    &mut transaction,
+                    subject.user(),
+                    &params,
+                    &base,
+                )
+                .await;
+                if read.is_ok() {
+                    transaction.commit().await?;
+                } else {
+                    transaction.rollback().await?;
+                }
+                read
+            }
+            .await;
+            settle(connection).await?;
+            result
         })
         .await
     }

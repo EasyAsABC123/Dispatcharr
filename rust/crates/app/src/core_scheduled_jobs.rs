@@ -36,6 +36,23 @@ fn plugin_refresh_enabled_for(value: Option<&OsStr>, core_enabled: bool) -> Resu
     }
 }
 
+pub fn plugin_startup_enabled(plugin_refresh: bool) -> Result<bool, String> {
+    plugin_startup_enabled_for(
+        env::var_os("RUST_CORE_PLUGIN_STARTUP_OWNER").as_deref(),
+        plugin_refresh,
+    )
+}
+
+fn plugin_startup_enabled_for(value: Option<&OsStr>, plugin_refresh: bool) -> Result<bool, String> {
+    match value {
+        None => Ok(false),
+        Some(value) if value == OsStr::new("rust") && plugin_refresh => Ok(true),
+        Some(_) => Err(
+            "RUST_CORE_PLUGIN_STARTUP_OWNER requires rust and the Core plugin refresh owner".into(),
+        ),
+    }
+}
+
 pub fn restore_grace(core_enabled: bool, shutdown: Duration) -> Result<Option<Duration>, String> {
     match env::var_os("RUST_CORE_BACKUP_RESTORE_OWNER") {
         None => Ok(None),
@@ -190,9 +207,10 @@ impl CoreScheduledJobs {
         self.scheduler.core_schedule_ready()
     }
 
-    pub async fn start(&self) -> Result<(), String> {
+    pub async fn start(&self, plugin_startup: bool) -> Result<(), String> {
         self.worker
-            .start(Arc::new(()))
+            .start(Arc::new(()), plugin_startup)
+            .await
             .map_err(|_| "Core scheduled worker did not start")?;
         let started = async {
             self.worker
@@ -262,4 +280,15 @@ fn core_plugin_refresh_requires_its_explicit_owner() {
     assert_eq!(plugin_refresh_enabled_for(Some(rust), true), Ok(true));
     assert!(plugin_refresh_enabled_for(Some(rust), false).is_err());
     assert!(plugin_refresh_enabled_for(Some(OsStr::new("yes")), true).is_err());
+}
+
+#[cfg(test)]
+#[test]
+fn core_plugin_startup_requires_the_prepared_plugin_refresh_owner() {
+    let rust = OsStr::new("rust");
+    assert_eq!(plugin_startup_enabled_for(None, true), Ok(false));
+    assert_eq!(plugin_startup_enabled_for(None, false), Ok(false));
+    assert_eq!(plugin_startup_enabled_for(Some(rust), true), Ok(true));
+    assert!(plugin_startup_enabled_for(Some(rust), false).is_err());
+    assert!(plugin_startup_enabled_for(Some(OsStr::new("yes")), true).is_err());
 }
