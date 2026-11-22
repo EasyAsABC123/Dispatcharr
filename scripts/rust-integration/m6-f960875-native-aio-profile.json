@@ -1,0 +1,60 @@
+{
+  "DVR_recovery_deferred": false,
+  "Native_explicit_owner_workload_proof_sha256": "84073c1a3cf3a8f26d61530e0de7c5e57d8f86423683c1baf8de04a197127d83",
+  "Original_stock_AIO_proof_sha256": "e8d199d65e6ff9670703181d3509ad5b68005431db89fe660fc46063ac47fcda",
+  "all_commands_reached_EOF": true,
+  "application_inputs": 2159,
+  "candidate": "f960875f26d26bf1108a299530064d24ecc462a3",
+  "cleanup": {
+    "exact_inventory_empty": true,
+    "normal_bootstrap_stop": true,
+    "owned_cids_absent": true,
+    "owned_host_generations_absent": true,
+    "passed": true
+  },
+  "cleanup_checkpoint_after_graceful_owner_stop": true,
+  "experimental_role_flags_absent": true,
+  "explicit_selected_core_only": false,
+  "flags_off_worker_activation": false,
+  "formal_rows_promoted": 0,
+  "host_tests_ignored": 127,
+  "host_tests_passed": 771,
+  "image": "sha256:f9b1e3a06997a15cc892a328763eb14ce753085620e9fdd4d2c82f30dfa54e2a",
+  "inherited_redis_databases": {
+    "broker": 0,
+    "cache": 0,
+    "result": 0
+  },
+  "literal_exit": 0,
+  "manifest_sha256": "4b2e7f2968b98ca07a5dacec396ac02b4259000e7f7521741cc715218bc43a8f",
+  "native_AIO_deployment_owned_Core": true,
+  "natural_cleanup": "one SUCCESS/null",
+  "natural_scanner_and_groups": 2,
+  "one_scheduler_then_zero": true,
+  "owned_api_import_and_children": 3,
+  "owned_roles_retired": 6,
+  "performance_measured": false,
+  "proof_sha256": "8fd76ec6dc9ad03ac84d8c7279cb0c787c6ad30f0f3ae62ee8e621ef66f74249",
+  "protected_inputs": 497,
+  "receipt_sha256": "f1116d1b202d004a5fcf380d9a254fc783476e9d9b741ae1e36c4ea27d4d02ed",
+  "same_peer_ready_after_owner_stop": true,
+  "scope_complete": true,
+  "startup_DVR": "SUCCESS/Recovery complete",
+  "startup_version": "SUCCESS/null via one HTTP 503",
+  "stock_setup_rows": 6,
+  "terminal_journal_families": [
+    "apps.channels.tasks.evaluate_series_rules",
+    "apps.channels.tasks.recover_recordings_on_startup",
+    "apps.epg.tasks.build_programme_index_task",
+    "apps.epg.tasks.refresh_epg_data",
+    "apps.m3u.tasks.refresh_m3u_groups",
+    "celery.backend_cleanup",
+    "core.tasks.check_for_version_update",
+    "core.tasks.scan_and_process_files"
+  ],
+  "verified_profile": {
+    "peer": "modular",
+    "worker": "aio"
+  },
+  "whole_M6": false
+}

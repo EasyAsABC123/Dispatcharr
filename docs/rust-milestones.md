@@ -26,6 +26,12 @@ The [5d9568f explicit worker rehearsal](rust-m6-5d9568f-explicit-role-compose.md
 verified startup, HTTP XMLTV import and descendants, natural scan and cleanup,
 durability after retirement, and a ready peer with exact teardown.
 
+The [f960875 short soak](rust-m9-f960875-sqlx-idle-correction.md) passed the original
+120-second workload and post-playback resource budgets after preserving SQLx idle age.
+Its [Native AIO profile](rust-m6-f960875-native-aio-profile.md) independently verified
+worker startup, the import and scheduler tasks, durable ownership release, and a
+ready modular peer. The 360-second prefix and two-hour soak have separate gates.
+
 The [08d3b455 media wave](rust-m3-m4-08d3-current-media.md) matched the active
 catch-up position and decoded range across both backends and verified a fresh
 fMP4 request on the ready Rust peer after planned lead retirement. The
