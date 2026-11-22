@@ -4,7 +4,7 @@ use dispatcharr_contracts::{
     PlaybackResolver, PlaybackSource, PlaybackViewer, UserLimitPolicy,
 };
 use sqlx::Row;
-use std::time::Duration;
+use std::{collections::BTreeMap, time::Duration};
 
 // Match the production engine's existing primary+alternate capacity, before
 // transferring/expanding profile commands for an unbounded provider join.
@@ -116,6 +116,125 @@ pub(crate) fn xc_credential_pool(
         counter_key: format!("server_group_connections:{group}:{}", &fingerprint[..16]),
         max_streams: maximum,
     })
+}
+
+fn unsupported_std_sample() -> StoreError {
+    StoreError::Unsupported("STD credential sample-URL precedence is outside the qualified domain")
+}
+
+fn std_sample_credential_pool(
+    group: i64,
+    maximum: u32,
+    sample: &str,
+    username: &str,
+    password: &str,
+) -> Result<dispatcharr_contracts::PlaybackCredentialPool, StoreError> {
+    // The verified slice is a plain HTTP(S) account sample. It is read only
+    // for pool identity. The actual assigned media URL is resolved separately.
+    let url = url::Url::parse(sample).map_err(|_| unsupported_std_sample())?;
+    if !matches!(url.scheme(), "http" | "https")
+        || url.host().is_none()
+        || url.as_str() != sample
+        || !url.username().is_empty()
+        || url.password().is_some()
+        || url.query().is_some()
+        || url.fragment().is_some()
+    {
+        return Err(unsupported_std_sample());
+    }
+    let mut segments = url.path_segments().ok_or_else(unsupported_std_sample)?;
+    let plain = |part: &str| {
+        !part.is_empty()
+            && part
+                .bytes()
+                .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_' | b'.'))
+    };
+    let (first, second, third) = (
+        segments.next().filter(|part| plain(part)),
+        segments.next().filter(|part| plain(part)),
+        segments.next().filter(|part| plain(part)),
+    );
+    let (Some(first), Some(second), Some(third)) = (first, second, third) else {
+        return Err(unsupported_std_sample());
+    };
+    let pair = match segments.next() {
+        Some(id)
+            if first.eq_ignore_ascii_case("live") && plain(id) && segments.next().is_none() =>
+        {
+            (second, third)
+        }
+        None if ![
+            "live",
+            "movie",
+            "series",
+            "timeshift",
+            "player_api.php",
+            "panel_api.php",
+            "xmltv.php",
+        ]
+        .iter()
+        .any(|reserved| first.eq_ignore_ascii_case(reserved)) =>
+        {
+            if username.is_empty() || password.is_empty() {
+                (first, second)
+            } else {
+                (username, password)
+            }
+        }
+        _ => return Err(unsupported_std_sample()),
+    };
+    xc_credential_pool(group, maximum, pair.0, pair.1)
+}
+
+struct StdSample {
+    url: Option<String>,
+    oversized: bool,
+    ambiguous: bool,
+}
+
+async fn std_account_samples(
+    store: &Store,
+    accounts: &[i64],
+) -> Result<BTreeMap<i64, StdSample>, StoreError> {
+    if accounts.is_empty() {
+        return Ok(BTreeMap::new());
+    }
+    let samples = sqlx::query_as::<_, (i64, Option<String>, bool, bool)>(
+        r#"SELECT requested.account_id,
+                  CASE WHEN octet_length(sample.url) <= 65536 THEN sample.url END,
+                  COALESCE(octet_length(sample.url) > 65536, false),
+                  COALESCE(sample.next_updated_at = sample.updated_at, false)
+           FROM unnest($1::bigint[]) AS requested(account_id)
+           LEFT JOIN LATERAL (
+               SELECT recent.url, recent.updated_at,
+                      LEAD(recent.updated_at) OVER (ORDER BY recent.updated_at DESC) AS next_updated_at
+               FROM (
+                   SELECT s.url, s.updated_at
+                   FROM dispatcharr_channels_stream s
+                   WHERE s.m3u_account_id = requested.account_id AND s.url IS DISTINCT FROM ''
+                   ORDER BY s.updated_at DESC
+                   LIMIT 2
+               ) recent
+               ORDER BY recent.updated_at DESC
+               LIMIT 1
+           ) sample ON true"#,
+    )
+    .bind(accounts)
+    .fetch_all(store.pool())
+    .await?;
+    Ok(samples
+        .into_iter()
+        .map(|(account, url, oversized, ambiguous)| {
+            (
+                account,
+                StdSample {
+                    url,
+                    oversized,
+                    ambiguous,
+                },
+            )
+        })
+        .collect())
 }
 
 struct PlaybackLookup<'a> {
@@ -344,10 +463,11 @@ impl Store {
             CASE WHEN octet_length(s.stream_hash)<=1024 THEN s.stream_hash END AS stream_hash,
             CASE WHEN octet_length(s.name)<=4096 THEN s.name END AS stream_name,
             CASE WHEN octet_length(s.url)<=65536 THEN s.url END AS url,
-            a.account_type,a.server_group_id::bigint AS server_group_id,
+            a.account_type,a.id::bigint AS provider_account_id,a.server_group_id::bigint AS server_group_id,
             CASE WHEN octet_length(a.server_url)<=65536 THEN a.server_url END AS xc_server_url,
             CASE WHEN octet_length(a.username)<=65536 THEN a.username END AS xc_username,
             CASE WHEN octet_length(a.password)<=65536 THEN a.password END AS xc_password,
+            (COALESCE(octet_length(a.username),0)>65536 OR COALESCE(octet_length(a.password),0)>65536) AS account_login_oversized,
             CASE WHEN octet_length(s.stream_id::text)<=4096 THEN s.stream_id::text END AS xc_stream_id,
             p.id::bigint AS provider_profile_id,
             CASE WHEN octet_length(p.name)<=4096 THEN p.name END AS provider_profile_name,
@@ -382,6 +502,21 @@ impl Store {
                 return Err(playback_capacity());
             }
         }
+        let ordinary_std_pool = preview.is_none() && profile_locked && profile_name == "Proxy";
+        let mut std_accounts = Vec::new();
+        if ordinary_std_pool {
+            for row in &rows {
+                if row.try_get::<&str, _>("account_type")? == "STD"
+                    && row.try_get::<Option<i64>, _>("server_group_id")?.is_some()
+                    && row.try_get::<i32, _>("max_streams")? > 0
+                {
+                    std_accounts.push(row.try_get("provider_account_id")?);
+                }
+            }
+            std_accounts.sort_unstable();
+            std_accounts.dedup();
+        }
+        let std_samples = std_account_samples(self, &std_accounts).await?;
         let mut streams = Vec::new();
         let mut ffmpeg_template: Option<crate::source_input_profile::Template> = None;
         let mut unsupported = false;
@@ -503,6 +638,29 @@ impl Store {
                         maximum as u32,
                         &current.username,
                         &current.password,
+                    )?)
+                }
+                (Some(group), true)
+                    if account_type == "STD" && ordinary_std_pool && input_command.is_none() =>
+                {
+                    let account: i64 = row.try_get("provider_account_id")?;
+                    let sample = std_samples
+                        .get(&account)
+                        .ok_or_else(unsupported_std_sample)?;
+                    if sample.oversized || row.try_get::<bool, _>("account_login_oversized")? {
+                        return Err(playback_capacity());
+                    }
+                    let sample = sample
+                        .url
+                        .as_deref()
+                        .filter(|_| !sample.ambiguous)
+                        .ok_or_else(unsupported_std_sample)?;
+                    Some(std_sample_credential_pool(
+                        group,
+                        maximum as u32,
+                        sample,
+                        username.as_deref().unwrap_or_default(),
+                        password.as_deref().unwrap_or_default(),
                     )?)
                 }
                 (Some(_), true) => {
@@ -1171,6 +1329,38 @@ mod output_tests {
                 .counter_key
         );
         assert!(xc_credential_pool(7, 2, "Σ", "password").is_err());
+    }
+    #[test]
+    fn ordinary_std_account_sample_shares_typed_and_saved_pool_identity() {
+        let selected = "pool-test";
+        let secret = format!("{selected}-pair");
+        let unselected = format!("{selected}-other");
+        let typed = format!("http://origin.invalid/live/{selected}/{secret}/1.ts");
+        let short = format!("http://origin.invalid/{unselected}/{secret}/1.ts");
+        let typed_pool = std_sample_credential_pool(7, 1, &typed, &unselected, &secret).unwrap();
+        let saved_pool = std_sample_credential_pool(7, 1, &short, selected, &secret).unwrap();
+        let distinct_pool = std_sample_credential_pool(7, 1, &short, "", "").unwrap();
+        assert_eq!(typed_pool, saved_pool);
+        assert_ne!(typed_pool, distinct_pool);
+        assert_eq!(
+            typed_pool,
+            xc_credential_pool(7, 1, selected, &secret).unwrap()
+        );
+    }
+
+    #[test]
+    fn ordinary_std_account_sample_rejects_unqualified_path_shapes() {
+        for suffix in [
+            "/",
+            "/live/only-two.ts",
+            "/movie/a/b/1.ts",
+            "/a/b/1.ts?query=1",
+            "/a/b/1.ts/",
+            "/a%20b/c/1.ts",
+        ] {
+            let sample = format!("http://origin.invalid{suffix}");
+            assert!(std_sample_credential_pool(7, 1, &sample, "", "").is_err());
+        }
     }
     #[test]
     fn xc_live_uses_rotated_login_instead_of_stale_imported_url() {
