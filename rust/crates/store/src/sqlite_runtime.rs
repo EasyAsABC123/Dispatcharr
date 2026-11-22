@@ -14,8 +14,14 @@ use chrono::Utc;
 
 #[path = "sqlite_app_data.rs"]
 pub(crate) mod application_data;
+#[path = "sqlite_core_catalog.rs"]
+pub(crate) mod core_catalog;
 #[path = "sqlite_environment.rs"]
 mod environment;
+#[path = "sqlite_epg_collections.rs"]
+pub(crate) mod epg_collections;
+#[path = "sqlite_m3u_accounts.rs"]
+pub(crate) mod m3u_accounts;
 #[path = "sqlite_profile.rs"]
 pub(crate) mod profile;
 use std::{collections::HashMap, path::Path};
@@ -30,6 +36,7 @@ pub struct CopiedSqliteRuntime {
     config: AuthConfig,
     password_workers: Arc<Semaphore>,
     requests: Arc<Semaphore>,
+    waiting_reads: Arc<Semaphore>,
 }
 
 impl CopiedSqliteRuntime {
@@ -52,6 +59,7 @@ impl CopiedSqliteRuntime {
             config,
             password_workers: Arc::new(Semaphore::new(4)),
             requests: Arc::new(Semaphore::new(4)),
+            waiting_reads: Arc::new(Semaphore::new(16)),
         })
     }
 
@@ -71,6 +79,11 @@ impl CopiedSqliteRuntime {
                 post(token).layer(axum::middleware::map_response(direct_token_allow)),
             )
             .route("/api/accounts/token/refresh/", axum::routing::any(refresh))
+            .route(
+                "/api/accounts/initialize-superuser/",
+                axum::routing::get(setup_status),
+            )
+            .route("/api/accounts/users/", axum::routing::get(profile::users))
             .route("/api/accounts/users/me/", axum::routing::any(profile::me))
             .route(
                 "/api/channels/groups/",
@@ -82,6 +95,10 @@ impl CopiedSqliteRuntime {
                     .put(group_put)
                     .patch(group_patch)
                     .delete(group_delete),
+            )
+            .route(
+                "/api/channels/profiles/",
+                axum::routing::get(channel_profiles),
             )
             .route("/api/channels/channels/", axum::routing::get(channels))
             .route(
@@ -106,6 +123,33 @@ impl CopiedSqliteRuntime {
                 "/api/core/settings/env/",
                 axum::routing::get(environment::get),
             )
+            .route(
+                "/api/core/useragents/",
+                axum::routing::get(catalog).layer(Extension(core_catalog::Catalog::UserAgents)),
+            )
+            .route(
+                "/api/core/streamprofiles/",
+                axum::routing::get(catalog).layer(Extension(core_catalog::Catalog::StreamProfiles)),
+            )
+            .route(
+                "/api/core/outputprofiles/",
+                axum::routing::get(catalog).layer(Extension(core_catalog::Catalog::OutputProfiles)),
+            )
+            .route(
+                "/api/m3u/server-groups/",
+                axum::routing::get(catalog).layer(Extension(core_catalog::Catalog::ServerGroups)),
+            )
+            .route(
+                "/api/epg/sources/",
+                axum::routing::get(epg_collection)
+                    .layer(Extension(epg_collections::Collection::Sources)),
+            )
+            .route(
+                "/api/epg/epgdata/",
+                axum::routing::get(epg_collection)
+                    .layer(Extension(epg_collections::Collection::Data)),
+            )
+            .route("/api/m3u/accounts/", axum::routing::get(provider_accounts))
             .route("/healthz", axum::routing::get(readiness))
             .with_state(self.clone())
     }
@@ -123,6 +167,18 @@ impl CopiedSqliteRuntime {
             .clone()
             .try_acquire_owned()
             .map_err(|_| StoreError::RateLimited(1))?;
+        self.read_with_permit(permit)
+    }
+
+    async fn allocate_read(&self) -> Result<RetainedSqliteRestReads, StoreError> {
+        let permit = acquire_read_permit(&self.requests, &self.waiting_reads).await?;
+        self.read_with_permit(permit)
+    }
+
+    fn read_with_permit(
+        &self,
+        permit: tokio::sync::OwnedSemaphorePermit,
+    ) -> Result<RetainedSqliteRestReads, StoreError> {
         RetainedSqliteRestReads::from_owned_request(
             &self.identity,
             self.config.clone(),
@@ -151,6 +207,52 @@ impl CopiedSqliteRuntime {
         }
         login_after_admission(&login, &self.password_workers, &self.config, body).await
     }
+}
+
+async fn acquire_read_permit(
+    active: &Arc<Semaphore>,
+    waiting: &Semaphore,
+) -> Result<tokio::sync::OwnedSemaphorePermit, StoreError> {
+    // The unchanged React bootstrap can issue ten reads concurrently. Keep
+    // the existing active limit and bound both waiting clients and wait time.
+    if let Ok(permit) = active.clone().try_acquire_owned() {
+        return Ok(permit);
+    }
+    let _waiting = waiting
+        .try_acquire()
+        .map_err(|_| StoreError::RateLimited(1))?;
+    tokio::time::timeout(
+        std::time::Duration::from_secs(2),
+        active.clone().acquire_owned(),
+    )
+    .await
+    .map_err(|_| StoreError::RateLimited(1))?
+    .map_err(|_| StoreError::RateLimited(1))
+}
+
+#[cfg(test)]
+#[tokio::test]
+async fn copied_reads_wait_for_capacity_and_keep_waiter_limit() {
+    let active = Arc::new(Semaphore::new(4));
+    let waiting = Semaphore::new(16);
+    let active_requests = active.clone().acquire_many_owned(4).await.unwrap();
+    let completions = futures_util::future::join_all((0..10).map(|_| async {
+        let permit = acquire_read_permit(&active, &waiting).await.unwrap();
+        drop(permit);
+    }));
+    let settle = async {
+        tokio::task::yield_now().await;
+        assert_eq!(waiting.available_permits(), 6);
+        drop(active_requests);
+    };
+    tokio::join!(completions, settle);
+    assert_eq!(waiting.available_permits(), 16);
+    let _held_active = active.clone().acquire_many_owned(4).await.unwrap();
+    let _held_waiting = waiting.acquire_many(16).await.unwrap();
+    assert!(matches!(
+        acquire_read_permit(&active, &waiting).await,
+        Err(StoreError::RateLimited(1))
+    ));
 }
 
 struct SqliteLogin<'a> {
@@ -282,7 +384,8 @@ async fn groups(
     headers: HeaderMap,
 ) -> Result<Response, StoreError> {
     runtime
-        .allocate()?
+        .allocate_read()
+        .await?
         .channel_group_collection(peer, headers)
         .await
 }
@@ -350,6 +453,27 @@ async fn group_delete(
         .allocate()?
         .channel_group_action(peer, headers, GroupAction::Delete(id))
         .await
+}
+
+async fn channel_profiles(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    let read = async {
+        let profiles = runtime
+            .allocate_read()
+            .await?
+            .channel_profile_collection(peer, headers.clone())
+            .await?;
+        crate::channel_profiles::canonical_json_response(profiles, &uri, &headers)
+    }
+    .await;
+    copied_read_headers(
+        read.unwrap_or_else(IntoResponse::into_response),
+        axum::http::HeaderValue::from_static("GET, POST, HEAD, OPTIONS"),
+    )
 }
 
 async fn channels(
@@ -435,7 +559,8 @@ async fn read_channel(
     operation: ChannelRead,
 ) -> Result<Value, StoreError> {
     runtime
-        .allocate()?
+        .allocate_read()
+        .await?
         .channel_read(peer, headers, uri, params, operation)
         .await
 }
@@ -460,6 +585,55 @@ fn copied_read_headers(mut response: Response, allow: axum::http::HeaderValue) -
         axum::http::HeaderValue::from_static("Accept, origin"),
     );
     response
+}
+
+fn setup_document(
+    exists: bool,
+    ip: &dispatcharr_contracts::SourceIpAddr,
+    allowed_ip: &str,
+) -> String {
+    if exists {
+        return r#"{"superuser_exists": true}"#.into();
+    }
+    let allowed = crate::startup::setup_allowed(ip.address(), allowed_ip);
+    format!(r#"{{"superuser_exists": false, "client_ip": "{ip}", "setup_allowed": {allowed}}}"#)
+}
+
+async fn setup_status(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    let exists = runtime
+        .allocate_read()
+        .await?
+        .bootstrap_admin_exists()
+        .await?;
+    let ip = source_client_ip_for_config(&runtime.config, &request(peer, headers));
+    let override_ip = std::env::var("DISPATCHARR_SETUP_ALLOWED_IP").unwrap_or_default();
+    Ok((
+        [(axum::http::header::CONTENT_TYPE, "application/json")],
+        setup_document(exists, &ip, &override_ip),
+    )
+        .into_response())
+}
+
+#[cfg(test)]
+#[test]
+fn copied_setup_keeps_source_json_spacing_and_local_gate() {
+    let ip = "127.0.0.1".parse().unwrap();
+    assert_eq!(
+        setup_document(true, &ip, ""),
+        r#"{"superuser_exists": true}"#
+    );
+    assert_eq!(
+        setup_document(false, &ip, ""),
+        r#"{"superuser_exists": false, "client_ip": "127.0.0.1", "setup_allowed": true}"#
+    );
+    assert_eq!(
+        setup_document(false, &ip, "192.0.2.1"),
+        r#"{"superuser_exists": false, "client_ip": "127.0.0.1", "setup_allowed": false}"#
+    );
 }
 
 async fn version(
@@ -560,12 +734,82 @@ async fn settings_reply(
 ) -> Response {
     let reply = async {
         runtime
-            .allocate()?
+            .allocate_read()
+            .await?
             .core_settings_read(peer, headers, id)
             .await
     }
     .await;
     copied_read_headers(reply.map(Json).into_response(), allow)
+}
+
+async fn catalog(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    Extension(catalog): Extension<core_catalog::Catalog>,
+) -> Response {
+    let reply = async {
+        runtime
+            .allocate_read()
+            .await?
+            .core_catalog_read(peer, headers, catalog)
+            .await
+    }
+    .await;
+    copied_read_headers(
+        reply.map(Json).into_response(),
+        crate::channels::COLLECTION_ALLOW,
+    )
+}
+
+async fn epg_collection(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    Extension(collection): Extension<epg_collections::Collection>,
+) -> Response {
+    let reply = async {
+        runtime
+            .allocate_read()
+            .await?
+            .epg_collection(peer, headers, collection)
+            .await
+    }
+    .await;
+    let response = match reply {
+        Ok(body) => (
+            [(axum::http::header::CONTENT_TYPE, "application/json")],
+            body,
+        )
+            .into_response(),
+        Err(error) => error.into_response(),
+    };
+    copied_read_headers(response, collection.allow())
+}
+
+async fn provider_accounts(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Response {
+    let read = async {
+        runtime
+            .allocate_read()
+            .await?
+            .provider_accounts(peer, headers)
+            .await
+    }
+    .await;
+    let response = match read {
+        Ok(body) => (
+            [(axum::http::header::CONTENT_TYPE, "application/json")],
+            body,
+        )
+            .into_response(),
+        Err(error) => error.into_response(),
+    };
+    copied_read_headers(response, crate::channels::COLLECTION_ALLOW)
 }
 
 async fn readiness(State(runtime): State<CopiedSqliteRuntime>) -> (StatusCode, Json<Value>) {
@@ -582,4 +826,60 @@ async fn readiness(State(runtime): State<CopiedSqliteRuntime>) -> (StatusCode, J
                         "backend": "rust", "scope": "sqlite_copied_data", "parity_complete": false}),
         ),
     )
+}
+
+#[cfg(test)]
+mod channel_profile_wire_tests {
+    use super::*;
+    use axum::{
+        body::{to_bytes, Body},
+        http::{header, Method, Request},
+        routing::get,
+    };
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn copied_channel_profile_response_keeps_get_and_head_headers() {
+        let router = Router::new().route(
+            "/api/channels/profiles/",
+            get(|| async {
+                let response = crate::channel_profiles::canonical_json_response(
+                    json!([{"id":2,"name":"Owned","channels":[8,3]}]),
+                    &axum::http::Uri::from_static("/api/channels/profiles/"),
+                    &HeaderMap::new(),
+                )
+                .unwrap();
+                copied_read_headers(
+                    response,
+                    axum::http::HeaderValue::from_static("GET, POST, HEAD, OPTIONS"),
+                )
+            }),
+        );
+        let expected = br#"[{"id":2,"name":"Owned","channels":[8,3]}]"#;
+        for method in [Method::GET, Method::HEAD] {
+            let request = Request::builder()
+                .method(method.clone())
+                .uri("/api/channels/profiles/")
+                .body(Body::empty())
+                .unwrap();
+            let response = router.clone().oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::OK);
+            assert_eq!(
+                response.headers()[header::ALLOW],
+                "GET, POST, HEAD, OPTIONS"
+            );
+            assert_eq!(response.headers()[header::VARY], "Accept, origin");
+            assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+            assert_eq!(
+                response.headers()[header::CONTENT_LENGTH],
+                expected.len().to_string().as_str()
+            );
+            let body = to_bytes(response.into_body(), 1024).await.unwrap();
+            if method == Method::GET {
+                assert_eq!(body.as_ref(), expected);
+            } else {
+                assert!(body.is_empty());
+            }
+        }
+    }
 }

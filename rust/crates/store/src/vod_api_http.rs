@@ -200,6 +200,10 @@ impl VodReads {
         )
         .router()
     }
+    /// Synchronous XC metadata work shares the same provider admission and shutdown.
+    pub fn xc_vod_refresh(&self) -> super::XcVodRefresh {
+        super::XcVodRefresh::new(self.auth.clone(), self.reader.shared_runtime())
+    }
     /// Selected work shares the already-bounded HTTP provider runtime.
     pub fn scheduled_vod(&self) -> super::ScheduledVod {
         super::ScheduledVod::new(self.auth.clone(), self.reader.shared_runtime())

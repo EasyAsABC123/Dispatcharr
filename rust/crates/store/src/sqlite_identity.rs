@@ -40,8 +40,7 @@ const RECORD_LAST_LOGIN: &str = "UPDATE accounts_user SET last_login=? WHERE use
 const INSERT_LOGIN_EVENT: &str = "INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details) VALUES('login_success',?,NULL,NULL,?)";
 
 #[cfg(feature = "sqlite-copied-data-runtime")]
-const INSERT_LOGIN_FAILURE: &str =
-    "INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details) VALUES('login_failed',?,NULL,NULL,?)";
+const INSERT_LOGIN_FAILURE: &str = "INSERT INTO core_systemevent(event_type,timestamp,channel_id,channel_name,details) VALUES('login_failed',?,NULL,NULL,?)";
 
 /// Outcome after attempting the post-verification successful login writes.
 #[derive(Debug)]
@@ -184,10 +183,18 @@ impl SqliteIdentity {
         #[cfg(feature = "sqlite-copied-data-runtime")]
         {
             snapshot.prepare(INSERT_LOGIN_FAILURE).await?;
-            use crate::auth::sqlite_runtime::{application_data, profile};
+            snapshot
+                .prepare(crate::rest_reads::sqlite::CHANNEL_PROFILE_COLLECTION_SQL)
+                .await?;
+            use crate::auth::sqlite_runtime::{
+                application_data, core_catalog, epg_collections, m3u_accounts, profile,
+            };
             for statement in profile::STATEMENTS
                 .into_iter()
                 .chain(application_data::STATEMENTS)
+                .chain(core_catalog::Catalog::STATEMENTS)
+                .chain(epg_collections::STATEMENTS)
+                .chain([m3u_accounts::QUERY])
                 .chain(crate::channel_groups::sqlite::writes::STATEMENTS)
             {
                 snapshot.prepare(statement).await?;

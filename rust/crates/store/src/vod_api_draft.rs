@@ -39,10 +39,13 @@ mod vod_api_scheduled_series_episodes;
 pub(crate) use vod_api_owned_read::ReadError;
 pub use vod_api_owned_read::ReadLimits as VodReadLimits;
 pub use vod_api_scheduled_series_episodes::{ScheduledVod, ScheduledVodError};
+#[path = "vod_api_xc_refresh.rs"]
+mod vod_api_xc_refresh;
 pub(crate) use vod_api_unified_html::{
     content as source_browsable_content, cookie as source_browsable_cookie,
     escape as source_browsable_escape,
 };
+pub use vod_api_xc_refresh::{XcVodRefresh, XcVodRefreshTarget};
 
 /// Existing captured Django/DRF CSRF masking/cookie algorithm, reusable by a
 /// bounded browsable renderer. This does not authenticate or register a route.

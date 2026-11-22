@@ -65,6 +65,7 @@ pub(crate) async fn read(
     user: &User,
     family: Family,
     id: i64,
+    selected: Option<(i64, i64)>,
     limits: &ReadLimit,
     available_work_bytes: usize,
 ) -> Result<Option<InfoRow>, StoreError> {
@@ -83,6 +84,8 @@ pub(crate) async fn read(
     let result = sqlx::query(&sql)
         .bind(id)
         .bind(i64::try_from(metadata).map_err(|_| reader::capacity())?)
+        .bind(selected.map(|(relation, _)| relation))
+        .bind(selected.map(|(_, account)| account))
         .fetch_optional(&mut *connection)
         .await;
     // The same supervised outer request/byte owners remain held until real
@@ -195,7 +198,7 @@ fn sql(family: Family, adult_filter: bool) -> String {
     } else {
         ""
     };
-    format!("SELECT relation_id,account_id,content_id,category_id,year,adult,created_at,modified_at,relation_created,last_refresh,logo_id,(row_bytes>$2) AS large_metadata,{bounded} FROM (SELECT selected.*,({bytes})::bigint AS row_bytes FROM (SELECT r.id::bigint AS relation_id,r.m3u_account_id::bigint AS account_id,r.{foreign}::bigint AS content_id,r.category_id::bigint AS category_id,{extension} AS extension,o.name,o.language,o.rating,o.description,o.genre,o.year,o.tmdb_id AS tmdb,o.imdb_id AS imdb,{adult} AS adult,o.created_at,r.updated_at AS modified_at,r.created_at AS relation_created,{last} AS last_refresh,o.logo_id::bigint AS logo_id,o.custom_properties::text AS properties,r.custom_properties::text AS relation_properties FROM {relation} r JOIN {object} o ON o.id=r.{foreign} JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id WHERE r.{foreign}=$1 AND a.is_active{visibility} ORDER BY a.priority DESC,r.id LIMIT 1) AS selected) AS bounded")
+    format!("SELECT relation_id,account_id,content_id,category_id,year,adult,created_at,modified_at,relation_created,last_refresh,logo_id,(row_bytes>$2) AS large_metadata,{bounded} FROM (SELECT selected.*,({bytes})::bigint AS row_bytes FROM (SELECT r.id::bigint AS relation_id,r.m3u_account_id::bigint AS account_id,r.{foreign}::bigint AS content_id,r.category_id::bigint AS category_id,{extension} AS extension,o.name,o.language,o.rating,o.description,o.genre,o.year,o.tmdb_id AS tmdb,o.imdb_id AS imdb,{adult} AS adult,o.created_at,r.updated_at AS modified_at,r.created_at AS relation_created,{last} AS last_refresh,o.logo_id::bigint AS logo_id,o.custom_properties::text AS properties,r.custom_properties::text AS relation_properties FROM {relation} r JOIN {object} o ON o.id=r.{foreign} JOIN m3u_m3uaccount a ON a.id=r.m3u_account_id WHERE r.{foreign}=$1 AND ($3::bigint IS NULL OR (r.id=$3 AND a.id=$4::bigint)) AND a.is_active{visibility} ORDER BY a.priority DESC,r.id LIMIT 1) AS selected) AS bounded")
 }
 
 #[cfg(test)]
