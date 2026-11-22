@@ -41,7 +41,9 @@ then matched all four AMD64 bodies through a restart on lappy. The [34860b9a
 Channel List cohort](rust-m8-34860-copied-sqlite-channel-shell.md) matched 13
 GET bodies byte for byte and the HEAD status and headers. It repeated ten
 administrator calls after restart with the same bearer tokens and served
-unchanged React assets. Broader browser workflows remain open.
+unchanged React assets. [The native ARM64 Channel List](rust-m10-34860-native-arm64-copied-sqlite-channel-list.md)
+also passed a restart on lappy and retained filtering, effective values, and
+two ordered stream relationships. Broader browser workflows remain open.
 
 The [2c939204 ordinary playback batch](rust-m3-2c939204-ordinary-output-cohort.md)
 passed shared HLS, shared profiled fMP4, live fMP4 lease renewal and natural
