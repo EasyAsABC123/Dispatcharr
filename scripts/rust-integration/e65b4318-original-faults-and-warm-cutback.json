@@ -1,0 +1,1156 @@
+{
+  "actual_group_exit": 0,
+  "actual_phases": {
+    "m6-lost-reply": 0,
+    "m7-source-fault": 0,
+    "m7-source-proof": 0,
+    "m8-source-dismiss": 0,
+    "m9-warm": 0,
+    "m9-warm-proof": 0
+  },
+  "application_performance_measured": false,
+  "credit": "Original Dispatcharr and dependency authors retain full credit.",
+  "original_M6": {
+    "cleanup_sha256": "a4080a989a9d5ab8259f70bc0fe298ad1e94195e1e9cc7e423ebe215ca82853b",
+    "exact_retired_CIDs": 2,
+    "first_attempt_actual_exit": 1,
+    "first_attempt_cleanup_exact": true,
+    "literal_original_exit": 0,
+    "native_measured": false,
+    "original": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "phases": {
+      "first-http": {
+        "attempts": [
+          {
+            "downstream_shutdown_before_forward": true,
+            "frame_sha256": "50d46a29716188aa9ff0c952003b8b024a0529840e4307dac4be696a6172b35c",
+            "independently_matched_queue_head": true,
+            "ordinal": 1,
+            "outcome": "committed",
+            "queue_length": 1,
+            "server_reply_sha256": "6d7dbcb27aa6e24f40bf1f4cb2cc8a36e2f3b7f1ae87edf906578a2936b756d2",
+            "task_sha256": "d91b03d70850aac5f8818c69781399967edf2725e5c11581531eaf0a4bac2e9b",
+            "withheld": true
+          },
+          {
+            "frame_sha256": "4905ddaffa0acdcef749a5d258f0c9ca26ae46c49a860399b3fbbd9fefb2aaf4",
+            "independently_matched_queue_head": true,
+            "ordinal": 2,
+            "outcome": "committed",
+            "queue_length": 2,
+            "server_reply_sha256": "b89b622c47fe6c01a8a4ad2f68bbab016691efc0b4366e603603c110b764cf44",
+            "task_sha256": "d91b03d70850aac5f8818c69781399967edf2725e5c11581531eaf0a4bac2e9b",
+            "withheld": false
+          }
+        ],
+        "declared_saved_hash_key": true,
+        "pre_worker_SQL_override_and_unrelated_rows_verified": true,
+        "queue": [
+          {
+            "frame_sha256": "4905ddaffa0acdcef749a5d258f0c9ca26ae46c49a860399b3fbbd9fefb2aaf4",
+            "task_sha256": "d91b03d70850aac5f8818c69781399967edf2725e5c11581531eaf0a4bac2e9b"
+          },
+          {
+            "frame_sha256": "50d46a29716188aa9ff0c952003b8b024a0529840e4307dac4be696a6172b35c",
+            "task_sha256": "d91b03d70850aac5f8818c69781399967edf2725e5c11581531eaf0a4bac2e9b"
+          }
+        ],
+        "ready_or_reserved": 2,
+        "token": "matching-frame",
+        "wire": {
+          "body_bytes": 999,
+          "body_sha256": "a22ec668ac58e8c99cfd173140ac4e033cd949af3d7e534a515e17e6ccecf12b",
+          "mime": "application/json",
+          "status": 200
+        }
+      },
+      "producer-ready": {
+        "business_http_started": false,
+        "expected_live_roles": true,
+        "first_stock_startup_root_count": 3,
+        "first_stock_web_generation_retired": true,
+        "queue_after_web_restart": 0,
+        "queue_before_web_restart": 0,
+        "replacement_web_generation_distinct": true,
+        "replacement_web_plugin_discovery_disable_requested": true,
+        "unowned_live_role_count": 0
+      },
+      "proxy-retired": {
+        "attempt_count": 2,
+        "errors": [],
+        "live_connections": 0,
+        "live_threads": 0
+      },
+      "same-value-retry": {
+        "attempts": [
+          {
+            "downstream_shutdown_before_forward": true,
+            "frame_sha256": "50d46a29716188aa9ff0c952003b8b024a0529840e4307dac4be696a6172b35c",
+            "independently_matched_queue_head": true,
+            "ordinal": 1,
+            "outcome": "committed",
+            "queue_length": 1,
+            "server_reply_sha256": "6d7dbcb27aa6e24f40bf1f4cb2cc8a36e2f3b7f1ae87edf906578a2936b756d2",
+            "task_sha256": "d91b03d70850aac5f8818c69781399967edf2725e5c11581531eaf0a4bac2e9b",
+            "withheld": true
+          },
+          {
+            "frame_sha256": "4905ddaffa0acdcef749a5d258f0c9ca26ae46c49a860399b3fbbd9fefb2aaf4",
+            "independently_matched_queue_head": true,
+            "ordinal": 2,
+            "outcome": "committed",
+            "queue_length": 2,
+            "server_reply_sha256": "b89b622c47fe6c01a8a4ad2f68bbab016691efc0b4366e603603c110b764cf44",
+            "task_sha256": "d91b03d70850aac5f8818c69781399967edf2725e5c11581531eaf0a4bac2e9b",
+            "withheld": false
+          }
+        ],
+        "declared_saved_hash_key": true,
+        "pre_worker_SQL_override_and_unrelated_rows_verified": true,
+        "queue": [
+          {
+            "frame_sha256": "4905ddaffa0acdcef749a5d258f0c9ca26ae46c49a860399b3fbbd9fefb2aaf4",
+            "task_sha256": "d91b03d70850aac5f8818c69781399967edf2725e5c11581531eaf0a4bac2e9b"
+          },
+          {
+            "frame_sha256": "50d46a29716188aa9ff0c952003b8b024a0529840e4307dac4be696a6172b35c",
+            "task_sha256": "d91b03d70850aac5f8818c69781399967edf2725e5c11581531eaf0a4bac2e9b"
+          }
+        ],
+        "ready_or_reserved": 2,
+        "token": "matching-frame",
+        "wire": {
+          "body_bytes": 999,
+          "body_sha256": "a22ec668ac58e8c99cfd173140ac4e033cd949af3d7e534a515e17e6ccecf12b",
+          "mime": "application/json",
+          "status": 200
+        }
+      },
+      "worker-terminal": {
+        "exact_merge_and_unrelated_rows": true,
+        "exact_refresh_events": false,
+        "journal_sha256": "4991ffe3d74742d839c52499492f055d6b51b7a07e0237bf40f3a66bf7305f26",
+        "journal_verified_scoped_attempts": 2,
+        "queue_empty": true,
+        "results": [
+          {
+            "exact_expected_result": true,
+            "status": "SUCCESS",
+            "task_sha256": "d91b03d70850aac5f8818c69781399967edf2725e5c11581531eaf0a4bac2e9b"
+          }
+        ],
+        "same_value_retry_SQL_equal": true,
+        "target_token_absent": true,
+        "worker_generation_distinct": true
+      }
+    },
+    "proof_sha256": "4e44dfd5be0f4f422832c9a6058e2c7b8e67a16e688301c69e94716a0fe28da1"
+  },
+  "original_M7": {
+    "actual_original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "cases": [
+      {
+        "case": "movie_stale",
+        "full_success_contract_after_fault": false,
+        "phase": "http503",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "movie_stale"
+        ],
+        "scripted_upstream_status": 503,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "stale",
+            "stale"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            true,
+            true
+          ],
+          "episode_count": [
+            0,
+            0
+          ],
+          "episode_relation_count": [
+            0,
+            0
+          ],
+          "episodes_fetched": [
+            null,
+            null
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 627,
+          "body_sha256": "365f9bedde06532e01a1bb1e34876ade143da915cc4af019d428bf0d3b276feb",
+          "content_type": "application/json",
+          "plot_class": "stored_cache",
+          "status": 200,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "movie_stale",
+        "full_success_contract_after_fault": false,
+        "phase": "invalid_json",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "movie_stale"
+        ],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "stale",
+            "stale"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            true,
+            true
+          ],
+          "episode_count": [
+            0,
+            0
+          ],
+          "episode_relation_count": [
+            0,
+            0
+          ],
+          "episodes_fetched": [
+            null,
+            null
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 627,
+          "body_sha256": "365f9bedde06532e01a1bb1e34876ade143da915cc4af019d428bf0d3b276feb",
+          "content_type": "application/json",
+          "plot_class": "stored_cache",
+          "status": 200,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "movie_stale",
+        "full_success_contract_after_fault": true,
+        "phase": "recovery",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "movie_stale"
+        ],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": false,
+          "changed_sequences": [],
+          "changed_tables": [
+            "vod_m3umovierelation",
+            "vod_movie"
+          ],
+          "clock_shape": [
+            "stale",
+            "recorded"
+          ],
+          "clock_unchanged": false,
+          "detailed_fetched": [
+            true,
+            true
+          ],
+          "episode_count": [
+            0,
+            0
+          ],
+          "episode_relation_count": [
+            0,
+            0
+          ],
+          "episodes_fetched": [
+            null,
+            null
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 659,
+          "body_sha256": "feb5b2c5a927b5bdc8c0cb888ab29b701dfc51c7fab6b3ca9256a45451972914",
+          "content_type": "application/json",
+          "plot_class": "refreshed",
+          "status": 200,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "movie_stale",
+        "full_success_contract_after_fault": false,
+        "phase": "following_open",
+        "provider_action_count": 0,
+        "provider_events": [],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "recorded",
+            "recorded"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            true,
+            true
+          ],
+          "episode_count": [
+            0,
+            0
+          ],
+          "episode_relation_count": [
+            0,
+            0
+          ],
+          "episodes_fetched": [
+            null,
+            null
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 659,
+          "body_sha256": "feb5b2c5a927b5bdc8c0cb888ab29b701dfc51c7fab6b3ca9256a45451972914",
+          "content_type": "application/json",
+          "plot_class": "refreshed",
+          "status": 200,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "movie_missing_metadata",
+        "full_success_contract_after_fault": false,
+        "phase": "http503",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "movie_missing_metadata"
+        ],
+        "scripted_upstream_status": 503,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "null",
+            "null"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            null,
+            null
+          ],
+          "episode_count": [
+            0,
+            0
+          ],
+          "episode_relation_count": [
+            0,
+            0
+          ],
+          "episodes_fetched": [
+            null,
+            null
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 666,
+          "body_sha256": "92584c49e0d3d44bc587e458647ab0901d36526071d8d4b32962dc8cf064a3ab",
+          "content_type": "application/json",
+          "plot_class": "stored_model",
+          "status": 200,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "movie_missing_metadata",
+        "full_success_contract_after_fault": false,
+        "phase": "invalid_json",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "movie_missing_metadata"
+        ],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "null",
+            "null"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            null,
+            null
+          ],
+          "episode_count": [
+            0,
+            0
+          ],
+          "episode_relation_count": [
+            0,
+            0
+          ],
+          "episodes_fetched": [
+            null,
+            null
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 666,
+          "body_sha256": "92584c49e0d3d44bc587e458647ab0901d36526071d8d4b32962dc8cf064a3ab",
+          "content_type": "application/json",
+          "plot_class": "stored_model",
+          "status": 200,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "movie_missing_metadata",
+        "full_success_contract_after_fault": true,
+        "phase": "recovery",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "movie_missing_metadata"
+        ],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": false,
+          "changed_sequences": [],
+          "changed_tables": [
+            "vod_m3umovierelation",
+            "vod_movie"
+          ],
+          "clock_shape": [
+            "null",
+            "recorded"
+          ],
+          "clock_unchanged": false,
+          "detailed_fetched": [
+            null,
+            true
+          ],
+          "episode_count": [
+            0,
+            0
+          ],
+          "episode_relation_count": [
+            0,
+            0
+          ],
+          "episodes_fetched": [
+            null,
+            null
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 714,
+          "body_sha256": "e7e2eff8413a89936067530aba2b6684c180f542b43e9d74f19b3a7c1f4c8650",
+          "content_type": "application/json",
+          "plot_class": "refreshed",
+          "status": 200,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "movie_missing_metadata",
+        "full_success_contract_after_fault": false,
+        "phase": "following_open",
+        "provider_action_count": 0,
+        "provider_events": [],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "recorded",
+            "recorded"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            true,
+            true
+          ],
+          "episode_count": [
+            0,
+            0
+          ],
+          "episode_relation_count": [
+            0,
+            0
+          ],
+          "episodes_fetched": [
+            null,
+            null
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 714,
+          "body_sha256": "e7e2eff8413a89936067530aba2b6684c180f542b43e9d74f19b3a7c1f4c8650",
+          "content_type": "application/json",
+          "plot_class": "refreshed",
+          "status": 200,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "series_stale_stored_episodes",
+        "full_success_contract_after_fault": false,
+        "phase": "http503",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "series_stale_stored_episodes"
+        ],
+        "scripted_upstream_status": 503,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "stale",
+            "stale"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            true,
+            true
+          ],
+          "episode_count": [
+            1,
+            1
+          ],
+          "episode_relation_count": [
+            1,
+            1
+          ],
+          "episodes_fetched": [
+            true,
+            true
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 925,
+          "body_sha256": "9f3b31db458ed86c71720d3bc5bd70c2cf6c308b3a10633b22376607534d7bfe",
+          "content_type": "application/json",
+          "episode_rows": 1,
+          "plot_class": "empty",
+          "recovery_episode_present": false,
+          "status": 200,
+          "stored_episode_present": true,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "series_stale_stored_episodes",
+        "full_success_contract_after_fault": false,
+        "phase": "invalid_json",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "series_stale_stored_episodes"
+        ],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "stale",
+            "stale"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            true,
+            true
+          ],
+          "episode_count": [
+            1,
+            1
+          ],
+          "episode_relation_count": [
+            1,
+            1
+          ],
+          "episodes_fetched": [
+            true,
+            true
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 925,
+          "body_sha256": "9f3b31db458ed86c71720d3bc5bd70c2cf6c308b3a10633b22376607534d7bfe",
+          "content_type": "application/json",
+          "episode_rows": 1,
+          "plot_class": "empty",
+          "recovery_episode_present": false,
+          "status": 200,
+          "stored_episode_present": true,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "series_stale_stored_episodes",
+        "full_success_contract_after_fault": true,
+        "phase": "recovery",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "series_stale_stored_episodes"
+        ],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": false,
+          "changed_sequences": [],
+          "changed_tables": [
+            "vod_m3useriesrelation",
+            "vod_series"
+          ],
+          "clock_shape": [
+            "stale",
+            "recorded"
+          ],
+          "clock_unchanged": false,
+          "detailed_fetched": [
+            true,
+            true
+          ],
+          "episode_count": [
+            1,
+            1
+          ],
+          "episode_relation_count": [
+            1,
+            1
+          ],
+          "episodes_fetched": [
+            true,
+            true
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 945,
+          "body_sha256": "dd7b899920516cdfeab0f1658b42eb9d882637fb4423e72abcffc5584109b518",
+          "content_type": "application/json",
+          "episode_rows": 1,
+          "plot_class": "refreshed",
+          "recovery_episode_present": false,
+          "status": 200,
+          "stored_episode_present": true,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "series_stale_stored_episodes",
+        "full_success_contract_after_fault": false,
+        "phase": "following_open",
+        "provider_action_count": 0,
+        "provider_events": [],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "recorded",
+            "recorded"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            true,
+            true
+          ],
+          "episode_count": [
+            1,
+            1
+          ],
+          "episode_relation_count": [
+            1,
+            1
+          ],
+          "episodes_fetched": [
+            true,
+            true
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 945,
+          "body_sha256": "dd7b899920516cdfeab0f1658b42eb9d882637fb4423e72abcffc5584109b518",
+          "content_type": "application/json",
+          "episode_rows": 1,
+          "plot_class": "refreshed",
+          "recovery_episode_present": false,
+          "status": 200,
+          "stored_episode_present": true,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "series_missing_metadata_and_episodes",
+        "full_success_contract_after_fault": false,
+        "phase": "http503",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "series_missing_metadata_and_episodes"
+        ],
+        "scripted_upstream_status": 503,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "null",
+            "null"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            null,
+            null
+          ],
+          "episode_count": [
+            0,
+            0
+          ],
+          "episode_relation_count": [
+            0,
+            0
+          ],
+          "episodes_fetched": [
+            null,
+            null
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 429,
+          "body_sha256": "8a071e80d9ea8aaac7fdc45639a679816bcc957e5d2fd2e06d1ded09c192e5e1",
+          "content_type": "application/json",
+          "episode_rows": 0,
+          "plot_class": "empty",
+          "recovery_episode_present": false,
+          "status": 200,
+          "stored_episode_present": false,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "series_missing_metadata_and_episodes",
+        "full_success_contract_after_fault": false,
+        "phase": "invalid_json",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "series_missing_metadata_and_episodes"
+        ],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "null",
+            "null"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            null,
+            null
+          ],
+          "episode_count": [
+            0,
+            0
+          ],
+          "episode_relation_count": [
+            0,
+            0
+          ],
+          "episodes_fetched": [
+            null,
+            null
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 429,
+          "body_sha256": "8a071e80d9ea8aaac7fdc45639a679816bcc957e5d2fd2e06d1ded09c192e5e1",
+          "content_type": "application/json",
+          "episode_rows": 0,
+          "plot_class": "empty",
+          "recovery_episode_present": false,
+          "status": 200,
+          "stored_episode_present": false,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "series_missing_metadata_and_episodes",
+        "full_success_contract_after_fault": true,
+        "phase": "recovery",
+        "provider_action_count": 1,
+        "provider_events": [
+          "authenticate",
+          "series_missing_metadata_and_episodes"
+        ],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": false,
+          "changed_sequences": [
+            "vod_episode_id_seq",
+            "vod_m3uepisoderelation_id_seq"
+          ],
+          "changed_tables": [
+            "vod_episode",
+            "vod_m3uepisoderelation",
+            "vod_m3useriesrelation",
+            "vod_series"
+          ],
+          "clock_shape": [
+            "null",
+            "recorded"
+          ],
+          "clock_unchanged": false,
+          "detailed_fetched": [
+            null,
+            true
+          ],
+          "episode_count": [
+            0,
+            1
+          ],
+          "episode_relation_count": [
+            0,
+            1
+          ],
+          "episodes_fetched": [
+            null,
+            true
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 988,
+          "body_sha256": "6fc7dd049135acce3aadb328d57770dd9c0a4241d6a2a6ad74e87af41811421f",
+          "content_type": "application/json",
+          "episode_rows": 1,
+          "plot_class": "refreshed",
+          "recovery_episode_present": true,
+          "status": 200,
+          "stored_episode_present": false,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      },
+      {
+        "case": "series_missing_metadata_and_episodes",
+        "full_success_contract_after_fault": false,
+        "phase": "following_open",
+        "provider_action_count": 0,
+        "provider_events": [],
+        "scripted_upstream_status": 200,
+        "sql": {
+          "cache_SQL_unchanged": true,
+          "changed_sequences": [],
+          "changed_tables": [],
+          "clock_shape": [
+            "recorded",
+            "recorded"
+          ],
+          "clock_unchanged": true,
+          "detailed_fetched": [
+            true,
+            true
+          ],
+          "episode_count": [
+            1,
+            1
+          ],
+          "episode_relation_count": [
+            1,
+            1
+          ],
+          "episodes_fetched": [
+            true,
+            true
+          ],
+          "outside_scope_SQL_exact": true,
+          "queue_and_results_unchanged": true,
+          "same_selected_relation": true,
+          "sequence_count": 59,
+          "table_count": 62
+        },
+        "wire": {
+          "body_bytes": 988,
+          "body_sha256": "6fc7dd049135acce3aadb328d57770dd9c0a4241d6a2a6ad74e87af41811421f",
+          "content_type": "application/json",
+          "episode_rows": 1,
+          "plot_class": "refreshed",
+          "recovery_episode_present": true,
+          "status": 200,
+          "stored_episode_present": false,
+          "typed_content_section": true,
+          "typed_info": true
+        }
+      }
+    ],
+    "exact_cleanup": true,
+    "fault_HTTP_requests": 8,
+    "following_opens_without_upstream": [
+      "movie_stale",
+      "movie_missing_metadata",
+      "series_stale_stored_episodes",
+      "series_missing_metadata_and_episodes"
+    ],
+    "fresh_HTTP_requests": 16,
+    "native_executed": false,
+    "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "prior_positive_receipt_sha256": "cb4a084cdf7885b1bafbd57a1b3d026b1dc7f00d7dbe789a10c6026ea762a118",
+    "proof_sha256": "9383fe3121d324b848099f0bcdff5890086e0129d2184e6e3e0ea4f71eb2ad86",
+    "receipt_sha256": "a5370e2e567fed34ad89abe1390fb7ca82790b71d7d8ee8c5d8e598b9158d291",
+    "recovered_success_contract": [
+      "movie_stale",
+      "movie_missing_metadata",
+      "series_stale_stored_episodes",
+      "series_missing_metadata_and_episodes"
+    ],
+    "source_only": true
+  },
+  "original_M8": {
+    "exact_cleanup": true,
+    "native_runtime_claimed": false,
+    "preserved_bootstrap_observations_per_generation": 88,
+    "proof_sha256": "d18f5eee04bf75b016eab416ffd02e8abf43e45b4d831668a9ea1255de6ba9fd",
+    "retained_raw_receipt_sha256": "11ad85d5a971a4f2765becfd1a90f20e34251bbd3f5b5b0ee517d00abdeb15b4",
+    "scope": "Original copied SQLite personal single dismissal",
+    "single_dismiss": {
+      "default_and_inclusive_reads_verified": true,
+      "fresh_rows": 2,
+      "same_row_and_first_clock_after_update_and_repeat": true,
+      "stable_existing_actor_rows_and_notification_table": true,
+      "unauthorized_visibility_had_no_effect": true,
+      "wire": {
+        "admin-own-notice": {
+          "allow": "POST, OPTIONS",
+          "body_bytes": 102,
+          "content_type": "application/json",
+          "declared_length": 102,
+          "response_matches_expected": true,
+          "sha256": "3edefba34f6ee4b7b1bf29d450fd0cea3e24efec1ad7d5deff5b86d552457bd9",
+          "status": 200,
+          "vary": "Accept, origin"
+        },
+        "standard-admin-only": {
+          "allow": "POST, OPTIONS",
+          "body_bytes": 59,
+          "content_type": "application/json",
+          "declared_length": 59,
+          "response_matches_expected": true,
+          "sha256": "4f589c6850db763b492e190a104efe115eb7478e0450f38828cb69ca49d8aee0",
+          "status": 404,
+          "vary": "Accept, origin"
+        },
+        "standard-create": {
+          "allow": "POST, OPTIONS",
+          "body_bytes": 103,
+          "content_type": "application/json",
+          "declared_length": 103,
+          "response_matches_expected": true,
+          "sha256": "5a561859093630a95be411b9385fd8ddde7e70e41fb6f7a34f205ef856cfc733",
+          "status": 200,
+          "vary": "Accept, origin"
+        },
+        "standard-repeat": {
+          "allow": "POST, OPTIONS",
+          "body_bytes": 103,
+          "content_type": "application/json",
+          "declared_length": 103,
+          "response_matches_expected": true,
+          "sha256": "5a561859093630a95be411b9385fd8ddde7e70e41fb6f7a34f205ef856cfc733",
+          "status": 200,
+          "vary": "Accept, origin"
+        },
+        "standard-set-action": {
+          "allow": "POST, OPTIONS",
+          "body_bytes": 103,
+          "content_type": "application/json",
+          "declared_length": 103,
+          "response_matches_expected": true,
+          "sha256": "5a561859093630a95be411b9385fd8ddde7e70e41fb6f7a34f205ef856cfc733",
+          "status": 200,
+          "vary": "Accept, origin"
+        }
+      }
+    }
+  },
+  "scoped_M9_warm_cutback": {
+    "build_manifest_sha256": "251664eabcf28f306529ffee681bed0b71cb910b5788497d27c963261c462d01",
+    "candidate_application": "e65b43181f235f7fc50c6563aae00bf04bd4002d",
+    "candidate_image_id": "sha256:14d5de1b57d0496367f911facbcf290089a7d2ebc6868cba7c80e4c7430c220c",
+    "current_strict_cold_executed": false,
+    "deployment_or_default_switch": false,
+    "exact_cleanup": true,
+    "formal_m9_nodes_claimed": 0,
+    "literal_exit": 0,
+    "local_fixture_recovery_ms": 8285,
+    "performance_gate_claimed": false,
+    "proof_sha256": "77587ec3934964101cce8c60072bdf6447c222c1b1154d776fc4514fcf032d4b",
+    "published_image": false,
+    "receipt_sha256": "b75632a3b181b9539995c182c718899156f91a9b890266043a4ee67e21891561",
+    "retained_warm_workload_proof_sha256": "3e3a2e447f9f65a0f043bdd484f25ce27de71387fd2036285cb507f980b9536a",
+    "row_projection": {
+      "changed_fields": [
+        "name",
+        "updated_at"
+      ],
+      "changed_table": "dispatcharr_channels_channel",
+      "old_native_writer_retired_before_reconcile": true,
+      "one_fallback_patch_acknowledged": true,
+      "retained_native_write_reconciled": true,
+      "same_original_process_generations": true,
+      "same_signed_session_read": true,
+      "unrelated_rows_and_schema_equal": true,
+      "updated_rows": 1
+    },
+    "scope": "owned copied PostgreSQL one acknowledged channel rename across rollback",
+    "separate_historical_strict_cold_scope": {
+      "historical_independent_Original_scope_exit": 0,
+      "historical_strict_Original_actual_exit": 1,
+      "redacted_retained_proof_sha256": "7b95f0263f76283611d1bfb049c0fb2fe22d98285e7413711e38b0e341e7a8e6",
+      "retained_affected_cells": [
+        [
+          "backup_schedule",
+          "updated",
+          [
+            "date_changed"
+          ]
+        ],
+        [
+          "beat_schedule_change_marker",
+          "updated",
+          [
+            "last_update"
+          ]
+        ],
+        [
+          "developer_notification",
+          "updated",
+          [
+            "updated_at"
+          ]
+        ],
+        [
+          "plugin_repo_refresh_schedule",
+          "updated",
+          [
+            "date_changed"
+          ]
+        ]
+      ],
+      "root_M9_rollback_qualified": false
+    },
+    "verified_publication": "38e83630f0b7c9f08424b63ea70d62935fb39255"
+  }
+}

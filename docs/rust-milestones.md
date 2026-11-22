@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [fault references and e65b4318 warm cutback](rust-e65b4318-original-faults-and-warm-cutback.md)
+record Original's broker reply-loss, Xtream fallback and recovery, and single
+notification dismissal behavior. The exact e65b4318 image also passed the
+scoped copied PostgreSQL warm cutback with one acknowledged fallback write.
+
 The [e65b4318 Compose checkpoint](rust-m6-m8-e65b4318-compose-checkpoint.md)
 matched Original's definite broker refusal and copied SQLite startup reads.
 The copied Standard Chromium flow completed real sign-in, rendered its owned
