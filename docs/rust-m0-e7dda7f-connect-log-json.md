@@ -1,0 +1,7 @@
+# Connect delivery log JSON collection and pagination
+
+The paired baseline ran ordinary Rust `88b9f45` and stock Original with the same isolated delivery-log fixture. The canonical collection matched for the three selected rows, their order, pagination links, and expected role responses. Original returned 200 on `/api/connect/logs.json` and its trailing-slash form. Rust returned 404 on both aliases. Resolver ordinal 347 identifies the formatted collection GET.
+
+The ordinary Rust successor `e7dda7f` registers both formatted paths on the existing delivery-log read handler and builds next and previous URLs from the requested path. The paired successor verified both pages of all three paths, selected log order, typed URLs, and expected 401 and 403 responses. PostgreSQL and the scoped broker state stayed unchanged. Both projects verified exact cleanup.
+
+The Docker package used the ordinary feature set. Formatting, strict Clippy, and the focused Store tests passed. A wider Store host invocation recorded nine socket permission denials under its sandbox. The [machine-readable record](../scripts/rust-integration/m0-e7dda7f-connect-log-json.json) binds both physical runs, exact source and image identities, and their literal receipt hashes. The comparison covers the formatted collection GET and pagination under the documented roles. Original Dispatcharr, Django, Django REST Framework, and dependency authors and contributors retain full credit.
