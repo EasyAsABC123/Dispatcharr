@@ -1,0 +1,95 @@
+{
+  "application_revision": "34860b9a995da77e3f8b726e881debaae7e45fe8",
+  "credit": "Original Dispatcharr, Celery, Kombu, Django and PostgreSQL contributors retain full credit.",
+  "full_M6": false,
+  "ordinary_build_manifest_sha256": "3b6c101f545b18fe4790ca32acb7a4aac31552413303415977c66b0840c17622",
+  "ordinary_image": "sha256:de56fbb04a87029f21452a62b7395a018ba60c48bc2e0ffedd30407ee6208149",
+  "performance_measured": false,
+  "saved_schedule_control": {
+    "candidate": "34860b9a995da77e3f8b726e881debaae7e45fe8",
+    "exact_retirement": {
+      "Native": 3
+    },
+    "image": "sha256:de56fbb04a87029f21452a62b7395a018ba60c48bc2e0ffedd30407ee6208149",
+    "lane_sha256": "9463d7c836f38e0154168923533c19936d1f3fb512e2cadd102a6aaf8b800779",
+    "literal_exits": {
+      "actual-exit": 0,
+      "physical": 0,
+      "preflight": 0,
+      "proof": 0
+    },
+    "manifest_sha256": "3b6c101f545b18fe4790ca32acb7a4aac31552413303415977c66b0840c17622",
+    "observed_celery_or_dvr_pushes_through_ready": 0,
+    "ordinary_saved_task": {
+      "children": 0,
+      "interval_hours": 6,
+      "other_rows_unchanged": true,
+      "queue": "celery",
+      "queues_empty": true,
+      "repositories_unchanged": true,
+      "root_publications": 1,
+      "saved_runs": 1,
+      "schedule_name": "plugin-repo-refresh-task",
+      "task": "apps.plugins.tasks.refresh_plugin_repos",
+      "terminal_result": null,
+      "terminal_status": "SUCCESS"
+    },
+    "performance_measured": false,
+    "proof_sha256": "1168778dba46eb8e5532e687c1360ad03cfcddd0789a72e37231174504f5c1aa",
+    "startup_monitor_sha256": "42ed6702b0bba1919bab4baa8a3ee209e230ebb9b7c0673459488dfcae66d836",
+    "startup_selector_present": false
+  },
+  "startup": {
+    "build_manifest_sha256": "3b6c101f545b18fe4790ca32acb7a4aac31552413303415977c66b0840c17622",
+    "business_scope": {
+      "broker_hold_before_due": true,
+      "countdown_limit_seconds": 10.1,
+      "held_envelope_matches_published_root": true,
+      "lookup_id_matches_published_root": true,
+      "one_backend_write_after_due": true,
+      "owned_origin_requests": 1,
+      "periodic_schedule_absent": true,
+      "persisted_owned_manifest": true,
+      "queue_and_unacked_empty": true,
+      "root_publications": 1,
+      "terminal_result": null,
+      "terminal_status": "SUCCESS"
+    },
+    "candidate": "34860b9a995da77e3f8b726e881debaae7e45fe8",
+    "comparative_performance": false,
+    "core_startup_owner_opt_in": true,
+    "credit": "Original Dispatcharr, Celery, Kombu and Django authors retain full credit.",
+    "exact_retirement": {
+      "Native": 3,
+      "Original": 2
+    },
+    "full_M6": false,
+    "lanes": {
+      "Native": {
+        "actual_exit": 0,
+        "cleanup_sha256": "c61e9537e5451aca2f8c9ca54ad831dbe6513d77c9beeb360b6cf0fad90bc70a",
+        "image": "sha256:de56fbb04a87029f21452a62b7395a018ba60c48bc2e0ffedd30407ee6208149",
+        "lane_sha256": "3d45ff2c027ff2466a2b5c349e79e255b0d1799a2ff5f46146848d16b83f21f7",
+        "wire_sha256": "bdb096dce7d6651f8f47c569d0ccf074a5870cf5747cb8d53c13468fe3b19d49"
+      },
+      "Original": {
+        "actual_exit": 0,
+        "cleanup_sha256": "6bd6dbdbd87e153d79b0e51e01bb81f9776817a15cb7cd79a847e649837c5010",
+        "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "lane_sha256": "00ad7154b34dd22fa095bae9a19a686fbcb63e2192b303fc764599ec3e839a7f",
+        "wire_sha256": "6740d93e815633b2338c87dcd3dbf6a772880a7ff52480d31bd343cba062c226"
+      }
+    },
+    "literal_exits": {
+      "actual-exit": 0,
+      "physical": 0,
+      "preflight": 0,
+      "proof": 0
+    },
+    "performance_measured": false,
+    "proof_sha256": "de3897bc652e48a5924678a49ea568e04e9092a2b144804994cebacf86a3f7b0",
+    "qualified_historical_stock_trace_sha256": "b0b66993fbd8f576f0d6542f3bd074eb20bbbad3a858616a91a6e864d201651b",
+    "review_sha256": "f2931421ab5cf50c4c8593290c36b861cedf2604481629a076ef6c5de184b7c5",
+    "startup_only": true
+  }
+}

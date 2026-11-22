@@ -25,7 +25,9 @@ observed peak one on both backends. The earlier overlap remains unexplained.
 The [shared Core repository refresh](rust-m6-core-saved-plugin-refresh.md)
 routed a saved plugin schedule through the existing worker and recorded a
 single successful result and durable tick. The [Version HTTP 503 pair](rust-m6-a8ea333d-core-version503.md)
-qualified the daily failure-response behavior on a8ea333d.
+qualified the daily failure-response behavior on a8ea333d. The [startup ETA pair](rust-m6-34860-core-plugin-startup-eta.md)
+also matched the delayed claim, acknowledgment and result on 34860b9a.
+A saved-only control ran once with zero startup publications through readiness.
 
 The [native ARM64 copied SQLite preview](rust-m10-3843b61a-native-arm64-copied-sqlite.md)
 passed a same-image restart on lappy. The copied database retained the saved
@@ -33,7 +35,11 @@ app data, the existing bearer and token refresh. The [AMD64 React shell preview]
 matched the Original HTML on the root and channels routes and served the
 packaged JavaScript and CSS across restart. Channel List JSON and browser
 workflow checks remain open. The [published native ARM64 shell](rust-m10-a379-native-arm64-copied-sqlite-shell.md)
-then matched all four AMD64 bodies through a restart on lappy.
+then matched all four AMD64 bodies through a restart on lappy. The [34860b9a
+Channel List cohort](rust-m8-34860-copied-sqlite-channel-shell.md) matched 13
+GET bodies byte for byte and the HEAD status and headers. It repeated ten
+administrator calls after restart with the same bearer tokens and served
+unchanged React assets. Broader browser workflows remain open.
 
 The [2c939204 ordinary playback batch](rust-m3-2c939204-ordinary-output-cohort.md)
 passed shared HLS, shared profiled fMP4, live fMP4 lease renewal and natural
