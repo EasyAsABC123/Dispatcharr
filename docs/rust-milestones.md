@@ -70,6 +70,10 @@ seven persistent PostgreSQL processes whose sockets matched the same Native Main
 pool-state diagnostic linked all seven to SQLx maintenance resetting their idle
 timestamps. The original short resource gate remains open.
 
+The [f960875 two-hour soak](rust-m9-f960875-two-hour-soak.md) passed with ten viewers,
+12 scheduled XMLTV imports, 140 decoded clips, and exact cleanup. The release
+workflow-parity prerequisite and whole-service comparison remain open.
+
 The [f960875 workflow wave and soak prefix](rust-m9-f960875-functional-wave-and-soak-prefix.md)
 verified 16 fresh workflows and a separate 360-second soak on one exact image.
 The two-hour soak and full 127-row release suite remain open.
@@ -1401,8 +1405,8 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (stock-profile AIO scheduler and modular web peer verified on f960875; broader jobs and recovery open) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (fixed HDHomeRun GET, Auto Sync regex preview and scoped Connect workflows verified) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (ordinary backup inventory and direct downloads, trusted selected actions and scoped operator checks passed; default jobs and wider restore/admin coverage open) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
-| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (16 fresh Compose workflows and 360-second soak pass on f960875; full suite, two-hour soak and release performance open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
-| M10 | Controlled rollout | M9 | Proposed ([native ARM64 package, startup, React and first-run auth verified](rust-m10-a8ea333d-native-arm64-docker-desktop.md) on a8ea333d) | Scoped rollout plan, monitoring and rollback on the selected release image |
+| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (16 fresh Compose workflows and two-hour owned soak pass on f960875; full suite and release performance open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
+| M10 | Controlled rollout | M9 | Proposed ([current ordinary ARM64 package, startup, React HTML, and scoped account checks verified](rust-m10-f960875-native-arm64-docker-desktop.md) on f960875) | Scoped rollout plan, monitoring and rollback on the selected release image |
 | M11 | Default switch and operator handoff | M10 | Proposed | Released image and configuration, upgrade evidence, attribution and monitored fallback |
 
 The historical selected functional application checkpoint is [image57](rust-image57-validation.md), immutable `d77f25fa94ee128c79ade9176d8eb4a9d23bf498`:839 Rust inputs,495 unchanged React inputs and original credits. All28 package groups and three scoped Main gates pass. Its [portable checkpoint](../scripts/rust-integration/image57-checkpoint/README.md) passes Root's57 controls,487 exact private projections and app/support/SDK reconstruction. The additional26 Main catalogue responses qualify separately while their original controller exit1 remains literal; its failed backend observer is not relabeled by the separate successful stop-observer run. Full M0–M9 acceptance and default worker activation remain open.
