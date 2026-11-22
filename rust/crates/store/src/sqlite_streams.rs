@@ -28,7 +28,8 @@ const TEXT_FIELDS: &[&str] = &[
     "stream_stats_updated_at",
 ];
 const ROW_TEXT_LIMIT: i64 = 65_536;
-const SUPPORTED_PARAMS: &[&str] = &["page", "page_size", "ordering", "name"];
+const SUPPORTED_PARAMS: &[&str] = &["page", "page_size", "ordering", "name", "m3u_account"];
+const ACCOUNT_MATCH: &str = " AND s.m3u_account_id IN (SELECT value FROM json_each(?))";
 const NAME_MATCH: &str = r" AND s.name LIKE ? ESCAPE '\'";
 
 pub(super) fn name_pattern(value: Option<&str>) -> Result<Option<String>, StoreError> {
@@ -47,6 +48,57 @@ pub(super) fn name_pattern(value: Option<&str>) -> Result<Option<String>, StoreE
         ));
     }
     Ok(Some(channels::like(name)))
+}
+
+#[derive(Default)]
+pub(crate) struct StreamFilter {
+    pub(super) name: Option<String>,
+    pub(super) accounts: Option<String>,
+}
+
+impl StreamFilter {
+    pub(crate) fn new(name: Option<String>, accounts: Option<&str>) -> Result<Self, StoreError> {
+        Ok(Self {
+            name,
+            accounts: accounts
+                .filter(|csv| !csv.is_empty())
+                .map(account_ids)
+                .transpose()?,
+        })
+    }
+
+    fn predicate(&self) -> &'static str {
+        match (self.name.is_some(), self.accounts.is_some()) {
+            (false, false) => "",
+            (true, false) => NAME_MATCH,
+            (false, true) => ACCOUNT_MATCH,
+            (true, true) => {
+                r" AND s.name LIKE ? ESCAPE '\' AND s.m3u_account_id IN (SELECT value FROM json_each(?))"
+            }
+        }
+    }
+
+    fn bindings(&self) -> impl Iterator<Item = &String> {
+        self.name.iter().chain(&self.accounts)
+    }
+}
+
+fn account_ids(csv: &str) -> Result<String, StoreError> {
+    let mut ids = csv
+        .split(',')
+        .map(|item| {
+            item.parse::<i64>()
+                .ok()
+                .filter(|id| *id > 0 && item.bytes().all(|byte| byte.is_ascii_digit()))
+                .ok_or(StoreError::Unsupported(
+                    "Copied SQLite Streams account IDs must be positive decimal integers.",
+                ))
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    ids.sort_unstable();
+    ids.dedup();
+    // Bind a single JSON array of integers even when React selects many accounts.
+    serde_json::to_string(&ids).map_err(|_| StoreError::UnhandledRestFault)
 }
 
 #[derive(Clone, Copy)]
@@ -77,16 +129,15 @@ impl Projection {
         {
             return Err(StoreError::StatusBody(
                 501,
-                json!({"detail": "This copied SQLite Streams view supports the name filter only."}),
+                json!({"detail": "This copied SQLite Streams view supports the name and M3U account filters."}),
             ));
         }
-        let ordering = ordering_sql(params);
         let name = name_pattern(params.get("name").map(String::as_str))?;
+        let filter = StreamFilter::new(name, params.get("m3u_account").map(String::as_str))?;
+        let ordering = ordering_sql(params);
         match self {
-            Self::Page => {
-                read_page(db, admin, params, base, limit, &ordering, name.as_deref()).await
-            }
-            Self::Ids => read_ids(db, limit, &ordering, name.as_deref()).await,
+            Self::Page => read_page(db, admin, params, base, limit, &ordering, &filter).await,
+            Self::Ids => read_ids(db, limit, &ordering, &filter).await,
         }
     }
 }
@@ -123,14 +174,14 @@ async fn read_page(
     base: &Url,
     limit: usize,
     ordering: &str,
-    name: Option<&str>,
+    filter: &StreamFilter,
 ) -> Result<Vec<u8>, StoreError> {
     let mut transaction = db.begin().await?;
-    let predicate = if name.is_some() { NAME_MATCH } else { "" };
+    let predicate = filter.predicate();
     let count_sql = format!("SELECT count(*){FROM}{predicate}");
     let mut count_query = sqlx::query_scalar(&count_sql);
-    if let Some(name) = name {
-        count_query = count_query.bind(name);
+    for value in filter.bindings() {
+        count_query = count_query.bind(value);
     }
     let count: i64 = count_query.fetch_one(&mut *transaction).await?;
     let (number, size, pages) = page(params, usize::try_from(count).map_err(|_| capacity())?)?;
@@ -150,8 +201,8 @@ async fn read_page(
     let mut remaining = limit;
     {
         let mut query = sqlx::query_scalar::<_, Option<String>>(&sql).bind(ROW_TEXT_LIMIT);
-        if let Some(name) = name {
-            query = query.bind(name);
+        for value in filter.bindings() {
+            query = query.bind(value);
         }
         let mut rows = query
             .bind(size as i64)
@@ -189,13 +240,13 @@ async fn read_ids(
     db: &mut SqliteConnection,
     limit: usize,
     ordering: &str,
-    name: Option<&str>,
+    filter: &StreamFilter,
 ) -> Result<Vec<u8>, StoreError> {
-    let predicate = if name.is_some() { NAME_MATCH } else { "" };
+    let predicate = filter.predicate();
     let sql = format!("SELECT s.id{FROM}{predicate} ORDER BY {ordering}");
     let mut query = sqlx::query_scalar::<_, i64>(&sql);
-    if let Some(name) = name {
-        query = query.bind(name);
+    for value in filter.bindings() {
+        query = query.bind(value);
     }
     let mut rows = query.fetch(db);
     let mut document = vec![b'['];
@@ -249,6 +300,144 @@ mod tests {
         .await
         .unwrap();
         db
+    }
+
+    #[tokio::test]
+    async fn copied_m3u_account_filter_preserves_visibility_and_option_hierarchy() {
+        use crate::{auth::sqlite_runtime::stream_filter_options, RestReadLimits};
+
+        let mut db = fixture().await;
+        sqlx::raw_sql(
+            "INSERT INTO m3u_m3uaccount VALUES (5,'Second',1),(6,'Unused',1);
+             INSERT INTO dispatcharr_channels_channelgroup VALUES
+                 (7,'Second group'),(8,'Disabled group'),(9,'Custom group');
+             UPDATE dispatcharr_channels_stream SET channel_group_id=8 WHERE id=3;
+             UPDATE dispatcharr_channels_stream SET channel_group_id=9 WHERE id=1;
+             INSERT INTO dispatcharr_channels_stream(id,name,url,m3u_account_id,channel_group_id)
+             VALUES (7,'Bravo','http://fixture.invalid/second',5,7),
+                    (8,'Alpine','http://fixture.invalid/first',2,4)",
+        )
+        .execute(&mut db)
+        .await
+        .unwrap();
+        let base = Url::parse(
+            "http://localhost:8300/api/channels/streams/?page=1&page_size=1&ordering=name&m3u_account=2%2C3%2C2",
+        )
+        .unwrap();
+        let mut params: HashMap<_, _> = base.query_pairs().into_owned().collect();
+        let page = Projection::Page
+            .read(&mut db, false, &params, &base, 8192)
+            .await
+            .unwrap();
+        let page: Value = serde_json::from_slice(&page).unwrap();
+        assert_eq!(page["count"], 2);
+        assert_eq!(page["results"][0]["id"], 2);
+        assert!(page["results"][0].get("url").is_none());
+        assert_eq!(
+            page["next"],
+            "http://localhost:8300/api/channels/streams/?m3u_account=2%2C3%2C2&ordering=name&page=2&page_size=1"
+        );
+        params.insert("page".into(), "2".into());
+        let page = Projection::Page
+            .read(&mut db, true, &params, &base, 8192)
+            .await
+            .unwrap();
+        let page: Value = serde_json::from_slice(&page).unwrap();
+        assert_eq!(page["results"][0]["url"], "http://fixture.invalid/first");
+        assert_eq!(
+            page["previous"],
+            "http://localhost:8300/api/channels/streams/?m3u_account=2%2C3%2C2&ordering=name&page_size=1"
+        );
+
+        for (selection, expected) in [
+            ("2,3,2", b"[2, 8]".as_slice()),
+            ("5,2", b"[2, 8, 7]".as_slice()),
+            ("3,6,99", b"[]".as_slice()),
+            ("", b"[2, 8, 7, 1]".as_slice()),
+        ] {
+            params.insert("m3u_account".into(), selection.into());
+            assert_eq!(
+                Projection::Ids
+                    .read(&mut db, false, &params, &base, 8192)
+                    .await
+                    .unwrap(),
+                expected
+            );
+        }
+        for (query, expected) in [
+            (
+                "m3u_account=2,3,2",
+                r#"{"groups":["Group"],"m3u_accounts":[{"id":2,"name":"Live"},{"id":5,"name":"Second"}]}"#,
+            ),
+            (
+                "m3u_account=3,6,99",
+                r#"{"groups":[],"m3u_accounts":[{"id":2,"name":"Live"},{"id":5,"name":"Second"}]}"#,
+            ),
+            (
+                "m3u_account=5&channel_group=Group",
+                r#"{"groups":["Second group"],"m3u_accounts":[{"id":2,"name":"Live"},{"id":5,"name":"Second"}]}"#,
+            ),
+            (
+                "m3u_account=2&m3u_account=5",
+                r#"{"groups":["Second group"],"m3u_accounts":[{"id":2,"name":"Live"},{"id":5,"name":"Second"}]}"#,
+            ),
+            (
+                "m3u_account=",
+                r#"{"groups":["Custom group","Group","Second group"],"m3u_accounts":[{"id":2,"name":"Live"},{"id":5,"name":"Second"}]}"#,
+            ),
+        ] {
+            let filter = stream_filter_options::filter(Some(query)).unwrap();
+            assert_eq!(
+                stream_filter_options::read(&mut db, RestReadLimits::default(), &filter)
+                    .await
+                    .unwrap(),
+                expected.as_bytes()
+            );
+        }
+        params.insert("page".into(), "1".into());
+        params.insert("m3u_account".into(), "2".into());
+        params.insert("name".into(), "Alpha".into());
+        assert_eq!(
+            Projection::Ids
+                .read(&mut db, false, &params, &base, 8192)
+                .await
+                .unwrap(),
+            b"[2]"
+        );
+        let page = Projection::Page
+            .read(&mut db, false, &params, &base, 8192)
+            .await
+            .unwrap();
+        let page: Value = serde_json::from_slice(&page).unwrap();
+        assert_eq!(page["count"], 1);
+        assert_eq!(page["results"][0]["id"], 2);
+        assert_eq!(page["next"], Value::Null);
+        assert!(page["results"][0].get("url").is_none());
+
+        // Name filters both option dimensions, whereas selecting account
+        // 2 limits only groups. Here only provider 5 has the requested name.
+        let filter = stream_filter_options::filter(Some("name=Bravo&m3u_account=2")).unwrap();
+        assert_eq!(
+            stream_filter_options::read(&mut db, RestReadLimits::default(), &filter)
+                .await
+                .unwrap(),
+            br#"{"groups":[],"m3u_accounts":[{"id":5,"name":"Second"}]}"#
+        );
+        params.insert("name".into(), "Bravo".into());
+        assert_eq!(
+            Projection::Ids
+                .read(&mut db, false, &params, &base, 8192)
+                .await
+                .unwrap(),
+            b"[]"
+        );
+        params.insert("channel_group".into(), "Group".into());
+        assert!(matches!(
+            Projection::Ids
+                .read(&mut db, false, &params, &base, 8192)
+                .await,
+            Err(StoreError::StatusBody(501, _))
+        ));
     }
 
     #[tokio::test]
@@ -346,11 +535,9 @@ mod tests {
                 .unwrap(),
             b"[4, 5]"
         );
-        let pattern = stream_filter_options::filter_name(Some("name=ignored&name=+ALPHA_%25+"))
-            .unwrap()
-            .unwrap();
+        let filter = stream_filter_options::filter(Some("name=ignored&name=+ALPHA_%25+")).unwrap();
         assert_eq!(
-            stream_filter_options::read(&mut db, RestReadLimits::default(), Some(&pattern))
+            stream_filter_options::read(&mut db, RestReadLimits::default(), &filter)
                 .await
                 .unwrap(),
             br#"{"groups":["Custom","Group"],"m3u_accounts":[{"id":2,"name":"Live"}]}"#

@@ -9,7 +9,7 @@ use std::collections::HashMap;
 use url::Url;
 
 const ROW: i64 = 65_536;
-const QUERY: &str = "
+const PROJECTION: &str = "
     SELECT l.id,
            CASE WHEN length(CAST(l.name AS BLOB)) <= ?1 THEN l.name END,
            CASE WHEN length(CAST(l.url AS BLOB)) <= ?1 THEN l.url END,
@@ -17,20 +17,33 @@ const QUERY: &str = "
            (SELECT json_group_array(CASE WHEN length(CAST(name AS BLOB)) <= ?1
                                         THEN 'Channel: ' || name END)
             FROM (SELECT c.name FROM dispatcharr_channels_channel c
-                  WHERE c.logo_id=l.id ORDER BY c.id LIMIT 5))
-    FROM dispatcharr_channels_logo l ORDER BY l.name LIMIT ?2 OFFSET ?3";
+                  WHERE c.logo_id=l.id ORDER BY c.id LIMIT 5))";
 
 pub(crate) fn params(uri: &axum::http::Uri) -> Result<HashMap<String, String>, StoreError> {
     let values = crate::logos::params(uri)
         .into_iter()
         .collect::<HashMap<_, _>>();
-    if values
-        .keys()
-        .any(|key| !matches!(key.as_str(), "page" | "page_size" | "no_pagination"))
-    {
+    if values.keys().any(|key| {
+        !matches!(
+            key.as_str(),
+            "page" | "page_size" | "no_pagination" | "used"
+        )
+    }) {
         return Err(crate::logos::missing());
     }
     Ok(values)
+}
+
+fn usage_predicate(values: &HashMap<String, String>) -> &'static str {
+    match values.get("used").map(String::as_str) {
+        Some("true") => {
+            " WHERE EXISTS (SELECT 1 FROM dispatcharr_channels_channel c WHERE c.logo_id=l.id)"
+        }
+        Some("false") => {
+            " WHERE NOT EXISTS (SELECT 1 FROM dispatcharr_channels_channel c WHERE c.logo_id=l.id)"
+        }
+        _ => "",
+    }
 }
 
 pub(crate) struct Collection {
@@ -77,24 +90,26 @@ pub(crate) async fn select(
     base: &Url,
     limit: usize,
 ) -> Result<Collection, StoreError> {
+    let usage = usage_predicate(values);
     if values
         .get("no_pagination")
         .is_some_and(|value| value == "true")
     {
-        let rows = rows(connection, limit, -1, 0).await?;
+        let rows = rows(connection, limit, usage, -1, 0).await?;
         return Ok(Collection { rows, page: None });
     }
 
     // Django assembles count and results via its paginator. A copied file can
     // get concurrent writes, so keep the count and page rows in one snapshot.
     let mut transaction = connection.begin().await?;
-    let count: i64 = sqlx::query_scalar("SELECT count(*) FROM dispatcharr_channels_logo")
+    let count_query = format!("SELECT count(*) FROM dispatcharr_channels_logo l{usage}");
+    let count: i64 = sqlx::query_scalar(&count_query)
         .fetch_one(&mut *transaction)
         .await?;
     let count = usize::try_from(count).map_err(|_| capacity())?;
     let (number, size, pages) = page_window(values, count)?;
     let offset = i64::try_from((number - 1) * size).map_err(|_| capacity())?;
-    let rows = rows(&mut transaction, limit, size as i64, offset).await?;
+    let rows = rows(&mut transaction, limit, usage, size as i64, offset).await?;
     transaction.commit().await?;
     Ok(Collection {
         rows,
@@ -116,9 +131,13 @@ fn capacity() -> StoreError {
 async fn rows(
     connection: &mut SqliteConnection,
     mut remaining: usize,
+    usage: &str,
     size: i64,
     offset: i64,
 ) -> Result<Vec<Value>, StoreError> {
+    let query = format!(
+        "{PROJECTION} FROM dispatcharr_channels_logo l{usage} ORDER BY l.name LIMIT ?2 OFFSET ?3"
+    );
     let mut rows = sqlx::query_as::<
         _,
         (
@@ -128,7 +147,7 @@ async fn rows(
             i64,
             Json<Vec<Option<String>>>,
         ),
-    >(QUERY)
+    >(&query)
     .bind(ROW)
     .bind(size)
     .bind(offset)
@@ -239,7 +258,7 @@ mod tests {
         .unwrap();
         let result = document(
             Collection {
-                rows: rows(&mut db, 8192, -1, 0).await.unwrap(),
+                rows: rows(&mut db, 8192, "", -1, 0).await.unwrap(),
                 page: None,
             },
             "http://localhost:8300",
@@ -253,10 +272,10 @@ mod tests {
                 r#"{"id":7,"name":"Zebra","url":"xyz","cache_url":"http://localhost:8300/api/channels/logos/7/cache/?v=d16fb36f","channel_count":0,"is_used":false,"channel_names":[]}]"#,
             )
         );
-        assert!(rows(&mut db, 256, -1, 0).await.is_err());
+        assert!(rows(&mut db, 256, "", -1, 0).await.is_err());
         assert!(document(
             Collection {
-                rows: rows(&mut db, 8192, -1, 0).await.unwrap(),
+                rows: rows(&mut db, 8192, "", -1, 0).await.unwrap(),
                 page: None
             },
             "http://localhost:8300",
@@ -337,6 +356,101 @@ mod tests {
         );
     }
 
+    #[tokio::test]
+    async fn copied_logo_used_filter_counts_linked_rows_before_paging() {
+        let mut db = SqliteConnection::connect("sqlite::memory:").await.unwrap();
+        sqlx::raw_sql(
+            "CREATE TABLE dispatcharr_channels_logo(id INTEGER PRIMARY KEY,name TEXT,url TEXT);
+             CREATE TABLE dispatcharr_channels_channel(id INTEGER PRIMARY KEY,logo_id INTEGER,name TEXT);
+             INSERT INTO dispatcharr_channels_logo VALUES
+                (1,'Alpha','abc'),(2,'Beta','bcd'),(3,'Gamma','cde'),(4,'Zebra','xyz');
+             INSERT INTO dispatcharr_channels_channel VALUES
+                (1,1,'Linked'),(2,1,'Also linked'),(3,3,'Gamma Channel'),(4,NULL,'No logo');",
+        )
+        .execute(&mut db)
+        .await
+        .unwrap();
+
+        for (query, count, first, channel_count, next, previous) in [
+            ("used=true&page_size=100", 2, 1, 2, None, None),
+            (
+                "page_size=1&used=true",
+                2,
+                1,
+                2,
+                Some("page=2&page_size=1&used=true"),
+                None,
+            ),
+            (
+                "page=2&page_size=1&used=true",
+                2,
+                3,
+                1,
+                None,
+                Some("page_size=1&used=true"),
+            ),
+            ("used=true&used=false", 2, 2, 0, None, None),
+            ("used=false&used=TRUE", 4, 1, 2, None, None),
+            ("used=", 4, 1, 2, None, None),
+        ] {
+            let route = format!("/api/channels/logos/?{query}");
+            let base = Url::parse(&format!("http://localhost{route}")).unwrap();
+            let options = params(&route.parse().unwrap()).unwrap();
+            let collection = select(&mut db, &options, &base, 8192).await.unwrap();
+            let body: Value =
+                serde_json::from_slice(&document(collection, "http://localhost", 8192).unwrap())
+                    .unwrap();
+            let href = |part| format!("http://localhost/api/channels/logos/?{part}");
+            assert_eq!(body["count"], count);
+            assert_eq!(body["results"][0]["id"], first);
+            assert_eq!(body["results"][0]["channel_count"], channel_count);
+            assert_eq!(body["results"][0]["is_used"], channel_count != 0);
+            assert_eq!(body["next"], json!(next.map(href)));
+            assert_eq!(body["previous"], json!(previous.map(href)));
+        }
+
+        let bulk = "http://localhost/api/channels/logos/?no_pagination=true&used=false&page=99";
+        let values = params(
+            &"/api/channels/logos/?no_pagination=true&used=false&page=99"
+                .parse()
+                .unwrap(),
+        )
+        .unwrap();
+        let selected = select(&mut db, &values, &Url::parse(bulk).unwrap(), 8192)
+            .await
+            .unwrap();
+        assert!(selected.page.is_none());
+        assert_eq!(
+            selected
+                .rows
+                .iter()
+                .map(|row| row["id"].as_i64().unwrap())
+                .collect::<Vec<_>>(),
+            [2, 4]
+        );
+
+        let bad = "http://localhost/api/channels/logos/?used=true&page=2";
+        let values = params(&"/api/channels/logos/?used=true&page=2".parse().unwrap()).unwrap();
+        assert!(matches!(
+            select(&mut db, &values, &Url::parse(bad).unwrap(), 8192).await,
+            Err(StoreError::StatusBody(404, _))
+        ));
+
+        sqlx::query("UPDATE dispatcharr_channels_channel SET logo_id=NULL")
+            .execute(&mut db)
+            .await
+            .unwrap();
+        let empty = "http://localhost/api/channels/logos/?used=true";
+        let values = params(&"/api/channels/logos/?used=true".parse().unwrap()).unwrap();
+        let selected = select(&mut db, &values, &Url::parse(empty).unwrap(), 8192)
+            .await
+            .unwrap();
+        assert_eq!(
+            document(selected, "http://localhost", 8192).unwrap(),
+            br#"{"count":0,"next":null,"previous":null,"results":[]}"#
+        );
+    }
+
     #[test]
     fn copied_logos_apply_original_page_number_and_size_coercion() {
         let opts = |path: &str| params(&path.parse().unwrap()).unwrap();
@@ -355,11 +469,11 @@ mod tests {
     }
 
     #[test]
-    fn copied_logos_keep_filters_outside_the_pagination_slice() {
+    fn copied_logos_keep_unsupported_filters_outside_the_read_slice() {
         for query in ["", "?page=last", "?page_size=20", "?no_pagination=true"] {
             assert!(params(&format!("/api/channels/logos/{query}").parse().unwrap()).is_ok());
         }
-        for query in ["?ids=1", "?name=a", "?used=true"] {
+        for query in ["?ids=1", "?name=a"] {
             assert!(matches!(
                 params(&format!("/api/channels/logos/{query}").parse().unwrap()),
                 Err(StoreError::StatusBody(404, _))

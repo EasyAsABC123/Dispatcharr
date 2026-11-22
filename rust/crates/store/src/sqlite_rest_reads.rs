@@ -460,30 +460,51 @@ impl RetainedSqliteRestReads {
     ) -> Result<Vec<u8>, StoreError> {
         use crate::notifications::sqlite;
         let actor = self.notification_actor(peer, headers).await?;
-        let pool = self.pool.clone();
-        let actor_id = actor.user().id;
-        let admin = actor.user().user_level >= 10;
-        let limits = self.limits;
-        let rows = supervised_sql_read(self.permit.clone(), async move {
-            let mut connection = pool.acquire().await?;
-            let rows =
-                sqlite::read(&mut connection, actor_id, admin, chrono::Utc::now(), limits).await;
-            settle(connection).await?;
-            rows
-        })
-        .await?;
+        let rows = self.notification_rows(actor.user()).await?;
         sqlite::render(
             rows,
             include_dismissed,
-            limits.work_bytes,
-            |id, conditions| async move {
-                let cache = self.cache.as_ref().ok_or(StoreError::Unsupported(
-                    "Developer notification conditions require the original shared Redis cache.",
-                ))?;
-                sqlite::developer_visible(cache, actor_id, id, &conditions, || self.network_group())
-                    .await
-            },
+            self.limits.work_bytes,
+            |id, conditions| self.notification_visible(actor.user().id, id, conditions),
         )
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    async fn notification_rows(&self, actor: &User) -> Result<Vec<Value>, StoreError> {
+        let pool = self.pool.clone();
+        let actor_id = actor.id;
+        let admin = actor.user_level >= 10;
+        let limits = self.limits;
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let rows = crate::notifications::sqlite::read(
+                &mut connection,
+                actor_id,
+                admin,
+                chrono::Utc::now(),
+                limits,
+            )
+            .await;
+            settle(connection).await?;
+            rows
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    async fn notification_visible(
+        &self,
+        actor_id: i64,
+        id: i64,
+        conditions: Value,
+    ) -> Result<bool, StoreError> {
+        let cache = self.cache.as_ref().ok_or(StoreError::Unsupported(
+            "Developer notification conditions require the original shared Redis cache.",
+        ))?;
+        crate::notifications::sqlite::developer_visible(cache, actor_id, id, &conditions, || {
+            self.network_group()
+        })
         .await
     }
 
@@ -547,6 +568,29 @@ impl RetainedSqliteRestReads {
     }
 
     #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn dismiss_all_notifications(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+    ) -> Result<Value, StoreError> {
+        use crate::notifications::sqlite;
+
+        let actor = self.notification_actor(peer, headers).await?;
+        let rows = self.notification_rows(actor.user()).await?;
+        let targets = sqlite::visible_rows(rows, false, |id, conditions| {
+            self.notification_visible(actor.user().id, id, conditions)
+        })
+        .await?;
+        let limits = self.limits;
+        let pool = self.pool.clone();
+        let subject = actor.user().clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            sqlite::dismiss_all(&pool, &subject, targets, limits).await
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
     pub(crate) async fn stream_filter_options(
         &self,
         peer: SocketAddr,
@@ -556,13 +600,12 @@ impl RetainedSqliteRestReads {
         use crate::auth::sqlite_runtime::stream_filter_options;
         let subject = self.bearer_account_user(peer, headers, false).await?;
         crate::channel_groups::collection_permission(subject.user())?;
-        let name = stream_filter_options::filter_name(raw_query)?;
+        let filter = stream_filter_options::filter(raw_query)?;
         let pool = self.pool.clone();
         let limits = self.limits;
         supervised_sql_read(self.permit.clone(), async move {
             let mut connection = pool.acquire().await?;
-            let result =
-                stream_filter_options::read(&mut connection, limits, name.as_deref()).await;
+            let result = stream_filter_options::read(&mut connection, limits, &filter).await;
             settle(connection).await?;
             result
         })

@@ -188,6 +188,72 @@ pub(crate) async fn dismiss(
     Ok(dismissal_response(&Value::String(current.key)))
 }
 
+pub(crate) async fn dismiss_all(
+    pool: &SqlitePool,
+    actor: &User,
+    targets: Vec<Value>,
+    limits: RestReadLimits,
+) -> Result<Value, StoreError> {
+    let count = targets.len();
+    if count == 0 {
+        return Ok(json!({"success": true, "dismissed_count": 0}));
+    }
+
+    // Check the same actor and selected targets after external condition
+    // evaluation, with exclusive writer intent for the entire operation.
+    let mut tx = pool.begin_with("BEGIN IMMEDIATE").await?;
+    let level = sqlx::query_scalar::<_, i32>(
+        "SELECT user_level FROM accounts_user WHERE id=?1 AND is_active",
+    )
+    .bind(actor.id)
+    .fetch_optional(&mut *tx)
+    .await?
+    .ok_or_else(missing)?;
+    let current = read(
+        &mut tx,
+        actor.id,
+        actor.user_level >= 10 && level >= 10,
+        Utc::now(),
+        limits,
+    )
+    .await?;
+    let current = current
+        .iter()
+        .map(|row| Ok((row["id"].as_i64().ok_or_else(failed)?, row)))
+        .collect::<Result<std::collections::HashMap<_, _>, StoreError>>()?;
+
+    let mut pending = Vec::new();
+    for selected in targets {
+        let id = selected["id"].as_i64().ok_or_else(failed)?;
+        let current = current.get(&id).ok_or_else(missing)?;
+        if ["notification_key", "source", "action_data"]
+            .iter()
+            .any(|field| current[*field] != selected[*field])
+        {
+            return Err(missing());
+        }
+        if current["is_dismissed"] != true {
+            let clock = Utc::now().format("%Y-%m-%d %H:%M:%S%.6f").to_string();
+            pending.push((id, clock));
+        }
+    }
+    if !pending.is_empty() {
+        let records = serde_json::to_string(&pending).map_err(|_| failed())?;
+        sqlx::query(
+            "INSERT INTO core_notificationdismissal(user_id,notification_id,dismissed_at,action_taken)
+             SELECT ?1,json_extract(value,'$[0]'),json_extract(value,'$[1]'),NULL
+             FROM json_each(?2) ORDER BY key",
+        )
+        .bind(actor.id)
+        .bind(records)
+        .execute(&mut *tx)
+        .await?;
+    }
+    tx.commit().await?;
+    // Django reports the number selected before bulk_create(ignore_conflicts=True).
+    Ok(json!({"success": true, "dismissed_count": count}))
+}
+
 pub(crate) async fn developer_visible<F, Fut>(
     cache: &NotificationCache,
     user: i64,
@@ -206,12 +272,11 @@ where
         .await
 }
 
-pub(crate) async fn render<F, Fut>(
+pub(crate) async fn visible_rows<F, Fut>(
     rows: Vec<Value>,
     include_dismissed: bool,
-    response_limit: usize,
     developer_visible: F,
-) -> Result<Vec<u8>, StoreError>
+) -> Result<Vec<Value>, StoreError>
 where
     F: Fn(i64, Value) -> Fut,
     Fut: std::future::Future<Output = Result<bool, StoreError>>,
@@ -231,6 +296,20 @@ where
             matching.push(row);
         }
     }
+    Ok(matching)
+}
+
+pub(crate) async fn render<F, Fut>(
+    rows: Vec<Value>,
+    include_dismissed: bool,
+    response_limit: usize,
+    developer_visible: F,
+) -> Result<Vec<u8>, StoreError>
+where
+    F: Fn(i64, Value) -> Fut,
+    Fut: std::future::Future<Output = Result<bool, StoreError>>,
+{
+    let matching = visible_rows(rows, include_dismissed, developer_visible).await?;
     let count = matching.len();
     let value = json!({"notifications":matching,"count":count,"unread_count":count});
     let encoded = crate::json_compat::compact_json_bytes(&value)
@@ -307,7 +386,10 @@ mod tests {
              CREATE TABLE core_systemnotification(
                id INTEGER PRIMARY KEY, notification_key TEXT NOT NULL UNIQUE, source TEXT NOT NULL,
                action_data TEXT NOT NULL, is_active BOOLEAN NOT NULL, admin_only BOOLEAN NOT NULL,
-               expires_at DATETIME
+               expires_at DATETIME, notification_type TEXT NOT NULL DEFAULT 'info',
+               priority TEXT NOT NULL DEFAULT 'normal', title TEXT NOT NULL DEFAULT 'Test title',
+               message TEXT NOT NULL DEFAULT 'Test message',
+               created_at DATETIME NOT NULL DEFAULT '2025-01-01 00:00:00'
              );
              CREATE TABLE core_notificationdismissal(
                id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER NOT NULL REFERENCES accounts_user(id),
@@ -315,8 +397,8 @@ mod tests {
                dismissed_at DATETIME NOT NULL, action_taken VARCHAR(50), UNIQUE(user_id,notification_id)
              );
              INSERT INTO accounts_user VALUES(1,1,1),(2,10,1),(3,1,0);
-             INSERT INTO core_systemnotification VALUES
-               (11,'owned-public','system','{}',1,0,NULL),
+             INSERT INTO core_systemnotification(id,notification_key,source,action_data,is_active,admin_only,expires_at)
+             VALUES (11,'owned-public','system','{}',1,0,NULL),
                (12,'owned-admin','system','{}',1,1,NULL),
                (13,'owned-expired','system','{}',1,0,'2020-01-01 00:00:00'),
                (14,'owned-disabled','system','{}',0,0,NULL),
@@ -453,6 +535,123 @@ mod tests {
         assert_eq!(saved(&pool).await, before);
         act(&pool, 12, &admin, br#"{}"#).await.unwrap();
         assert_eq!(saved(&pool).await.len(), 2);
+    }
+
+    async fn bulk_targets(pool: &SqlitePool, user: &User) -> Vec<Value> {
+        let records = read(
+            &mut pool.acquire().await.unwrap(),
+            user.id,
+            user.user_level >= 10,
+            Utc::now(),
+            RestReadLimits::default(),
+        )
+        .await
+        .unwrap();
+        visible_rows(records, false, |id, _| async move { Ok(id == 16) })
+            .await
+            .unwrap()
+    }
+
+    #[tokio::test]
+    async fn bulk_dismiss_checks_actor_visibility_and_preserves_existing_rows() {
+        let pool = owned_dismissals().await;
+        sqlx::query(
+            r#"INSERT INTO core_systemnotification(id,notification_key,source,action_data,is_active,admin_only)
+               VALUES (16,'owned-visible-condition','developer','{"condition":["local"]}',1,0)"#,
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+        let user = actor(1, 1);
+        let admin = actor(2, 10);
+        let existing = saved(&pool).await;
+        let limits = RestReadLimits::default();
+        let selected = bulk_targets(&pool, &user).await;
+        assert_eq!(selected.len(), 2);
+        assert_eq!(
+            dismiss_all(&pool, &user, selected, limits).await.unwrap(),
+            json!({"success": true, "dismissed_count": 2})
+        );
+        let first = saved(&pool).await;
+        assert_eq!(first[0], existing[0]);
+        assert_eq!(first.len(), 3);
+        assert_eq!(
+            first[1..]
+                .iter()
+                .map(|row| row.2)
+                .collect::<std::collections::BTreeSet<_>>(),
+            [11, 16].into_iter().collect()
+        );
+        assert!(first[1..].iter().all(|row| row.1 == user.id
+            && row.4.is_none()
+            && NaiveDateTime::parse_from_str(&row.3, "%Y-%m-%d %H:%M:%S%.f").is_ok()));
+        let repeated = bulk_targets(&pool, &user).await;
+        assert_eq!(
+            dismiss_all(&pool, &user, repeated, limits).await.unwrap(),
+            json!({"success": true, "dismissed_count": 0})
+        );
+        assert_eq!(saved(&pool).await, first);
+        assert_eq!(seq(&pool).await, first.last().unwrap().0);
+        let admin_visible = bulk_targets(&pool, &admin).await;
+        assert_eq!(
+            dismiss_all(&pool, &admin, admin_visible, limits)
+                .await
+                .unwrap(),
+            json!({"success": true, "dismissed_count": 2})
+        );
+        let final_rows = saved(&pool).await;
+        assert_eq!(final_rows[..3], first);
+        assert_eq!(
+            final_rows[3..]
+                .iter()
+                .map(|row| (row.1, row.2))
+                .collect::<std::collections::BTreeSet<_>>(),
+            [(2, 12), (2, 16)].into_iter().collect()
+        );
+    }
+
+    async fn seq(pool: &SqlitePool) -> i64 {
+        sqlx::query_scalar(
+            "SELECT seq FROM sqlite_sequence WHERE name='core_notificationdismissal'",
+        )
+        .fetch_one(pool)
+        .await
+        .unwrap()
+    }
+
+    #[tokio::test]
+    async fn bulk_dismiss_revalidates_before_any_insert_and_preserves_same_actor_winner() {
+        let pool = owned_dismissals().await;
+        let user = actor(1, 1);
+        let limits = RestReadLimits::default();
+        let original = saved(&pool).await;
+        let selected = bulk_targets(&pool, &user).await;
+        assert_eq!(selected.len(), 1);
+        sqlx::query("UPDATE accounts_user SET is_active=0 WHERE id=1")
+            .execute(&pool)
+            .await
+            .unwrap();
+        assert!(matches!(
+            dismiss_all(&pool, &user, selected, limits).await,
+            Err(StoreError::StatusBody(404, _))
+        ));
+        assert_eq!(saved(&pool).await, original);
+        assert_eq!(seq(&pool).await, 1);
+        sqlx::query("UPDATE accounts_user SET is_active=1 WHERE id=1")
+            .execute(&pool)
+            .await
+            .unwrap();
+        let selected = bulk_targets(&pool, &user).await;
+        act(&pool, 11, &user, br#"{"action_taken":"kept"}"#)
+            .await
+            .unwrap();
+        let winner = saved(&pool).await;
+        assert_eq!(
+            dismiss_all(&pool, &user, selected, limits).await.unwrap(),
+            json!({"success": true, "dismissed_count": 1})
+        );
+        assert_eq!(saved(&pool).await, winner);
+        assert_eq!(seq(&pool).await, 2);
     }
 
     #[test]

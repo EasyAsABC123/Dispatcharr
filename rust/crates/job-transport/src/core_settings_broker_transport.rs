@@ -2,11 +2,87 @@
 use super::*;
 use crate::decode::{Metadata, State};
 use dispatcharr_store::ProviderRehashResult;
-use std::future::Future;
+use sha2::{Digest, Sha256};
+use std::{future::Future, sync::Mutex};
+
+#[derive(PartialEq, Eq)]
+struct ClaimIdentity {
+    task_id: Uuid,
+    frame_sha256: [u8; 32],
+}
+
+impl ClaimIdentity {
+    fn new(task_id: Uuid, frame: &[u8]) -> Self {
+        Self {
+            task_id,
+            frame_sha256: Sha256::digest(frame).into(),
+        }
+    }
+}
+
+// At most one active observation per Jobs. The provider's existing admission
+// lease serializes its publications. This slot never controls queue admission.
+#[derive(Default)]
+pub(super) struct ProviderRehashClaim {
+    active: Mutex<Option<(ClaimIdentity, bool)>>,
+}
+
+struct ClaimObservation<'a>(&'a ProviderRehashClaim);
+
+impl ProviderRehashClaim {
+    fn observe(&self, task_id: Uuid, frame: &[u8]) -> Option<ClaimObservation<'_>> {
+        let identity = ClaimIdentity::new(task_id, frame);
+        let mut slot = self
+            .active
+            .lock()
+            .unwrap_or_else(|error| error.into_inner());
+        if slot.is_some() {
+            return None;
+        }
+        *slot = Some((identity, false));
+        Some(ClaimObservation(self))
+    }
+
+    pub(super) fn claimed(&self, task_id: Uuid, frame: &[u8]) {
+        let identity = ClaimIdentity::new(task_id, frame);
+        let mut slot = self
+            .active
+            .lock()
+            .unwrap_or_else(|error| error.into_inner());
+        if let Some((expected, claimed)) = slot.as_mut() {
+            if *expected == identity {
+                *claimed = true;
+            }
+        }
+    }
+}
+
+impl ClaimObservation<'_> {
+    fn confirmed(&self) -> bool {
+        self.0
+            .active
+            .lock()
+            .unwrap_or_else(|error| error.into_inner())
+            .as_ref()
+            .is_some_and(|(_, claimed)| *claimed)
+    }
+}
+
+impl Drop for ClaimObservation<'_> {
+    fn drop(&mut self) {
+        // Only this guard can vacate the slot. observe() cannot replace it.
+        *self
+            .0
+            .active
+            .lock()
+            .unwrap_or_else(|error| error.into_inner()) = None;
+    }
+}
 
 async fn provider_rehash_outcome<F>(
     task_id: Uuid,
     publication: Result<i64, Error>,
+    claimed: impl Fn() -> bool,
     lookup: impl FnOnce(Uuid) -> F,
 ) -> Result<ProviderRehashResult, Error>
 where
@@ -18,6 +94,9 @@ where
         Ok(-2) => Err(Error::Capacity),
         Ok(_) => Err(Error::Corrupt),
         Err(error @ Error::AmbiguousPublication(id)) if id == task_id => {
+            if claimed() {
+                return Ok(ProviderRehashResult::Acknowledged);
+            }
             // The result backend is trusted and identity-bound. A worker result
             // proves admission even when the task ran unsuccessfully. Revocation
             // alone is inconclusive because control can write it without a claim.
@@ -29,7 +108,8 @@ where
                             chrono::DateTime::parse_from_rfc3339(date_done).is_ok()
                         })
                 })
-            }) {
+            }) || claimed()
+            {
                 Ok(ProviderRehashResult::Acknowledged)
             } else {
                 Err(error)
@@ -90,6 +170,10 @@ impl Jobs {
         owner: Arc<dyn Send + Sync>,
         task_id: Uuid,
     ) -> Result<ProviderRehashResult, Error> {
+        let observation = self
+            .inner
+            .provider_rehash_claim
+            .observe(task_id, publication.bytes());
         let published = self
             .publish_core_frame(
                 publication,
@@ -99,7 +183,17 @@ impl Jobs {
                 false,
             )
             .await;
-        provider_rehash_outcome(task_id, published, |id| self.read(id, owner)).await
+        provider_rehash_outcome(
+            task_id,
+            published,
+            || {
+                observation
+                    .as_ref()
+                    .is_some_and(ClaimObservation::confirmed)
+            },
+            |id| self.read(id, owner),
+        )
+        .await
     }
 
     async fn publish_core_frame(
@@ -182,6 +276,7 @@ mod tests {
             let actual = provider_rehash_outcome(
                 id,
                 publication,
+                || panic!("claim read without matching ambiguous publication"),
                 |_| -> std::future::Ready<Result<Option<Metadata>, Error>> {
                     panic!("result lookup without matching ambiguous publication")
                 },
@@ -196,11 +291,16 @@ mod tests {
         let id = Uuid::new_v4();
         for state in [State::Success, State::Failure] {
             let mut lookups = 0;
-            let actual = provider_rehash_outcome(id, Err(Error::AmbiguousPublication(id)), |key| {
-                assert_eq!(key, id);
-                lookups += 1;
-                ready(Ok(Some(metadata(id, state))))
-            })
+            let actual = provider_rehash_outcome(
+                id,
+                Err(Error::AmbiguousPublication(id)),
+                || false,
+                |key| {
+                    assert_eq!(key, id);
+                    lookups += 1;
+                    ready(Ok(Some(metadata(id, state))))
+                },
+            )
             .await;
             assert_eq!(lookups, 1);
             assert_eq!(actual, Ok(ProviderRehashResult::Acknowledged));
@@ -232,14 +332,94 @@ mod tests {
         ];
         for result in cases {
             let mut lookups = 0;
-            let actual = provider_rehash_outcome(id, Err(Error::AmbiguousPublication(id)), |key| {
-                assert_eq!(key, id);
-                lookups += 1;
-                ready(result)
-            })
+            let actual = provider_rehash_outcome(
+                id,
+                Err(Error::AmbiguousPublication(id)),
+                || false,
+                |key| {
+                    assert_eq!(key, id);
+                    lookups += 1;
+                    ready(result)
+                },
+            )
             .await;
             assert_eq!(lookups, 1);
             assert_eq!(actual, Err(Error::AmbiguousPublication(id)));
         }
+    }
+
+    #[test]
+    fn provider_rehash_claim_matches_current_exact_frame_in_same_jobs_only() {
+        let jobs = ProviderRehashClaim::default();
+        let other_jobs = ProviderRehashClaim::default();
+        let task = Uuid::new_v4();
+        let other_task = Uuid::new_v4();
+        let observation = jobs.observe(task, b"owned frame").unwrap();
+        assert!(jobs.observe(other_task, b"next frame").is_none());
+        other_jobs.claimed(task, b"owned frame");
+        jobs.claimed(other_task, b"owned frame");
+        jobs.claimed(task, b"other frame");
+        assert!(!observation.confirmed());
+        jobs.claimed(task, b"owned frame");
+        assert!(observation.confirmed());
+        drop(observation);
+        jobs.claimed(task, b"owned frame");
+        assert!(!jobs.observe(other_task, b"next frame").unwrap().confirmed());
+    }
+
+    #[tokio::test]
+    async fn provider_rehash_cancelled_observer_retires_slot() {
+        let jobs = Arc::new(ProviderRehashClaim::default());
+        let task = Uuid::new_v4();
+        let (started, registered) = tokio::sync::oneshot::channel();
+        let owned = jobs.clone();
+        let waiter = tokio::spawn(async move {
+            let observation = owned.observe(task, b"owned frame").unwrap();
+            started.send(()).unwrap();
+            std::future::pending::<()>().await;
+            drop(observation);
+        });
+        registered.await.unwrap();
+        jobs.claimed(task, b"owned frame");
+        assert!(jobs.observe(task, b"owned frame").is_none());
+        waiter.abort();
+        assert!(waiter.await.unwrap_err().is_cancelled());
+        assert!(!jobs.observe(task, b"owned frame").unwrap().confirmed());
+    }
+
+    #[tokio::test]
+    async fn provider_rehash_local_claim_can_confirm_before_worker_result() {
+        let jobs = ProviderRehashClaim::default();
+        let task = Uuid::new_v4();
+        let observation = jobs.observe(task, b"owned frame").unwrap();
+        jobs.claimed(task, b"owned frame");
+        let verdict = provider_rehash_outcome(
+            task,
+            Err(Error::AmbiguousPublication(task)),
+            || observation.confirmed(),
+            |_| -> std::future::Ready<Result<Option<Metadata>, Error>> {
+                panic!("confirmed claim must not issue a result lookup")
+            },
+        )
+        .await;
+        assert_eq!(verdict, Ok(ProviderRehashResult::Acknowledged));
+    }
+
+    #[tokio::test]
+    async fn provider_rehash_claim_during_result_lookup_can_confirm() {
+        let jobs = ProviderRehashClaim::default();
+        let task = Uuid::new_v4();
+        let observation = jobs.observe(task, b"owned frame").unwrap();
+        let verdict = provider_rehash_outcome(
+            task,
+            Err(Error::AmbiguousPublication(task)),
+            || observation.confirmed(),
+            |_| {
+                jobs.claimed(task, b"owned frame");
+                ready(Ok(None))
+            },
+        )
+        .await;
+        assert_eq!(verdict, Ok(ProviderRehashResult::Acknowledged));
     }
 }
