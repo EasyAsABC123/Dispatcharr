@@ -4,7 +4,7 @@
 const {spawn}=require('node:child_process');
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),readline=require('node:readline');
 const directory=fs.mkdtempSync(path.join(os.tmpdir(),'dispatcharr-clean-browser-'));
-let child,cdp,next=1,stage='startup';const pending=new Map(),responses=[],socketTypes=new Set();let exceptions=0;
+let child,cdp,next=1,stage='startup',checkpoint=null;const pending=new Map(),responses=[],socketTypes=new Set();let exceptions=0;
 const required=['/api/accounts/users/me/','/api/core/settings/','/api/core/settings/env/','/api/channels/groups/','/api/channels/profiles/','/api/m3u/accounts/','/api/epg/sources/','/api/epg/epgdata/','/api/core/streamprofiles/','/api/core/outputprofiles/','/api/core/useragents/','/api/m3u/server-groups/','/api/channels/channels/ids/','/api/accounts/users/','/api/channels/logos/','/api/channels/streams/filter-options/'];
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 function call(method,params={}){const id=next++;return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{pending.delete(id);reject(new Error('CDP deadline'))},10000);pending.set(id,{resolve:value=>{clearTimeout(timer);resolve(value)},reject});cdp.send(JSON.stringify({id,method,params}));});}
@@ -37,11 +37,11 @@ async function logoImage(name){await until(`(()=>{const row=${logoRowExpression(
 async function logoChecks(extra={}){await delay(200);return {...extra,exceptions,failed_api_responses:responses.filter(r=>r.status>=400&&!(r.path==='/api/accounts/auth/proxy-login/'&&r.status===401))};}
 async function command(config){
  if(config.op==='setup'){
-  stage='first-admin-form';await call('Page.navigate',{url:config.url});await until(`document.body.innerText.includes('Create your Super User Account')&&!!document.querySelector('input[name="username"]')`);
-  await input('username',config.username);await input('password',config.password);await input('email',config.email);await evaluate(`document.querySelector('form').requestSubmit();true`);
-  stage='login-form';await until(`!document.body.innerText.includes('Create your Super User Account')&&!!document.querySelector('input[name="username"]')&&document.body.innerText.includes('Login')`);
-  await input('username',config.username);await input('password',config.password);await evaluate(`document.querySelector('form').requestSubmit();true`);
-  stage='initialization';return await authenticated(config);
+  stage='first-admin-form';checkpoint='navigate';await call('Page.navigate',{url:config.url});checkpoint='wait-setup-form';await until(`!!document.body?.innerText?.includes('Create your Super User Account')&&!!document.querySelector('input[name="username"]')`);
+  checkpoint='enter-setup-user';await input('username',config.username);checkpoint='enter-setup-password';await input('password',config.password);checkpoint='enter-setup-email';await input('email',config.email);checkpoint='submit-setup-form';await evaluate(`document.querySelector('form').requestSubmit();true`);
+  stage='login-form';checkpoint='wait-login-form';await until(`!!document.body?.innerText?.includes('Login')&&!document.body.innerText.includes('Create your Super User Account')&&!!document.querySelector('input[name="username"]')`);
+  checkpoint='enter-login-user';await input('username',config.username);checkpoint='enter-login-password';await input('password',config.password);checkpoint='submit-login-form';await evaluate(`document.querySelector('form').requestSubmit();true`);
+  stage='initialization';checkpoint='verify-initialization';return await authenticated(config);
  }
  if(config.op==='reload') {stage='restart-reload';responses.length=0;await call('Page.reload',{ignoreCache:true});return await authenticated(config);}
  if(config.op==='logo_create'){
@@ -65,7 +65,7 @@ async function command(config){
  if(config.op==='screenshot'){const value=await call('Page.captureScreenshot',{format:'png'});fs.writeFileSync(config.path,Buffer.from(value.data,'base64'));return {saved:true};}
  if(config.op==='close')return {closed:true};throw new Error('Unknown browser command');
 }
-(async()=>{try{process.stdout.write(JSON.stringify(await start())+'\n');for await(const line of readline.createInterface({input:process.stdin})){const config=JSON.parse(line);let response;try{response=await command(config)}catch(error){let diagnostics=null;if(config.op.startsWith('logo')){try{diagnostics=await evaluate(`({rows:Array.from(document.querySelectorAll('.tr')).map(row=>({text:row.innerText.slice(0,120),images:Array.from(row.querySelectorAll('img')).map(image=>({path:(()=>{try{return new URL(image.src).pathname}catch{return null}})(),complete:image.complete,width:image.naturalWidth,height:image.naturalHeight}))})),inputs:Array.from(document.querySelectorAll('input')).map(input=>({name:input.name,type:input.type})),dialogs:document.querySelectorAll('[role=dialog]').length})`)}catch{}}response={failed:true,stage,error_type:error.name,failure_message:error.message,observed_api_paths:responses,diagnostics,missing_required_api_paths:required.filter(path=>!responses.some(r=>r.path===path&&r.status===200)),exceptions};process.exitCode=1}process.stdout.write(JSON.stringify(response)+'\n');if(config.op==='close'||response.failed)break}}
+(async()=>{try{process.stdout.write(JSON.stringify(await start())+'\n');for await(const line of readline.createInterface({input:process.stdin})){const config=JSON.parse(line);let response;try{response=await command(config)}catch(error){let diagnostics=null;if(config.op.startsWith('logo')){try{diagnostics=await evaluate(`({rows:Array.from(document.querySelectorAll('.tr')).map(row=>({text:row.innerText.slice(0,120),images:Array.from(row.querySelectorAll('img')).map(image=>({path:(()=>{try{return new URL(image.src).pathname}catch{return null}})(),complete:image.complete,width:image.naturalWidth,height:image.naturalHeight}))})),inputs:Array.from(document.querySelectorAll('input')).map(input=>({name:input.name,type:input.type})),dialogs:document.querySelectorAll('[role=dialog]').length})`)}catch{}}response={failed:true,stage,checkpoint,error_type:error.name,failure_message:error.message,observed_api_paths:responses,diagnostics,missing_required_api_paths:required.filter(path=>!responses.some(r=>r.path===path&&r.status===200)),exceptions};process.exitCode=1}process.stdout.write(JSON.stringify(response)+'\n');if(config.op==='close'||response.failed)break}}
  catch(error){process.stdout.write(JSON.stringify({failed:true,stage,error_type:error.name})+'\n');process.exitCode=1}
  finally{if(cdp)cdp.close();if(child){try{process.kill(-child.pid,'SIGTERM')}catch{}await delay(200);try{process.kill(-child.pid,'SIGKILL')}catch{}}fs.rmSync(directory,{recursive:true,force:true})}
 })();
