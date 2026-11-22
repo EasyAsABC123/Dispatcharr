@@ -290,6 +290,34 @@ impl RetainedSqliteRestReads {
     }
 
     #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn channel_streams(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        uri: &axum::http::Uri,
+        params: HashMap<String, String>,
+        projection: crate::auth::sqlite_runtime::streams::Projection,
+    ) -> Result<Vec<u8>, StoreError> {
+        let subject = self
+            .bearer_account_user(peer, headers.clone(), false)
+            .await?;
+        crate::channel_groups::collection_permission(subject.user())?;
+        let base = crate::channels::base_url(&headers, uri)?;
+        let admin = subject.user().user_level >= 10;
+        let pool = self.pool.clone();
+        let work_bytes = self.limits.work_bytes;
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = projection
+                .read(&mut connection, admin, &params, &base, work_bytes)
+                .await;
+            settle(connection).await?;
+            result
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
     pub(crate) async fn channel_read(
         &self,
         peer: SocketAddr,
@@ -466,6 +494,28 @@ impl RetainedSqliteRestReads {
                     .await
             },
         )
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn stream_filter_options(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        raw_query: Option<&str>,
+    ) -> Result<Vec<u8>, StoreError> {
+        use crate::auth::sqlite_runtime::stream_filter_options;
+        let subject = self.bearer_account_user(peer, headers, false).await?;
+        crate::channel_groups::collection_permission(subject.user())?;
+        stream_filter_options::require_unfiltered(raw_query)?;
+        let pool = self.pool.clone();
+        let limits = self.limits;
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = stream_filter_options::read(&mut connection, limits).await;
+            settle(connection).await?;
+            result
+        })
         .await
     }
 

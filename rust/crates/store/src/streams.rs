@@ -107,6 +107,10 @@ pub(crate) fn filters(
     Ok(())
 }
 fn ordering(query: &mut QueryBuilder<'_, Postgres>, params: &HashMap<String, String>) {
+    query.push(" ORDER BY ").push(ordering_sql(params));
+}
+
+pub(crate) fn ordering_sql(params: &HashMap<String, String>) -> String {
     let clauses = params
         .get("ordering")
         .map(String::as_str)
@@ -125,13 +129,13 @@ fn ordering(query: &mut QueryBuilder<'_, Postgres>, params: &HashMap<String, Str
             Some(format!("{column} {}", if desc { "DESC" } else { "ASC" }))
         })
         .collect::<Vec<_>>();
-    query.push(" ORDER BY ").push(if clauses.is_empty() {
+    if clauses.is_empty() {
         "s.name DESC".into()
     } else {
         clauses.join(",")
-    });
+    }
 }
-fn page(
+pub(crate) fn page(
     params: &HashMap<String, String>,
     count: usize,
 ) -> Result<(usize, usize, usize), StoreError> {
@@ -161,7 +165,7 @@ fn page(
     }
     Ok((page, size, pages))
 }
-fn previous(base: &Url, page: usize) -> Option<String> {
+pub(crate) fn previous(base: &Url, page: usize) -> Option<String> {
     if page <= 1 {
         return None;
     }

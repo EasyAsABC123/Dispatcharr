@@ -26,6 +26,10 @@ pub(crate) mod epg_collections;
 pub(crate) mod m3u_accounts;
 #[path = "sqlite_profile.rs"]
 pub(crate) mod profile;
+#[path = "sqlite_stream_filter_options.rs"]
+pub(crate) mod stream_filter_options;
+#[path = "sqlite_streams.rs"]
+pub(crate) mod streams;
 use std::{collections::HashMap, path::Path};
 use tokio::sync::Semaphore;
 
@@ -107,8 +111,20 @@ impl CopiedSqliteRuntime {
                     .delete(group_delete),
             )
             .route(
+                "/api/channels/streams/",
+                axum::routing::get(channel_streams).layer(Extension(streams::Projection::Page)),
+            )
+            .route(
+                "/api/channels/streams/ids/",
+                axum::routing::get(channel_streams).layer(Extension(streams::Projection::Ids)),
+            )
+            .route(
                 "/api/channels/profiles/",
                 axum::routing::get(channel_profiles),
+            )
+            .route(
+                "/api/channels/streams/filter-options/",
+                axum::routing::get(stream_filter_options),
             )
             .route("/api/channels/logos/", axum::routing::get(channel_logos))
             .route("/api/channels/channels/", axum::routing::get(channels))
@@ -489,6 +505,33 @@ async fn channel_profiles(
         read.unwrap_or_else(IntoResponse::into_response),
         axum::http::HeaderValue::from_static("GET, POST, HEAD, OPTIONS"),
     )
+}
+
+async fn channel_streams(
+    State(runtime): State<CopiedSqliteRuntime>,
+    Extension(projection): Extension<streams::Projection>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+    Query(params): Query<HashMap<String, String>>,
+) -> Response {
+    let read = async {
+        runtime
+            .allocate_read()
+            .await?
+            .channel_streams(peer, headers, &uri, params, projection)
+            .await
+    }
+    .await;
+    let response = match read {
+        Ok(body) => (
+            [(axum::http::header::CONTENT_TYPE, "application/json")],
+            body,
+        )
+            .into_response(),
+        Err(error) => error.into_response(),
+    };
+    copied_read_headers(response, projection.allow())
 }
 
 async fn channels(
@@ -879,6 +922,34 @@ async fn channel_logos(
         Err(error) => error.into_response(),
     };
     copied_read_headers(response, crate::channels::COLLECTION_ALLOW)
+}
+
+async fn stream_filter_options(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    RawQuery(raw): RawQuery,
+) -> Response {
+    let result = async {
+        runtime
+            .allocate_read()
+            .await?
+            .stream_filter_options(peer, headers, raw.as_deref())
+            .await
+    }
+    .await;
+    let response = match result {
+        Ok(body) => (
+            [(axum::http::header::CONTENT_TYPE, "application/json")],
+            body,
+        )
+            .into_response(),
+        Err(error) => error.into_response(),
+    };
+    copied_read_headers(
+        response,
+        axum::http::HeaderValue::from_static("GET, HEAD, OPTIONS"),
+    )
 }
 
 async fn readiness(State(runtime): State<CopiedSqliteRuntime>) -> (StatusCode, Json<Value>) {
