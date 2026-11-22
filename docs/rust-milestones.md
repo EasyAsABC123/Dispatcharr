@@ -9,6 +9,10 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [4558a85b grouped Compose checkpoint](rust-m9-4558a85b-formal-compose.md)
+recorded 26 fresh passing workflows across 127 required rows.
+The matrix retains each other disposition and the Original reference separately.
+
 The [4558a85b standalone wave](rust-m9-4558a85b-standalone-compose.md)
 passed six current-image Compose checks with verified cleanup. Nineteen other
 bindings passed preflight and still needed physical execution at this checkpoint.
