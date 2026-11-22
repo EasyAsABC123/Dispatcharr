@@ -12,6 +12,7 @@ import shutil
 import tempfile
 import unittest
 import recording_hls_source_contracts as plain_hls
+import observed_programme_packaged_contracts as programme
 
 # These portable Source-input classes are included in the existing SDK module.
 from test_source_contracts import SourceContracts
@@ -49,6 +50,7 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update({'scripts/rust-contracts/framework-auth/' + name for name in ['bindings.json', 'full-suite-reference.json', 'observations.json', 'original/test_accounts.py', 'original/test_login_rate_limit_inbox.py']})
         account_input = json.loads((REPO / 'scripts/rust-contracts/accounts-settings/bindings.json').read_text())
         refs.add('docs/rust-contract-register.json')
+        refs.update(programme.INPUT_SHA256)
         refs.add('scripts/rust-integration/m0-recording-hls-canonical-precedence.json')
         refs.add('scripts/rust-contracts/accounts-settings/bindings.json')
         refs.update(x['path'] for x in account_input['authorities'])
@@ -273,7 +275,7 @@ class CapturedEvidenceRegister(unittest.TestCase):
         self.assertEqual(actual['openapi_operations'], self.baseline['openapi_operations'])
         self.assertEqual(actual['non_HTTP_candidates'], self.baseline['non_HTTP_candidates'])
         counts = actual['counts']
-        self.assertEqual((counts['runtime_routes'], counts['runtime_operation_work_items'], counts['operations_with_partial_case_bindings'], counts['mapped_packaged_case_observations'], counts['fully_verified_route_operations']), (592, 798, 11, 403, 0))
+        self.assertEqual((counts['runtime_routes'], counts['runtime_operation_work_items'], counts['operations_with_partial_case_bindings'], counts['mapped_packaged_case_observations'], counts['fully_verified_route_operations']), (592, 798, 13, 419, 0))
         self.assertEqual(len(actual['observations_for_methods_not_declared_in_discovery']), 265)
         first = lambda v: v['bindings'][2]
         dataset = lambda v: v['evidence_datasets'][0]
@@ -320,7 +322,7 @@ class CapturedEvidenceRegister(unittest.TestCase):
         self.module.ROOT = REPO
         result = self.module.build(REPO / 'scripts/rust-contracts/case-bindings.json', deep_evidence=True)
         self.assertEqual(result['counts']['fully_verified_route_operations'], 0)
-        self.assertEqual(result['counts']['mapped_packaged_case_observations'], 403)
+        self.assertEqual(result['counts']['mapped_packaged_case_observations'], 419)
 
 
 if __name__ == '__main__':

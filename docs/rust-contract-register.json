@@ -9,6 +9,8 @@
     "docs/rust-runtime-methods.json": "c0ce8aca7f820ef52256c5ed3ea285a2951b19269872a15923d2d299813d5ec6",
     "scripts/rust-contracts/case-bindings.json": "ca396701f317f44e22085f5d3552db2d2e26bf9e7815996e02f377bba0fc4ad1",
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
+    "scripts/rust-contracts/observed-http-9cf6407/programme.json": "0736bbee00d57377ce42952e1fb7f042535634d7336500ec2c22bbea6846d0bc",
+    "scripts/rust-contracts/observed-http-9cf6407/verify.py": "da8983349edaf5f24bb071696803531e02801658c4e04194cddbd6e2223f4c87",
     "scripts/rust-integration/m0-recording-hls-canonical-precedence.json": "daddfbf65a5bb5fc81e4ab82e243db7a09a0e6f21b07c325995c825b52f6823d",
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json": "57f54204594c9f71c4fd12633818b145d96f3965e45aa2e5e8a982a082a90b62",
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/report.json": "481bde98368d9ee2d0b996a1f2dcec0a288a171f1cf25262bedccc4cfa13ec0b",
@@ -1290,8 +1292,8 @@
     "static_non_HTTP_candidates": 250,
     "fully_verified_route_operations": 0,
     "scoped_evidence_requiring_case_mapping": 16,
-    "operations_with_partial_case_bindings": 11,
-    "mapped_packaged_case_observations": 403
+    "operations_with_partial_case_bindings": 13,
+    "mapped_packaged_case_observations": 419
   },
   "observations_for_methods_not_declared_in_discovery": [
     {
@@ -93431,6 +93433,242 @@
               "Source_TCP_verified": false,
               "complete_role_matrix": false
             }
+          },
+          "case_bindings": {
+            "contract_id": "route-55aadc5558ca3b8248b1:GET",
+            "method": "GET",
+            "pattern_exact": "api/epg/^programs/$",
+            "literal_path_template": "/api/epg/programs/",
+            "source_handler": "apps.epg.api_views.ProgramViewSet",
+            "runtime": {
+              "image_id": "sha256:fd1a839e1fce4835039b7b079cd0929cd3c658261374cea2c7bbebf813fae3a9",
+              "manifest_sha256": "19d618bfe72657a0adfc65fd93094ad42cbaffbe8b609bdc68ba8eddfb7e17a1",
+              "package_seal_sha256": "1f0c2f7c6559e76114267d57d633d502f2347f6819190b21ea4ce99e95b3f7bc",
+              "review_sha256": "9f36a67170b5c6f3d53ef603c2826474cc15c6590ae0a31711015cfed47e3e2e",
+              "revision": "9cf640701dacea07ea5f394ce7b18a6fa7c8c088"
+            },
+            "packaged_report": "scripts/rust-contracts/observed-http-9cf6407/programme.json",
+            "packaged_report_sha256": "0736bbee00d57377ce42952e1fb7f042535634d7336500ec2c22bbea6846d0bc",
+            "packaged_report_schema": "paired_programme_response_projection_v1",
+            "observed_roles": [
+              "admin",
+              "standard"
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "GET",
+                "role": "admin",
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "805d64ffa295d1073cebe8df8a6aed48a9ae67827afe781edefd950951b5e924"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "b92077823e00331cb2a35fe487d904aa5a8f32f46f7cfa0b2e35d0587d37c7b5",
+                  "observed_HTTP": {
+                    "allow": "GET, POST, HEAD, OPTIONS",
+                    "body_bytes": 16190,
+                    "content_length": 16190,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "1206a3dc2e55126af1f7746e7bcc4030061d9b66c4643b540a2c30eca83b12d4"
+                },
+                "evidence_pointer": "/observations/0"
+              },
+              {
+                "method": "GET",
+                "role": "admin",
+                "accept": "text/*",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "805d64ffa295d1073cebe8df8a6aed48a9ae67827afe781edefd950951b5e924"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "b92077823e00331cb2a35fe487d904aa5a8f32f46f7cfa0b2e35d0587d37c7b5",
+                  "observed_HTTP": {
+                    "allow": "GET, POST, HEAD, OPTIONS",
+                    "body_bytes": 16190,
+                    "content_length": 16190,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "1206a3dc2e55126af1f7746e7bcc4030061d9b66c4643b540a2c30eca83b12d4"
+                },
+                "evidence_pointer": "/observations/1"
+              },
+              {
+                "method": "GET",
+                "role": "admin",
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "format_query": "?format=api",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "805d64ffa295d1073cebe8df8a6aed48a9ae67827afe781edefd950951b5e924"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "4f1d345123b0c66abb8d39568217ec5897ad40d77a4c0a37ee8610f78a599c6e",
+                  "observed_HTTP": {
+                    "allow": "GET, POST, HEAD, OPTIONS",
+                    "body_bytes": 16289,
+                    "content_length": 16289,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "e19e4adf6c0d1f10147a9451398c8eb842d4b2e0b7a4ed0b8da17fc8ce85171a"
+                },
+                "evidence_pointer": "/observations/2"
+              },
+              {
+                "method": "GET",
+                "role": "admin",
+                "accept": "application/json;q=0.9, text/html;q=0.5",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "805d64ffa295d1073cebe8df8a6aed48a9ae67827afe781edefd950951b5e924"
+                  },
+                  "normalized_body_sha256": "59c74ed2888280d8394b8e41a8c68b2c30930b4e9dfa4fb45c8b4afb48ffe106",
+                  "observed_HTTP": {
+                    "allow": "GET, POST, HEAD, OPTIONS",
+                    "body_bytes": 371,
+                    "content_length": 371,
+                    "content_type": "application/json",
+                    "csrf_cookie_header_present": false,
+                    "status": 200,
+                    "vary": "Accept, origin"
+                  },
+                  "stable_repeat": true
+                },
+                "evidence_pointer": "/observations/3"
+              },
+              {
+                "method": "GET",
+                "role": "standard",
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "805d64ffa295d1073cebe8df8a6aed48a9ae67827afe781edefd950951b5e924"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "e2f8bf506341930b27eb344769629ed0e0ef2ee2ca182eea55dbace440873211",
+                  "observed_HTTP": {
+                    "allow": "GET, POST, HEAD, OPTIONS",
+                    "body_bytes": 11292,
+                    "content_length": 11292,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "a25fcd6f6967b5937638215fe6e0078b8642559d417f4d19d941fed9e16045f1"
+                },
+                "evidence_pointer": "/observations/8"
+              },
+              {
+                "method": "GET",
+                "role": "standard",
+                "accept": "text/*",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "805d64ffa295d1073cebe8df8a6aed48a9ae67827afe781edefd950951b5e924"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "e2f8bf506341930b27eb344769629ed0e0ef2ee2ca182eea55dbace440873211",
+                  "observed_HTTP": {
+                    "allow": "GET, POST, HEAD, OPTIONS",
+                    "body_bytes": 11292,
+                    "content_length": 11292,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "a25fcd6f6967b5937638215fe6e0078b8642559d417f4d19d941fed9e16045f1"
+                },
+                "evidence_pointer": "/observations/9"
+              },
+              {
+                "method": "GET",
+                "role": "standard",
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "format_query": "?format=api",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "805d64ffa295d1073cebe8df8a6aed48a9ae67827afe781edefd950951b5e924"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "1c872870e02aea7cbd6db28c250029bfa8ef56de66a5571bae774e4f1f15ebed",
+                  "observed_HTTP": {
+                    "allow": "GET, POST, HEAD, OPTIONS",
+                    "body_bytes": 11358,
+                    "content_length": 11358,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "a7e767a2d0b556fe98a622063d0d0a1b793c464055d30b564b94417f40748ecf"
+                },
+                "evidence_pointer": "/observations/10"
+              },
+              {
+                "method": "GET",
+                "role": "standard",
+                "accept": "application/json;q=0.9, text/html;q=0.5",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "805d64ffa295d1073cebe8df8a6aed48a9ae67827afe781edefd950951b5e924"
+                  },
+                  "normalized_body_sha256": "59c74ed2888280d8394b8e41a8c68b2c30930b4e9dfa4fb45c8b4afb48ffe106",
+                  "observed_HTTP": {
+                    "allow": "GET, POST, HEAD, OPTIONS",
+                    "body_bytes": 371,
+                    "content_length": 371,
+                    "content_type": "application/json",
+                    "csrf_cookie_header_present": false,
+                    "status": 200,
+                    "vary": "Accept, origin"
+                  },
+                  "stable_repeat": true
+                },
+                "evidence_pointer": "/observations/11"
+              }
+            ]
           }
         },
         {
@@ -96572,6 +96810,242 @@
               "Source_TCP_verified": false,
               "complete_role_matrix": false
             }
+          },
+          "case_bindings": {
+            "contract_id": "route-82723694fa5ab6ee5f1e:GET",
+            "method": "GET",
+            "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)/$",
+            "literal_path_template": "/api/epg/programs/{pk}/",
+            "source_handler": "apps.epg.api_views.ProgramViewSet",
+            "runtime": {
+              "image_id": "sha256:fd1a839e1fce4835039b7b079cd0929cd3c658261374cea2c7bbebf813fae3a9",
+              "manifest_sha256": "19d618bfe72657a0adfc65fd93094ad42cbaffbe8b609bdc68ba8eddfb7e17a1",
+              "package_seal_sha256": "1f0c2f7c6559e76114267d57d633d502f2347f6819190b21ea4ce99e95b3f7bc",
+              "review_sha256": "9f36a67170b5c6f3d53ef603c2826474cc15c6590ae0a31711015cfed47e3e2e",
+              "revision": "9cf640701dacea07ea5f394ce7b18a6fa7c8c088"
+            },
+            "packaged_report": "scripts/rust-contracts/observed-http-9cf6407/programme.json",
+            "packaged_report_sha256": "0736bbee00d57377ce42952e1fb7f042535634d7336500ec2c22bbea6846d0bc",
+            "packaged_report_schema": "paired_programme_response_projection_v1",
+            "observed_roles": [
+              "admin",
+              "standard"
+            ],
+            "fully_verified": false,
+            "cases": [
+              {
+                "method": "GET",
+                "role": "admin",
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "0b6edb97f94e7425d7669bf839035aac1292001c8b0cc10267db2095f663f052"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "1bf96a409315fd8b73ae0e633e613ec8967976a3e0af1c611e13a4bf107f8aad",
+                  "observed_HTTP": {
+                    "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                    "body_bytes": 19043,
+                    "content_length": 19043,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "65b75d9e6f546ef3701a3b92f9ead94a59ad1a95ab7c0f916735a6d059fb6ba4"
+                },
+                "evidence_pointer": "/observations/4"
+              },
+              {
+                "method": "GET",
+                "role": "admin",
+                "accept": "text/*",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "0b6edb97f94e7425d7669bf839035aac1292001c8b0cc10267db2095f663f052"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "1bf96a409315fd8b73ae0e633e613ec8967976a3e0af1c611e13a4bf107f8aad",
+                  "observed_HTTP": {
+                    "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                    "body_bytes": 19043,
+                    "content_length": 19043,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "65b75d9e6f546ef3701a3b92f9ead94a59ad1a95ab7c0f916735a6d059fb6ba4"
+                },
+                "evidence_pointer": "/observations/5"
+              },
+              {
+                "method": "GET",
+                "role": "admin",
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "format_query": "?format=api",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "0b6edb97f94e7425d7669bf839035aac1292001c8b0cc10267db2095f663f052"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "be35b1de443c3c82180f9f6b59c85a0f54d27d547c57b850fb1baf252d5a801b",
+                  "observed_HTTP": {
+                    "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                    "body_bytes": 19164,
+                    "content_length": 19164,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "36073847bb0ac904585f6c80f1e08d64502b6ead9409e3775e10f1e7eb681c69"
+                },
+                "evidence_pointer": "/observations/6"
+              },
+              {
+                "method": "GET",
+                "role": "admin",
+                "accept": "application/json;q=0.9, text/html;q=0.5",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "0b6edb97f94e7425d7669bf839035aac1292001c8b0cc10267db2095f663f052"
+                  },
+                  "normalized_body_sha256": "1b9b14c7d85bba662bffe9781b6656759e882c29d62a082ab41f68ed8aaf8b8f",
+                  "observed_HTTP": {
+                    "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                    "body_bytes": 870,
+                    "content_length": 870,
+                    "content_type": "application/json",
+                    "csrf_cookie_header_present": false,
+                    "status": 200,
+                    "vary": "Accept, origin"
+                  },
+                  "stable_repeat": true
+                },
+                "evidence_pointer": "/observations/7"
+              },
+              {
+                "method": "GET",
+                "role": "standard",
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "0b6edb97f94e7425d7669bf839035aac1292001c8b0cc10267db2095f663f052"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "7d55e1b95d5f53fe7086fce52779b51504b1fbb7a13f47a92700122c5e6b7b8f",
+                  "observed_HTTP": {
+                    "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                    "body_bytes": 12382,
+                    "content_length": 12382,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "401144daa6e7ce72f6ff2a9942eaf50e8600d8b3de7031ad7ab7b74a2cec13fc"
+                },
+                "evidence_pointer": "/observations/12"
+              },
+              {
+                "method": "GET",
+                "role": "standard",
+                "accept": "text/*",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "0b6edb97f94e7425d7669bf839035aac1292001c8b0cc10267db2095f663f052"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "7d55e1b95d5f53fe7086fce52779b51504b1fbb7a13f47a92700122c5e6b7b8f",
+                  "observed_HTTP": {
+                    "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                    "body_bytes": 12382,
+                    "content_length": 12382,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "401144daa6e7ce72f6ff2a9942eaf50e8600d8b3de7031ad7ab7b74a2cec13fc"
+                },
+                "evidence_pointer": "/observations/13"
+              },
+              {
+                "method": "GET",
+                "role": "standard",
+                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                "format_query": "?format=api",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "0b6edb97f94e7425d7669bf839035aac1292001c8b0cc10267db2095f663f052"
+                  },
+                  "fresh_independent_HTML_masks": true,
+                  "normalized_body_sha256": "95ea230ebd42f0ce7aa624703f69e6f3e4d2f1085ea6b821b9a92732175dcba1",
+                  "observed_HTTP": {
+                    "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                    "body_bytes": 12459,
+                    "content_length": 12459,
+                    "content_type": "text/html; charset=utf-8",
+                    "csrf_cookie_header_present": true,
+                    "status": 200,
+                    "vary": "Accept, origin, Cookie"
+                  },
+                  "stable_repeat": true,
+                  "template_sha256": "86afcddbf64a35c875820f4f65927f24a9b9ceeb9e9909d9884ebe90db454ea5"
+                },
+                "evidence_pointer": "/observations/14"
+              },
+              {
+                "method": "GET",
+                "role": "standard",
+                "accept": "application/json;q=0.9, text/html;q=0.5",
+                "format_query": "",
+                "result": "passed_scoped_live_response_projection",
+                "response": {
+                  "JSON_control": {
+                    "status": 200,
+                    "typed_sha256": "0b6edb97f94e7425d7669bf839035aac1292001c8b0cc10267db2095f663f052"
+                  },
+                  "normalized_body_sha256": "1b9b14c7d85bba662bffe9781b6656759e882c29d62a082ab41f68ed8aaf8b8f",
+                  "observed_HTTP": {
+                    "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                    "body_bytes": 870,
+                    "content_length": 870,
+                    "content_type": "application/json",
+                    "csrf_cookie_header_present": false,
+                    "status": 200,
+                    "vary": "Accept, origin"
+                  },
+                  "stable_repeat": true
+                },
+                "evidence_pointer": "/observations/15"
+              }
+            ]
           }
         },
         {

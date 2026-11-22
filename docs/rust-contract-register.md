@@ -15,7 +15,7 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | Non-HTTP candidate identities | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
 | Typed executable Original non-HTTP assignments | 250 | Partial observations for 145 migrations, 50 Django class registrations, 31 task behaviors, 16 registration-only tasks, two command executions, three command registrations, one model test, one synthetic consumer and one WebSocket route. |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
-| Operations with partial case bindings | 11 | 403 scoped packaged observations; remaining role/input coverage stays open |
+| Operations with partial case bindings | 13 | 419 scoped packaged observations; remaining role/input coverage stays open |
 | Fully audited register operation rows | 0 | Register-to-case mapping has not been completed; existing reports retain their actual passes |
 
 Each operation has a contract ID, source handler/action, proposed milestone owner, explicit role-matrix state, fixture/assertion placeholders, coverage state and result. Module-associated test filenames are candidates only. An OpenAPI security declaration describes authentication, not authorization. Format variants and duplicate resolver occurrences keep separate IDs.
@@ -717,3 +717,9 @@ routes. They retain the tested metadata and leave the discovery method
 declarations unchanged. These partial assignments reuse qualified receipts
 and require no additional HTTP run. The register adds no operation IDs or
 fully verified rows.
+
+## Packaged Programme Guide GET observations
+
+The [paired 9cf6407 Programme Guide packet](../scripts/rust-contracts/observed-http-9cf6407/README.md) adds sixteen measured response comparisons to the two declared Programme Guide GET operations. Each operation includes eight cases for admin and standard roles. The packet compares selected HTTP fields, typed JSON controls, normalized body hashes, and redacted HTML template hashes. The existing Original framework evidence and incomplete role matrices remain applicable.
+
+The register now maps thirteen operations to 419 partial packaged observations. All operation and route identities are preserved. Wider Programme Guide authorization and the full milestone remain open. Original Dispatcharr, Django and Django REST Framework contributors retain full credit.

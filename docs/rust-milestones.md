@@ -11,7 +11,9 @@ alone does not establish application parity or an application performance gain.
 
 The [9cf6407 HTTP attachment packets](../scripts/rust-contracts/observed-http-9cf6407/README.md)
 record 16 Channels and M3U directory requests and 16 Programme Guide requests. Portable
-offline verification covers the tested route identities, response projections and physical cleanup.
+offline verification covers the tested route identities, response projections and physical cleanup. The
+[executable contract register](rust-contract-register.md) now binds the 16 Programme
+Guide cases to the two declared list and detail GET rows as partial evidence.
 
 The [checkout-only Clean Install replay](rust-m9-local-clean-install/README.md) rebuilds
 the exact `9cf6407` application inputs, runs the tracked React bootstrap and restart
