@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [949c864f ordinary checkpoint](rust-m0-m6-949c864f-stats-and-hdhr.md)
+matched two receiver-backed saved Stats schedules and eight browsable
+HDHomeRun authentication cases with exact retirement. Its predecessor
+also matched a Newfoundland cleanup occurrence in explicit Selected/Core mode.
+
 The [e0016d42 HDHomeRun browser authentication comparison](rust-m0-e0016d42-hdhr-browser-auth.md)
 matched eight 401 statuses and bearer challenges. Original used its
 browsable HTML response and Rust used JSON. Both scopes retired cleanly.
