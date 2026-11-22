@@ -1,10 +1,10 @@
 //! Original Dispatcharr Channel Batch group, content and access flag updates.
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
-use super::{boolean, err, integer, mark_group, primary_key, rename};
+use super::{boolean, character, err, integer, mark_group, primary_key, rename};
 use crate::{channels, AuthService, StoreError};
 use axum::{
     extract::{ConnectInfo, OriginalUri, Query, Request, State},
-    http::header,
+    http::{header, HeaderValue},
     response::{IntoResponse, Response},
     Json,
 };
@@ -93,6 +93,8 @@ impl FromIterator<References> for ReferenceColumns {
 #[derive(Debug, Default, PartialEq, Eq)]
 struct Edit {
     id: i64,
+    name: Option<String>,
+    name_error: Option<Value>,
     group: Option<i64>,
     override_group: Option<i64>,
     mature: Option<bool>,
@@ -176,7 +178,8 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
             if row.keys().any(|key| {
                 !matches!(
                     key.as_str(),
-                    "id" | "channel_group_id"
+                    "id" | "name"
+                        | "channel_group_id"
                         | "is_adult"
                         | "is_radio"
                         | "user_level"
@@ -188,6 +191,23 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
             }) {
                 return Err(unsupported());
             }
+            let (name, name_error) = match row
+                .get("name")
+                .map(|value| character("name", value, Some(512), false))
+                .transpose()
+            {
+                Ok(name) => (name, None),
+                // Source checks row existence before reporting serializer errors.
+                Err(StoreError::InvalidInput(Value::Object(mut errors))) => (
+                    None,
+                    Some(
+                        errors
+                            .remove("name")
+                            .ok_or(StoreError::UnhandledRestFault)?,
+                    ),
+                ),
+                Err(error) => return Err(error),
+            };
             let override_intent = overrides.get(&id);
             let (override_group, override_radio, override_references) = match override_intent {
                 None | Some(Value::Null) => (None, None, References::default()),
@@ -212,6 +232,8 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
             };
             Ok(Edit {
                 id,
+                name,
+                name_error,
                 group: row.get("channel_group_id").map(group).transpose()?,
                 override_group,
                 override_radio,
@@ -394,6 +416,9 @@ async fn validate_and_lock(
         if !nested.is_empty() {
             fields.insert("override".into(), Value::Object(nested));
         }
+        if let Some(error) = &edit.name_error {
+            fields.insert("name".into(), error.clone());
+        }
         if !fields.is_empty() {
             errors.push(json!({"channel_id":edit.id,"errors":fields}));
         }
@@ -401,10 +426,13 @@ async fn validate_and_lock(
     if errors.is_empty() {
         Ok(selected)
     } else {
-        Err(StoreError::InvalidInput(
-            json!({"updated_count":edits.len()-errors.len(),"errors":errors}),
-        ))
+        Err(batch_validation_error(errors, edits.len()))
     }
+}
+
+fn batch_validation_error(errors: Vec<Value>, edits: usize) -> StoreError {
+    let updated_count = edits - errors.len();
+    StoreError::InvalidInput(json!({"errors": errors, "updated_count": updated_count}))
 }
 
 const CHANNEL_BATCH_SIZE: usize = 100;
@@ -434,7 +462,8 @@ async fn apply(
                 unhide.push(edit.id);
             }
         }
-        if edit.group.is_some()
+        if edit.name.is_some()
+            || edit.group.is_some()
             || edit.mature.is_some()
             || edit.level.is_some()
             || edit.radio.is_some()
@@ -459,6 +488,7 @@ async fn apply(
         let radio: Vec<_> = chunk.iter().map(|edit| edit.radio).collect();
         let levels: Vec<_> = chunk.iter().map(|edit| edit.level).collect();
         let hidden: Vec<_> = chunk.iter().map(|edit| edit.hidden).collect();
+        let names: Vec<_> = chunk.iter().map(|edit| edit.name.as_deref()).collect();
         let refs: ReferenceColumns = chunk.iter().map(|edit| edit.references).collect();
         // Stock bulk_update leaves channel row clocks unchanged.
         sqlx::query(
@@ -469,10 +499,12 @@ async fn apply(
                  user_level = COALESCE(change.level, channel.user_level),
                  stream_profile_id = CASE WHEN change.has_profile THEN change.profile ELSE channel.stream_profile_id END,
                  logo_id = CASE WHEN change.has_logo THEN change.logo ELSE channel.logo_id END,
-                 hidden_from_output = COALESCE(change.hidden, channel.hidden_from_output)
+                 hidden_from_output = COALESCE(change.hidden, channel.hidden_from_output),
+                 name = COALESCE(change.name, channel.name)
              FROM unnest($1::bigint[], $2::bigint[], $3::boolean[], $4::boolean[], $5::integer[],
-                         $6::boolean[], $7::bigint[], $8::boolean[], $9::bigint[], $10::boolean[])
-                 AS change(id, group_id, mature, radio, level, has_profile, profile, has_logo, logo, hidden)
+                         $6::boolean[], $7::bigint[], $8::boolean[], $9::bigint[], $10::boolean[],
+                         $11::text[])
+                 AS change(id, group_id, mature, radio, level, has_profile, profile, has_logo, logo, hidden, name)
              WHERE channel.id = change.id",
         )
         .bind(ids)
@@ -485,6 +517,7 @@ async fn apply(
         .bind(refs.logos_present)
         .bind(refs.logos)
         .bind(hidden)
+        .bind(names)
         .execute(&mut **tx)
         .await?;
     }
@@ -639,6 +672,24 @@ fn project_unhide_response(row: &mut Value) {
     row["effective_channel_number"] = row["override"]["channel_number"].clone();
 }
 
+fn batch_headers(mut response: Response) -> Response {
+    let headers = response.headers_mut();
+    headers.insert(header::ALLOW, HeaderValue::from_static("PATCH, OPTIONS"));
+    headers.insert(header::VARY, HeaderValue::from_static("Accept, origin"));
+    response
+}
+
+fn batch_rejection(error: StoreError) -> Result<Response, StoreError> {
+    match &error {
+        StoreError::Unauthorized("Authentication credentials were not provided.")
+        | StoreError::PermissionDenied => {}
+        StoreError::InvalidInput(Value::Object(fields))
+            if fields.contains_key("errors") && fields.contains_key("updated_count") => {}
+        _ => return Err(error),
+    }
+    Ok(batch_headers(error.into_response()))
+}
+
 pub(crate) async fn handle(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -649,21 +700,28 @@ pub(crate) async fn handle(
     let permit = auth.task_sql_writer()?;
     let auth = auth.with_request_writer_permit(permit.clone())?;
     let owner = auth.core_publication_owner(permit);
-    tokio::spawn(async move {
+    let result = tokio::spawn(async move {
         let headers = request.headers().clone();
         auth.account_user(peer, headers.clone(), true).await?;
         let base = channels::base_url(&headers, &uri)?;
-        let include = params.get("include_streams").is_some_and(|value| value == "true");
+        let include = params
+            .get("include_streams")
+            .is_some_and(|value| value == "true");
         let edits = edits(channels::mutation_value(request).await?)?;
         let ids: Vec<i64> = edits.iter().map(|edit| edit.id).collect();
         let result = write(&auth, &edits, &ids, include, &base, owner).await?;
-        Ok((
-            [(header::ALLOW, "PATCH, OPTIONS"), (header::VARY, "Accept, origin")],
-            Json(json!({"message":format!("Successfully updated {} channels", result.len()),"channels":result})),
-        ).into_response())
+        Ok(Json(json!({
+            "message": format!("Successfully updated {} channels", result.len()),
+            "channels": result
+        }))
+        .into_response())
     })
     .await
-    .map_err(|_| StoreError::UnhandledRestFault)?
+    .map_err(|_| StoreError::UnhandledRestFault)?;
+    match result {
+        Ok(response) => Ok(batch_headers(response)),
+        Err(error) => batch_rejection(error),
+    }
 }
 
 #[cfg(test)]
@@ -937,6 +995,97 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[test]
+    fn bulk_names_use_channel_serializer_rules_and_defer_row_errors() {
+        let rows = edits(json!([
+            {"id": 99999, "name": null},
+            {"id": 21, "name": "first name"},
+            {"id": 14},
+            {"id": 21, "name": "  Final name  "},
+            {"id": 19, "name": " "},
+            {"id": 23, "name": "a".repeat(513)}
+        ]))
+        .unwrap();
+        assert_eq!(
+            rows.iter().map(|edit| edit.id).collect::<Vec<_>>(),
+            [99999, 21, 14, 19, 23]
+        );
+        assert_eq!(
+            rows[0].name_error,
+            Some(json!(["This field may not be null."]))
+        );
+        assert_eq!(rows[1].name.as_deref(), Some("Final name"));
+        assert_eq!(rows[1].name_error, None);
+        assert_eq!(rows[2].name, None);
+        assert_eq!(rows[2].name_error, None);
+        assert_eq!(
+            rows[3].name_error,
+            Some(json!(["This field may not be blank."]))
+        );
+        assert_eq!(
+            rows[4].name_error,
+            Some(json!([
+                "Ensure this field has no more than 512 characters."
+            ]))
+        );
+    }
+
+    #[tokio::test]
+    async fn canonical_rejections_keep_stock_validation_bytes_and_method_metadata() {
+        use axum::{body::to_bytes, http::StatusCode};
+
+        let mixed = batch_validation_error(
+            vec![json!({"channel_id": 99999, "error": "Channel not found"})],
+            2,
+        );
+        for (error, status, body, challenge) in [
+            (
+                mixed,
+                StatusCode::BAD_REQUEST,
+                r#"{"errors":[{"channel_id":99999,"error":"Channel not found"}],"updated_count":1}"#,
+                None,
+            ),
+            (
+                StoreError::Unauthorized("Authentication credentials were not provided."),
+                StatusCode::UNAUTHORIZED,
+                r#"{"detail":"Authentication credentials were not provided."}"#,
+                Some(r#"Bearer realm="api""#),
+            ),
+            (
+                StoreError::PermissionDenied,
+                StatusCode::FORBIDDEN,
+                r#"{"detail":"You do not have permission to perform this action."}"#,
+                None,
+            ),
+        ] {
+            let response = batch_rejection(error).unwrap();
+            assert_eq!(response.status(), status);
+            assert_eq!(response.headers()[header::ALLOW], "PATCH, OPTIONS");
+            assert_eq!(response.headers()[header::VARY], "Accept, origin");
+            assert_eq!(
+                response
+                    .headers()
+                    .get(header::WWW_AUTHENTICATE)
+                    .map(|v| v.to_str().unwrap()),
+                challenge
+            );
+            let raw = to_bytes(response.into_body(), 1024).await.unwrap();
+            assert_eq!(raw.as_ref(), body.as_bytes());
+        }
+        assert!(matches!(
+            batch_rejection(StoreError::InvalidInput(json!({"errors": ["required"]}))),
+            Err(StoreError::InvalidInput(_))
+        ));
+        assert!(matches!(
+            batch_rejection(StoreError::Unauthorized("Invalid authentication header")),
+            Err(StoreError::Unauthorized("Invalid authentication header"))
+        ));
+        assert!(matches!(
+            batch_rejection(unsupported()),
+            Err(StoreError::Unsupported(_))
+        ));
     }
 
     #[test]
