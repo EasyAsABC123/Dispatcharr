@@ -257,9 +257,37 @@ pub struct SelectedCoreSchedules {
     backup: Arc<crate::normal_backup::Application>,
     plugin_refresh: bool,
     saved_stats: bool,
+    saved_xc: Option<crate::normal_xc_live::Worker>,
 }
 
 impl SelectedCoreSchedules {
+    pub fn with_saved_xc(
+        mut self,
+        scanner: &crate::normal_scanner::Prepared,
+    ) -> Result<Self, Error> {
+        let receiver = self.receiver.upgrade().ok_or(Error::Closed)?;
+        let (single, vod) = scanner.saved_xc_handlers();
+        if !saved_xc_receivers_match(&receiver.families, single, vod) {
+            return Err(Error::Configuration);
+        }
+        self.saved_xc = Some(scanner.saved_xc_worker());
+        Ok(self)
+    }
+
+    pub(super) fn owns_saved_xc(&self) -> bool {
+        self.saved_xc.is_some()
+    }
+
+    pub(super) async fn admits_saved_xc(
+        &self,
+        account: i64,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<bool, dispatcharr_store::StoreError> {
+        match self.saved_xc.as_ref() {
+            Some(worker) => worker.admits_saved_root(account, caller).await,
+            None => Ok(false),
+        }
+    }
     pub(super) fn jobs(&self) -> crate::transport::Jobs {
         self.backup.scheduled_jobs()
     }
@@ -319,6 +347,23 @@ fn selected_schedules_ready(
     dvr: &State,
 ) -> bool {
     !stopping && backup_open && celery.ready() && dvr.ready()
+}
+
+fn saved_xc_receivers_match(
+    families: &BTreeMap<Family, Arc<OwnedFamily>>,
+    single: &Arc<dyn Handler>,
+    vod: &Arc<dyn Handler>,
+) -> bool {
+    [(Family::M3uSingle, single), (Family::VodIngestion, vod)]
+        .into_iter()
+        .all(|(family, expected)| {
+            families.get(&family).is_some_and(|entry| {
+                Arc::ptr_eq(&entry.inner, expected) && entry.inner.supports_selected_head()
+            })
+        })
+        && families
+            .get(&Family::XcAccountProfiles)
+            .is_some_and(|entry| entry.inner.supports_selected_head())
 }
 
 fn selected_schedules_match(
@@ -766,6 +811,7 @@ impl Application {
             backup: backup.clone(),
             plugin_refresh: self.inner.families.contains_key(&Family::PluginRefresh),
             saved_stats: true,
+            saved_xc: None,
         })
     }
 
@@ -1552,6 +1598,20 @@ mod tests {
             assert!(!selected_schedules_match(&families, &actual));
             families.insert(family, removed);
         }
+        assert!(!saved_xc_receivers_match(&families, &actual, &actual));
+        for family in [
+            Family::M3uSingle,
+            Family::VodIngestion,
+            Family::XcAccountProfiles,
+        ] {
+            families.insert(family, entry(actual.clone()));
+        }
+        assert!(saved_xc_receivers_match(&families, &actual, &actual));
+        let other = handler();
+        assert!(!saved_xc_receivers_match(&families, &actual, &other));
+        assert!(!saved_xc_receivers_match(&families, &other, &actual));
+        families.remove(&Family::XcAccountProfiles);
+        assert!(!saved_xc_receivers_match(&families, &actual, &actual));
     }
 
     #[test]

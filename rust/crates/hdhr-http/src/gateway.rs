@@ -334,6 +334,14 @@ impl HdhrGateway {
             set_lineup_status_auth_headers(response.headers_mut(), set_cookie);
             return Ok(response);
         }
+        if method == Method::OPTIONS && request.uri().path() == LINEUP_STATUS_PATH {
+            return self.retained(
+                StatusCode::OK,
+                Some(LINEUP_STATUS_OPTIONS.as_bytes().to_vec()),
+                memory,
+                false,
+            );
+        }
         let mut response = if method == Method::OPTIONS {
             Json(json!({"name":match endpoint{Endpoint::Discover{..}=>"Discover Api",Endpoint::Lineup{..}=>"Lineup Api",Endpoint::Status=>"Lineup Status Api",Endpoint::Xml=>"Hdhr Device Xml Api",_=>unreachable!()},"description":match endpoint{Endpoint::Discover{..}=>"Returns device discovery information",Endpoint::Lineup{..}=>"Returns available channel lineup",Endpoint::Status=>"Returns the current status of the HDHR lineup",Endpoint::Xml=>"Returns HDHomeRun device configuration in XML",_=>unreachable!()},"renders":["application/json","text/html"],"parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]})).into_response()
         } else if method != Method::GET && method != Method::HEAD {
@@ -380,16 +388,24 @@ impl HdhrGateway {
         Ok(response)
     }
 }
+const LINEUP_STATUS_PATH: &str = "/hdhr/lineup_status.json";
+const LINEUP_STATUS_OPTIONS: &str = concat!(
+    r#"{"name":"Lineup Status Api","description":"Returns the current status of the HDHR lineup","#,
+    r#""renders":["application/json","text/html"],"#,
+    r#""parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]}"#,
+);
+
 fn forced_browser_format(method: &Method, path: &str, format: Option<&str>) -> bool {
     format == Some("api")
-        && method == Method::GET
-        && matches!(
-            path,
-            "/hdhr/discover.json"
-                | "/hdhr/lineup.json"
-                | "/hdhr/lineup_status.json"
-                | "/hdhr/device.xml"
-        )
+        && ((method == Method::HEAD && path == LINEUP_STATUS_PATH)
+            || (method == Method::GET
+                && matches!(
+                    path,
+                    "/hdhr/discover.json"
+                        | "/hdhr/lineup.json"
+                        | LINEUP_STATUS_PATH
+                        | "/hdhr/device.xml"
+                )))
 }
 
 const BROWSABLE_AUTH_VARY: HeaderValue = HeaderValue::from_static("Accept, origin, Cookie");
@@ -405,7 +421,7 @@ fn lineup_status_auth_shell(
     format: Option<&str>,
     headers: &HeaderMap,
 ) -> Option<&'static str> {
-    if *method != Method::GET || uri.path() != "/hdhr/lineup_status.json" {
+    if *method != Method::GET || uri.path() != LINEUP_STATUS_PATH {
         return None;
     }
     if forced_browser_format(method, uri.path(), format) {
@@ -927,6 +943,53 @@ mod tests {
                 None
             );
         }
+    }
+
+    #[test]
+    fn lineup_status_head_accepts_the_forced_browser_format() {
+        let route = endpoint(LINEUP_STATUS_PATH).unwrap();
+        assert_eq!(
+            negotiation_status(
+                &Method::HEAD,
+                LINEUP_STATUS_PATH,
+                &route,
+                Some("api"),
+                Some(ORDINARY_BROWSER_ACCEPT),
+            ),
+            None
+        );
+        assert_eq!(
+            negotiation_status(
+                &Method::HEAD,
+                LINEUP_STATUS_PATH,
+                &route,
+                Some("api"),
+                Some("application/json"),
+            ),
+            Some(StatusCode::NOT_ACCEPTABLE)
+        );
+    }
+
+    #[test]
+    fn lineup_status_options_preserves_the_source_wire_order() {
+        let fields: Vec<_> = LINEUP_STATUS_OPTIONS
+            .match_indices(r#"":"#)
+            .map(|(offset, _)| {
+                let prefix = &LINEUP_STATUS_OPTIONS[..offset];
+                prefix.rsplit('"').next().unwrap()
+            })
+            .collect();
+        assert_eq!(fields, ["name", "description", "renders", "parses"]);
+        assert_eq!(LINEUP_STATUS_OPTIONS.len(), 221);
+        assert_eq!(
+            serde_json::from_str::<serde_json::Value>(LINEUP_STATUS_OPTIONS).unwrap(),
+            serde_json::json!({
+                "name": "Lineup Status Api",
+                "description": "Returns the current status of the HDHR lineup",
+                "renders": ["application/json", "text/html"],
+                "parses": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"]
+            })
+        );
     }
 
     #[test]

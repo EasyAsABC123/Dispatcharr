@@ -17,6 +17,8 @@ pub struct Prepared {
     registry: Registry,
     xc: crate::normal_xc_live::Worker,
     _inline_xc_groups: Arc<dyn dispatcharr_store::xc_create_groups::InlineGroups>,
+    selected_m3u: Arc<dyn Handler>,
+    selected_vod: Arc<dyn Handler>,
     remote: crate::normal_m3u_remote::Worker,
     auto: Option<crate::normal_auto_sync::Prepared>,
 }
@@ -181,8 +183,12 @@ impl Prepared {
             m3u_roots.cache,
             recording,
         );
+        let selected_m3u = Arc::new(M3u(m3u.clone(), xc.clone(), remote.clone()));
+        let selected_vod = xc.vod_handler();
         Ok(Self {
             _inline_xc_groups: inline_xc_groups,
+            selected_m3u,
+            selected_vod,
             auto,
             remote,
             xc,
@@ -215,19 +221,24 @@ impl Prepared {
         self.registry.clone()
     }
     pub fn entries(&self) -> Vec<(Family, Arc<dyn Handler>)> {
-        let m3u: Arc<dyn Handler> =
-            Arc::new(M3u(self.m3u.clone(), self.xc.clone(), self.remote.clone()));
         let mut entries: Vec<(Family, Arc<dyn Handler>)> = vec![
             (Family::Scanner, Arc::new(Scanner(self.scanner.clone()))),
-            (Family::M3uGroups, m3u.clone()),
-            (Family::M3uSingle, m3u),
+            (Family::M3uGroups, self.selected_m3u.clone()),
+            (Family::M3uSingle, self.selected_m3u.clone()),
             (Family::M3uAll, self.xc.all_handler(self.service.clone())),
-            (Family::VodIngestion, self.xc.vod_handler()),
+            (Family::VodIngestion, self.selected_vod.clone()),
         ];
         if let Some(auto) = &self.auto {
             entries.push(auto.entry())
         }
         entries
+    }
+    pub(crate) fn saved_xc_handlers(&self) -> (&Arc<dyn Handler>, &Arc<dyn Handler>) {
+        (&self.selected_m3u, &self.selected_vod)
+    }
+
+    pub(crate) fn saved_xc_worker(&self) -> crate::normal_xc_live::Worker {
+        self.xc.clone()
     }
     /// All queue lanes must stop first. Shared Jobs is closed only by Main after
     /// every other family has physically drained; this assembly never closes it.

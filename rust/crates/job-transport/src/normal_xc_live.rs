@@ -355,6 +355,19 @@ impl dispatcharr_store::xc_create_groups::AdmittedInlineGroups for InlineAdmissi
         })
     }
 }
+impl Inner {
+    async fn canonical_root_cache_absent(&self, account: i64, owner: Owner) -> bool {
+        let path = self.cache_root.join(format!("{account}.json"));
+        tokio::task::spawn_blocking(move || {
+            let _owner = owner;
+            std::fs::symlink_metadata(path)
+                .is_err_and(|error| error.kind() == std::io::ErrorKind::NotFound)
+        })
+        .await
+        .is_ok_and(|absent| absent)
+    }
+}
+
 impl Worker {
     pub(crate) fn bind_sd(
         &self,
@@ -408,6 +421,29 @@ impl Worker {
     }
     pub(crate) fn begin_drain(&self, budget: Duration) {
         self.inner.flows.begin_drain(budget);
+    }
+    pub(crate) async fn admits_saved_root(
+        &self,
+        account: i64,
+        owner: Owner,
+    ) -> Result<bool, StoreError> {
+        if self.inner.closed.load(Ordering::Acquire)
+            || !self
+                .inner
+                .canonical_root_cache_absent(account, owner.clone())
+                .await
+        {
+            return Ok(false);
+        }
+        dispatcharr_store::xc_live_tasks::admit_scheduled_xc(
+            self.inner.store.clone(),
+            self.inner.auth.clone(),
+            account,
+            owner,
+            self.inner.events.clone(),
+            self.inner.auto_jobs.is_some(),
+        )
+        .await
     }
     pub(crate) async fn shutdown(&self, t: Duration) -> bool {
         self.stop();
@@ -543,20 +579,7 @@ impl Worker {
                     Err(StoreError::Unsupported(_)) => return Err(D::UnsupportedDomain),
                     Err(_) => return Err(D::Operational("XC live SQL admission".into())),
                 };
-                let path = inner
-                    .cache_root
-                    .join(format!("{}.json", candidate.message.account));
-                let retained = owner.clone();
-                let cache = tokio::task::spawn_blocking(move || {
-                    let _owner = retained;
-                    match std::fs::symlink_metadata(path) {
-                        Ok(_) => Ok(true),
-                        Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(false),
-                        Err(_) => Err(()),
-                    }
-                })
-                .await;
-                if !matches!(cache, Ok(Ok(false))) {
+                if !inner.canonical_root_cache_absent(candidate.message.account, owner.clone()).await {
                     session
                         .close()
                         .await

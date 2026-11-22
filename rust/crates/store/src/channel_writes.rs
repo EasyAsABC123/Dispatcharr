@@ -353,6 +353,7 @@ fn manual_override_error() -> StoreError {
 enum GuideTarget {
     CacheOnly,
     Programme(i64),
+    XmltvProgramme(i64),
 }
 fn guide_unsupported() -> StoreError {
     StoreError::Unsupported("Channel guide coupling outside Source25 positive domain")
@@ -401,7 +402,11 @@ async fn guide_target(
             if !channel_guide_publisher_ready(auth, kind.as_deref()) {
                 return Err(guide_unsupported());
             }
-            Ok(GuideTarget::Programme(epg))
+            Ok(if kind.as_deref() == Some("xmltv") {
+                GuideTarget::XmltvProgramme(epg)
+            } else {
+                GuideTarget::Programme(epg)
+            })
         }
         _ => Err(guide_unsupported()),
     }
@@ -422,7 +427,7 @@ async fn guide_after_save(
     // Source catches cache invalidation errors, then still attempts publication.
     // Physical command ownership remains retained even after a logical error.
     let _ = cache.command::<i64>(command).await;
-    if let GuideTarget::Programme(epg) = target {
+    if let GuideTarget::Programme(epg) | GuideTarget::XmltvProgramme(epg) = target {
         crate::core_settings_special_broker::publish_tvg_programmes(auth, epg).await?;
     }
     Ok(())
@@ -709,7 +714,7 @@ async fn create_rows(
     let created_guide = if let Some(epg) = data["epg_data_id"].as_i64() {
         let target = guide_target(auth, tx, Some(epg), stock_manual_guide).await?;
         if stock_manual_guide {
-            if !matches!(target, GuideTarget::CacheOnly) {
+            if matches!(target, GuideTarget::Programme(_)) {
                 return Err(guide_unsupported());
             }
             let triggers: bool = sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgenabled <> 'D' AND tgrelid IN ('dispatcharr_channels_channelstream'::regclass,'dispatcharr_channels_channelprofilemembership'::regclass))")
@@ -803,8 +808,8 @@ async fn create_owned(
             .as_ref()
             .is_some_and(|v| v.get("epg_data_id").is_some_and(|v| !v.is_null()));
     // The React new-channel form always sends its stream list and may include
-    // the current profile. The dummy-guide signal invalidates the cache without
-    // publishing a job, before the ordinary stream and membership inserts.
+    // the current profile. Guide save effects precede the ordinary stream
+    // and membership inserts.
     let stock_manual_guide = data["auto_created"] == false
         && data["auto_created_by_id"].is_null()
         && data["epg_data_id"].is_i64()
