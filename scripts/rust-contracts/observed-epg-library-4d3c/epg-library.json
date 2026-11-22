@@ -1,0 +1,410 @@
+{
+  "actual": {
+    "exact_retired_roles": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "physical_exit": 0,
+    "proof_exit": 0,
+    "proof_sha256": "e08a7f4659abbdd0ef2829e02f6d561fa1df0597b8f4d133b54dbc9b8f77018b",
+    "receipt_sha256": "bec73a400151081228a4053165292cc038ace5455912fbf969f29cf3398d3dce",
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    },
+    "unchanged_library_SQL": {
+      "native": true,
+      "original": true
+    }
+  },
+  "candidate": {
+    "image_id": "sha256:a370f3a6cd46bdca90270a633a910464f4d9b185fb9e199366bdb78438feb55d",
+    "manifest_sha256": "034b853a1958775d8f780f7b3a04d5bfde17d97b43a3f96f23961515831a24d4",
+    "package_seal_sha256": "edd3094c92ac78a8e9cff26296fa238105739798092ce540c8515933de42580f",
+    "review_sha256": "1b14ce31a1c304aaa86735b3f9f9913dce04e1677e0082df279e2367d0712c27",
+    "revision": "4d3cfbb15e8390e1cd205830b07d4eb76fcb258e"
+  },
+  "cohort": "canonical EPG library positive reads",
+  "framework_capture_sha256": "09969484794184a2b8754b27935e75e7c60af3529bd569dee5cb941a99aefedc",
+  "full_operations_verified": 0,
+  "observations": [
+    {
+      "accept": "application/json",
+      "contract_id": "route-e8763dfe777286fc6b57:GET",
+      "historical_source_index": 0,
+      "historical_source_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7",
+      "method": "GET",
+      "query": "",
+      "resolver_ordinal": 149,
+      "response": {
+        "body_bytes": 348,
+        "body_sha256": "9b53b047888e50f7005ad9a363fe52b7119f0312b1657f4fe5bf1922f29c92ba",
+        "entity_count": 1,
+        "headers": {
+          "allow": [
+            "GET, POST, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "348"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "owned_entity_fields": [
+          "created_at",
+          "cron_expression",
+          "custom_properties",
+          "epg_data_count",
+          "file_path",
+          "has_channels",
+          "id",
+          "is_active",
+          "last_message",
+          "name",
+          "priority",
+          "refresh_interval",
+          "source_type",
+          "status",
+          "updated_at",
+          "url",
+          "username"
+        ],
+        "status": 200
+      },
+      "role": "admin",
+      "route_template": "/api/epg/sources/",
+      "source_handler": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "accept": "application/json",
+      "contract_id": "route-e8763dfe777286fc6b57:GET",
+      "historical_source_index": 16,
+      "historical_source_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7",
+      "method": "GET",
+      "query": "",
+      "resolver_ordinal": 149,
+      "response": {
+        "body_bytes": 348,
+        "body_sha256": "9b53b047888e50f7005ad9a363fe52b7119f0312b1657f4fe5bf1922f29c92ba",
+        "entity_count": 1,
+        "headers": {
+          "allow": [
+            "GET, POST, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "348"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "owned_entity_fields": [
+          "created_at",
+          "cron_expression",
+          "custom_properties",
+          "epg_data_count",
+          "file_path",
+          "has_channels",
+          "id",
+          "is_active",
+          "last_message",
+          "name",
+          "priority",
+          "refresh_interval",
+          "source_type",
+          "status",
+          "updated_at",
+          "url",
+          "username"
+        ],
+        "status": 200
+      },
+      "role": "standard",
+      "route_template": "/api/epg/sources/",
+      "source_handler": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "accept": "application/json",
+      "contract_id": "route-2bb81f30c5e580e289f8:GET",
+      "historical_source_index": 8,
+      "historical_source_projection_sha256": "0cd58b0d52cb36df71f337d2928bf0dd2e1437e328020ef16ade7281e7e1ffe4",
+      "method": "GET",
+      "query": "",
+      "resolver_ordinal": 153,
+      "response": {
+        "body_bytes": 346,
+        "body_sha256": "355178a1310d67949d21348648a1506c486246232b84d1debd14f24030ebfa76",
+        "entity_count": 1,
+        "headers": {
+          "allow": [
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "346"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "owned_entity_fields": [
+          "created_at",
+          "cron_expression",
+          "custom_properties",
+          "epg_data_count",
+          "file_path",
+          "has_channels",
+          "id",
+          "is_active",
+          "last_message",
+          "name",
+          "priority",
+          "refresh_interval",
+          "source_type",
+          "status",
+          "updated_at",
+          "url",
+          "username"
+        ],
+        "status": 200
+      },
+      "role": "admin",
+      "route_template": "/api/epg/sources/{id}/",
+      "source_handler": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "accept": "application/json",
+      "contract_id": "route-2bb81f30c5e580e289f8:GET",
+      "historical_source_index": 17,
+      "historical_source_projection_sha256": "0cd58b0d52cb36df71f337d2928bf0dd2e1437e328020ef16ade7281e7e1ffe4",
+      "method": "GET",
+      "query": "",
+      "resolver_ordinal": 153,
+      "response": {
+        "body_bytes": 346,
+        "body_sha256": "355178a1310d67949d21348648a1506c486246232b84d1debd14f24030ebfa76",
+        "entity_count": 1,
+        "headers": {
+          "allow": [
+            "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "346"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "owned_entity_fields": [
+          "created_at",
+          "cron_expression",
+          "custom_properties",
+          "epg_data_count",
+          "file_path",
+          "has_channels",
+          "id",
+          "is_active",
+          "last_message",
+          "name",
+          "priority",
+          "refresh_interval",
+          "source_type",
+          "status",
+          "updated_at",
+          "url",
+          "username"
+        ],
+        "status": 200
+      },
+      "role": "standard",
+      "route_template": "/api/epg/sources/{id}/",
+      "source_handler": "apps.epg.api_views.EPGSourceViewSet"
+    },
+    {
+      "accept": "application/json",
+      "contract_id": "route-dfd94c84789ce0429d99:GET",
+      "historical_source_index": 31,
+      "historical_source_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b",
+      "method": "GET",
+      "query": "",
+      "resolver_ordinal": 167,
+      "response": {
+        "body_bytes": 121,
+        "body_sha256": "b34c266ad2ae08a35b729e65016b30a3e7acb5aad0ab466cd10bf7a91b678606",
+        "entity_count": 1,
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "121"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "owned_entity_fields": [
+          "epg_source",
+          "icon_url",
+          "id",
+          "name",
+          "tvg_id"
+        ],
+        "status": 200
+      },
+      "role": "admin",
+      "route_template": "/api/epg/epgdata/",
+      "source_handler": "apps.epg.api_views.EPGDataViewSet"
+    },
+    {
+      "accept": "application/json",
+      "contract_id": "route-dfd94c84789ce0429d99:GET",
+      "historical_source_index": 51,
+      "historical_source_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b",
+      "method": "GET",
+      "query": "",
+      "resolver_ordinal": 167,
+      "response": {
+        "body_bytes": 121,
+        "body_sha256": "b34c266ad2ae08a35b729e65016b30a3e7acb5aad0ab466cd10bf7a91b678606",
+        "entity_count": 1,
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "121"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "owned_entity_fields": [
+          "epg_source",
+          "icon_url",
+          "id",
+          "name",
+          "tvg_id"
+        ],
+        "status": 200
+      },
+      "role": "standard",
+      "route_template": "/api/epg/epgdata/",
+      "source_handler": "apps.epg.api_views.EPGDataViewSet"
+    },
+    {
+      "accept": "application/json",
+      "contract_id": "route-d64394eade0a18a43d8b:GET",
+      "historical_source_index": 39,
+      "historical_source_projection_sha256": "1e822d7d4c9dcc2d2c73f3b229f514d4d2be971f4f4ebacb1b6c03933ca80ee5",
+      "method": "GET",
+      "query": "",
+      "resolver_ordinal": 169,
+      "response": {
+        "body_bytes": 119,
+        "body_sha256": "a5d4e028c33ba03f5719bfb84facb1b705e5959bca862e5e2fd24aeeee235552",
+        "entity_count": 1,
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "119"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "owned_entity_fields": [
+          "epg_source",
+          "icon_url",
+          "id",
+          "name",
+          "tvg_id"
+        ],
+        "status": 200
+      },
+      "role": "admin",
+      "route_template": "/api/epg/epgdata/{id}/",
+      "source_handler": "apps.epg.api_views.EPGDataViewSet"
+    },
+    {
+      "accept": "application/json",
+      "contract_id": "route-d64394eade0a18a43d8b:GET",
+      "historical_source_index": 52,
+      "historical_source_projection_sha256": "1e822d7d4c9dcc2d2c73f3b229f514d4d2be971f4f4ebacb1b6c03933ca80ee5",
+      "method": "GET",
+      "query": "",
+      "resolver_ordinal": 169,
+      "response": {
+        "body_bytes": 119,
+        "body_sha256": "a5d4e028c33ba03f5719bfb84facb1b705e5959bca862e5e2fd24aeeee235552",
+        "entity_count": 1,
+        "headers": {
+          "allow": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "content-length": [
+            "119"
+          ],
+          "content-type": [
+            "application/json"
+          ],
+          "vary": [
+            "Accept, origin"
+          ]
+        },
+        "owned_entity_fields": [
+          "epg_source",
+          "icon_url",
+          "id",
+          "name",
+          "tvg_id"
+        ],
+        "status": 200
+      },
+      "role": "standard",
+      "route_template": "/api/epg/epgdata/{id}/",
+      "source_handler": "apps.epg.api_views.EPGDataViewSet"
+    }
+  ],
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_verified": false,
+  "publication": {
+    "exact_application_inputs": 2159,
+    "protected_inputs": 497,
+    "remote_and_receiving_commit": "1bffaed4064d02ab7ae75316a8471f8a5a109a35",
+    "verification_digests": {
+      "archive": "a4eb4cacc5da9d5c9b1eb7ee4ea67e096c3123644ca18a0daa8dcf17d1e587f5",
+      "receiving_checkout": "32b039986e2157fecacb74f072d2e4f6618e94303c20b43298bd816b509344e2",
+      "remote_ref": "8f01a502cc8797ac5c171772116c34aaedfbc0c85381d125dfe82eb2bde69fca",
+      "verification": "86ce47bcf2f31262148f56b531e275efe1af22e82799a7096abe8abeef2870c4"
+    }
+  },
+  "register_sha256": "c84e049dc2aa05df8b35e6fac1b09799790fe89c8ad16115d278feaaaff80998",
+  "schema": 1
+}

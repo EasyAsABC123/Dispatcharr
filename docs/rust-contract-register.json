@@ -11,6 +11,8 @@
     "scripts/rust-contracts/datasets/image44-scoped-cases.json": "c85b86ae9af15f06c005cc63cd634fa87aa025663a291a1d2dde48b8a9797087",
     "scripts/rust-contracts/observed-http-9cf6407/programme.json": "0736bbee00d57377ce42952e1fb7f042535634d7336500ec2c22bbea6846d0bc",
     "scripts/rust-contracts/observed-http-9cf6407/verify.py": "da8983349edaf5f24bb071696803531e02801658c4e04194cddbd6e2223f4c87",
+    "scripts/rust-contracts/observed-epg-library-4d3c/epg-library.json": "c77847527f783e55bc179d04c927d0f87c0bf83b8744b79f5deec71791f65b91",
+    "scripts/rust-contracts/observed-epg-library-4d3c/verify.py": "01c0d10e844a96df80e5a610c5e0e9087a6861bab01034c679296d6f72a6eb51",
     "scripts/rust-integration/m0-recording-hls-canonical-precedence.json": "daddfbf65a5bb5fc81e4ab82e243db7a09a0e6f21b07c325995c825b52f6823d",
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json": "57f54204594c9f71c4fd12633818b145d96f3965e45aa2e5e8a982a082a90b62",
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/report.json": "481bde98368d9ee2d0b996a1f2dcec0a288a171f1cf25262bedccc4cfa13ec0b",
@@ -1292,8 +1294,8 @@
     "static_non_HTTP_candidates": 250,
     "fully_verified_route_operations": 0,
     "scoped_evidence_requiring_case_mapping": 16,
-    "operations_with_partial_case_bindings": 13,
-    "mapped_packaged_case_observations": 419
+    "operations_with_partial_case_bindings": 17,
+    "mapped_packaged_case_observations": 427
   },
   "observations_for_methods_not_declared_in_discovery": [
     {
@@ -88407,6 +88409,131 @@
               "Source_TCP_verified": false,
               "complete_role_matrix": false
             }
+          },
+          "case_bindings": {
+            "contract_id": "route-e8763dfe777286fc6b57:GET",
+            "method": "GET",
+            "runtime": {
+              "image_id": "sha256:a370f3a6cd46bdca90270a633a910464f4d9b185fb9e199366bdb78438feb55d",
+              "manifest_sha256": "034b853a1958775d8f780f7b3a04d5bfde17d97b43a3f96f23961515831a24d4",
+              "package_seal_sha256": "edd3094c92ac78a8e9cff26296fa238105739798092ce540c8515933de42580f",
+              "review_sha256": "1b14ce31a1c304aaa86735b3f9f9913dce04e1677e0082df279e2367d0712c27",
+              "revision": "4d3cfbb15e8390e1cd205830b07d4eb76fcb258e"
+            },
+            "packaged_report": "scripts/rust-contracts/observed-epg-library-4d3c/epg-library.json",
+            "packaged_report_sha256": "c77847527f783e55bc179d04c927d0f87c0bf83b8744b79f5deec71791f65b91",
+            "packaged_report_schema": "paired_epg_library_canonical_get_v1",
+            "fully_verified": false,
+            "observed_roles": [
+              "admin",
+              "standard"
+            ],
+            "cases": [
+              {
+                "accept": "application/json",
+                "contract_id": "route-e8763dfe777286fc6b57:GET",
+                "historical_source_index": 0,
+                "historical_source_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7",
+                "method": "GET",
+                "query": "",
+                "resolver_ordinal": 149,
+                "response": {
+                  "body_bytes": 348,
+                  "body_sha256": "9b53b047888e50f7005ad9a363fe52b7119f0312b1657f4fe5bf1922f29c92ba",
+                  "entity_count": 1,
+                  "headers": {
+                    "allow": [
+                      "GET, POST, HEAD, OPTIONS"
+                    ],
+                    "content-length": [
+                      "348"
+                    ],
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "vary": [
+                      "Accept, origin"
+                    ]
+                  },
+                  "owned_entity_fields": [
+                    "created_at",
+                    "cron_expression",
+                    "custom_properties",
+                    "epg_data_count",
+                    "file_path",
+                    "has_channels",
+                    "id",
+                    "is_active",
+                    "last_message",
+                    "name",
+                    "priority",
+                    "refresh_interval",
+                    "source_type",
+                    "status",
+                    "updated_at",
+                    "url",
+                    "username"
+                  ],
+                  "status": 200
+                },
+                "role": "admin",
+                "route_template": "/api/epg/sources/",
+                "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+                "evidence_pointer": "/observations/0"
+              },
+              {
+                "accept": "application/json",
+                "contract_id": "route-e8763dfe777286fc6b57:GET",
+                "historical_source_index": 16,
+                "historical_source_projection_sha256": "79345695829112b21e706dc8b42ecbf298265e0835599699689f428ee51529f7",
+                "method": "GET",
+                "query": "",
+                "resolver_ordinal": 149,
+                "response": {
+                  "body_bytes": 348,
+                  "body_sha256": "9b53b047888e50f7005ad9a363fe52b7119f0312b1657f4fe5bf1922f29c92ba",
+                  "entity_count": 1,
+                  "headers": {
+                    "allow": [
+                      "GET, POST, HEAD, OPTIONS"
+                    ],
+                    "content-length": [
+                      "348"
+                    ],
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "vary": [
+                      "Accept, origin"
+                    ]
+                  },
+                  "owned_entity_fields": [
+                    "created_at",
+                    "cron_expression",
+                    "custom_properties",
+                    "epg_data_count",
+                    "file_path",
+                    "has_channels",
+                    "id",
+                    "is_active",
+                    "last_message",
+                    "name",
+                    "priority",
+                    "refresh_interval",
+                    "source_type",
+                    "status",
+                    "updated_at",
+                    "url",
+                    "username"
+                  ],
+                  "status": 200
+                },
+                "role": "standard",
+                "route_template": "/api/epg/sources/",
+                "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+                "evidence_pointer": "/observations/1"
+              }
+            ]
           }
         },
         {
@@ -90086,6 +90213,131 @@
               "Source_TCP_verified": false,
               "complete_role_matrix": false
             }
+          },
+          "case_bindings": {
+            "contract_id": "route-2bb81f30c5e580e289f8:GET",
+            "method": "GET",
+            "runtime": {
+              "image_id": "sha256:a370f3a6cd46bdca90270a633a910464f4d9b185fb9e199366bdb78438feb55d",
+              "manifest_sha256": "034b853a1958775d8f780f7b3a04d5bfde17d97b43a3f96f23961515831a24d4",
+              "package_seal_sha256": "edd3094c92ac78a8e9cff26296fa238105739798092ce540c8515933de42580f",
+              "review_sha256": "1b14ce31a1c304aaa86735b3f9f9913dce04e1677e0082df279e2367d0712c27",
+              "revision": "4d3cfbb15e8390e1cd205830b07d4eb76fcb258e"
+            },
+            "packaged_report": "scripts/rust-contracts/observed-epg-library-4d3c/epg-library.json",
+            "packaged_report_sha256": "c77847527f783e55bc179d04c927d0f87c0bf83b8744b79f5deec71791f65b91",
+            "packaged_report_schema": "paired_epg_library_canonical_get_v1",
+            "fully_verified": false,
+            "observed_roles": [
+              "admin",
+              "standard"
+            ],
+            "cases": [
+              {
+                "accept": "application/json",
+                "contract_id": "route-2bb81f30c5e580e289f8:GET",
+                "historical_source_index": 8,
+                "historical_source_projection_sha256": "0cd58b0d52cb36df71f337d2928bf0dd2e1437e328020ef16ade7281e7e1ffe4",
+                "method": "GET",
+                "query": "",
+                "resolver_ordinal": 153,
+                "response": {
+                  "body_bytes": 346,
+                  "body_sha256": "355178a1310d67949d21348648a1506c486246232b84d1debd14f24030ebfa76",
+                  "entity_count": 1,
+                  "headers": {
+                    "allow": [
+                      "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+                    ],
+                    "content-length": [
+                      "346"
+                    ],
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "vary": [
+                      "Accept, origin"
+                    ]
+                  },
+                  "owned_entity_fields": [
+                    "created_at",
+                    "cron_expression",
+                    "custom_properties",
+                    "epg_data_count",
+                    "file_path",
+                    "has_channels",
+                    "id",
+                    "is_active",
+                    "last_message",
+                    "name",
+                    "priority",
+                    "refresh_interval",
+                    "source_type",
+                    "status",
+                    "updated_at",
+                    "url",
+                    "username"
+                  ],
+                  "status": 200
+                },
+                "role": "admin",
+                "route_template": "/api/epg/sources/{id}/",
+                "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+                "evidence_pointer": "/observations/2"
+              },
+              {
+                "accept": "application/json",
+                "contract_id": "route-2bb81f30c5e580e289f8:GET",
+                "historical_source_index": 17,
+                "historical_source_projection_sha256": "0cd58b0d52cb36df71f337d2928bf0dd2e1437e328020ef16ade7281e7e1ffe4",
+                "method": "GET",
+                "query": "",
+                "resolver_ordinal": 153,
+                "response": {
+                  "body_bytes": 346,
+                  "body_sha256": "355178a1310d67949d21348648a1506c486246232b84d1debd14f24030ebfa76",
+                  "entity_count": 1,
+                  "headers": {
+                    "allow": [
+                      "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+                    ],
+                    "content-length": [
+                      "346"
+                    ],
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "vary": [
+                      "Accept, origin"
+                    ]
+                  },
+                  "owned_entity_fields": [
+                    "created_at",
+                    "cron_expression",
+                    "custom_properties",
+                    "epg_data_count",
+                    "file_path",
+                    "has_channels",
+                    "id",
+                    "is_active",
+                    "last_message",
+                    "name",
+                    "priority",
+                    "refresh_interval",
+                    "source_type",
+                    "status",
+                    "updated_at",
+                    "url",
+                    "username"
+                  ],
+                  "status": 200
+                },
+                "role": "standard",
+                "route_template": "/api/epg/sources/{id}/",
+                "source_handler": "apps.epg.api_views.EPGSourceViewSet",
+                "evidence_pointer": "/observations/3"
+              }
+            ]
           }
         },
         {
@@ -99034,6 +99286,107 @@
               "Source_TCP_verified": false,
               "complete_role_matrix": false
             }
+          },
+          "case_bindings": {
+            "contract_id": "route-dfd94c84789ce0429d99:GET",
+            "method": "GET",
+            "runtime": {
+              "image_id": "sha256:a370f3a6cd46bdca90270a633a910464f4d9b185fb9e199366bdb78438feb55d",
+              "manifest_sha256": "034b853a1958775d8f780f7b3a04d5bfde17d97b43a3f96f23961515831a24d4",
+              "package_seal_sha256": "edd3094c92ac78a8e9cff26296fa238105739798092ce540c8515933de42580f",
+              "review_sha256": "1b14ce31a1c304aaa86735b3f9f9913dce04e1677e0082df279e2367d0712c27",
+              "revision": "4d3cfbb15e8390e1cd205830b07d4eb76fcb258e"
+            },
+            "packaged_report": "scripts/rust-contracts/observed-epg-library-4d3c/epg-library.json",
+            "packaged_report_sha256": "c77847527f783e55bc179d04c927d0f87c0bf83b8744b79f5deec71791f65b91",
+            "packaged_report_schema": "paired_epg_library_canonical_get_v1",
+            "fully_verified": false,
+            "observed_roles": [
+              "admin",
+              "standard"
+            ],
+            "cases": [
+              {
+                "accept": "application/json",
+                "contract_id": "route-dfd94c84789ce0429d99:GET",
+                "historical_source_index": 31,
+                "historical_source_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b",
+                "method": "GET",
+                "query": "",
+                "resolver_ordinal": 167,
+                "response": {
+                  "body_bytes": 121,
+                  "body_sha256": "b34c266ad2ae08a35b729e65016b30a3e7acb5aad0ab466cd10bf7a91b678606",
+                  "entity_count": 1,
+                  "headers": {
+                    "allow": [
+                      "GET, HEAD, OPTIONS"
+                    ],
+                    "content-length": [
+                      "121"
+                    ],
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "vary": [
+                      "Accept, origin"
+                    ]
+                  },
+                  "owned_entity_fields": [
+                    "epg_source",
+                    "icon_url",
+                    "id",
+                    "name",
+                    "tvg_id"
+                  ],
+                  "status": 200
+                },
+                "role": "admin",
+                "route_template": "/api/epg/epgdata/",
+                "source_handler": "apps.epg.api_views.EPGDataViewSet",
+                "evidence_pointer": "/observations/4"
+              },
+              {
+                "accept": "application/json",
+                "contract_id": "route-dfd94c84789ce0429d99:GET",
+                "historical_source_index": 51,
+                "historical_source_projection_sha256": "d5956204be747a9e1ba4aeddb4beeefb746ba12e84284b756978cf8a90679d6b",
+                "method": "GET",
+                "query": "",
+                "resolver_ordinal": 167,
+                "response": {
+                  "body_bytes": 121,
+                  "body_sha256": "b34c266ad2ae08a35b729e65016b30a3e7acb5aad0ab466cd10bf7a91b678606",
+                  "entity_count": 1,
+                  "headers": {
+                    "allow": [
+                      "GET, HEAD, OPTIONS"
+                    ],
+                    "content-length": [
+                      "121"
+                    ],
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "vary": [
+                      "Accept, origin"
+                    ]
+                  },
+                  "owned_entity_fields": [
+                    "epg_source",
+                    "icon_url",
+                    "id",
+                    "name",
+                    "tvg_id"
+                  ],
+                  "status": 200
+                },
+                "role": "standard",
+                "route_template": "/api/epg/epgdata/",
+                "source_handler": "apps.epg.api_views.EPGDataViewSet",
+                "evidence_pointer": "/observations/5"
+              }
+            ]
           }
         }
       ]
@@ -99631,6 +99984,107 @@
               "Source_TCP_verified": false,
               "complete_role_matrix": false
             }
+          },
+          "case_bindings": {
+            "contract_id": "route-d64394eade0a18a43d8b:GET",
+            "method": "GET",
+            "runtime": {
+              "image_id": "sha256:a370f3a6cd46bdca90270a633a910464f4d9b185fb9e199366bdb78438feb55d",
+              "manifest_sha256": "034b853a1958775d8f780f7b3a04d5bfde17d97b43a3f96f23961515831a24d4",
+              "package_seal_sha256": "edd3094c92ac78a8e9cff26296fa238105739798092ce540c8515933de42580f",
+              "review_sha256": "1b14ce31a1c304aaa86735b3f9f9913dce04e1677e0082df279e2367d0712c27",
+              "revision": "4d3cfbb15e8390e1cd205830b07d4eb76fcb258e"
+            },
+            "packaged_report": "scripts/rust-contracts/observed-epg-library-4d3c/epg-library.json",
+            "packaged_report_sha256": "c77847527f783e55bc179d04c927d0f87c0bf83b8744b79f5deec71791f65b91",
+            "packaged_report_schema": "paired_epg_library_canonical_get_v1",
+            "fully_verified": false,
+            "observed_roles": [
+              "admin",
+              "standard"
+            ],
+            "cases": [
+              {
+                "accept": "application/json",
+                "contract_id": "route-d64394eade0a18a43d8b:GET",
+                "historical_source_index": 39,
+                "historical_source_projection_sha256": "1e822d7d4c9dcc2d2c73f3b229f514d4d2be971f4f4ebacb1b6c03933ca80ee5",
+                "method": "GET",
+                "query": "",
+                "resolver_ordinal": 169,
+                "response": {
+                  "body_bytes": 119,
+                  "body_sha256": "a5d4e028c33ba03f5719bfb84facb1b705e5959bca862e5e2fd24aeeee235552",
+                  "entity_count": 1,
+                  "headers": {
+                    "allow": [
+                      "GET, HEAD, OPTIONS"
+                    ],
+                    "content-length": [
+                      "119"
+                    ],
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "vary": [
+                      "Accept, origin"
+                    ]
+                  },
+                  "owned_entity_fields": [
+                    "epg_source",
+                    "icon_url",
+                    "id",
+                    "name",
+                    "tvg_id"
+                  ],
+                  "status": 200
+                },
+                "role": "admin",
+                "route_template": "/api/epg/epgdata/{id}/",
+                "source_handler": "apps.epg.api_views.EPGDataViewSet",
+                "evidence_pointer": "/observations/6"
+              },
+              {
+                "accept": "application/json",
+                "contract_id": "route-d64394eade0a18a43d8b:GET",
+                "historical_source_index": 52,
+                "historical_source_projection_sha256": "1e822d7d4c9dcc2d2c73f3b229f514d4d2be971f4f4ebacb1b6c03933ca80ee5",
+                "method": "GET",
+                "query": "",
+                "resolver_ordinal": 169,
+                "response": {
+                  "body_bytes": 119,
+                  "body_sha256": "a5d4e028c33ba03f5719bfb84facb1b705e5959bca862e5e2fd24aeeee235552",
+                  "entity_count": 1,
+                  "headers": {
+                    "allow": [
+                      "GET, HEAD, OPTIONS"
+                    ],
+                    "content-length": [
+                      "119"
+                    ],
+                    "content-type": [
+                      "application/json"
+                    ],
+                    "vary": [
+                      "Accept, origin"
+                    ]
+                  },
+                  "owned_entity_fields": [
+                    "epg_source",
+                    "icon_url",
+                    "id",
+                    "name",
+                    "tvg_id"
+                  ],
+                  "status": 200
+                },
+                "role": "standard",
+                "route_template": "/api/epg/epgdata/{id}/",
+                "source_handler": "apps.epg.api_views.EPGDataViewSet",
+                "evidence_pointer": "/observations/7"
+              }
+            ]
           }
         }
       ]

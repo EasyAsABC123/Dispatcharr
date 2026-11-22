@@ -28,7 +28,9 @@ durability after retirement, and a ready peer with exact teardown.
 
 The [4d3cfbb EPG library pair](rust-m0-4d3cfbb-epg-library-get.md) matched eight
 successful JSON GETs per backend across four operations, including the Original
-headers and body digests, with unchanged guide SQL and exact cleanup.
+headers and body digests, with unchanged guide SQL and exact cleanup. The route
+register now records 17 partial operation bindings and 427 observations. The
+four added operations carry partial coverage for the eight measured cases.
 
 The [scoped Compose wave](rust-m5-m7-m8-scoped-compose.md) verified the manual
 channel edit on `5d9568f`, and realtime and ordinary plugin settings on `1124391`.

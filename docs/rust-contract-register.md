@@ -15,7 +15,7 @@ All application and algorithm credit remains with the original Dispatcharr autho
 | Non-HTTP candidate identities | 250 | Models, migrations, tasks, management commands and WebSocket candidates |
 | Typed executable Original non-HTTP assignments | 250 | Partial observations for 145 migrations, 50 Django class registrations, 31 task behaviors, 16 registration-only tasks, two command executions, three command registrations, one model test, one synthetic consumer and one WebSocket route. |
 | Related scoped-evidence links | 16 | Initial ordinary/category links requiring exact case mapping |
-| Operations with partial case bindings | 13 | 419 scoped packaged observations; remaining role/input coverage stays open |
+| Operations with partial case bindings | 17 | 427 scoped packaged observations; remaining role/input coverage stays open |
 | Fully audited register operation rows | 0 | Register-to-case mapping has not been completed; existing reports retain their actual passes |
 
 Each operation has a contract ID, source handler/action, proposed milestone owner, explicit role-matrix state, fixture/assertion placeholders, coverage state and result. Module-associated test filenames are candidates only. An OpenAPI security declaration describes authentication, not authorization. Format variants and duplicate resolver occurrences keep separate IDs.
