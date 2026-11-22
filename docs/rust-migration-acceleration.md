@@ -96,6 +96,22 @@ comparison continues to demonstrate one upstream, equivalent decoded work,
 The current release-wide resource gate remains open.
 [100-viewer measurement](rust-m2-100-viewer-measured.md)
 
+## Exercise generated fixture commands before reserving Docker
+
+Two first attempts stopped in the host-side SQL probe generator. The channel
+create never sent its HTTP request. The canonical scanner never armed its
+schedule. Both runs retired cleanly. Importing or compiling the outer adapter
+had passed in both cases because the bad format expression ran only when the
+fixture invoked the probe.
+
+The corrected passes invoked the actual assembled probe with an offline SQL
+stub. They compiled the emitted guest program, checked its exact operation and
+parameters, and then ran the physical comparison against the same application
+image. Apply this narrow check to generated database and guest commands before
+reserving an engine slot. Keep the first run's literal exit and cleanup when
+publishing the corrected result.
+[Channel create replay](rust-m0-m6-ad6babd-compose.md#guide-channel-creation) · [Canonical scanner replay](rust-m5-m6-9cf6407-focused-compose.md#m6-canonical-scan-files)
+
 ## Parallel ownership with a bounded integration queue
 
 Use four concurrent agents on this host: one integrator and three work owners.

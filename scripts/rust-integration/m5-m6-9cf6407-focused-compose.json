@@ -1,0 +1,182 @@
+{
+  "application_revision": "9cf640701dacea07ea5f394ce7b18a6fa7c8c088",
+  "channel_groups": {
+    "proof_sha256": "8dd8b9629b2edb30a0e645acdb55d409c8654389a1e0f4f417222e844ab25352",
+    "result": {
+      "Native_SQLite_parity_verified": false,
+      "Original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "actual_exit": 0,
+      "both_backend_SQL_boundaries_verified": true,
+      "both_backend_typed_group_shapes_match": true,
+      "build_manifest_sha256": "19d618bfe72657a0adfc65fd93094ad42cbaffbe8b609bdc68ba8eddfb7e17a1",
+      "candidate_image_id": "sha256:fd1a839e1fce4835039b7b079cd0929cd3c658261374cea2c7bbebf813fae3a9",
+      "candidate_revision": "9cf640701dacea07ea5f394ce7b18a6fa7c8c088",
+      "cases": {
+        "claim": 200,
+        "create": 201,
+        "delete": 204,
+        "deleted_read": 404,
+        "detail": 200,
+        "fresh_login": 200,
+        "list": 200,
+        "login": 200,
+        "patch": 200,
+        "put": 200,
+        "restart_read": 200,
+        "unclaim": 200
+      },
+      "credit": "Original Dispatcharr, Django, PostgreSQL and dependency contributors.",
+      "exact_owned_container_generations_retired": 5,
+      "fixture_receipt_sha256": "69733b8721083c86e91e86bb237ba4946d34f8036360c027128b79065d403794",
+      "graceful_native_main_generations": 2,
+      "graceful_stock_web_generations": 2,
+      "performance_verified": false,
+      "persisted_readback_after_each_restart": true,
+      "provider_demotion_or_bulk_cleanup_exercised": false,
+      "review_sha256": "9f36a67170b5c6f3d53ef603c2826474cc15c6590ae0a31711015cfed47e3e2e",
+      "unchanged_PG_process_generation_and_independent_groups": true,
+      "wire_Allow_differences": {},
+      "workload_seal_sha256": "2b089ddc05c3eb170392236f039f98bd77101c94fbe3bf0d63679a08af89c18e"
+    }
+  },
+  "earlier_stock_scanner_harness_exit": {
+    "exact_cleanup": true,
+    "failure": "The fixture could not format the probe and stopped before arming scan-files.",
+    "literal_exit": 1
+  },
+  "full_milestones_closed": [],
+  "image": "sha256:fd1a839e1fce4835039b7b079cd0929cd3c658261374cea2c7bbebf813fae3a9",
+  "manual_channel_edit": {
+    "proof_sha256": "21221bd314386d39f2e61b26348cd9193d6d540c667cc45a8aa192a17e794739",
+    "result": {
+      "exact_cleanup": true,
+      "image": "sha256:31446db001c8e381406ad2370f71a8858afbd6358885ea61616d20ee0a3e5e26",
+      "lanes": {
+        "Native": {
+          "XMLTV_transition": [
+            [
+              "Owned programme A"
+            ],
+            [
+              "Owned programme B"
+            ]
+          ],
+          "cache_generation_delta": 2,
+          "retained_profile_memberships": 1,
+          "retained_stream_links": 2,
+          "selected_programme_roots": 1,
+          "statuses": [
+            200,
+            200
+          ]
+        },
+        "Original": {
+          "XMLTV_transition": [
+            [
+              "Owned programme A"
+            ],
+            [
+              "Owned programme B"
+            ]
+          ],
+          "cache_generation_delta": 2,
+          "retained_profile_memberships": 1,
+          "retained_stream_links": 2,
+          "selected_programme_roots": 1,
+          "statuses": [
+            200,
+            200
+          ]
+        }
+      },
+      "passed": true,
+      "revision": "ad6babd7641067a49ba33f749b8aa39cba1cbb79",
+      "scope": "Manual React channel edit, real XMLTV replacement then reordered existing streams on exact ad6"
+    }
+  },
+  "native_scanner": {
+    "proof_sha256": "c189c189fa99b843aee03f17d93cdeaf04c91db559e2cd81134dc74cc9545406",
+    "result": {
+      "Original_proof_sha256": "04835264a8fa4a43e5317b842581b7b080620e77e555487574b0307579139db9",
+      "candidate": "9cf640701dacea07ea5f394ce7b18a6fa7c8c088",
+      "exact_cleanup": true,
+      "full_M6": false,
+      "image": "sha256:fd1a839e1fce4835039b7b079cd0929cd3c658261374cea2c7bbebf813fae3a9",
+      "matched": {
+        "actual_parent_hard_soft_limits": [
+          null,
+          null
+        ],
+        "actual_publication_after_due": true,
+        "group_signal_child_exact_inactive_return": true,
+        "group_signal_child_terminal": "SUCCESS",
+        "input_sha256": "1be5e98e400d16fb10e2194a7dfe4fc28aa0c540945af8ef545eb2cd69f69704",
+        "isolated_unrelated_first_scan_epg_rows": 1,
+        "observed_queue": "celery",
+        "one_actual_group_signal_child_and_parent_owned_lineage": true,
+        "parent_exact_return": null,
+        "parent_task": "core.tasks.scan_and_process_files",
+        "parent_terminal": "SUCCESS",
+        "periodic_name": "scan-files",
+        "periodic_run_count": 1,
+        "remaining_ready_or_reserved": 0,
+        "scan_marker_matches_file_mtime": true,
+        "scanner_sql_account": {
+          "account_type": "STD",
+          "file_path": "/data/m3us/owned-compat-beat.m3u",
+          "is_active": false,
+          "name": "owned-compat-beat.m3u",
+          "status": "idle"
+        }
+      },
+      "native_lane_sha256": "45daa3910c3731bb69166909056350fc2c11f203ba1c12158d0957f6a4f73102",
+      "owner_flags": {
+        "RUST_EXPERIMENTAL_SELECTED_BEAT": "0",
+        "RUST_EXPERIMENTAL_SELECTED_CORE_BEAT": "1",
+        "RUST_EXPERIMENTAL_SELECTED_JOBS": "1",
+        "RUST_VERSION_TASKS_ENABLED": "1"
+      },
+      "raw_journal_sha256": "60c0fa0244438865a103316493a9f0f9e4cc6bb98e5a8849c354399acbe455e3"
+    }
+  },
+  "performance_measured": false,
+  "stock_scanner": {
+    "proof_sha256": "04835264a8fa4a43e5317b842581b7b080620e77e555487574b0307579139db9",
+    "result": {
+      "actual_journal_sha256": "39e9df489903d7b9ee2408beb2530707fd49ef5cf0fa3933fd1dd457bb7f490d",
+      "actual_original_scope": true,
+      "actual_parent_hard_soft_limits": [
+        null,
+        null
+      ],
+      "actual_publication_after_due": true,
+      "due_utc": "2026-11-22 13:30:21.780712+00:00",
+      "exact_cleanup": true,
+      "group_signal_child_exact_inactive_return": true,
+      "group_signal_child_terminal": "SUCCESS",
+      "input_sha256": "1be5e98e400d16fb10e2194a7dfe4fc28aa0c540945af8ef545eb2cd69f69704",
+      "isolated_unrelated_first_scan_epg_rows": 1,
+      "lane_sha256": "7065eb6d50ee43366510e44c7179a9fd67bc9953b752393586bcbca1e1890800",
+      "native_verified": false,
+      "observed_queue": "celery",
+      "one_actual_group_signal_child_and_parent_owned_lineage": true,
+      "parent_exact_return": null,
+      "parent_task": "core.tasks.scan_and_process_files",
+      "parent_terminal": "SUCCESS",
+      "performance_verified": false,
+      "periodic_name": "scan-files",
+      "periodic_run_count": 1,
+      "remaining_ready_or_reserved": 0,
+      "root_redis_time": 1795354221.792712,
+      "scan_marker_matches_file_mtime": true,
+      "scan_marker_ttl_seconds": 259196,
+      "scanner_sql_account": {
+        "account_type": "STD",
+        "file_path": "/data/m3us/owned-compat-beat.m3u",
+        "is_active": false,
+        "name": "owned-compat-beat.m3u",
+        "status": "idle"
+      }
+    }
+  }
+}

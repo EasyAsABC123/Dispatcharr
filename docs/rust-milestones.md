@@ -13,6 +13,10 @@ The [9cf6407 HTTP attachment packets](../scripts/rust-contracts/observed-http-9c
 record 16 Channels and M3U directory requests and 16 Programme Guide requests. Portable
 offline verification covers the tested route identities, response projections and physical cleanup.
 
+The [focused M5 and M6 Compose pair](rust-m5-m6-9cf6407-focused-compose.md) verified the
+Channel Groups lifecycle across serving restarts and the naturally due stock scanner
+with its genuine M3U group child. Both comparisons passed exact cleanup.
+
 The [current 9cf6407 workflow evidence](rust-m9-9cf6407-seventeen-workflows.md) links
 17 distinct fresh passes across three scoped Compose waves. The latest checks cover Guide
 Grid, shared streaming including 100-viewer retention, and two scoped operator suites.
