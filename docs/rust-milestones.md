@@ -60,7 +60,9 @@ verified completion by a fresh receiver, with exact cleanup.
 The [1124391 export comparisons](rust-m7-1124391-ordinary-exports.md) passed 19 M3U
 and 13 XMLTV cases per arm with independent cleanup. The
 [65dbbbd short-soak repeat](rust-m9-65dbbbd-short-soak-resource-stop.md) observed
-seven persistent PostgreSQL processes whose sockets matched the same Native Main.
+seven persistent PostgreSQL processes whose sockets matched the same Native Main. A later
+pool-state diagnostic linked all seven to SQLx maintenance resetting their idle
+timestamps. The original short resource gate remains open.
 
 The [1124391 grouped Compose run](rust-m9-1124391-sixteen-compose-workflows.md)
 passed 16 selected workflows, with three retained Original authorities, 108 blocked
