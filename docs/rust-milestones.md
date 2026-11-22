@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [424880a9 Compose checkpoint](rust-m6-m8-424880a9-compose-checkpoint.md)
+verified copied Streams account filters, Logo usage filters, and dismiss-all.
+The ordinary rehash matched Original. Reply loss returned HTTP 503 on Rust
+and HTTP 200 on Original, with the committed frame counts recorded separately.
+
 The [paired playback follow-up](rust-m2-m3-shared-playback-compose-followup.md)
 matched finite MPEG-TS handoff on 4558a85b and exercised two-viewer fMP4
 playback with Native dynamic health enabled on 25dc1502. Both comparisons

@@ -4,13 +4,24 @@ Full parity across M0–M11 remains open. The existing React UI is part of the
 compatibility contract. The original Dispatcharr authors and dependency
 contributors retain full credit. [Attribution](../ATTRIBUTION.md)
 
-The latest formal Compose wave covers exact application `e740306c`. It
-recorded **26 fresh passes out of 127 required nodes**,
-0 failures, 100 blocked nodes and
-0 unexecuted nodes, with one retained Original
-comparison authority and exact cleanup. The earlier 25 fresh passes on
-`1423e79b` apply to that separate image. [Current formal wave](rust-m9-e740306c-formal-matrix.md) ·
-[Earlier formal wave](rust-m9-1423e79b-formal-matrix.md)
+The most recent integrated formal report covers exact application `25dc1502`.
+It recorded **21 fresh passes out of 127 required rows**, with 105 blocked
+and one retained Original authority. The 21 include one exact-source Core
+component and one fresh Original XMLTV workflow. The historical best
+report remains **26 of 127** on `4558a85b`, with 100 blocked and one retained
+Original authority. Both reports verified cleanup. The counts describe
+separate candidates and cannot be added.
+[25dc report](rust-m9-25dc1502-core-and-m4.md) ·
+[4558 report](rust-m9-4558a85b-formal-compose.md)
+
+The latest published application checkpoint verified copied SQLite Streams
+account filters, Logo usage filters, dismiss-all, and normal provider rehash
+on `424880a9`. The reply-loss comparison returned HTTP 503 on Rust and
+HTTP 200 on Original. A separate paired comparison verified finite MPEG-TS
+fallback and two-viewer fMP4 sharing on their named earlier packages.
+[424880 checkpoint](rust-m6-m8-424880a9-compose-checkpoint.md) ·
+[Paired playback](rust-m2-m3-shared-playback-compose-followup.md) ·
+[Measured build throughput](rust-migration-acceleration.md#november-22-build-and-acceptance-review)
 
 The `e740306c` package also qualified scheduled series and movie refreshes,
 inactive Guide artwork settings, and a copied PostgreSQL warm fallback with
