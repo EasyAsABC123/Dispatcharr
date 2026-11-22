@@ -13,6 +13,10 @@ The [9cf6407 HTTP attachment packets](../scripts/rust-contracts/observed-http-9c
 record 16 Channels and M3U directory requests and 16 Programme Guide requests. Portable
 offline verification covers the tested route identities, response projections and physical cleanup.
 
+The [combined 9cf6407 workflow evidence](rust-m9-9cf6407-eleven-workflows.md) links
+eleven distinct fresh passes across two scoped Compose waves, including clean install,
+React/Stats, profiles, and VOD/timeshift. The formal 127-row release gate remains open.
+
 Four [required M9 Compose rows](rust-m9-9cf6407-four-required-compose.md) passed fresh on
 9cf6407, including Complete Refresh with its immediately preceding Original reference. The
 same image passed a [local warm rollback](rust-m10-m11-9cf6407-local-rollback.md) with one
@@ -1279,16 +1283,16 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 
 | ID | Deliverable | Depends on | Current status | Evidence required to pass |
 | --- | --- | --- | --- | --- |
-| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; fixed HDHomeRun GET matched 224 reviewed pairs; wider HTTP and typed coverage open) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
+| M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; 224 fixed HDHomeRun GET pairs and 32 directory/Guide requests verified; wider executable coverage open) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
 | M1 | Shared bounded streaming core | M0 | In progress (technical core gates passed; M0 executable-contract prerequisite open) | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
 | M2 | Authenticated live TS vertical slice | M1 | In progress (ad6babd passed three fresh 100-viewer resource pairs with one upstream per side) | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
 | M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
 | M4 | VOD and timeshift parity | M2 | In progress (ordinary DVR functional slice and one- and ten-viewer completed playback budgets passed) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
-| M5 | Accounts, settings, and channel control APIs | M2 | In progress (stock React provider modals, group cleanup and prior guide edits verified) | API/permission/database/React workflow parity and API benchmarks |
-| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (saved Stats, local M3U, clocked DVR, XC and UTC XMLTV passed explicit worker scopes; default graph open) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
+| M5 | Accounts, settings, and channel control APIs | M2 | In progress (stock React provider modals and group cleanup verified on prior revisions; both guide-create orders matched) | API/permission/database/React workflow parity and API benchmarks |
+| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (saved jobs and warm Core failover verified in explicit worker scopes; default graph open) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (fixed HDHomeRun GET, Auto Sync regex preview and scoped Connect workflows verified) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (ordinary backup inventory and direct downloads, trusted selected actions and scoped operator checks passed; default jobs and wider restore/admin coverage open) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
-| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (seven fresh required Compose passes on a99e1772; copied PostgreSQL rollback with matched restart timestamps; final suite and soak open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
+| M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (eleven fresh required Compose passes on 9cf6407; local copied PostgreSQL rollback passed; final suite and soak open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |
 | M10 | Controlled rollout | M9 | Proposed ([native ARM64 package, startup, React and first-run auth verified](rust-m10-a8ea333d-native-arm64-docker-desktop.md) on a8ea333d) | Scoped rollout plan, monitoring and rollback on the selected release image |
 | M11 | Default switch and operator handoff | M10 | Proposed | Released image and configuration, upgrade evidence, attribution and monitored fallback |
 
