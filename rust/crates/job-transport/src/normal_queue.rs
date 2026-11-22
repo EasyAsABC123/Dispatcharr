@@ -563,7 +563,18 @@ impl CoreScheduledWorker {
     }
 
     pub(crate) fn ready(&self) -> bool {
-        self.lane.state.borrow().ready() && !*self.stop.0.borrow()
+        self.schedule_availability() == SelectedScheduleAvailability::Ready
+    }
+
+    pub(super) fn schedule_availability(&self) -> SelectedScheduleAvailability {
+        let state = self.lane.state.borrow();
+        if *self.stop.0.borrow() || matches!(*state, State::Fault(_) | State::Stopped) {
+            SelectedScheduleAvailability::Terminal
+        } else if state.ready() {
+            SelectedScheduleAvailability::Ready
+        } else {
+            SelectedScheduleAvailability::Waiting
+        }
     }
 
     pub(super) fn enable_schedule(
