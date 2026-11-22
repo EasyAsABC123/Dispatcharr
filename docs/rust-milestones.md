@@ -9,11 +9,13 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
-The latest executed formal matrix is still the `e740306c` package. It recorded
-26 passed, 100 blocked and one retained Original result across 127 required
-nodes. Every milestone still has open acceptance work. The scopes below track
-newer package results individually. The next comparative resource measurement
-follows functional acceptance. [Recorded matrix](../scripts/rust-integration/m9-e740306c-formal-matrix.json)
+The latest formal clean-install report records one passing node and 126
+blocked nodes on the `34860b9a` package. The latest broader executed wave,
+`e740306c`, recorded 26 passed, 100 blocked and one retained Original result
+across the same 127 required nodes. Every milestone still has open acceptance
+work. The next comparative resource measurement follows functional
+acceptance. [Current scoped results](rust-m1-m4-m6-m9-34860-ordinary-post-feature.md) ·
+[Broader recorded matrix](../scripts/rust-integration/m9-e740306c-formal-matrix.json)
 
 The [live provider retry](rust-m2-provider-capacity-retry.md) matched the
 ordinary full-slot HTTP 503 response. Both backends delivered media after a
