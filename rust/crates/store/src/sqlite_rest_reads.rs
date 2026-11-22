@@ -462,14 +462,7 @@ impl RetainedSqliteRestReads {
         include_dismissed: bool,
     ) -> Result<Vec<u8>, StoreError> {
         use crate::notifications::sqlite;
-        // The Original read is IsAuthenticated, independent of UI network
-        // admission. The held preview bearer still supplies the active user.
-        let actor = self
-            .authenticate_bearer(&Self::checked_bearer_request(peer, headers)?)
-            .await?
-            .ok_or(StoreError::Unauthorized(
-                "Authentication credentials were not provided.",
-            ))?;
+        let actor = self.notification_actor(peer, headers).await?;
         let pool = self.pool.clone();
         let actor_id = actor.user().id;
         let admin = actor.user().user_level >= 10;
@@ -498,6 +491,65 @@ impl RetainedSqliteRestReads {
     }
 
     #[cfg(feature = "sqlite-copied-data-runtime")]
+    async fn notification_actor(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+    ) -> Result<RetainedRestSubject, StoreError> {
+        // Personal actions use Original IsAuthenticated without UI network admission.
+        self.authenticate_bearer(&Self::checked_bearer_request(peer, headers)?)
+            .await?
+            .ok_or(StoreError::Unauthorized(
+                "Authentication credentials were not provided.",
+            ))
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn dismiss_notification(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        raw: String,
+        body: axum::body::Bytes,
+    ) -> Result<Value, StoreError> {
+        use crate::notifications::{self, sqlite};
+
+        let actor = self.notification_actor(peer, headers.clone()).await?;
+        let id = notifications::key(raw)?;
+        let limits = self.limits;
+        let pool = self.pool.clone();
+        let subject = actor.user().clone();
+        let target = supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let target =
+                sqlite::dismiss_target(&mut connection, id, &subject, chrono::Utc::now(), limits)
+                    .await;
+            settle(connection).await?;
+            target
+        })
+        .await?;
+        if let Some(conditions) = target.conditions()? {
+            let cache = self.cache.as_ref().ok_or(StoreError::Unsupported(
+                "Developer notification conditions require the original shared Redis cache.",
+            ))?;
+            if !sqlite::developer_visible(cache, actor.user().id, id, &conditions, || {
+                self.network_group()
+            })
+            .await?
+            {
+                return Err(notifications::missing());
+            }
+        }
+
+        let pool = self.pool.clone();
+        let subject = actor.user().clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            sqlite::dismiss(&pool, id, &subject, target, limits, &headers, &body).await
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
     pub(crate) async fn stream_filter_options(
         &self,
         peer: SocketAddr,
@@ -507,12 +559,13 @@ impl RetainedSqliteRestReads {
         use crate::auth::sqlite_runtime::stream_filter_options;
         let subject = self.bearer_account_user(peer, headers, false).await?;
         crate::channel_groups::collection_permission(subject.user())?;
-        stream_filter_options::require_unfiltered(raw_query)?;
+        let name = stream_filter_options::filter_name(raw_query)?;
         let pool = self.pool.clone();
         let limits = self.limits;
         supervised_sql_read(self.permit.clone(), async move {
             let mut connection = pool.acquire().await?;
-            let result = stream_filter_options::read(&mut connection, limits).await;
+            let result =
+                stream_filter_options::read(&mut connection, limits, name.as_deref()).await;
             settle(connection).await?;
             result
         })

@@ -144,6 +144,10 @@ impl CopiedSqliteRuntime {
                 "/api/core/notifications/",
                 axum::routing::get(notifications),
             )
+            .route(
+                "/api/core/notifications/{id}/dismiss/",
+                axum::routing::post(notification_dismiss),
+            )
             .route("/api/core/version/", axum::routing::any(version))
             .route("/api/core/settings/", axum::routing::get(settings))
             .route(
@@ -873,6 +877,30 @@ async fn notifications(
         Err(error) => error.into_response(),
     };
     copied_read_headers(response, crate::channels::COLLECTION_ALLOW)
+}
+
+async fn notification_dismiss(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    RoutePath(id): RoutePath<String>,
+    headers: HeaderMap,
+    body: axum::body::Bytes,
+) -> Response {
+    let result = async {
+        runtime
+            .allocate()?
+            .dismiss_notification(peer, headers, id, body)
+            .await
+    }
+    .await;
+    let response = match result {
+        Ok(value) => Json(value).into_response(),
+        Err(error) => error.into_response(),
+    };
+    copied_read_headers(
+        response,
+        axum::http::HeaderValue::from_static("POST, OPTIONS"),
+    )
 }
 
 async fn provider_accounts(

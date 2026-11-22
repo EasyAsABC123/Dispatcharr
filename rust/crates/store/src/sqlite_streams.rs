@@ -28,7 +28,26 @@ const TEXT_FIELDS: &[&str] = &[
     "stream_stats_updated_at",
 ];
 const ROW_TEXT_LIMIT: i64 = 65_536;
-const INITIAL_PARAMS: &[&str] = &["page", "page_size", "ordering"];
+const SUPPORTED_PARAMS: &[&str] = &["page", "page_size", "ordering", "name"];
+const NAME_MATCH: &str = r" AND s.name LIKE ? ESCAPE '\'";
+
+pub(super) fn name_pattern(value: Option<&str>) -> Result<Option<String>, StoreError> {
+    let Some(name) = value.and_then(|value| {
+        // CharField.strip() uses Python's whitespace set, including ASCII
+        // information separators in addition to Unicode White_Space.
+        let text =
+            value.trim_matches(|c: char| c.is_whitespace() || ('\u{1c}'..='\u{1f}').contains(&c));
+        (!text.is_empty()).then_some(text)
+    }) else {
+        return Ok(None);
+    };
+    if name.contains('\0') {
+        return Err(StoreError::InvalidInput(
+            json!({"name":["Null characters are not allowed."]}),
+        ));
+    }
+    Ok(Some(channels::like(name)))
+}
 
 #[derive(Clone, Copy)]
 pub(crate) enum Projection {
@@ -54,17 +73,20 @@ impl Projection {
     ) -> Result<Vec<u8>, StoreError> {
         if params
             .keys()
-            .any(|key| !INITIAL_PARAMS.contains(&key.as_str()))
+            .any(|key| !SUPPORTED_PARAMS.contains(&key.as_str()))
         {
             return Err(StoreError::StatusBody(
                 501,
-                json!({"detail": "This copied SQLite Streams view supports unfiltered reads."}),
+                json!({"detail": "This copied SQLite Streams view supports the name filter only."}),
             ));
         }
         let ordering = ordering_sql(params);
+        let name = name_pattern(params.get("name").map(String::as_str))?;
         match self {
-            Self::Page => read_page(db, admin, params, base, limit, &ordering).await,
-            Self::Ids => read_ids(db, limit, &ordering).await,
+            Self::Page => {
+                read_page(db, admin, params, base, limit, &ordering, name.as_deref()).await
+            }
+            Self::Ids => read_ids(db, limit, &ordering, name.as_deref()).await,
         }
     }
 }
@@ -91,7 +113,7 @@ fn stream_selection(admin: bool) -> String {
         .collect::<Vec<_>>()
         .join("+");
     let row = sqlite_list::sqlite_json_object("s", &fields);
-    format!("CASE WHEN {text_bytes} <= ?1 THEN {row} END")
+    format!("CASE WHEN {text_bytes} <= ? THEN {row} END")
 }
 
 async fn read_page(
@@ -101,14 +123,19 @@ async fn read_page(
     base: &Url,
     limit: usize,
     ordering: &str,
+    name: Option<&str>,
 ) -> Result<Vec<u8>, StoreError> {
     let mut transaction = db.begin().await?;
-    let count: i64 = sqlx::query_scalar(&format!("SELECT count(*){FROM}"))
-        .fetch_one(&mut *transaction)
-        .await?;
+    let predicate = if name.is_some() { NAME_MATCH } else { "" };
+    let count_sql = format!("SELECT count(*){FROM}{predicate}");
+    let mut count_query = sqlx::query_scalar(&count_sql);
+    if let Some(name) = name {
+        count_query = count_query.bind(name);
+    }
+    let count: i64 = count_query.fetch_one(&mut *transaction).await?;
     let (number, size, pages) = page(params, usize::try_from(count).map_err(|_| capacity())?)?;
     let sql = format!(
-        "SELECT {}{FROM} ORDER BY {ordering} LIMIT ?2 OFFSET ?3",
+        "SELECT {}{FROM}{predicate} ORDER BY {ordering} LIMIT ? OFFSET ?",
         stream_selection(admin),
     );
 
@@ -122,8 +149,11 @@ async fn read_page(
     append(&mut document, br#","results":["#, limit)?;
     let mut remaining = limit;
     {
-        let mut rows = sqlx::query_scalar::<_, Option<String>>(&sql)
-            .bind(ROW_TEXT_LIMIT)
+        let mut query = sqlx::query_scalar::<_, Option<String>>(&sql).bind(ROW_TEXT_LIMIT);
+        if let Some(name) = name {
+            query = query.bind(name);
+        }
+        let mut rows = query
             .bind(size as i64)
             .bind(((number - 1) * size) as i64)
             .fetch(&mut *transaction);
@@ -159,9 +189,15 @@ async fn read_ids(
     db: &mut SqliteConnection,
     limit: usize,
     ordering: &str,
+    name: Option<&str>,
 ) -> Result<Vec<u8>, StoreError> {
-    let sql = format!("SELECT s.id{FROM} ORDER BY {ordering}");
-    let mut rows = sqlx::query_scalar::<_, i64>(&sql).fetch(db);
+    let predicate = if name.is_some() { NAME_MATCH } else { "" };
+    let sql = format!("SELECT s.id{FROM}{predicate} ORDER BY {ordering}");
+    let mut query = sqlx::query_scalar::<_, i64>(&sql);
+    if let Some(name) = name {
+        query = query.bind(name);
+    }
+    let mut rows = query.fetch(db);
     let mut document = vec![b'['];
     while let Some(id) = rows.try_next().await? {
         if document.len() > 1 {
@@ -266,6 +302,74 @@ mod tests {
                 .await,
             Err(StoreError::StatusBody(404, _))
         ));
+    }
+
+    #[tokio::test]
+    async fn copied_name_filter_shares_literal_sqlite_matching_across_all_three_reads() {
+        use crate::{auth::sqlite_runtime::stream_filter_options, RestReadLimits};
+
+        let mut db = fixture().await;
+        sqlx::raw_sql(
+            r"INSERT INTO dispatcharr_channels_channelgroup VALUES (5,'Custom'),(6,'Inactive only');
+              INSERT INTO dispatcharr_channels_stream (id,name,url,m3u_account_id,channel_group_id)
+              VALUES (4,'Label ALPHA_% Before','http://fixture.invalid/filtered',2,4),
+                     (5,'Name alpha_% After',NULL,NULL,5),
+                     (6,'Name alphaXY After',NULL,NULL,5),
+                     (7,'Inactive alpha_%',NULL,3,6),
+                     (8,'Back\Slash Éclair',NULL,2,4),
+                     (9,'O''Brien',NULL,2,4);",
+        )
+        .execute(&mut db)
+        .await
+        .unwrap();
+        let base = Url::parse(
+            "http://localhost:8300/api/channels/streams/?name=alpha_%25&ordering=name&page_size=1",
+        )
+        .unwrap();
+        let mut params = base.query_pairs().into_owned().collect::<HashMap<_, _>>();
+        let page = Projection::Page
+            .read(&mut db, false, &params, &base, 8192)
+            .await
+            .unwrap();
+        let page: Value = serde_json::from_slice(&page).unwrap();
+        assert_eq!(page["count"], 2);
+        assert_eq!(page["results"][0]["id"], 4);
+        assert!(page["results"][0].get("url").is_none());
+        assert_eq!(
+            page["next"],
+            "http://localhost:8300/api/channels/streams/?name=alpha_%25&ordering=name&page=2&page_size=1"
+        );
+        assert_eq!(
+            Projection::Ids
+                .read(&mut db, false, &params, &base, 8192)
+                .await
+                .unwrap(),
+            b"[4, 5]"
+        );
+        let pattern = stream_filter_options::filter_name(Some("name=ignored&name=+ALPHA_%25+"))
+            .unwrap()
+            .unwrap();
+        assert_eq!(
+            stream_filter_options::read(&mut db, RestReadLimits::default(), Some(&pattern))
+                .await
+                .unwrap(),
+            br#"{"groups":["Custom","Group"],"m3u_accounts":[{"id":2,"name":"Live"}]}"#
+        );
+        for (needle, ids) in [
+            (r"Back\Slash", b"[8]".as_slice()),
+            ("éclair", b"[]".as_slice()),
+            ("Éclair", b"[8]".as_slice()),
+            ("O'Brien", b"[9]".as_slice()),
+        ] {
+            params.insert("name".into(), needle.into());
+            assert_eq!(
+                Projection::Ids
+                    .read(&mut db, false, &params, &base, 8192)
+                    .await
+                    .unwrap(),
+                ids
+            );
+        }
     }
 
     #[tokio::test]

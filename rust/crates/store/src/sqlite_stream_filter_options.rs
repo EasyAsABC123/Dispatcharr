@@ -1,4 +1,4 @@
-//! Original unfiltered StreamsTable options on the copied SQLite runtime.
+//! Original startup and name-filtered StreamsTable options on the copied SQLite runtime.
 //! Original Dispatcharr and DRF contributors retain full credit.
 use crate::{RestReadLimits, StoreError};
 use futures_util::TryStreamExt;
@@ -14,6 +14,7 @@ const GROUPS: &str = r#"
         FROM dispatcharr_channels_stream s
         LEFT JOIN m3u_m3uaccount a ON a.id = s.m3u_account_id
         WHERE s.channel_group_id = g.id AND a.is_active IS NOT 0
+          AND (?2 IS NULL OR s.name LIKE ?2 ESCAPE '\')
     )
     ORDER BY g.name
 "#;
@@ -23,17 +24,18 @@ const ACCOUNTS: &str = r#"
     FROM m3u_m3uaccount a
     WHERE a.is_active AND EXISTS (
         SELECT 1 FROM dispatcharr_channels_stream s WHERE s.m3u_account_id = a.id
+          AND (?2 IS NULL OR s.name LIKE ?2 ESCAPE '\')
     )
     ORDER BY a.name
 "#;
 
 pub(crate) const STATEMENTS: [&str; 2] = [GROUPS, ACCOUNTS];
 
-pub(crate) fn require_unfiltered(query: Option<&str>) -> Result<(), StoreError> {
+pub(crate) fn filter_name(query: Option<&str>) -> Result<Option<String>, StoreError> {
     let params: HashMap<_, _> =
         url::form_urlencoded::parse(query.unwrap_or_default().as_bytes()).collect();
-    let slow = [
-        "name",
+    let name = params.get("name").map(|value| value.as_ref());
+    let other_slow_filter = [
         "m3u_account",
         "m3u_account_name",
         "m3u_account_is_active",
@@ -41,14 +43,25 @@ pub(crate) fn require_unfiltered(query: Option<&str>) -> Result<(), StoreError> 
     ]
     .iter()
     .any(|key| params.get(*key).is_some_and(|value| !value.is_empty()));
-    if slow {
+    // These queryset switches only matter in Original's slow branch.
+    let mixed = name.is_some_and(|value| !value.is_empty())
+        && (params.contains_key("assigned")
+            || ["hide_stale", "unassigned", "is_catchup", "is_radio"]
+                .iter()
+                .any(|key| {
+                    params.get(*key).is_some_and(|value| {
+                        ["1", "true", "yes", "on"].contains(&value.to_ascii_lowercase().as_str())
+                    })
+                }));
+    if other_slow_filter || mixed {
         return Err(StoreError::Unsupported(
-            "Copied SQLite stream filter options do not support active filters.",
+            "Copied SQLite stream filter options support the name filter only.",
         ));
     }
-    Ok(())
+    // FilterSet.qs consumes valid cleaned fields even when another field is
+    // invalid. Unlike the list backend it does not raise the name form error.
+    Ok(super::streams::name_pattern(name).unwrap_or(None))
 }
-
 fn capacity() -> StoreError {
     StoreError::StatusBody(
         503,
@@ -86,6 +99,7 @@ fn append_entry(body: &mut Vec<u8>, value: &Value, limit: usize) -> Result<(), S
 async fn rows(
     connection: &mut SqliteConnection,
     limits: RestReadLimits,
+    name: Option<&str>,
 ) -> Result<Vec<u8>, StoreError> {
     let mut body = Vec::new();
     let limit = limits.work_bytes;
@@ -94,6 +108,7 @@ async fn rows(
     {
         let mut names = sqlx::query_scalar::<_, Option<String>>(GROUPS)
             .bind(name_limit)
+            .bind(name)
             .fetch(&mut *connection);
         while let Some(name) = names.try_next().await? {
             append_entry(&mut body, &json!(name.ok_or_else(capacity)?), limit)?;
@@ -102,6 +117,7 @@ async fn rows(
     append(&mut body, br#"],"m3u_accounts":["#, limit)?;
     let mut accounts = sqlx::query_as::<_, (i64, Option<String>)>(ACCOUNTS)
         .bind(name_limit)
+        .bind(name)
         .fetch(connection);
     while let Some((id, name)) = accounts.try_next().await? {
         append_entry(
@@ -117,10 +133,11 @@ async fn rows(
 pub(crate) async fn read(
     connection: &mut SqliteConnection,
     limits: RestReadLimits,
+    name: Option<&str>,
 ) -> Result<Vec<u8>, StoreError> {
     // Keep both option arrays in one owned read snapshot.
     let mut transaction = connection.begin().await?;
-    let result = rows(&mut transaction, limits).await;
+    let result = rows(&mut transaction, limits, name).await;
     if result.is_ok() {
         transaction.commit().await?;
     } else {
@@ -144,18 +161,17 @@ mod tests {
             Some("tvg_id=x&tvg_id="),
             Some("channel_group=17&search=words&hide_stale=true&unassigned=true"),
         ] {
-            assert!(require_unfiltered(query).is_ok());
+            assert!(filter_name(query).unwrap().is_none());
         }
         for query in [
-            "name=word",
             "m3u_account=4",
             "m3u_account_name=x",
             "m3u_account_is_active=false",
             "tvg_id=+",
-            "name=&name=x",
+            "name=x&unassigned=true",
         ] {
             assert!(matches!(
-                require_unfiltered(Some(query)),
+                filter_name(Some(query)),
                 Err(StoreError::Unsupported(_))
             ));
         }
@@ -175,7 +191,7 @@ mod tests {
             .await
             .unwrap();
         let expected = std::fs::read(root.join("expected.json")).unwrap();
-        let body = read(&mut connection, RestReadLimits::default())
+        let body = read(&mut connection, RestReadLimits::default(), None)
             .await
             .unwrap();
         assert_eq!(body, expected);
@@ -185,6 +201,7 @@ mod tests {
                 work_bytes: 40,
                 ..RestReadLimits::default()
             },
+            None,
         )
         .await
         .unwrap_err();
@@ -195,13 +212,14 @@ mod tests {
                 max_raw_bytes: 8,
                 ..RestReadLimits::default()
             },
+            None,
         )
         .await
         .unwrap_err();
         assert!(matches!(error, StoreError::StatusBody(503, _)));
         // Both refused reads must fully retire their SQLite transaction.
         assert_eq!(
-            read(&mut connection, RestReadLimits::default())
+            read(&mut connection, RestReadLimits::default(), None)
                 .await
                 .unwrap(),
             expected
@@ -211,7 +229,9 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(
-            read(&mut empty, RestReadLimits::default()).await.unwrap(),
+            read(&mut empty, RestReadLimits::default(), None)
+                .await
+                .unwrap(),
             br#"{"groups":[],"m3u_accounts":[]}"#
         );
         empty.close().await.unwrap();
