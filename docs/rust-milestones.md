@@ -13,6 +13,10 @@ The [9cf6407 HTTP attachment packets](../scripts/rust-contracts/observed-http-9c
 record 16 Channels and M3U directory requests and 16 Programme Guide requests. Portable
 offline verification covers the tested route identities, response projections and physical cleanup.
 
+The [checkout-only Clean Install replay](rust-m9-local-clean-install/README.md) rebuilds
+the exact `9cf6407` application inputs, runs the tracked React bootstrap and restart
+workflow, and checks the local image and exact Compose cleanup.
+
 The [focused M5 and M6 Compose pair](rust-m5-m6-9cf6407-focused-compose.md) verified the
 Channel Groups lifecycle across serving restarts and the naturally due stock scanner
 with its genuine M3U group child. Both comparisons passed exact cleanup.
