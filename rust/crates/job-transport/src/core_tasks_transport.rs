@@ -60,7 +60,12 @@ impl Jobs {
             )
             .await
         {
-            Ok((1, _)) => Ok(candidate.message),
+            Ok((1, _)) => {
+                if crate::normal_core_tasks::owned_provider_rehash(&candidate.message.kind) {
+                    self.inner.provider_rehash_claim.claimed(id, &candidate.raw);
+                }
+                Ok(candidate.message)
+            }
             Ok((0, _)) => Err(Error::ClaimRace),
             Ok(_) => Err(Error::Corrupt),
             Err(ClassifiedError::Backend) => Err(Error::AmbiguousClaim(id)),

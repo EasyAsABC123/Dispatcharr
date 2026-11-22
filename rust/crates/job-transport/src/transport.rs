@@ -86,6 +86,7 @@ struct Inner {
     authority: Authority,
     eta: std::sync::Mutex<Option<Arc<crate::eta::Pool>>>,
     cleanup_receipts: std::sync::Mutex<Option<Arc<cleanup_reservation_transport::Pool>>>,
+    provider_rehash_claim: core_settings_broker_transport::ProviderRehashClaim,
 }
 #[derive(Clone)]
 pub struct Jobs {
@@ -314,6 +315,7 @@ impl Jobs {
                 authority,
                 eta: std::sync::Mutex::new(None),
                 cleanup_receipts: std::sync::Mutex::new(None),
+                provider_rehash_claim: Default::default(),
             }),
         })
     }
