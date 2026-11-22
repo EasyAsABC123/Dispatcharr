@@ -173,6 +173,32 @@ where the missing work is binding existing observations.
    to `rust-fork/rust-backend-migration` and verify the receiving ref. Close
    only gates actually met; carry explicit required blockers forward.
 
+### Preflight the grouped run and its receipts
+
+Freeze one verified package and group the ready workflows in the existing
+coordinator. Bind each row to its own fixture, assertions, cleanup and qualified
+Original authority where required. The `1124391e` run passed all 16 selected
+Compose workflows and their cleanup checks. Keep the coordinator's literal
+partial exit 2 and the remaining rows in the full matrix.
+[Grouped Compose evidence](rust-m9-1124391-sixteen-compose-workflows.md)
+
+Before booking Docker, exercise the wrapper's parser with the actual launch
+arguments and parse a retained receipt from each pinned child runner. Confirm
+who generates the owned Compose project name, which file is the terminal result,
+and how project cleanup is proven. In the M10 smoke, the first wrapper expected
+the wrong clean-install project prefix and the second expected
+`integration.json` from a playback runner that writes `shared-ts.json`. Both
+child workloads exited 0. The follow-up verified their exact image, assertions
+and empty project inventories while preserving both wrapper exit 1 receipts.
+
+For a build-cache experiment, pin the toolchain, absolute source/target/output
+paths and one source revision per comparison phase. Use isolated cache arms and
+apply the same source delta to both for the warm phase. Require identical Main
+and operator bytes and executable modes. Check cold equality before spending
+time on warm builds. Report a warm-build speedup only after warm equality and
+package checks pass.
+[Fixed-path build evidence](rust-m10-fixed-path-build-comparison.md)
+
 A bounded harness improvement belongs inside the next matching batch. Source51
 already reused one Compose context for 14 cases in 149.562 seconds, but issued
 272 external command receipts totaling 106.939 seconds of command wall time.
