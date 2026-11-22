@@ -94,6 +94,12 @@ matched four owned provider selection phases. Lappy concurrently ran three
 observed three-project samples, one generated-output pass, two failed fixtures
 and verified teardown in all three.
 
+The [e68fb95 streaming core and runtime](rust-m1-e68fb95-bounded-stream-core.md)
+passed 33 deterministic host tests. The [f960875 growing DVR replay](rust-m4-f960875-growing-dvr-playback.md)
+passed on both images with two playlist generations and matching segment bytes.
+Original and Native also passed the [ARM64 same-schema restore comparison](rust-m8-f960875-arm64-same-schema-restore-pair.md)
+in separately owned PostgreSQL environments.
+
 The [f960875 planned fMP4 replay](rust-m3-f960875-planned-fmp4-handoff.md) passed
 on Original and Native after the lead viewer disconnected and both media leases
 drained. Each backend decoded both clips and admitted a fresh viewer on the
