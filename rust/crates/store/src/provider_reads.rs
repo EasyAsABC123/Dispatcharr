@@ -5,8 +5,10 @@ use crate::{
     AuthService, StoreError,
 };
 use axum::{
-    extract::{ConnectInfo, Path, State},
-    http::{header::ALLOW, HeaderMap, HeaderValue, Method},
+    extract::{ConnectInfo, Path, Request, State},
+    http::{header, HeaderMap, HeaderValue, Method, StatusCode},
+    middleware::{from_fn_with_state, Next},
+    response::Response,
     routing::get,
     Json, Router,
 };
@@ -290,35 +292,43 @@ fn serialize(resource: Resource, row: PgRow, admin: bool) -> Result<Value, Store
             value["epg_source"] = raw["epg_source_id"].clone();
             value
         }
-        Resource::EpgSources => {
-            let mut value = fields(
-                &raw,
-                &[
-                    "id",
-                    "name",
-                    "source_type",
-                    "url",
-                    "username",
-                    "is_active",
-                    "file_path",
-                    "refresh_interval",
-                    "priority",
-                    "status",
-                    "last_message",
-                    "created_at",
-                    "updated_at",
-                    "custom_properties",
-                ],
-            );
-            for key in ["created_at", "updated_at"] {
-                value[key] = timestamp(&raw[key]);
-            }
-            value["cron_expression"] = row.try_get::<String, _>("cron")?.into();
-            value["epg_data_count"] = json!(row.try_get::<i64, _>("data_count")?);
-            value["has_channels"] = json!(row.try_get::<bool, _>("has_channels")?);
-            value
-        }
+        Resource::EpgSources => epg_source_projection(
+            &raw,
+            row.try_get::<String, _>("cron")?,
+            row.try_get::<i64, _>("data_count")?,
+            row.try_get::<bool, _>("has_channels")?,
+        ),
     })
+}
+fn epg_source_projection(raw: &Value, cron: String, data_count: i64, has_channels: bool) -> Value {
+    let mut value = fields(
+        raw,
+        &[
+            "id",
+            "name",
+            "source_type",
+            "url",
+            "username",
+            "is_active",
+            "file_path",
+            "refresh_interval",
+            "cron_expression",
+            "priority",
+            "status",
+            "last_message",
+            "created_at",
+            "updated_at",
+            "custom_properties",
+        ],
+    );
+    // DRF replaces this existing serializer field with the linked schedule.
+    value["cron_expression"] = cron.into();
+    for key in ["created_at", "updated_at"] {
+        value[key] = timestamp(&raw[key]);
+    }
+    value["epg_data_count"] = data_count.into();
+    value["has_channels"] = has_channels.into();
+    value
 }
 // Shared row projection for the incremental EPG component; the established
 // API query and serializer remain authoritative for source/data fields.
@@ -415,25 +425,7 @@ macro_rules! endpoints {
 }
 endpoints!(accounts, account_detail, Accounts);
 endpoints!(server_groups, server_group, ServerGroups);
-endpoints!(epg_sources, epg_source_detail, EpgSources);
-
-async fn epg_source(
-    auth: State<AuthService>,
-    id: Path<String>,
-    peer: ConnectInfo<SocketAddr>,
-    method: Method,
-    headers: HeaderMap,
-) -> Result<(HeaderMap, Json<Value>), StoreError> {
-    let body = epg_source_detail(auth, id, peer, headers).await?;
-    let mut response = HeaderMap::new();
-    if method == Method::GET {
-        response.insert(
-            ALLOW,
-            HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
-        );
-    }
-    Ok((response, body))
-}
+endpoints!(epg_sources, epg_source, EpgSources);
 endpoints!(epg_data, epg_entry, EpgData);
 struct ProviderJsonFormatter;
 impl serde_json::ser::Formatter for ProviderJsonFormatter {
@@ -776,6 +768,32 @@ async fn account_collection_headers(
     }
     response
 }
+const EPG_SOURCE_LIST_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
+const EPG_SOURCE_DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
+const EPG_DATA_ALLOW: &str = "GET, HEAD, OPTIONS";
+
+async fn epg_library_json_headers(
+    State(allow): State<&'static str>,
+    request: Request,
+    next: Next,
+) -> Response {
+    let is_get = request.method() == Method::GET;
+    let mut response = next.run(request).await;
+    if is_get
+        && response.status() == StatusCode::OK
+        && response
+            .headers()
+            .get(header::CONTENT_TYPE)
+            .is_some_and(|value| value == "application/json")
+    {
+        let headers = response.headers_mut();
+        headers.insert(header::ALLOW, HeaderValue::from_static(allow));
+        // The app response middleware adds the origin token to this field.
+        headers.insert(header::VARY, HeaderValue::from_static("Accept"));
+    }
+    response
+}
+
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route(
@@ -836,7 +854,12 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/epg/sources/",
-            get(epg_sources).post(crate::sd_source_http::create),
+            get(epg_sources)
+                .layer(from_fn_with_state(
+                    EPG_SOURCE_LIST_ALLOW,
+                    epg_library_json_headers,
+                ))
+                .post(crate::sd_source_http::create),
         )
         .route(
             "/api/epg/sources/{id}/sd-lineups/",
@@ -849,12 +872,22 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route(
             "/api/epg/sources/{id}/",
             get(epg_source)
+                .layer(from_fn_with_state(
+                    EPG_SOURCE_DETAIL_ALLOW,
+                    epg_library_json_headers,
+                ))
                 .patch(crate::epg_source_writes::patch)
                 .put(crate::epg_source_writes::put)
                 .delete(crate::epg_source_writes::delete),
         )
-        .route("/api/epg/epgdata/", get(epg_data))
-        .route("/api/epg/epgdata/{id}/", get(epg_entry))
+        .route(
+            "/api/epg/epgdata/",
+            get(epg_data).layer(from_fn_with_state(EPG_DATA_ALLOW, epg_library_json_headers)),
+        )
+        .route(
+            "/api/epg/epgdata/{id}/",
+            get(epg_entry).layer(from_fn_with_state(EPG_DATA_ALLOW, epg_library_json_headers)),
+        )
         .with_state(auth)
 }
 pub(crate) async fn physical_account_detail(
@@ -883,6 +916,95 @@ mod tests {
         );
         let _router = router(auth);
     }
+    #[test]
+    fn epg_source_keeps_original_compact_json_field_order() {
+        let raw = json!({
+            "id": 17,
+            "name": "Local guide",
+            "source_type": "dummy",
+            "is_active": false,
+            "refresh_interval": 0,
+            "priority": 0,
+            "status": "idle",
+            "created_at": "2030-01-02T03:04:05.123456+00:00",
+            "custom_properties": {},
+        });
+        let projection = epg_source_projection(&raw, "1 2 * * *".into(), 1, false);
+        assert_eq!(
+            serde_json::to_string(&projection).unwrap(),
+            concat!(
+                r#"{"id":17,"name":"Local guide","source_type":"dummy","url":null,"username":null,"#,
+                r#""is_active":false,"file_path":null,"refresh_interval":0,"cron_expression":"1 2 * * *","#,
+                r#""priority":0,"status":"idle","last_message":null,"created_at":"2030-01-02T03:04:05.123456Z","#,
+                r#""updated_at":null,"custom_properties":{},"epg_data_count":1,"has_channels":false}"#,
+            ),
+        );
+    }
+
+    #[tokio::test]
+    async fn epg_library_headers_apply_to_successful_json_gets_only() {
+        use axum::body::Body;
+        use tower::ServiceExt;
+
+        let headers = |allow| from_fn_with_state(allow, epg_library_json_headers);
+        let app = Router::new()
+            .route(
+                "/source",
+                get(|| async { Json(json!([])) }).layer(headers(EPG_SOURCE_LIST_ALLOW)),
+            )
+            .route(
+                "/detail",
+                get(|| async { Json(json!({})) }).layer(headers(EPG_SOURCE_DETAIL_ALLOW)),
+            )
+            .route(
+                "/data",
+                get(|| async { Json(json!([])) }).layer(headers(EPG_DATA_ALLOW)),
+            )
+            .route(
+                "/error",
+                get(|| async { (StatusCode::NOT_FOUND, Json(json!({}))) })
+                    .layer(headers(EPG_DATA_ALLOW)),
+            )
+            .route("/outside", get(|| async { Json(json!([])) }));
+        for (path, method, status, expected_allow) in [
+            (
+                "/source",
+                Method::GET,
+                StatusCode::OK,
+                Some(EPG_SOURCE_LIST_ALLOW),
+            ),
+            (
+                "/detail",
+                Method::GET,
+                StatusCode::OK,
+                Some(EPG_SOURCE_DETAIL_ALLOW),
+            ),
+            ("/data", Method::GET, StatusCode::OK, Some(EPG_DATA_ALLOW)),
+            ("/data", Method::HEAD, StatusCode::OK, None),
+            ("/error", Method::GET, StatusCode::NOT_FOUND, None),
+            ("/outside", Method::GET, StatusCode::OK, None),
+        ] {
+            let request = axum::http::Request::builder()
+                .uri(path)
+                .method(method)
+                .body(Body::empty())
+                .unwrap();
+            let response = app.clone().oneshot(request).await.unwrap();
+            assert_eq!(response.status(), status);
+            for (name, expected) in [
+                (header::ALLOW, expected_allow),
+                (header::VARY, expected_allow.map(|_| "Accept")),
+            ] {
+                let values = response.headers().get_all(name);
+                let text = values
+                    .iter()
+                    .map(|value| value.to_str().unwrap())
+                    .collect::<Vec<_>>();
+                assert_eq!(text, expected.into_iter().collect::<Vec<_>>());
+            }
+        }
+    }
+
     #[test]
     fn legacy_group_profile_ids_keep_python_integer_coercion() {
         assert_eq!(
