@@ -100,6 +100,12 @@ passed on both images with two playlist generations and matching segment bytes.
 Original and Native also passed the [ARM64 same-schema restore comparison](rust-m8-f960875-arm64-same-schema-restore-pair.md)
 in separately owned PostgreSQL environments.
 
+The [method declaration map](../scripts/rust-contracts/method-declarations/README.md)
+accounts for all 322 unresolved-route work IDs and identifies 98 explicit Original
+method declarations. An exact [e68fb95 backup GET replay](rust-m0-e68fb95-backup-readonly.md)
+passed inventory, direct owned archive download, repeated readback and cleanup
+on both backends.
+
 The [f960875 planned fMP4 replay](rust-m3-f960875-planned-fmp4-handoff.md) passed
 on Original and Native after the lead viewer disconnected and both media leases
 drained. Each backend decoded both clips and admitted a fresh viewer on the
