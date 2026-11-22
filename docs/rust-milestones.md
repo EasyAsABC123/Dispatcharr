@@ -9,6 +9,18 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [ad6babd ordinary checkpoint](rust-m0-m6-ad6babd-compose.md) verified
+saved XC live refresh and automatic VOD ingestion, a linked UTC XMLTV cron,
+six deterministic HDHomeRun HEAD and JSON OPTIONS cases, and the post-commit
+branch of manual channel creation with a real XMLTV guide. Its scheduler
+checks used explicit Selected/Core ownership.
+
+The [ad6babd shared-viewing comparison](rust-m2-ad6babd-viewing100.md)
+measured three fresh 100-viewer pairs with one upstream connection and
+one provider slot per backend. The six phases passed useful audio and video,
+resource and throughput budgets, and exact cleanup. Active jobs and
+release-wide performance retain their own gates.
+
 The [a99e1772 ordinary checkpoint](rust-m0-m9-a99e1772-compose.md)
 matched all 224 reviewed requests to the fixed HDHomeRun lineup status GET.
 The [standalone verifier](../scripts/rust-contracts/observed-hdhr-get-a99e/README.md)
@@ -1251,11 +1263,11 @@ Update this ledger with report paths and tested commit IDs as evidence arrives.
 | --- | --- | --- | --- | --- |
 | M0 | Reproducible baseline, toolchain, fixtures, and measurement | None | In progress (baseline/verifier qualified; fixed HDHomeRun GET matched 224 reviewed pairs; wider HTTP and typed coverage open) | Rust checks; Compose readiness; Python baseline contracts and performance reports |
 | M1 | Shared bounded streaming core | M0 | In progress (technical core gates passed; M0 executable-contract prerequisite open) | Buffer, TS, discontinuity, wakeup, shutdown tests; comparative core benchmark |
-| M2 | Authenticated live TS vertical slice | M1 | In progress (three scoped 100-viewer pairs passed with one upstream per side) | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
+| M2 | Authenticated live TS vertical slice | M1 | In progress (ad6babd passed three fresh 100-viewer resource pairs with one upstream per side) | Existing-client playback against both backends; lifecycle, limits, and resource comparison |
 | M3 | Complete live playback formats and profiles | M2 | In progress (legacy HLS pair and scoped 10-viewer live MPEG-TS comparison verified) | HLS/fMP4/profile parity, decoder checks, failover and fanout performance |
 | M4 | VOD and timeshift parity | M2 | In progress (ordinary DVR functional slice and one- and ten-viewer completed playback budgets passed) | Range/seek/catchup and session parity; throughput, CPU, and memory comparison |
 | M5 | Accounts, settings, and channel control APIs | M2 | In progress (stock React provider modals, group cleanup and prior guide edits verified) | API/permission/database/React workflow parity and API benchmarks |
-| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (saved Stats, local M3U and clocked DVR passed with explicit worker ownership; default scheduler graph open) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
+| M6 | Provider ingestion, guide, matching, and scheduled jobs | M5 | In progress (saved Stats, local M3U, clocked DVR, XC and UTC XMLTV passed explicit worker scopes; default graph open) | Import/job parity; failure recovery; import and concurrent-playback benchmarks |
 | M7 | Output protocols and realtime/integration behavior | M3, M4, M5, M6 | In progress (fixed HDHomeRun GET, Auto Sync regex preview and scoped Connect workflows verified) | Xtream/HDHR/XMLTV/M3U/WebSocket/integration suites and performance reports |
 | M8 | Backup, admin, plugins, and operational compatibility | M5, M6, M7 | In progress (ordinary backup inventory and direct downloads, trusted selected actions and scoped operator checks passed; default jobs and wider restore/admin coverage open) | Restore/rollback/plugin/admin/config tests; full-service resource accounting |
 | M9 | Full parity, soak, packaging, and cutover rehearsal | M0–M8 | In progress (seven fresh required Compose passes on a99e1772; copied PostgreSQL rollback with matched restart timestamps; final suite and soak open) | All contracts covered; Compose end-to-end, soak and performance acceptance; rollback rehearsal |

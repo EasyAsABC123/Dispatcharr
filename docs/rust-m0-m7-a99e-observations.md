@@ -25,6 +25,16 @@ Three Original-only checks establish further behavior for the Rust port.
 The three Original-only results supply reference behavior. Rust replay
 of those scopes remains a separate acceptance step.
 
+A four-case named-profile M3U Compose pair also passed on a99e1772.
+Original and Rust matched the GET, empty POST, compact JSON-object POST,
+and the ordinary nonempty JSON rejection. The response and policy checks
+passed with exact cleanup.
+
+A follow-up Original capture verified the two forced-browser OPTIONS
+responses against one redacted HTML shell. Each response was 10,642 bytes
+and carried a fresh CSRF mask that matched its cookie. The matching
+metadata and separate observed hashes are retained in the evidence.
+
 Original Dispatcharr authors and contributors retain full application credit.
 Django, Django REST Framework, Celery and all dependencies retain their
 authorship and licenses. [Attribution](../ATTRIBUTION.md)
