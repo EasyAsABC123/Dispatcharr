@@ -78,6 +78,12 @@ reconciled one accepted write through the warm Original endpoint in 7.929 s.
 Fresh native ARM64 projects matched the [ordinary account API](rust-m5-f960875-arm64-ordinary-account-pair.md)
 and verified [both owned AIO startup task terminals](rust-m6-f960875-arm64-aio-downstream-startup.md).
 
+The exact ordinary AMD64 [e68fb95 successor](rust-m0-m6-e68fb95-appdata-and-named-schedules.md)
+matches the measured numeric AppData Allow/Vary fields and runs both separately
+named Version rows under ordinary AIO ownership. The two empty DELETE 204
+responses retain their original framing difference. The named cleanup shape
+passed host checks and awaits its dedicated Compose replay.
+
 The [f960875 planned fMP4 replay](rust-m3-f960875-planned-fmp4-handoff.md) passed
 on Original and Native after the lead viewer disconnected and both media leases
 drained. Each backend decoded both clips and admitted a fresh viewer on the

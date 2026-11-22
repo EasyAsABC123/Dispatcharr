@@ -1,0 +1,11 @@
+# Numeric AppData headers and named schedules on e68fb95
+
+The original Dispatcharr authors and contributors retain full credit for the application. See [Attribution](../ATTRIBUTION.md).
+
+The ordinary AMD64 package at `e68fb950c7ed4abf2ab58da45104f4e2c5f13937` changes two Rust files. It matches measured numeric AppData `Allow` and `Vary` fields and admits saved names for two supported built-in schedule shapes under the ordinary AIO scheduler. Formatting, strict Clippy, 1,129 affected crate tests, both focused regressions, the ordinary Compose build, and independent package verification passed. The test runner recorded 259 ignored tests. The package verifies 2,159 exact application inputs and 497 protected inputs.
+
+Fresh Original and Native Compose runs compared 12 AppData cases. The fixture reads the numeric collection and key, and writes or deletes the key. Each operation checks the owner, an administrator and another standard user. The cases matched HTTP status, literal bodies, the measured selected headers and scoped PostgreSQL effects, with exact teardown. The two empty DELETE 204 responses retain one framing difference. Original emits `Content-Length: 0`, while Native omits that field.
+
+An independent ordinary AIO run exercised two saved Version names. Their counts advanced from 2 to 3 and 7 to 8 with distinct task IDs and microsecond checkpoint preservation for the idle sibling. Each task reached `SUCCESS` with a null result, made one HTTP 200 request against the owned origin, and matched the Original notice and event observations. The Native controller returned 0 and verified exact teardown. The first independent reducer returned 1 because its closed-journal projection omitted Redis time and client address. The corrected reducer compared those fields, full payloads, SQL snapshots and lifecycle records on the same sealed run and returned 0.
+
+The [machine-readable receipt](../scripts/rust-integration/m0-m6-e68fb95-appdata-and-named-schedules.json) binds both scopes to the exact ordinary package. The saved cleanup name shape passed its host regression and still needs its own physical Compose replay. Broader AppData methods, complete scheduler parity, formal milestone closure, and performance on this image remain open.

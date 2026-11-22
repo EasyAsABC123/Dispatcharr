@@ -146,6 +146,16 @@ const EXPIRATION_PERIODIC_NAME: &str = "check-account-expirations";
 const EXPIRATION_PERIODIC_TASK: &str = "apps.m3u.tasks.check_account_expirations";
 const VERSION_PERIODIC_NAME: &str = "check-version-updates";
 const DAILY_SECONDS: i32 = 86_400;
+const RESERVED_PERIODIC_NAMES: &[&str] = &[
+    CLEANUP_PERIODIC_TASK,
+    VERSION_PERIODIC_NAME,
+    EXPIRATION_PERIODIC_NAME,
+    SCAN_FILES.0,
+    MAINTAIN_RECURRING.0,
+    DISABLED_STATS_DEFAULT,
+    BACKUP_PERIODIC_NAME,
+    plugin_startup_schedule::NAME,
+];
 const DISABLED_STATS_DEFAULT: &str = "fetch-channel-statuses";
 const STATS_TASK: &str = "apps.proxy.tasks.fetch_channel_stats";
 const SCAN_FILES: (&str, &str, i32) = ("scan-files", "core.tasks.scan_and_process_files", 20);
@@ -297,6 +307,39 @@ impl ScheduleScope {
         }
     }
 
+    fn is_named_builtin(self, name: &str, task: &str) -> bool {
+        self.uses_selected_receivers()
+            && !RESERVED_PERIODIC_NAMES.contains(&name)
+            && matches!(task, CLEANUP_PERIODIC_TASK | crate::version_protocol::TASK)
+    }
+
+    fn admits_named_builtin(self, entry: &Entry) -> bool {
+        if !self.is_named_builtin(&entry.name, &entry.task)
+            || entry.id <= 0
+            || entry.total_run_count < 0
+            || entry.name.is_empty()
+            || entry.name.chars().count() > 200
+            || !entry.enabled
+        {
+            return false;
+        }
+        match entry.task.as_str() {
+            CLEANUP_PERIODIC_TASK => {
+                entry.interval.is_none()
+                    && entry.expire_seconds == Some(43_200)
+                    && daily_utc_crontab(entry).is_some()
+            }
+            crate::version_protocol::TASK => {
+                entry.crontab.is_none()
+                    && entry.expire_seconds.is_none()
+                    && entry.interval.as_ref().is_some_and(|(every, period)| {
+                        *every == DAILY_SECONDS && period == "seconds"
+                    })
+            }
+            _ => false,
+        }
+    }
+
     fn row_identity(self) -> (Option<&'static str>, Option<&'static str>) {
         match self {
             Self::All => (None, None),
@@ -366,7 +409,11 @@ impl ScheduleScope {
                                 *every == seconds && period == "seconds"
                             })
                     });
-            let ordinary = (cleanup || daily || plugin_refresh || selected_default)
+            let ordinary = (cleanup
+                || daily
+                || plugin_refresh
+                || selected_default
+                || self.admits_named_builtin(entry))
                 && entry
                     .kwargs
                     .as_object()
@@ -1975,6 +2022,17 @@ const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
                      AND cr.timezone='UTC' AND cr.minute ~ '^[0-5]?[0-9]$'
                      AND cr.hour ~ '^(0?[0-9]|1[0-9]|2[0-3])$'
                      AND cr.day_of_week='*' AND cr.day_of_month='*' AND cr.month_of_year='*')))
+         OR (p.name <> ALL($27::text[]) AND char_length(p.name) BETWEEN 1 AND 200
+            AND p.total_run_count>=0 AND NOT p.one_off AND p.start_time IS NULL AND p.expires IS NULL
+            AND p.queue IS NULL AND p.exchange IS NULL AND p.routing_key IS NULL AND p.priority IS NULL
+            AND p.args IN ('','[]') AND p.kwargs IN ('','{}') AND p.headers IN ('','{}')
+            AND ((p.task=$7::text AND p.expire_seconds=43200 AND p.interval_id IS NULL
+                  AND cr.timezone='UTC' AND cr.minute ~ '^[0-5]?[0-9]$'
+                  AND cr.hour ~ '^(0?[0-9]|1[0-9]|2[0-3])$'
+                  AND cr.day_of_week='*' AND cr.day_of_month='*' AND cr.month_of_year='*')
+                 OR (p.task=$11::text AND p.expire_seconds IS NULL AND p.crontab_id IS NULL
+                     AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
+                                 WHERE i.id=p.interval_id AND i.every=$12::integer AND i.period='seconds'))))
          OR (p.task=$24::text AND p.interval_id IS NOT NULL AND p.crontab_id IS NULL
              AND EXISTS (SELECT 1 FROM m3u_m3uaccount a
                          JOIN django_celery_beat_intervalschedule i ON i.id=p.interval_id
@@ -2107,6 +2165,7 @@ async fn load(
             .bind(crate::normal_xc_live::SINGLE_TASK_NAME)
             .bind(CLOCKED_DVR_TASK)
             .bind(scope.includes_saved_xc())
+            .bind(RESERVED_PERIODIC_NAMES)
     } else {
         query
     };
@@ -2130,7 +2189,8 @@ async fn load(
         let skip_invalid = scope.is_linked_xmltv_task(&task)
             || scope.is_linked_local_m3u_task(&task)
             || scope.is_linked_clocked_dvr(&task)
-            || scope.selected_default_interval(&name, &task).is_some();
+            || scope.selected_default_interval(&name, &task).is_some()
+            || scope.is_named_builtin(&name, &task);
         let interval: Option<String> = row.try_get("interval_spec")?;
         let crontab: Option<String> = row.try_get("crontab_spec")?;
         let mut clocked: Option<DateTime<Utc>> = row.try_get("clocked_time")?;
@@ -3111,6 +3171,84 @@ mod tests {
         assert!(!ScheduleScope::Backup.admits(&entry));
         entry.name = BACKUP_PERIODIC_NAME.into();
         assert!(!ScheduleScope::Core.admits(&entry));
+    }
+    #[tokio::test]
+    async fn selected_core_keeps_distinct_named_cleanup_and_version_rows() {
+        let selected = ScheduleScope::core_with_xmltv(false, true, false, false).unwrap();
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
+            .unwrap();
+        let auth = dispatcharr_store::AuthService::new(
+            dispatcharr_store::Store::from_pool(pool),
+            dispatcharr_store::AuthConfig::new("unused-metadata-only".into()).unwrap(),
+        );
+        let identity = auth.producer_identity_source();
+        let mut cleanup = model(CLEANUP_PERIODIC_TASK);
+        cleanup.name = "owned-restart-backend-cleanup".into();
+        cleanup.interval = None;
+        cleanup.crontab = Some((
+            "0".into(),
+            "4".into(),
+            "*".into(),
+            "*".into(),
+            "*".into(),
+            "UTC".into(),
+        ));
+        cleanup.expire_seconds = Some(43_200);
+        let mut version = model(crate::version_protocol::TASK);
+        version.name = "Second release check".into();
+        version.interval = Some((DAILY_SECONDS, "seconds".into()));
+        for entry in [cleanup, version] {
+            assert!(selected.admits(&entry));
+            assert!(!ScheduleScope::Core.admits(&entry));
+            let mut sibling = entry.clone();
+            sibling.id += 1;
+            sibling.name.push_str(" copy");
+            sibling.total_run_count += 1;
+            assert!(selected.admits(&sibling));
+            assert_ne!(sibling.id, entry.id);
+            assert_ne!(sibling.name, entry.name);
+            assert_ne!(sibling.total_run_count, entry.total_run_count);
+            for saved in [&entry, &sibling] {
+                let id = Uuid::new_v4();
+                let published = prepare_publication(saved, id, &identity).unwrap();
+                let envelope: Value = serde_json::from_slice(published.bytes()).unwrap();
+                assert_eq!(envelope["headers"]["periodic_task_name"], saved.name);
+                assert_eq!(published.redis_queue(), "celery");
+                if saved.task == CLEANUP_PERIODIC_TASK {
+                    let parsed = crate::default_protocol::parse(published.bytes()).unwrap();
+                    assert_eq!(parsed.task_id, id);
+                    assert_eq!(
+                        parsed.kind,
+                        crate::default_protocol::Kind::RedisBackendCleanup
+                    );
+                } else {
+                    assert_eq!(
+                        crate::version_protocol::parse(published.bytes())
+                            .unwrap()
+                            .task_id,
+                        id
+                    );
+                }
+            }
+            let mut invalid = entry.clone();
+            invalid.queue = Some("dvr".into());
+            assert!(!selected.admits(&invalid));
+            let mut invalid = entry.clone();
+            invalid.kwargs = json!({"unexpected": true});
+            assert!(!selected.admits(&invalid));
+            let mut invalid = entry.clone();
+            invalid.task = "core.tasks.scan_and_process_files".into();
+            assert!(!selected.admits(&invalid));
+            for reserved in RESERVED_PERIODIC_NAMES {
+                assert!(!selected.is_named_builtin(reserved, &entry.task));
+            }
+        }
+        let candidate = LOAD_SELECTED_CORE_QUERY
+            .find("p.name <> ALL($27::text[])")
+            .unwrap();
+        assert!(candidate < LOAD_SELECTED_CORE_QUERY.find("LIMIT 257").unwrap());
+        assert!(!LOAD_QUERY.contains("$27"));
     }
     #[test]
     fn core_expiration_scope_admits_only_the_canonical_saved_daily_task() {
