@@ -290,6 +290,14 @@ impl SelectedCoreSchedules {
         self.plugin_refresh
     }
 
+    pub(super) fn owns_xmltv_refresh(&self) -> bool {
+        self.receiver.upgrade().is_some_and(|receiver| {
+            [Family::Refresh, Family::ProgrammeIndex, Family::Series]
+                .iter()
+                .all(|family| receiver.families.contains_key(family))
+        })
+    }
+
     pub(super) fn enable_schedule(
         &self,
         data: serde_json::Value,

@@ -325,7 +325,7 @@ impl HdhrGateway {
             .source_network_allowed(self.inner.auth.client_ip(&identity), "M3U_EPG", None)
             .await?
         {
-            (StatusCode::FORBIDDEN, Json(json!({"error":"Forbidden"}))).into_response()
+            network_denied()
         } else {
             let (content_type, data) = crate::read::read(&self.inner, endpoint, &origin).await?;
             if data.len() > self.inner.config.max_response_bytes {
@@ -436,6 +436,19 @@ pub(crate) fn unavailable() -> StoreError {
         503,
         json!({"detail":"HDHR resource capacity is unavailable."}),
     )
+}
+fn network_denied() -> Response {
+    // Django's JsonResponse includes the space after the colon.
+    let body = r#"{"error": "Forbidden"}"#;
+    (
+        StatusCode::FORBIDDEN,
+        [
+            ("content-type", "application/json"),
+            ("content-length", "22"),
+        ],
+        body,
+    )
+        .into_response()
 }
 fn error(status: StatusCode, detail: &str) -> Response {
     (status, Json(json!({"detail":detail}))).into_response()
@@ -583,6 +596,17 @@ fn origin(auth: &AuthService, identity: &PlaybackRequest, _headers: &HeaderMap) 
 mod tests {
     use super::*;
     use http_body_util::BodyExt;
+
+    #[tokio::test]
+    async fn network_denial_uses_the_exact_django_json_bytes() {
+        let response = network_denied();
+        assert_eq!(response.status(), StatusCode::FORBIDDEN);
+        assert_eq!(response.headers()["content-type"], "application/json");
+        assert_eq!(response.headers()["content-length"], "22");
+        let body = response.into_body().collect().await.unwrap().to_bytes();
+        assert_eq!(body.as_ref(), br#"{"error": "Forbidden"}"#);
+        assert_eq!(body.len(), 22);
+    }
 
     #[test]
     fn browser_format_keeps_the_public_django_response() {
