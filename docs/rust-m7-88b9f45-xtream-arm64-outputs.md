@@ -5,3 +5,5 @@ The AMD64 pair ran stock Original and ordinary Rust application `88b9f45` in iso
 The native ARM64 package from the same Rust revision passed four separate output checks on Lappy. Authenticated M3U and XMLTV returned HTTP 200. Both missing-credentials requests returned HTTP 401 with the qualified body digests. The private project used an internal network with no published ports and verified exact cleanup. An earlier admission exited before creating a project because Docker inspect returned the index descriptor. The passing run verified the image index, ARM64 child manifest, and config directly from the same local image.
 
 The [machine-readable record](../scripts/rust-integration/m7-88b9f45-xtream-arm64-outputs.json) includes exact image and result hashes. No performance comparison was taken.
+
+The [case attachments](../scripts/rust-integration/m7-88b9f45-output-case-attachments.json) bind the four paired Xtream cases and the four ARM64 Native cases to their required parent nodes. The parent nodes still require broader output combinations, XMLTV grammar, and realtime and Connect evidence.

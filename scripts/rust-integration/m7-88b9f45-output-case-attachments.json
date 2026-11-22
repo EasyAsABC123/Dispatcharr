@@ -1,0 +1,94 @@
+{
+  "M7_accepted": false,
+  "accepted_case_attachments": [
+    {
+      "cases": [
+        {
+          "action": "get_short_epg",
+          "body_sha256": "d0225043df3def94a3ef7beae4827cbb93a85dc79a4aafe9cd13d0069ae1bee2",
+          "configured_seed": 42,
+          "guide": "stored",
+          "method": "GET",
+          "path": "/player_api.php",
+          "retained_original_case": "standard 0 get_short_epg",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "action": "get_simple_data_table",
+          "body_sha256": "c7819e153e0fe75fff3cbe9c164d6fa8edebc04c733b8ded0a099834829dabe4",
+          "configured_seed": 42,
+          "guide": "stored",
+          "method": "GET",
+          "path": "/player_api.php",
+          "retained_original_case": "standard 0 get_simple_data_table",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "action": "get_short_epg",
+          "body_sha256": "04f48e541906a3474ebda59ee01e9b95373dfa2506368bacbede7712de736953",
+          "configured_seed": 42,
+          "guide": "generated",
+          "method": "GET",
+          "path": "/player_api.php",
+          "retained_original_case": "standard 3 get_short_epg",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "action": "get_simple_data_table",
+          "body_sha256": "a4f4801b047795d998e3b51a14719f15fde30edb7e1a5334e033e5823026b86f",
+          "configured_seed": 42,
+          "guide": "generated",
+          "method": "GET",
+          "path": "/player_api.php",
+          "retained_original_case": "standard 3 get_simple_data_table",
+          "role": "standard",
+          "status": 200
+        }
+      ],
+      "parents": [
+        "source/M7-hash-regex-realtime",
+        "native/M3U-XMLTV-HDHR"
+      ],
+      "physical_scope": "original-native-amd64-paired",
+      "receipt_sha256": "1c28fa22c4821e7f5a003120cb3c03b0afa8cdf1505ebb796046dd4013fa2a0f"
+    },
+    {
+      "cases": [
+        {
+          "credentials": "valid",
+          "protocol": "M3U",
+          "status": 200
+        },
+        {
+          "credentials": "missing",
+          "protocol": "M3U",
+          "status": 401
+        },
+        {
+          "credentials": "valid",
+          "protocol": "XMLTV",
+          "status": 200
+        },
+        {
+          "credentials": "missing",
+          "protocol": "XMLTV",
+          "status": 401
+        }
+      ],
+      "parents": [
+        "native/M3U-XMLTV-HDHR"
+      ],
+      "physical_scope": "native-arm64-only",
+      "receipt_sha256": "84eccc8e9383bf243733022c1a4c05de318ae84ead3b2a744fed15d634fb55e6"
+    }
+  ],
+  "application": "88b9f45f880d8e5147c862f223efa92284697fa2",
+  "matrix_sha256": "8e754d123e9a63cd023c752cee119368f7355ccf2504ac52fb9a43b7a3cfcb3b",
+  "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_verified": false,
+  "publication": "efba9ab958354887af5fa9da788b529c6f766ecf",
+  "required_nodes_passed": []
+}

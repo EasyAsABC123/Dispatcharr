@@ -13,6 +13,7 @@
     "scripts/rust-contracts/observed-http-9cf6407/verify.py": "da8983349edaf5f24bb071696803531e02801658c4e04194cddbd6e2223f4c87",
     "scripts/rust-contracts/observed-epg-library-4d3c/epg-library.json": "c77847527f783e55bc179d04c927d0f87c0bf83b8744b79f5deec71791f65b91",
     "scripts/rust-contracts/observed-epg-library-4d3c/verify.py": "01c0d10e844a96df80e5a610c5e0e9087a6861bab01034c679296d6f72a6eb51",
+    "scripts/rust-integration/m0-e7dda7f-connect-log-json.json": "20d844e836d0cc224276a3a2ab38c98ff04b76fd2dd6721c55f94b61d729cb8e",
     "scripts/rust-integration/m0-recording-hls-canonical-precedence.json": "daddfbf65a5bb5fc81e4ab82e243db7a09a0e6f21b07c325995c825b52f6823d",
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json": "57f54204594c9f71c4fd12633818b145d96f3965e45aa2e5e8a982a082a90b62",
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/report.json": "481bde98368d9ee2d0b996a1f2dcec0a288a171f1cf25262bedccc4cfa13ec0b",
@@ -1294,8 +1295,8 @@
     "static_non_HTTP_candidates": 250,
     "fully_verified_route_operations": 0,
     "scoped_evidence_requiring_case_mapping": 16,
-    "operations_with_partial_case_bindings": 17,
-    "mapped_packaged_case_observations": 427
+    "operations_with_partial_case_bindings": 18,
+    "mapped_packaged_case_observations": 437
   },
   "observations_for_methods_not_declared_in_discovery": [
     {
@@ -275666,6 +275667,192 @@
               "complete_raw_proof_sha256": "db2dcdefe66ddd35707a57507f05dfea0b8a71fef3cc45d00d1f518d409237e7"
             },
             "literal_path_template": "/api/connect/logs.json?integration={integration}&type=webhook&page_size=2"
+          },
+          "case_bindings": {
+            "contract_id": "route-d52d5a62d4e324405b85:GET",
+            "method": "GET",
+            "runtime": {
+              "expected": "successor",
+              "image_id": "sha256:abcbbe219c822e8320d77810f4305831d832a0be0f0c72600af809c90fb4535d",
+              "manifest_sha256": "a07614a0d6b42efa27f3ee229fc61d28e331cbd81d51c829d6a26655ea0743cf",
+              "revision": "e7dda7fec25918644a29de56454bad7f9a63fd83",
+              "source_tree_sha256": "3738fcd39f5e9cf0cce5608ad2d5b73370c745f6fdf2bb4248b60c21f2030852",
+              "tag": "dispatcharr-rust-candidate:88b-connect-log-json-ordinary-e7dda7fec259"
+            },
+            "packaged_report": "scripts/rust-integration/m0-e7dda7f-connect-log-json.json",
+            "packaged_report_sha256": "20d844e836d0cc224276a3a2ab38c98ff04b76fd2dd6721c55f94b61d729cb8e",
+            "packaged_report_schema": "paired_connect_delivery_log_filtered_pagination_v1",
+            "fully_verified": false,
+            "observed_roles": [
+              "admin",
+              "anonymous",
+              "standard",
+              "viewer"
+            ],
+            "cases": [
+              {
+                "request_path": "/api/connect/logs.json",
+                "method": "GET",
+                "role": "admin",
+                "page": 1,
+                "status": 200,
+                "content_type": "application/json",
+                "authentication_challenge_present": false,
+                "owned_SQL_and_queues_unchanged": true,
+                "body_comparison": "typed",
+                "fixture_query": "selected integration, webhook, page_size 2",
+                "evidence_pointer": "/successor/business/Original/json",
+                "paired_evidence_pointer": "/successor/business/Native/json",
+                "matching_log_count": 3,
+                "selected_row_order": [
+                  3,
+                  2
+                ],
+                "typed_next_and_previous_stay_on_request_path": true
+              },
+              {
+                "request_path": "/api/connect/logs.json",
+                "method": "GET",
+                "role": "admin",
+                "page": 2,
+                "status": 200,
+                "content_type": "application/json",
+                "authentication_challenge_present": false,
+                "owned_SQL_and_queues_unchanged": true,
+                "body_comparison": "typed",
+                "fixture_query": "selected integration, webhook, page_size 2",
+                "evidence_pointer": "/successor/business/Original/json",
+                "paired_evidence_pointer": "/successor/business/Native/json",
+                "matching_log_count": 3,
+                "selected_row_order": [
+                  1
+                ],
+                "typed_next_and_previous_stay_on_request_path": true
+              },
+              {
+                "request_path": "/api/connect/logs.json",
+                "method": "GET",
+                "role": "anonymous",
+                "page": 1,
+                "status": 401,
+                "content_type": "application/json",
+                "authentication_challenge_present": true,
+                "owned_SQL_and_queues_unchanged": true,
+                "body_comparison": "typed",
+                "fixture_query": "selected integration, webhook, page_size 2",
+                "evidence_pointer": "/successor/business/Original/json",
+                "paired_evidence_pointer": "/successor/business/Native/json"
+              },
+              {
+                "request_path": "/api/connect/logs.json",
+                "method": "GET",
+                "role": "standard",
+                "page": 1,
+                "status": 403,
+                "content_type": "application/json",
+                "authentication_challenge_present": false,
+                "owned_SQL_and_queues_unchanged": true,
+                "body_comparison": "typed",
+                "fixture_query": "selected integration, webhook, page_size 2",
+                "evidence_pointer": "/successor/business/Original/json",
+                "paired_evidence_pointer": "/successor/business/Native/json"
+              },
+              {
+                "request_path": "/api/connect/logs.json",
+                "method": "GET",
+                "role": "viewer",
+                "page": 1,
+                "status": 403,
+                "content_type": "application/json",
+                "authentication_challenge_present": false,
+                "owned_SQL_and_queues_unchanged": true,
+                "body_comparison": "typed",
+                "fixture_query": "selected integration, webhook, page_size 2",
+                "evidence_pointer": "/successor/business/Original/json",
+                "paired_evidence_pointer": "/successor/business/Native/json"
+              },
+              {
+                "request_path": "/api/connect/logs.json/",
+                "method": "GET",
+                "role": "admin",
+                "page": 1,
+                "status": 200,
+                "content_type": "application/json",
+                "authentication_challenge_present": false,
+                "owned_SQL_and_queues_unchanged": true,
+                "body_comparison": "typed",
+                "fixture_query": "selected integration, webhook, page_size 2",
+                "evidence_pointer": "/successor/business/Original/json_slash",
+                "paired_evidence_pointer": "/successor/business/Native/json_slash",
+                "matching_log_count": 3,
+                "selected_row_order": [
+                  3,
+                  2
+                ],
+                "typed_next_and_previous_stay_on_request_path": true
+              },
+              {
+                "request_path": "/api/connect/logs.json/",
+                "method": "GET",
+                "role": "admin",
+                "page": 2,
+                "status": 200,
+                "content_type": "application/json",
+                "authentication_challenge_present": false,
+                "owned_SQL_and_queues_unchanged": true,
+                "body_comparison": "typed",
+                "fixture_query": "selected integration, webhook, page_size 2",
+                "evidence_pointer": "/successor/business/Original/json_slash",
+                "paired_evidence_pointer": "/successor/business/Native/json_slash",
+                "matching_log_count": 3,
+                "selected_row_order": [
+                  1
+                ],
+                "typed_next_and_previous_stay_on_request_path": true
+              },
+              {
+                "request_path": "/api/connect/logs.json/",
+                "method": "GET",
+                "role": "anonymous",
+                "page": 1,
+                "status": 401,
+                "content_type": "application/json",
+                "authentication_challenge_present": true,
+                "owned_SQL_and_queues_unchanged": true,
+                "body_comparison": "typed",
+                "fixture_query": "selected integration, webhook, page_size 2",
+                "evidence_pointer": "/successor/business/Original/json_slash",
+                "paired_evidence_pointer": "/successor/business/Native/json_slash"
+              },
+              {
+                "request_path": "/api/connect/logs.json/",
+                "method": "GET",
+                "role": "standard",
+                "page": 1,
+                "status": 403,
+                "content_type": "application/json",
+                "authentication_challenge_present": false,
+                "owned_SQL_and_queues_unchanged": true,
+                "body_comparison": "typed",
+                "fixture_query": "selected integration, webhook, page_size 2",
+                "evidence_pointer": "/successor/business/Original/json_slash",
+                "paired_evidence_pointer": "/successor/business/Native/json_slash"
+              },
+              {
+                "request_path": "/api/connect/logs.json/",
+                "method": "GET",
+                "role": "viewer",
+                "page": 1,
+                "status": 403,
+                "content_type": "application/json",
+                "authentication_challenge_present": false,
+                "owned_SQL_and_queues_unchanged": true,
+                "body_comparison": "typed",
+                "fixture_query": "selected integration, webhook, page_size 2",
+                "evidence_pointer": "/successor/business/Original/json_slash",
+                "paired_evidence_pointer": "/successor/business/Native/json_slash"
+              }
+            ]
           }
         }
       ]

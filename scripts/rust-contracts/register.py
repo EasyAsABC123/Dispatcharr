@@ -286,10 +286,13 @@ def build(bindings_path=None,deep_evidence=False):
     observed_programme_packaged_contracts.apply(ROOT,rows)
     import observed_epg_library_packaged_contracts
     observed_epg_library_packaged_contracts.apply(ROOT,rows)
+    import observed_connect_log_json_packaged_contracts
+    observed_connect_log_json_packaged_contracts.apply(ROOT,rows)
     attestations=sorted({item['attestation']['path']:item['attestation']for item in(case_bindings or{}).get('evidence_datasets',[])}.values(),key=lambda item:item['path'])
     attestation_paths=[ROOT/item['path']for item in attestations]
     attestation_paths.extend(ROOT/path for path in observed_programme_packaged_contracts.INPUT_SHA256)
     attestation_paths.extend(ROOT/path for path in observed_epg_library_packaged_contracts.INPUT_SHA256)
+    attestation_paths.extend(ROOT/path for path in observed_connect_log_json_packaged_contracts.INPUT_SHA256)
     operations=[]
     for path,item in sorted(runtime['openapi']['paths'].items()):
         for method,op in sorted(item.items()):
