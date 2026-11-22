@@ -1,7 +1,7 @@
 use axum::{
     body::Body,
     extract::{ConnectInfo, State},
-    http::{header, HeaderMap, HeaderValue, Method, Request, StatusCode},
+    http::{header, HeaderMap, HeaderValue, Method, Request, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::any,
     Json, Router,
@@ -312,17 +312,23 @@ impl HdhrGateway {
             );
         }
         if let Err(error) = self.inner.auth.authenticate(&identity).await {
-            let path = request.uri().path();
-            if path != "/hdhr/lineup_status.json"
-                || !forced_browser_format(&method, path, identity.parameter("format"))
-            {
+            let Some(shell) = lineup_status_auth_shell(
+                &method,
+                request.uri(),
+                identity.parameter("format"),
+                headers,
+            ) else {
                 return Err(error);
-            }
+            };
             let Some(content) = lineup_status_auth_content(&error) else {
                 return Err(error);
             };
-            let (body, set_cookie) =
-                lineup_status_auth_html(content, headers, self.inner.config.max_response_bytes)?;
+            let (body, set_cookie) = lineup_status_auth_html(
+                shell,
+                content,
+                headers,
+                self.inner.config.max_response_bytes,
+            )?;
             let mut response =
                 self.retained(StatusCode::UNAUTHORIZED, Some(body), memory, false)?;
             set_lineup_status_auth_headers(response.headers_mut(), set_cookie);
@@ -388,6 +394,31 @@ fn forced_browser_format(method: &Method, path: &str, format: Option<&str>) -> b
 
 const BROWSABLE_AUTH_VARY: HeaderValue = HeaderValue::from_static("Accept, origin, Cookie");
 const LINEUP_STATUS_AUTH_SHELL: &str = include!("../datasets/lineup-status-auth.rs");
+const LINEUP_STATUS_ORDINARY_BROWSER_AUTH_SHELL: &str =
+    include!("../datasets/lineup-status-ordinary-browser-auth.rs");
+const ORDINARY_BROWSER_ACCEPT: &str =
+    "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+
+fn lineup_status_auth_shell(
+    method: &Method,
+    uri: &Uri,
+    format: Option<&str>,
+    headers: &HeaderMap,
+) -> Option<&'static str> {
+    if *method != Method::GET || uri.path() != "/hdhr/lineup_status.json" {
+        return None;
+    }
+    if forced_browser_format(method, uri.path(), format) {
+        return Some(LINEUP_STATUS_AUTH_SHELL);
+    }
+    let mut accepts = headers.get_all(header::ACCEPT).iter();
+    (uri.query().is_none()
+        && accepts
+            .next()
+            .is_some_and(|accept| accept == ORDINARY_BROWSER_ACCEPT)
+        && accepts.next().is_none())
+    .then_some(LINEUP_STATUS_ORDINARY_BROWSER_AUTH_SHELL)
+}
 
 fn set_lineup_status_auth_headers(headers: &mut HeaderMap, set_cookie: HeaderValue) {
     for (name, value) in [
@@ -444,11 +475,12 @@ const EXPIRED_BEARER_HTML: &str = r#"{
 }"#;
 
 fn lineup_status_auth_html(
+    shell: &str,
     content: &str,
     headers: &HeaderMap,
     maximum: usize,
 ) -> Result<(Vec<u8>, HeaderValue), StoreError> {
-    let (before, after) = LINEUP_STATUS_AUTH_SHELL
+    let (before, after) = shell
         .split_once("@@HDHR_ERROR_CONTENT@@")
         .expect("captured HDHR error slot");
     let (middle, end) = after
@@ -709,6 +741,47 @@ mod tests {
     use http_body_util::BodyExt;
 
     #[test]
+    fn selects_the_captured_ordinary_browser_auth_shell_only_for_fixed_get() {
+        let uri: Uri = "/hdhr/lineup_status.json".parse().unwrap();
+        let forced: Uri = "/hdhr/lineup_status.json?format=api".parse().unwrap();
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            header::ACCEPT,
+            HeaderValue::from_static(ORDINARY_BROWSER_ACCEPT),
+        );
+        assert_eq!(
+            lineup_status_auth_shell(&Method::GET, &uri, None, &headers),
+            Some(LINEUP_STATUS_ORDINARY_BROWSER_AUTH_SHELL)
+        );
+        assert_eq!(
+            lineup_status_auth_shell(&Method::GET, &forced, Some("api"), &headers),
+            Some(LINEUP_STATUS_AUTH_SHELL)
+        );
+        for request_uri in [
+            "/hdhr/lineup_status.json?format=json",
+            "/hdhr/lineup_status.json?ordinary=1",
+            "/hdhr/lineup_status.json?",
+            "/hdhr/profile/lineup_status.json",
+        ] {
+            assert!(lineup_status_auth_shell(
+                &Method::GET,
+                &request_uri.parse().unwrap(),
+                None,
+                &headers,
+            )
+            .is_none());
+        }
+        assert!(lineup_status_auth_shell(&Method::HEAD, &uri, None, &headers).is_none());
+        assert!(lineup_status_auth_shell(&Method::OPTIONS, &uri, None, &headers).is_none());
+        headers.append(header::ACCEPT, HeaderValue::from_static("application/json"));
+        assert!(lineup_status_auth_shell(&Method::GET, &uri, None, &headers).is_none());
+        headers.insert(header::ACCEPT, HeaderValue::from_static("application/json"));
+        assert!(lineup_status_auth_shell(&Method::GET, &uri, None, &headers).is_none());
+        headers.clear();
+        assert!(lineup_status_auth_shell(&Method::GET, &uri, None, &headers).is_none());
+    }
+
+    #[test]
     fn fixed_status_browsable_auth_preserves_captured_shapes_and_response_limit() {
         let inactive_bearer = StoreError::AuthenticationBody(
             json!({"detail":"User is inactive","code":"user_inactive"}),
@@ -732,7 +805,9 @@ mod tests {
             (expired, 10630),
         ] {
             let content = lineup_status_auth_content(&error).unwrap();
-            let (body, cookie) = lineup_status_auth_html(content, &headers, length).unwrap();
+            let (body, cookie) =
+                lineup_status_auth_html(LINEUP_STATUS_AUTH_SHELL, content, &headers, length)
+                    .unwrap();
             assert_eq!(body.len(), length);
             let body = std::str::from_utf8(&body).unwrap();
             assert!(body.contains(content));
@@ -744,7 +819,13 @@ mod tests {
                 .to_str()
                 .unwrap()
                 .starts_with(&format!("csrftoken={secret};")));
-            assert!(lineup_status_auth_html(content, &headers, length - 1).is_err());
+            assert!(lineup_status_auth_html(
+                LINEUP_STATUS_AUTH_SHELL,
+                content,
+                &headers,
+                length - 1
+            )
+            .is_err());
         }
         assert!(lineup_status_auth_content(&StoreError::Unauthorized("Invalid API key")).is_none());
         assert!(lineup_status_auth_content(&StoreError::RateLimited(1)).is_none());
