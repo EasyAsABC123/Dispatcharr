@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [9ace9f66 Compose checkpoint](rust-m6-m8-9ace9f66-compose-checkpoint.md)
+matched 36 copied Logo GET and HEAD observations and a normal provider
+rehash. The measured broker reply-loss case still differs in first HTTP
+status and committed frame count.
+
 The [25dc1502 Core and timeshift follow-up](rust-m9-25dc1502-core-and-m4.md)
 adds one qualified exact-source Core component row and records 21 fresh
 passes across 127 required rows. The separate numeric seek and calendar
