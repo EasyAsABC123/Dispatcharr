@@ -9,6 +9,12 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [e0016d42 ordinary and copied-data checkpoint](rust-m6-m8-e0016d42-scheduler-copied-preview.md)
+matched saved schedule identities, Scanner and Recurring work, four Version
+outcomes, and daily expiration. The copied-feature image also served two
+real Standard-user viewers, including unchanged React Preview, through
+one upstream with decoded media and exact retirement.
+
 The [c1b52dc8 formal Compose wave](rust-m9-c1b52dc8-profile-browser-wave.md)
 passed clean install, live playback with Stats in unchanged React, and
 Native profile delivery. It verified 16 fresh A/V observations and exact
