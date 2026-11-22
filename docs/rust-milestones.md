@@ -18,8 +18,9 @@ follows functional acceptance. [Recorded matrix](../scripts/rust-integration/m9-
 The [live provider retry](rust-m2-provider-capacity-retry.md) matched the
 ordinary full-slot HTTP 503 response. Both backends delivered media after a
 normal last-viewer close and a fresh request following slot retirement. An
-active-handler overlap observed on Native during one global-stop repeat is
-under investigation.
+active-handler overlap was observed on Native during one global-stop repeat.
+Three [socket-aware repeats](rust-m2-2c939204-origin-stop-causality.md) each
+observed peak one on both backends. The earlier overlap remains unexplained.
 
 The [shared Core repository refresh](rust-m6-core-saved-plugin-refresh.md)
 routed a saved plugin schedule through the existing worker and recorded a
@@ -28,7 +29,10 @@ qualified the daily failure-response behavior on a8ea333d.
 
 The [native ARM64 copied SQLite preview](rust-m10-3843b61a-native-arm64-copied-sqlite.md)
 passed a same-image restart on lappy. The copied database retained the saved
-app data, the existing bearer and token refresh.
+app data, the existing bearer and token refresh. The [AMD64 React shell preview](rust-m8-2c939204-copied-sqlite-react-shell.md)
+matched the Original HTML on the root and channels routes and served the
+packaged JavaScript and CSS across restart. Channel List JSON and browser
+workflow checks remain open.
 
 The [shared Core restore](rust-m8-core-postgres-restore.md) restored an
 Original PostgreSQL archive and a Rust recovery archive in order, with exact

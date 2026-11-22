@@ -1,0 +1,97 @@
+{
+  "candidate_manifest_sha256": "a414892b9fbd1b3d1fada462b06a5eb1da62280736f4e6f2ac2e026bc64dee98",
+  "candidate_revision": "2c939204e070954e7de86b662f362237b5f7f9ae",
+  "comparative_performance": false,
+  "credit": "Original Dispatcharr and framework authors retain full credit.",
+  "full_M2_accepted": false,
+  "prior_observed_failure": {
+    "Native_peak_origin_handlers": 2,
+    "Original_peak_origin_handlers": 1,
+    "capture_sha256": "5bc2f74504acec965bb188dc2d427c4973ccac412f31cb5b8ad2355a51e08d3b",
+    "exact_cleanup": true,
+    "physical_exit": 1,
+    "socket_overlap_cause_observed": false
+  },
+  "prior_peak_two_reproduced_with_socket_observer": false,
+  "strict_peak_one_guarantee_verified": false,
+  "trials": [
+    {
+      "arms": {
+        "Native": {
+          "first_peer_terminal_observation": "peek-eof",
+          "first_write_failure": "broken-pipe",
+          "peak_origin_handlers": 1,
+          "pending_request_served_useful_AV": true,
+          "prior_exit_to_next_entry_microseconds": 61016,
+          "prior_handler_exited_before_second_handler_entered": true
+        },
+        "Original": {
+          "first_peer_terminal_observation": "reset-or-not-connected",
+          "first_write_failure": "broken-pipe",
+          "peak_origin_handlers": 1,
+          "pending_request_served_useful_AV": true,
+          "prior_exit_to_next_entry_microseconds": 93039,
+          "prior_handler_exited_before_second_handler_entered": true
+        }
+      },
+      "capture_sha256": "3438bfeaac55e9d88be1884406b969ff019ceadd4d7833466582ec1b9e3aaf04",
+      "cleanup_sha256": "0548a530c6cc27d6f41aaad1f70ba4785b8fc3e974ba2bbbf4126b95d9666c65",
+      "exact_owned_roles_retired": 5,
+      "physical_exit": 0,
+      "proof_sha256": "b626b9f0f30d521bc8ab8d5df275c1bf71007d34798ed8fb7cf5a2c7ef3b472d",
+      "trial": 1
+    },
+    {
+      "arms": {
+        "Native": {
+          "first_peer_terminal_observation": "peek-eof",
+          "first_write_failure": "broken-pipe",
+          "peak_origin_handlers": 1,
+          "pending_request_served_useful_AV": true,
+          "prior_exit_to_next_entry_microseconds": 66153,
+          "prior_handler_exited_before_second_handler_entered": true
+        },
+        "Original": {
+          "first_peer_terminal_observation": "reset-or-not-connected",
+          "first_write_failure": "broken-pipe",
+          "peak_origin_handlers": 1,
+          "pending_request_served_useful_AV": true,
+          "prior_exit_to_next_entry_microseconds": 91263,
+          "prior_handler_exited_before_second_handler_entered": true
+        }
+      },
+      "capture_sha256": "5d4e7bb712f351d9b64291353130d01409e11f1bffd14f2feaae90294cb64a35",
+      "cleanup_sha256": "8637b7596c828d3dcc9d298a327d2e46a9842d7804cb56550081cdb632e95d9a",
+      "exact_owned_roles_retired": 5,
+      "physical_exit": 0,
+      "proof_sha256": "6cac340d14a2ab0c8e076416af903f001561b86a2c31e084d88a3c47a1391a38",
+      "trial": 2
+    },
+    {
+      "arms": {
+        "Native": {
+          "first_peer_terminal_observation": "peek-eof",
+          "first_write_failure": "broken-pipe",
+          "peak_origin_handlers": 1,
+          "pending_request_served_useful_AV": true,
+          "prior_exit_to_next_entry_microseconds": 19479,
+          "prior_handler_exited_before_second_handler_entered": true
+        },
+        "Original": {
+          "first_peer_terminal_observation": "reset-or-not-connected",
+          "first_write_failure": "broken-pipe",
+          "peak_origin_handlers": 1,
+          "pending_request_served_useful_AV": true,
+          "prior_exit_to_next_entry_microseconds": 87864,
+          "prior_handler_exited_before_second_handler_entered": true
+        }
+      },
+      "capture_sha256": "ec7766e0c61b19b87f9bbfcbec1b7c4b5795c5e44fc5017c09d5248d675679b5",
+      "cleanup_sha256": "3c773e54a9d3100bd8cdf9798d78683045fa912c4fe817614566e55366bc620d",
+      "exact_owned_roles_retired": 5,
+      "physical_exit": 0,
+      "proof_sha256": "0e67e5eab41da3a5dfc2b241e5e8a5feb5ccbf2ba6d2f0856d52014a43d84a90",
+      "trial": 3
+    }
+  ]
+}
