@@ -1,6 +1,9 @@
 //! Original environment IP cache/background worker, ported from core/api_views.py.
 //! Original Dispatcharr authors retain full application credit (ATTRIBUTION.md).
-use crate::{channels::truthy, notifications::decode_cache, AuthService, StoreError};
+use crate::{
+    channels::truthy, notifications::decode_cache, AuthService, NotificationCache, StoreError,
+};
+use dispatcharr_contracts::UpdateEventSink;
 use dispatcharr_upstream_http::{body, Attempt};
 use futures_util::StreamExt;
 use serde_json::{json, Value};
@@ -175,17 +178,37 @@ impl AuthService {
         self
     }
     pub(crate) async fn ip_environment(&self, enabled: Value) -> Result<Value, StoreError> {
+        self.ip_lookup
+            .environment(
+                enabled,
+                self.notification_cache.as_ref(),
+                None,
+                self.event_sink.as_ref(),
+            )
+            .await
+    }
+}
+
+impl IpLookup {
+    pub(crate) async fn environment(
+        &self,
+        enabled: Value,
+        cache: Option<&NotificationCache>,
+        request_cache: Option<&NotificationCache>,
+        event_sink: Option<&Arc<dyn UpdateEventSink>>,
+    ) -> Result<Value, StoreError> {
         let mut result = json!({"public_ip":null,"local_ip":null,"country_code":null,"country_name":null,"city":null,"ip_lookup_enabled":enabled,"ip_lookup_pending":false});
         if !truthy(Some(&enabled)) {
             return Ok(result);
         }
-        let cache = self
-            .notification_cache
-            .as_ref()
-            .ok_or(StoreError::Unsupported(
-                "Enabled IP lookup requires the original shared Redis cache.",
-            ))?;
-        let cached = cache
+        let cache = cache.ok_or(StoreError::Unsupported(
+            "Enabled IP lookup requires the original shared Redis cache.",
+        ))?;
+        // Copied SQLite retains its request permit through the foreground
+        // cache operations. Only the process-wide cache and event owner
+        // enter a separately coalesced background lookup.
+        let request_cache = request_cache.unwrap_or(cache);
+        let cached = request_cache
             .get(CACHE)
             .await
             .map_err(|_| failed())?
@@ -216,20 +239,25 @@ impl AuthService {
                 .arg("NX")
                 .arg("EX")
                 .arg(30);
-            let claimed: Option<String> = cache.command(cmd).await.map_err(|_| failed())?;
+            let claimed: Option<String> = request_cache.command(cmd).await.map_err(|_| failed())?;
             if claimed.is_some()
                 && self
-                    .ip_lookup
                     .running
                     .compare_exchange(false, true, Ordering::AcqRel, Ordering::Acquire)
                     .is_ok()
             {
-                let auth = self.clone();
-                let running = Running(self.ip_lookup.running.clone());
+                let ip_lookup = self.clone();
+                let running = Running(self.running.clone());
+                let cache = cache.clone();
+                let event_sink = event_sink.cloned();
                 tokio::spawn(async move {
                     let _running = running;
                     if !matches!(
-                        tokio::time::timeout(Duration::from_secs(30), auth.refresh_ip()).await,
+                        tokio::time::timeout(
+                            Duration::from_secs(30),
+                            ip_lookup.refresh_ip(&cache, event_sink.as_deref())
+                        )
+                        .await,
                         Ok(Ok(()))
                     ) {
                         tracing::warn!("Background IP lookup did not complete; original cache lock will expire");
@@ -239,9 +267,12 @@ impl AuthService {
         }
         Ok(result)
     }
-    async fn refresh_ip(&self) -> Result<(), StoreError> {
-        let result = lookup(&self.ip_lookup.config).await.map_err(|_| failed())?;
-        let cache = self.notification_cache.as_ref().ok_or_else(failed)?;
+    async fn refresh_ip(
+        &self,
+        cache: &NotificationCache,
+        event_sink: Option<&dyn UpdateEventSink>,
+    ) -> Result<(), StoreError> {
+        let result = lookup(&self.config).await.map_err(|_| failed())?;
         let previous = cache
             .get(CACHE)
             .await
@@ -265,26 +296,82 @@ impl AuthService {
         cmd.arg(LOCK);
         let _: i64 = cache.command(cmd).await.map_err(|_| failed())?;
         if store {
-            if let Some(sink) = self.event_sink.as_ref() {
-                let mut data = result.as_object().expect("lookup result object").clone();
-                data.insert("type".into(), json!("ip_lookup_complete"));
-                if sink
-                    .send("updates", json!({"type":"update","data":data}))
-                    .await
-                    .is_err()
-                {
-                    tracing::warn!("IP lookup update delivery failed");
-                }
-            } else {
-                tracing::warn!("IP lookup cached; M7 event sink is not configured");
-            }
+            publish_ip_update(event_sink, &result).await;
         }
         Ok(())
+    }
+}
+
+async fn publish_ip_update(sink: Option<&dyn UpdateEventSink>, result: &Value) {
+    if let Some(sink) = sink {
+        let mut data = result.as_object().expect("lookup result object").clone();
+        data.insert("type".into(), json!("ip_lookup_complete"));
+        if sink
+            .send("updates", json!({"type":"update","data":data}))
+            .await
+            .is_err()
+        {
+            tracing::warn!("IP lookup update delivery failed");
+        }
+    } else {
+        tracing::warn!("IP lookup cached; M7 event sink is not configured");
     }
 }
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn disabled_lookup_uses_no_cache_or_network() {
+        let owner = IpLookup::new(IpLookupConfig::default());
+        assert_eq!(
+            owner
+                .environment(json!(false), None, None, None)
+                .await
+                .unwrap(),
+            json!({"public_ip":null,"local_ip":null,"country_code":null,"country_name":null,
+                   "city":null,"ip_lookup_enabled":false,"ip_lookup_pending":false})
+        );
+        assert!(matches!(
+            owner.environment(json!(true), None, None, None).await,
+            Err(StoreError::Unsupported(_))
+        ));
+        assert!(!owner.running.load(Ordering::Acquire));
+    }
+    #[tokio::test]
+    async fn ip_completion_sends_only_the_original_message_to_the_configured_sink() {
+        use dispatcharr_contracts::{BoxFuture, UpdateEventError};
+        use std::sync::Mutex;
+
+        #[derive(Default)]
+        struct OwnedSink(Mutex<Vec<(String, Value)>>);
+        impl UpdateEventSink for OwnedSink {
+            fn send<'a>(
+                &'a self,
+                group: &'a str,
+                message: Value,
+            ) -> BoxFuture<'a, Result<(), UpdateEventError>> {
+                self.0.lock().unwrap().push((group.into(), message));
+                Box::pin(async { Ok(()) })
+            }
+        }
+
+        let owned = OwnedSink::default();
+        let result = json!({"public_ip":"192.0.2.4","local_ip":"127.0.0.1",
+                            "country_code":null,"country_name":null,"city":null});
+        publish_ip_update(Some(&owned), &result).await;
+        assert_eq!(
+            owned.0.into_inner().unwrap(),
+            vec![(
+                "updates".into(),
+                json!({"type":"update","data":{
+                    "type":"ip_lookup_complete","public_ip":"192.0.2.4","local_ip":"127.0.0.1",
+                    "country_code":null,"country_name":null,"city":null
+                }})
+            )]
+        );
+        assert!(result.get("type").is_none());
+        assert!(result.get("verified_at").is_none());
+    }
     #[test]
     fn source_public_ip_validation_retains_original_value_types() {
         for value in [

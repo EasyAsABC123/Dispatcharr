@@ -49,13 +49,15 @@ async fn version(
 ) -> Result<Json<Value>, StoreError> {
     // AllowAny still invokes DRF authentication when credentials are presented.
     auth.authenticate(&request(peer, headers)).await?;
+    Ok(Json(version_document()))
+}
+
+pub(crate) fn version_document() -> Value {
     let timestamp = std::env::var("DISPATCHARR_VERSION_TIMESTAMP")
         .ok()
         .map(Value::String)
         .unwrap_or(Value::Null);
-    Ok(Json(
-        json!({"version":env("DISPATCHARR_VERSION","0.33.0"),"timestamp":timestamp}),
-    ))
+    json!({"version":env("DISPATCHARR_VERSION","0.33.0"),"timestamp":timestamp})
 }
 
 fn valid_header(header: &str) -> bool {
@@ -237,13 +239,7 @@ fn tls_status() -> (Value, Value) {
     };
     (redis, postgres)
 }
-async fn environment(
-    State(auth): State<AuthService>,
-    ConnectInfo(peer): ConnectInfo<SocketAddr>,
-    headers: HeaderMap,
-) -> Result<Json<Value>, StoreError> {
-    auth.account_user(peer, headers, false).await?;
-    let system = auth.system_settings().await?;
+pub(crate) fn ip_lookup_policy(system: &Value) -> (Value, bool) {
     let disabled = !flag("DISPATCHARR_ENABLE_IP_LOOKUP", "true");
     let enabled = if disabled {
         Value::Bool(false)
@@ -253,14 +249,29 @@ async fn environment(
             .cloned()
             .unwrap_or(Value::Bool(true))
     };
-    let mut result = auth.ip_environment(enabled).await?;
+    (enabled, disabled)
+}
+
+pub(crate) fn environment_body(mut result: Value, disabled: bool) -> Value {
     let (redis, postgres) = tls_status();
     result["authenticated"] = json!(true);
     result["ip_lookup_env_disabled"] = json!(disabled);
     result["env_mode"] = json!(env("DISPATCHARR_ENV", "aio"));
     result["redis_tls"] = redis;
     result["postgres_tls"] = postgres;
-    Ok(Json(result))
+    result
+}
+
+async fn environment(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Result<Json<Value>, StoreError> {
+    auth.account_user(peer, headers, false).await?;
+    let system = auth.system_settings().await?;
+    let (enabled, disabled) = ip_lookup_policy(&system);
+    let result = auth.ip_environment(enabled).await?;
+    Ok(Json(environment_body(result, disabled)))
 }
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
