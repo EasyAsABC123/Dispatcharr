@@ -682,7 +682,9 @@ impl SelectedJobs {
             Beat::Core => jobs::normal_beat::Scheduler::prepare_core_schedules_for_selected(
                 queue
                     .core_schedule_receiver(&backup_handler, &stats)
-                    .map_err(|_| "Selected Core Beat receiver configuration failed")?,
+                    .map_err(|_| "Selected Core Beat receiver configuration failed")?
+                    .with_saved_xc(&scanner)
+                    .map_err(|_| "Selected Core Beat XC and VOD receiver binding failed")?,
                 Duration::from_secs(5),
             ),
             Beat::Off | Beat::Legacy => jobs::normal_beat::Scheduler::prepare(

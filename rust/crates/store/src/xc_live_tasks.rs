@@ -182,6 +182,39 @@ pub enum ChildAdmissionError {
     Unsupported,
     Operational(StoreError),
 }
+
+/// Check the existing root-only XC admission without changing task, cache or SQL state.
+pub async fn admit_scheduled_xc(
+    store: Store,
+    auth: AuthService,
+    id: i64,
+    owner: Owner,
+    events: Arc<dyn UpdateEventSink>,
+    allow_auto: bool,
+) -> Result<bool, StoreError> {
+    match prepare_for(
+        store,
+        auth,
+        id,
+        owner,
+        events,
+        PreparationMode {
+            expected_type: "XC",
+            allow_vod: true,
+            allow_auto,
+            observe_only: true,
+        },
+    )
+    .await
+    {
+        Ok(Some(prepared)) => {
+            prepared.close().await?;
+            Ok(true)
+        }
+        Ok(None) | Err(PreparationError::Domain(_)) => Ok(false),
+        Err(PreparationError::Operational(error)) => Err(error),
+    }
+}
 /// Reuse the production XC/remote-STD predicate with actual cached values and
 /// read-only settings observation. No status/cache/lock/publication side effects.
 /// LocalStd delegates only observed nonremote rows to their existing file service.

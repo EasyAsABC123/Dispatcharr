@@ -65,6 +65,7 @@ pub enum Status {
 struct Cached {
     entry: Entry,
     clocked: Option<DateTime<Utc>>,
+    saved_xc: bool,
     when: f64,
     identity: Arc<()>,
 }
@@ -147,6 +148,7 @@ enum ScheduleScope {
     CoreWithXmltv {
         plugin_refresh: bool,
         saved_stats: bool,
+        saved_xc: bool,
     },
 }
 impl ScheduleScope {
@@ -154,6 +156,7 @@ impl ScheduleScope {
         plugin_refresh: bool,
         xmltv_worker_available: bool,
         saved_stats: bool,
+        saved_xc: bool,
     ) -> Result<Self, Error> {
         if !xmltv_worker_available {
             return Err(Error::Configuration(
@@ -163,11 +166,16 @@ impl ScheduleScope {
         Ok(Self::CoreWithXmltv {
             plugin_refresh,
             saved_stats,
+            saved_xc,
         })
     }
 
     fn uses_selected_receivers(self) -> bool {
         matches!(self, Self::CoreWithXmltv { .. })
+    }
+
+    fn includes_saved_xc(self) -> bool {
+        matches!(self, Self::CoreWithXmltv { saved_xc: true, .. })
     }
 
     fn selected_default_interval(self, name: &str, task: &str) -> Option<i32> {
@@ -259,23 +267,10 @@ impl ScheduleScope {
             return false;
         }
 
-        fn clock_value(value: &str, upper_bound: u8) -> bool {
-            value.len() <= 2
-                && value.bytes().all(|digit| digit.is_ascii_digit())
-                && value.parse::<u8>().is_ok_and(|value| value < upper_bound)
-        }
-
         match (&entry.interval, &entry.crontab) {
             (Some((every, period)), None) => *every > 0 && period == "seconds" && entry.one_off,
-            (None, Some((minute, hour, weekday, day, month, zone))) => {
-                zone == "UTC"
-                    && !entry.one_off
-                    && entry.start_time.is_none()
-                    && clock_value(minute, 60)
-                    && clock_value(hour, 24)
-                    && weekday == "*"
-                    && day == "*"
-                    && month == "*"
+            (None, Some(_)) => {
+                !entry.one_off && entry.start_time.is_none() && daily_utc_crontab(entry).is_some()
             }
             _ => false,
         }
@@ -331,6 +326,11 @@ impl ScheduleScope {
                     .as_ref()
                     .is_some_and(|(every, period)| *every > 0 && period == "hours")
                 && entry.expire_seconds.is_none();
+            let linked_xmltv_cron = self.xmltv_source_id(entry).is_some()
+                && entry.enabled
+                && entry.interval.is_none()
+                && entry.expire_seconds.is_none()
+                && daily_utc_crontab(entry).is_some();
             let selected_default =
                 self.selected_default_interval(&entry.name, &entry.task)
                     .is_some_and(|seconds| {
@@ -346,7 +346,7 @@ impl ScheduleScope {
                     .kwargs
                     .as_object()
                     .is_some_and(|kwargs| kwargs.is_empty());
-            return (ordinary || linked_refresh)
+            return (ordinary || linked_refresh || linked_xmltv_cron)
                 && !entry.one_off
                 && entry.start_time.is_none()
                 && entry.expires.is_none()
@@ -386,6 +386,23 @@ impl ScheduleScope {
             })
     }
 }
+fn daily_utc_crontab(entry: &Entry) -> Option<(&str, &str)> {
+    fn clock_value(value: &str, upper_bound: u8) -> bool {
+        value.len() <= 2
+            && value.bytes().all(|digit| digit.is_ascii_digit())
+            && value.parse::<u8>().is_ok_and(|value| value < upper_bound)
+    }
+
+    let (minute, hour, weekday, day, month, zone) = entry.crontab.as_ref()?;
+    (zone == "UTC"
+        && clock_value(minute, 60)
+        && clock_value(hour, 24)
+        && weekday == "*"
+        && day == "*"
+        && month == "*")
+        .then_some((minute.as_str(), hour.as_str()))
+}
+
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 enum Admission {
     Prepared,
@@ -509,6 +526,7 @@ impl Scheduler {
             worker.owns_plugin_refresh(),
             worker.owns_xmltv_refresh(),
             worker.owns_saved_stats(),
+            worker.owns_saved_xc(),
         )?;
         Self::prepare_scoped(
             worker.pool(),
@@ -983,6 +1001,31 @@ WHERE p.id=$2::bigint AND p.name=$3::text AND p.task=$4::text
   AND octet_length(p.headers)<=65536
 FOR SHARE OF p,i NOWAIT"#;
 
+// Lock the source first, as for the interval path. Require the identical
+// current numeric UTC fields before reserving the cached occurrence.
+const LOCK_CURRENT_XMLTV_CRON: &str = r#"
+WITH source AS MATERIALIZED (
+    SELECT refresh_task_id FROM epg_epgsource
+    WHERE id=$1::bigint AND is_active AND source_type='xmltv' AND refresh_interval=0
+    FOR SHARE NOWAIT
+)
+SELECT p.args,p.kwargs,p.headers
+FROM source s
+JOIN django_celery_beat_periodictask p ON p.id=s.refresh_task_id
+JOIN django_celery_beat_crontabschedule c ON c.id=p.crontab_id
+WHERE p.id=$2::bigint AND p.name=$3::text AND p.task=$4::text
+  AND p.enabled AND NOT p.one_off AND p.solar_id IS NULL
+  AND p.clocked_id IS NULL AND p.interval_id IS NULL
+  AND p.start_time IS NULL AND p.expires IS NULL AND p.expire_seconds IS NULL
+  AND p.queue IS NULL AND p.exchange IS NULL AND p.routing_key IS NULL AND p.priority IS NULL
+  AND c.minute=$5::text AND c.hour=$6::text AND c.timezone='UTC'
+  AND c.day_of_week='*' AND c.day_of_month='*' AND c.month_of_year='*'
+  AND p.total_run_count=$7::bigint
+  AND COALESCE(p.last_run_at,p.date_changed)=$8::timestamptz
+  AND octet_length(p.args)<=65536 AND octet_length(p.kwargs)<=65536
+  AND octet_length(p.headers)<=65536
+FOR SHARE OF p,c NOWAIT"#;
+
 // Match the local Single receiver's bounded account and default interval lane.
 // Both SQL paths use these same predicates before admitting a row.
 macro_rules! local_m3u_account {
@@ -1011,13 +1054,32 @@ macro_rules! local_m3u_interval {
            AND octet_length(p.headers) BETWEEN 1 AND 64"#
     };
 }
+
+// The first saved XC scope is the same unparented live + VOD account shape
+// already qualified by the ordinary receiver. Reuse its runtime preclaim too.
+macro_rules! saved_xc_account {
+    () => {
+        r#"a.account_type='XC' AND a.is_active AND NOT a.locked
+           AND COALESCE(octet_length(a.file_path),0)=0
+           AND octet_length(a.server_url) BETWEEN 1 AND 4096
+           AND octet_length(a.username) BETWEEN 1 AND 255
+           AND octet_length(a.password) BETWEEN 1 AND 255
+           AND a.user_agent_id IS NULL AND a.stream_profile_id IS NULL
+           AND a.stale_stream_days=0
+           AND a.custom_properties='{"enable_vod":true,"hash_key":"url","auto_enable_new_groups_live":true}'::jsonb
+           AND octet_length(a.name)<=512 AND COALESCE(octet_length(a.last_message),0)<=8192"#
+    };
+}
+
 // Match the normal Store write order and retire the locks before Redis work.
-const LOCK_CURRENT_LOCAL_M3U: &str = concat!(
-    r#"WITH account AS MATERIALIZED (
+macro_rules! lock_current_m3u {
+    ($account:expr) => {
+        concat!(
+            r#"WITH account AS MATERIALIZED (
     SELECT a.refresh_task_id,a.refresh_interval FROM m3u_m3uaccount a
     WHERE a.id=$1::bigint AND "#,
-    local_m3u_account!(),
-    r#"
+            $account,
+            r#"
     FOR SHARE NOWAIT
 )
 SELECT p.args,p.kwargs,p.headers
@@ -1030,9 +1092,14 @@ WHERE p.id=$2::bigint AND p.name=$3::text AND p.task=$4::text
   AND p.total_run_count=$6::bigint
   AND COALESCE(p.last_run_at,p.date_changed)=$7::timestamptz
   AND "#,
-    local_m3u_interval!(),
-    " FOR SHARE OF p,i NOWAIT"
-);
+            local_m3u_interval!(),
+            " FOR SHARE OF p,i NOWAIT"
+        )
+    };
+}
+
+const LOCK_CURRENT_LOCAL_M3U: &str = lock_current_m3u!(local_m3u_account!());
+const LOCK_CURRENT_SAVED_XC: &str = lock_current_m3u!(saved_xc_account!());
 
 fn linked_arguments_current(args: &str, kwargs: &str, headers: &str, entry: &Entry) -> bool {
     fn matches(raw: &str, empty: &str, expected: &Value) -> bool {
@@ -1077,6 +1144,35 @@ async fn reserve_linked_interval(
         .bind(snapshot.last_run_at)
         .fetch_optional(&mut *transaction)
         .await;
+    settle_linked_reservation(transaction, current, snapshot).await
+}
+
+async fn reserve_linked_xmltv_cron(
+    connection: &mut PgConnection,
+    source_id: i64,
+    snapshot: &mut Entry,
+) -> Result<LinkedReservation, Error> {
+    let (minute, hour) = daily_utc_crontab(snapshot).ok_or(Error::Supervisor)?;
+    let mut transaction = connection.begin().await?;
+    let current = sqlx::query_as::<_, (String, String, String)>(LOCK_CURRENT_XMLTV_CRON)
+        .bind(source_id)
+        .bind(snapshot.id)
+        .bind(&snapshot.name)
+        .bind(&snapshot.task)
+        .bind(minute)
+        .bind(hour)
+        .bind(snapshot.total_run_count)
+        .bind(snapshot.last_run_at)
+        .fetch_optional(&mut *transaction)
+        .await;
+    settle_linked_reservation(transaction, current, snapshot).await
+}
+
+async fn settle_linked_reservation(
+    transaction: sqlx::Transaction<'_, sqlx::Postgres>,
+    current: Result<Option<(String, String, String)>, sqlx::Error>,
+    snapshot: &mut Entry,
+) -> Result<LinkedReservation, Error> {
     let current = match current {
         Ok(current) => current,
         Err(error) => {
@@ -1311,19 +1407,44 @@ async fn tick(
             .scope
             .xmltv_source_id(&entry.entry)
             .ok_or(Error::Supervisor)?;
-        reserve_linked_interval(connection, LOCK_CURRENT_XMLTV, source_id, &mut snapshot).await?
+        if snapshot.crontab.is_some() {
+            reserve_linked_xmltv_cron(connection, source_id, &mut snapshot).await?
+        } else {
+            reserve_linked_interval(connection, LOCK_CURRENT_XMLTV, source_id, &mut snapshot)
+                .await?
+        }
     } else if inner.scope.is_linked_local_m3u_task(&snapshot.task) {
         let account_id = inner
             .scope
             .local_m3u_account_id(&snapshot)
             .ok_or(Error::Supervisor)?;
-        reserve_linked_interval(
-            connection,
-            LOCK_CURRENT_LOCAL_M3U,
-            account_id,
-            &mut snapshot,
-        )
-        .await?
+        if entry.saved_xc {
+            let Some(ScheduleConsumer::Selected(receiver)) = inner.backup_worker.as_ref() else {
+                return Err(Error::Supervisor);
+            };
+            match receiver.admits_saved_xc(account_id, owner.clone()).await {
+                Ok(true) => {
+                    reserve_linked_interval(
+                        connection,
+                        LOCK_CURRENT_SAVED_XC,
+                        account_id,
+                        &mut snapshot,
+                    )
+                    .await?
+                }
+                // A provider outside the composed receiver domain may become
+                // valid later. Allow other saved rows to run in the meantime.
+                Ok(false) | Err(_) => LinkedReservation::Busy,
+            }
+        } else {
+            reserve_linked_interval(
+                connection,
+                LOCK_CURRENT_LOCAL_M3U,
+                account_id,
+                &mut snapshot,
+            )
+            .await?
+        }
     } else if inner.scope.is_linked_clocked_dvr(&snapshot.task) {
         let binding = clocked_dvr(&snapshot, entry.clocked).ok_or(Error::Supervisor)?;
         reserve_current_clocked_dvr(connection, binding, &mut snapshot).await?
@@ -1457,14 +1578,14 @@ SELECT b.rows,b.bytes,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.interval_spec END AS interval_spec,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.crontab_spec END AS crontab_spec,
  CASE WHEN b.rows<=256 AND b.bytes<=1048576 THEN c.clocked_time END AS clocked_time,
- c.dvr_channel,c.dvr_end
+ c.dvr_channel,c.dvr_end,c.saved_xc
 FROM budget b LEFT JOIN candidates c ON b.rows<=256 AND b.bytes<=1048576"#)
     };
 }
 const LOAD_QUERY: &str = load_query!(
     "",
     "",
-    "NULL::bigint AS dvr_channel,NULL::timestamptz AS dvr_end",
+    "NULL::bigint AS dvr_channel,NULL::timestamptz AS dvr_end,false AS saved_xc",
     ""
 );
 const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
@@ -1475,6 +1596,16 @@ const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
                          AND s.refresh_task_id=p.id AND p.name='epg_source-refresh-' || s.id::text)
            AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
                        WHERE i.id=p.interval_id AND i.every>0 AND i.period='hours'))
+        OR (p.task=$15::text AND p.interval_id IS NULL AND p.crontab_id IS NOT NULL
+           AND NOT p.one_off AND p.start_time IS NULL
+           AND p.expires IS NULL AND p.expire_seconds IS NULL
+           AND p.queue IS NULL AND p.exchange IS NULL AND p.routing_key IS NULL AND p.priority IS NULL
+           AND EXISTS (SELECT 1 FROM epg_epgsource s
+                       WHERE s.id>0 AND s.is_active AND s.source_type='xmltv' AND s.refresh_interval=0
+                         AND s.refresh_task_id=p.id AND p.name='epg_source-refresh-' || s.id::text)
+           AND cr.timezone='UTC' AND cr.minute ~ '^[0-5]?[0-9]$'
+           AND cr.hour ~ '^(0?[0-9]|1[0-9]|2[0-3])$'
+           AND cr.day_of_week='*' AND cr.day_of_month='*' AND cr.month_of_year='*')
         OR (p.interval_id IS NOT NULL AND p.crontab_id IS NULL
            AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
                        WHERE i.id=p.interval_id AND i.period='seconds'
@@ -1496,9 +1627,11 @@ const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
                          JOIN django_celery_beat_intervalschedule i ON i.id=p.interval_id
                          WHERE a.id>0 AND a.refresh_task_id=p.id
                            AND p.name='m3u_account-refresh-' || a.id::text
-                           AND "#,
+                           AND (("#,
         local_m3u_account!(),
-        " AND ",
+        ") OR ($26::boolean AND ",
+        saved_xc_account!(),
+        ")) AND ",
         local_m3u_interval!(),
         "))"
     ),
@@ -1506,7 +1639,11 @@ const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
       AND p.name=r.task_id AND p.name='dvr-recording-' || r.id::text
       AND r.start_time=cl.clocked_time AND r.end_time>r.start_time
 "#,
-    "r.channel_id::bigint AS dvr_channel,r.end_time AS dvr_end",
+    r#"r.channel_id::bigint AS dvr_channel,r.end_time AS dvr_end,
+    CASE WHEN $26::boolean AND p.task=$24::text THEN
+        EXISTS (SELECT 1 FROM m3u_m3uaccount a WHERE a.account_type='XC'
+                  AND a.refresh_task_id=p.id AND p.name='m3u_account-refresh-' || a.id::text)
+        ELSE false END AS saved_xc"#,
     r#"        OR (p.task=$25::text AND p.one_off
            AND p.interval_id IS NULL AND p.crontab_id IS NULL AND p.clocked_id IS NOT NULL
            AND p.start_time IS NULL AND p.expires IS NULL AND p.expire_seconds IS NULL
@@ -1608,6 +1745,7 @@ async fn load(
             .bind(DISABLED_STATS_DEFAULT)
             .bind(crate::normal_xc_live::SINGLE_TASK_NAME)
             .bind(CLOCKED_DVR_TASK)
+            .bind(scope.includes_saved_xc())
     } else {
         query
     };
@@ -1786,6 +1924,7 @@ async fn load(
         let mut cached = Cached {
             entry: model,
             clocked,
+            saved_xc: row.try_get("saved_xc")?,
             when: 0.0,
             identity: Arc::new(()),
         };
@@ -2114,9 +2253,99 @@ fn cron_names(raw: &str) -> String {
 mod tests {
     use super::*;
 
+    #[test]
+    fn selected_core_saved_xc_extends_only_the_linked_hourly_receiver_gate() {
+        let selected = ScheduleScope::core_with_xmltv(false, true, false, true).unwrap();
+        let without = ScheduleScope::core_with_xmltv(false, true, false, false).unwrap();
+        assert!(selected.includes_saved_xc());
+        assert!(!without.includes_saved_xc());
+        assert!(!ScheduleScope::Core.includes_saved_xc());
+        assert!(!LOAD_QUERY.contains("m3u_m3uaccount"));
+        assert!(LOAD_SELECTED_CORE_QUERY.contains("$26::boolean AND a.account_type='XC'"));
+        assert!(LOAD_SELECTED_CORE_QUERY.contains("a.account_type='STD' AND a.is_active"));
+        assert!(LOCK_CURRENT_SAVED_XC.contains("i.period='hours' AND i.every=a.refresh_interval"));
+        assert!(LOCK_CURRENT_SAVED_XC.contains("p.clocked_id IS NULL AND p.crontab_id IS NULL"));
+        assert!(LOCK_CURRENT_SAVED_XC.contains("FOR SHARE OF p,i NOWAIT"));
+        assert!(LOCK_CURRENT_SAVED_XC.contains("\"enable_vod\":true"));
+        assert!(!LOCK_CURRENT_LOCAL_M3U.contains("a.account_type='XC'"));
+        let mut entry = model(crate::normal_xc_live::SINGLE_TASK_NAME);
+        entry.name = "m3u_account-refresh-17".into();
+        entry.kwargs = json!({"account_id":17});
+        entry.interval = Some((1, "hours".into()));
+        assert_eq!(selected.local_m3u_account_id(&entry), Some(17));
+        assert!(selected.admits(&entry));
+        entry.kwargs = json!({"account_id":18});
+        assert!(!selected.admits(&entry));
+    }
+
+    #[test]
+    fn selected_core_linked_xmltv_cron_keeps_the_daily_utc_boundary() {
+        let scope = ScheduleScope::core_with_xmltv(false, true, false, true).unwrap();
+        let due = "2026-11-23T00:01:00Z".parse::<DateTime<Utc>>().unwrap();
+        let mut entry = model(crate::refresh_protocol::NAME);
+        entry.name = "epg_source-refresh-17".into();
+        entry.kwargs = json!({"source_id":17});
+        entry.interval = None;
+        entry.crontab = Some((
+            "01".into(),
+            "0".into(),
+            "*".into(),
+            "*".into(),
+            "*".into(),
+            "UTC".into(),
+        ));
+        entry.last_run_at = due - chrono::Duration::seconds(75);
+        assert_eq!(scope.xmltv_source_id(&entry), Some(17));
+        assert_eq!(daily_utc_crontab(&entry), Some(("01", "0")));
+        assert!(scope.admits(&entry));
+        assert!(!ScheduleScope::Core.admits(&entry));
+        let cached = Cached {
+            entry: entry.clone(),
+            clocked: None,
+            saved_xc: false,
+            when: 0.0,
+            identity: Arc::new(()),
+        };
+        assert!(
+            !decision(&cached, due - chrono::Duration::seconds(1))
+                .unwrap()
+                .due
+        );
+        assert!(decision(&cached, due).unwrap().due);
+
+        let mut changed = entry.clone();
+        changed.kwargs = json!({"source_id":18});
+        assert!(!scope.admits(&changed));
+        changed = entry.clone();
+        changed.crontab.as_mut().unwrap().0 = "60".into();
+        assert!(!scope.admits(&changed));
+        changed = entry.clone();
+        changed.crontab.as_mut().unwrap().5 = "America/St_Johns".into();
+        assert!(!scope.admits(&changed));
+        changed = entry.clone();
+        changed.crontab.as_mut().unwrap().3 = "29".into();
+        assert!(!scope.admits(&changed));
+        changed = entry.clone();
+        changed.enabled = false;
+        assert!(!scope.admits(&changed));
+        changed = entry;
+        changed.one_off = true;
+        assert!(!scope.admits(&changed));
+        assert!(LOCK_CURRENT_XMLTV_CRON.contains("AND refresh_interval=0"));
+        assert!(LOCK_CURRENT_XMLTV_CRON.contains("c.minute=$5::text AND c.hour=$6::text"));
+        assert!(LOCK_CURRENT_XMLTV_CRON.contains("FOR SHARE OF p,c NOWAIT"));
+        assert!(!LOAD_QUERY.contains("epg_epgsource"));
+        assert!(
+            LOAD_SELECTED_CORE_QUERY
+                .find("AND s.refresh_interval=0")
+                .unwrap()
+                < LOAD_SELECTED_CORE_QUERY.find("LIMIT 257").unwrap()
+        );
+    }
+
     #[tokio::test]
     async fn selected_core_clocked_dvr_uses_the_existing_recording_receiver_envelope() {
-        let scope = ScheduleScope::core_with_xmltv(false, true, false).unwrap();
+        let scope = ScheduleScope::core_with_xmltv(false, true, false, false).unwrap();
         assert!(scope.is_linked_clocked_dvr(CLOCKED_DVR_TASK));
         assert!(!ScheduleScope::Core.is_linked_clocked_dvr(CLOCKED_DVR_TASK));
         assert!(!ScheduleScope::Backup.is_linked_clocked_dvr(CLOCKED_DVR_TASK));
@@ -2199,7 +2428,7 @@ mod tests {
 
     #[test]
     fn selected_core_admits_only_canonical_saved_local_m3u_interval() {
-        let scope = ScheduleScope::core_with_xmltv(false, true, false).unwrap();
+        let scope = ScheduleScope::core_with_xmltv(false, true, false, false).unwrap();
         let mut entry = model(crate::normal_xc_live::SINGLE_TASK_NAME);
         entry.name = "m3u_account-refresh-101".into();
         entry.interval = Some((2, "hours".into()));
@@ -2249,10 +2478,10 @@ mod tests {
         entry.interval = Some((1, "hours".into()));
         entry.crontab = None;
         entry.kwargs = json!({"source_id":17});
-        let scope = ScheduleScope::core_with_xmltv(true, true, false).unwrap();
+        let scope = ScheduleScope::core_with_xmltv(true, true, false, false).unwrap();
         assert!(scope.admits(&entry));
         assert!(!ScheduleScope::CoreWithPluginRefresh.admits(&entry));
-        assert!(ScheduleScope::core_with_xmltv(false, false, false).is_err());
+        assert!(ScheduleScope::core_with_xmltv(false, false, false, false).is_err());
         assert_eq!(scope.xmltv_source_id(&entry), Some(17));
         let mut second = entry.clone();
         second.name = "epg_source-refresh-29".into();
@@ -2487,7 +2716,7 @@ mod tests {
     async fn selected_core_defaults_publish_to_registered_receiver_families() {
         use crate::default_protocol::Kind;
         use crate::milestone_dispatch::{builtin_family, Family, REQUIRED};
-        let scope = ScheduleScope::core_with_xmltv(false, true, false).unwrap();
+        let scope = ScheduleScope::core_with_xmltv(false, true, false, false).unwrap();
         let pool = sqlx::postgres::PgPoolOptions::new()
             .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
             .unwrap();
@@ -2590,8 +2819,8 @@ mod tests {
     async fn selected_core_saved_stats_uses_the_existing_guards_and_receiver_frame() {
         use crate::milestone_dispatch::{builtin_family, Family};
 
-        let scope = ScheduleScope::core_with_xmltv(false, true, true).unwrap();
-        let no_stats = ScheduleScope::core_with_xmltv(false, true, false).unwrap();
+        let scope = ScheduleScope::core_with_xmltv(false, true, true, false).unwrap();
+        let no_stats = ScheduleScope::core_with_xmltv(false, true, false, false).unwrap();
         let mut entry = model(STATS_TASK);
         let now = entry.last_run_at;
         entry.name = "operator-saved-stats".into();
@@ -2623,6 +2852,7 @@ mod tests {
         let mut cached = Cached {
             entry: entry.clone(),
             clocked: None,
+            saved_xc: false,
             when: 0.0,
             identity: Arc::new(()),
         };
@@ -2811,6 +3041,7 @@ mod tests {
         let mut cached = Cached {
             entry,
             clocked: None,
+            saved_xc: false,
             when: 0.0,
             identity: Arc::new(()),
         };
@@ -2871,6 +3102,7 @@ mod tests {
             let mut cached = Cached {
                 entry,
                 clocked: None,
+                saved_xc: false,
                 when: 0.0,
                 identity: Arc::new(()),
             };
@@ -2910,6 +3142,7 @@ mod tests {
             let mut cached = Cached {
                 entry,
                 clocked: None,
+                saved_xc: false,
                 when: 0.0,
                 identity: Arc::new(()),
             };
@@ -2923,6 +3156,7 @@ mod tests {
         let mut cached = Cached {
             entry: model("apps.channels.tasks.run_recording"),
             clocked: Some(now),
+            saved_xc: false,
             when: 0.0,
             identity: Arc::new(()),
         };
