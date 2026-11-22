@@ -1,0 +1,91 @@
+{
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "application_revision": "55c895bfe5637541788fe0445cd968c5f8f52ffc",
+  "cleanup": {
+    "compose_down_passed": true,
+    "exact_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "credit": "Original Dispatcharr and dependency authors retain full credit.",
+  "literal_controller_exit": 0,
+  "manifest_sha256": "84c6c607a893765ea5e7e902d1fa51289f4b7f3575c56cff8e27af3db1d9d5dc",
+  "measured_per_backend": [
+    {
+      "body_sha256": "16104d39f7c188736d9ab387c2413cae197b2b2eef8c00c223c411022148f1d1",
+      "case": "admin:get_vod_info",
+      "content_type": "application/json",
+      "fresh_without_clock_override": true,
+      "sql_and_sequences_unchanged": true,
+      "status": 200
+    },
+    {
+      "body_sha256": "5f91ab034d2ce2f044e7bf0bc03286db125fba5f838d35b3682978e0ef725f53",
+      "case": "admin:get_series_info",
+      "content_type": "application/json",
+      "fresh_without_clock_override": true,
+      "sql_and_sequences_unchanged": true,
+      "status": 200
+    },
+    {
+      "body_sha256": "16104d39f7c188736d9ab387c2413cae197b2b2eef8c00c223c411022148f1d1",
+      "case": "standard:get_vod_info",
+      "content_type": "application/json",
+      "fresh_without_clock_override": true,
+      "sql_and_sequences_unchanged": true,
+      "status": 200
+    },
+    {
+      "body_sha256": "5f91ab034d2ce2f044e7bf0bc03286db125fba5f838d35b3682978e0ef725f53",
+      "case": "standard:get_series_info",
+      "content_type": "application/json",
+      "fresh_without_clock_override": true,
+      "sql_and_sequences_unchanged": true,
+      "status": 200
+    },
+    {
+      "body_sha256": "16104d39f7c188736d9ab387c2413cae197b2b2eef8c00c223c411022148f1d1",
+      "case": "basic:get_vod_info",
+      "content_type": "application/json",
+      "fresh_without_clock_override": true,
+      "sql_and_sequences_unchanged": true,
+      "status": 200
+    },
+    {
+      "body_sha256": "5f91ab034d2ce2f044e7bf0bc03286db125fba5f838d35b3682978e0ef725f53",
+      "case": "basic:get_series_info",
+      "content_type": "application/json",
+      "fresh_without_clock_override": true,
+      "sql_and_sequences_unchanged": true,
+      "status": 200
+    },
+    {
+      "body_sha256": "16104d39f7c188736d9ab387c2413cae197b2b2eef8c00c223c411022148f1d1",
+      "case": "hide_adult:get_vod_info",
+      "content_type": "application/json",
+      "fresh_without_clock_override": true,
+      "sql_and_sequences_unchanged": true,
+      "status": 200
+    },
+    {
+      "body_sha256": "5f91ab034d2ce2f044e7bf0bc03286db125fba5f838d35b3682978e0ef725f53",
+      "case": "hide_adult:get_series_info",
+      "content_type": "application/json",
+      "fresh_without_clock_override": true,
+      "sql_and_sequences_unchanged": true,
+      "status": 200
+    }
+  ],
+  "ordinary_image": "sha256:9eb35093fb94adece8547fca1aef9aa21af95f7a606f98b1fa88e22609e1cf04",
+  "performance_measured": false,
+  "provider_origin_requests": 0,
+  "receipt_sha256": "85fbf105a52231aa52574176ba1288abfac4b235ac074e9153f3670bd89d0603"
+}

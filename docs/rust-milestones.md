@@ -30,6 +30,9 @@ single successful result and durable tick. The [Version HTTP 503 pair](rust-m6-a
 qualified the daily failure-response behavior on a8ea333d. The [startup ETA pair](rust-m6-34860-core-plugin-startup-eta.md)
 also matched the delayed claim, acknowledgment and result on 34860b9a.
 A saved-only control ran once with zero startup publications through readiness.
+The [55c895bf provider rehash](rust-m6-55c895-core-provider-rehash.md) matched
+the ordinary PATCH, two-stream merge and real worker completion. The
+publication-failure cases remain open.
 
 The [native ARM64 copied SQLite preview](rust-m10-3843b61a-native-arm64-copied-sqlite.md)
 passed a same-image restart on lappy. The copied database retained the saved
@@ -43,7 +46,13 @@ GET bodies byte for byte and the HEAD status and headers. It repeated ten
 administrator calls after restart with the same bearer tokens and served
 unchanged React assets. [The native ARM64 Channel List](rust-m10-34860-native-arm64-copied-sqlite-channel-list.md)
 also passed a restart on lappy and retained filtering, effective values, and
-two ordered stream relationships. Broader browser workflows remain open.
+two ordered stream relationships. The [55c895bf read cohort](rust-m8-55c895bf-copied-sqlite-channel-reads.md)
+matched Channel List, detail, IDs and Guide summary. All 29 GET bodies and
+three HEAD lengths matched Original, and 20 admin reads repeated after restart.
+The build reused the ordinary Cargo layer from the same verified archive.
+Broader browser workflows and comparative playback performance remain open.
+The [55c895bf cached Xtream info](rust-m7-55c895-cached-xc-info.md) also matched
+eight paired requests, with unchanged SQL and zero provider calls.
 
 The [2c939204 ordinary playback batch](rust-m3-2c939204-ordinary-output-cohort.md)
 passed shared HLS, shared profiled fMP4, live fMP4 lease renewal and natural
