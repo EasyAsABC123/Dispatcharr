@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [25dc1502 release rehearsal](rust-m9-25dc1502-formal-and-package-scopes.md)
+recorded 20 fresh passes across 127 required rows after the same-image
+first-admin browser replay. The first failure remains in the ledger.
+The separate HDHomeRun and backup filename comparisons also completed.
+
 The [provider fault and resolver checkpoint](rust-25dc1502-provider-faults-and-resolver.md)
 matched all 16 Xtream fallback and recovery cases on 25dc1502. It preserves
 the measured e65b4318 broker reply-loss response difference and records 187
