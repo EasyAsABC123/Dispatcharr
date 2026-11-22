@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [7f6b7016 scheduled-backup pilot](rust-m6-m8-7f6b7016-selected-core-beat.md)
+matched the ordinary saved UTC backup workflow using one Selected worker
+and scoped Core Beat, with exact cleanup. The explicit mode remains a
+pilot.
+
 The [424880a9 browser checkpoint](rust-m9-424880a9-browser-checkpoint.md)
 records fresh full passes for Unified HTML and Static Chrome on the same
 ordinary image. Both verified shipped React assets and exact cleanup.
