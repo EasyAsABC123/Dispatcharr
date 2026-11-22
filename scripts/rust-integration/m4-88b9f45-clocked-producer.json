@@ -1,0 +1,142 @@
+{
+  "credit": "Original Dispatcharr, FFmpeg and dependency authors retain full credit.",
+  "independent_proof_exit": 0,
+  "packet_comparer_exit": 0,
+  "packets": {
+    "canonical_packet_trace_sha256": "b57f4e1a9617b3bca9fd7f8120412d9046a72fe4cf211b8d23d6171255eff2f7",
+    "different_container_bytes": 60,
+    "different_container_bytes_before_packets": true,
+    "different_zero_based_spans_inclusive": [
+      [
+        220,
+        223
+      ],
+      [
+        264,
+        279
+      ],
+      [
+        299,
+        302
+      ],
+      [
+        318,
+        325
+      ],
+      [
+        458,
+        465
+      ],
+      [
+        863,
+        866
+      ],
+      [
+        910,
+        917
+      ],
+      [
+        988,
+        995
+      ]
+    ],
+    "ffprobe_actual_exits": [
+      0,
+      0
+    ],
+    "first_packet_positions": {
+      "Native": 1076,
+      "Original": 1076
+    },
+    "literal_ffprobe_binary_sha256": "b9170e6e9da249120590cb6c76064d38295b3beb65615b73db7c1d9148884f99",
+    "packet_count_per_backend": 2862,
+    "packet_digest_time_size_equal": true
+  },
+  "semantic": {
+    "backends": [
+      {
+        "audio_frames": 1866,
+        "backend": "Original",
+        "complete_file_bytes": 5693515,
+        "exact_cleanup_sha256": "3421f1f4dc95c367e0824484a0da8a647103ba956d7cff064d084a16aa8a067d",
+        "file_sha256": "892548af9ad26f53d2ecc93ce271ff6f58ee1de3a33bc69ecb6cdf3bab70f764",
+        "flags": {},
+        "fresh_witness_sha256": {
+          "clocked-active-capture.json": "e816071d82b5b2756552e594aa5f176b17c9c90de7d4bd81232ec5bf8cbb930d",
+          "clocked-after-terminal.json": "5437f564b09516174c902fbefb439768331631b96653c645435f22cd4d4a6d60",
+          "clocked-before-due.json": "abce6d8c68307de80459432ef1e91ce47be9bf6c34ebd838765a24420e370b91",
+          "clocked-decode.json": "02f024a992a9750c5c0cb2cf9fa2aed85d62626c016a375bab0b6dca9a9d2574",
+          "clocked-frame.json": "f93a36d6cf946c56ea50a038400c3344fa5d7694109dc25721ab9f476f3dee07",
+          "clocked-journal-receipt.json": "5b5b5c6d0ba125700370dc3bcdd015e393011475d0b25a68e35b739ad9d240da",
+          "clocked-produced-playback.json": "c83ef9530ce1736b6b5b952205319e855b17aa6eeb38498d78e2a1c72fbee19b",
+          "clocked-terminal.json": "458b49efbe7c2e798ee176932f1aae6371cf3e9abad4811043897b8c3b07ace1",
+          "copied-booking.json": "04ec58e193dc51b7c566a9e6e5f3cf0ad8e256f60b1d83e48710ad2d9998071d"
+        },
+        "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "video_frames": 996
+      },
+      {
+        "audio_frames": 1866,
+        "backend": "Native",
+        "complete_file_bytes": 5693515,
+        "exact_cleanup_sha256": "90655ff8cea7822a1ae00cc786b53ee53dfd8f5811f462ac051be0bc87f97c2b",
+        "file_sha256": "3dcefc245229c409b77db61950f57a3081805736c6fa410d1f93916f2f38409d",
+        "flags": {
+          "RUST_EXPERIMENTAL_SELECTED_BEAT": "0",
+          "RUST_EXPERIMENTAL_SELECTED_CORE_BEAT": "1",
+          "RUST_EXPERIMENTAL_SELECTED_JOBS": "1",
+          "RUST_VERSION_TASKS_ENABLED": "1"
+        },
+        "fresh_witness_sha256": {
+          "clocked-active-capture.json": "e816071d82b5b2756552e594aa5f176b17c9c90de7d4bd81232ec5bf8cbb930d",
+          "clocked-after-terminal.json": "5437f564b09516174c902fbefb439768331631b96653c645435f22cd4d4a6d60",
+          "clocked-before-due.json": "abce6d8c68307de80459432ef1e91ce47be9bf6c34ebd838765a24420e370b91",
+          "clocked-decode.json": "bd472cf06f8078e7d1208e524f7f8e64f4aba5ca5c357ed54a86fe4e72a02a3e",
+          "clocked-frame.json": "5708655514e3838e5e72fb28c2edecb353db33f9817858f662b41f0f4a7a2ef9",
+          "clocked-journal-receipt.json": "c0b5fbbd107d44fb96770259bfe937a5dd6c39b803d480f5173b241ebcd49c33",
+          "clocked-produced-playback.json": "a908104384d15924ded9fdda0aa1693cd7c29f1e2dcfa1d2e8ac88cc05dba148",
+          "clocked-terminal.json": "66a0418dafea062e1181e40ff1570177f3fbc4e30a6bd9cc3b8ae46dba901104",
+          "copied-booking.json": "815904ba0b1ea38c41f852b21d941e34064bda5c7811e04eec65ec3bc03ba90a"
+        },
+        "image": "sha256:9c888b3376d053eb297f1d16ce41459b6ced7b69d5c718801d48333e66dbabfb",
+        "video_frames": 996
+      }
+    ],
+    "between_backend_media_bytes_required_equal": false,
+    "business": {
+      "actual_recording_and_owned_media_origin_observed": true,
+      "actual_video_and_audio_decoded": true,
+      "completed_HTTP_full_head_and_seek_exact": true,
+      "one_saved_clocked_publication": true,
+      "periodic_and_clocked_retires": true,
+      "queues_empty": true,
+      "terminal": "SUCCESS/null",
+      "unrelated_rows_unchanged": true
+    },
+    "candidate": "88b9f45f880d8e5147c862f223efa92284697fa2",
+    "earlier_original_source_reference": "323c396c00b88fa48459a61a63799c5f2529919554b529778aa3b7a221b0a7b8",
+    "full_M4": false,
+    "manifest_sha256": "0015cb44fe1e3bd7382a42c30a0af4a9c5c15de31d9fa1314580bef3e38959be",
+    "observed_scope": "one real saved clocked recording and actual completed-file playback per backend",
+    "ordinary_default_activation": false,
+    "performance_verified": false,
+    "physical_engine_calls_by_reducer": 0,
+    "prior_artifact_pins": {
+      "SHA256SUMS": "d319ed491838ea49fedbb281bdaaac22e83f76848635663e0e5224560562756b",
+      "actual-pair-1/Native-execution.json": "f4cced8a03e588c14cd4931adbb81193990126c9ab224cb3cd4507238c882446",
+      "actual-pair-1/Native/lane.json": "92f1007a896586f13bc7eb9cd48eee19559ed731b7ad761bafc6395fca1fab45",
+      "actual-pair-1/Original-execution.json": "ab929c3b5e437582447da662d4b654a353a7bda698a17351aac37e6528da5ab3",
+      "actual-pair-1/Original/lane.json": "16435374e87934dd6b12dfacfcea2feab523c982eb1f1f4161a6f1e5621141a4",
+      "actual-pair-1/binding.json": "610da1b74053a9d075e0245c3491f5682591c63740da15746b52ebf79a6798fb",
+      "actual-pair-1/qualification.json": "058e9c646b64bca484574e56f3c15dcb7cba4709145071c5fd977d32aef95ed4",
+      "owner-1/reduce.stderr": "2024af99f0be180751a2d62de7155d8840464e85b8ca393db799451c1d1ead41"
+    },
+    "retained_original_literal_outcomes": {
+      "actual": 1,
+      "preflight": 0,
+      "reduce": 1,
+      "run": 0
+    },
+    "retained_stale_mechanical_label": "one naturally due saved America/St_Johns crontab on each exact backend"
+  }
+}

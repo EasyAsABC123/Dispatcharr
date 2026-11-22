@@ -114,6 +114,11 @@ read and sign-out on both backends.
 The [e68fb95 streaming core and runtime](rust-m1-e68fb95-bounded-stream-core.md)
 passed 33 deterministic host tests. The [f960875 growing DVR replay](rust-m4-f960875-growing-dvr-playback.md)
 passed on both images with two playlist generations and matching segment bytes.
+
+The [88b9f45 real clocked DVR pair](rust-m4-88b9f45-clocked-producer.md)
+matched all 2,862 encoded packets in its completed recordings, including
+payload and timing. The [f960875 active OutputProfile probes](rust-m9-f960875-active-profile-status.md)
+matched the initial TS 200 and HLS 302 responses and verified exact cleanup.
 Original and Native also passed the [ARM64 same-schema restore comparison](rust-m8-f960875-arm64-same-schema-restore-pair.md)
 in separately owned PostgreSQL environments.
 
