@@ -1,0 +1,88 @@
+{
+  "credit": "The original Dispatcharr authors and contributors retain full application credit.",
+  "downstream": {
+    "actual_dispatcharr_env": "aio",
+    "actual_exit": 0,
+    "arm_manifest": "sha256:a255e6e917e9153be134a20110643fcdae1d1def64457f252739d07ad4cfc631",
+    "candidate_engine_exit": 0,
+    "exact_cleanup": true,
+    "external_http": false,
+    "image": "sha256:ba228a4a8638aba8b8df77c5f9ac70626c2d6c05b58b3d4364fca2e5b1586068",
+    "monitor_controller_exit": 130,
+    "origin_namespace_verified": true,
+    "origin_requests": [
+      {
+        "method": "GET",
+        "path": "/owned-version",
+        "release": "99.83.17",
+        "status": 200
+      }
+    ],
+    "owned_role_count": 5,
+    "ownership_overrides": [],
+    "revision": "e68fb950c7ed4abf2ab58da45104f4e2c5f13937",
+    "source_cardinality": {
+      "application_inputs": 2159,
+      "protected_inputs": 497
+    },
+    "task_families": [
+      "apps.channels.tasks.recover_recordings_on_startup",
+      "core.tasks.check_for_version_update"
+    ],
+    "terminal_statuses": {
+      "apps.channels.tasks.recover_recordings_on_startup": "SUCCESS",
+      "core.tasks.check_for_version_update": "SUCCESS"
+    },
+    "version_notification_count": 1
+  },
+  "downstream_receipt_sha256": "e56eda27e58a3882cff10d0a78ba54826228f0c041a161e558e4696338f3a412",
+  "earlier_admission_only_exits": [
+    1,
+    1
+  ],
+  "performance_measured": false,
+  "role": {
+    "actual_dispatcharr_env": "aio",
+    "actual_exit": 0,
+    "arm_manifest": "sha256:a255e6e917e9153be134a20110643fcdae1d1def64457f252739d07ad4cfc631",
+    "candidate_engine_exit": 0,
+    "control": "Subscribed",
+    "exact_cleanup": true,
+    "image": "sha256:ba228a4a8638aba8b8df77c5f9ac70626c2d6c05b58b3d4364fca2e5b1586068",
+    "owned_role_count": 4,
+    "ownership_overrides": [],
+    "ready": true,
+    "ready_status": 200,
+    "revision": "e68fb950c7ed4abf2ab58da45104f4e2c5f13937",
+    "scan_tick": {
+      "after": 1,
+      "before": 0,
+      "last_run_at": "2026-11-22T22:13:05.021872+00:00"
+    },
+    "schedule_contracts_passed": [
+      "celery.backend_cleanup",
+      "check-account-expirations",
+      "check-version-updates",
+      "fetch-channel-statuses",
+      "maintain-recurring-recordings",
+      "plugin-repo-refresh-task",
+      "scan-files"
+    ],
+    "source_cardinality": {
+      "application_inputs": 2159,
+      "protected_inputs": 497
+    },
+    "startup_locks": {
+      "core:version_check_dispatch_lock": {
+        "ttl": 300,
+        "value": "1"
+      },
+      "dvr:recover_dispatch_lock": {
+        "ttl": 300,
+        "value": "1"
+      }
+    }
+  },
+  "role_receipt_sha256": "3b90ef0dad8a3c5f5e8d452b6235675b3f045208a9c6e0c7740b756717331c68",
+  "whole_M6": false
+}

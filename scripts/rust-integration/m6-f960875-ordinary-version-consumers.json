@@ -1,0 +1,83 @@
+{
+  "candidate": "f960875f26d26bf1108a299530064d24ecc462a3",
+  "cleanup": {
+    "exact_inventory_empty": true,
+    "normal_bootstrap_stop": true,
+    "owned_cids_absent": true,
+    "owned_host_generations_absent": true,
+    "passed": true
+  },
+  "credit": "Original Dispatcharr authors and contributors retain full application credit.",
+  "image": "sha256:f9b1e3a06997a15cc892a328763eb14ce753085620e9fdd4d2c82f30dfa54e2a",
+  "literal_exits": {
+    "preflight": 0,
+    "proof": 0,
+    "run": 0
+  },
+  "manifest_sha256": "4b2e7f2968b98ca07a5dacec396ac02b4259000e7f7521741cc715218bc43a8f",
+  "ordinary_aio_recovery": "SUCCESS/Recovery complete",
+  "paired_Version_cases": 6,
+  "performance_measured": false,
+  "poststop_roster_sha256": "9967ac9074e8bed675f02e3a0fb3ec9cb6eafa37bf7e50ab71a270c8810975ef",
+  "preboot_roster_sha256": "9967ac9074e8bed675f02e3a0fb3ec9cb6eafa37bf7e50ab71a270c8810975ef",
+  "receipt_sha256": "2c5120fa245def6cc6bb5a587e1dd6a0c2b93faa1a563a51cdffe9d6a6bfb40f",
+  "retained_developer_startup_event": {
+    "data": {
+      "type": "notifications_cleared"
+    },
+    "type": "update"
+  },
+  "scheduled_cases_claimed": 0,
+  "scope": "startup and on-demand Version consumer parity",
+  "typed_cases": [
+    {
+      "case": "start",
+      "http_status": 200,
+      "notice_events": 1,
+      "notices": 1,
+      "terminal": "SUCCESS/null",
+      "typed_effect_matched": true
+    },
+    {
+      "case": "no-update",
+      "http_status": 200,
+      "notice_events": 1,
+      "notices": 0,
+      "terminal": "SUCCESS/null",
+      "typed_effect_matched": true
+    },
+    {
+      "case": "update",
+      "http_status": 200,
+      "notice_events": 1,
+      "notices": 1,
+      "terminal": "SUCCESS/null",
+      "typed_effect_matched": true
+    },
+    {
+      "case": "repeat",
+      "http_status": 200,
+      "notice_events": 0,
+      "notices": 1,
+      "terminal": "SUCCESS/null",
+      "typed_effect_matched": true
+    },
+    {
+      "case": "malformed",
+      "http_status": 200,
+      "notice_events": 0,
+      "notices": 1,
+      "terminal": "SUCCESS/null",
+      "typed_effect_matched": true
+    },
+    {
+      "case": "upstream-503",
+      "http_status": 503,
+      "notice_events": 0,
+      "notices": 1,
+      "terminal": "SUCCESS/null",
+      "typed_effect_matched": true
+    }
+  ],
+  "whole_M6": false
+}

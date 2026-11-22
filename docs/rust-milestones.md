@@ -87,6 +87,14 @@ ordinary AIO, covering current and overdue at boot and overdue after readiness.
 The [native ARM64 e68fb95 package](rust-m10-e68fb95-native-arm64-package.md)
 passed exact binary, default-UID, startup, React HTML, and scoped authentication checks.
 
+Its [ordinary ARM64 AIO replays](rust-m6-e68fb95-arm64-aio-startup.md) verified
+seven saved schedule contracts, a natural scan tick and both owned startup
+task results. On f960875, the [Version consumer fixture](rust-m6-f960875-ordinary-version-consumers.md)
+matched six retained Original cases and verified exact cleanup. The [copied
+Cleanup checkpoint evidence](rust-m6-f960875-preboot-cleanup-recovered.md)
+preserves the overdue controller's exit 1 and the successful independent
+reduction of its observed SQL, broker and cleanup effects.
+
 The fresh [e68fb95 ten-viewer XMLTV pair](rust-m2-e68fb95-live-xmltv-performance.md)
 measured 55.3% lower backend and infrastructure CPU and 78.3% lower peak working
 set on AMD64. Both arms served ten progressing viewers through one upstream
